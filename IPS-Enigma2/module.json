@@ -1,0 +1,14 @@
+{
+  "id": "{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}",
+  "name": "Enigma2",
+  "type": 0,
+  "vendor": "",
+  "aliases":
+  [
+    "Enigma2"
+  ],
+  "parentRequirements": [],
+  "childRequirements": [],
+  "implemented": [],
+  "prefix": "AV"
+}
