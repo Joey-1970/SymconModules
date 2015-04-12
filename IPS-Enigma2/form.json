@@ -1,0 +1,13 @@
+{
+  "elements":
+  [
+    { "name": "Open", "type": "CheckBox", "caption": "Active" },
+    { "name": "IP", "type": "ValidationTextBox", "caption": "IP" },
+  ],
+  "status":
+  [
+    { "code": 102, "icon": "active", "caption": "Interface is open" },
+    { "code": 104, "icon": "inactive", "caption": "Interface is closed" },
+    { "code": 200, "icon": "error", "caption": "Interface is an error state. Please$
+  ]
+}
