@@ -8,6 +8,6 @@
   [
     { "code": 102, "icon": "active", "caption": "Interface is open" },
     { "code": 104, "icon": "inactive", "caption": "Interface is closed" },
-    { "code": 200, "icon": "error", "caption": "Interface is an error state. Please$
+    { "code": 200, "icon": "error", "caption": "Interface is an error state. " }
   ]
 }
