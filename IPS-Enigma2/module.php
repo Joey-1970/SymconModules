@@ -15,8 +15,8 @@ class Enigma2 extends IPSModule
   {
     //Never delete this line!
     parent::ApplyChanges();
-    $this->RegisterVariableBoolean("Status", "~Switch");
-		$this->RegisterEventCyclic("UpdateTimer", "Automatische Aktualisierung", 15);
+    $this->RegisterVariableBoolean("Status", "Status", "~Switch");
+    $this->RegisterEventCyclic("UpdateTimer", "Automatische Aktualisierung", 15);
   }
   
   private function CreateCategoryByIdent($id, $ident, $name)
