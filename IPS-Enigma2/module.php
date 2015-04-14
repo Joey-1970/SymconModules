@@ -19,6 +19,34 @@ class Enigma2 extends IPSModule
     //$this->RegisterEventCyclic("UpdateTimer", "Automatische Aktualisierung", 15);
   }
   
+  public function RequestInfo()
+	{
+		$IP = $this->ReadPropertyString("IP");
+		
+		SetValue($this->GetIDForIdent("Status"), ENIGMA2_PowerstateStatus($IP));
+	}
+  
+  //*************************************************************************************************************
+  // Prüft ob die Box eingeschaltet ist
+  private function ENIGMA2_PowerstateStatus($ipadr)
+  {
+     $result = false;
+  
+  	$xml = simplexml_load_file("http://$ipadr/web/powerstate?.xml");
+  	$wert = $xml->e2instandby;
+  
+  	if(strpos($wert,"false")!== false)
+  		{
+  		$result = true; // Bei "false" ist die Box eingeschaltet
+  		}
+  	else
+  		{
+  		$result = false;
+  		}
+  
+  return $result;
+  }
+  
   private function CreateCategoryByIdent($id, $ident, $name)
   {
     $cid = @IPS_GetObjectIDByIdent($ident, $id);
