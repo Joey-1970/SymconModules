@@ -8,7 +8,7 @@ class Enigma2 extends IPSModule
     //These lines are parsed on Symcon Startup or Instance creation
     //You cannot use variables here. Just static values.
     $this->RegisterPropertyString("IP", "");
-    $this->RegisterPropertyString("Open", "");
+    $this->RegisterPropertyBoolean("Open", "");
   }
   
   public function ApplyChanges()
