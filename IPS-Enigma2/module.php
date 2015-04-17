@@ -111,6 +111,53 @@ class Enigma2 extends IPSModule
   return $result;
   }
   
+  //*************************************************************************************************************
+  // Weckt das Gerät aus dem Standby-Modus
+  public function WakeUpStandby()
+  {
+   $powerstate = 4;
+   $result = false;
+   $IP = $this->ReadPropertyString("IP");
+
+   if ((Boolean) Sys_Ping($IP, 1000))
+    	{
+		$xmlResult = new SimpleXMLElement(file_get_contents("http://$IP/web/powerstate?newstate=$powerstate"));
+      		$result = (Boolean)$xmlResult->e2instandby;
+   	}
+  return $result;
+  }
+  
+  //*************************************************************************************************************
+  // Rebootes das Gerät
+  public function Reboot()
+  {
+   $powerstate = 2;
+   $result = false;
+   $IP = $this->ReadPropertyString("IP");
+
+   if ((Boolean) Sys_Ping($IP, 1000))
+    	{
+      $xmlResult = new SimpleXMLElement(file_get_contents("http://$IP/web/powerstate?newstate=$powerstate"));
+      $result = (Boolean)$xmlResult->e2instandby;
+   	}
+  return $result;
+  }
+  
+  //*************************************************************************************************************
+  // Rebootet das Gerät
+  public function Restart()
+ {
+   $powerstate = 3;
+   $result = false;
+   $IP = $this->ReadPropertyString("IP");
+
+   if ((Boolean) Sys_Ping($IP, 1000))
+    	{
+      $xmlResult = new SimpleXMLElement(file_get_contents("http://$IP/web/powerstate?newstate=$powerstate"));
+      $result = (Boolean)$xmlResult->e2instandby;
+   	}
+  return $result;
+  }
   
   private function CreateCategoryByIdent($id, $ident, $name)
   {
