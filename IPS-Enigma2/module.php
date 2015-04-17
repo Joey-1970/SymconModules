@@ -23,12 +23,12 @@ class Enigma2 extends IPSModule
 	{
 		$IP = $this->ReadPropertyString("IP");
 		
-		SetValue($this->GetIDForIdent("Status"), ENIGMA2_PowerstateStatus($IP));
+		SetValue($this->GetIDForIdent("Status"), PowerstateStatus($IP));
 	}
   
   //*************************************************************************************************************
   // Prüft ob die Box eingeschaltet ist
-  private function ENIGMA2_PowerstateStatus($ipadr)
+  public function PowerstateStatus($ipadr)
   {
      $result = false;
   
