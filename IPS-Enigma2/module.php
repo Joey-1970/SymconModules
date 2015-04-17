@@ -28,7 +28,7 @@ class Enigma2 extends IPSModule
   
   //*************************************************************************************************************
   // Prüft ob die Box eingeschaltet ist
-  public function PowerstateStatus
+  public function PowerstateStatus()
   {
      $result = false;
   	$IP = $this->ReadPropertyString("IP");
