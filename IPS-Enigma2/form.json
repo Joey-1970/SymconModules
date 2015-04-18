@@ -4,6 +4,10 @@
     { "name": "Open", "type": "CheckBox", "caption": "Active" },
     { "name": "IP", "type": "ValidationTextBox", "caption": "IP" },
   ],
+  "actions":
+    [
+        { "type": "Button", "label": "Test", "onClick": "SMS_Send($id, $Number, $Message);" },
+    ],
   "status":
   [
     { "code": 101, "icon": "inactive", "caption": "Interface will be open" },
