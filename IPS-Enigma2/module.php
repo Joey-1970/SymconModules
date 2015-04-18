@@ -22,7 +22,6 @@ class Enigma2 extends IPSModule
   public function RequestInfo()
 	{
 		$IP = $this->ReadPropertyString("IP");
-		
 		SetValue($this->GetIDForIdent("Status"), PowerstateStatus($IP));
 	}
   
