@@ -6,7 +6,7 @@
   ],
   "actions":
     [
-        { "type": "Button", "label": "Test", "onClick": "SMS_Send($id, $Number, $Message);" },
+        { "type": "Button", "label": "Test", "onClick": "ENI_RequestInfo;" },
     ],
   "status":
   [
