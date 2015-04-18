@@ -6,7 +6,7 @@
   ],
   "actions":
     [
-        { "type": "Button", "label": "Test", "onClick": "RequestInfo;" },
+        { "type": "Button", "label": "Test", "onClick": "ENI_RequestInfo();" },
     ],
   "status":
   [
