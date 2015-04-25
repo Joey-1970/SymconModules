@@ -110,7 +110,6 @@ class Enigma2 extends IPSModule
    if ((Boolean) Sys_Ping($IP, 1000))
     {
        $xmlResult = new SimpleXMLElement(file_get_contents("http://$IP/web/powerstate?newstate=$powerstate"));
-        print_r ($xmlResult);
         if ($xmlResult->e2instandby == 'true')
         {
            $result = 1;
