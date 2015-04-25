@@ -86,6 +86,19 @@ class Enigma2 extends IPSModule
   return $result;
   }
   
+    //*************************************************************************************************************
+  // Testfunktion
+  public function Test()
+  {
+   $result = false;
+   if ((Boolean) Sys_Ping($IP, 1000))
+   	{
+    	$result = false
+   	}
+  return $result;
+  }
+  
+  
   //*************************************************************************************************************
   // Setzt das Gerät in den Standby-Modus
   public function Standby()
