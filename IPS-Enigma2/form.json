@@ -6,7 +6,7 @@
   ],
   "actions":
     [
-        { "type": "Button", "label": "Test", "onClick": "Enigma2_RequestInfo();" },
+        { "type": "Button", "label": "Test", "onClick": "Enigma2_RequestInfo;" },
     ],
   "status":
   [
