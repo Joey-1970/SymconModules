@@ -140,7 +140,7 @@ class Enigma2 extends IPSModule
   
   //*************************************************************************************************************
   // Rebootes das Gerät
-  public function Reboot()
+  public function FullReboot()
   {
    $powerstate = 2;
    $result = false;
