@@ -93,7 +93,7 @@ class Enigma2 extends IPSModule
    $result = false;
    if ((Boolean) Sys_Ping($IP, 1000))
    	{
-    	$result = false;
+    	$result = true;
    	}
   return $result;
   }
