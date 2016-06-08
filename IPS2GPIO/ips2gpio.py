@@ -9,22 +9,20 @@ from requests.auth import HTTPBasicAuth
 
 #[1]=RaspberryPi-Name
 #[2]=RaspberryPi-Port default 8888
-#[3]=IPS-Server-IP
-#[4]=JSON-RPC-Port
-#[5]=Fernzugriff-User
-#[6]=Fernzugriff-Passwort
-#[7]=Variablen-ID
-#[8]=Kommando
-#[9-n]=Parameterwerte
+#[3]=Fernzugriff-User
+#[4]=Fernzugriff-Passwort
+#[5]=Variablen-ID
+#[6]=Kommando
+#[7-n]=Parameterwerte
 
 pi = pigpio.pi(sys.argv[1])
 port = sys.argv[2]
-command = sys.argv[8]
+command = sys.argv[6]
 
 
 # JSON-RPS zu IPS definieren
 def IpsRpc(methodIps, paramIps):
-    url = "http://192.168.178.47:3777/api/"
+    url = "http://127.0.0.1:3777/api/"
     auth=HTTPBasicAuth('paeper@horburg.de', 'Dennis1999')
     headers = {'content-type': 'application/json'}
 
@@ -33,10 +31,10 @@ def IpsRpc(methodIps, paramIps):
 
 if command == "set_mode":
 
-                if sys.argv[10] == "IN":
-                        pi.set_mode(int(sys.argv[9]), pigpio.INPUT)
-                elif sys.argv[10] == "OUT":
-                        pi.set_mode(int(sys.argv[9]), pigpio.OUTPUT)
+                if sys.argv[8] == "IN":
+                        pi.set_mode(int(sys.argv[7]), pigpio.INPUT)
+                elif sys.argv[8] == "OUT":
+                        pi.set_mode(int(sys.argv[7]), pigpio.OUTPUT)
 
 if command == "set_PWM_dutycycle":
         for g in range(3,3+(len(sys.argv)-4)/2):
