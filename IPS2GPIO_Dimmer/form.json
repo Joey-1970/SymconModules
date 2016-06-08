@@ -24,9 +24,8 @@
     ],
     "actions":
     [
-        { "type": "Button", "label": "Send Message", "onClick": "SMS_Send($id, $Number, $Message);" },
-        { "type": "HorizontalSlider", "name": "Slider", "minimum": 0, "maxmaximum": 16, "onChange": "echo $id;" }
-        
+        { "type": "Button", "label": "Switch", "onClick": "SMS_Send($id, $Number, $Message);" },
+        { "type": "HorizontalSlider", "name": "Slider", "minimum": 0, "maxmaximum": 255, "onChange": "echo $id;" }
     ],
     "status":
     [
