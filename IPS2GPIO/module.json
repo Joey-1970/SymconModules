@@ -1,8 +1,8 @@
 {
   "id": "{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}",
   "name": "IPS2GPIO",
-  "type": 0,
-  "vendor": "",
+  "type": 1,
+  "vendor": "GPIO",
   "aliases":
   [
     "IPS2GPIO"
