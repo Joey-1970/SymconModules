@@ -3,11 +3,11 @@
    [ 
      { "name": "Open", "type": "CheckBox", "caption": "Active" }, 
      { "name": "IP", "type": "ValidationTextBox", "caption": "IP" },
-     { "name": "area", "type": "Select", "caption": "Gebiet", 
+     { "name": "Model", "type": "Select", "caption": "Model", 
  			"options": [ 
- 				{ "label": "Deutschland", "value": "DL" }, 
- 				{ "label": "Baden-Württemberg", "value": "BWB" }, 
- 				{ "label": "Bayern", "value": "BAY" } 
+ 				{ "label": "Raspberry Pi Model B (26 Pin)", "value": "RPi" }, 
+ 				{ "label": "Raspberry Pi Model A, B (26+8 Pin)", "value": "RPi" }, 
+ 				{ "label": "Raspberry Pi Model A+, B+, Pi Zero, Pi2B, Pi3B (40 Pin)", "value": "RPi" } 
  			] 
  		}, 
 
