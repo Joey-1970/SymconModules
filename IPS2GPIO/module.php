@@ -9,6 +9,7 @@ class IPS2GPIO extends IPSModule
     //You cannot use variables here. Just static values.
     $this->RegisterPropertyString("IP", "");
     $this->RegisterPropertyBoolean("Open", "");
+    $this->RegisterPropertyString("Model", "");
   }
   
   public function ApplyChanges()
