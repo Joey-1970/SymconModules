@@ -42,7 +42,7 @@ if command == "set_PWM_dutycycle":
                 pi.set_PWM_dutycycle(pin, value)
 
 variable=29419
-IpsRpc("SetValue", [variable,command])
+IpsRpc("SetValue", [varid,command])
 
 pi.stop()
 
