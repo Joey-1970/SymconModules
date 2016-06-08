@@ -3,7 +3,14 @@
    [ 
      { "name": "Open", "type": "CheckBox", "caption": "Active" }, 
      { "name": "IP", "type": "ValidationTextBox", "caption": "IP" },
-     { "name": "Typ", "type": "ValidationTextBox", "caption": "IP" },
+     { "name": "area", "type": "Select", "caption": "Gebiet", 
+ 			"options": [ 
+ 				{ "label": "Deutschland", "value": "DL" }, 
+ 				{ "label": "Baden-Württemberg", "value": "BWB" }, 
+ 				{ "label": "Bayern", "value": "BAY" } 
+ 			] 
+ 		}, 
+
    ], 
    "actions": 
    [ 
