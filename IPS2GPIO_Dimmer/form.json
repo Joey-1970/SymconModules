@@ -1,10 +1,10 @@
 {
     "elements":
     [
-        { "type": "ValidationTextBox", "name": "Username", "caption": "Username" },
-        { "type": "ValidationTextBox", "name": "Password", "caption": "Password" },
-        { "type": "NumberSpinner", "name": "APIID", "caption": "APIID" },
-        { "type": "ValidationTextBox", "name": "Sender", "caption": "Sender" }
+        
+        
+        
+        
         { "type": "Select", "name": "SMSType", "caption": "Type",
             "options": [
                 { "label": "SMS", "value": 0 },
