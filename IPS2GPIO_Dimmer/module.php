@@ -1,6 +1,6 @@
 <?
     // Klassendefinition
-    class ModulnameXYZ extends IPSModule {
+    class IPS2GPIO_Dimmer extends IPSModule {
  
         // Der Konstruktor des Moduls
         // Überschreibt den Standard Kontruktor von IPS
