@@ -17,6 +17,7 @@ from requests.auth import HTTPBasicAuth
 
 pi = pigpio.pi(sys.argv[1])
 port = sys.argv[2]
+varid = sys.argv[5]
 command = sys.argv[6]
 
 
@@ -30,16 +31,14 @@ def IpsRpc(methodIps, paramIps):
     response = requests.post(url, auth=auth, data=json.dumps(payload), headers=headers)
 
 if command == "set_mode":
-
                 if sys.argv[8] == "IN":
                         pi.set_mode(int(sys.argv[7]), pigpio.INPUT)
                 elif sys.argv[8] == "OUT":
                         pi.set_mode(int(sys.argv[7]), pigpio.OUTPUT)
 
 if command == "set_PWM_dutycycle":
-        for g in range(3,3+(len(sys.argv)-4)/2):
-                pin = int(sys.argv[g*2-2])
-                value = int(sys.argv[g*2-1])
+                pin = int(sys.argv[7])
+                value = int(sys.argv[8])
                 pi.set_PWM_dutycycle(pin, value)
 
 variable=29419
