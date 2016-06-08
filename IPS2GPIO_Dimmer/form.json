@@ -1,15 +1,11 @@
 {
     "elements":
     [
-        
-        
-        
-        
-        { "type": "Select", "name": "SMSType", "caption": "Type",
+        { "type": "Select", "name": "Pin", "caption": "Pin",
             "options": [
-                { "label": "SMS", "value": 0 },
-                { "label": "Kombi-SMS", "value": 1 },
-                { "label": "MMS", "value": 2 }
+                { "label": "0", "value": 0 },
+                { "label": "1", "value": 1 },
+                { "label": "4", "value": 2 }
         ]
     ],
     "actions":
