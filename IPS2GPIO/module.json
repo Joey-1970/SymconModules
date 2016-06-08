@@ -5,7 +5,7 @@
   "vendor": "GPIO",
   "aliases":
   [
-    ["IPS2GPIO"]
+    "IPS2GPIO-I/O"
   ],
   "parentRequirements": [],
   "childRequirements": [],
