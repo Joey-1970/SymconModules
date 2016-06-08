@@ -5,16 +5,16 @@
      { "name": "IP", "type": "ValidationTextBox", "caption": "IP" },
      { "name": "Model", "type": "Select", "caption": "Model", 
  			"options": [ 
- 				{ "label": "Raspberry Pi Model B (26 Pin)", "value": "RPi" }, 
- 				{ "label": "Raspberry Pi Model A, B (26+8 Pin)", "value": "RPi" }, 
- 				{ "label": "Raspberry Pi Model A+, B+, Pi Zero, Pi2B, Pi3B (40 Pin)", "value": "RPi" } 
+ 				   { "label": "Raspberry Pi Model B (26 Pin)", "value": "RPi 1" }, 
+ 				   { "label": "Raspberry Pi Model A, B (26+8 Pin)", "value": "RPi 2" }, 
+ 				   { "label": "Raspberry Pi Model A+, B+, Pi Zero, Pi2B, Pi3B (40 Pin)", "value": "RPi 3" } 
  			] 
- 		}, 
+ 	   } 
 
    ], 
    "actions": 
    [ 
-        { "type": "Button", "label": "Test", "onClick": "Enigma2_Test();" }, 
+        { "type": "Button", "label": "Test", "onClick": "IPS2GPIO_Test();" }, 
    ], 
    "status": 
    [ 
