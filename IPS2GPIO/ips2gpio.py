@@ -16,8 +16,8 @@ from requests.auth import HTTPBasicAuth
 #[7-n]=Parameterwerte
 
 pi = pigpio.pi(sys.argv[1])
-port = sys.argv[2]
-varid = sys.argv[5]
+port = int(sys.argv[2])
+varid = int(sys.argv[5])
 command = sys.argv[6]
 
 
