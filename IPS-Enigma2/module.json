@@ -1,14 +1,14 @@
 {
   "id": "{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}",
-  "name": "Enigma2",
+  "name": "IPS2GPIO",
   "type": 0,
   "vendor": "",
   "aliases":
   [
-    "Enigma2"
+    "IPS2GPIO"
   ],
   "parentRequirements": [],
   "childRequirements": [],
   "implemented": [],
-  "prefix": "Enigma2"
+  "prefix": "IPS2GPIO"
 }
