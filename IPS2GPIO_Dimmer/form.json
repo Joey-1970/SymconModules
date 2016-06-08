@@ -25,7 +25,8 @@
     "actions":
     [
         { "type": "Button", "label": "Send Message", "onClick": "SMS_Send($id, $Number, $Message);" },
-        { "type": "Button", "label": "Read Balance", "onClick": "echo 'Balance: '.sprintf('%.2f', SMS_RequestBalance($id)).' credits';" }
+        { "type": "HorizontalSlider", "name": "Slider", "minimum": 0, "maxmaximum": 16, "onChange": "echo $id;" }
+        
     ],
     "status":
     [
