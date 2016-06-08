@@ -5,9 +5,9 @@
      { "name": "IP", "type": "ValidationTextBox", "caption": "IP" },
      { "name": "Model", "type": "Select", "caption": "Model", 
  			"options": [ 
- 				   { "label": "Raspberry Pi Model B (26 Pin)", "value": "RPi 1" }, 
- 				   { "label": "Raspberry Pi Model A, B (26+8 Pin)", "value": "RPi 2" }, 
- 				   { "label": "Raspberry Pi Model A+, B+, Pi Zero, Pi2B, Pi3B (40 Pin)", "value": "RPi 3" } 
+ 				   { "label": "Raspberry Pi Model B (26 Pin)", "value": "0" }, 
+ 				   { "label": "Raspberry Pi Model A, B (26+8 Pin)", "value": "1" }, 
+ 				   { "label": "Raspberry Pi Model A+, B+, Pi Zero, Pi2B, Pi3B (40 Pin)", "value": "2" } 
  			] 
  	   } 
 
