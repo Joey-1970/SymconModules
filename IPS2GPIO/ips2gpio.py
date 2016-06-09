@@ -37,11 +37,14 @@ if command == "set_mode":
                         pi.set_mode(int(sys.argv[7]), pigpio.OUTPUT)
 
 if command == "set_PWM_dutycycle":
-                pin = int(sys.argv[7])
-                value = int(sys.argv[8])
-                pi.set_PWM_dutycycle(pin, value)
+                pi.set_PWM_dutycycle(int(sys.argv[7]), int(sys.argv[8]))
 
-variable=29419
+if command == "set_PWM_dutycycle_RGB":
+                pi.set_PWM_dutycycle(int(sys.argv[7]), int(sys.argv[8]))
+                pi.set_PWM_dutycycle(int(sys.argv[9]), int(sys.argv[10]))
+                pi.set_PWM_dutycycle(int(sys.argv[11]), int(sys.argv[12]))
+
+
 IpsRpc("SetValue", [varid,command])
 
 pi.stop()
