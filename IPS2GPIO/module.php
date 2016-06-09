@@ -16,16 +16,10 @@ class IPS2GPIO extends IPSModule
   {
     //Never delete this line!
     parent::ApplyChanges();
-    $this->RegisterVariableBoolean("Status", "Status", "~Switch");
+    //$this->RegisterVariableBoolean("Status", "Status", "~Switch");
     //$this->RegisterEventCyclic("UpdateTimer", "Automatische Aktualisierung", 15);
   }
-  
-  public function RequestInfo()
-	{
-		$IP = $this->ReadPropertyString("IP");
-		SetValue($this->GetIDForIdent("Status"), PowerstateStatus($IP));
-	}
-  
+ 
   //*************************************************************************************************************
   // Prüft ob die Box eingeschaltet ist
   public function PowerstateStatus()
