@@ -14,17 +14,6 @@
      { "type": "Label", "label": "Typ 2 - Raspberry Pi Model A, B (26+8 Pin)" }
      { "type": "Label", "label": "Typ 3 - Raspberry Pi Model A+, B+, Pi Zero, Pi2B, Pi3B (40 Pin)" }
      
-   ], 
-   "actions": 
-   [ 
-        { "type": "Button", "label": "Test", "onClick": "IPS2GPIO_Test();" }, 
-   ], 
-   "status": 
-   [ 
-     { "code": 101, "icon": "inactive", "caption": "Interface will be open" }, 
-     { "code": 102, "icon": "active", "caption": "Interface is open" }, 
-     { "code": 104, "icon": "inactive", "caption": "Interface is closed" }, 
-     { "code": 200, "icon": "error", "caption": "Interface is an error state. Please check message log for more information." } 
-   ] 
+   ]
 } 
 
