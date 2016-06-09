@@ -7,9 +7,9 @@ class IPS2GPIO extends IPSModule
     parent::__construct($InstanceID);
     //These lines are parsed on Symcon Startup or Instance creation
     //You cannot use variables here. Just static values.
-    $this->RegisterPropertyString("IP", "");
-    $this->RegisterPropertyBoolean("Open", "");
-    $this->RegisterPropertyString("Model", "");
+    //$this->RegisterPropertyString("IP", "");
+    //$this->RegisterPropertyBoolean("Open", "");
+    //$this->RegisterPropertyString("Model", "");
   }
   
   public function ApplyChanges()
@@ -20,30 +20,7 @@ class IPS2GPIO extends IPSModule
     //$this->RegisterEventCyclic("UpdateTimer", "Automatische Aktualisierung", 15);
   }
  
-  //*************************************************************************************************************
-  // Prüft ob die Box eingeschaltet ist
-  public function PowerstateStatus()
-  {
-     $result = false;
-  	$IP = $this->ReadPropertyString("IP");
-  	$xml = simplexml_load_file("http://$IP/web/powerstate?.xml");
-  	$wert = $xml->e2instandby;
-  
-  	if(strpos($wert,"false")!== false)
-  		{
-  		$result = true; // Bei "false" ist die Box eingeschaltet
-  		}
-  	else
-  		{
-  		$result = false;
-  		}
-  
-  return $result;
-  }
-  
-  
-  
-  
+
   
     //*************************************************************************************************************
   // Testfunktion
