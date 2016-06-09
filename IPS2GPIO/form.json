@@ -4,12 +4,11 @@
      { "name": "Open", "type": "CheckBox", "caption": "Active" }, 
      { "name": "IPAddress", "type": "ValidationTextBox",  "caption": "IP" },
      { "name": "GPIO-Typ", "type": "Select",  "caption": "GPIO-Typ",
- 			"options": 
- 			      [ 
+ 			"options": [ 
  				   { "label": "Typ 1", "value": "0" }, 
  				   { "label": "Typ 2", "value": "1" }, 
  				   { "label": "Typ 3", "value": "2" } 
- 			      ] 
+ 			  ] 
      }
      { "type": "Label", "label": "Typ 1 - Raspberry Pi Model B (26 Pin)" },
      { "type": "Label", "label": "Typ 2 - Raspberry Pi Model A, B (26+8 Pin)" },
