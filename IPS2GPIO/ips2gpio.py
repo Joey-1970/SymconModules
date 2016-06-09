@@ -44,6 +44,8 @@ if command == "set_PWM_dutycycle_RGB":
                 pi.set_PWM_dutycycle(int(sys.argv[9]), int(sys.argv[10]))
                 pi.set_PWM_dutycycle(int(sys.argv[11]), int(sys.argv[12]))
 
+if command == "write":
+                pi.write(int(sys.argv[7]), int(sys.argv[8]))
 
 IpsRpc("SetValue", [varid,command])
 
