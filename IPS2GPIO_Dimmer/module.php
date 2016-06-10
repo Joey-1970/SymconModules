@@ -18,7 +18,7 @@
             parent::Create();
            
             $this->RegisterPropertyInteger("Pin", 2);
- 	    $this->ForceParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");	
+ 	    $this->ForceParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");	
         }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
