@@ -1,6 +1,6 @@
 <?
     // Klassendefinition
-    class IPS2GPIO_Dimmer extends IPSModule 
+    class IPS2GPIODMR extends IPSModule 
     {
  
         // Der Konstruktor des Moduls
