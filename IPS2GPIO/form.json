@@ -3,7 +3,7 @@
    [ 
      { "name": "Open", "type": "CheckBox", "caption": "Active" }, 
      { "name": "IPAddress", "type": "ValidationTextBox",  "caption": "IP" },
-     { "name": "GPIO-Typ", "type": "Select",  "caption": "GPIO-Typ",
+     { "name": "GpioTyp", "type": "Select",  "caption": "GPIO-Typ",
  			"options": [ 
  				   { "label": "Typ 1", "value": "0" }, 
  				   { "label": "Typ 2", "value": "1" }, 
