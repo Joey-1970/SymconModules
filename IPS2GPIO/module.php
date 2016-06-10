@@ -9,7 +9,8 @@ class IPS2GPIO extends IPSModule
     //You cannot use variables here. Just static values.
   }
   
-  public function Create() {
+  public function Create() 
+  {
     // Diese Zeile nicht entfernen
     parent::Create();
  
@@ -17,7 +18,7 @@ class IPS2GPIO extends IPSModule
     $this->RegisterPropertyString("IPAddress", "127.0.0.1");
     $this->RegisterPropertyBoolean("Open", false);
     $this->RegisterPropertyInteger("Model", 0);
-
+  }
   
   public function ApplyChanges()
   {
