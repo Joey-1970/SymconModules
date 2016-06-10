@@ -14,7 +14,7 @@ class IPS2GPIO extends IPSModule
     parent::Create();
  
     // Modul-Eigenschaftserstellung
-    $this->RegisterPropertyString("IP", "127.0.0.1");
+    $this->RegisterPropertyString("IPAddress", "127.0.0.1");
     $this->RegisterPropertyBoolean("Open", false);
     $this->RegisterPropertyInteger("Model", 0);
 
