@@ -7,10 +7,19 @@ class IPS2GPIO extends IPSModule
     parent::__construct($InstanceID);
     //These lines are parsed on Symcon Startup or Instance creation
     //You cannot use variables here. Just static values.
-    //$this->RegisterPropertyString("IP", "");
-    //$this->RegisterPropertyBoolean("Open", "");
-    //$this->RegisterPropertyString("Model", "");
+    
   }
+  
+  public function Create() {
+ 
+    // Diese Zeile nicht entfernen
+    parent::Create();
+ 
+    // Modul-Eigenschaftserstellung
+    $this->RegisterPropertyString("IP", "127.0.0.1");
+    $this->RegisterPropertyBoolean("Open", false);
+    $this->RegisterPropertyInteger("Model", 0);
+
   
   public function ApplyChanges()
   {
