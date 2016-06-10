@@ -7,11 +7,9 @@ class IPS2GPIO extends IPSModule
     parent::__construct($InstanceID);
     //These lines are parsed on Symcon Startup or Instance creation
     //You cannot use variables here. Just static values.
-    
   }
   
   public function Create() {
- 
     // Diese Zeile nicht entfernen
     parent::Create();
  
