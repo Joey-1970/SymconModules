@@ -16,10 +16,8 @@
         public function Create() {
             // Diese Zeile nicht löschen.
             parent::Create();
-            
-            $this->RegisterPropertyString("IPAddress", "127.0.0.1");
-    	    $this->RegisterPropertyBoolean("Open", false);
-    	    $this->RegisterPropertyInteger("Model", 0);
+           
+            $this->RegisterPropertyInteger("Pin", 2);
  
         }
  
