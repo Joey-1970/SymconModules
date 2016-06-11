@@ -7,7 +7,7 @@
   [
     "IPS2GPIO Dimmer"
   ],
-  "parentRequirements": ["{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}"],
+  "parentRequirements": ["{A0DAAF26-4A2D-4350-963E-CC02E74BD414}"],
   "childRequirements": [],
   "implemented": [],
   "prefix": "I2GDMR"
