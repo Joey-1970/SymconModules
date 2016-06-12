@@ -27,4 +27,3 @@ class IPS2GPIO_IO extends IPSModule
 
 }
 ?>
-
