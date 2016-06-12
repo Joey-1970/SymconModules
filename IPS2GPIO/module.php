@@ -5,8 +5,8 @@ class IPS2GPIO_IO extends IPSModule
   // Überschreibt den Standard Kontruktor von IPS
   public function __construct($InstanceID) 
   {
-  // Diese Zeile nicht löschen
-  parent::__construct($InstanceID);
+      // Diese Zeile nicht löschen
+      parent::__construct($InstanceID);
  
             // Selbsterstellter Code
   }
@@ -17,9 +17,9 @@ class IPS2GPIO_IO extends IPSModule
     parent::Create();
  
     // Modul-Eigenschaftserstellung
-    $this->RegisterPropertyString("IPAddress", "127.0.0.1");
-    $this->RegisterPropertyBoolean("Open", false);
-    $this->RegisterPropertyInteger("Model", 0);
+    //$this->RegisterPropertyString("IPAddress", "127.0.0.1");
+    //$this->RegisterPropertyBoolean("Open", false);
+    //$this->RegisterPropertyInteger("Model", 0);
   }
   
   public function ApplyChanges()
