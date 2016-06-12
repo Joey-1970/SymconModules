@@ -1,11 +1,11 @@
 {
   "id": "{FCE0DF96-16EE-42BF-A102-71C6FBEA658C}",
-  "name": "IPS2GPIO Dimmer",
+  "name": "IPS2GPIO_Dimmer",
   "type": 3,
   "vendor": "GPIO",
   "aliases":
   [
-    "IPS2GPIO Dimmer"
+    "IPS2GPIO_Dimmer"
   ],
   "parentRequirements": ["{A0DAAF26-4A2D-4350-963E-CC02E74BD414}"],
   "childRequirements": [],
