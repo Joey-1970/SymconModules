@@ -25,6 +25,9 @@
         public function ApplyChanges() {
             // Diese Zeile nicht löschen
             parent::ApplyChanges();
+            
+            //Connect to available splitter or create a new one
+	   $this->ConnectParent("{46C969BF-3465-4E3E-B2A5-E404FB969735}");
         }
  
         /**
