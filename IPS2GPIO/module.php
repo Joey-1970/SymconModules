@@ -1,12 +1,14 @@
 <?
 class IPS2GPIO_IO extends IPSModule
 {
-  public function __construct($InstanceID)
+  // Der Konstruktor des Moduls
+  // Überschreibt den Standard Kontruktor von IPS
+  public function __construct($InstanceID) 
   {
-    //Never delete this line!
-    parent::__construct($InstanceID);
-    //These lines are parsed on Symcon Startup or Instance creation
-    //You cannot use variables here. Just static values.
+  // Diese Zeile nicht löschen
+  parent::__construct($InstanceID);
+ 
+            // Selbsterstellter Code
   }
   
   public function Create() 
