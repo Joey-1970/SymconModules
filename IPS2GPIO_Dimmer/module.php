@@ -18,7 +18,7 @@
             parent::Create();
            
             $this->RegisterPropertyInteger("Pin", 2);
- 	    $this->ForceParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");	
+ 	    //$this->ForceParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");	
         }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -27,7 +27,7 @@
             parent::ApplyChanges();
             
             //Connect to available splitter or create a new one
-	   $this->ConnectParent("{46C969BF-3465-4E3E-B2A5-E404FB969735}");
+	   $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
  
         /**
