@@ -35,7 +35,7 @@
 	   //Status-Variablen anlegen
 	   $this->RegisterVariableBoolean("Status", "Status", "~Switch", 1);
            $this->EnableAction("Status");
-           $this->RegisterVariableInteger("Intensity", "Intensity", "~Itensity.255");
+           $this->RegisterVariableInteger("Intensity", "Intensity", "~Intensity.255");
            $this->EnableAction("Intensity");
         }
 
