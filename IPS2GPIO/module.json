@@ -1,11 +1,11 @@
 {
   "id": "{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}",
-  "name": "IPS2GPIO-IO",
+  "name": "IPS2GPIO IO",
   "type": 1,
   "vendor": "GPIO",
   "aliases":
   [
-    "IPS2GPIO-IO"
+    "IPS2GPIO IO"
   ],
   "parentRequirements": [],
   "childRequirements": ["{8D44CA24-3B35-4918-9CBD-85A28C0C8917}"],
