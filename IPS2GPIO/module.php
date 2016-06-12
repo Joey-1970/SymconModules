@@ -29,10 +29,5 @@ class IPS2GPIO_IO extends IPSModule
     //$this->RegisterVariableBoolean("Status", "Status", "~Switch");
     //$this->RegisterEventCyclic("UpdateTimer", "Automatische Aktualisierung", 15);
   }
- 
-
-  
-
 }
 ?>
-
