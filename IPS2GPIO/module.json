@@ -8,7 +8,7 @@
     "IPS2GPIO-I/O"
   ],
   "parentRequirements": [],
-  "childRequirements": [{8D44CA24-3B35-4918-9CBD-85A28C0C8917}],
+  "childRequirements": ["{8D44CA24-3B35-4918-9CBD-85A28C0C8917}"],
   "implemented": ["{A0DAAF26-4A2D-4350-963E-CC02E74BD414}"],
   "prefix": "I2G"
 }
