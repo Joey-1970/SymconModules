@@ -1,5 +1,5 @@
 <?
-class IPS2GPIO extends IPSModule
+class IPS2GPIO_IO extends IPSModule
 {
   public function __construct($InstanceID)
   {
