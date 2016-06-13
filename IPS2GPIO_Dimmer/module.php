@@ -37,6 +37,7 @@
            $this->EnableAction("Status");
            $this->RegisterVariableInteger("Intensity", "Intensity", "~Intensity.255");
            $this->EnableAction("Intensity");
+           Set_Mode();
         }
 	// Beginn der Funktionen
 	
