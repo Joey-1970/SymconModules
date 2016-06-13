@@ -17,6 +17,8 @@ from requests.auth import HTTPBasicAuth
 
 pi = pigpio.pi(sys.argv[1])
 port = int(sys.argv[2])
+user = sys.argv[3]
+pw = sys.argv[4]
 varid = int(sys.argv[5])
 command = sys.argv[6]
 
@@ -24,7 +26,7 @@ command = sys.argv[6]
 # JSON-RPS zu IPS definieren
 def IpsRpc(methodIps, paramIps):
     url = "http://127.0.0.1:3777/api/"
-    auth=HTTPBasicAuth('paeper@horburg.de', 'Dennis1999')
+    auth=HTTPBasicAuth(user, pw)
     headers = {'content-type': 'application/json'}
 
     payload = {"method": methodIps, "params": paramIps, "jsonrpc": "2.0", "id": "0"}
