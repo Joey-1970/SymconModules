@@ -37,7 +37,7 @@
            $this->EnableAction("Status");
            $this->RegisterVariableInteger("Intensity", "Intensity", "~Intensity.255");
            $this->EnableAction("Intensity");
-           Set_Mode();
+           $this->Set_Mode();
         }
 	// Beginn der Funktionen
 	
@@ -50,7 +50,7 @@
    		$command = "set_mode";
    		$GPIOPin = 22; //$this->ReadPropertyInteger("Pin");
    		$GPIOMode = "OUT";
-   		list($result, $IPSUser, $IPSPass) = RemoteAccessData();
+   		list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
 		$result = "";
 		SetValueString(47271, 'sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.$RPiIP.' '.$RPiPort.' '.$IPSUser.' '.$IPSPass.' '.$IPSID.' '.$Command.' '.$GPIOPin.' '.$GPIOMode);
    		$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.$RPiIP.' '.$RPiPort.' '.$IPSUser.' '.$IPSPass.' '.$IPSID.' '.$Command.' '.$GPIOPin.' '.$GPIOMode);
