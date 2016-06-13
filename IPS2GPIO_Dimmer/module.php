@@ -52,7 +52,7 @@
    		$GPIOMode = "OUT";
    		list($result, $IPSUser, $IPSPass) = RemoteAccessData();
 		$result = "";
-		SetValueString(47271, 'sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.$RPiIP.' '.$RPiPort.' '.$IPSUser.' '.$IPSPass.' '.$IPSID.' '.$Command.' '.$GPIOPin.' '.$GPIOMode));
+		SetValueString(47271, 'sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.$RPiIP.' '.$RPiPort.' '.$IPSUser.' '.$IPSPass.' '.$IPSID.' '.$Command.' '.$GPIOPin.' '.$GPIOMode);
    		$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.$RPiIP.' '.$RPiPort.' '.$IPSUser.' '.$IPSPass.' '.$IPSID.' '.$Command.' '.$GPIOPin.' '.$GPIOMode);
 	return $result;
 	}
