@@ -46,14 +46,14 @@
 	{
    		$RPiIP = IPS_GetProperty((IPS_GetInstance(39330)['ConnectionID']), "IPAddress");
    		$RPIPort = 8888;
-   		$IPS_ID = 29149;
+   		$IPSID = 29149;
    		$command = "set_mode";
-   		$GPIO_Pin = 22; //$this->ReadPropertyInteger("Pin");
-   		$GPIO_Mode = "OUT";
-   		list($result, $IPS_User, $IPS_Pass) = RemoteAccessData();
+   		$GPIOPin = 22; //$this->ReadPropertyInteger("Pin");
+   		$GPIOMode = "OUT";
+   		list($result, $IPSUser, $IPSPass) = RemoteAccessData();
 		$result = "";
-		SetValueString(47271, 'sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.$RPiIP.' '.$RPiPort.' '.$IPS_User.' '.$IPS_Pass.' '.$IPS_ID.' '.$Command.' '.$GPIO_Pin.' '.$GPIO_Mode));
-   		$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.$RPiIP.' '.$RPiPort.' '.$IPS_User.' '.$IPS_Pass.' '.$IPS_ID.' '.$Command.' '.$GPIO_Pin.' '.$GPIO_Mode);
+		SetValueString(47271, 'sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.$RPiIP.' '.$RPiPort.' '.$IPSUser.' '.$IPSPass.' '.$IPSID.' '.$Command.' '.$GPIOPin.' '.$GPIOMode));
+   		$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.$RPiIP.' '.$RPiPort.' '.$IPSUser.' '.$IPSPass.' '.$IPSID.' '.$Command.' '.$GPIOPin.' '.$GPIOMode);
 	return $result;
 	}
 	
