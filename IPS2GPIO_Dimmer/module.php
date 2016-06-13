@@ -37,14 +37,14 @@
            $this->EnableAction("Status");
            $this->RegisterVariableInteger("Intensity", "Intensity", "~Intensity.255");
            $this->EnableAction("Intensity");
-           I2GDMR_Set_Mode();
+           Set_Mode();
         }
 	// Beginn der Funktionen
 	
 	// Setzt einen Pin in einen bestimmten Modus
 	private function Set_Mode()
 	{
-   		$RPiIP = IPS_GetProperty((IPS_GetInstance(39330)['ConnectionID']), "IPAddress");
+   		$RPiIP = IPS_GetProperty((IPS_GetInstance($_IPS['SELF'])['ConnectionID']), "IPAddress");
    		$RPIPort = 8888;
    		$IPSID = 29149;
    		$command = "set_mode";
