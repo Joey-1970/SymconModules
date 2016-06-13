@@ -45,7 +45,7 @@
 	private function Set_Mode()
 	{
    		$RPiIP = IPS_GetProperty((IPS_GetInstance(47271)['ConnectionID']), "IPAddress");
-   		$RPIPort = 8888;
+   		$RPiPort = 8888;
    		$IPSID = 29149;
    		$GPIOPin = $this->ReadPropertyInteger("Pin");
    		list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
