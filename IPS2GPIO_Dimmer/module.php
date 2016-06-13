@@ -41,16 +41,17 @@
 	// Beginn der Funktionen
 	
 	// Setzt einen Pin in einen bestimmten Modus
-	private function Set_Mode($RPiIP, $RPiPort, $IPS_ID, $Command, $GPIO_Pin, $GPIO_Mode)
+	private function Set_Mode()
 	{
-   		//$RPiIP -> steht in der übergeordneten Instanz
-   		//$RPIPort -> default 8888 - sollte auch nicht verändert werden
-   		//$IPS_ID -> wohin soll ein ggf. Rückgabewert gesendet werden?
-   		//$command = set_mode
-   		//$GPIO_Pin -> steht in dieser Instanz: $this->ReadPropertyInteger("Pin")
-   		//$GPIO_Mode -> ist bei einem Dimmer immer OUT
+   		$RPiIP = IPS_GetProperty((IPS_GetInstance(39330)['ConnectionID']), "IPAddress");
+   		$RPIPort = 8888;
+   		$IPS_ID = 29149;
+   		$command = "set_mode";
+   		$GPIO_Pin = $this->ReadPropertyInteger("Pin");
+   		$GPIO_Mode = "OUT";
    		list($result, $IPS_User, $IPS_Pass) = RemoteAccessData();
 		$result = "";
+		SetValueString(47271, 'sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.$RPiIP.' '.$RPiPort.' '.$IPS_User.' '.$IPS_Pass.' '.$IPS_ID.' '.$Command.' '.$GPIO_Pin.' '.$GPIO_Mode));
    		$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.$RPiIP.' '.$RPiPort.' '.$IPS_User.' '.$IPS_Pass.' '.$IPS_ID.' '.$Command.' '.$GPIO_Pin.' '.$GPIO_Mode);
 	return $result;
 	}
