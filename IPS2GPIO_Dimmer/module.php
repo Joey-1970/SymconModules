@@ -43,6 +43,12 @@
 	// Setzt einen Pin in einen bestimmten Modus
 	private function Set_Mode($RPiIP, $RPiPort, $IPS_ID, $Command, $GPIO_Pin, $GPIO_Mode)
 	{
+   		//$RPiIP -> steht in der übergeordneten Instanz
+   		//$RPIPort -> default 8888 - sollte auch nicht verändert werden
+   		//$IPS_ID -> wohin soll ein ggf. Rückgabewert gesendet werden?
+   		//$command = set_mode
+   		//$GPIO_Pin -> steht in dieser Instanz
+   		//$GPIO_Mode -> ist bei einem Dimmer immer OUT
    		list($result, $IPS_User, $IPS_Pass) = RemoteAccessData();
 		$result = "";
    		$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.$RPiIP.' '.$RPiPort.' '.$IPS_User.' '.$IPS_Pass.' '.$IPS_ID.' '.$Command.' '.$GPIO_Pin.' '.$GPIO_Mode);
