@@ -48,7 +48,7 @@
    		$RPIPort = 8888;
    		$IPS_ID = 29149;
    		$command = "set_mode";
-   		$GPIO_Pin = $this->ReadPropertyInteger("Pin");
+   		$GPIO_Pin = 22; //$this->ReadPropertyInteger("Pin");
    		$GPIO_Mode = "OUT";
    		list($result, $IPS_User, $IPS_Pass) = RemoteAccessData();
 		$result = "";
