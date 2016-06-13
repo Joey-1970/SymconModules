@@ -44,12 +44,10 @@
 	// Setzt einen Pin in einen bestimmten Modus
 	private function Set_Mode()
 	{
-   		$RPiIP = IPS_GetProperty((IPS_GetInstance($_IPS['SELF'])['ConnectionID']), "IPAddress");
+   		$RPiIP = IPS_GetProperty((IPS_GetInstance(47271)['ConnectionID']), "IPAddress");
    		$RPIPort = 8888;
    		$IPSID = 29149;
-   		
-   		$GPIOPin = 22; //$this->ReadPropertyInteger("Pin");
-   		$GPIOMode = "OUT";
+   		$GPIOPin = $this->ReadPropertyInteger("Pin");
    		list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
 		$result = "";
 		SetValueString(47271, 'sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.$RPiIP.' '.$RPiPort.' '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_mode '.$GPIOPin.' OUT');
