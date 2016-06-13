@@ -46,7 +46,7 @@
 	{
    		$RPiIP = IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress");
    		$RPiPort = 8888;
-   		$IPSID = 29149;
+   		$IPSID = 29419;
    		$GPIOPin = $this->ReadPropertyInteger("Pin");
    		list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
 		$result = "";
