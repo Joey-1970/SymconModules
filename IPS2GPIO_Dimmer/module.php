@@ -44,7 +44,7 @@
 	// Setzt einen Pin in einen bestimmten Modus
 	private function Set_Mode()
 	{
-   		$RPiIP = IPS_GetProperty((IPS_GetInstance(47271)['ConnectionID']), "IPAddress");
+   		$RPiIP = IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress");
    		$RPiPort = 8888;
    		$IPSID = 29149;
    		$GPIOPin = $this->ReadPropertyInteger("Pin");
