@@ -20,9 +20,8 @@
                 { "label": "24", "value": 24 },
                 { "label": "25", "value": 25 }
                 ]
-        }
-    ],
-        [
+        },
+    
         { "type": "Select", "name": "Pin_G", "caption": "Pin Grün",
             "options": [
                 { "label": "2", "value": 2 },
@@ -42,9 +41,8 @@
                 { "label": "24", "value": 24 },
                 { "label": "25", "value": 25 }
                 ]
-        }
-    ],
-        [
+        },
+
         { "type": "Select", "name": "Pin_B", "caption": "Pin Blau",
             "options": [
                 { "label": "2", "value": 2 },
