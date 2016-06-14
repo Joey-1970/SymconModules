@@ -80,7 +80,7 @@
 	return $result;
 	}
 	
-	private function Hex2RGBt()
+	private function Hex2RGB()
 	{
 	//$r = (($_IPS['VALUE'] >> 16) & 0xFF);
 	//$g = (($_IPS['VALUE'] >> 8) & 0xFF);
