@@ -5,7 +5,7 @@
   "vendor": "GPIO",
   "aliases":
   [
-    "IPS2GPIO_Dimmer"
+    "IPS2GPIO_RGB"
   ],
   "parentRequirements": ["{A0DAAF26-4A2D-4350-963E-CC02E74BD414}"],
   "childRequirements": [],
