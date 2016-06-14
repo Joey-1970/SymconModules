@@ -37,12 +37,14 @@
 	        //Status-Variablen anlegen
 	        $this->RegisterVariableBoolean("Status", "Status", "~Switch", 1);
            	$this->EnableAction("Status");
-           	$this->RegisterVariableInteger("IntensityR", "Intensity Rot", "~Intensity.255");
-           	$this->EnableAction("IntensityR");
-           	$this->RegisterVariableInteger("IntensityG", "Intensity Grün", "~Intensity.255");
-           	$this->EnableAction("IntensityG");
-           	$this->RegisterVariableInteger("IntensityB", "Intensity Blau", "~Intensity.255");
-           	$this->EnableAction("IntensityB");
+           	$this->RegisterVariableInteger("Intensity_R", "Intensity Rot", "~Intensity.255");
+           	$this->EnableAction("Intensity_R");
+           	$this->RegisterVariableInteger("Intensity_G", "Intensity Grün", "~Intensity.255");
+           	$this->EnableAction("Intensity_G");
+           	$this->RegisterVariableInteger("Intensity_B", "Intensity Blau", "~Intensity.255");
+           	$this->EnableAction("Intensity_B");
+           	$this->RegisterVariableInteger("Color", "Farbe", "~HexColor");
+           	$this->EnableAction("Color");
            	$this->Set_Mode_RGB();
         }
 	// Beginn der Funktionen
@@ -66,9 +68,9 @@
    		list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
 		$result = "";
    		$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress").' '.$RPiPort.' '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_PWM_dutycycle_RGB '.$this->ReadPropertyInteger("Pin_R").' '.$R.' '.$this->ReadPropertyInteger("Pin_G").' '.$G.' '.$this->ReadPropertyInteger("Pin_B").' '.$B);
-		SetValue($this->GetIDForIdent("IntensityR"), $R);
-		SetValue($this->GetIDForIdent("IntensityG"), $G);
-		SetValue($this->GetIDForIdent("IntensityB"), $B);
+		SetValue($this->GetIDForIdent("Intensity_R"), $R);
+		SetValue($this->GetIDForIdent("Intensity_G"), $G);
+		SetValue($this->GetIDForIdent("Intensity_B"), $B);
 		If ($R + $G + $B == 0) {
 			SetValue($this->GetIDForIdent("Status"), false);
 			}
