@@ -1,3 +1,4 @@
+<?
    // Klassendefinition
     class IPS2GPIO_RGB extends IPSModule 
     {
