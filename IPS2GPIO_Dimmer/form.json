@@ -26,11 +26,5 @@
     [
         { "type": "Button", "label": "Switch", "onClick": "" },
         { "type": "HorizontalSlider", "name": "Slider", "minimum": 0, "maxmaximum": 255, "onChange": "" }
-    ],
-    "status":
-    [
-        { "code": 102, "icon": "active", "caption": "Login information valid" },
-        { "code": 201, "icon": "error", "caption": "Authentication failed" },
-        { "code": 202, "icon": "error", "caption": "No credits left" }
     ]
 }
