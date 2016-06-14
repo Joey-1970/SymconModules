@@ -28,18 +28,18 @@
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
         {
-      // Diese Zeile nicht löschen
-      parent::ApplyChanges();
+      		// Diese Zeile nicht löschen
+      		parent::ApplyChanges();
             
-      //Connect to available splitter or create a new one
-	   $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+      		//Connect to available splitter or create a new one
+	   	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 	   
-	         //Status-Variablen anlegen
-	         $this->RegisterVariableBoolean("Status", "Status", "~Switch", 1);
-           $this->EnableAction("Status");
-           $this->RegisterVariableInteger("Intensity", "Intensity", "~Intensity.255");
-           $this->EnableAction("Intensity");
-           $this->Set_Mode();
+	        //Status-Variablen anlegen
+	        $this->RegisterVariableBoolean("Status", "Status", "~Switch", 1);
+           	$this->EnableAction("Status");
+           	$this->RegisterVariableInteger("Intensity", "Intensity", "~Intensity.255");
+           	$this->EnableAction("Intensity");
+           	$this->Set_Mode();
         }
 	// Beginn der Funktionen
 	
