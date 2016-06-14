@@ -22,7 +22,7 @@
             $this->RegisterPropertyInteger("Pin_R", 2);
             $this->RegisterPropertyInteger("Pin_G", 3);
             $this->RegisterPropertyInteger("Pin_B", 4);
- 	          $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");	
+ 	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");	
         }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -66,8 +66,10 @@
    		list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
 		$result = "";
    		$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress").' '.$RPiPort.' '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_PWM_dutycycle_RGB '.$this->ReadPropertyInteger("Pin_R").' '.$R.' '.$this->ReadPropertyInteger("Pin_G").' '.$G.' '.$this->ReadPropertyInteger("Pin_B").' '.$B);
-		SetValue($this->GetIDForIdent("Intensity"), $value);
-		If ($value == 0) {
+		SetValue($this->GetIDForIdent("IntensityR"), $R);
+		SetValue($this->GetIDForIdent("IntensityG"), $G);
+		SetValue($this->GetIDForIdent("IntensityB"), $B);
+		If ($R + $G + $B == 0) {
 			SetValue($this->GetIDForIdent("Status"), false);
 			}
 		else {
