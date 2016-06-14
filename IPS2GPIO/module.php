@@ -32,34 +32,19 @@ class IPS2GPIO_IO extends IPSModule
   
   private function ConnectionTest()
   {
-      $IP = "paule-25.selfhost.bz";
-      $port = 8888;
-      $AktuellerPCStatus = False;
-
-      If (GetValueBoolean(18029 /*[Fritz!Box\DSL\DSL\Status]*/ )== true)
-	    {
-	        $AktuellerPCStatus = Sys_Ping($IP, 2000);
-
-	        If ($AktuellerPCStatus == true)
-		      {
-		          $status = @fsockopen($IP, $port, $errno, $errstr, 10);
-
-		          if (!$status)
-   		        {
-      	          //SetValueBoolean(45369 /*[LAN\TV Server\TV Server Status\HD+ Server]*/ , false);
-			            //echo "Fehler";
-   		        }
-   		        else
-   		        {
-   		            fclose($status);
-      	          //SetValueBoolean(45369 /*[LAN\TV Server\TV Server Status\HD+ Server]*/ , true);
-			            //echo "Ok";
-   		        }
-		      }
-		      else
-		      {
-		            //SetValueBoolean(45369 /*[LAN\TV Server\TV Server Status\HD+ Server]*/ , false);
-		      }
-      }
+      If (Sys_Ping($IP, 2000)) {
+	Echo "PC erreichbar";
+	$status = @fsockopen($IP, 8888, $errno, $errstr, 10);
+	if (!$status) {
+		echo "Port geschlossen";
+   		}
+   	else {
+   		fclose($status);
+		echo "Port offen";
+   		}
+	}
+	else {
+		Echo "PC nicht erreichbar";
+		}
   }
 ?>
