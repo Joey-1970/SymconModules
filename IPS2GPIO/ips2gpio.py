@@ -39,12 +39,9 @@ if command == "set_mode":
                         pi.set_mode(int(sys.argv[7]), pigpio.OUTPUT)
 
 if command == "set_mode_RGB":
-                
-                        pi.set_mode(int(sys.argv[7]), pigpio.OUTPUT)
-                
-                        pi.set_mode(int(sys.argv[8]), pigpio.OUTPUT)
-                
-                        pi.set_mode(int(sys.argv[9]), pigpio.OUTPUT)
+                pi.set_mode(int(sys.argv[7]), pigpio.OUTPUT)
+                pi.set_mode(int(sys.argv[8]), pigpio.OUTPUT)
+                pi.set_mode(int(sys.argv[9]), pigpio.OUTPUT)
 
 if command == "set_PWM_dutycycle":
                 pi.set_PWM_dutycycle(int(sys.argv[7]), int(sys.argv[8]))
