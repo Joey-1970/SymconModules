@@ -52,6 +52,16 @@
 	return $result;
 	}
 	
+	// Dimmt den gewaehlten Pin
+	public function Set_PWM_dutycycle($value)
+	{
+   		$RPiPort = 8888;
+   		$IPSID = 29419;
+   		list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
+		$result = "";
+   		$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress").' '.$RPiPort.' '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_PWM_dutycycle '.$this->ReadPropertyInteger("Pin").' OUT');
+	return $result;
+	}
 	
 	// Ermittelt den User und das Passwort für den Fernzugriff (nur RPi)
 	private function RemoteAccessData()
