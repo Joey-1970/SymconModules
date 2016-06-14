@@ -80,6 +80,14 @@
 	return $result;
 	}
 	
+	private function Hex2Int()
+	{
+	//$r = (($_IPS['VALUE'] >> 16) & 0xFF);
+	//$g = (($_IPS['VALUE'] >> 8) & 0xFF);
+	//$b = (($_IPS['VALUE'] >> 0) & 0xFF);	
+	
+	}
+	
 	// Ermittelt den User und das Passwort für den Fernzugriff (nur RPi)
 	private function RemoteAccessData()
 	{
