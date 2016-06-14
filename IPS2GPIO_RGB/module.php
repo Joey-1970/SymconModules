@@ -37,14 +37,18 @@
 	        //Status-Variablen anlegen
 	        $this->RegisterVariableBoolean("Status", "Status", "~Switch", 1);
            	$this->EnableAction("Status");
-           	$this->RegisterVariableInteger("Intensity", "Intensity", "~Intensity.255");
-           	$this->EnableAction("Intensity");
-           	$this->Set_Mode();
+           	$this->RegisterVariableInteger("IntensityR", "Intensity Rot", "~Intensity.255");
+           	$this->EnableAction("IntensityR");
+           	$this->RegisterVariableInteger("IntensityG", "Intensity Grün", "~Intensity.255");
+           	$this->EnableAction("IntensityG");
+           	$this->RegisterVariableInteger("IntensityB", "Intensity Blau", "~Intensity.255");
+           	$this->EnableAction("IntensityB");
+           	$this->Set_Mode_RGB();
         }
 	// Beginn der Funktionen
 	
 	// Setzt den gewaehlten Pins in den Output-Modus
-	private function Set_Mode()
+	private function Set_Mode_RGB()
 	{
    		$RPiPort = 8888;
    		$IPSID = 29419;
