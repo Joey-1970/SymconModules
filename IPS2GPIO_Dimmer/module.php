@@ -60,6 +60,13 @@
    		list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
 		$result = "";
    		$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress").' '.$RPiPort.' '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_PWM_dutycycle '.$this->ReadPropertyInteger("Pin").' '.$value);
+		SetValue($this->GetIDForIdent("Intensity"), $value);
+		If ($value == 0) {
+			SetValue($this->GetIDForIdent("Status"), false);
+			}
+		else {
+			SetValue($this->GetIDForIdent("Status"), true);
+			}
 	return $result;
 	}
 	
