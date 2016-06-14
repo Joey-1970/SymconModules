@@ -1,0 +1,80 @@
+{
+    "elements":
+    [
+        { "type": "Select", "name": "Pin_R", "caption": "Pin Rot",
+            "options": [
+                { "label": "2", "value": 2 },
+                { "label": "3", "value": 3 },
+                { "label": "4", "value": 4 },
+                { "label": "7", "value": 7 },
+                { "label": "8", "value": 8 },
+                { "label": "9", "value": 9 },
+                { "label": "10", "value": 10 },
+                { "label": "11", "value": 11 },
+                { "label": "14", "value": 14 },
+                { "label": "15", "value": 15 },
+                { "label": "17", "value": 17 },
+                { "label": "18", "value": 18 },
+                { "label": "22", "value": 22 },
+                { "label": "23", "value": 23 },
+                { "label": "24", "value": 24 },
+                { "label": "25", "value": 25 }
+                ]
+        }
+    ],
+        [
+        { "type": "Select", "name": "Pin_G", "caption": "Pin Grün",
+            "options": [
+                { "label": "2", "value": 2 },
+                { "label": "3", "value": 3 },
+                { "label": "4", "value": 4 },
+                { "label": "7", "value": 7 },
+                { "label": "8", "value": 8 },
+                { "label": "9", "value": 9 },
+                { "label": "10", "value": 10 },
+                { "label": "11", "value": 11 },
+                { "label": "14", "value": 14 },
+                { "label": "15", "value": 15 },
+                { "label": "17", "value": 17 },
+                { "label": "18", "value": 18 },
+                { "label": "22", "value": 22 },
+                { "label": "23", "value": 23 },
+                { "label": "24", "value": 24 },
+                { "label": "25", "value": 25 }
+                ]
+        }
+    ],
+        [
+        { "type": "Select", "name": "Pin_B", "caption": "Pin Blau",
+            "options": [
+                { "label": "2", "value": 2 },
+                { "label": "3", "value": 3 },
+                { "label": "4", "value": 4 },
+                { "label": "7", "value": 7 },
+                { "label": "8", "value": 8 },
+                { "label": "9", "value": 9 },
+                { "label": "10", "value": 10 },
+                { "label": "11", "value": 11 },
+                { "label": "14", "value": 14 },
+                { "label": "15", "value": 15 },
+                { "label": "17", "value": 17 },
+                { "label": "18", "value": 18 },
+                { "label": "22", "value": 22 },
+                { "label": "23", "value": 23 },
+                { "label": "24", "value": 24 },
+                { "label": "25", "value": 25 }
+                ]
+        }
+    ],
+    "actions":
+    [
+        { "type": "Button", "label": "Switch", "onClick": "" },
+        { "type": "HorizontalSlider", "name": "Slider", "minimum": 0, "maxmaximum": 255, "onChange": "" }
+    ],
+    "status":
+    [
+        { "code": 102, "icon": "active", "caption": "Login information valid" },
+        { "code": 201, "icon": "error", "caption": "Authentication failed" },
+        { "code": 202, "icon": "error", "caption": "No credits left" }
+    ]
+}
