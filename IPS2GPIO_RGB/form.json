@@ -67,7 +67,9 @@
     "actions":
     [
         { "type": "Button", "label": "Switch", "onClick": "" },
-        { "type": "HorizontalSlider", "name": "Slider", "minimum": 0, "maxmaximum": 255, "onChange": "" }
+        { "type": "HorizontalSlider", "name": "SliderR", "minimum": 0, "maxmaximum": 255, "onChange": "" },
+        { "type": "HorizontalSlider", "name": "SliderG", "minimum": 0, "maxmaximum": 255, "onChange": "" },
+        { "type": "HorizontalSlider", "name": "SliderB", "minimum": 0, "maxmaximum": 255, "onChange": "" },
     ],
     "status":
     [
