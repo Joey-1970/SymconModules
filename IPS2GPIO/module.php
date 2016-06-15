@@ -32,7 +32,6 @@ class IPS2GPIO_IO extends IPSModule
   
   public function RequestAction($Ident, $Value) 
   {
- 
     switch($Ident) {
         case "Open":
             If ($Value = True)
