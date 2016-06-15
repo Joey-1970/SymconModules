@@ -76,4 +76,5 @@ class IPS2GPIO_IO extends IPSModule
 		$this->SetStatus(104);
 	}
   }
+}
 ?>
