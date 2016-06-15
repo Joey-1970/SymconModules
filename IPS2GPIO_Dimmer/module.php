@@ -62,7 +62,7 @@
 	}
 	
 	// Dimmt den gewaehlten Pin
-	public function Set_PWM_dutycycle($value)
+	public function Set_Intensity($value)
 	{
    		SetValue($this->GetIDForIdent("Intensity"), $value);
 		If ($this->GetIDForIdent("Status") == true) {
