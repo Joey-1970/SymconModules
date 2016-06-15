@@ -84,6 +84,13 @@
 			$result = "";
    			$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress").' 8888 '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_PWM_dutycycle '.$this->ReadPropertyInteger("Pin").' '.GetValue($this->GetIDForIdent("Intensity")));
 		}
+		else {
+			$IPSID = $this->InstanceID;
+   			list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
+			$result = "";
+   			$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress").' 8888 '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_PWM_dutycycle '.$this->ReadPropertyInteger("Pin").' 0');
+		}
+		
 	}
 	// Ermittelt den User und das Passwort für den Fernzugriff (nur RPi)
 	private function RemoteAccessData()
