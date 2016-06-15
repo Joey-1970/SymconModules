@@ -54,22 +54,26 @@ class IPS2GPIO_IO extends IPSModule
   
   private function ConnectionTest()
   {
-      If (Sys_Ping($this->ReadPropertyInteger("IPAddress"), 2000)) {
-	Echo "PC erreichbar";
-	$status = @fsockopen($this->ReadPropertyInteger("IPAddress"), 8888, $errno, $errstr, 10);
-	if (!$status) {
-		echo "Port geschlossen";
-		$this->SetStatus(104);
-   		}
-   	else {
-   		fclose($status);
-		echo "Port offen";
-		$this->SetStatus(102);
-   		}
+      If (Sys_Ping($this->ReadPropertyInteger("IPAddress"), 2000)) 
+      {
+		Echo "PC erreichbar";
+		$status = @fsockopen($this->ReadPropertyInteger("IPAddress"), 8888, $errno, $errstr, 10);
+			if (!$status) 
+			{
+				echo "Port geschlossen";
+				$this->SetStatus(104);
+   			}
+   			else 
+   			{
+   				fclose($status);
+				echo "Port offen";
+				$this->SetStatus(102);
+   			}
 	}
-	else {
+	else 
+	{
 		Echo "PC nicht erreichbar";
 		$this->SetStatus(104);
-		}
+	}
   }
 ?>
