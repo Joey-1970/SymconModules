@@ -30,6 +30,29 @@ class IPS2GPIO_IO extends IPSModule
     //$this->RegisterEventCyclic("UpdateTimer", "Automatische Aktualisierung", 15);
   }
   
+  public function RequestAction($Ident, $Value) 
+  {
+ 
+    switch($Ident) {
+        case "Open":
+            If ($Value = True)
+            	{
+            		$this->SetStatus(101);
+            		$this->ConnectionTest();
+            	}
+ 	   else
+ 	   	{
+ 	   		$this->SetStatus(104);
+ 	   	}
+            //Neuen Wert in die Statusvariable schreiben
+            SetValue($this->GetIDForIdent($Ident), $Value);
+            break;
+        default:
+            throw new Exception("Invalid Ident");
+    }
+ 
+   }
+  
   private function ConnectionTest()
   {
       If (Sys_Ping($this->ReadPropertyInteger("IPAddress"), 2000)) {
@@ -37,14 +60,17 @@ class IPS2GPIO_IO extends IPSModule
 	$status = @fsockopen($this->ReadPropertyInteger("IPAddress"), 8888, $errno, $errstr, 10);
 	if (!$status) {
 		echo "Port geschlossen";
+		$this->SetStatus(104);
    		}
    	else {
    		fclose($status);
 		echo "Port offen";
+		$this->SetStatus(102);
    		}
 	}
 	else {
 		Echo "PC nicht erreichbar";
+		$this->SetStatus(104);
 		}
   }
 ?>
