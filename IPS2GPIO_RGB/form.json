@@ -72,6 +72,6 @@
         { "type": "Label", "label": "Grün" },
         { "type": "HorizontalSlider", "name": "Slider_G", "minimum": 0, "maxmaximum": 255, "onChange": "" },
         { "type": "Label", "label": "Blau" },
-        { "type": "HorizontalSlider", "name": "Slider_B", "minimum": 0, "maxmaximum": 255, "onChange": "" },
+        { "type": "HorizontalSlider", "name": "Slider_B", "minimum": 0, "maxmaximum": 255, "onChange": "" }
     ]
 }
