@@ -39,13 +39,23 @@
            $this->EnableAction("Intensity");
            $this->Set_Mode();
         }
+	
+	public function ReceiveData($JSONString) 
+	{
+    	// Empfangene Daten vom Gateway/Splitter
+    	$data = json_decode($JSONString);
+    	IPS_LogMessage("ReceiveData", utf8_decode($data->Buffer));
+ 
+    	// Datenverarbeitung und schreiben der Werte in die Statusvariablen
+    	//SetValue($this->GetIDForIdent("Value"), $data->Buffer);
+	}
 	// Beginn der Funktionen
 	
 	// Setzt den gewaehlten Pin in den Output-Modus
 	private function Set_Mode()
 	{
    		$RPiPort = 8888;
-   		$IPSID = 29419;
+   		$IPSID = $this->InstanceID;
    		list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
 		$result = "";
    		$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress").' '.$RPiPort.' '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_mode '.$this->ReadPropertyInteger("Pin").' OUT');
@@ -56,7 +66,7 @@
 	public function Set_PWM_dutycycle($value)
 	{
    		$RPiPort = 8888;
-   		$IPSID = 29419;
+   		$IPSID = $this->InstanceID;
    		list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
 		$result = "";
    		$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress").' '.$RPiPort.' '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_PWM_dutycycle '.$this->ReadPropertyInteger("Pin").' '.$value);
