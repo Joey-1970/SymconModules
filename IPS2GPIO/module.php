@@ -24,7 +24,7 @@ class IPS2GPIO_IO extends IPSModule
     $this->RegisterPropertyString("Password", "");
     $this->RegisterPropertyString("PinPossible", "");
     $this->RegisterPropertyString("PinUsed", "");
-    //$this->RemoteAccessData();
+    
   }
   
   public function ApplyChanges()
@@ -97,7 +97,7 @@ class IPS2GPIO_IO extends IPSModule
 			$result = false; }
 		else {
 	      		$Pass = base64_decode(substr(strstr($ResultArray[(count($ResultArray))-1], "="),1)); 
-			SetValue($this->GetIDForIdent("User"), $Password);}
+			SetValue($this->GetIDForIdent("Password"), $Pass);}
 	return $result;
 	}
 }
