@@ -70,12 +70,7 @@
 		SetValue($this->GetIDForIdent("Intensity_R"), $R);
 		SetValue($this->GetIDForIdent("Intensity_G"), $G);
 		SetValue($this->GetIDForIdent("Intensity_B"), $B);
-		If ($R + $G + $B == 0) {
-			SetValue($this->GetIDForIdent("Status"), false);
-			}
-		else {
-			SetValue($this->GetIDForIdent("Status"), true);
-			}
+		
 	return $result;
 	}
 	
