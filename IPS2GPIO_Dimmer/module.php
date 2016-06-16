@@ -55,7 +55,9 @@
 	private function Set_Mode()
 	{
    		$IPSID = $this->InstanceID;
-   		list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
+   		//list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
+   		$IPSUser = IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "User");
+		$IPSPass = IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "Password");
 		$result = "";
    		$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress").' 8888 '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_mode '.$this->ReadPropertyInteger("Pin").' OUT');
 	return $result;
@@ -65,9 +67,11 @@
 	public function Set_Intensity($value)
 	{
    		SetValue($this->GetIDForIdent("Intensity"), $value);
-		If ($this->GetIDForIdent("Status") == true) {
+		If ($this->GetValue(GetIDForIdent("Status")) == true) {
 			$IPSID = $this->InstanceID;
-   			list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
+   			//list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
+			$IPSUser = IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "User");
+			$IPSPass = IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "Password");
 			$result = "";
    			$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress").' 8888 '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_PWM_dutycycle '.$this->ReadPropertyInteger("Pin").' '.$value);
 		}
@@ -79,9 +83,11 @@
 	{
 		SetValue($this->GetIDForIdent("Status"), $value);
 		$IPSID = $this->InstanceID;
-   		list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
+   		//list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
+		$IPSUser = IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "User");
+		$IPSPass = IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "Password");
 		$result = "";
-		If ($this->GetIDForIdent("Status") == true) {
+		If ($this->GetValue(GetIDForIdent("Status")) == true) {
 			$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress").' 8888 '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_PWM_dutycycle '.$this->ReadPropertyInteger("Pin").' '.GetValue($this->GetIDForIdent("Intensity")));
 		}
 		else {
