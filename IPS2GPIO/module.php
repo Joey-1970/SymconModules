@@ -33,7 +33,7 @@ class IPS2GPIO_IO extends IPSModule
     //Never delete this line!
     parent::ApplyChanges();
     
-    $this->RemoteAccessData();
+    //$this->RemoteAccessData();
     
   }
   
