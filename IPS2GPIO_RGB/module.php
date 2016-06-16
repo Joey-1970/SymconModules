@@ -89,6 +89,10 @@
 		{
 			$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress").' 8888 '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_PWM_dutycycle_RGB '.$this->ReadPropertyInteger("Pin_R").' '.GetValue($this->GetIDForIdent("Intensity_R")).' '.$this->ReadPropertyInteger("Pin_G").' '.GetValue($this->GetIDForIdent("Intensity_G")).' '.$this->ReadPropertyInteger("Pin_B").' '.GetValue($this->GetIDForIdent("Intensity_B")));
 		}
+		else
+		{
+			$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress").' 8888 '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_PWM_dutycycle_RGB '.$this->ReadPropertyInteger("Pin_R").' 0 '.$this->ReadPropertyInteger("Pin_G").' 0 '.$this->ReadPropertyInteger("Pin_B").' 0');
+		}
 	}
 	
 	
