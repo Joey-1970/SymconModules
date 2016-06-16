@@ -61,7 +61,7 @@
 	}
 	
 	// Dimmt den gewaehlten Pin
-	public function Set_PWM_dutycycle($R, $G, $B)
+	public function Set_RGB($R, $G, $B)
 	{
    		$RPiPort = 8888;
    		$IPSID = 29419;
