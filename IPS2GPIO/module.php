@@ -89,12 +89,14 @@ class IPS2GPIO_IO extends IPSModule
 	   	If (strpos($ResultArray[0], "Licensee=") === false) {
 			$result = false; }
 		else {
-	      		$User = substr(strstr($ResultArray[0], "="),1); }
+	      		$User = substr(strstr($ResultArray[0], "="),1); 
+	      		SetValue($this->GetIDForIdent("User"), $User);}
 		If (strpos($ResultArray[(count($ResultArray))-1], "Password=") === false) {
 			$result = false; }
 		else {
-	      		$Pass = base64_decode(substr(strstr($ResultArray[(count($ResultArray))-1], "="),1)); }
-	return array($result, $User, $Pass);
+	      		$Pass = base64_decode(substr(strstr($ResultArray[(count($ResultArray))-1], "="),1)); 
+			SetValue($this->GetIDForIdent("User"), $Password);}
+	return $result;
 	}
 }
 ?>
