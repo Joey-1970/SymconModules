@@ -7,7 +7,11 @@ class IPS2GPIO_IO extends IPSModule
   {
       // Diese Zeile nicht löschen
       parent::__construct($InstanceID);
- 
+ 	
+ 	$this->RegisterPropertyString("User", "");
+    	$this->RegisterPropertyString("Password", "");
+    	$this->RegisterPropertyString("PinPossible", "");
+    	$this->RegisterPropertyString("PinUsed", "");
             // Selbsterstellter Code
   }
   
@@ -20,10 +24,7 @@ class IPS2GPIO_IO extends IPSModule
     $this->RegisterPropertyString("IPAddress", "127.0.0.1");
     $this->RegisterPropertyBoolean("Open", false);
     $this->RegisterPropertyInteger("Model", 0);
-    $this->RegisterPropertyString("User", "");
-    $this->RegisterPropertyString("Password", "");
-    $this->RegisterPropertyString("PinPossible", "");
-    $this->RegisterPropertyString("PinUsed", "");
+
     
   }
   
