@@ -24,14 +24,16 @@ class IPS2GPIO_IO extends IPSModule
     $this->RegisterPropertyString("Password", "");
     $this->RegisterPropertyString("PinPossible", "");
     $this->RegisterPropertyString("PinUsed", "");
+    $this->RemoteAccessData();
   }
   
   public function ApplyChanges()
   {
     //Never delete this line!
     parent::ApplyChanges();
-    //$this->RegisterVariableBoolean("Status", "Status", "~Switch");
-    //$this->RegisterEventCyclic("UpdateTimer", "Automatische Aktualisierung", 15);
+    
+    $this->RemoteAccessData();
+    
   }
   
   public function RequestAction($Ident, $Value) 
