@@ -56,29 +56,45 @@ class IPS2GPIO_IO extends IPSModule
  
    }
   
-  private function ConnectionTest()
-  {
-      If (Sys_Ping($this->ReadPropertyInteger("IPAddress"), 2000)) 
-      {
-		Echo "PC erreichbar";
-		$status = @fsockopen($this->ReadPropertyInteger("IPAddress"), 8888, $errno, $errstr, 10);
-			if (!$status) 
-			{
-				echo "Port geschlossen";
-				$this->SetStatus(104);
-   			}
-   			else 
-   			{
-   				fclose($status);
-				echo "Port offen";
-				$this->SetStatus(102);
-   			}
-	}
-	else 
+	private function ConnectionTest()
 	{
-		Echo "PC nicht erreichbar";
-		$this->SetStatus(104);
+	      If (Sys_Ping($this->ReadPropertyInteger("IPAddress"), 2000)) 
+	      {
+			Echo "PC erreichbar";
+			$status = @fsockopen($this->ReadPropertyInteger("IPAddress"), 8888, $errno, $errstr, 10);
+				if (!$status) 
+				{
+					echo "Port geschlossen";
+					$this->SetStatus(104);
+	   			}
+	   			else 
+	   			{
+	   				fclose($status);
+					echo "Port offen";
+					$this->SetStatus(102);
+	   			}
+		}
+		else 
+		{
+			Echo "PC nicht erreichbar";
+			$this->SetStatus(104);
+		}
 	}
-  }
+  
+  	// Ermittelt den User und das Passwort für den Fernzugriff (nur RPi)
+	private function RemoteAccessData()
+	{
+	   	$result = true;
+	   	exec('sudo cat /root/.symcon', $ResultArray);
+	   	If (strpos($ResultArray[0], "Licensee=") === false) {
+			$result = false; }
+		else {
+	      		$User = substr(strstr($ResultArray[0], "="),1); }
+		If (strpos($ResultArray[(count($ResultArray))-1], "Password=") === false) {
+			$result = false; }
+		else {
+	      		$Pass = base64_decode(substr(strstr($ResultArray[(count($ResultArray))-1], "="),1)); }
+	return array($result, $User, $Pass);
+	}
 }
 ?>
