@@ -63,11 +63,10 @@
 	// Dimmt den gewaehlten Pin
 	public function Set_RGB($R, $G, $B)
 	{
-   		$RPiPort = 8888;
    		$IPSID = 29419;
    		list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
 		$result = "";
-   		$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress").' '.$RPiPort.' '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_PWM_dutycycle_RGB '.$this->ReadPropertyInteger("Pin_R").' '.$R.' '.$this->ReadPropertyInteger("Pin_G").' '.$G.' '.$this->ReadPropertyInteger("Pin_B").' '.$B);
+   		$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress").' 8888 '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_PWM_dutycycle_RGB '.$this->ReadPropertyInteger("Pin_R").' '.$R.' '.$this->ReadPropertyInteger("Pin_G").' '.$G.' '.$this->ReadPropertyInteger("Pin_B").' '.$B);
 		SetValue($this->GetIDForIdent("Intensity_R"), $R);
 		SetValue($this->GetIDForIdent("Intensity_G"), $G);
 		SetValue($this->GetIDForIdent("Intensity_B"), $B);
@@ -79,6 +78,19 @@
 			}
 	return $result;
 	}
+	
+	public function Set_Status($value)
+	{
+		SetValue($this->GetIDForIdent("Status"), $value);
+		$IPSID = 29419;
+   		list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
+		$result = "";
+		If ($value == true)
+		{
+			$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress").' 8888 '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_PWM_dutycycle_RGB '.$this->ReadPropertyInteger("Pin_R").' '.GetValue($this->GetIDForIdent("Intensity_R")).' '.$this->ReadPropertyInteger("Pin_G").' '.GetValue($this->GetIDForIdent("Intensity_G")).' '.$this->ReadPropertyInteger("Pin_B").' '.GetValue($this->GetIDForIdent("Intensity_B")));
+		}
+	}
+	
 	
 	private function Hex2RGB($Hex)
 	{
