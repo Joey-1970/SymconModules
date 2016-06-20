@@ -37,17 +37,22 @@ class IPS2GPIO_IO extends IPSModule
     
   }
   
-  public function ReceiveData($JSONString) {
+  // Beispiel innerhalb einer Gateway/Splitter Instanz
+public function ForwardData($JSONString) {
  
-    // Empfangene Daten vom I/O
+    // Empfangene Daten von der Device Instanz
     $data = json_decode($JSONString);
-    IPS_LogMessage("ReceiveData", utf8_decode($data->Buffer));
+    IPS_LogMessage("ForwardData", utf8_decode($data->Buffer));
  
-    // Hier werden die Daten verarbeitet
+    // Hier würde man den Buffer im Normalfall verarbeiten
+    // z.B. CRC prüfen, in Einzelteile zerlegen
  
-    // Weiterleitung zu allen Gerät-/Device-Instanzen
-    $this->SendDataToChildren(json_encode(Array("DataID" => "{66164EB8-3439-4599-B937-A365D7A68567}", "Buffer" => $data->Buffer)));
-}
+    // Weiterleiten zur I/O Instanz
+    $resultat = $this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => $data->Buffer)));
+ 
+    // Weiterverarbeiten und durchreichen
+    return $resultat;
+
   
   public function RequestAction($Ident, $Value) 
   {
