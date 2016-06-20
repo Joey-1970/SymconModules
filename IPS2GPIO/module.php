@@ -78,11 +78,8 @@ class IPS2GPIO_IO extends IPSModule
   
 	// Setzt den gewaehlten Pin in den geforderten Modus
 	private function Set_Mode($Pin, $Modus)
-	{
-   		
+	{	
    		$IPSID = $this->InstanceID;
-   		
-		
    		$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.$this->ReadPropertyInteger("IPAddress").' 8888 '.$this->ReadPropertyInteger("User").' '.$this->ReadPropertyInteger("Password").' '.$IPSID.' set_mode '.$Pin.' '.$Modus);
 	return $result;
 	}
