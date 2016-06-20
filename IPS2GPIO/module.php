@@ -50,7 +50,7 @@ class IPS2GPIO_IO extends IPSModule
     	
  
     	// Weiterverarbeiten und durchreichen
-    return $resultat;
+    return;
   }
 
   
