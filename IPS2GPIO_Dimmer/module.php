@@ -56,9 +56,9 @@
 	{
    		$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_mode", "Pin" => $this->ReadPropertyInteger("Pin"), "Direction" => "OUT")));
    		$IPSID = $this->InstanceID;
-   		//list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
-   		$IPSUser = IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "User");
-		$IPSPass = IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "Password");
+   		list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
+   		//$IPSUser = IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "User");
+		//$IPSPass = IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "Password");
 		$result = "";
    		$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress").' 8888 '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_mode '.$this->ReadPropertyInteger("Pin").' OUT');
 	return $result;
