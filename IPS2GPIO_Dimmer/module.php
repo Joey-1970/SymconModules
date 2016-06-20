@@ -61,7 +61,7 @@
 		//$IPSPass = IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "Password");
 		//$result = "";
    		//$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress").' 8888 '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_mode '.$this->ReadPropertyInteger("Pin").' OUT');
-	return $result;
+	return;
 	}
 	
 	// Dimmt den gewaehlten Pin
