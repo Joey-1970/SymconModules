@@ -46,8 +46,8 @@ class IPS2GPIO_IO extends IPSModule
 	    case "set_mode":
 	        $this->Set_Mode($data->Pin, $data->Modus);
 	        break;
-	    case 1:
-	        echo "i ist gleich 1";
+	    case "set_PWM_dutycycle":
+	        $this->Set_Intensity($data->Pin, $data->Value);
 	        break;
 	    case 2:
 	        echo "i ist gleich 2";
