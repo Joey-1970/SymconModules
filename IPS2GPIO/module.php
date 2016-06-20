@@ -97,16 +97,8 @@ class IPS2GPIO_IO extends IPSModule
 	// Dimmt den gewaehlten Pin
 	private function Set_Intensity($Pin, $Value)
 	{
-   		//SetValue($this->GetIDForIdent("Intensity"), $value);
-		//If ($this->GetValue(GetIDForIdent("Status")) == true) {
-			//$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $value)));
- 
-			$IPSID = $this->InstanceID;
-   			//list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
-			//$IPSUser = IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "User");
-			//$IPSPass = IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "Password");
-			//$result = "";
-   			$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.$this->ReadPropertyInteger("IPAddress").' 8888 '.GetValue($this->GetIDForIdent("User")).' '.GetValue($this->GetIDForIdent("Password")).' '.$IPSID.' set_PWM_dutycycle '.$Pin.' '.$Value);
+   		$IPSID = $this->InstanceID;
+   		$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.$this->ReadPropertyInteger("IPAddress").' 8888 '.GetValue($this->GetIDForIdent("User")).' '.GetValue($this->GetIDForIdent("Password")).' '.$IPSID.' set_PWM_dutycycle '.$Pin.' '.$Value);
 		}
 	return;
 	}
