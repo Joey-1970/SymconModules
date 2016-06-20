@@ -54,6 +54,7 @@
 	// Setzt den gewaehlten Pin in den Output-Modus
 	private function Set_Mode()
 	{
+   		$this->SendDataToParent(json_encode(Array("DataID" => "{B87AC955-F258-468B-92FE-F4E0866A9E18}", "Buffer" => $Text)));
    		$IPSID = $this->InstanceID;
    		//list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
    		$IPSUser = IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "User");
