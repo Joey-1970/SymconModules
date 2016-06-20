@@ -42,7 +42,17 @@ class IPS2GPIO_IO extends IPSModule
  	// Empfangene Daten von der Device Instanz
     	$data = json_decode($JSONString);
     	IPS_LogMessage("ForwardData", utf8_decode($data->Function));
- 
+ 	switch ($data->Function) {
+	    case "set_mode":
+	        $this->Set_Mode($data->Pin, $data->Modus);
+	        break;
+	    case 1:
+	        echo "i ist gleich 1";
+	        break;
+	    case 2:
+	        echo "i ist gleich 2";
+	        break;
+	}
     	// Hier würde man den Buffer im Normalfall verarbeiten
     	// z.B. CRC prüfen, in Einzelteile zerlegen
  	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Buffer" => $data->Function)));
