@@ -68,14 +68,11 @@
 	return;
 	}
 	
-	// Dimmt den gewaehlten Pin
+	// Schaltet den gewaehlten Pin
 	public function Set_Status($value)
 	{
 		SetValue($this->GetIDForIdent("Status"), $value);
 		$IPSID = $this->InstanceID;
-   		//list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
-		//$IPSUser = IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "User");
-		//$IPSPass = IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "Password");
 		$result = "";
 		If ($this->GetValue(GetIDForIdent("Status")) == true) {
 			$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress").' 8888 '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_PWM_dutycycle '.$this->ReadPropertyInteger("Pin").' '.GetValue($this->GetIDForIdent("Intensity")));
