@@ -62,6 +62,7 @@
 	public function Set_Intensity($value)
 	{
    		SetValue($this->GetIDForIdent("Intensity"), $value);
+		
 		If ($this->GetValue(GetIDForIdent("Status")) == true) {
 			$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $value)));
  		}
@@ -74,26 +75,13 @@
 		SetValue($this->GetIDForIdent("Status"), $value);
 		
 		If ($value == true) {
-			$this->Set_Intensity($this->GetValue(GetIDForIdent("Intensity")));		}
+			$this->Set_Intensity($this->GetValue(GetIDForIdent("Intensity")));
+		}
 		else {
-   			$this->Set_Intensity(0);}
-		
+   			$this->Set_Intensity(0);
+		}	
 	}
-	// Ermittelt den User und das Passwort für den Fernzugriff (nur RPi)
-	private function RemoteAccessData()
-	{
-	   	$result = true;
-	   	exec('sudo cat /root/.symcon', $ResultArray);
-	   	If (strpos($ResultArray[0], "Licensee=") === false) {
-			$result = false; }
-		else {
-	      		$User = substr(strstr($ResultArray[0], "="),1); }
-		If (strpos($ResultArray[(count($ResultArray))-1], "Password=") === false) {
-			$result = false; }
-		else {
-	      		$Pass = base64_decode(substr(strstr($ResultArray[(count($ResultArray))-1], "="),1)); }
-	return array($result, $User, $Pass);
-	}
+	
 
     }
 ?>
