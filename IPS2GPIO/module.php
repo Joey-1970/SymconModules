@@ -102,7 +102,7 @@ class IPS2GPIO_IO extends IPSModule
 	return $result;
 	}
 	
-		// Schaltet den gewaehlten Pin
+	// Schaltet den gewaehlten Pin
 	private function Set_Status($Pin, $Value)
 	{
 		$IPSID = $this->InstanceID;
