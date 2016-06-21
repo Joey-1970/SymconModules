@@ -1,90 +1,88 @@
 <?
 class IPS2GPIO_IO extends IPSModule
 {
-  // Der Konstruktor des Moduls
-  // Überschreibt den Standard Kontruktor von IPS
-  public function __construct($InstanceID) 
-  {
-      // Diese Zeile nicht löschen
-      parent::__construct($InstanceID);
- 	
+	  // Der Konstruktor des Moduls
+	  // Überschreibt den Standard Kontruktor von IPS
+	  public function __construct($InstanceID) 
+	  {
+	      // Diese Zeile nicht löschen
+	      parent::__construct($InstanceID);
+	 	
+	
+	            // Selbsterstellter Code
+	  }
+  
+	  public function Create() 
+	  {
+	    // Diese Zeile nicht entfernen
+	    parent::Create();
+	 
+	    // Modul-Eigenschaftserstellung
+	    $this->RegisterPropertyString("IPAddress", "127.0.0.1");
+	    $this->RegisterPropertyBoolean("Open", false);
+	    $this->RegisterPropertyInteger("Model", 0);
+	
+	  }
+  
+	  public function ApplyChanges()
+	  {
+	    //Never delete this line!
+	    parent::ApplyChanges();
+	    
+	    $this->RegisterVariableString("User", "User");
+	    $this->RegisterVariableString("Password", "Password");
+	    $this->RegisterVariableString("PinPossible", "PinPossible");
+	    $this->RegisterVariableString("PinUsed", "PinUsed");
+	    $this->RemoteAccessData();
+	    
+	  }
+  
+	  public function ForwardData($JSONString) 
+	  {
+	 	// Empfangene Daten von der Device Instanz
+	    	$data = json_decode($JSONString);
+	    	IPS_LogMessage("ForwardData", utf8_decode($data->Function));
+	 	switch ($data->Function) {
+		    case "set_mode":
+		        $this->Set_Mode($data->Pin, $data->Modus);
+		        break;
+		    case "set_PWM_dutycycle":
+		        $this->Set_Intensity($data->Pin, $data->Value);
+		        break;
+		    case 2:
+		        echo "i ist gleich 2";
+		        break;
+		}
+	    	// Hier würde man den Buffer im Normalfall verarbeiten
+	    	// z.B. CRC prüfen, in Einzelteile zerlegen
+	 	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Buffer" => $data->Function)));
+	    	// Weiterleiten zur I/O Instanz
+	    	
+	 
+	    	// Weiterverarbeiten und durchreichen
+	    return;
+	  }
 
-            // Selbsterstellter Code
-  }
   
-  public function Create() 
-  {
-    // Diese Zeile nicht entfernen
-    parent::Create();
- 
-    // Modul-Eigenschaftserstellung
-    $this->RegisterPropertyString("IPAddress", "127.0.0.1");
-    $this->RegisterPropertyBoolean("Open", false);
-    $this->RegisterPropertyInteger("Model", 0);
-
-  }
-  
-  public function ApplyChanges()
-  {
-    //Never delete this line!
-    parent::ApplyChanges();
-    
-    $this->RegisterVariableString("User", "User");
-    $this->RegisterVariableString("Password", "Password");
-    $this->RegisterVariableString("PinPossible", "PinPossible");
-    $this->RegisterVariableString("PinUsed", "PinUsed");
-    $this->RemoteAccessData();
-    
-  }
-  
-  public function ForwardData($JSONString) 
-  {
- 	// Empfangene Daten von der Device Instanz
-    	$data = json_decode($JSONString);
-    	IPS_LogMessage("ForwardData", utf8_decode($data->Function));
- 	switch ($data->Function) {
-	    case "set_mode":
-	        $this->Set_Mode($data->Pin, $data->Modus);
-	        break;
-	    case "set_PWM_dutycycle":
-	        $this->Set_Intensity($data->Pin, $data->Value);
-	        break;
-	    case 2:
-	        echo "i ist gleich 2";
-	        break;
-	}
-    	// Hier würde man den Buffer im Normalfall verarbeiten
-    	// z.B. CRC prüfen, in Einzelteile zerlegen
- 	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Buffer" => $data->Function)));
-    	// Weiterleiten zur I/O Instanz
-    	
- 
-    	// Weiterverarbeiten und durchreichen
-    return;
-  }
-
-  
-  public function RequestAction($Ident, $Value) 
-  {
-    switch($Ident) {
-        case "Open":
-            If ($Value = True)
-            	{
-            		$this->SetStatus(101);
-            		$this->ConnectionTest();
-            	}
- 	   else
- 	   	{
- 	   		$this->SetStatus(104);
- 	   	}
-            //Neuen Wert in die Statusvariable schreiben
-            SetValue($this->GetIDForIdent($Ident), $Value);
-            break;
-        default:
-            throw new Exception("Invalid Ident");
-    }
- 
-   }
+	  public function RequestAction($Ident, $Value) 
+	  {
+		    switch($Ident) {
+		        case "Open":
+		            If ($Value = True) {
+		            		$this->SetStatus(101);
+		            		$this->ConnectionTest();
+		            	}
+		 	   else {
+		 	   		$this->SetStatus(104);
+		 	   	}
+		            //Neuen Wert in die Statusvariable schreiben
+		            SetValue($this->GetIDForIdent($Ident), $Value);
+		            break;
+		        default:
+		            throw new Exception("Invalid Ident");
+		    }
+	 
+	   }
   
 	// Setzt den gewaehlten Pin in den geforderten Modus
 	private function Set_Mode($Pin, $Modus)
@@ -112,24 +110,20 @@ class IPS2GPIO_IO extends IPSModule
 	
 	private function ConnectionTest()
 	{
-	      If (Sys_Ping($this->ReadPropertyInteger("IPAddress"), 2000)) 
-	      {
+	      If (Sys_Ping($this->ReadPropertyInteger("IPAddress"), 2000)) {
 			Echo "PC erreichbar";
 			$status = @fsockopen($this->ReadPropertyInteger("IPAddress"), 8888, $errno, $errstr, 10);
-				if (!$status) 
-				{
+				if (!$status) {
 					echo "Port geschlossen";
 					$this->SetStatus(104);
 	   			}
-	   			else 
-	   			{
+	   			else {
 	   				fclose($status);
 					echo "Port offen";
 					$this->SetStatus(102);
 	   			}
 		}
-		else 
-		{
+		else {
 			Echo "PC nicht erreichbar";
 			$this->SetStatus(104);
 		}
