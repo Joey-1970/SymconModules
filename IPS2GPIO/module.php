@@ -97,6 +97,8 @@ class IPS2GPIO_IO extends IPSModule
 	{
    		$IPSID = $this->InstanceID;
    		$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.$this->ReadPropertyInteger("IPAddress").' 8888 '.GetValue($this->GetIDForIdent("User")).' '.GetValue($this->GetIDForIdent("Password")).' '.$IPSID.' set_PWM_dutycycle '.$Pin.' '.$Value);
+		$result = 'sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.$this->ReadPropertyInteger("IPAddress").' 8888 '.GetValue($this->GetIDForIdent("User")).' '.GetValue($this->GetIDForIdent("Password")).' '.$IPSID.' set_PWM_dutycycle '.$Pin.' '.$Value;
+		SetValueString(47271, $result)
 	return $result;
 	}
 	
