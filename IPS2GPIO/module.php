@@ -102,6 +102,14 @@ class IPS2GPIO_IO extends IPSModule
 	return $result;
 	}
 	
+		// Schaltet den gewaehlten Pin
+	private function Set_Status($Pin, $Value)
+	{
+		$IPSID = $this->InstanceID;
+		$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.$this->ReadPropertyInteger("IPAddress").' 8888 '.GetValue($this->GetIDForIdent("User")).' '.GetValue($this->GetIDForIdent("Password")).' '.$IPSID.' set_PWM_dutycycle '.$Pin.' 0');
+		
+	}
+	
 	private function ConnectionTest()
 	{
 	      If (Sys_Ping($this->ReadPropertyInteger("IPAddress"), 2000)) 
