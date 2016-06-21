@@ -72,14 +72,11 @@
 	public function Set_Status($value)
 	{
 		SetValue($this->GetIDForIdent("Status"), $value);
-		$IPSID = $this->InstanceID;
-		$result = "";
-		If ($this->GetValue(GetIDForIdent("Status")) == true) {
-			$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress").' 8888 '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_PWM_dutycycle '.$this->ReadPropertyInteger("Pin").' '.GetValue($this->GetIDForIdent("Intensity")));
-		}
+		
+		If ($value == true) {
+			$this->Set_Intensity($this->GetValue(GetIDForIdent("Intensity")));		}
 		else {
-   			$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress").' 8888 '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_PWM_dutycycle '.$this->ReadPropertyInteger("Pin").' 0');
-		}
+   			$this->Set_Intensity(0);}
 		
 	}
 	// Ermittelt den User und das Passwort für den Fernzugriff (nur RPi)
