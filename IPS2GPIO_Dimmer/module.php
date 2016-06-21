@@ -75,7 +75,7 @@
 		SetValueBoolean($this->GetIDForIdent("Status"), $value);
 		
 		If ($value == true) {
-			$this->Set_Intensity(GetValueInteger(GetIDForIdent("Intensity")));
+			$this->Set_Intensity(GetValueInteger($this->GetIDForIdent("Intensity")));
 		}
 		else {
    			$this->Set_Intensity(0);
