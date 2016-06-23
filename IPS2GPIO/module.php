@@ -16,7 +16,8 @@ class IPS2GPIO_IO extends IPSModule
 	  {
 	    // Diese Zeile nicht entfernen
 	    parent::Create();
-	    $this->ConnectParent({"3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");  
+	    
+	    $this->ConnectParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");  
 	    // Modul-Eigenschaftserstellung
 	    $this->RegisterPropertyString("IPAddress", "127.0.0.1");
 	    $this->RegisterPropertyBoolean("Open", false);
