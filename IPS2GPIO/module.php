@@ -43,9 +43,9 @@ class IPS2GPIO_IO extends IPSModule
             	{
                 	IPS_SetProperty($ParentID, 'Host', $this->ReadPropertyString('IPAddress'));
            	}
-            	if (IPS_GetProperty($ParentID, 'Port') <> $this->ReadPropertyInteger('Port'))
+            	if (IPS_GetProperty($ParentID, 'Port') <> 8888)
             	{
-                	IPS_SetProperty($ParentID, 'Port', $this->ReadPropertyInteger('Port'));
+                	IPS_SetProperty($ParentID, 'Port', 8888);
            	}
             }
 	  }
