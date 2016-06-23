@@ -47,7 +47,7 @@ class IPS2GPIO_IO extends IPSModule
             	{
                 	IPS_SetProperty($ParentID, 'Port', $this->ReadPropertyInteger('Port'));
            	}
-           
+            }
 	  }
   	  
   	  public function ReceiveData($JSONString) 
