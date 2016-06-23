@@ -114,7 +114,7 @@ class IPS2GPIO_IO extends IPSModule
 	{	
    		//$IPSID = $this->InstanceID;
    		//$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.$this->ReadPropertyString("IPAddress").' 8888 '.GetValue($this->GetIDForIdent("User")).' '.GetValue($this->GetIDForIdent("Password")).' '.$IPSID.' set_mode '.$Pin.' '.$Modus);
-		$result = CSCK_SendText(IPS_GetInstance($this->InstanceID)['ConnectionID'], pack("LLLL", 0, $Pin, W, 0));
+		$result = CSCK_SendText(IPS_GetInstance($this->InstanceID)['ConnectionID'], pack("LLLL", 0, $Pin, "W", 0));
 	return $result;
 	}
 	
