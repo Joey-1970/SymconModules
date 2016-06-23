@@ -36,7 +36,7 @@ class IPS2GPIO_IO extends IPSModule
 	    $this->RegisterVariableString("PinUsed", "PinUsed");
 	    $this->RemoteAccessData();
 	    // Zwangskonfiguration des ClientSocket
-            $ParentID = $this->GetParent();
+            $ParentID = IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress");
             if ($ParentID > 0)
             {
             	if (IPS_GetProperty($ParentID, 'Host') <> $this->ReadPropertyString('IPAddress'))
