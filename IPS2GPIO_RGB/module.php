@@ -55,26 +55,20 @@
    		$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_mode", "Pin" => $this->ReadPropertyInteger("Pin_R"), "Modus" => "W"))); 
  		$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_mode", "Pin" => $this->ReadPropertyInteger("Pin_G"), "Modus" => "W")));
  		$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_mode", "Pin" => $this->ReadPropertyInteger("Pin_B"), "Modus" => "W"))); 
-
-   		//$RPiPort = 8888;
-   		//$IPSID = 29419;
-   		//list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
-		//$result = "";
-   		//$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress").' '.$RPiPort.' '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_mode_RGB '.$this->ReadPropertyInteger("Pin_R").' '.$this->ReadPropertyInteger("Pin_G").' '.$this->ReadPropertyInteger("Pin_B"));
 	return $result;
 	}
 	
 	// Dimmt den gewaehlten Pin
 	public function Set_RGB($R, $G, $B)
 	{
-   		$IPSID = 29419;
-   		list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
-		$result = "";
-   		$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress").' 8888 '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_PWM_dutycycle_RGB '.$this->ReadPropertyInteger("Pin_R").' '.$R.' '.$this->ReadPropertyInteger("Pin_G").' '.$G.' '.$this->ReadPropertyInteger("Pin_B").' '.$B);
-		SetValue($this->GetIDForIdent("Intensity_R"), $R);
+ 		SetValue($this->GetIDForIdent("Intensity_R"), $R);
 		SetValue($this->GetIDForIdent("Intensity_G"), $G);
 		SetValue($this->GetIDForIdent("Intensity_B"), $B);
-		
+ 		 
+ 		If (GetValueBoolean($this->GetIDForIdent("Status")) == true) { 
+ 			$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin_R"), "Value" => $value))); 
+   			$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin_G"), "Value" => $value)));
+   			$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin_B"), "Value" => $value)));
 	return $result;
 	}
 	
