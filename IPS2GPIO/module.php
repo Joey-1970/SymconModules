@@ -30,8 +30,6 @@ class IPS2GPIO_IO extends IPSModule
 	    //Never delete this line!
 	    parent::ApplyChanges();
 	    
-	    $this->RegisterVariableString("User", "User");
-	    $this->RegisterVariableString("Password", "Password");
 	    $this->RegisterVariableString("PinPossible", "PinPossible");
 	    $this->RegisterVariableString("PinUsed", "PinUsed");
 	    $this->RemoteAccessData();
@@ -150,20 +148,6 @@ class IPS2GPIO_IO extends IPSModule
 		}
 	}
   
-  	// Ermittelt den User und das Passwort für den Fernzugriff (nur RPi)
-	private function RemoteAccessData()
-	{
-	   	$result = true;
-	   	exec('sudo cat /root/.symcon', $ResultArray);
-	   	If (strpos($ResultArray[0], "Licensee=") === false) {
-			$result = false; }
-		else {
-	      		SetValue($this->GetIDForIdent("User"), substr(strstr($ResultArray[0], "="),1));}
-		If (strpos($ResultArray[(count($ResultArray))-1], "Password=") === false) {
-			$result = false; }
-		else {
-			SetValue($this->GetIDForIdent("Password"), base64_decode(substr(strstr($ResultArray[(count($ResultArray))-1], "="),1)));}
-	return $result;
-	}
+
 }
 ?>
