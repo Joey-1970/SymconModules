@@ -44,12 +44,12 @@
 	{
   		switch($Ident) {
 	        case "Status":
-	            this->Set_Status($Value);
+	            $this->Set_Status($Value);
 	            //Neuen Wert in die Statusvariable schreiben
 	            SetValue($this->GetIDForIdent($Ident), $Value);
 	            break;
 	        case "Intensity":
-	            this->Set_Intensity($Value);
+	            $this->Set_Intensity($Value);
 	            //Neuen Wert in die Statusvariable schreiben
 	            SetValue($this->GetIDForIdent($Ident), $Value);
 	            break;
