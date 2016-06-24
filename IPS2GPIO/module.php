@@ -111,8 +111,8 @@ class IPS2GPIO_IO extends IPSModule
   
 	// Setzt den gewaehlten Pin in den geforderten Modus
 	private function Set_Mode($Pin, $Modus)
-	{	
-		$result = CSCK_SendText(IPS_GetInstance($this->InstanceID)['ConnectionID'], pack("LLLL", 0, $Pin, "W", 0));
+	{
+		result = CSCK_SendText(IPS_GetInstance($this->InstanceID)['ConnectionID'], pack("LLLL", 0, $Pin, $Modus, 0));
 	return $result;
 	}
 	
