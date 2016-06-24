@@ -1,7 +1,6 @@
 { 
    "elements": 
    [ 
-     { "name": "Open", "type": "CheckBox", "caption": "Active" }, 
      { "name": "IPAddress", "type": "ValidationTextBox",  "caption": "IP" },
      { "name": "Model", "type": "Select",  "caption": "GPIO-Typ",
  			"options": [ 
