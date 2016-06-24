@@ -10,9 +10,9 @@
  				   { "label": "Typ 3", "value": "2" } 
  			  ] 
      },
-     { "type": "Label", "label": "Typ 1 - Raspberry Pi Model B (26 Pin)" },
-     { "type": "Label", "label": "Typ 2 - Raspberry Pi Model A, B (26+8 Pin)" },
-     { "type": "Label", "label": "Typ 3 - Raspberry Pi Model A+, B+, Pi Zero, Pi2B, Pi3B (40 Pin)" }
+     { "type": "Label", "label": "Typ 1 - Raspberry Pi Model B Revision 1 (26 Pin)" },
+     { "type": "Label", "label": "Typ 2 - Raspberry Pi Model A, B Revision 2 (26 Pin)" },
+     { "type": "Label", "label": "Typ 3 - Raspberry Pi Model A+, B+, Pi Zero, Pi 2B, Pi 3B (40 Pin)" }
      
    ]
 } 
