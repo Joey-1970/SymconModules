@@ -52,11 +52,15 @@
 	// Setzt den gewaehlten Pins in den Output-Modus
 	private function Set_Mode_RGB()
 	{
-   		$RPiPort = 8888;
-   		$IPSID = 29419;
-   		list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
-		$result = "";
-   		$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress").' '.$RPiPort.' '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_mode_RGB '.$this->ReadPropertyInteger("Pin_R").' '.$this->ReadPropertyInteger("Pin_G").' '.$this->ReadPropertyInteger("Pin_B"));
+   		$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_mode", "Pin" => $this->ReadPropertyInteger("Pin_R"), "Modus" => "W"))); 
+ 		$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_mode", "Pin" => $this->ReadPropertyInteger("Pin_G"), "Modus" => "W")));
+ 		$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_mode", "Pin" => $this->ReadPropertyInteger("Pin_B"), "Modus" => "W"))); 
+
+   		//$RPiPort = 8888;
+   		//$IPSID = 29419;
+   		//list($result, $IPSUser, $IPSPass) = $this->RemoteAccessData();
+		//$result = "";
+   		//$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.IPS_GetProperty((IPS_GetInstance($this->InstanceID)['ConnectionID']), "IPAddress").' '.$RPiPort.' '.$IPSUser.' '.$IPSPass.' '.$IPSID.' set_mode_RGB '.$this->ReadPropertyInteger("Pin_R").' '.$this->ReadPropertyInteger("Pin_G").' '.$this->ReadPropertyInteger("Pin_B"));
 	return $result;
 	}
 	
@@ -106,21 +110,7 @@
 	return $Hex;
 	}
 	
-	// Ermittelt den User und das Passwort für den Fernzugriff (nur RPi)
-	private function RemoteAccessData()
-	{
-	   	$result = true;
-	   	exec('sudo cat /root/.symcon', $ResultArray);
-	   	If (strpos($ResultArray[0], "Licensee=") === false) {
-			$result = false; }
-		else {
-	      		$User = substr(strstr($ResultArray[0], "="),1); }
-		If (strpos($ResultArray[(count($ResultArray))-1], "Password=") === false) {
-			$result = false; }
-		else {
-	      		$Pass = base64_decode(substr(strstr($ResultArray[(count($ResultArray))-1], "="),1)); }
-	return array($result, $User, $Pass);
-	}
+
 
     }
 ?>
