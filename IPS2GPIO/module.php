@@ -45,9 +45,9 @@ class IPS2GPIO_IO extends IPSModule
 	                	IPS_SetProperty($ParentID, 'Port', 8888);
 	           	}
 	        }
-           	$Typ(0) = array(0, 1, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 21, 22, 23, 24, 25);	
-           	$Typ(1) = array(2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27);
-           	$Typ(2) = array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27);
+           	$Typ[0] = array(0, 1, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 21, 22, 23, 24, 25);	
+           	$Typ[1] = array(2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27);
+           	$Typ[2] = array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27);
            	SetValueString($this->GetIDForIdent("PinPossible"), serialize ($Typ($this->ReadPropertyInteger('Model'))));
 	  }
   	  
