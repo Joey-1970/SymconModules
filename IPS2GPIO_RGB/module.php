@@ -47,6 +47,35 @@
            	$this->EnableAction("Color");
            	$this->Set_Mode_RGB();
         }
+	
+	public function RequestAction($Ident, $Value) 
+	{
+  		switch($Ident) {
+	        case "Status":
+	            this->Set_Status($Value);
+	            //Neuen Wert in die Statusvariable schreiben
+	            SetValue($this->GetIDForIdent($Ident), $Value);
+	            break;
+	        case "Intensity_R":
+	            this->Set_RGB($Value);
+	            //Neuen Wert in die Statusvariable schreiben
+	            SetValue($this->GetIDForIdent($Ident), $Value);
+	            break;
+	        case "Intensity_G":
+	            this->Set_RGB($Value);
+	            //Neuen Wert in die Statusvariable schreiben
+	            SetValue($this->GetIDForIdent($Ident), $Value);
+	            break;
+	        case "Intensity_B":
+	            this->Set_RGB($Value);
+	            //Neuen Wert in die Statusvariable schreiben
+	            SetValue($this->GetIDForIdent($Ident), $Value);
+	            break;
+	        default:
+	            throw new Exception("Invalid Ident");
+	    }
+	 }
+	
 	// Beginn der Funktionen
 	
 	// Setzt den gewaehlten Pins in den Output-Modus
