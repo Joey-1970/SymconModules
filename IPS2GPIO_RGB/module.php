@@ -52,22 +52,22 @@
 	{
   		switch($Ident) {
 	        case "Status":
-	            this->Set_Status($Value);
+	            $this->Set_Status($Value);
 	            //Neuen Wert in die Statusvariable schreiben
 	            SetValue($this->GetIDForIdent($Ident), $Value);
 	            break;
 	        case "Intensity_R":
-	            this->Set_RGB($Value);
+	            $this->Set_RGB($Value);
 	            //Neuen Wert in die Statusvariable schreiben
 	            SetValue($this->GetIDForIdent($Ident), $Value);
 	            break;
 	        case "Intensity_G":
-	            this->Set_RGB($Value);
+	            $this->Set_RGB($Value);
 	            //Neuen Wert in die Statusvariable schreiben
 	            SetValue($this->GetIDForIdent($Ident), $Value);
 	            break;
 	        case "Intensity_B":
-	            this->Set_RGB($Value);
+	            $this->Set_RGB($Value);
 	            //Neuen Wert in die Statusvariable schreiben
 	            SetValue($this->GetIDForIdent($Ident), $Value);
 	            break;
