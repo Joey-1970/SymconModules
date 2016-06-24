@@ -40,7 +40,7 @@
            $this->Set_Mode();
         }
 	
-	function RequestAction($Ident, $Value) 
+	public function RequestAction($Ident, $Value) 
 	{
   		switch($Ident) {
 	        case "Status":
