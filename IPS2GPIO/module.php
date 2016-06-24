@@ -75,8 +75,8 @@ class IPS2GPIO_IO extends IPSModule
 		    case "set_PWM_dutycycle":
 		        $this->Set_Intensity($data->Pin, $data->Value);
 		        break;
-		    case 2:
-		        echo "i ist gleich 2";
+		    case "pin_possible":
+		        $this->PinPossible($data->Pin);
 		        break;
 		}
 	    	// Hier würde man den Buffer im Normalfall verarbeiten
@@ -128,6 +128,20 @@ class IPS2GPIO_IO extends IPSModule
 	private function Set_Status($Pin, $Value)
 	{
 		$result = CSCK_SendText(IPS_GetInstance($this->InstanceID)['ConnectionID'], pack("LLLL", 5, $Pin, $Value, 0));
+	}
+	
+	private function PinPossible($Pin)
+	{
+		$PinPossible() = unserialize(GetValueString($this->GetIDForIdent("PinPossible")));
+		if (in_array($Pin, $a)) {
+    			$result = true;
+		}
+		else {
+			$result = false;
+			Echo "Pin ist an diesem Modell nicht verfügbar!"
+		}
+		
+	return $result	
 	}
 	
 	private function ConnectionTest()
