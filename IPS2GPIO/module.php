@@ -112,8 +112,6 @@ class IPS2GPIO_IO extends IPSModule
 	// Setzt den gewaehlten Pin in den geforderten Modus
 	private function Set_Mode($Pin, $Modus)
 	{	
-   		//$IPSID = $this->InstanceID;
-   		//$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.$this->ReadPropertyString("IPAddress").' 8888 '.GetValue($this->GetIDForIdent("User")).' '.GetValue($this->GetIDForIdent("Password")).' '.$IPSID.' set_mode '.$Pin.' '.$Modus);
 		$result = CSCK_SendText(IPS_GetInstance($this->InstanceID)['ConnectionID'], pack("LLLL", 0, $Pin, "W", 0));
 	return $result;
 	}
@@ -121,11 +119,6 @@ class IPS2GPIO_IO extends IPSModule
 	// Dimmt den gewaehlten Pin
 	private function Set_Intensity($Pin, $Value)
 	{
-   		//$IPSID = $this->InstanceID;
-   		//$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.$this->ReadPropertyString("IPAddress").' 8888 '.GetValue($this->GetIDForIdent("User")).' '.GetValue($this->GetIDForIdent("Password")).' '.$IPSID.' set_PWM_dutycycle '.$Pin.' '.$Value);
-		//$result = 'sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.$this->ReadPropertyString("IPAddress").' 8888 '.GetValue($this->GetIDForIdent("User")).' '.GetValue($this->GetIDForIdent("Password")).' '.$IPSID.' set_PWM_dutycycle '.$Pin.' '.$Value;
-		//SetValueString(47271, $result);
-		
 		$result = CSCK_SendText(IPS_GetInstance($this->InstanceID)['ConnectionID'], pack("LLLL", 5, $Pin, $Value, 0));
 	return $result;
 	}
@@ -133,8 +126,6 @@ class IPS2GPIO_IO extends IPSModule
 	// Schaltet den gewaehlten Pin
 	private function Set_Status($Pin, $Value)
 	{
-		//$IPSID = $this->InstanceID;
-		//$result = exec('sudo python '.IPS_GetKernelDir().'modules/SymconModules/IPS2GPIO/ips2gpio.py '.$this->ReadPropertyString("IPAddress").' 8888 '.GetValue($this->GetIDForIdent("User")).' '.GetValue($this->GetIDForIdent("Password")).' '.$IPSID.' set_PWM_dutycycle '.$Pin.' '.$Value);
 		$result = CSCK_SendText(IPS_GetInstance($this->InstanceID)['ConnectionID'], pack("LLLL", 5, $Pin, $Value, 0));
 	}
 	
@@ -167,12 +158,10 @@ class IPS2GPIO_IO extends IPSModule
 	   	If (strpos($ResultArray[0], "Licensee=") === false) {
 			$result = false; }
 		else {
-	      		//$User = substr(strstr($ResultArray[0], "="),1); 
 	      		SetValue($this->GetIDForIdent("User"), substr(strstr($ResultArray[0], "="),1));}
 		If (strpos($ResultArray[(count($ResultArray))-1], "Password=") === false) {
 			$result = false; }
 		else {
-	      		//$Pass = base64_decode(substr(strstr($ResultArray[(count($ResultArray))-1], "="),1)); 
 			SetValue($this->GetIDForIdent("Password"), base64_decode(substr(strstr($ResultArray[(count($ResultArray))-1], "="),1)));}
 	return $result;
 	}
