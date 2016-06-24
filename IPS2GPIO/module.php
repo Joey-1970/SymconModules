@@ -31,7 +31,7 @@ class IPS2GPIO_IO extends IPSModule
 		    
 		$this->RegisterVariableString("PinPossible", "PinPossible");
 		$this->RegisterVariableString("PinUsed", "PinUsed");
-		$this->RemoteAccessData();
+		
 		// Zwangskonfiguration des ClientSocket
 	        $ParentID = (IPS_GetInstance($this->InstanceID)['ConnectionID']);
 	        if ($ParentID > 0)
