@@ -138,7 +138,7 @@ class IPS2GPIO_IO extends IPSModule
 		}
 		else {
 			$result = false;
-			Echo "Pin ist an diesem Modell nicht verfügbar!"
+			Echo "Pin ist an diesem Modell nicht verfügbar!";
 		}
 		
 	return $result	
