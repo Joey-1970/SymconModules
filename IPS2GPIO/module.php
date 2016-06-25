@@ -130,6 +130,7 @@ class IPS2GPIO_IO extends IPSModule
 	// Setzt die Farbe der RGB-LED
 	private function Set_Intensity_RGB($Pin_R, $Value_R, $Pin_G, $Value_G, $Pin_B, $Value_B)
 	{
+		SetValueString(47271, $Pin_R.", ".$Value_R.", ".$Pin_G.", ".$Value_G.", ".$Pin_B.", ".$Value_B);
 		$result = CSCK_SendText(IPS_GetInstance($this->InstanceID)['ConnectionID'], pack("LLLL", 5, $Pin_R, $Value_R, 0));
 		$result = CSCK_SendText(IPS_GetInstance($this->InstanceID)['ConnectionID'], pack("LLLL", 5, $Pin_G, $Value_G, 0));
 		$result = CSCK_SendText(IPS_GetInstance($this->InstanceID)['ConnectionID'], pack("LLLL", 5, $Pin_B, $Value_B, 0));
