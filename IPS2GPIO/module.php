@@ -75,6 +75,9 @@ class IPS2GPIO_IO extends IPSModule
 		    case "set_PWM_dutycycle":
 		        $this->Set_Intensity($data->Pin, $data->Value);
 		        break;
+		    case "set_PWM_dutycycle_RGB":
+		        $this->Set_Intensity($data->Pin_R, $data->Value_R, $data->Pin_G, $data->Value_G, $data->Pin_B, $data->Value_B);
+		        break;
 		    case "pin_possible":
 		        $this->PinPossible($data->Pin);
 		        break;
@@ -121,6 +124,13 @@ class IPS2GPIO_IO extends IPSModule
 	private function Set_Intensity($Pin, $Value)
 	{
 		$result = CSCK_SendText(IPS_GetInstance($this->InstanceID)['ConnectionID'], pack("LLLL", 5, $Pin, $Value, 0));
+	return $result;
+	}
+	
+	// Setzt die Farbe der RGB-LED
+	private function Set_Intensity_RGB($Pin_R, $Value_R, $Pin_G, $Value_G, $Pin_B, $Value_B)
+	{
+		$result = CSCK_SendText(IPS_GetInstance($this->InstanceID)['ConnectionID'], pack("LLLL", 5, $Pin_R, $Value_R, 0).pack("LLLL", 5, $Pin_G, $Value_G, 0).pack("LLLL", 5, $Pin_B, $Value_B, 0));
 	return $result;
 	}
 	
