@@ -76,7 +76,7 @@ class IPS2GPIO_IO extends IPSModule
 		        $this->Set_Intensity($data->Pin, $data->Value);
 		        break;
 		    case "set_PWM_dutycycle_RGB":
-		        $this->Set_Intensity($data->Pin_R, $data->Value_R, $data->Pin_G, $data->Value_G, $data->Pin_B, $data->Value_B);
+		        $this->Set_Intensity_RGB($data->Pin_R, $data->Value_R, $data->Pin_G, $data->Value_G, $data->Pin_B, $data->Value_B);
 		        break;
 		    case "pin_possible":
 		        $this->PinPossible($data->Pin);
