@@ -56,7 +56,7 @@ class IPS2GPIO_IO extends IPSModule
  		// Empfangene Daten vom I/O
 		$data = json_decode($JSONString);
 		IPS_LogMessage("ReceiveData", utf8_decode($data->Buffer));
-		$result = unpack("LLLL", $data->Buffer);
+		$result[] = unpack("LLLL", $data->Buffer);
 		IPS_LogMessage("ReceiveData", $result[3]);
 		// Hier werden die Daten verarbeitet
 		 
