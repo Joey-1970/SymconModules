@@ -132,6 +132,57 @@ class IPS2GPIO_IO extends IPSModule
 	return $result;
 	}
 	
+	private function ClientSocket()
+	{
+		if(!($sock = socket_create(AF_INET, SOCK_STREAM, 0))) 
+		{ 
+		    $errorcode = socket_last_error(); 
+		    $errormsg = socket_strerror($errorcode); 
+		
+		    die("Couldn't create socket: [$errorcode] $errormsg \n"); 
+		} 
+		
+		echo "Socket created"; 
+		
+		if(!socket_connect($sock , '192.168.178.53' , 8888)) 
+		{ 
+		    $errorcode = socket_last_error(); 
+		    $errormsg = socket_strerror($errorcode); 
+		
+		    die("Could not connect: [$errorcode] $errormsg \n"); 
+		} 
+		
+		echo "Connection established \n"; 
+		
+		$message = pack("LLLL", 17, 0, 0, 0); 
+		
+		//Send the message to the server 
+		if( ! socket_send ( $sock , $message , strlen($message) , 0)) 
+		{ 
+		    $errorcode = socket_last_error(); 
+		    $errormsg = socket_strerror($errorcode); 
+		
+		    die("Could not send data: [$errorcode] $errormsg \n"); 
+		} 
+		
+		echo "Message send successfully \n"; 
+		
+		//Now receive reply from server 
+		if(socket_recv ( $sock , $buf , 16, MSG_WAITALL ) === FALSE) 
+		{ 
+		    $errorcode = socket_last_error(); 
+		    $errormsg = socket_strerror($errorcode); 
+		
+		    die("Could not receive data: [$errorcode] $errormsg \n"); 
+		} 
+		
+		//print the received message 
+		//echo $buf; 
+		print_r (unpack("LLLL", $buf));  
+
+	return;	
+	}
+	
 	private function ConnectionTest()
 	{
 	      If (Sys_Ping($this->ReadPropertyInteger("IPAddress"), 2000)) {
