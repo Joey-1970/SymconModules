@@ -96,7 +96,7 @@ class IPS2GPIO_IO extends IPSModule
 	{
 		//$result = CSCK_SendText(IPS_GetInstance($this->InstanceID)['ConnectionID'], pack("LLLL", 0, $Pin, $Modus, 0));
 		$this->ClientSocket(pack("LLLL", 0, $Pin, $Modus, 0));
-	return $result;
+	return;
 	}
 	
 	// Dimmt den gewaehlten Pin
@@ -104,7 +104,7 @@ class IPS2GPIO_IO extends IPSModule
 	{
 		//$result = CSCK_SendText(IPS_GetInstance($this->InstanceID)['ConnectionID'], pack("LLLL", 5, $Pin, $Value, 0));
 		$this->ClientSocket(pack("LLLL", 5, $Pin, $Value, 0));
-	return $result;
+	return;
 	}
 	
 	// Setzt die Farbe der RGB-LED
@@ -112,7 +112,7 @@ class IPS2GPIO_IO extends IPSModule
 	{
 		//$result = CSCK_SendText(IPS_GetInstance($this->InstanceID)['ConnectionID'], pack("LLLL", 5, $Pin_R, $Value_R, 0).pack("LLLL", 5, $Pin_G, $Value_G, 0).pack("LLLL", 5, $Pin_B, $Value_B, 0));
 		$this->ClientSocket(pack("LLLL", 0, $Pin_R, $Value_R, 0).pack("LLLL", 0, $Pin_G, $Value_G, 0).pack("LLLL", 0, $Pin_B, $Value_B, 0));
-	return $result;
+	return;
 	}
 			
 	// Schaltet den gewaehlten Pin
@@ -120,6 +120,7 @@ class IPS2GPIO_IO extends IPSModule
 	{
 		//$result = CSCK_SendText(IPS_GetInstance($this->InstanceID)['ConnectionID'], pack("LLLL", 5, $Pin, $Value, 0));
 		$this->ClientSocket(pack("LLLL", 5, $Pin, $Value, 0));
+	return;
 	}
 	
 	private function PinPossible($Pin)
@@ -180,7 +181,7 @@ class IPS2GPIO_IO extends IPSModule
 		
 		//print the received message 
 		//echo $buf; 
-		print_r (unpack("LLLL", $buf));  
+		print_r (unpack("L*", $buf));  
 
 	return;	
 	}
