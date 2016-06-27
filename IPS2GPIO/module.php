@@ -32,37 +32,14 @@ class IPS2GPIO_IO extends IPSModule
 		$this->RegisterVariableString("PinPossible", "PinPossible");
 		$this->RegisterVariableString("PinUsed", "PinUsed");
 		
-		// Zwangskonfiguration des ClientSocket
-	        $ParentID = (IPS_GetInstance($this->InstanceID)['ConnectionID']);
-	        if ($ParentID > 0)
-	        {
-	            	if (IPS_GetProperty($ParentID, 'Host') <> $this->ReadPropertyString('IPAddress'))
-	            	{
-	                	IPS_SetProperty($ParentID, 'Host', $this->ReadPropertyString('IPAddress'));
-	           	}
-	            	if (IPS_GetProperty($ParentID, 'Port') <> 8888)
-	            	{
-	                	IPS_SetProperty($ParentID, 'Port', 8888);
-	           	}
-	        }
+
            	$Typ[0] = array(0, 1, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 21, 22, 23, 24, 25);	
            	$Typ[1] = array(2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27);
            	$Typ[2] = array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27);
            	SetValueString($this->GetIDForIdent("PinPossible"), serialize ($Typ[$this->ReadPropertyInteger('Model')]));
 	  }
   	  
-  	  public function ReceiveData($JSONString) 
-  	  {
- 		// Empfangene Daten vom I/O
-		$data = json_decode($JSONString);
-		IPS_LogMessage("ReceiveData", utf8_decode($data->Buffer));
-		$result = unpack("LLLL", $data->Buffer);
-		IPS_LogMessage("ReceiveData", $result);
-		// Hier werden die Daten verarbeitet
-		 
-		// Weiterleitung zu allen Gerät-/Device-Instanzen
-		//$this->SendDataToChildren(json_encode(Array("DataID" => "{66164EB8-3439-4599-B937-A365D7A68567}", "Buffer" => $data->Buffer)));
-	 }
+
 
 	  public function ForwardData($JSONString) 
 	  {
