@@ -148,7 +148,7 @@ class IPS2GPIO_IO extends IPSModule
 		
 		echo "Socket created"; 
 		
-		if(!socket_connect($sock , $this->ReadPropertyInteger("IPAddress") , 8888)) 
+		if(!socket_connect($sock , $this->ReadPropertyString("IPAddress") , 8888)) 
 		{ 
 		    $errorcode = socket_last_error(); 
 		    $errormsg = socket_strerror($errorcode); 
@@ -187,9 +187,9 @@ class IPS2GPIO_IO extends IPSModule
 	
 	private function ConnectionTest()
 	{
-	      If (Sys_Ping($this->ReadPropertyInteger("IPAddress"), 2000)) {
+	      If (Sys_Ping($this->ReadPropertyString("IPAddress"), 2000)) {
 			Echo "PC erreichbar";
-			$status = @fsockopen($this->ReadPropertyInteger("IPAddress"), 8888, $errno, $errstr, 10);
+			$status = @fsockopen($this->ReadPropertyString("IPAddress"), 8888, $errno, $errstr, 10);
 				if (!$status) {
 					echo "Port geschlossen";
 					$this->SetStatus(104);
