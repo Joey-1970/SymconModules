@@ -1,17 +1,7 @@
 { 
    "elements": 
    [ 
-     { "name": "IPAddress", "type": "ValidationTextBox",  "caption": "IP" },
-     { "name": "Model", "type": "Select",  "caption": "GPIO-Typ",
- 			"options": [ 
- 				   { "label": "Typ 1", "value": "0" }, 
- 				   { "label": "Typ 2", "value": "1" }, 
- 				   { "label": "Typ 3", "value": "2" } 
- 			  ] 
-     },
-     { "type": "Label", "label": "Typ 1 - Raspberry Pi Model B Revision 1 (26 Pin)" },
-     { "type": "Label", "label": "Typ 2 - Raspberry Pi Model A, B Revision 2 (26 Pin)" },
-     { "type": "Label", "label": "Typ 3 - Raspberry Pi Model A+, B+, Pi Zero, Pi 2B, Pi 3B (40 Pin)" }
-     
+     { "name": "Open", "type": "CheckBox",  "caption": "Open" },
+     { "name": "IPAddress", "type": "ValidationTextBox",  "caption": "IP" }
    ]
 } 
