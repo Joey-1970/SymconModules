@@ -94,28 +94,32 @@ class IPS2GPIO_IO extends IPSModule
 	// Setzt den gewaehlten Pin in den geforderten Modus
 	private function Set_Mode($Pin, $Modus)
 	{
-		$result = CSCK_SendText(IPS_GetInstance($this->InstanceID)['ConnectionID'], pack("LLLL", 0, $Pin, $Modus, 0));
+		//$result = CSCK_SendText(IPS_GetInstance($this->InstanceID)['ConnectionID'], pack("LLLL", 0, $Pin, $Modus, 0));
+		$this->ClientSocket(pack("LLLL", 0, $Pin, $Modus, 0));
 	return $result;
 	}
 	
 	// Dimmt den gewaehlten Pin
 	private function Set_Intensity($Pin, $Value)
 	{
-		$result = CSCK_SendText(IPS_GetInstance($this->InstanceID)['ConnectionID'], pack("LLLL", 5, $Pin, $Value, 0));
+		//$result = CSCK_SendText(IPS_GetInstance($this->InstanceID)['ConnectionID'], pack("LLLL", 5, $Pin, $Value, 0));
+		$this->ClientSocket(pack("LLLL", 5, $Pin, $Value, 0));
 	return $result;
 	}
 	
 	// Setzt die Farbe der RGB-LED
 	private function Set_Intensity_RGB($Pin_R, $Value_R, $Pin_G, $Value_G, $Pin_B, $Value_B)
 	{
-		$result = CSCK_SendText(IPS_GetInstance($this->InstanceID)['ConnectionID'], pack("LLLL", 5, $Pin_R, $Value_R, 0).pack("LLLL", 5, $Pin_G, $Value_G, 0).pack("LLLL", 5, $Pin_B, $Value_B, 0));
+		//$result = CSCK_SendText(IPS_GetInstance($this->InstanceID)['ConnectionID'], pack("LLLL", 5, $Pin_R, $Value_R, 0).pack("LLLL", 5, $Pin_G, $Value_G, 0).pack("LLLL", 5, $Pin_B, $Value_B, 0));
+		$this->ClientSocket(pack("LLLL", 0, $Pin_R, $Value_R, 0).pack("LLLL", 0, $Pin_G, $Value_G, 0).pack("LLLL", 0, $Pin_B, $Value_B, 0));
 	return $result;
 	}
 			
 	// Schaltet den gewaehlten Pin
 	private function Set_Status($Pin, $Value)
 	{
-		$result = CSCK_SendText(IPS_GetInstance($this->InstanceID)['ConnectionID'], pack("LLLL", 5, $Pin, $Value, 0));
+		//$result = CSCK_SendText(IPS_GetInstance($this->InstanceID)['ConnectionID'], pack("LLLL", 5, $Pin, $Value, 0));
+		$this->ClientSocket(pack("LLLL", 5, $Pin, $Value, 0));
 	}
 	
 	private function PinPossible($Pin)
@@ -132,7 +136,7 @@ class IPS2GPIO_IO extends IPSModule
 	return $result;
 	}
 	
-	private function ClientSocket()
+	private function ClientSocket($message)
 	{
 		if(!($sock = socket_create(AF_INET, SOCK_STREAM, 0))) 
 		{ 
@@ -153,8 +157,6 @@ class IPS2GPIO_IO extends IPSModule
 		} 
 		
 		echo "Connection established \n"; 
-		
-		$message = pack("LLLL", 17, 0, 0, 0); 
 		
 		//Send the message to the server 
 		if( ! socket_send ( $sock , $message , strlen($message) , 0)) 
