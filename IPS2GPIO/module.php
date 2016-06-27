@@ -147,7 +147,7 @@ class IPS2GPIO_IO extends IPSModule
 		    die("Couldn't create socket: [$errorcode] $errormsg \n"); 
 		} 
 		
-		echo "Socket created"; 
+		//echo "Socket created"; 
 		
 		if(!socket_connect($sock , $this->ReadPropertyString("IPAddress") , 8888)) 
 		{ 
@@ -157,7 +157,7 @@ class IPS2GPIO_IO extends IPSModule
 		    die("Could not connect: [$errorcode] $errormsg \n"); 
 		} 
 		
-		echo "Connection established \n"; 
+		//echo "Connection established \n"; 
 		
 		//Send the message to the server 
 		if( ! socket_send ( $sock , $message , strlen($message) , 0)) 
@@ -168,7 +168,7 @@ class IPS2GPIO_IO extends IPSModule
 		    die("Could not send data: [$errorcode] $errormsg \n"); 
 		} 
 		
-		echo "Message send successfully \n"; 
+		//echo "Message send successfully \n"; 
 		
 		//Now receive reply from server 
 		if(socket_recv ( $sock , $buf , 16, MSG_WAITALL ) === FALSE) 
@@ -181,7 +181,7 @@ class IPS2GPIO_IO extends IPSModule
 		
 		//print the received message 
 		//echo $buf; 
-		print_r (unpack("L*", $buf));  
+		//print_r (unpack("L*", $buf));  
 
 	return;	
 	}
