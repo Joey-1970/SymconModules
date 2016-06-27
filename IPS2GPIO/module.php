@@ -144,7 +144,7 @@ class IPS2GPIO_IO extends IPSModule
 		
 		echo "Socket created"; 
 		
-		if(!socket_connect($sock , '192.168.178.53' , 8888)) 
+		if(!socket_connect($sock , $this->ReadPropertyInteger("IPAddress") , 8888)) 
 		{ 
 		    $errorcode = socket_last_error(); 
 		    $errormsg = socket_strerror($errorcode); 
