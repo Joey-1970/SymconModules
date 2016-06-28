@@ -32,9 +32,11 @@ class IPS2GPIO_IO extends IPSModule
 		$this->RegisterVariableString("PinPossible", "PinPossible");
 		$this->RegisterVariableString("PinUsed", "PinUsed");
 		
-		$this->ConnectionTest();
+		If($this->ConnectionTest()) {
+			$this->ClientSocket(pack("LLLL", 17, 0, 0, 0));
+		}
 		// Hardware feststellen
-           	$this->ClientSocket(pack("LLLL", 17, 0, 0, 0));
+           	
 	  }
   	  
 
@@ -197,6 +199,7 @@ class IPS2GPIO_IO extends IPSModule
 	
 	private function ConnectionTest()
 	{
+	      $result = false;
 	      If (Sys_Ping($this->ReadPropertyString("IPAddress"), 2000)) {
 			Echo "PC erreichbar";
 			$status = @fsockopen($this->ReadPropertyString("IPAddress"), 8888, $errno, $errstr, 10);
@@ -207,6 +210,7 @@ class IPS2GPIO_IO extends IPSModule
 	   			else {
 	   				fclose($status);
 					echo "Port offen";
+					$result = true;
 					$this->SetStatus(102);
 	   			}
 		}
@@ -214,6 +218,7 @@ class IPS2GPIO_IO extends IPSModule
 			Echo "PC nicht erreichbar";
 			$this->SetStatus(104);
 		}
+	return $result;
 	}
   
 
