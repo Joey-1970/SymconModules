@@ -181,13 +181,13 @@ class IPS2GPIO_IO extends IPSModule
            			$Typ[2] = array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27);
            			
            			if (in_array($response[3], $Model[0])) {
-    					SetValueString($this->GetIDForIdent("PinPossible"), serialize($Typ[0]);
+    					SetValueString($this->GetIDForIdent("PinPossible"), serialize($Typ[0]));
 				}
 				else if (in_array($response[3], $Model[1])) {
-					SetValueString($this->GetIDForIdent("PinPossible"), serialize($Typ[1]);
+					SetValueString($this->GetIDForIdent("PinPossible"), serialize($Typ[1]));
 				}
 				else if ($response[3] >= 16) {
-					SetValueString($this->GetIDForIdent("PinPossible"), serialize($Typ[2]);
+					SetValueString($this->GetIDForIdent("PinPossible"), serialize($Typ[2]));
 				}
            			
            			
