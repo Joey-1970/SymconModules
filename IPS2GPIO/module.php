@@ -170,7 +170,7 @@ class IPS2GPIO_IO extends IPSModule
 	
 	private function ClientResponse($Message)
 	{
-		$response = unpack("L*", $Message)
+		$response = unpack("L*", $Message);
 		switch($response[0]) {
 		        case "17":
 		            	$Model[0] = array(2, 3);
