@@ -201,21 +201,21 @@ class IPS2GPIO_IO extends IPSModule
 	{
 	      $result = false;
 	      If (Sys_Ping($this->ReadPropertyString("IPAddress"), 2000)) {
-			Echo "PC erreichbar";
+			// PC erreichbar
 			$status = @fsockopen($this->ReadPropertyString("IPAddress"), 8888, $errno, $errstr, 10);
 				if (!$status) {
-					echo "Port geschlossen";
+					// Port geschlossen
 					$this->SetStatus(104);
 	   			}
 	   			else {
 	   				fclose($status);
-					echo "Port offen";
+					// Port offen
 					$result = true;
 					$this->SetStatus(102);
 	   			}
 		}
 		else {
-			Echo "PC nicht erreichbar";
+			// PC nicht erreichbar
 			$this->SetStatus(104);
 		}
 	return $result;
