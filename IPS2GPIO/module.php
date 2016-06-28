@@ -187,7 +187,7 @@ class IPS2GPIO_IO extends IPSModule
 				else if ($response[3] >= 16) {
 					SetValueString($this->GetIDForIdent("PinPossible"), serialize($Typ[2]);
 				}
-           			If ($response[3] == )
+           			
            			
 		            break;
 		        
