@@ -33,11 +33,8 @@ class IPS2GPIO_IO extends IPSModule
 		$this->RegisterVariableString("PinUsed", "PinUsed");
 		
 		$this->ConnectionTest();
-
-           	$Typ[0] = array(0, 1, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 21, 22, 23, 24, 25);	
-           	$Typ[1] = array(2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27);
-           	$Typ[2] = array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27);
-           	//SetValueString($this->GetIDForIdent("PinPossible"), serialize ($Typ[$this->ReadPropertyInteger('Model')]));
+		// Hardware feststellen
+           	$this->ClientSocket(pack("LLLL", 17, 0, 0, 0));
 	  }
   	  
 
@@ -164,11 +161,38 @@ class IPS2GPIO_IO extends IPSModule
 		    	die("Could not receive data: [$errorcode] $errormsg \n"); 
 		} 
 		
-		//print the received message 
-		
-		//print_r (unpack("L*", $buf));  
-
+		// received message 
+		$this->ClientResponse($buf);
 	return;	
+	}
+	
+	private function ClientResponse($Message)
+	{
+		$response = unpack("L*", $Message)
+		switch($response[0]) {
+		        case "17":
+		            	$Model[0] = array(2, 3);
+		            	$Model[1] = array(4, 5, 6, 15);
+		            	$Model[2] = array(16);
+		            	$Typ[0] = array(0, 1, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 21, 22, 23, 24, 25);	
+           			$Typ[1] = array(2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27);
+           			$Typ[2] = array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27);
+           			
+           			if (in_array($response[3], $Model[0])) {
+    					SetValueString($this->GetIDForIdent("PinPossible"), serialize($Typ[0]);
+				}
+				else if (in_array($response[3], $Model[1])) {
+					SetValueString($this->GetIDForIdent("PinPossible"), serialize($Typ[1]);
+				}
+				else if ($response[3] >= 16) {
+					SetValueString($this->GetIDForIdent("PinPossible"), serialize($Typ[2]);
+				}
+           			If ($response[3] == )
+           			
+		            break;
+		        
+		    }
+	return;
 	}
 	
 	private function ConnectionTest()
