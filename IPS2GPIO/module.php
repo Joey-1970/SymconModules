@@ -174,7 +174,7 @@ class IPS2GPIO_IO extends IPSModule
 		switch($response[1]) {
 		        case "17":
 		            	$Model[0] = array(2, 3);
-		            	$Model[1] = array(4, 5, 6, 15);
+		            	$Model[1] = array(4, 5, 6, 13, 14, 15);
 		            	$Model[2] = array(16);
 		            	$Typ[0] = array(0, 1, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 21, 22, 23, 24, 25);	
            			$Typ[1] = array(2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27);
