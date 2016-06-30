@@ -35,6 +35,7 @@ class IPS2GPIO_IO extends IPSModule
 		
 		If($this->ConnectionTest()) {
 			$this->ClientSocket(pack("LLLL", 17, 0, 0, 0));
+			$this->ClientSocket(pack("LLLL", 18, 0, 0, 0));
 		}
 		// Hardware feststellen
            	
