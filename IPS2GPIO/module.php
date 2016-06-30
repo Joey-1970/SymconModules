@@ -108,6 +108,7 @@ class IPS2GPIO_IO extends IPSModule
 	private function Set_Mode($Pin, $Modus)
 	{		
 		$this->ClientSocket(pack("LLLL", 0, $Pin, $Modus, 0));
+		IPS_LogMessage("SetMode Parameter : ",$Pin." , ".$Modus);  
 	return;
 	}
 	
@@ -115,6 +116,7 @@ class IPS2GPIO_IO extends IPSModule
 	private function Set_Intensity($Pin, $Value)
 	{
 		$this->ClientSocket(pack("LLLL", 5, $Pin, $Value, 0));
+		IPS_LogMessage("Set Intensity : ",$Pin." , ".$Value);  
 	return;
 	}
 	
@@ -122,6 +124,7 @@ class IPS2GPIO_IO extends IPSModule
 	private function Set_Intensity_RGB($Pin_R, $Value_R, $Pin_G, $Value_G, $Pin_B, $Value_B)
 	{
 		$this->ClientSocket(pack("LLLL", 5, $Pin_R, $Value_R, 0).pack("LLLL", 5, $Pin_G, $Value_G, 0).pack("LLLL", 5, $Pin_B, $Value_B, 0));
+		IPS_LogMessage("Set Intensity RGB : ",$gpio." , ".$mode);  
 	return;
 	}
 			
