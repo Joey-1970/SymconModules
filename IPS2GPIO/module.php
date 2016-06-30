@@ -136,36 +136,9 @@ class IPS2GPIO_IO extends IPSModule
 	
 	private function ClientSocket($message)
 	{
-		// create Socket 
-		if(!($sock = socket_create(AF_INET, SOCK_STREAM, 0))) { 
-		    	$errorcode = socket_last_error(); 
-		    	$errormsg = socket_strerror($errorcode); 
-		    	die("Couldn't create socket: [$errorcode] $errormsg \n"); 
-		} 
-				
-		// establish Connection
-		if(!socket_connect($sock , $this->ReadPropertyString("IPAddress") , 8888)) { 
-		    	$errorcode = socket_last_error(); 
-		    	$errormsg = socket_strerror($errorcode); 
-			die("Could not connect: [$errorcode] $errormsg \n"); 
-		} 
-			
-		//Send the message to the server 
-		if( ! socket_send ( $sock , $message , strlen($message) , 0)) { 
-		    	$errorcode = socket_last_error(); 
-		    	$errormsg = socket_strerror($errorcode); 
-			die("Could not send data: [$errorcode] $errormsg \n"); 
-		} 
+		$res = $this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode($message))));  
 		
-		//Now receive reply from server 
-		if(socket_recv ( $sock , $buf , 16, MSG_WAITALL ) === FALSE) { 
-		    	$errorcode = socket_last_error(); 
-		    	$errormsg = socket_strerror($errorcode);  
-		    	die("Could not receive data: [$errorcode] $errormsg \n"); 
-		} 
-		
-		// received message 
-		$this->ClientResponse($buf);
+	
 	return;	
 	}
 	
