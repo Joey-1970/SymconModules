@@ -35,7 +35,7 @@ class IPS2GPIO_IO extends IPSModule
 		
 		If($this->ConnectionTest()) {
 			$this->ClientSocket(pack("LLLL", 17, 0, 0, 0));
-			$this->ClientSocket(pack("LLLL", 18, 0, 0, 0));
+			$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));
 		}
 		// Hardware feststellen
            	
@@ -179,10 +179,10 @@ class IPS2GPIO_IO extends IPSModule
 				else if ($response[4] >= 16) {
 					SetValueString($this->GetIDForIdent("PinPossible"), serialize($Typ[2]));
 				}
-           		case "18":
+           		case "99":
            			If ($response[4] > 0 ) {
            				$this->ClientSocket(pack("LLLL", 19, $response[4], -1, 0));
-           				$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));
+           				//$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));
            			}
            			
 		            break;
