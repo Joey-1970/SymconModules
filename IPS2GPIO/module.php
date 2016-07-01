@@ -32,6 +32,7 @@ class IPS2GPIO_IO extends IPSModule
 		    
 		$this->RegisterVariableString("PinPossible", "PinPossible");
 		$this->RegisterVariableString("PinUsed", "PinUsed");
+		$this->RegisterVariableInteger("Handle", "Handle");
 		
 		If($this->ConnectionTest()) {
 			$this->ClientSocket(pack("LLLL", 17, 0, 0, 0));
@@ -181,6 +182,7 @@ class IPS2GPIO_IO extends IPSModule
 				}
            		case "99":
            			If ($response[4] > 0 ) {
+           				SetValueInteger($this->GetIDForIdent("Handle"), $response[4]);
            				$this->ClientSocket(pack("LLLL", 19, $response[4], -1, 0));
            				//$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));
            			}
