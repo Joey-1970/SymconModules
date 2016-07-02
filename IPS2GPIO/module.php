@@ -188,7 +188,7 @@ class IPS2GPIO_IO extends IPSModule
            			If ($response[4] > 0 ) {
            				SetValueInteger($this->GetIDForIdent("Handle"), $response[4]);
            				$this->ClientSocket(pack("LLLL", 21, $response[4], 0, 0));
-           				$this->ClientSocket(pack("LLLL", 19, $response[4], $this->CalcBitmask(), 0));
+           				$this->ClientSocket(pack("LLLL", 19, $response[4], dechex($this->CalcBitmask()), 0));
            				//$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));
            			}
            			
