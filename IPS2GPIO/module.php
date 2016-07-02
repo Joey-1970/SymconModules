@@ -168,7 +168,7 @@ class IPS2GPIO_IO extends IPSModule
 	private function ClientResponse($Message)
 	{
 		$response = unpack("L*", $Message);
-		If (strlen(utf8_decode($Message)) = 16) {
+		If (strlen(utf8_decode($Message)) == 16) {
 			switch($response[1]) {
 			        case "17":
 			            	IPS_LogMessage("GPIO Hardwareermittlung: ","gestartet");
@@ -212,7 +212,7 @@ class IPS2GPIO_IO extends IPSModule
 			        
 			    }
 		}
-		elseif (strlen(utf8_decode($Message)) = 12) {
+		elseif (strlen(utf8_decode($Message)) == 12) {
 			IPS_LogMessage("GPIO Notify: ","Meldung");		
 			IPS_LogMessage("GPIO Notify: ","Meldung".$response[1]." ".$response[2]);
 		}
