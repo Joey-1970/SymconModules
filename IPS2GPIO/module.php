@@ -187,7 +187,8 @@ class IPS2GPIO_IO extends IPSModule
            		case "99":
            			If ($response[4] > 0 ) {
            				SetValueInteger($this->GetIDForIdent("Handle"), $response[4]);
-           				$this->ClientSocket(pack("LLLL", 19, $response[4], 50331664, 0));
+           				$this->ClientSocket(pack("LLLL", 21, $response[4], 0, 0));
+           				$this->ClientSocket(pack("LLLL", 19, $response[4], $this->CalcBitmask(), 0));
            				//$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));
            			}
            			
@@ -195,6 +196,17 @@ class IPS2GPIO_IO extends IPSModule
 		        
 		    }
 	return;
+	}
+	
+	private function CalcBitmask()
+	{
+		$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
+
+		$Bitmask = 0;
+		for ($i = 0; $i <= Count($PinNotify) - 1; $i++) {
+    			$Bitmask = $Bitmask + pow(2, $PinNotify[$i]);
+		}
+	return $Bitmask;	
 	}
 	
 	private function ConnectionTest()
