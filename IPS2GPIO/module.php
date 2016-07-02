@@ -184,15 +184,22 @@ class IPS2GPIO_IO extends IPSModule
 				else if ($response[4] >= 16) {
 					SetValueString($this->GetIDForIdent("PinPossible"), serialize($Typ[2]));
 				}
+				break;
            		case "99":
            			If ($response[4] > 0 ) {
+           				IPS_LogMessage("Handle : ",$response[4]);
            				SetValueInteger($this->GetIDForIdent("Handle"), $response[4]);
            				$this->ClientSocket(pack("LLLL", 21, $response[4], 0, 0));
            				$this->ClientSocket(pack("LLLL", 19, $response[4], 0x3000010, 0));
            				//$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));
            			}
-           			
-		            break;
+           			break;
+           		case "21":
+           			IPS_LogMessage("GPIO Notify : ","gestoppt");
+		            	break;
+		        case "19":
+           			IPS_LogMessage("GPIO Notify : ","gestartet");
+		            	break;
 		        
 		    }
 	return;
