@@ -206,7 +206,7 @@ class IPS2GPIO_IO extends IPSModule
 		for ($i = 0; $i <= Count($PinNotify) - 1; $i++) {
     			$Bitmask = $Bitmask + pow(2, $PinNotify[$i]);
 		}
-	return $Bitmask;	
+	return dechex($Bitmask);	
 	}
 	
 	private function ConnectionTest()
