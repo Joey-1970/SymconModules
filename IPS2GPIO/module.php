@@ -168,48 +168,54 @@ class IPS2GPIO_IO extends IPSModule
 	private function ClientResponse($Message)
 	{
 		$response = unpack("L*", $Message);
-		switch($response[1]) {
-		        case "17":
-		            	IPS_LogMessage("GPIO Hardwareermittlung: ","gestartet");
-		            	$Model[0] = array(2, 3);
-		            	$Model[1] = array(4, 5, 6, 13, 14, 15);
-		            	$Model[2] = array(16);
-		            	$Typ[0] = array(0, 1, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 21, 22, 23, 24, 25);	
-           			$Typ[1] = array(2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27);
-           			$Typ[2] = array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27);
-           			
-           			if (in_array($response[4], $Model[0])) {
-    					SetValueString($this->GetIDForIdent("PinPossible"), serialize($Typ[0]));
-    					IPS_LogMessage("GPIO Hardwareermittlung: ","Raspberry Pi Typ 0");
-				}
-				else if (in_array($response[4], $Model[1])) {
-					SetValueString($this->GetIDForIdent("PinPossible"), serialize($Typ[1]));
-					IPS_LogMessage("GPIO Hardwareermittlung: ","Raspberry Pi Typ 1");
-				}
-				else if ($response[4] >= 16) {
-					SetValueString($this->GetIDForIdent("PinPossible"), serialize($Typ[2]));
-					IPS_LogMessage("GPIO Hardwareermittlung: ","Raspberry Pi Typ 2");
-				}
-				else
-					IPS_LogMessage("GPIO Hardwareermittlung: ","nicht erfolgreich!");
-				break;
-           		case "99":
-           			If ($response[4] > 0 ) {
-           				IPS_LogMessage("GPIO Handle: ",$response[4]);
-           				SetValueInteger($this->GetIDForIdent("Handle"), $response[4]);
-           				//$this->ClientSocket(pack("LLLL", 21, $response[4], 0, 0));
-           				$this->ClientSocket(pack("LLLL", 19, $response[4], $this->CalcBitmask(), 0));
-           				//$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));
-           			}
-           			break;
-           		case "21":
-           			IPS_LogMessage("GPIO Notify: ","gestoppt");
-		            	break;
-		        case "19":
-           			IPS_LogMessage("GPIO Notify: ","gestartet");
-		            	break;
-		        
-		    }
+		If (strlen(utf8_decode($data->Buffer)) = 16) {
+			switch($response[1]) {
+			        case "17":
+			            	IPS_LogMessage("GPIO Hardwareermittlung: ","gestartet");
+			            	$Model[0] = array(2, 3);
+			            	$Model[1] = array(4, 5, 6, 13, 14, 15);
+			            	$Model[2] = array(16);
+			            	$Typ[0] = array(0, 1, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 21, 22, 23, 24, 25);	
+	           			$Typ[1] = array(2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27);
+	           			$Typ[2] = array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27);
+	           			
+	           			if (in_array($response[4], $Model[0])) {
+	    					SetValueString($this->GetIDForIdent("PinPossible"), serialize($Typ[0]));
+	    					IPS_LogMessage("GPIO Hardwareermittlung: ","Raspberry Pi Typ 0");
+					}
+					else if (in_array($response[4], $Model[1])) {
+						SetValueString($this->GetIDForIdent("PinPossible"), serialize($Typ[1]));
+						IPS_LogMessage("GPIO Hardwareermittlung: ","Raspberry Pi Typ 1");
+					}
+					else if ($response[4] >= 16) {
+						SetValueString($this->GetIDForIdent("PinPossible"), serialize($Typ[2]));
+						IPS_LogMessage("GPIO Hardwareermittlung: ","Raspberry Pi Typ 2");
+					}
+					else
+						IPS_LogMessage("GPIO Hardwareermittlung: ","nicht erfolgreich!");
+					break;
+	           		case "99":
+	           			If ($response[4] > 0 ) {
+	           				IPS_LogMessage("GPIO Handle: ",$response[4]);
+	           				SetValueInteger($this->GetIDForIdent("Handle"), $response[4]);
+	           				//$this->ClientSocket(pack("LLLL", 21, $response[4], 0, 0));
+	           				$this->ClientSocket(pack("LLLL", 19, $response[4], $this->CalcBitmask(), 0));
+	           				//$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));
+	           			}
+	           			break;
+	           		case "21":
+	           			IPS_LogMessage("GPIO Notify: ","gestoppt");
+			            	break;
+			        case "19":
+	           			IPS_LogMessage("GPIO Notify: ","gestartet");
+			            	break;
+			        
+			    }
+		}
+		elseif (strlen(utf8_decode($data->Buffer)) = 12) {
+			IPS_LogMessage("GPIO Notify: ","Meldung");		
+			
+		}
 	return;
 	}
 	
@@ -231,12 +237,12 @@ class IPS2GPIO_IO extends IPSModule
 			IPS_LogMessage("GPIO Netzanbindung: ","Raspberry Pi gefunden");
 			$status = @fsockopen($this->ReadPropertyString("IPAddress"), 8888, $errno, $errstr, 10);
 				if (!$status) {
-					IPS_LogMessage("GPIO Netzanbindung: ","Port geschlossen!");
+					IPS_LogMessage("GPIO Netzanbindung: ","Port ist geschlossen!");
 					$this->SetStatus(104);
 	   			}
 	   			else {
 	   				fclose($status);
-					IPS_LogMessage("GPIO Netzanbindung: ","Port geöffnet");
+					IPS_LogMessage("GPIO Netzanbindung: ","Port ist geöffnet");
 					$result = true;
 					$this->SetStatus(102);
 	   			}
