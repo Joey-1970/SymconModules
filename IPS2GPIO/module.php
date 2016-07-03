@@ -170,6 +170,9 @@ class IPS2GPIO_IO extends IPSModule
 		If (strlen(utf8_decode($Message)) == 16) {
 			$response = unpack("L*", $Message);
 			switch($response[1]) {
+			        case "5":
+			        	IPS_LogMessage("GPIO PWM: ","erfolgreich gesendet");
+			        	break;
 			        case "17":
 			            	IPS_LogMessage("GPIO Hardwareermittlung: ","gestartet");
 			            	$Model[0] = array(2, 3);
@@ -194,7 +197,14 @@ class IPS2GPIO_IO extends IPSModule
 					else
 						IPS_LogMessage("GPIO Hardwareermittlung: ","nicht erfolgreich!");
 					break;
-	           		case "99":
+	           		case "19":
+	           			IPS_LogMessage("GPIO Notify: ","gestartet");
+			            	break;
+	           		case "21":
+	           			IPS_LogMessage("GPIO Notify: ","gestoppt");
+			            	break;
+			        
+			        case "99":
 	           			If ($response[4] > 0 ) {
 	           				IPS_LogMessage("GPIO Handle: ",$response[4]);
 	           				SetValueInteger($this->GetIDForIdent("Handle"), $response[4]);
@@ -203,13 +213,6 @@ class IPS2GPIO_IO extends IPSModule
 	           				//$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));
 	           			}
 	           			break;
-	           		case "21":
-	           			IPS_LogMessage("GPIO Notify: ","gestoppt");
-			            	break;
-			        case "19":
-	           			IPS_LogMessage("GPIO Notify: ","gestartet");
-			            	break;
-			        
 			    }
 		}
 		elseif (strlen(utf8_decode($Message)) == 12) {
