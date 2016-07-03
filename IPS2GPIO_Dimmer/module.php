@@ -65,7 +65,13 @@
     	// Empfangene Daten vom Gateway/Splitter
     	$data = json_decode($JSONString);
     	IPS_LogMessage("ReceiveData_Dimmer", utf8_decode($data->Buffer));
- 
+ 	switch ($data->Function) {
+		    case "pin_possible":
+		        If ($data->InstanzID == $this->InstanzID) {
+		        	
+		        	IPS_LogMessage("GPIO Auswahl: ",$data->Result);
+		        }
+		        break;
     	// Datenverarbeitung und schreiben der Werte in die Statusvariablen
     	//SetValue($this->GetIDForIdent("Value"), $data->Buffer);
 	}
