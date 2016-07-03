@@ -29,7 +29,7 @@ class IPS2GPIO_IO extends IPSModule
 	  {
 		//Never delete this line!
 		parent::ApplyChanges();
-		$this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Host" => $this->ReadPropertyString("IPAddress"))));
+		//$this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Host" => $this->ReadPropertyString("IPAddress"))));
 		$this->RegisterVariableString("PinPossible", "PinPossible");
 		$this->RegisterVariableString("PinUsed", "PinUsed");
 		$this->RegisterVariableString("PinNotify", "PinNotify");
