@@ -143,15 +143,16 @@ class IPS2GPIO_IO extends IPSModule
 	return;
 	}
 	
-	private function PinPossible($DataID, $InstanzId, $Pin)
+	private function PinPossible($DataID, $InstanzID, $Pin)
 	{
 		$PinPossible = unserialize(GetValueString($this->GetIDForIdent("PinPossible")));
 		if (in_array($Pin, $a)) {
     			$result = true;
+    			IPS_LogMessage("GPIO Auswahl: ","Gewählter Pin ist bei diesem Modell verfügbar");
 		}
 		else {
 			$result = false;
-			Echo "Pin ist an diesem Modell nicht verfügbar!";
+			IPS_LogMessage("GPIO Auswahl: ","Gewählter Pin ist bei diesem Modell nicht verfügbar!");
 		}
 		$this->SendDataToChildren(json_encode(Array("DataID" => $DataID, "InstanzID" => $InstanzID, "Result"=>$result)));
 	return;
