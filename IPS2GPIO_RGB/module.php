@@ -76,6 +76,16 @@
 	    }
 	 }
 	
+	public function ReceiveData($JSONString) 
+	{
+    	// Empfangene Daten vom Gateway/Splitter
+    	$data = json_decode($JSONString);
+    	IPS_LogMessage("ReceiveData-RGB", utf8_decode($data->Buffer));
+ 
+    	// Datenverarbeitung und schreiben der Werte in die Statusvariablen
+    	//SetValue($this->GetIDForIdent("Value"), $data->Buffer);
+	}
+	
 	// Beginn der Funktionen
 	
 	// Setzt den gewaehlten Pins in den Output-Modus
