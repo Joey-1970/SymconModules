@@ -63,7 +63,7 @@
 	{
     	// Empfangene Daten vom Gateway/Splitter
     	$data = json_decode($JSONString);
-    	IPS_LogMessage("ReceiveData", utf8_decode($data->Buffer));
+    	IPS_LogMessage("ReceiveData_Dimmer", utf8_decode($data->Buffer));
  
     	// Datenverarbeitung und schreiben der Werte in die Statusvariablen
     	//SetValue($this->GetIDForIdent("Value"), $data->Buffer);
