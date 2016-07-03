@@ -154,7 +154,7 @@ class IPS2GPIO_IO extends IPSModule
 			$result = false;
 			IPS_LogMessage("GPIO Auswahl: ","Gewählter Pin ist bei diesem Modell nicht verfügbar!");
 		}
-		$this->SendDataToChildren(json_encode(Array("DataID" =>$DataID, "InstanzID" =>$InstanzID, "Result"=>$result)));
+		$this->SendDataToChildren(json_encode(Array("DataID" =>$DataID, "Function"=>"pin_possible", "InstanzID" =>$InstanzID, "Result"=>$result)));
 	return;
 	}
 	
