@@ -66,7 +66,7 @@ class IPS2GPIO_IO extends IPSModule
 		        $this->Set_Intensity_RGB($data->Pin_R, $data->Value_R, $data->Pin_G, $data->Value_G, $data->Pin_B, $data->Value_B);
 		        break;
 		    case "pin_possible":
-		        $this->PinPossible($data-> DataID, $aata-> InstanzID, $data->Pin);
+		        $this->PinPossible($data->DataID, $data->InstanzID, $data->Pin);
 		        break;
 		}
 	    	// Hier würde man den Buffer im Normalfall verarbeiten
@@ -154,7 +154,7 @@ class IPS2GPIO_IO extends IPSModule
 			$result = false;
 			IPS_LogMessage("GPIO Auswahl: ","Gewählter Pin ist bei diesem Modell nicht verfügbar!");
 		}
-		$this->SendDataToChildren(json_encode(Array("DataID" => $DataID, "InstanzID" => $InstanzID, "Result"=>$result)));
+		$this->SendDataToChildren(json_encode(Array("DataID" =>$DataID, "InstanzID" =>$InstanzID, "Result"=>$result)));
 	return;
 	}
 	
