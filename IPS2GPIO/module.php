@@ -164,7 +164,7 @@ class IPS2GPIO_IO extends IPSModule
 		else {
 			$result = true;
 			IPS_LogMessage("GPIO Auswahl: ","Gewählter Pin ist verfügbar!");
-			$PinUsed[] = $Pin
+			$PinUsed[] = $Pin;
 			SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
 		}
 		
