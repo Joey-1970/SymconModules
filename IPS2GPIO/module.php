@@ -234,7 +234,7 @@ class IPS2GPIO_IO extends IPSModule
 		elseif (strlen(utf8_decode($Message)) == 12) {
 			$response = unpack("S*", $Message);
 			IPS_LogMessage("GPIO Notify: ","Meldung");		
-			IPS_LogMessage("GPIO Notify: ","Meldung: ".$response[1]." ".$response[2]." ".$response[3]." ".$response[4]);
+			IPS_LogMessage("GPIO Notify: ","Meldung: ".$response[1]." ".$response[2]." ".$response[3]." ".$response[4]." ".$response[5]." ".$response[6]);
 		}
 	return;
 	}
