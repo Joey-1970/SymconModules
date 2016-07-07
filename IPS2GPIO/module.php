@@ -157,7 +157,7 @@ class IPS2GPIO_IO extends IPSModule
 		}
 		// Prüfen ob der gewählten GPIO noch nicht in eine der anderen Instanzen genutzt wird
 		$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
-		if (in_array($Pin, $PinUsed) {
+		if (in_array($Pin, $PinUsed)) {
     			$result = false;
     			IPS_LogMessage("GPIO Auswahl: ","Gewählter Pin wird schon genutzt!");
 		}
