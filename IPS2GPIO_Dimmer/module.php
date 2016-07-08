@@ -37,7 +37,7 @@
            $this->EnableAction("Status");
            $this->RegisterVariableInteger("Intensity", "Intensity", "~Intensity.255");
            $this->EnableAction("Intensity");
-           $this->SetStatus(101);
+           //$this->SetStatus(101);
            //$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "pin_possible", "DataID" => $this->DataID, "InstanzID" => $this->InstanzID, "Pin" => $this->ReadPropertyInteger("Pin"))));
            
            $this->Set_Mode();
@@ -48,7 +48,7 @@
   		SetValueString(47271, $Ident." ".$Value);
   		switch($Ident) {
 	        case "Status":
-	            $this->Set_Status($Value);
+	            //$this->Set_Status($Value);
 	            //Neuen Wert in die Statusvariable schreiben
 	            SetValue($this->GetIDForIdent($Ident), $Value);
 	            break;
@@ -71,11 +71,11 @@
 		    case "pin_possible":
 		        If ($data->InstanzID == $this->InstanzID) {
 		        	If ($data->Result) {
-		        		$this->SetStatus(102);
+		        		//$this->SetStatus(102);
 		        		IPS_LogMessage("GPIO Auswahl: ","erfolgreich");
 		        	}
 		        	else {
-		        		$this->SetStatus(200);
+		        		//$this->SetStatus(200);
 		        		IPS_LogMessage("GPIO Auswahl: ","nicht erfolgreich!");
 		        	}
 		        				
