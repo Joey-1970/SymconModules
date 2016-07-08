@@ -82,6 +82,7 @@
 		        	
 		        }
 		        break;
+ 	}
     	// Datenverarbeitung und schreiben der Werte in die Statusvariablen
     	//SetValue($this->GetIDForIdent("Value"), $data->Buffer);
 	
