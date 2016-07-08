@@ -84,7 +84,9 @@
 		        break;
     	// Datenverarbeitung und schreiben der Werte in die Statusvariablen
     	//SetValue($this->GetIDForIdent("Value"), $data->Buffer);
-	}
+	
+ 	return;
+ 	}
 	// Beginn der Funktionen
 	
 	// Setzt den gewaehlten Pin in den Output-Modus
