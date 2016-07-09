@@ -68,6 +68,9 @@ class IPS2GPIO_IO extends IPSModule
 		    case "pin_possible":
 		        $this->PinPossible($data->DataID, $data->InstanzID, $data->Pin);
 		        break;
+		    case "set_glitchfilter":
+		        $this->Set_GlitchFilter($data->Pin, $data->Value);
+		        break;
 		}
 	    	// Hier würde man den Buffer im Normalfall verarbeiten
 	    	// z.B. CRC prüfen, in Einzelteile zerlegen
@@ -117,6 +120,14 @@ class IPS2GPIO_IO extends IPSModule
 	{		
 		$this->ClientSocket(pack("LLLL", 0, $Pin, $Modus, 0));
 		IPS_LogMessage("SetMode Parameter : ",$Pin." , ".$Modus);  
+	return;
+	}
+
+	// Setzt den gewaehlten Pin in den geforderten Modus
+	private function Set_GlitchFilter($Pin, $Value)
+	{		
+		$this->ClientSocket(pack("LLLL", 97, $Pin, $Modus, 0));
+		IPS_LogMessage("SetGlitchFilter Parameter : ",$Pin." , ".$Value);  
 	return;
 	}
 	
@@ -218,7 +229,9 @@ class IPS2GPIO_IO extends IPSModule
 	           		case "21":
 	           			IPS_LogMessage("GPIO Notify: ","gestoppt");
 			            	break;
-			        
+			        case "97":
+	           			IPS_LogMessage("GPIO GlitchFilter: ","gesetzt");
+			            	break;
 			        case "99":
 	           			If ($response[4] > 0 ) {
 	           				IPS_LogMessage("GPIO Handle: ",$response[4]);
