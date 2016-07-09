@@ -179,7 +179,7 @@ class IPS2GPIO_IO extends IPSModule
 			SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
 		}
 		
-		$this->SendDataToChildren(json_encode(Array("DataID" =>$DataID, "Function"=>"pin_possible", "InstanzID" =>$InstanzID, "Result"=>$result)));
+		//$this->SendDataToChildren(json_encode(Array("DataID" =>$DataID, "Function"=>"pin_possible", "InstanzID" =>$InstanzID, "Result"=>$result)));
 	return;
 	}
 	
