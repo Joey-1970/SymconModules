@@ -50,7 +50,7 @@
 	{
     	// Empfangene Daten vom Gateway/Splitter
     	$data = json_decode($JSONString);
-    	IPS_LogMessage("ReceiveData_Input", utf8_decode($data->Buffer));
+    	//IPS_LogMessage("ReceiveData_Input", utf8_decode($data->Buffer));
  	switch ($data->Function) {
 		    case "pin_possible":
 		        If ($data->InstanzID == $this->$InstanceID) {
