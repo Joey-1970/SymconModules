@@ -69,7 +69,7 @@
     	IPS_LogMessage("ReceiveData_Dimmer", utf8_decode($data->Buffer));
  	switch ($data->Function) {
 		    case "pin_possible":
-		        If ($data->InstanzID == $this->InstanzID) {
+		        If ($data->InstanzID == $this->$InstanzID) {
 		        	If ($data->Result) {
 		        		//$this->SetStatus(102);
 		        		IPS_LogMessage("GPIO Auswahl: ","erfolgreich");
