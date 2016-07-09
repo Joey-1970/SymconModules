@@ -33,6 +33,7 @@
                 { "label": "27", "value": 27 }
                 ]
         },
+    { "type": "Label", "label": "Zur Software-Entprellung angeschlossener Taster/Schalter (0-300000ms)" },
     { "type": "IntervalBox", "name": "GlitchFilter", "caption": "ms" }
     ]
  }
