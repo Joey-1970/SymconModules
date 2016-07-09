@@ -245,13 +245,13 @@ class IPS2GPIO_IO extends IPSModule
 			    }
 		}
 		elseif (strlen(utf8_decode($Message)) == 12) {
-			$response = unpack("S*", $Message);
+			$response = unpack("v*", $Message);
 			IPS_LogMessage("GPIO Notify: ","Meldung");		
 			IPS_LogMessage("GPIO Notify: ","Meldung: ".$response[1]." ".$response[2]." ".$response[3]." ".$response[4]." ".$response[5]." ".$response[6]);
 		}
 		elseif (strlen(utf8_decode($Message)) > 16) {
 			$Message = substr($Message, 0, 12);
-			$response = unpack("S*", $Message);
+			$response = unpack("v*", $Message);
 			IPS_LogMessage("GPIO Notify: ","gekürzte Meldung");		
 			IPS_LogMessage("GPIO Notify: ","Meldung: ".$response[1]." ".$response[2]." ".$response[3]." ".$response[4]." ".$response[5]." ".$response[6]);
 		}
