@@ -21,7 +21,7 @@
            
             $this->RegisterPropertyInteger("Pin", 2);
             $this->RegisterPropertyInteger("GlitchFilter", 10);
- 	          $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");	
+ 	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");	
         }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -31,10 +31,10 @@
             parent::ApplyChanges();
             
             //Connect to available splitter or create a new one
-	          $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 	   
 	          //Status-Variablen anlegen
-	          $this->RegisterVariableBoolean("Status", "Status", "~Switch", 1);
+	    $this->RegisterVariableBoolean("Status", "Status", "~Switch", 1);
             $this->EnableAction("Status");
             $this->RegisterVariableBoolean("Toggle", "Toggle", "~Switch", 1);
             $this->EnableAction("Toggle");
@@ -80,7 +80,13 @@
    		$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_mode", "Pin" => $this->ReadPropertyInteger("Pin"), "Modus" => "R")));
    	return;
 	}
-	
+
+	// Setzt den gewaehlten Pin in den Output-Modus
+	private function Set_GlitchFilter()
+	{
+   		$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_glitchfilter", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $this->ReadPropertyInteger("GlitchFilter"))));
+   	return;
+	}	
 
 	
 
