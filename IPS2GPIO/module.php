@@ -74,7 +74,7 @@ class IPS2GPIO_IO extends IPSModule
 		}
 	    	// Hier würde man den Buffer im Normalfall verarbeiten
 	    	// z.B. CRC prüfen, in Einzelteile zerlegen
-	 	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Buffer" => $data->Function)));
+	 	//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Buffer" => $data->Function)));
 	    	// Weiterleiten zur I/O Instanz
 	    	
 	 
@@ -179,7 +179,7 @@ class IPS2GPIO_IO extends IPSModule
 			SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
 		}
 		
-		//$this->SendDataToChildren(json_encode(Array("DataID" =>$DataID, "Function"=>"pin_possible", "InstanzID" =>$InstanzID, "Result"=>$result)));
+		$this->SendDataToChildren(json_encode(Array("DataID" =>$DataID, "Function"=>"pin_possible", "InstanzID" =>$InstanzID, "Result"=>$result)));
 	return;
 	}
 	
