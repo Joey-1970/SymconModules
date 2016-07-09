@@ -77,14 +77,14 @@
 	// Setzt den gewaehlten Pin in den Output-Modus
 	private function Set_Mode()
 	{
-   		$this->SendDataToParent(json_encode(Array("DataID" => "{EBFBEE2B-0F1A-470D-8B5B-97F977D605CA}", "Function" => "set_mode", "Pin" => $this->ReadPropertyInteger("Pin"), "Modus" => "R")));
+   		$this->SendDataToParent(json_encode(Array("Function" => "set_mode", "Pin" => $this->ReadPropertyInteger("Pin"), "Modus" => "R")));
    	return;
 	}
 
 	// Setzt den gewaehlten Pin in den Output-Modus
 	private function Set_GlitchFilter()
 	{
-   		$this->SendDataToParent(json_encode(Array("DataID" => "{EBFBEE2B-0F1A-470D-8B5B-97F977D605CA}", "Function" => "set_glitchfilter", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $this->ReadPropertyInteger("GlitchFilter"))));
+   		$this->SendDataToParent(json_encode(Array("Function" => "set_glitchfilter", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $this->ReadPropertyInteger("GlitchFilter"))));
    	return;
 	}	
 
