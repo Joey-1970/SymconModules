@@ -1,14 +1,14 @@
 {
-  "id": "{FCE0DF96-16EE-42BF-A102-71C6FBEA658C}",
+  "id": "{EDF0B4B1-B534-477E-8BB5-E2C2B56613B8}",
   "name": "IPS2GPIO_Input",
   "type": 3,
   "vendor": "GPIO",
   "aliases":
   [
-    "IPS2GPIO_Dimmer"
+    "IPS2GPIO_Input"
   ],
-  "parentRequirements": ["{A0DAAF26-4A2D-4350-963E-CC02E74BD414}"],
+  "parentRequirements": ["{EBFBEE2B-0F1A-470D-8B5B-97F977D605CA}"],
   "childRequirements": [],
-  "implemented": ["{8D44CA24-3B35-4918-9CBD-85A28C0C8917}"],
+  "implemented": ["{696FADD0-5D27-4C02-8407-01258BE905D7}"],
   "prefix": "I2GIN"
 }
