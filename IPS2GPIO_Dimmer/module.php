@@ -93,7 +93,7 @@
 	// Setzt den gewaehlten Pin in den Output-Modus
 	private function Set_Mode()
 	{
-   		$this->SendDataToParent(json_encode(Array("Function" => "set_mode", "Pin" => $this->ReadPropertyInteger("Pin"), "Modus" => "W")));
+   		$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_mode", "Pin" => $this->ReadPropertyInteger("Pin"), "Modus" => "W")));
    	return;
 	}
 	
@@ -103,7 +103,7 @@
    		SetValueInteger($this->GetIDForIdent("Intensity"), $value);
 		
 		If (GetValueBoolean($this->GetIDForIdent("Status")) == true) {
-			$this->SendDataToParent(json_encode(Array("Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $value)));
+			$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $value)));
  		}
 	return;
 	}
@@ -114,10 +114,10 @@
 		SetValueBoolean($this->GetIDForIdent("Status"), $value);
 		
 		If ($value == true) {
-			$this->SendDataToParent(json_encode(Array("Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => GetValueInteger($this->GetIDForIdent("Intensity")))));
+			$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => GetValueInteger($this->GetIDForIdent("Intensity")))));
 		}
 		else {
-   			$this->SendDataToParent(json_encode(Array("Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => 0)));
+   			$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => 0)));
 		}	
 	}
 	
