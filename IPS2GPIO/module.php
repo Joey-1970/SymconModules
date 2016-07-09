@@ -126,7 +126,7 @@ class IPS2GPIO_IO extends IPSModule
 	// Setzt den gewaehlten Pin in den geforderten Modus
 	private function Set_GlitchFilter($Pin, $Value)
 	{		
-		$this->ClientSocket(pack("LLLL", 97, $Pin, $Modus, 0));
+		$this->ClientSocket(pack("LLLL", 97, $Pin, $Value, 0));
 		IPS_LogMessage("SetGlitchFilter Parameter : ",$Pin." , ".$Value);  
 	return;
 	}
