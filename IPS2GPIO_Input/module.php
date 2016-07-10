@@ -69,6 +69,9 @@
 		        break;
 		   case "notify":
 		   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
+		   		If ((GetValueBoolean($this->GetIDForIdent("Status")) == false) and ($data->Value == true)) {
+		   			SetValueBoolean($this->GetIDForIdent("Toggle"), !GetValueBoolean($this->GetIDForIdent("Toggle")));
+		   		}
 		   		SetValueBoolean($this->GetIDForIdent("Status"), $data->Value);
 		   	}
  	}
