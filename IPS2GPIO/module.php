@@ -69,7 +69,14 @@ class IPS2GPIO_IO extends IPSModule
 		        $this->PinPossible($data->DataID, $data->InstanzID, $data->Pin);
 		        break;
 		    case "set_glitchfilter":
+		        
 		        $this->Set_GlitchFilter($data->Pin, $data->Value);
+		        break;
+		    case "set_notifypin":
+		        // Erstellt ein Array für alle Pins für die die Notifikation erforderlich ist 
+		        $PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
+		        $PinNotify[] = $data->Pin;
+			SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
 		        break;
 		}
 	    	// Hier würde man den Buffer im Normalfall verarbeiten
