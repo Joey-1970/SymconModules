@@ -67,6 +67,10 @@
 		        	
 		        }
 		        break;
+		   case "notify":
+		   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
+		   		SetValueBoolean($this->GetIDForIdent("Status"), $data->Value);
+		   	}
  	}
     	// Datenverarbeitung und schreiben der Werte in die Statusvariablen
     	//SetValue($this->GetIDForIdent("Value"), $data->Buffer);
