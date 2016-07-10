@@ -87,7 +87,7 @@ class IPS2GPIO_IO extends IPSModule
 	    // Empfangene Daten vom I/O
 	    $data = json_decode($JSONString);
 	    IPS_LogMessage("ReceiveData", "Länge: ".strlen(utf8_decode($data->Buffer))." Test ".utf8_decode($data->Buffer));
-	 	$this->ClientResponse($data->Buffer);
+	 	$this->ClientResponse(utf8_decode($data->Buffer));
 	    // Hier werden die Daten verarbeitet
 	 
 	    // Weiterleitung zu allen Gerät-/Device-Instanzen
@@ -193,7 +193,7 @@ class IPS2GPIO_IO extends IPSModule
 	
 	private function ClientResponse($Message)
 	{
-		If (strlen(utf8_decode($Message)) == 16) {
+		If (strlen($Message) == 16) {
 			$response = unpack("L*", $Message);
 			switch($response[1]) {
 			        case "5":
@@ -244,15 +244,14 @@ class IPS2GPIO_IO extends IPSModule
 	           			break;
 			    }
 		}
-		elseif (strlen(utf8_decode($Message)) == 12) {
-			//$response = unpack("V*", substr($Message, 7, 12));
-			$response = unpack("L*", utf8_decode($Message));
+		elseif (strlen($Message) == 12) {
+			$response = unpack("L*", $Message);
 			IPS_LogMessage("GPIO Notify: ","Meldung");		
 			IPS_LogMessage("GPIO Notify: ","Meldung: ".count($response)." ".$response[1]." ".$response[2]." ".$response[3]);
 		}
-		elseif (strlen(utf8_decode($Message)) > 16) {
+		elseif (strlen($Message) > 16) {
 			$Message = substr($Message, 0, 12);
-			$response = unpack("S1L*", $Message);
+			$response = unpack("L*", $Message);
 			IPS_LogMessage("GPIO Notify: ","gekürzte Meldung");		
 			IPS_LogMessage("GPIO Notify: ","Meldung: ".$response[1]." ".$response[2]." ".$response[3]);
 		}
