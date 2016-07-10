@@ -251,7 +251,8 @@ class IPS2GPIO_IO extends IPSModule
 	           			break;
 			    }
 		}
-		elseif (strlen($Message) == 12) {
+		elseif ((strlen($Message) == 12) OR (strlen($Message) > 16)) {
+			$Message = substr($Message, 0, 12);
 			$response = unpack("L*", $Message);
 			IPS_LogMessage("GPIO Notify: ","Meldung");		
 			IPS_LogMessage("GPIO Notify: ","Meldung: ".count($response)." ".$response[1]." ".$response[2]." ".$response[3]);
@@ -264,19 +265,8 @@ class IPS2GPIO_IO extends IPSModule
     				$this->SendDataToChildren(json_encode(Array("DataID" => "{696FADD0-5D27-4C02-8407-01258BE905D7}", "Function"=>"notify", "Pin" => $PinNotify[$i], "Value"=> $Bitvalue)));
 			}
 		}
-		elseif (strlen($Message) > 16) {
-			$Message = substr($Message, 0, 12);
-			$response = unpack("L*", $Message);
-			IPS_LogMessage("GPIO Notify: ","gekürzte Meldung");		
-			IPS_LogMessage("GPIO Notify: ","Meldung: ".$response[1]." ".$response[2]." ".$response[3]);
-			
-			$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
-
-			for ($i = 0; $i < Count($PinNotify); $i++) {
-    				$Bitvalue = boolval($response[3]&(1<<$PinNotify[$i]));
-    				IPS_LogMessage("GPIO Notify: ","Pin ".$PinNotify[$i]." Value ->".$Bitvalue);
-    				$this->SendDataToChildren(json_encode(Array("DataID" => "{696FADD0-5D27-4C02-8407-01258BE905D7}", "Function"=>"notify", "Pin" => $PinNotify[$i], "Value"=> $Bitvalue)));
-			}
+		else {
+			IPS_LogMessage("GPIO Notify: ","Meldung konnte nicht dekodiert werden!");		
 		}
 	return;
 	}
