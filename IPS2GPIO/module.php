@@ -35,8 +35,9 @@ class IPS2GPIO_IO extends IPSModule
 		$this->RegisterVariableString("PinNotify", "PinNotify");
 		$this->RegisterVariableInteger("Handle", "Handle");
 		
-		$Notify[0] = array(4, 24, 25);
-		SetValueString($this->GetIDForIdent("PinNotify"), serialize($Notify[0]));
+		// Nur Testdaten!
+		//$Notify[0] = array(4, 24, 25);
+		//SetValueString($this->GetIDForIdent("PinNotify"), serialize($Notify[0]));
 		
 		If($this->ConnectionTest()) {
 			// Hardware feststellen
