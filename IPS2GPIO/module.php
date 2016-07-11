@@ -35,29 +35,15 @@ class IPS2GPIO_IO extends IPSModule
 		$this->RegisterVariableString("PinNotify", "PinNotify");
 		$this->RegisterVariableInteger("Handle", "Handle");
 		
-		// Nur Testdaten!
-		//$Notify[0] = array(4, 24, 25);
-		//SetValueString($this->GetIDForIdent("PinNotify"), serialize($Notify[0]));
 		
 		If($this->ConnectionTest()) {
 			// Hardware feststellen
 			$this->ClientSocket(pack("LLLL", 17, 0, 0, 0));
 			// Notify Starten
 			$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));
-			// Pins ermitteln für die ein Notify erforderlich ist
-			SetValueString($this->GetIDForIdent("PinNotify"), "");
-			$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_notifypin")));
 			
-			If (GetValueInteger($this->GetIDForIdent("Handle")) > 0) {
-	           		$this->ClientSocket(pack("LLLL", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0));
-			}
-			// Pins ermitteln die genutzt werden
-			SetValueString($this->GetIDForIdent("PinUsed"), "");
-			$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_usedpin")));
-			
+			$this->Get_PinUpdate;
 		}
-		
-           	
 	  }
   	  
 
@@ -134,6 +120,23 @@ class IPS2GPIO_IO extends IPSModule
 	 
 	   }
   
+	// Aktualisierung der genutzten Pins und der Notifikation
+	private function Get_PinUpdate()
+	{
+		// Pins ermitteln für die ein Notify erforderlich ist
+		SetValueString($this->GetIDForIdent("PinNotify"), "");
+		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_notifypin")));
+			
+		If (GetValueInteger($this->GetIDForIdent("Handle")) > 0) {
+	           	$this->ClientSocket(pack("LLLL", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0));
+		}
+		// Pins ermitteln die genutzt werden
+		SetValueString($this->GetIDForIdent("PinUsed"), "");
+		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_usedpin")));
+	return;
+	}
+	
+	
 	// Setzt den gewaehlten Pin in den geforderten Modus
 	private function Set_Mode($Pin, $Modus)
 	{		
