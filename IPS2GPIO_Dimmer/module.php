@@ -48,7 +48,7 @@
   		SetValueString(47271, $Ident." ".$Value);
   		switch($Ident) {
 	        case "Status":
-	            //$this->Set_Status($Value);
+	            $this->Set_Status($Value);
 	            //Neuen Wert in die Statusvariable schreiben
 	            SetValue($this->GetIDForIdent($Ident), $Value);
 	            break;
