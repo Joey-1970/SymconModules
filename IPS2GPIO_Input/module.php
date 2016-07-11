@@ -76,10 +76,10 @@
 		   	}
 		   	break;
 		   case "get_notifypin":
-		   	$this->SendDataToParent(json_encode(Array("DataID"=> "{EBFBEE2B-0F1A-470D-8B5B-97F977D605CA}", "Function" => "set_notifypin", "Pin" => $this->ReadPropertyInteger("Pin"))));
+		   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_notifypin", "Pin" => $this->ReadPropertyInteger("Pin"))));
 		   	break;
 		   case "get_usedpin":
-		   	$this->SendDataToParent(json_encode(Array("DataID"=> "{EBFBEE2B-0F1A-470D-8B5B-97F977D605CA}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin"))));
+		   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin"))));
 		   	break;
  	}
     	// Datenverarbeitung und schreiben der Werte in die Statusvariablen
@@ -92,14 +92,14 @@
 	// Setzt den gewaehlten Pin in den Output-Modus
 	private function Set_Mode()
 	{
-   		$this->SendDataToParent(json_encode(Array("DataID"=> "{EBFBEE2B-0F1A-470D-8B5B-97F977D605CA}", "Function" => "set_mode", "Pin" => $this->ReadPropertyInteger("Pin"), "Modus" => "R")));
+   		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_mode", "Pin" => $this->ReadPropertyInteger("Pin"), "Modus" => "R")));
    	return;
 	}
 
 	// Setzt den gewaehlten Pin in den Output-Modus
 	private function Set_GlitchFilter()
 	{
-   		$this->SendDataToParent(json_encode(Array("DataID"=> "{EBFBEE2B-0F1A-470D-8B5B-97F977D605CA}", "Function" => "set_glitchfilter", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $this->ReadPropertyInteger("GlitchFilter"))));
+   		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_glitchfilter", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $this->ReadPropertyInteger("GlitchFilter"))));
    	return;
 	}	
 
