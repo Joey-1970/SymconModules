@@ -47,6 +47,10 @@ class IPS2GPIO_IO extends IPSModule
 			// Pins ermitteln für die ein Notify erforderlich ist
 			SetValueString($this->GetIDForIdent("PinNotify"), "");
 			$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_notifypin")));
+			
+			If (GetValueInteger($this->GetIDForIdent("Handle")) > 0) {
+	           		$this->ClientSocket(pack("LLLL", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0));
+			
 			// Pins ermitteln die genutzt werden
 			SetValueString($this->GetIDForIdent("PinUsed"), "");
 			$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_usedpin")));
