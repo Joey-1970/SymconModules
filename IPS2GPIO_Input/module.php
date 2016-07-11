@@ -78,6 +78,9 @@
 		   case "get_notifypin":
 		   	$this->SendDataToParent(json_encode(Array("DataID"=> "{EBFBEE2B-0F1A-470D-8B5B-97F977D605CA}", "Function" => "set_notifypin", "Pin" => $this->ReadPropertyInteger("Pin"))));
 		   	break;
+		   case "get_usedpin":
+		   	$this->SendDataToParent(json_encode(Array("DataID"=> "{EBFBEE2B-0F1A-470D-8B5B-97F977D605CA}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin"))));
+		   	break;
  	}
     	// Datenverarbeitung und schreiben der Werte in die Statusvariablen
     	//SetValue($this->GetIDForIdent("Value"), $data->Buffer);
