@@ -57,22 +57,31 @@
 	        case "Status":
 	            $this->Set_Status($Value);
 	            //Neuen Wert in die Statusvariable schreiben
-	            SetValue($this->GetIDForIdent($Ident), $Value);
+	            SetValueBoolean($this->GetIDForIdent($Ident), $Value);
 	            break;
 	        case "Intensity_R":
 	            $this->Set_RGB($Value);
 	            //Neuen Wert in die Statusvariable schreiben
-	            SetValue($this->GetIDForIdent($Ident), $Value);
+	            SetValueInteger($this->GetIDForIdent($Ident), $Value);
+	            SetValueInteger($this->GetIDForIdent("Color"), RGB2Hex(GetValue($this->GetIDForIdent(Intensity_R)), GetValue($this->GetIDForIdent(Intensity_G)), GetValue($this->GetIDForIdent(Intensity_B))));
 	            break;
 	        case "Intensity_G":
 	            $this->Set_RGB($Value);
 	            //Neuen Wert in die Statusvariable schreiben
-	            SetValue($this->GetIDForIdent($Ident), $Value);
+	            SetValueInteger($this->GetIDForIdent($Ident), $Value);
+	            SetValueInteger($this->GetIDForIdent("Color"), RGB2Hex(GetValue($this->GetIDForIdent(Intensity_R)), GetValue($this->GetIDForIdent(Intensity_G)), GetValue($this->GetIDForIdent(Intensity_B))));
+	      
 	            break;
 	        case "Intensity_B":
 	            $this->Set_RGB($Value);
 	            //Neuen Wert in die Statusvariable schreiben
-	            SetValue($this->GetIDForIdent($Ident), $Value);
+	            SetValueInteger($this->GetIDForIdent($Ident), $Value);
+	            SetValueInteger($this->GetIDForIdent("Color"), RGB2Hex(GetValue($this->GetIDForIdent(Intensity_R)), GetValue($this->GetIDForIdent(Intensity_G)), GetValue($this->GetIDForIdent(Intensity_B))));
+	            break;
+	        case "Color":
+	            $this->Set_RGB($Value);
+	            //Neuen Wert in die Statusvariable schreiben
+	            SetValueInteger($this->GetIDForIdent($Ident), RGB2Hex(GetValue($this->GetIDForIdent(Intensity_R)), GetValue($this->GetIDForIdent(Intensity_G)), GetValue($this->GetIDForIdent(Intensity_B))));
 	            break;
 	        default:
 	            throw new Exception("Invalid Ident");
