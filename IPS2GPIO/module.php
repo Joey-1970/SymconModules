@@ -46,7 +46,7 @@ class IPS2GPIO_IO extends IPSModule
 			If (GetValueInteger($this->GetIDForIdent("Handle")) == 0) {
 				$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));		
 			}
-			$this->Get_PinUpdate;
+			$this->Get_PinUpdate();
 		}
 	  }
   	  
