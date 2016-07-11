@@ -82,6 +82,9 @@ class IPS2GPIO_IO extends IPSModule
 		        $PinUsed[] = $data->Pin;
 			SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
 		        break;
+		   case "get_pinupdate":
+		   	$this->Get_PinUpdate();
+		   	break;
 		}
 	    
 	    return;
