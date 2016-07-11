@@ -80,10 +80,14 @@
 	{
     	// Empfangene Daten vom Gateway/Splitter
     	$data = json_decode($JSONString);
-    	//IPS_LogMessage("ReceiveData-RGB", utf8_decode($data->Buffer));
- 
-    	// Datenverarbeitung und schreiben der Werte in die Statusvariablen
-    	//SetValue($this->GetIDForIdent("Value"), $data->Buffer);
+    	switch ($data->Function) {
+    		case "get_usedpin":
+		   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_R"))));
+		   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_G"))));
+		   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_B"))));
+		   	break;
+	   	
+    		}
 	}
 	
 	// Beginn der Funktionen
