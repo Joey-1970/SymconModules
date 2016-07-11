@@ -46,7 +46,18 @@ class IPS2GPIO_IO extends IPSModule
 			$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));
 			// Pins ermitteln für die ein Notify erforderlich ist
 			SetValueString($this->GetIDForIdent("PinNotify"), "");
+			// Input-Instanz
 			$this->SendDataToChildren(json_encode(Array("DataID" => "{696FADD0-5D27-4C02-8407-01258BE905D7}", "Function"=>"get_notifypin")));
+			// Pins ermitteln die genutzt werden
+			SetValueString($this->GetIDForIdent("PinUsed"), "");
+			// Input-Instanz
+			$this->SendDataToChildren(json_encode(Array("DataID" => "{696FADD0-5D27-4C02-8407-01258BE905D7}", "Function"=>"get_usedpin")));
+			// Dimmer-Instanz
+			$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_usedpin")));
+			// RGB-Instanz
+			$this->SendDataToChildren(json_encode(Array("DataID" => "{B43CE7FB-7FB7-4730-8828-A639105EAF3B}", "Function"=>"get_usedpin")));
+
+
 		}
 		
            	
@@ -82,14 +93,14 @@ class IPS2GPIO_IO extends IPSModule
 		        $PinNotify[] = $data->Pin;
 			SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
 		        break;
+		   case "set_usedpin":
+		        // Erstellt ein Array für alle Pins die genutzt werden 
+		        $PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
+		        $PinUsed[] = $data->Pin;
+			SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
+		        break;
 		}
-	    	// Hier würde man den Buffer im Normalfall verarbeiten
-	    	// z.B. CRC prüfen, in Einzelteile zerlegen
-	 	//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Buffer" => $data->Function)));
-	    	// Weiterleiten zur I/O Instanz
-	    	
-	 
-	    	// Weiterverarbeiten und durchreichen
+	    
 	    return;
 	  }
 	
