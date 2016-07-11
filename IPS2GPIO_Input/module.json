@@ -7,8 +7,8 @@
   [
     "IPS2GPIO_Input"
   ],
-  "parentRequirements": ["{EBFBEE2B-0F1A-470D-8B5B-97F977D605CA}"],
+  "parentRequirements": ["{A0DAAF26-4A2D-4350-963E-CC02E74BD414}"],
   "childRequirements": [],
-  "implemented": ["{696FADD0-5D27-4C02-8407-01258BE905D7}"],
+  "implemented": ["{8D44CA24-3B35-4918-9CBD-85A28C0C8917}"],
   "prefix": "I2GIN"
 }
