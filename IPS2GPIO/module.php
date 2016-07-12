@@ -42,10 +42,7 @@ class IPS2GPIO_IO extends IPSModule
 			// Notify Starten
 			SetValueInteger($this->GetIDForIdent("Handle"), 0);
 			$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));
-			// Hilfskonstruktion, falls keine Reaktion erfolgte
-			If (GetValueInteger($this->GetIDForIdent("Handle")) == 0) {
-				$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));		
-			}
+			
 			$this->Get_PinUpdate();
 		}
 	  }
@@ -104,8 +101,11 @@ class IPS2GPIO_IO extends IPSModule
 	 	If (strlen(utf8_decode($data->Buffer)) == 12) or (strlen(utf8_decode($data->Buffer)) == 16)) {
 	 		$this->ClientResponse(utf8_decode($data->Buffer));
 	 	}
-	    	elseif (in_array($RDlen[0], strlen(utf8_decode($data->Buffer)))) {
-	    		
+	    	elseif (in_array(strlen(utf8_decode($data->Buffer)), $RDlen[0])) {
+	    		$DataArray = str_split(utf8_decode($data->Buffer)), 16);
+	    		for ($i = 0; $i < Count($DataArray); $i++) {
+    				$this->ClientResponse(utf8_decode($DataArray[$i]));
+			} 
 	    	}
 	 	
 	 	
