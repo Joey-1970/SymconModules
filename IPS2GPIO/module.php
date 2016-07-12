@@ -98,7 +98,7 @@ class IPS2GPIO_IO extends IPSModule
 	    	$data = json_decode($JSONString);
 	    	IPS_LogMessage("ReceiveData", "Länge: ".strlen(utf8_decode($data->Buffer)));
 	 	// Wenn die Datenlänge wie erwartet eintrifft
-	 	If (strlen(utf8_decode($data->Buffer)) == 12) or (strlen(utf8_decode($data->Buffer)) == 16)) {
+	 	If ((strlen(utf8_decode($data->Buffer)) == 12) or (strlen(utf8_decode($data->Buffer)) == 16)) {
 	 		$this->ClientResponse(utf8_decode($data->Buffer));
 	 	}
 	    	elseif (in_array(strlen(utf8_decode($data->Buffer)), $RDlen[0])) {
