@@ -80,6 +80,9 @@ class IPS2GPIO_IO extends IPSModule
 		   case "set_usedpin":
 		        // Erstellt ein Array für alle Pins die genutzt werden 
 		        $PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
+		        If (in_array($data->Pin, $PinUsed)) {
+		        	IPS_LogMessage("GPIO Pin", "Achtung: Pin ".$data->Pin." wird mehrfach genutzt!");
+		        }
 		        $PinUsed[] = $data->Pin;
 			SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
 		        break;
