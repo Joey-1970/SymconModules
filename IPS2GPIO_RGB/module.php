@@ -83,9 +83,9 @@
 	            //Neuen Wert in die Statusvariable schreiben
 	            SetValueInteger($this->GetIDForIdent($Ident), RGB2Hex(GetValue($this->GetIDForIdent(Intensity_R)), GetValue($this->GetIDForIdent(Intensity_G)), GetValue($this->GetIDForIdent(Intensity_B))));
 	            list($r, $g, $b) = Hex2RGB($Value);
-	            SetValueInteger($this->GetIDForIdent"Intensity_R"), $r);
-	            SetValueInteger($this->GetIDForIdent"Intensity_G"), $g);
-	            SetValueInteger($this->GetIDForIdent"Intensity_B"), $b);
+	            SetValueInteger($this->GetIDForIdent"Intensity_R"), intval($r));
+	            SetValueInteger($this->GetIDForIdent"Intensity_G"), intval($g));
+	            SetValueInteger($this->GetIDForIdent"Intensity_B"), intval($b));
 	            break;
 	        default:
 	            throw new Exception("Invalid Ident");
