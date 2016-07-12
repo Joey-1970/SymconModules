@@ -82,6 +82,7 @@
 	            list($r, $g, $b) = $this->Hex2RGB($Value);
 	            $this->Set_RGB($r, $g, $b);
 	            //Neuen Wert in die Statusvariable schreiben
+	            SetValueInteger($this->GetIDForIdent($Ident), $Value);
 	            //SetValueInteger($this->GetIDForIdent($Ident), RGB2Hex(GetValue($this->GetIDForIdent(Intensity_R)), GetValue($this->GetIDForIdent(Intensity_G)), GetValue($this->GetIDForIdent(Intensity_B))));
 	            
 	            SetValueInteger($this->GetIDForIdent("Intensity_R"), intval($r));
