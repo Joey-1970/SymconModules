@@ -102,7 +102,7 @@ class IPS2GPIO_IO extends IPSModule
 	 		$this->ClientResponse(utf8_decode($data->Buffer));
 	 	}
 	    	elseif (in_array(strlen(utf8_decode($data->Buffer)), $RDlen[0])) {
-	    		$DataArray = str_split(utf8_decode($data->Buffer)), 16);
+	    		$DataArray = str_split(utf8_decode($data->Buffer), 16);
 	    		for ($i = 0; $i < Count($DataArray); $i++) {
     				$this->ClientResponse(utf8_decode($DataArray[$i]));
 			} 
