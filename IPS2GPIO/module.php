@@ -279,7 +279,7 @@ class IPS2GPIO_IO extends IPSModule
 		elseif ((strlen($Message) == 12) OR (strlen($Message) > 16)) {
 			$Message = substr($Message, 0, 12);
 			$response = unpack("L*", $Message);
-			IPS_LogMessage("GPIO Notify: ","Meldung");		
+					
 			IPS_LogMessage("GPIO Notify: ","Meldung: ".count($response)." ".$response[1]." ".$response[2]." ".$response[3]);
 		
 			$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
