@@ -95,16 +95,19 @@ class IPS2GPIO_IO extends IPSModule
  	    	$RDlen[0] = array(32, 48, 64,80);	
 	        $RDlen[1] = array(24, 36, 48, 60);
  	    	// Empfangene Daten vom I/O
-	    	$data = json_decode($JSONString);
-	    	IPS_LogMessage("ReceiveData", "Länge: ".strlen(utf8_decode($data->Buffer)));
+	    	$Data = json_decode($JSONString);
+	    	$Message = utf8_decode($Data->Buffer);
+	    	$MessageLen = strlen($message);
+	    	IPS_LogMessage("GPIO ReceiveData", "Länge: ".$MessageLen);
 	 	// Wenn die Datenlänge wie erwartet eintrifft
-	 	If ((strlen(utf8_decode($data->Buffer)) == 12) or (strlen(utf8_decode($data->Buffer)) == 16)) {
-	 		$this->ClientResponse(utf8_decode($data->Buffer));
+	 	If (($MessageLen == 12) or ($MessageLen == 16)) {
+	 		$this->ClientResponse($Message);
 	 	}
-	    	elseif (in_array(strlen(utf8_decode($data->Buffer)), $RDlen[0])) {
-	    		$DataArray = str_split(utf8_decode($data->Buffer), 16);
+	    	elseif (in_array($MessageLen, $RDlen[0])) {
+	    		$DataArray = str_split($Message, 16);
+	    		IPS_LogMessage("GPIO ReceiveData", "Überlänge: ".Count($DataArray)." Datensätze");
 	    		for ($i = 0; $i < Count($DataArray); $i++) {
-    				$this->ClientResponse(utf8_decode($DataArray[$i]));
+    				$this->ClientResponse($DataArray[$i]);
 			} 
 	    	}
 	 	
