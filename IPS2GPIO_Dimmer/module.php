@@ -125,7 +125,8 @@
 	// Toggelt den Status
 	public function Toggle_Status()
 	{
-		$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")));	
+		$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")));
+	return;
 	}
 
     }
