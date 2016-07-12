@@ -79,10 +79,11 @@
 	            SetValueInteger($this->GetIDForIdent("Color"), RGB2Hex(GetValue($this->GetIDForIdent(Intensity_R)), GetValue($this->GetIDForIdent(Intensity_G)), GetValue($this->GetIDForIdent(Intensity_B))));
 	            break;
 	        case "Color":
-	            $this->Set_RGB($Value);
-	            //Neuen Wert in die Statusvariable schreiben
-	            SetValueInteger($this->GetIDForIdent($Ident), RGB2Hex(GetValue($this->GetIDForIdent(Intensity_R)), GetValue($this->GetIDForIdent(Intensity_G)), GetValue($this->GetIDForIdent(Intensity_B))));
 	            list($r, $g, $b) = Hex2RGB($Value);
+	            $this->Set_RGB($r, $g, $b);
+	            //Neuen Wert in die Statusvariable schreiben
+	            //SetValueInteger($this->GetIDForIdent($Ident), RGB2Hex(GetValue($this->GetIDForIdent(Intensity_R)), GetValue($this->GetIDForIdent(Intensity_G)), GetValue($this->GetIDForIdent(Intensity_B))));
+	            
 	            SetValueInteger($this->GetIDForIdent"Intensity_R"), intval($r));
 	            SetValueInteger($this->GetIDForIdent"Intensity_G"), intval($g));
 	            SetValueInteger($this->GetIDForIdent"Intensity_B"), intval($b));
