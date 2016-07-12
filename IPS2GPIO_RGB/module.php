@@ -63,23 +63,23 @@
 	            $this->Set_RGB($Value);
 	            //Neuen Wert in die Statusvariable schreiben
 	            SetValueInteger($this->GetIDForIdent($Ident), $Value);
-	            SetValueInteger($this->GetIDForIdent("Color"), RGB2Hex(GetValue($this->GetIDForIdent(Intensity_R)), GetValue($this->GetIDForIdent(Intensity_G)), GetValue($this->GetIDForIdent(Intensity_B))));
+	            SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex(GetValue($this->GetIDForIdent(Intensity_R)), GetValue($this->GetIDForIdent(Intensity_G)), GetValue($this->GetIDForIdent(Intensity_B))));
 	            break;
 	        case "Intensity_G":
 	            $this->Set_RGB($Value);
 	            //Neuen Wert in die Statusvariable schreiben
 	            SetValueInteger($this->GetIDForIdent($Ident), $Value);
-	            SetValueInteger($this->GetIDForIdent("Color"), RGB2Hex(GetValue($this->GetIDForIdent(Intensity_R)), GetValue($this->GetIDForIdent(Intensity_G)), GetValue($this->GetIDForIdent(Intensity_B))));
+	            SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex(GetValue($this->GetIDForIdent(Intensity_R)), GetValue($this->GetIDForIdent(Intensity_G)), GetValue($this->GetIDForIdent(Intensity_B))));
 	      
 	            break;
 	        case "Intensity_B":
 	            $this->Set_RGB($Value);
 	            //Neuen Wert in die Statusvariable schreiben
 	            SetValueInteger($this->GetIDForIdent($Ident), $Value);
-	            SetValueInteger($this->GetIDForIdent("Color"), RGB2Hex(GetValue($this->GetIDForIdent(Intensity_R)), GetValue($this->GetIDForIdent(Intensity_G)), GetValue($this->GetIDForIdent(Intensity_B))));
+	            SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex(GetValue($this->GetIDForIdent(Intensity_R)), GetValue($this->GetIDForIdent(Intensity_G)), GetValue($this->GetIDForIdent(Intensity_B))));
 	            break;
 	        case "Color":
-	            list($r, $g, $b) = Hex2RGB($Value);
+	            list($r, $g, $b) = $this->Hex2RGB($Value);
 	            $this->Set_RGB($r, $g, $b);
 	            //Neuen Wert in die Statusvariable schreiben
 	            //SetValueInteger($this->GetIDForIdent($Ident), RGB2Hex(GetValue($this->GetIDForIdent(Intensity_R)), GetValue($this->GetIDForIdent(Intensity_G)), GetValue($this->GetIDForIdent(Intensity_B))));
