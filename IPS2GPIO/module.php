@@ -97,7 +97,7 @@ class IPS2GPIO_IO extends IPSModule
  	    	// Empfangene Daten vom I/O
 	    	$Data = json_decode($JSONString);
 	    	$Message = utf8_decode($Data->Buffer);
-	    	$MessageLen = strlen($message);
+	    	$MessageLen = strlen($Message);
 	    	IPS_LogMessage("GPIO ReceiveData", "Länge: ".$MessageLen);
 	 	// Wenn die Datenlänge wie erwartet eintrifft
 	 	If (($MessageLen == 12) or ($MessageLen == 16)) {
