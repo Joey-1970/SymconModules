@@ -95,16 +95,21 @@ class IPS2GPIO_IO extends IPSModule
 	  }
 	
 	 public function ReceiveData($JSONString) {
- 
-	    // Empfangene Daten vom I/O
-	    $data = json_decode($JSONString);
-	    IPS_LogMessage("ReceiveData", "Länge: ".strlen(utf8_decode($data->Buffer))." Test ".utf8_decode($data->Buffer));
-	 	$this->ClientResponse(utf8_decode($data->Buffer));
-	    // Hier werden die Daten verarbeitet
-	 
-	    // Weiterleitung zu allen Gerät-/Device-Instanzen
-	    //$this->SendDataToChildren(json_encode(Array("DataID" => "{66164EB8-3439-4599-B937-A365D7A68567}", "Buffer" => $data->Buffer)));
-	}
+ 	    	$RDlen[0] = array(32, 48, 64,80);	
+	        $RDlen[1] = array(24, 36, 48, 60);
+ 	    	// Empfangene Daten vom I/O
+	    	$data = json_decode($JSONString);
+	    	IPS_LogMessage("ReceiveData", "Länge: ".strlen(utf8_decode($data->Buffer)));
+	 	// Wenn die Datenlänge wie erwartet eintrifft
+	 	If (strlen(utf8_decode($data->Buffer)) == 12) or (strlen(utf8_decode($data->Buffer)) == 16)) {
+	 		$this->ClientResponse(utf8_decode($data->Buffer));
+	 	}
+	    	elseif (in_array($RDlen[0], strlen(utf8_decode($data->Buffer)))) {
+	    		
+	    	}
+	 	
+	 	
+	 }
  
   
 	  public function RequestAction($Ident, $Value) 
