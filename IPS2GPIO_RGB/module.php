@@ -156,6 +156,7 @@
 	public function Toggle_Status()
 	{
 		$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")));	
+	return;
 	}
 	
 	private function Hex2RGB($Hex)
