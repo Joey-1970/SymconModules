@@ -41,7 +41,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->CommandClientSocket(pack("LLLL", 17, 0, 0, 0));
 			// Notify Starten
 			SetValueInteger($this->GetIDForIdent("Handle"), 0);
-			$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));
+			$this->CommandClientSocket(pack("LLLL", 99, 0, 0, 0));
 			
 			$this->Get_PinUpdate();
 		}
@@ -97,7 +97,7 @@ class IPS2GPIO_IO extends IPSModule
 	  }
 	
 	 public function ReceiveData($JSONString) {
- 	    	$RDlen[0] = array(32, 48, 64, 80);	
+ 	    	$RDlen[0] = array(32);	
 	        $RDlen[1] = array(24, 36, 48, 60, 72, 84, 96, 108, 120, 132, 144, 156, 168, 180);
  	    	// Empfangene Daten vom I/O
 	    	$Data = json_decode($JSONString);
