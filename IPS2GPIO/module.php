@@ -53,7 +53,7 @@ class IPS2GPIO_IO extends IPSModule
 	  {
 	 	// Empfangene Daten von der Device Instanz
 	    	$data = json_decode($JSONString);
-	    	IPS_LogMessage("ForwardData", utf8_decode($data->Function));
+	    	
 	 	switch ($data->Function) {
 		    case "set_mode":
 		        $this->Set_Mode($data->Pin, $data->Modus);
