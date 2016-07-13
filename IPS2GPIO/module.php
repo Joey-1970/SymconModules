@@ -64,9 +64,18 @@ class IPS2GPIO_IO extends IPSModule
 		        // Erstellt ein Array für alle Pins die genutzt werden 
 		        $PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
 		        If (is_array($PinUsed)) {
+			        // Prüft, ob der ausgeählte Pin schon einmal genutzt wird
 			        If (in_array($data->Pin, $PinUsed)) {
 			        	IPS_LogMessage("GPIO Pin", "Achtung: Pin ".$data->Pin." wird mehrfach genutzt!");
 			        }
+			        // Prüfen, ob der gewählte GPIO bei dem Modell überhaupt vorhanden ist
+				$PinPossible = unserialize(GetValueString($this->GetIDForIdent("PinPossible")));
+				if (in_array($data->Pin, $PinPossible)) {
+		    			IPS_LogMessage("GPIO Pin: ","Gewählter Pin ist bei diesem Modell verfügbar");
+				}
+				else {
+					IPS_LogMessage("GPIO Pin: ","Gewählter Pin ist bei diesem Modell nicht verfügbar!");
+				}
 		        }
 		        $PinUsed[] = $data->Pin;
 			SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
@@ -191,30 +200,7 @@ class IPS2GPIO_IO extends IPSModule
 	
 	private function PinPossible($DataID, $InstanzID, $Pin)
 	{
-		// Prüfen, ob der gewählte GPIO bei dem Modell überhaupt vorhanden ist
-		$PinPossible = unserialize(GetValueString($this->GetIDForIdent("PinPossible")));
-		if (in_array($Pin, $PinPossible)) {
-    			$result = true;
-    			IPS_LogMessage("GPIO Auswahl: ","Gewählter Pin ist bei diesem Modell verfügbar");
-		}
-		else {
-			$result = false;
-			IPS_LogMessage("GPIO Auswahl: ","Gewählter Pin ist bei diesem Modell nicht verfügbar!");
-		}
-		// Prüfen ob der gewählten GPIO noch nicht in eine der anderen Instanzen genutzt wird
-		$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
-		if (in_array($Pin, $PinUsed)) {
-    			$result = false;
-    			IPS_LogMessage("GPIO Auswahl: ","Gewählter Pin wird schon genutzt!");
-		}
-		else {
-			$result = true;
-			IPS_LogMessage("GPIO Auswahl: ","Gewählter Pin ist verfügbar!");
-			$PinUsed[] = $Pin;
-			SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
-		}
-		
-		$this->SendDataToChildren(json_encode(Array("DataID" =>"{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"pin_possible", "InstanzID" =>$InstanzID, "Result"=>$result)));
+		//$this->SendDataToChildren(json_encode(Array("DataID" =>"{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"pin_possible", "InstanzID" =>$InstanzID, "Result"=>$result)));
 	return;
 	}
 	
