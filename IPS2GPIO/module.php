@@ -1,17 +1,6 @@
 <?
 class IPS2GPIO_IO extends IPSModule
 {
-	  // Der Konstruktor des Moduls
-	  // Überschreibt den Standard Kontruktor von IPS
-	  public function __construct($InstanceID) 
-	  {
-	      // Diese Zeile nicht löschen
-	      parent::__construct($InstanceID);
-	 	
-	
-	            // Selbsterstellter Code
-	  }
-  
 	  public function Create() 
 	  {
 	    // Diese Zeile nicht entfernen
