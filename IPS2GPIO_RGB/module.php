@@ -36,8 +36,6 @@
            	$this->EnableAction("Color");
            	$this->Set_Mode_RGB();
            	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
-
-           	
         }
 	
 	public function RequestAction($Ident, $Value) 
@@ -59,7 +57,6 @@
 	            //Neuen Wert in die Statusvariable schreiben
 	            SetValueInteger($this->GetIDForIdent($Ident), $Value);
 	            SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex(GetValue($this->GetIDForIdent(Intensity_R)), GetValue($this->GetIDForIdent(Intensity_G)), GetValue($this->GetIDForIdent(Intensity_B))));
-	      
 	            break;
 	        case "Intensity_B":
 	            $this->Set_RGB($Value);
@@ -72,8 +69,6 @@
 	            $this->Set_RGB($r, $g, $b);
 	            //Neuen Wert in die Statusvariable schreiben
 	            SetValueInteger($this->GetIDForIdent($Ident), $Value);
-	            //SetValueInteger($this->GetIDForIdent($Ident), RGB2Hex(GetValue($this->GetIDForIdent(Intensity_R)), GetValue($this->GetIDForIdent(Intensity_G)), GetValue($this->GetIDForIdent(Intensity_B))));
-	            
 	            SetValueInteger($this->GetIDForIdent("Intensity_R"), intval($r));
 	            SetValueInteger($this->GetIDForIdent("Intensity_G"), intval($g));
 	            SetValueInteger($this->GetIDForIdent("Intensity_B"), intval($b));
@@ -93,8 +88,8 @@
 		   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_G"))));
 		   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_B"))));
 		   	break;
-	   	
     		}
+    	return;
 	}
 	
 	// Beginn der Funktionen
@@ -137,7 +132,6 @@
    			$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin_G"), "Value" => 0)));
    			$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin_B"), "Value" => 0)));	
 		}
-	
 	return;
 	}
 	
@@ -162,8 +156,6 @@
 	
 	return $Hex;
 	}
-	
-
 
     }
 ?>
