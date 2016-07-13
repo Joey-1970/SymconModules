@@ -41,7 +41,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->CommandClientSocket(pack("LLLL", 17, 0, 0, 0));
 			// Notify Starten
 			SetValueInteger($this->GetIDForIdent("Handle"), 0);
-			$this->CommandClientSocket(pack("LLLL", 99, 0, 0, 0));
+			$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));
 			
 			$this->Get_PinUpdate();
 		}
