@@ -32,8 +32,6 @@ class IPS2GPIO_IO extends IPSModule
 			$this->Get_PinUpdate();
 		}
 	  }
-  	  
-
 
 	  public function ForwardData($JSONString) 
 	  {
@@ -54,7 +52,6 @@ class IPS2GPIO_IO extends IPSModule
 		        $this->PinPossible($data->DataID, $data->InstanzID, $data->Pin);
 		        break;
 		    case "set_glitchfilter":
-		        
 		        $this->Set_GlitchFilter($data->Pin, $data->Value);
 		        break;
 		    case "set_notifypin":
