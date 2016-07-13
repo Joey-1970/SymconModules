@@ -7,7 +7,7 @@
         {
             // Diese Zeile nicht löschen.
             parent::Create();
-           
+            $this->SetStatus(101);
             $this->RegisterPropertyInteger("Pin_R", 2);
             $this->RegisterPropertyInteger("Pin_G", 3);
             $this->RegisterPropertyInteger("Pin_B", 4);
