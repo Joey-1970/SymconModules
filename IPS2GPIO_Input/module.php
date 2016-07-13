@@ -38,18 +38,6 @@
 	    	$data = json_decode($JSONString);
 	    	//IPS_LogMessage("ReceiveData_Input", utf8_decode($data->Buffer));
 	 	switch ($data->Function) {
-			    case "pin_possible":
-			        If ($data->InstanzID == $this->$InstanceID) {
-			        	If ($data->Result) {
-			        		//$this->SetStatus(102);
-			        		IPS_LogMessage("GPIO Auswahl: ","erfolgreich");
-			        	}
-			        	else {
-			        		//$this->SetStatus(200);
-			        		IPS_LogMessage("GPIO Auswahl: ","nicht erfolgreich!");
-			        	}
-			        }
-			        break;
 			   case "notify":
 			   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
 			   		If ((GetValueBoolean($this->GetIDForIdent("Status")) == false) and ($data->Value == true)) {
