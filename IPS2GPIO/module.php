@@ -119,9 +119,12 @@ class IPS2GPIO_IO extends IPSModule
 		elseif (in_array($MessageLen, $RDlen[1])) {
 	    		// wenn es sich um mehrere Notifikationen handelt, nur die erste Änderung übermitteln
 	    		$DataArray = str_split($Message, 12);
-	    		$Message = substr($Message, 0, 12);
+	    		//$Message = substr($Message, 0, 12);
 	    		IPS_LogMessage("GPIO ReceiveData", "Überlänge: ".Count($DataArray)." Notify-Datensätze");
-	    		$this->ClientResponse($Message);
+	    		for ($i = 0; $i < Count($DataArray); $i++) {
+    				$this->ClientResponse($DataArray[$i]);
+			}
+	    		//$this->ClientResponse($Message);
 		}
 	 	else {
 	 		IPS_LogMessage("GPIO ReceiveData", "Überlänge: Datensätze nicht differenzierbar!");
