@@ -7,7 +7,7 @@
         {
             // Diese Zeile nicht löschen.
             parent::Create();
-           
+            $this->SetStatus(101);
             $this->RegisterPropertyInteger("Pin", 2);
             $this->RegisterPropertyInteger("GlitchFilter", 10);
  	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");	
