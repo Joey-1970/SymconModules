@@ -243,6 +243,47 @@ class IPS2GPIO_IO extends IPSModule
 	return;	
 	}
 	
+	private function CommandClientSocket($message)
+	{
+		// Socket erstellen
+		if(!($sock = socket_create(AF_INET, SOCK_STREAM, 0))) {
+			$errorcode = socket_last_error();
+		    $errormsg = socket_strerror($errorcode);
+		
+		    die("Couldn't create socket: [$errorcode] $errormsg \n");
+		}
+		
+		// Verbindung aufbauen
+		if(!socket_connect($sock , '192.168.178.53' , 8888)) {
+			$errorcode = socket_last_error();
+		    $errormsg = socket_strerror($errorcode);
+		
+		    die("Could not connect: [$errorcode] $errormsg \n");
+		}
+		
+		// Message senden
+		$message = pack("LLLL", 10, 0, 0, 0);
+		if( ! socket_send ( $sock , $message , strlen($message) , 0))
+		{
+			$errorcode = socket_last_error();
+		    $errormsg = socket_strerror($errorcode);
+		
+		    die("Could not send data: [$errorcode] $errormsg \n");
+		}
+		
+		//Now receive reply from server
+		if(socket_recv ( $sock , $buf , 16, MSG_WAITALL ) === FALSE) {
+			$errorcode = socket_last_error();
+		    $errormsg = socket_strerror($errorcode);
+		
+		    die("Could not receive data: [$errorcode] $errormsg \n");
+		}
+		
+		$message = (unpack("L*", $buf));
+		
+	return;	
+	}
+	
 	private function ClientResponse($Message)
 	{
 		If (strlen($Message) == 16) {
