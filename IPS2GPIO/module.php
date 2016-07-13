@@ -98,7 +98,7 @@ class IPS2GPIO_IO extends IPSModule
 	
 	 public function ReceiveData($JSONString) {
  	    	$RDlen[0] = array(32, 48, 64, 80);	
-	        $RDlen[1] = array(24, 36, 48, 60, 72, 84, 96, 108, 120);
+	        $RDlen[1] = array(24, 36, 48, 60, 72, 84, 96, 108, 120, 132, 144, 156, 168, 180);
  	    	// Empfangene Daten vom I/O
 	    	$Data = json_decode($JSONString);
 	    	$Message = utf8_decode($Data->Buffer);
@@ -121,7 +121,7 @@ class IPS2GPIO_IO extends IPSModule
 	    		$DataArray = str_split($Message, 12);
 	    		$Message = substr($Message, 0, 12);
 	    		IPS_LogMessage("GPIO ReceiveData", "Überlänge: ".Count($DataArray)." Notify-Datensätze");
-	    		$this->ClientResponse($DataArray[$i]);
+	    		$this->ClientResponse($Message);
 		}
 	 	else {
 	 		IPS_LogMessage("GPIO ReceiveData", "Überlänge: Datensätze nicht differenzierbar!");
