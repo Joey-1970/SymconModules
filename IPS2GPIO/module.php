@@ -120,8 +120,7 @@ class IPS2GPIO_IO extends IPSModule
 	    		$Message = substr($Message, 0, 12);
 	    		IPS_LogMessage("GPIO ReceiveData", "Überlänge: ".Count($DataArray)." Notify-Datensätze");
 	    		$this->ClientResponse($DataArray[$i]);
-			}
-	 	}
+		}
 	 	else {
 	 		IPS_LogMessage("GPIO ReceiveData", "Überlänge: Datensätze nicht differenzierbar!");
 	 	}
