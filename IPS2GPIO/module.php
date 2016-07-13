@@ -48,9 +48,6 @@ class IPS2GPIO_IO extends IPSModule
 		    case "set_PWM_dutycycle_RGB":
 		        $this->Set_Intensity_RGB($data->Pin_R, $data->Value_R, $data->Pin_G, $data->Value_G, $data->Pin_B, $data->Value_B);
 		        break;
-		    case "pin_possible":
-		        $this->PinPossible($data->DataID, $data->InstanzID, $data->Pin);
-		        break;
 		    case "set_glitchfilter":
 		        $this->Set_GlitchFilter($data->Pin, $data->Value);
 		        break;
@@ -197,13 +194,7 @@ class IPS2GPIO_IO extends IPSModule
 		$this->CommandClientSocket(pack("LLLL", 5, $Pin, $Value, 0));
 	return;
 	}
-	
-	private function PinPossible($DataID, $InstanzID, $Pin)
-	{
-		//$this->SendDataToChildren(json_encode(Array("DataID" =>"{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"pin_possible", "InstanzID" =>$InstanzID, "Result"=>$result)));
-	return;
-	}
-	
+
 	private function ClientSocket($message)
 	{
 		$res = $this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode($message))));  
