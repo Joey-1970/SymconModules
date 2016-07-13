@@ -38,7 +38,7 @@ class IPS2GPIO_IO extends IPSModule
 		
 		If($this->ConnectionTest()) {
 			// Hardware feststellen
-			$this->ClientSocket(pack("LLLL", 17, 0, 0, 0));
+			$this->CommandClientSocket(pack("LLLL", 17, 0, 0, 0));
 			// Notify Starten
 			SetValueInteger($this->GetIDForIdent("Handle"), 0);
 			$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));
@@ -158,7 +158,7 @@ class IPS2GPIO_IO extends IPSModule
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_notifypin")));
 		// Notify setzen	
 		If (GetValueInteger($this->GetIDForIdent("Handle")) > 0) {
-	           	$this->ClientSocket(pack("LLLL", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0));
+	           	$this->CommandClientSocket(pack("LLLL", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0));
 		}
 		// Pins ermitteln die genutzt werden
 		SetValueString($this->GetIDForIdent("PinUsed"), "");
@@ -170,7 +170,7 @@ class IPS2GPIO_IO extends IPSModule
 	// Setzt den gewaehlten Pin in den geforderten Modus
 	private function Set_Mode($Pin, $Modus)
 	{		
-		$this->ClientSocket(pack("LLLL", 0, $Pin, $Modus, 0));
+		$this->CommandClientSocket(pack("LLLL", 0, $Pin, $Modus, 0));
 		IPS_LogMessage("SetMode Parameter : ",$Pin." , ".$Modus);  
 	return;
 	}
@@ -178,7 +178,7 @@ class IPS2GPIO_IO extends IPSModule
 	// Setzt den gewaehlten Pin in den geforderten Modus
 	private function Set_GlitchFilter($Pin, $Value)
 	{		
-		$this->ClientSocket(pack("LLLL", 97, $Pin, $Value, 0));
+		$this->CommandClientSocket(pack("LLLL", 97, $Pin, $Value, 0));
 		IPS_LogMessage("SetGlitchFilter Parameter : ",$Pin." , ".$Value);  
 	return;
 	}
@@ -186,7 +186,7 @@ class IPS2GPIO_IO extends IPSModule
 	// Dimmt den gewaehlten Pin
 	private function Set_Intensity($Pin, $Value)
 	{
-		$this->ClientSocket(pack("LLLL", 5, $Pin, $Value, 0));
+		$this->CommandClientSocket(pack("LLLL", 5, $Pin, $Value, 0));
 		IPS_LogMessage("Set Intensity : ",$Pin." , ".$Value);  
 	return;
 	}
@@ -194,7 +194,7 @@ class IPS2GPIO_IO extends IPSModule
 	// Setzt die Farbe der RGB-LED
 	private function Set_Intensity_RGB($Pin_R, $Value_R, $Pin_G, $Value_G, $Pin_B, $Value_B)
 	{
-		$this->ClientSocket(pack("LLLL", 5, $Pin_R, $Value_R, 0).pack("LLLL", 5, $Pin_G, $Value_G, 0).pack("LLLL", 5, $Pin_B, $Value_B, 0));
+		$this->CommandClientSocket(pack("LLLL", 5, $Pin_R, $Value_R, 0).pack("LLLL", 5, $Pin_G, $Value_G, 0).pack("LLLL", 5, $Pin_B, $Value_B, 0));
 		IPS_LogMessage("Set Intensity RGB : ",$Pin_R." , ".$Value_R." ".$Pin_G." , ".$Value_G." ".$Pin_B." , ".$Value_B);  
 	return;
 	}
@@ -202,7 +202,7 @@ class IPS2GPIO_IO extends IPSModule
 	// Schaltet den gewaehlten Pin
 	private function Set_Status($Pin, $Value)
 	{
-		$this->ClientSocket(pack("LLLL", 5, $Pin, $Value, 0));
+		$this->CommandClientSocket(pack("LLLL", 5, $Pin, $Value, 0));
 	return;
 	}
 	
