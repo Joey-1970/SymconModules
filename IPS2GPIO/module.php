@@ -278,7 +278,7 @@ class IPS2GPIO_IO extends IPSModule
 		    	die(IPS_LogMessage("GPIO Socket: ", "Fehler beim beim Empfangen ".[$errorcode]." ".$errormsg));
 		}
 		
-		$this->ClientResponse($buf)
+		$this->ClientResponse($buf);
 		
 	return;	
 	}
