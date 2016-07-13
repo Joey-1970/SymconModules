@@ -10,8 +10,6 @@ class IPS2GPIO_IO extends IPSModule
 	    $this->RegisterPropertyBoolean("Open", 0);
 	    $this->RegisterPropertyString("IPAddress", "127.0.0.1");
 	    $this->ConnectParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
-	    
-	
 	  }
   
 	  public function ApplyChanges()
@@ -23,7 +21,6 @@ class IPS2GPIO_IO extends IPSModule
 		$this->RegisterVariableString("PinUsed", "PinUsed");
 		$this->RegisterVariableString("PinNotify", "PinNotify");
 		$this->RegisterVariableInteger("Handle", "Handle");
-		
 		
 		If($this->ConnectionTest()) {
 			// Hardware feststellen
@@ -113,7 +110,6 @@ class IPS2GPIO_IO extends IPSModule
 	    		for ($i = 0; $i < Count($DataArray); $i++) {
     				$this->ClientResponse($DataArray[$i]);
 			}
-	    		//$this->ClientResponse($Message);
 		}
 	 	else {
 	 		IPS_LogMessage("GPIO ReceiveData", "Überlänge: Datensätze nicht differenzierbar!");
@@ -121,7 +117,6 @@ class IPS2GPIO_IO extends IPSModule
 	 	
 	 }
  
-  
 	  public function RequestAction($Ident, $Value) 
 	  {
 		    switch($Ident) {
@@ -157,7 +152,6 @@ class IPS2GPIO_IO extends IPSModule
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_usedpin")));
 	return;
 	}
-	
 	
 	// Setzt den gewaehlten Pin in den geforderten Modus
 	private function Set_Mode($Pin, $Modus)
@@ -230,8 +224,6 @@ class IPS2GPIO_IO extends IPSModule
 	private function ClientSocket($message)
 	{
 		$res = $this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode($message))));  
-		
-	
 	return;	
 	}
 	
@@ -385,6 +377,5 @@ class IPS2GPIO_IO extends IPSModule
 	return $result;
 	}
   
-
 }
 ?>
