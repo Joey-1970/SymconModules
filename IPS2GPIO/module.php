@@ -83,6 +83,10 @@ class IPS2GPIO_IO extends IPSModule
 		   case "get_pinupdate":
 		   	$this->Get_PinUpdate();
 		   	break;
+		   case "get_freepin":
+		   	$PinPossible = unserialize(GetValueString($this->GetIDForIdent("PinPossible")));
+		   	
+		   	break;
 		}
 	    
 	    return;
