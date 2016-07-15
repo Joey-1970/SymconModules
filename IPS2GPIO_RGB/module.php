@@ -11,7 +11,8 @@
             $this->RegisterPropertyInteger("Pin_R", -1);
             $this->RegisterPropertyInteger("Pin_G", -1);
             $this->RegisterPropertyInteger("Pin_B", -1);
- 	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");	
+ 	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+ 	    $this->SetStatus(101);
         }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -34,8 +35,10 @@
            	$this->EnableAction("Intensity_B");
            	$this->RegisterVariableInteger("Color", "Farbe", "~HexColor");
            	$this->EnableAction("Color");
-           	$this->Set_Mode_RGB();
-           	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
+           	If ($this->ReadPropertyInteger("Pin_R") >= 0) AND ($this->ReadPropertyInteger("Pin_G") >= 0) AND ($this->ReadPropertyInteger("Pin_B") >= 0) {
+           		$this->Set_Mode_RGB();
+           		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
+           	}
         }
 	
 	public function RequestAction($Ident, $Value) 
