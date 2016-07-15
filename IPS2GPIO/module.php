@@ -40,45 +40,57 @@ class IPS2GPIO_IO extends IPSModule
 	    	
 	 	switch ($data->Function) {
 		    case "set_mode":
-		        $this->Set_Mode($data->Pin, $data->Modus);
+		        If ($data->Pin >= 0) {
+		        	$this->Set_Mode($data->Pin, $data->Modus);
+		        }
 		        break;
 		    case "set_PWM_dutycycle":
-		        $this->Set_Intensity($data->Pin, $data->Value);
+		    	If ($data->Pin >= 0) {
+		        	$this->Set_Intensity($data->Pin, $data->Value);
+		    	}
 		        break;
 		    case "set_PWM_dutycycle_RGB":
-		        $this->Set_Intensity_RGB($data->Pin_R, $data->Value_R, $data->Pin_G, $data->Value_G, $data->Pin_B, $data->Value_B);
+		    	If (($data->Pin_R >= 0) AND ($data->Pin_G >= 0) AND ($data->Pin_B >= 0)) {
+		        	$this->Set_Intensity_RGB($data->Pin_R, $data->Value_R, $data->Pin_G, $data->Value_G, $data->Pin_B, $data->Value_B);
+		    	}
 		        break;
 		    case "set_glitchfilter":
-		        $this->Set_GlitchFilter($data->Pin, $data->Value);
+		    	If ($data->Pin >= 0) {
+		        	$this->Set_GlitchFilter($data->Pin, $data->Value);
+		    	}
 		        break;
 		    case "set_notifypin":
-		        // Erstellt ein Array für alle Pins für die die Notifikation erforderlich ist 
-		        $PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
-		        $PinNotify[] = $data->Pin;
-			SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
+		    	If ($data->Pin >= 0) {
+			        // Erstellt ein Array für alle Pins für die die Notifikation erforderlich ist 
+			        $PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
+			        $PinNotify[] = $data->Pin;
+				SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
+		    	}
 		        break;
 		   case "set_usedpin":
-			// Prüfen, ob der gewählte GPIO bei dem Modell überhaupt vorhanden ist
-			$PinPossible = unserialize(GetValueString($this->GetIDForIdent("PinPossible")));
-			if (in_array($data->Pin, $PinPossible)) {
-		    		IPS_LogMessage("GPIO Pin: ","Gewählter Pin ist bei diesem Modell verfügbar");
-		    		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>102)));
-			}
-			else {
-				IPS_LogMessage("GPIO Pin: ","Gewählter Pin ist bei diesem Modell nicht verfügbar!");
-				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>201)));
-			}
-			// Erstellt ein Array für alle Pins die genutzt werden 	
-			$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
-		        If (is_array($PinUsed)) {	
-				// Prüft, ob der ausgeählte Pin schon einmal genutzt wird
-			        If (in_array($data->Pin, $PinUsed)) {
-			        	IPS_LogMessage("GPIO Pin", "Achtung: Pin ".$data->Pin." wird mehrfach genutzt!");
-			        	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>200)));
+		   	If ($data->Pin >= 0) {
+				// Prüfen, ob der gewählte GPIO bei dem Modell überhaupt vorhanden ist
+				$PinPossible = unserialize(GetValueString($this->GetIDForIdent("PinPossible")));
+				if (in_array($data->Pin, $PinPossible)) {
+			    		IPS_LogMessage("GPIO Pin: ","Gewählter Pin ist bei diesem Modell verfügbar");
+			    		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>102)));
+				}
+				else {
+					IPS_LogMessage("GPIO Pin: ","Gewählter Pin ist bei diesem Modell nicht verfügbar!");
+					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>201)));
+				}
+				// Erstellt ein Array für alle Pins die genutzt werden 	
+				$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
+			        If (is_array($PinUsed)) {	
+					// Prüft, ob der ausgeählte Pin schon einmal genutzt wird
+				        If (in_array($data->Pin, $PinUsed)) {
+				        	IPS_LogMessage("GPIO Pin", "Achtung: Pin ".$data->Pin." wird mehrfach genutzt!");
+				        	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>200)));
+				        }
 			        }
-		        }
-		        $PinUsed[] = $data->Pin;
-			SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
+			        $PinUsed[] = $data->Pin;
+				SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
+		   	}
 		        break;
 		   case "get_pinupdate":
 		   	$this->Get_PinUpdate();
