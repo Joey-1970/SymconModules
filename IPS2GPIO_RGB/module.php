@@ -95,6 +95,11 @@
 			If (($data->Pin == $this->ReadPropertyInteger("Pin_R")) OR ($data->Pin == $this->ReadPropertyInteger("Pin_G")) OR ($data->Pin == $this->ReadPropertyInteger("Pin_B"))) {
 			   	$this->SetStatus($data->Status);
 			}
+			break;
+		case "freepin":
+			// Funktion zum erstellen dynamischer Pulldown-Menüs
+			break;
+		
     		}
     	return;
 	}
