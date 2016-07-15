@@ -58,6 +58,10 @@
 			   		$this->SetStatus($data->Status);
 			   	}
 			   	break;
+			   case "freepin":
+			   	If ($this->ReadPropertyInteger("Pin") == -1) {
+			   		SetValueInteger($this->GetIDForIdent("Pin"), $data->Pin);
+			   	}
 	 	}
 	return;
  	}
