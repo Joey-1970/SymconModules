@@ -24,6 +24,16 @@ class IPS2GPIO_IO extends IPSModule
 		$this->RegisterVariableString("PinNotify", "PinNotify");
 		$this->RegisterVariableInteger("Handle", "Handle");
 		
+		$ParentID = $this->GetParentID();
+		If ($ParentID > 0) {
+			If (IPS_GetProperty($ParentID, 'Host') <> $this->ReadPropertyString('Host')) {
+	                	IPS_SetProperty($ParentID, 'Host', $this->ReadPropertyString('Host'));
+			}
+			If (IPS_GetProperty($ParentID, 'Port') <> 8888) {
+	                	IPS_SetProperty($ParentID, 'Port', 8888);
+			}
+		}
+		
 		If($this->ConnectionTest()) {
 			// Hardware feststellen
 			$this->CommandClientSocket(pack("LLLL", 17, 0, 0, 0));
@@ -379,6 +389,12 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetStatus(104);
 		}
 	return $result;
+	}
+	
+	private function GetParentID()
+	{
+		$ParentID = (IPS_GetInstance($this->InstanceID)['ConnectionID']);  
+	return $ParentID;
 	}
   
 }
