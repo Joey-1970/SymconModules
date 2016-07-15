@@ -9,7 +9,8 @@
             parent::Create();
             $this->SetStatus(101);
             $this->RegisterPropertyInteger("Pin", -1);
- 	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");	
+ 	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+ 	    $this->SetStatus(104);
         }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -26,9 +27,10 @@
            $this->EnableAction("Status");
            $this->RegisterVariableInteger("Intensity", "Intensity", "~Intensity.255");
            $this->EnableAction("Intensity");
-           
-           $this->Set_Mode();
-           $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
+           If ($this->ReadPropertyInteger("Pin") >= 0) {
+           	$this->Set_Mode();
+           	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
+           }	
         }
 	
 	public function RequestAction($Ident, $Value) 
@@ -64,6 +66,9 @@
 			   	$this->SetStatus($data->Status);
 			}
 			break;
+		   case "freepin":
+			   // Funktion zum erstellen dynamischer Pulldown-Menüs
+			   break;
  	}
 
  	return;
