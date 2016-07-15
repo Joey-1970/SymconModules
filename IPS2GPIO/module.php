@@ -18,7 +18,6 @@ class IPS2GPIO_IO extends IPSModule
 	  {
 		//Never delete this line!
 		parent::ApplyChanges();
-		//$this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Host" => $this->ReadPropertyString("IPAddress"))));
 		$this->RegisterVariableString("PinPossible", "PinPossible");
 		$this->RegisterVariableString("PinUsed", "PinUsed");
 		$this->RegisterVariableString("PinNotify", "PinNotify");
@@ -26,8 +25,8 @@ class IPS2GPIO_IO extends IPSModule
 		
 		$ParentID = $this->GetParentID();
 		If ($ParentID > 0) {
-			If (IPS_GetProperty($ParentID, 'Host') <> $this->ReadPropertyString('Host')) {
-	                	IPS_SetProperty($ParentID, 'Host', $this->ReadPropertyString('Host'));
+			If (IPS_GetProperty($ParentID, 'Host') <> $this->ReadPropertyString('IPAddress')) {
+	                	IPS_SetProperty($ParentID, 'Host', $this->ReadPropertyString('IPAddress'));
 			}
 			If (IPS_GetProperty($ParentID, 'Port') <> 8888) {
 	                	IPS_SetProperty($ParentID, 'Port', 8888);
