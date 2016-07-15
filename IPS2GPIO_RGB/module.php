@@ -12,7 +12,7 @@
             $this->RegisterPropertyInteger("Pin_G", -1);
             $this->RegisterPropertyInteger("Pin_B", -1);
  	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
- 	    $this->SetStatus(101);
+ 	    $this->SetStatus(104);
         }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
