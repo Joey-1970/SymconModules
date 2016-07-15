@@ -28,9 +28,11 @@
             $this->EnableAction("Status");
             $this->RegisterVariableBoolean("Toggle", "Toggle", "~Switch", 1);
             $this->EnableAction("Toggle");
-            $this->Set_Mode();
-            $this->Set_GlitchFilter();
-            $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
+            If ($this->ReadPropertyInteger("Pin") >= 0) {
+            	$this->Set_Mode();
+            	$this->Set_GlitchFilter();
+            	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
+            }
         }
 	
 	public function ReceiveData($JSONString) 
@@ -59,9 +61,8 @@
 			   	}
 			   	break;
 			   case "freepin":
-			   	If ($this->ReadPropertyInteger("Pin") == -1) {
-			   		SetValueInteger($this->GetIDForIdent("Pin"), $data->Pin);
-			   	}
+			   	// Funktion zum erstellen dynamischer Pulldown-Menüs
+			   	break;
 	 	}
 	return;
  	}
