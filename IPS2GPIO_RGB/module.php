@@ -8,9 +8,9 @@
             // Diese Zeile nicht löschen.
             parent::Create();
             $this->SetStatus(101);
-            $this->RegisterPropertyInteger("Pin_R", 2);
-            $this->RegisterPropertyInteger("Pin_G", 3);
-            $this->RegisterPropertyInteger("Pin_B", 4);
+            $this->RegisterPropertyInteger("Pin_R", -1);
+            $this->RegisterPropertyInteger("Pin_G", -1);
+            $this->RegisterPropertyInteger("Pin_B", -1);
  	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");	
         }
  
