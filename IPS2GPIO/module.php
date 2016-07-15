@@ -1,6 +1,11 @@
 <?
 class IPS2GPIO_IO extends IPSModule
 {
+	  public function __construct($InstanceID) {
+            // Diese Zeile nicht löschen
+            parent::__construct($InstanceID);
+         }
+
 	  public function Create() 
 	  {
 	    // Diese Zeile nicht entfernen
