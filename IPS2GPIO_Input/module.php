@@ -8,10 +8,11 @@
             // Diese Zeile nicht löschen.
             parent::Create();
             $this->SetStatus(101);
-            $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_freepin")));
+            //$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_freepin")));
             $this->RegisterPropertyInteger("Pin", -1);
             $this->RegisterPropertyInteger("GlitchFilter", 10);
- 	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");	
+ 	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+ 	    $this->SetStatus(104);
         }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
