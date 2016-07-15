@@ -3,6 +3,7 @@
     [
         { "code": 101, "icon": "inactive", "caption": "Instanz wird erstellt" },
         { "code": 102, "icon": "active", "caption": "Instanz ist aktiv" },
+        { "code": 104, "icon": "active", "caption": "Instanz ist inaktiv" },
         { "code": 200, "icon": "error", "caption": "Pin wird doppelt genutzt!" },
         { "code": 201, "icon": "error", "caption": "Pin wird an diesem Raspberry Pi Modell nicht vorhanden!" }
     ],
@@ -10,7 +11,7 @@
     [
         { "type": "Select", "name": "Pin", "caption": "Pin",
             "options": [
-                { "label": "n.n.b", "value": -1 },
+                { "label": "ungesetzt", "value": -1 },
                 { "label": "0", "value": 0 },
                 { "label": "1", "value": 1 },
                 { "label": "2", "value": 2 },
