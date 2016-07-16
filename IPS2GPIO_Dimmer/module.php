@@ -60,17 +60,22 @@
     	$data = json_decode($JSONString);
     	//IPS_LogMessage("ReceiveData_Dimmer", utf8_decode($data->Buffer));
  	switch ($data->Function) {
-		   case "get_usedpin":
+		case "get_usedpin":
 		   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin"))));
 		   	break;
-		   case "status":
+		case "status":
 			If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
 			   	$this->SetStatus($data->Status);
 			}
 			break;
-		   case "freepin":
+		case "freepin":
 			   // Funktion zum erstellen dynamischer Pulldown-Menüs
 			   break;
+		case "result":
+			If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
+			   	$this->SetValueInteger($this->GetIDForIdent("Intensity"), $data->Value);
+			}
+			break;
  	}
 
  	return;
@@ -87,10 +92,11 @@
 	// Dimmt den gewaehlten Pin
 	public function Set_Intensity($value)
 	{
-   		SetValueInteger($this->GetIDForIdent("Intensity"), $value);
-		
 		If (GetValueBoolean($this->GetIDForIdent("Status")) == true) {
 			$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $value)));
+ 		}
+ 		else {
+ 			SetValueInteger($this->GetIDForIdent("Intensity"), $value);
  		}
 	return;
 	}
