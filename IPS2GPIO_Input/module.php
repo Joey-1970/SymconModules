@@ -27,9 +27,11 @@
 	   
 	    //Status-Variablen anlegen
 	    $this->RegisterVariableBoolean("Status", "Status", "~Switch", 1);
-            $this->EnableAction("Status");
+            $this->DisableAction("Status");
             $this->RegisterVariableBoolean("Toggle", "Toggle", "~Switch", 1);
-            $this->EnableAction("Toggle");
+            $this->DisableAction("Toggle");
+            $this->RegisterVariableBoolean("Trigger", "Trigger", "~Switch", 1);
+            $this->DisableAction("Trigger");
             If ($this->ReadPropertyInteger("Pin") >= 0) {
             	$this->Set_Mode();
             	$this->Set_GlitchFilter();
@@ -45,9 +47,16 @@
 	 	switch ($data->Function) {
 			   case "notify":
 			   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
+			   		// Trigger kurzzeitig setzen
+			   		If ($data->Value == true) {
+			   			SetValueBoolean($this->GetIDForIdent("Trigger"), true);
+			   			SetValueBoolean($this->GetIDForIdent("Trigger"), false);
+			   		}
+			   		// Toggle-Variable
 			   		If ((GetValueBoolean($this->GetIDForIdent("Status")) == false) and ($data->Value == true)) {
 			   			SetValueBoolean($this->GetIDForIdent("Toggle"), !GetValueBoolean($this->GetIDForIdent("Toggle")));
 			   		}
+			   		// Status setzen
 			   		SetValueBoolean($this->GetIDForIdent("Status"), $data->Value);
 			   	}
 			   	break;
