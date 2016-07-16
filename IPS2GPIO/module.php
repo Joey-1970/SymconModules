@@ -21,7 +21,6 @@ class IPS2GPIO_IO extends IPSModule
 	  {
 		//Never delete this line!
 		parent::ApplyChanges();
-		$this->SetStatus(101);
 		$this->RegisterVariableString("PinPossible", "PinPossible");
 		$this->RegisterVariableString("PinUsed", "PinUsed");
 		$this->RegisterVariableString("PinNotify", "PinNotify");
@@ -272,7 +271,7 @@ class IPS2GPIO_IO extends IPSModule
 		}
 		
 		//Now receive reply from server
-		if(socket_recv ($sock, $buf, 16, MSG_WAITALL ) === FALSE) {
+		if(socket_recv ($sock, $buf, strlen($message), MSG_WAITALL ) === FALSE) {
 		    	$errorcode = socket_last_error();
 		    	$errormsg = socket_strerror($errorcode);
 			IPS_LogMessage("GPIO Socket: ", "Fehler beim beim Empfangen ".[$errorcode]." ".$errormsg);
