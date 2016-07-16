@@ -72,7 +72,7 @@
 			   // Funktion zum erstellen dynamischer Pulldown-Menüs
 			   break;
 		case "result":
-			If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
+			If (($data->Pin == $this->ReadPropertyInteger("Pin")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
 			   	$this->SetValueInteger($this->GetIDForIdent("Intensity"), $data->Value);
 			}
 			break;
