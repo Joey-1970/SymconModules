@@ -12,12 +12,10 @@
         {
             // Diese Zeile nicht löschen.
             parent::Create();
-            $this->SetStatus(101);
             $this->RegisterPropertyInteger("Pin_R", -1);
             $this->RegisterPropertyInteger("Pin_G", -1);
             $this->RegisterPropertyInteger("Pin_B", -1);
  	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
- 	    $this->SetStatus(104);
         }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -25,7 +23,7 @@
         {
       		// Diese Zeile nicht löschen
       		parent::ApplyChanges();
-            
+            	$this->SetStatus(101);
       		//Connect to available splitter or create a new one
 	   	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 	   
