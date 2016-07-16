@@ -293,7 +293,12 @@ class IPS2GPIO_IO extends IPSModule
 			$response = unpack("L*", $Message);
 			switch($response[1]) {
 			        case "5":
-			        	IPS_LogMessage("GPIO PWM: ","erfolgreich gesendet");
+			        	If ($response[1] == 0) {
+			        		IPS_LogMessage("GPIO PWM: ", "Pin: ".$response[2]." Wert: ".$response[3]." erfolgreich gesendet");
+			        	}
+			        	else {
+			        		IPS_LogMessage("GPIO PWM: ", "Pin: ".$response[2]." Wert: ".$response[3]." erfolgreich gesendet");
+			        	}
 			        	break;
 			        case "17":
 			            	IPS_LogMessage("GPIO Hardwareermittlung: ","gestartet");
