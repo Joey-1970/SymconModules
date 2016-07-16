@@ -101,7 +101,17 @@
 		case "freepin":
 			// Funktion zum erstellen dynamischer Pulldown-Menüs
 			break;
-		
+		case "result":
+			If (($data->Pin == $this->ReadPropertyInteger("Pin_R")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
+			   	$this->SetValueInteger($this->GetIDForIdent("Intensity_R"), $data->Value);
+			}
+			ElseIf (($data->Pin == $this->ReadPropertyInteger("Pin_G")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
+			   	$this->SetValueInteger($this->GetIDForIdent("Intensity_G"), $data->Value);
+			}
+			If (($data->Pin == $this->ReadPropertyInteger("Pin_B")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
+			   	$this->SetValueInteger($this->GetIDForIdent("Intensity_B"), $data->Value);
+			}
+			break;
     		}
     	return;
 	}
@@ -120,12 +130,15 @@
 	// Dimmt den gewaehlten Pin
 	public function Set_RGB($R, $G, $B)
 	{
- 		SetValueInteger($this->GetIDForIdent("Intensity_R"), $R);
-		SetValueInteger($this->GetIDForIdent("Intensity_G"), $G);
-		SetValueInteger($this->GetIDForIdent("Intensity_B"), $B);
+ 		
  		 
  		If (GetValueBoolean($this->GetIDForIdent("Status")) == true) { 
  			$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => $R, "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => $G, "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => $B))); 
+		}
+		else {
+			SetValueInteger($this->GetIDForIdent("Intensity_R"), $R);
+			SetValueInteger($this->GetIDForIdent("Intensity_G"), $G);
+			SetValueInteger($this->GetIDForIdent("Intensity_B"), $B);	
 		}
 	return;
 	}
