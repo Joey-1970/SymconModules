@@ -25,7 +25,7 @@
 	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 	   
 	    //Status-Variablen anlegen
-	    $this->RegisterVariableFloat("", "Distanz", "", 0);
+	    $this->RegisterVariableFloat("Distanz", "Distanz", "", 0);
             $this->DisableAction("Distanz");
             
             If (($this->ReadPropertyInteger("Pin_I") >= 0) AND ($this->ReadPropertyInteger("Pin_O")) >= 0) {
