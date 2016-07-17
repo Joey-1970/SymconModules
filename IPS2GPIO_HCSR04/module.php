@@ -13,7 +13,7 @@
             parent::Create();
             $this->RegisterPropertyInteger("Pin_I", -1);
             $this->RegisterPropertyInteger("Pin_O", -1);
- 	          $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+ 	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -25,10 +25,10 @@
 	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 	   
 	    //Status-Variablen anlegen
-	          //$this->RegisterVariableBoolean("Status", "Status", "~Switch", 1);
-            //$this->DisableAction("Status");
+	    $this->RegisterVariableFloat("", "Distanz", "", 0);
+            $this->DisableAction("Distanz");
             
-            If ($this->ReadPropertyInteger("Pin") >= 0) {
+            If (($this->ReadPropertyInteger("Pin_I") >= 0) AND ($this->ReadPropertyInteger("Pin_O")) >= 0) {
             	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
             }
         }
@@ -40,7 +40,7 @@
 	    	//IPS_LogMessage("ReceiveData_Input", utf8_decode($data->Buffer));
 	 	switch ($data->Function) {
 			   case "notify":
-			   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
+			   	If ($data->Pin == $this->ReadPropertyInteger("Pin_I")) {
 			   		
 			   	}
 			   	break;
