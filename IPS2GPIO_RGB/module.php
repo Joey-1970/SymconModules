@@ -38,7 +38,6 @@
            	$this->RegisterVariableInteger("Color", "Farbe", "~HexColor");
            	$this->EnableAction("Color");
            	If (($this->ReadPropertyInteger("Pin_R") >= 0) AND ($this->ReadPropertyInteger("Pin_G") >= 0) AND ($this->ReadPropertyInteger("Pin_B") >= 0)) {
-           		//$this->Set_Mode_RGB();
            		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
            	}
         }
@@ -117,16 +116,7 @@
 	}
 	
 	// Beginn der Funktionen
-	
-	// Setzt den gewaehlten Pins in den Output-Modus
-	private function Set_Mode_RGB()
-	{
-   		$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_mode", "Pin" => $this->ReadPropertyInteger("Pin_R"), "Modus" => "W"))); 
- 		$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_mode", "Pin" => $this->ReadPropertyInteger("Pin_G"), "Modus" => "W")));
- 		$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_mode", "Pin" => $this->ReadPropertyInteger("Pin_B"), "Modus" => "W"))); 
-	return;
-	}
-	
+
 	// Dimmt den gewaehlten Pin
 	public function Set_RGB($R, $G, $B)
 	{
