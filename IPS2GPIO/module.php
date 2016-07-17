@@ -54,11 +54,6 @@ class IPS2GPIO_IO extends IPSModule
 	    	$data = json_decode($JSONString);
 	    	
 	 	switch ($data->Function) {
-		    case "set_mode":
-		        If ($data->Pin >= 0) {
-		        	$this->Set_Mode($data->Pin, $data->Modus);
-		        }
-		        break;
 		    case "set_PWM_dutycycle":
 		    	If ($data->Pin >= 0) {
 		        	$this->Set_Intensity($data->Pin, $data->Value);
@@ -67,11 +62,6 @@ class IPS2GPIO_IO extends IPSModule
 		    case "set_PWM_dutycycle_RGB":
 		    	If (($data->Pin_R >= 0) AND ($data->Pin_G >= 0) AND ($data->Pin_B >= 0)) {
 		        	$this->Set_Intensity_RGB($data->Pin_R, $data->Value_R, $data->Pin_G, $data->Value_G, $data->Pin_B, $data->Value_B);
-		    	}
-		        break;
-		    case "set_glitchfilter":
-		    	If ($data->Pin >= 0) {
-		        	$this->Set_GlitchFilter($data->Pin, $data->Value);
 		    	}
 		        break;
 		    case "set_notifypin":
