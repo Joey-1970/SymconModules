@@ -334,6 +334,9 @@ class IPS2GPIO_IO extends IPSModule
 	           				
 	           				$this->ClientSocket(pack("LLLL", 19, $response[4], $this->CalcBitmask(), 0));
 	           			}
+	           			else {
+	           				$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));		
+	           			}
 	           			break;
 			    }
 		}
