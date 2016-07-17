@@ -80,8 +80,7 @@ class IPS2GPIO_IO extends IPSModule
 			        $PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
 			        $PinNotify[] = $data->Pin;
 				SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
-				// Setzt den Mode auf Input und den Glitch Filter
-				$this->Set_Mode($data->Pin, "R");
+				// Setzt den Glitch Filter
 				$this->Set_GlitchFilter($data->Pin, $data->GlitchFilter);
 		    	}
 		        break;
@@ -107,6 +106,7 @@ class IPS2GPIO_IO extends IPSModule
 				        }
 			        }
 			        $PinUsed[] = $data->Pin;
+			        $this->Set_Mode($data->Pin, $data->Modus);
 				SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
 		   	}
 		        break;
