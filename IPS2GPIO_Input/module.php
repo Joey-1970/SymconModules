@@ -33,8 +33,6 @@
             $this->RegisterVariableBoolean("Trigger", "Trigger", "~Switch", 1);
             $this->DisableAction("Trigger");
             If ($this->ReadPropertyInteger("Pin") >= 0) {
-            	//$this->Set_Mode();
-            	//$this->Set_GlitchFilter();
             	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
             }
         }
@@ -79,19 +77,6 @@
  	}
 	// Beginn der Funktionen
 	
-	// Setzt den gewaehlten Pin in den Output-Modus
-	private function Set_Mode()
-	{
-   		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_mode", "Pin" => $this->ReadPropertyInteger("Pin"), "Modus" => "R")));
-   	return;
-	}
-
-	// Setzt den gewaehlten Pin in den Output-Modus
-	private function Set_GlitchFilter()
-	{
-   		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_glitchfilter", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $this->ReadPropertyInteger("GlitchFilter"))));
-   	return;
-	}	
 
 }
 ?>
