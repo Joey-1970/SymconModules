@@ -13,6 +13,7 @@
             parent::Create();
             $this->RegisterPropertyInteger("Pin_I", -1);
             $this->RegisterPropertyInteger("Pin_O", -1);
+            $this->RegisterPropertyInteger("Messzyklus", 50);
  	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
  
@@ -64,6 +65,13 @@
 	return;
  	}
 	// Beginn der Funktionen
+	
+	// Toggelt den Status
+	public function Measurement()
+	{
+		//$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")));
+	return;
+	}
 	
 }
 ?>
