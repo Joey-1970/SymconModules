@@ -362,7 +362,7 @@ class IPS2GPIO_IO extends IPSModule
 			IPS_LogMessage("GPIO Notify: ","Meldung: ".count($response)." ".$response[1]." ".$response[2]." ".$response[3]);
 			
 			// Test
-			$$responsetest = unpack("SSL*", $Message);
+			$responsetest = unpack("SSL*", $Message);
 			IPS_LogMessage("GPIO Notify Test: ","Meldung: ".count($responsetest)." ".$responsetest[1]." ".$responsetest[2]." ".$responsetest[3]." ".$responsetest[4]);
 
 			$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
