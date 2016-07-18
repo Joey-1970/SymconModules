@@ -74,6 +74,8 @@
                 { "label": "26", "value": 26 },
                 { "label": "27", "value": 27 }
                 ]
-        }
+        },
+    { "type": "Label", "label": "Wiederholungszyklus (50-300000ms)" },
+    { "type": "IntervalBox", "name": "Messzyklus", "caption": "ms" }
     ]
 }
