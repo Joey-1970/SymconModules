@@ -64,6 +64,11 @@ class IPS2GPIO_IO extends IPSModule
 		        	$this->Set_Intensity_RGB($data->Pin_R, $data->Value_R, $data->Pin_G, $data->Value_G, $data->Pin_B, $data->Value_B);
 		    	}
 		        break;
+		    case "set_value":
+		    	If ($data->Pin >= 0) {
+		        	$this->Set_Value($data->Pin, $data->Value);
+		    	}
+		        break;
 		    case "set_notifypin":
 		    	If ($data->Pin >= 0) {
 			        // Erstellt ein Array für alle Pins für die die Notifikation erforderlich ist 
@@ -198,7 +203,14 @@ class IPS2GPIO_IO extends IPSModule
 		IPS_LogMessage("SetMode Parameter : ",$Pin." , ".$Modus);  
 	return;
 	}
-
+	
+	// Setzt den gewaehlten Pin auf den geforderten Wert
+	private function Set_Value($Pin, $Value)
+	{		
+		$this->CommandClientSocket(pack("LLLL", 4, $Pin, $Value, 0));
+		IPS_LogMessage("SetValue Parameter : ",$Pin." , ".$Value);  
+	return;
+	}
 	// Setzt den gewaehlten Pin in den geforderten Modus
 	private function Set_GlitchFilter($Pin, $Value)
 	{		
@@ -285,6 +297,9 @@ class IPS2GPIO_IO extends IPSModule
 		If (strlen($Message) == 16) {
 			$response = unpack("L*", $Message);
 			switch($response[1]) {
+			        case "4":
+			        	
+			        	break;
 			        case "5":
 			        	If ($response[1] == 0) {
 			        		IPS_LogMessage("GPIO PWM: ", "Pin: ".$response[2]." Wert: ".$response[3]." erfolgreich gesendet");
