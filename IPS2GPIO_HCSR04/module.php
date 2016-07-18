@@ -69,7 +69,10 @@
 	// Toggelt den Status
 	public function Measurement()
 	{
-		//$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")));
+		//Vorbereitend: Pin_O auf off (4, Pin_O, 0, 0)
+		// Triggern: (37, Pin_O, 10, 4, 1)
+		
+		
 	return;
 	}
 	
