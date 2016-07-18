@@ -69,6 +69,11 @@ class IPS2GPIO_IO extends IPSModule
 		        	$this->Set_Value($data->Pin, $data->Value);
 		    	}
 		        break;
+		    case "set_trigger":
+		    	If ($data->Pin >= 0) {
+		        	$this->Set_Trigger($data->Pin, $data->Time);
+		    	}
+		        break;
 		    case "set_notifypin":
 		    	If ($data->Pin >= 0) {
 			        // Erstellt ein Array für alle Pins für die die Notifikation erforderlich ist 
@@ -211,6 +216,15 @@ class IPS2GPIO_IO extends IPSModule
 		IPS_LogMessage("SetValue Parameter : ",$Pin." , ".$Value);  
 	return;
 	}
+	
+	// Triggert den gewaehlten Pin
+	private function Set_Trigger($Pin, $Time)
+	{		
+		$this->CommandClientSocket(pack("LLLLL", 37, $Pin, $Time, 4, 1));
+		IPS_LogMessage("SetTrigger Parameter : ",$Pin." , ".$Time);  
+	return;
+	}
+	
 	// Setzt den gewaehlten Pin in den geforderten Modus
 	private function Set_GlitchFilter($Pin, $Value)
 	{		
