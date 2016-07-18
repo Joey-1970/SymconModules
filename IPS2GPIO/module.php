@@ -301,12 +301,12 @@ class IPS2GPIO_IO extends IPSModule
 			        	
 			        	break;
 			        case "5":
-			        	If ($response[1] == 0) {
+			        	If ($response[4] == 0) {
 			        		IPS_LogMessage("GPIO PWM: ", "Pin: ".$response[2]." Wert: ".$response[3]." erfolgreich gesendet");
 			        		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"result", "Pin" => $response[2], "Value"=> $response[3])));
 			        	}
 			        	else {
-			        		IPS_LogMessage("GPIO PWM: ", "Pin: ".$response[2]." Wert: ".$response[3]." erfolgreich gesendet");
+			        		IPS_LogMessage("GPIO PWM: ", "Pin: ".$response[2]." Wert: ".$response[3]." konnte nicht erfolgreich gesendet werden!");
 			        	}
 			        	break;
 			        case "17":
@@ -360,7 +360,11 @@ class IPS2GPIO_IO extends IPSModule
 			$response = unpack("L*", $Message);
 					
 			IPS_LogMessage("GPIO Notify: ","Meldung: ".count($response)." ".$response[1]." ".$response[2]." ".$response[3]);
-		
+			
+			// Test
+			$$responsetest = unpack("SSL*", $Message);
+			IPS_LogMessage("GPIO Notify Test: ","Meldung: ".count($responsetest)." ".$responsetest[1]." ".$responsetest[2]." ".$responsetest[3]." ".$responsetest[4]);
+
 			$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
 
 			for ($i = 0; $i < Count($PinNotify); $i++) {
