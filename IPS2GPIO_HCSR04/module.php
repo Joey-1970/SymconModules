@@ -13,7 +13,8 @@
             parent::Create();
             $this->RegisterPropertyInteger("Pin_I", -1);
             $this->RegisterPropertyInteger("Pin_O", -1);
-            $this->RegisterPropertyInteger("Messzyklus", 50);
+            $this->RegisterPropertyInteger("Messzyklus", 1000);
+            $this->RegisterTimer("Messzyklus", 0, 'I2GSR4_Measurement($_IPS["TARGET"]);');
  	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
  
@@ -31,7 +32,7 @@
             $this->RegisterVariableInteger("TimestampTrigger", "TimestampTrigger", "", 0);
             $this->DisableAction("TimestampTrigger");
             IPS_SetHidden(GetIDForIdent("TimestampTrigger"), true);
-            $this->RegisterTimer("Messzyklus", 0, 'I2GSR4_Measurement($_IPS["TARGET"]);');
+            $this->SetTimerInterval("Messzyklus", $this->ReadPropertyInteger("Messzyklus"));
             
             If (($this->ReadPropertyInteger("Pin_I") >= 0) AND ($this->ReadPropertyInteger("Pin_O")) >= 0) {
             	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
