@@ -51,8 +51,8 @@
 			   	If (($data->Pin == $this->ReadPropertyInteger("Pin_I")) AND ($data->Value == false)) {
 			   		$TimeDiff = $data->Timestamp - GetValueInteger($this->GetIDForIdent("Timestamp"));
 			   		$TimeDiff = $TimeDiff/1000000;
-   					SetValueFloat($this->GetIDForIdent("Distanz"), ($TimeDiff * 34300 / 2));
-   					IPS_LogMessage("HCS04: ","Stop: ".$data->Timestamp." Diff: ".$TimeDiff);
+   					$Distance = round(($TimeDiff * 34300 / 2), 2);
+   					SetValueFloat($this->GetIDForIdent("Distanz"), $Distance);
 			   	}
 			   	elseif (($data->Pin == $this->ReadPropertyInteger("Pin_I")) AND ($data->Value == true)) {
 			   		SetValueInteger($this->GetIDForIdent("Timestamp"), $data->Timestamp);	
