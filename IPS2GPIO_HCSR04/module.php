@@ -48,7 +48,7 @@
 			   case "notify":
 			   	If ($data->Pin == $this->ReadPropertyInteger("Pin_I")) {
 			   		$TimeDiff = $data->Timestamp - GetValueInteger(GetIDForIdent("TimestampTrigger"));
-   					SetValueFloat(GetIDForIdent("Distanz"), $TimeDiff * 34300) / 2);
+   					SetValueFloat(GetIDForIdent("Distanz"), ($TimeDiff * 34300 / 2));
 			   	}
 			   	elseif ($data->Pin == $this->ReadPropertyInteger("Pin_O")) {
 			   		SetValueInteger(GetIDForIdent("TimestampTrigger"), $data->Timestamp);	
