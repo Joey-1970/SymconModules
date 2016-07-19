@@ -22,9 +22,13 @@ class IPS2GPIO_IO extends IPSModule
 		//Never delete this line!
 		parent::ApplyChanges();
 		$this->RegisterVariableString("PinPossible", "PinPossible");
+		$this->DisableAction("PinPossible");
 		$this->RegisterVariableString("PinUsed", "PinUsed");
+		$this->DisableAction("PinUsed");
 		$this->RegisterVariableString("PinNotify", "PinNotify");
+		$this->DisableAction("PinNotify");
 		$this->RegisterVariableInteger("Handle", "Handle");
+		$this->DisableAction("Handle");
 		
 		$ParentID = $this->GetParentID();
 		If ($ParentID > 0) {
