@@ -40,10 +40,10 @@ class IPS2GPIO_IO extends IPSModule
 			}
 		}
 		
-		IPS_SetHidden(GetIDForIdent("PinPossible"), true);
-		IPS_SetHidden(GetIDForIdent("PinUsed"), true);
-		IPS_SetHidden(GetIDForIdent("PinNotify"), true);
-		IPS_SetHidden(GetIDForIdent("Handle"), true);
+		IPS_SetHidden($this->GetIDForIdent("PinPossible"), true);
+		IPS_SetHidden($this->GetIDForIdent("PinUsed"), true);
+		IPS_SetHidden($this->GetIDForIdent("PinNotify"), true);
+		IPS_SetHidden($this->GetIDForIdent("Handle"), true);
 		
 		If($this->ConnectionTest()) {
 			// Hardware feststellen
