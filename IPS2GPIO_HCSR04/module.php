@@ -31,9 +31,9 @@
 	    //Status-Variablen anlegen
 	    $this->RegisterVariableFloat("Distanz", "Distanz", "", 0);
             $this->DisableAction("Distanz");
-            $this->RegisterVariableInteger("TimestampTrigger", "TimestampTrigger", "", 0);
-            $this->DisableAction("TimestampTrigger");
-            IPS_SetHidden($this->GetIDForIdent("TimestampTrigger"), true);
+            $this->RegisterVariableInteger("Timestamp", "Timestamp", "", 0);
+            $this->DisableAction("Timestamp");
+            IPS_SetHidden($this->GetIDForIdent("Timestamp"), true);
             $this->SetTimerInterval("Messzyklus", $this->ReadPropertyInteger("Messzyklus"));
             
             If (($this->ReadPropertyInteger("Pin_I") >= 0) AND ($this->ReadPropertyInteger("Pin_O")) >= 0) {
@@ -49,9 +49,9 @@
 	 	switch ($data->Function) {
 			   case "notify":
 			   	If (($data->Pin == $this->ReadPropertyInteger("Pin_I")) AND ($data->Value == true)) {
-			   		$TimeDiff = $data->Timestamp - GetValueInteger($this->GetIDForIdent("TimestampTrigger"));
+			   		$TimeDiff = $data->Timestamp - GetValueInteger($this->GetIDForIdent("Timestamp"));
    					SetValueFloat($this->GetIDForIdent("Distanz"), ($TimeDiff * 34300 / 2000));
-   					IPS_LogMessage("HCS04: ","Stop: ".$data->Timestamp." Start: ".GetValueInteger($this->GetIDForIdent("TimestampTrigger")));
+   					IPS_LogMessage("HCS04: ","Stop: ".$data->Timestamp." Start: ".GetValueInteger($this->GetIDForIdent("Timestamp")));
 			   	}
 			   	elseif (($data->Pin == $this->ReadPropertyInteger("Pin_I")) AND ($data->Value == false)) {
 			   		SetValueInteger($this->GetIDForIdent("TimestampTrigger"), $data->Timestamp);	
@@ -59,7 +59,6 @@
 			   	break;
 			   case "get_notifypin":
 			   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_notifypin", "Pin" => $this->ReadPropertyInteger("Pin_I"), "GlitchFilter" => 0)));
-			   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_notifypin", "Pin" => $this->ReadPropertyInteger("Pin_O"), "GlitchFilter" => 0)));
 			   	break;
 			   case "get_usedpin":
 			   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_I"), "Modus" => "R")));
