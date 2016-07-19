@@ -78,11 +78,6 @@ class IPS2GPIO_IO extends IPSModule
 		        	$this->Set_Value($data->Pin, $data->Value);
 		    	}
 		        break;
-		    case "set_mode":
-		    	If ($data->Pin >= 0) {
-		        	$this->Set_Modus($data->Pin, $data->Modus);
-		    	}
-		        break;
 		    case "set_trigger":
 		    	If ($data->Pin >= 0) {
 		        	$this->Set_Trigger($data->Pin, $data->Time);
