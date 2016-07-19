@@ -31,7 +31,7 @@
             $this->DisableAction("Distanz");
             $this->RegisterVariableInteger("TimestampTrigger", "TimestampTrigger", "", 0);
             $this->DisableAction("TimestampTrigger");
-            IPS_SetHidden(GetIDForIdent("TimestampTrigger"), true);
+            IPS_SetHidden($this->GetIDForIdent("TimestampTrigger"), true);
             $this->SetTimerInterval("Messzyklus", $this->ReadPropertyInteger("Messzyklus"));
             
             If (($this->ReadPropertyInteger("Pin_I") >= 0) AND ($this->ReadPropertyInteger("Pin_O")) >= 0) {
