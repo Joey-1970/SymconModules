@@ -47,11 +47,11 @@
 	 	switch ($data->Function) {
 			   case "notify":
 			   	If ($data->Pin == $this->ReadPropertyInteger("Pin_I")) {
-			   		$TimeDiff = $data->Timestamp - GetValueInteger(GetIDForIdent("TimestampTrigger"));
+			   		$TimeDiff = $data->Timestamp - GetValueInteger($this->GetIDForIdent("TimestampTrigger"));
    					SetValueFloat(GetIDForIdent("Distanz"), ($TimeDiff * 34300 / 2));
 			   	}
 			   	elseif ($data->Pin == $this->ReadPropertyInteger("Pin_O")) {
-			   		SetValueInteger(GetIDForIdent("TimestampTrigger"), $data->Timestamp);	
+			   		SetValueInteger($this->GetIDForIdent("TimestampTrigger"), $data->Timestamp);	
 			   	}
 			   	break;
 			   case "get_notifypin":
