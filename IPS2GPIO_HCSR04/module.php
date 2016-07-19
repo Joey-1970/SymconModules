@@ -54,7 +54,7 @@
    					IPS_LogMessage("HCS04: ","Stop: ".$data->Timestamp." Start: ".GetValueInteger($this->GetIDForIdent("Timestamp")));
 			   	}
 			   	elseif (($data->Pin == $this->ReadPropertyInteger("Pin_I")) AND ($data->Value == false)) {
-			   		SetValueInteger($this->GetIDForIdent("TimestampTrigger"), $data->Timestamp);	
+			   		SetValueInteger($this->GetIDForIdent("Timestamp"), $data->Timestamp);	
 			   	}
 			   	break;
 			   case "get_notifypin":
