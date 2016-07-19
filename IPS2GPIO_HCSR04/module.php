@@ -48,12 +48,12 @@
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
 			   case "notify":
-			   	If (($data->Pin == $this->ReadPropertyInteger("Pin_I")) AND ($data->Value == true)) {
+			   	If (($data->Pin == $this->ReadPropertyInteger("Pin_I")) AND ($data->Value == false)) {
 			   		$TimeDiff = $data->Timestamp - GetValueInteger($this->GetIDForIdent("Timestamp"));
    					SetValueFloat($this->GetIDForIdent("Distanz"), ($TimeDiff * 34300 / 2000));
    					IPS_LogMessage("HCS04: ","Stop: ".$data->Timestamp." Start: ".GetValueInteger($this->GetIDForIdent("Timestamp")));
 			   	}
-			   	elseif (($data->Pin == $this->ReadPropertyInteger("Pin_I")) AND ($data->Value == false)) {
+			   	elseif (($data->Pin == $this->ReadPropertyInteger("Pin_I")) AND ($data->Value == true)) {
 			   		SetValueInteger($this->GetIDForIdent("Timestamp"), $data->Timestamp);	
 			   	}
 			   	break;
