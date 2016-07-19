@@ -49,9 +49,10 @@
 	 	switch ($data->Function) {
 			   case "notify":
 			   	If (($data->Pin == $this->ReadPropertyInteger("Pin_I")) AND ($data->Value == false)) {
-			   		$TimeDiff = ($data->Timestamp - GetValueInteger($this->GetIDForIdent("Timestamp")) / 1000000);
+			   		$TimeDiff = $data->Timestamp - GetValueInteger($this->GetIDForIdent("Timestamp"));
+			   		$TimeDiff = $TimeDiff/1000000;
    					SetValueFloat($this->GetIDForIdent("Distanz"), ($TimeDiff * 34300 / 2));
-   					IPS_LogMessage("HCS04: ","Stop: ".$data->Timestamp." Start: ".GetValueInteger($this->GetIDForIdent("Timestamp")));
+   					IPS_LogMessage("HCS04: ","Stop: ".$data->Timestamp." Diff: ".$TimeDiff);
 			   	}
 			   	elseif (($data->Pin == $this->ReadPropertyInteger("Pin_I")) AND ($data->Value == true)) {
 			   		SetValueInteger($this->GetIDForIdent("Timestamp"), $data->Timestamp);	
