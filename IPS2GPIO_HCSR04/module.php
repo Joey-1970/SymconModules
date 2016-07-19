@@ -48,7 +48,7 @@
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
 			   case "notify":
-			   	If ($data->Pin == $this->ReadPropertyInteger("Pin_I")) {
+			   	If (($data->Pin == $this->ReadPropertyInteger("Pin_I")) AND ($data->Value == true)) {
 			   		$TimeDiff = $data->Timestamp - GetValueInteger($this->GetIDForIdent("TimestampTrigger"));
    					SetValueFloat($this->GetIDForIdent("Distanz"), ($TimeDiff * 34300 / 2000));
 			   	}
