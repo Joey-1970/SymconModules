@@ -23,16 +23,12 @@ class IPS2GPIO_IO extends IPSModule
 		parent::ApplyChanges();
 		$this->RegisterVariableString("PinPossible", "PinPossible");
 		$this->DisableAction("PinPossible");
-		IPS_SetHidden(GetIDForIdent("PinPossible"), true);
 		$this->RegisterVariableString("PinUsed", "PinUsed");
 		$this->DisableAction("PinUsed");
-		IPS_SetHidden(GetIDForIdent("PinUsed"), true);
 		$this->RegisterVariableString("PinNotify", "PinNotify");
 		$this->DisableAction("PinNotify");
-		IPS_SetHidden(GetIDForIdent("PinNotify"), true);
 		$this->RegisterVariableInteger("Handle", "Handle");
 		$this->DisableAction("Handle");
-		IPS_SetHidden(GetIDForIdent("Handle"), true);
 		
 		$ParentID = $this->GetParentID();
 		If ($ParentID > 0) {
@@ -43,6 +39,11 @@ class IPS2GPIO_IO extends IPSModule
 	                	IPS_SetProperty($ParentID, 'Port', 8888);
 			}
 		}
+		
+		IPS_SetHidden(GetIDForIdent("PinPossible"), true);
+		IPS_SetHidden(GetIDForIdent("PinUsed"), true);
+		IPS_SetHidden(GetIDForIdent("PinNotify"), true);
+		IPS_SetHidden(GetIDForIdent("Handle"), true);
 		
 		If($this->ConnectionTest()) {
 			// Hardware feststellen
