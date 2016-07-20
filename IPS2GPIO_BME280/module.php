@@ -24,20 +24,8 @@
 	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 	    //Status-Variablen anlegen
 	    $this->RegisterVariableInteger("HardwareRev", "HardwareRev");
-	    $this->DisableAction("HardwareRev");
-	    IPS_SetHidden($this->GetIDForIdent("HardwareRev"), true);
-	    $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_hardwarerev")));
-	    $this->RegisterVariableInteger("Pin_SDA", "Pin_SDA");
-	    $this->DisableAction("Pin_SDA");
-	    IPS_SetHidden($this->GetIDForIdent("Pin_SDA"), true);
-	    $this->RegisterVariableInteger("Pin_SCL", "Pin_SCL");
-	    $this->DisableAction("Pin_SCL");
-	    IPS_SetHidden($this->GetIDForIdent("Pin_SCL"), true);
-	    
-
-            If (($this->ReadPropertyInteger("Pin_D") >= 0) AND ($this->ReadPropertyInteger("Pin_D") >= 0)) {
-            	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
-            }
+          
+            $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
         }
 	
 	public function ReceiveData($JSONString) 
