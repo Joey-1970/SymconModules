@@ -50,7 +50,7 @@
 			   case "notify":
 			   	If (($data->Pin == $this->ReadPropertyInteger("Pin_I")) AND ($data->Value == false)) {
 			   		$TimeDiff = $data->Timestamp - GetValueInteger($this->GetIDForIdent("Timestamp"));
-			   		$TimeDiff = $TimeDiff/1000000;
+			   		$TimeDiff = abs($TimeDiff/1000000);
    					$Distance = round(($TimeDiff * 34300 / 2), 1);
    					SetValueFloat($this->GetIDForIdent("Distanz"), $Distance);
 			   	}
