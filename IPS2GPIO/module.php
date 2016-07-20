@@ -36,9 +36,9 @@ class IPS2GPIO_IO extends IPSModule
 		$this->RegisterVariableInteger("Handle_I2C", "Handle_I2C");
 		$this->DisableAction("Handle_I2C");
 		IPS_SetHidden($this->GetIDForIdent("Handle_I2C"), true);
-		$this->RegisterVariableBoolean("I2C_Usage", "I2C_Usage");
-		$this->DisableAction("I2C_Usage");
-		IPS_SetHidden($this->GetIDForIdent("I2C_Usage"), true);
+		$this->RegisterVariableBoolean("I2C_Used", "I2C_Used");
+		$this->DisableAction("I2C_Used");
+		IPS_SetHidden($this->GetIDForIdent("I2C_Used"), true);
 		$this->RegisterVariableInteger("HardwareRev", "HardwareRev");
 		$this->DisableAction("HardwareRev");
 		IPS_SetHidden($this->GetIDForIdent("HardwareRev"), true);
@@ -130,6 +130,42 @@ class IPS2GPIO_IO extends IPSModule
 		   case "get_pinupdate":
 		   	$this->Get_PinUpdate();
 		   	break;
+		   case "set_used_i2c":
+		   	SetValueBoolean($this->GetIDForIdent("I2C_Used", true);
+		   	$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
+		   	
+		   	If (GetValueInteger($this->GetIDForIdent("HardwareRev")) <=3) {
+		   		If (is_array($PinUsed)) {	
+					// Prüft, ob der ausgeählte Pin schon einmal genutzt wird
+				        If (in_array(0, $PinUsed)) {
+				        	IPS_LogMessage("GPIO Pin", "Achtung: Pin 0 wird mehrfach genutzt!");
+				        	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>200)));
+				        }
+				        If (in_array(1, $PinUsed)) {
+				        	IPS_LogMessage("GPIO Pin", "Achtung: Pin 1 wird mehrfach genutzt!");
+				        	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>200)));
+				        }
+			        }
+			        $PinUsed[] = 0;
+			        $PinUsed[] = 1;
+		   	}
+		   	elseif (GetValueInteger($this->GetIDForIdent("HardwareRev")) >3) {
+		   		If (is_array($PinUsed)) {	
+					// Prüft, ob der ausgeählte Pin schon einmal genutzt wird
+				        If (in_array(2, $PinUsed)) {
+				        	IPS_LogMessage("GPIO Pin", "Achtung: Pin 2 wird mehrfach genutzt!");
+				        	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>200)));
+				        }
+				        If (in_array(3, $PinUsed)) {
+				        	IPS_LogMessage("GPIO Pin", "Achtung: Pin 3 wird mehrfach genutzt!");
+				        	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>200)));
+				        }
+			        }
+			        $PinUsed[] = 2;
+			        $PinUsed[] = 3;
+		   	}
+			SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));	
+		   	break;
 		   case "get_freepin":
 		   	$PinPossible = unserialize(GetValueString($this->GetIDForIdent("PinPossible")));
 		   	$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
@@ -207,13 +243,13 @@ class IPS2GPIO_IO extends IPSModule
 		If (GetValueInteger($this->GetIDForIdent("Handle")) > 0) {
 	           	$this->CommandClientSocket(pack("LLLL", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
 		}
+		// Ermitteln ob der I2C-Bus genutzt wird
+		SetValueBoolean($this->GetIDForIdent("I2C_Used"), false);
+		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_used_i2c")));
 		// Pins ermitteln die genutzt werden
 		SetValueString($this->GetIDForIdent("PinUsed"), "");
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_usedpin")));
-		// Ermitteln ob der I2C-Bus genutzt wird
-		SetValueBoolean($this->GetIDForIdent("I2C_Usage"), false);
-		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_i2c_usage")));
-	return;
+			return;
 	}
 	
 	// Setzt den gewaehlten Pin in den geforderten Modus
