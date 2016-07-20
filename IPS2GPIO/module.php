@@ -353,6 +353,8 @@ class IPS2GPIO_IO extends IPSModule
 	           			$Typ[1] = array(2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27);
 	           			$Typ[2] = array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27);
 	           			
+	           			SetValueInteger($this->GetIDForIdent("HardwareRev"), $response[4]);
+	           			
 	           			if (in_array($response[4], $Model[0])) {
 	    					SetValueString($this->GetIDForIdent("PinPossible"), serialize($Typ[0]));
 	    					IPS_LogMessage("GPIO Hardwareermittlung: ","Raspberry Pi Typ 0");
