@@ -130,10 +130,6 @@ class IPS2GPIO_IO extends IPSModule
 		   case "get_pinupdate":
 		   	$this->Get_PinUpdate();
 		   	break;
-		   case "get_hardwarerev":
-		   	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_hardwarerev", "Value"=>GetValueInteger($this->GetIDForIdent("HardwareRev")))));
-		   	break;
-
 		   case "get_freepin":
 		   	$PinPossible = unserialize(GetValueString($this->GetIDForIdent("PinPossible")));
 		   	$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
@@ -214,6 +210,9 @@ class IPS2GPIO_IO extends IPSModule
 		// Pins ermitteln die genutzt werden
 		SetValueString($this->GetIDForIdent("PinUsed"), "");
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_usedpin")));
+		// Ermitteln ob der I2C-Bus ge nutzt wird
+		SetValueBoolean($this->GetIDForIdent("I2C_Usage"), false);
+		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_i2cusage")));
 	return;
 	}
 	
