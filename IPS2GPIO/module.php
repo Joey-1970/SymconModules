@@ -23,12 +23,22 @@ class IPS2GPIO_IO extends IPSModule
 		parent::ApplyChanges();
 		$this->RegisterVariableString("PinPossible", "PinPossible");
 		$this->DisableAction("PinPossible");
+		IPS_SetHidden($this->GetIDForIdent("PinPossible"), true);
 		$this->RegisterVariableString("PinUsed", "PinUsed");
 		$this->DisableAction("PinUsed");
+		IPS_SetHidden($this->GetIDForIdent("PinUsed"), true);
 		$this->RegisterVariableString("PinNotify", "PinNotify");
 		$this->DisableAction("PinNotify");
+		IPS_SetHidden($this->GetIDForIdent("PinNotify"), true);
 		$this->RegisterVariableInteger("Handle", "Handle");
 		$this->DisableAction("Handle");
+		IPS_SetHidden($this->GetIDForIdent("Handle"), true);
+		$this->RegisterVariableInteger("Handle_I2C", "Handle_I2C");
+		$this->DisableAction("Handle_I2C");
+		IPS_SetHidden($this->GetIDForIdent("Handle_I2C"), true);
+		$this->RegisterVariableInteger("HardwareRev", "HardwareRev");
+		$this->DisableAction("HardwareRev");
+		IPS_SetHidden($this->GetIDForIdent("HardwareRev"), true);
 		
 		$ParentID = $this->GetParentID();
 		If ($ParentID > 0) {
@@ -40,10 +50,10 @@ class IPS2GPIO_IO extends IPSModule
 			}
 		}
 		
-		IPS_SetHidden($this->GetIDForIdent("PinPossible"), true);
-		IPS_SetHidden($this->GetIDForIdent("PinUsed"), true);
-		IPS_SetHidden($this->GetIDForIdent("PinNotify"), true);
-		IPS_SetHidden($this->GetIDForIdent("Handle"), true);
+		
+		
+		
+		
 		
 		If($this->ConnectionTest()) {
 			// Hardware feststellen
