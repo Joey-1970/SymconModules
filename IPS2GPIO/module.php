@@ -49,12 +49,7 @@ class IPS2GPIO_IO extends IPSModule
 	                	IPS_SetProperty($ParentID, 'Port', 8888);
 			}
 		}
-		
-		
-		
-		
-		
-		
+
 		If($this->ConnectionTest()) {
 			// Hardware feststellen
 			$this->CommandClientSocket(pack("LLLL", 17, 0, 0, 0), 16);
@@ -132,6 +127,10 @@ class IPS2GPIO_IO extends IPSModule
 		   case "get_pinupdate":
 		   	$this->Get_PinUpdate();
 		   	break;
+		   case "get_hardwarerev":
+		   	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_hardwarerev", "Value"=>GetValueInteger($this->GetIDForIdent("HardwareRev")))));
+		   	break;
+
 		   case "get_freepin":
 		   	$PinPossible = unserialize(GetValueString($this->GetIDForIdent("PinPossible")));
 		   	$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
