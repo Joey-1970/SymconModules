@@ -36,7 +36,6 @@
 	
 	public function RequestAction($Ident, $Value) 
 	{
-  		SetValueString(47271, $Ident." ".$Value);
   		switch($Ident) {
 	        case "Status":
 	            $this->Set_Status($Value);
