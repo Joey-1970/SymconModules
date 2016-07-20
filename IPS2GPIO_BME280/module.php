@@ -48,6 +48,7 @@
 
 			   	break;
 			   case "status":
+			   	// Ist bei allen bisherigen Raspberry Pi GPIO 2&3, außer beim Modell 1 Revision 1, muss noch angepasst werden!
 			   	If (($data->Pin == 2) OR ($data->Pin == 3)){
 			   		$this->SetStatus($data->Status);
 			   	}
