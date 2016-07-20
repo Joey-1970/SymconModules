@@ -36,6 +36,9 @@ class IPS2GPIO_IO extends IPSModule
 		$this->RegisterVariableInteger("Handle_I2C", "Handle_I2C");
 		$this->DisableAction("Handle_I2C");
 		IPS_SetHidden($this->GetIDForIdent("Handle_I2C"), true);
+		$this->RegisterVariableBoolean("I2C_Usage", "I2C_Usage");
+		$this->DisableAction("I2C_Usage");
+		IPS_SetHidden($this->GetIDForIdent("I2C_Usage"), true);
 		$this->RegisterVariableInteger("HardwareRev", "HardwareRev");
 		$this->DisableAction("HardwareRev");
 		IPS_SetHidden($this->GetIDForIdent("HardwareRev"), true);
