@@ -210,9 +210,9 @@ class IPS2GPIO_IO extends IPSModule
 		// Pins ermitteln die genutzt werden
 		SetValueString($this->GetIDForIdent("PinUsed"), "");
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_usedpin")));
-		// Ermitteln ob der I2C-Bus ge nutzt wird
+		// Ermitteln ob der I2C-Bus genutzt wird
 		SetValueBoolean($this->GetIDForIdent("I2C_Usage"), false);
-		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_i2cusage")));
+		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_i2c_usage")));
 	return;
 	}
 	
