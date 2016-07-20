@@ -1,3 +1,3 @@
-# SymconMisc
+# SymconModule
 
 Module für IP-Symcon
