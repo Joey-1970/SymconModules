@@ -61,6 +61,21 @@
  	}
 	// Beginn der Funktionen
 	
+	
+	// pi.i2c_open(0, YL_40, 0) => I2CO 54 bus device 4 uint32_t flags 
+	// BME280_I2CADDR = 0x77
+	// Rückgabe des Handle
+	
+	// I2CWB 62 handle register 4 uint32_t byte 
+	// BME280_REGISTER_CONTROL_HUM = 0xF2 
+	// 67 BME280_REGISTER_CONTROL = 0xF4 
+	// 68 BME280_REGISTER_CONFIG = 0xF5 
+	// 69 BME280_REGISTER_PRESSURE_DATA = 0xF7 
+	// 70 BME280_REGISTER_TEMP_DATA = 0xFA 
+	// 71 BME280_REGISTER_HUMIDITY_DATA = 0xFD 
+	
+	// I2CRB 61 handle register 0 - 
+
 
 }
 ?>
