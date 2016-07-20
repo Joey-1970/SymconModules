@@ -59,6 +59,11 @@
 			   		$this->SetStatus($data->Status);
 			   	}
 			   	break;
+			  case "result":
+				If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
+			   		$this->SetValueInteger($this->GetIDForIdent("Status"), $data->Value);
+				}
+			break;
 			   case "freepin":
 			   	// Funktion zum erstellen dynamischer Pulldown-Menüs
 			   	break;
@@ -70,8 +75,6 @@
 	// Schaltet den gewaehlten Pin
 	public function Set_Status($Value)
 	{
-		// Muss noch angepasst werden!
-		SetValueBoolean($this->GetIDForIdent("Status"), $Value);
 		$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value)));
 	}
 	
