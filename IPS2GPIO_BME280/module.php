@@ -51,11 +51,8 @@
 			   case "get_notifypin":
 			   	//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_notifypin", "Pin" => $this->ReadPropertyInteger("Pin"), "GlitchFilter" => $this->ReadPropertyInteger("GlitchFilter"))));
 			   	break;
-			   case "get_usedpin":
-			   	// Ist bei allen bisherigen Raspberry Pi GPIO 2&3, außer beim Modell 1 Revision 1, muss noch angepasst werden!
-			   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => 2, "Modus" => "R")));
-			   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => 3, "Modus" => "R")));
-
+			   case "get_used_i2c":
+			   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "Value" => true)));
 			   	break;
 			   case "status":
 			   	// Ist bei allen bisherigen Raspberry Pi GPIO 2&3, außer beim Modell 1 Revision 1, muss noch angepasst werden!
