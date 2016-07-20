@@ -50,7 +50,7 @@
 			   	break;
 			   case "status":
 			   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
-			   		//$this->SetStatus($data->Status);
+			   		$this->SetStatus($data->Status);
 			   	}
 			   	break;
 			   case "freepin":
