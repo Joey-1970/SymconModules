@@ -136,7 +136,7 @@ class IPS2GPIO_IO extends IPSModule
 		   	}
 		   	break;
 		   case "set_used_i2c":
-		   	SetValueBoolean($this->GetIDForIdent("I2C_Used", true);
+		   	SetValueBoolean($this->GetIDForIdent("I2C_Used"), true);
 		   	$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
 		   	
 		   	If (GetValueInteger($this->GetIDForIdent("HardwareRev")) <=3) {
