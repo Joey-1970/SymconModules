@@ -33,9 +33,6 @@ class IPS2GPIO_IO extends IPSModule
 		$this->RegisterVariableInteger("Handle", "Handle");
 		$this->DisableAction("Handle");
 		IPS_SetHidden($this->GetIDForIdent("Handle"), true);
-		$this->RegisterVariableInteger("Handle_I2C", "Handle_I2C");
-		$this->DisableAction("Handle_I2C");
-		IPS_SetHidden($this->GetIDForIdent("Handle_I2C"), true);
 		$this->RegisterVariableBoolean("I2C_Used", "I2C_Used");
 		$this->DisableAction("I2C_Used");
 		IPS_SetHidden($this->GetIDForIdent("I2C_Used"), true);
@@ -129,6 +126,14 @@ class IPS2GPIO_IO extends IPSModule
 		        break;
 		   case "get_pinupdate":
 		   	$this->Get_PinUpdate();
+		   	break;
+		   case "get_handle_i2c":
+		   	If (GetValueInteger($this->GetIDForIdent("HardwareRev")) <=3) {
+		   		$this->ClientSocket(pack("LLLLL", 54, 0, $data->Address, 4, 0), 16);	
+		   	}
+		   	elseif (GetValueInteger($this->GetIDForIdent("HardwareRev")) >3) {
+		   		$this->ClientSocket(pack("LLLLL", 54, 0, $data->Address, 4, 0), 16);
+		   	}
 		   	break;
 		   case "set_used_i2c":
 		   	SetValueBoolean($this->GetIDForIdent("I2C_Used", true);
@@ -413,6 +418,16 @@ class IPS2GPIO_IO extends IPSModule
 	           		case "21":
 	           			IPS_LogMessage("GPIO Notify: ","gestoppt");
 			            	break;
+			        case "54":
+			        	If ($response[4] > 0 ) {
+	           				IPS_LogMessage("GPIO I2C-Handle: ",$response[4]." für Device ".$response[3]);
+	           				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c-handle", "Address" => $response[3], "Handle"=> $response[4])));
+	           			}
+	           			else {
+	           				IPS_LogMessage("GPIO I2C-Handle: ",$response[4]." für Device ".$response[3]." nicht vergeben!");
+	           			}
+	           			
+			        	break;
 			        case "97":
 	           			IPS_LogMessage("GPIO GlitchFilter: ","gesetzt");
 			            	break;
