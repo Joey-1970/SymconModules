@@ -3,29 +3,33 @@
     class IPS2GPIO_BME280 extends IPSModule 
     {
 	public function __construct($InstanceID) {
-            // Diese Zeile nicht löschen
-            parent::__construct($InstanceID);
+            	// Diese Zeile nicht löschen
+            	parent::__construct($InstanceID);
         }
 
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
-            // Diese Zeile nicht löschen.
-            parent::Create();
- 	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+            	// Diese Zeile nicht löschen.
+            	parent::Create();
+ 	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
         {
-            // Diese Zeile nicht löschen
-            parent::ApplyChanges();
-            //Connect to available splitter or create a new one
-	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
-	    //Status-Variablen anlegen
-	    $this->RegisterVariableInteger("HardwareRev", "HardwareRev");
-          
-            $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
+            	// Diese Zeile nicht löschen
+            	parent::ApplyChanges();
+            	//Connect to available splitter or create a new one
+	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+	    	//Status-Variablen anlegen
+	    	$this->RegisterVariableInteger("HardwareRev", "HardwareRev");
+          	
+          	$this->RegisterVariableInteger("Handle_I2C", "Handle_I2C");
+		$this->DisableAction("Handle_I2C");
+		IPS_SetHidden($this->GetIDForIdent("Handle_I2C"), true);
+            	
+            	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
         }
 	
 	public function ReceiveData($JSONString) 
