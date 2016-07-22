@@ -63,7 +63,13 @@
 	return;
  	}
 	// Beginn der Funktionen
-	
+
+	// Führt eine Messung aus
+	public function Measurement()
+	{
+		//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_trigger", "Pin" => $this->ReadPropertyInteger("Pin_O"), "Time" => 10)));
+	return;
+	}	
 	
 	// pi.i2c_open(0, YL_40, 0) => I2CO 54 bus device 4 uint32_t flags 
 	// BME280_I2CADDR = 0x77
