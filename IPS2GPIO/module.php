@@ -80,12 +80,16 @@ class IPS2GPIO_IO extends IPSModule
 		        break;
 		    case "set_value":
 		    	If ($data->Pin >= 0) {
-		        	$this->Set_Value($data->Pin, $data->Value);
+		    		$this->CommandClientSocket(pack("LLLL", 4, $data->Pin, $data->Value, 0), 16);
+				IPS_LogMessage("SetValue Parameter : ",$data->Pin." , ".$data->Value); 
+		        	//$this->Set_Value($data->Pin, $data->Value);
 		    	}
 		        break;
 		    case "set_trigger":
 		    	If ($data->Pin >= 0) {
-		        	$this->Set_Trigger($data->Pin, $data->Time);
+		        	$this->CommandClientSocket(pack("LLLLL", 37, $data->Pin, $data->Time, 4, 1), 16);
+				IPS_LogMessage("SetTrigger Parameter : ",$data->Pin." , ".$data->Time);  
+		        	//$this->Set_Trigger($data->Pin, $data->Time);
 		    	}
 		        break;
 		    case "set_notifypin":
@@ -95,7 +99,9 @@ class IPS2GPIO_IO extends IPSModule
 			        $PinNotify[] = $data->Pin;
 				SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
 				// Setzt den Glitch Filter
-				$this->Set_GlitchFilter($data->Pin, $data->GlitchFilter);
+				$this->CommandClientSocket(pack("LLLL", 97, $data->Pin, $data->GlitchFilter, 0), 16);
+				IPS_LogMessage("SetGlitchFilter Parameter : ",$data->Pin." , ".$data->GlitchFilter);  
+				//$this->Set_GlitchFilter($data->Pin, $data->GlitchFilter);
 		    	}
 		        break;
 		   case "set_usedpin":
@@ -263,7 +269,7 @@ class IPS2GPIO_IO extends IPSModule
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_usedpin")));
 			return;
 	}
-	
+/*	
 	// Setzt den gewaehlten Pin in den geforderten Modus
 	private function Set_Mode($Pin, $Modus)
 	{		
@@ -271,30 +277,30 @@ class IPS2GPIO_IO extends IPSModule
 		IPS_LogMessage("SetMode Parameter : ",$Pin." , ".$Modus);  
 	return;
 	}
-	
-	// Setzt den gewaehlten Pin auf den geforderten Wert
+*/	
+/*	// Setzt den gewaehlten Pin auf den geforderten Wert
 	private function Set_Value($Pin, $Value)
 	{		
 		$this->CommandClientSocket(pack("LLLL", 4, $Pin, $Value, 0), 16);
 		IPS_LogMessage("SetValue Parameter : ",$Pin." , ".$Value);  
 	return;
 	}
-	
+*/	
 	// Triggert den gewaehlten Pin
-	private function Set_Trigger($Pin, $Time)
+/*	private function Set_Trigger($Pin, $Time)
 	{		
 		$this->CommandClientSocket(pack("LLLLL", 37, $Pin, $Time, 4, 1), 16);
 		IPS_LogMessage("SetTrigger Parameter : ",$Pin." , ".$Time);  
 	return;
 	}
-	
+*/	
 	// Setzt den gewaehlten Pin in den geforderten Modus
-	private function Set_GlitchFilter($Pin, $Value)
+/*	private function Set_GlitchFilter($Pin, $Value)
 	{		
 		$this->CommandClientSocket(pack("LLLL", 97, $Pin, $Value, 0), 16);
 		IPS_LogMessage("SetGlitchFilter Parameter : ",$Pin." , ".$Value);  
 	return;
-	}
+*/	}
 	
 	// Dimmt den gewaehlten Pin
 	private function Set_Intensity($Pin, $Value)
