@@ -76,7 +76,7 @@
                 { "label": "27", "value": 27 }
                 ]
         },
-    { "type": "Label", "label": "Wiederholungszyklus in ms (0 -> aus, 1sek -> Minimum)" },
+    { "type": "Label", "label": "Wiederholungszyklus in Sekunden (0 -> aus, 1 sek -> Minimum)" },
     { "type": "IntervalBox", "name": "Messzyklus", "caption": "Messzyklus (sek)" }
     ]
 }
