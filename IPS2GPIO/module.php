@@ -120,7 +120,10 @@ class IPS2GPIO_IO extends IPSModule
 				        }
 			        }
 			        $PinUsed[] = $data->Pin;
-			        $this->Set_Mode($data->Pin, $data->Modus);
+			        // Pin in den entsprechenden Mode setzen
+			        $this->CommandClientSocket(pack("LLLL", 0, $data->Pin, $data->Modus, 0), 16);
+				IPS_LogMessage("SetMode Parameter : ",$data->Pin." , ".$data->Modus);  
+			        //$this->Set_Mode($data->Pin, $data->Modus);
 				SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
 		   	}
 		        break;
@@ -432,6 +435,9 @@ class IPS2GPIO_IO extends IPSModule
 	           			}
 	           			
 			        	break;
+			        case "61":
+	           			IPS_LogMessage("GPIO I2C Read: ",$response[4]);
+			            	break;
 			        case "97":
 	           			IPS_LogMessage("GPIO GlitchFilter: ","gesetzt");
 			            	break;
