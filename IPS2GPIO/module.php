@@ -69,13 +69,19 @@ class IPS2GPIO_IO extends IPSModule
 	    	
 	 	switch ($data->Function) {
 		    case "set_PWM_dutycycle":
+		    	// Dimmt einen Pin
 		    	If ($data->Pin >= 0) {
-		        	$this->Set_Intensity($data->Pin, $data->Value);
+		        	$this->CommandClientSocket(pack("LLLL", 5, $data->Pin, $data->Value, 0), 16);
+				IPS_LogMessage("Set Intensity : ",$data->Pin." , ".$data->Value);  
+		        	//$this->Set_Intensity($data->Pin, $data->Value);
 		    	}
 		        break;
 		    case "set_PWM_dutycycle_RGB":
+		    	// Setzt die RGB-Farben
 		    	If (($data->Pin_R >= 0) AND ($data->Pin_G >= 0) AND ($data->Pin_B >= 0)) {
-		        	$this->Set_Intensity_RGB($data->Pin_R, $data->Value_R, $data->Pin_G, $data->Value_G, $data->Pin_B, $data->Value_B);
+		        	$this->CommandClientSocket(pack("LLLL", 5, $data->Pin_R, $data->Value_R, 0).pack("LLLL", 5, $data->Pin_G, $data->Value_G, 0).pack("LLLL", 5, $data->Pin_B, $data->Value_B, 0), 48);
+				IPS_LogMessage("Set Intensity RGB : ",$data->Pin_R." , ".$data->Value_R." ".$data->Pin_G." , ".$data->Value_G." ".$data->Pin_B." , ".$data->Value_B);  
+		        	//$this->Set_Intensity_RGB($data->Pin_R, $data->Value_R, $data->Pin_G, $data->Value_G, $data->Pin_B, $data->Value_B);
 		    	}
 		        break;
 		    case "set_value":
@@ -86,6 +92,7 @@ class IPS2GPIO_IO extends IPSModule
 		    	}
 		        break;
 		    case "set_trigger":
+		    	// Setzten einen Trigger
 		    	If ($data->Pin >= 0) {
 		        	$this->CommandClientSocket(pack("LLLLL", 37, $data->Pin, $data->Time, 4, 1), 16);
 				IPS_LogMessage("SetTrigger Parameter : ",$data->Pin." , ".$data->Time);  
@@ -303,20 +310,20 @@ class IPS2GPIO_IO extends IPSModule
 */	}
 	
 	// Dimmt den gewaehlten Pin
-	private function Set_Intensity($Pin, $Value)
+/*	private function Set_Intensity($Pin, $Value)
 	{
 		$this->CommandClientSocket(pack("LLLL", 5, $Pin, $Value, 0), 16);
 		IPS_LogMessage("Set Intensity : ",$Pin." , ".$Value);  
-	return;
+*/	return;
 	}
 	
 	// Setzt die Farbe der RGB-LED
-	private function Set_Intensity_RGB($Pin_R, $Value_R, $Pin_G, $Value_G, $Pin_B, $Value_B)
+/*	private function Set_Intensity_RGB($Pin_R, $Value_R, $Pin_G, $Value_G, $Pin_B, $Value_B)
 	{
 		$this->CommandClientSocket(pack("LLLL", 5, $Pin_R, $Value_R, 0).pack("LLLL", 5, $Pin_G, $Value_G, 0).pack("LLLL", 5, $Pin_B, $Value_B, 0), 48);
 		IPS_LogMessage("Set Intensity RGB : ",$Pin_R." , ".$Value_R." ".$Pin_G." , ".$Value_G." ".$Pin_B." , ".$Value_B);  
 	return;
-	}
+*/	}
 			
 	// Schaltet den gewaehlten Pin
 	private function Set_Status($Pin, $Value)
