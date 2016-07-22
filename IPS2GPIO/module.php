@@ -85,6 +85,7 @@ class IPS2GPIO_IO extends IPSModule
 		    	}
 		        break;
 		    case "set_value":
+		    	// Schaltet den Pin
 		    	If ($data->Pin >= 0) {
 		    		$this->CommandClientSocket(pack("LLLL", 4, $data->Pin, $data->Value, 0), 16);
 				IPS_LogMessage("SetValue Parameter : ",$data->Pin." , ".$data->Value); 
@@ -326,11 +327,11 @@ class IPS2GPIO_IO extends IPSModule
 */	}
 			
 	// Schaltet den gewaehlten Pin
-	private function Set_Status($Pin, $Value)
+/*	private function Set_Status($Pin, $Value)
 	{
 		$this->CommandClientSocket(pack("LLLL", 5, $Pin, $Value, 0), 16);
 	return;
-	}
+*/	}
 
 	private function ClientSocket($message)
 	{
