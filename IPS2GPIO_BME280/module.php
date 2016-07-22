@@ -14,6 +14,8 @@
             	parent::Create();
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
  	    	$this->RegisterPropertyString("DeviceAddress", "");
+ 	    	$this->RegisterPropertyInteger("Messzyklus", 60);
+            	$this->RegisterTimer("Messzyklus", 0, 'I2GBME_Measurement($_IPS["TARGET"]);');
         }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
