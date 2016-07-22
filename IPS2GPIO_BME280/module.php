@@ -48,16 +48,22 @@
 			   case "set_i2c-handle":
 			   	If ($data->Address == $this->ReadPropertyString("DeviceAddress")) {
 			   		SetValueInteger($this->GetIDForIdent("Handle"), $data->Handle);
+			   		SetValueInteger($this->GetIDForIdent("HardwareRev"), $data->HardwareRev);
 			   	}
 			   	break;
 			   case "get_used_i2c":
 			   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "Value" => true)));
 			   	break;
 			   case "status":
-			   	// Muss noch angepasst werden
-			   	If (($data->Pin == 2) OR ($data->Pin == 3)){
-			   		$this->SetStatus($data->Status);
-			   	}
+			   	If (GetValueInteger($this->GetIDForIdent("HardwareRev")) <= 3) {
+				   	If (($data->Pin == 0) OR ($data->Pin == 1)) {
+				   		$this->SetStatus($data->Status);		
+				   	}
+				else if (GetValueInteger($this->GetIDForIdent("HardwareRev")) > 3) {
+					If (($data->Pin == 2) OR ($data->Pin == 3)) {
+				   		$this->SetStatus($data->Status);
+				   	}
+				}
 			   	break;
 	 	}
 	return;
