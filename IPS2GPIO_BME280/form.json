@@ -9,6 +9,7 @@
     ],
     "elements":
     [
+        { "type": "Label", "label": "Die GPIO-Nummer (Broadcom-Number) ist je nach Raspberry Pi Modell fest definiert (GPIO 0/1 oder GPIO 2/3)" },
         { "type": "ValidationTextBox", "name": "DeviceAddress", "caption": "Device-Adresse" },
         { "type": "Label", "label": "Aktuell unfertiges Modul!" },
         { "type": "Label", "label": "Wiederholungszyklus in ms (0 -> aus, 1000ms -> Minimum)" },
