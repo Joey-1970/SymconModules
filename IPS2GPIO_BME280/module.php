@@ -54,7 +54,7 @@
 			   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "Value" => true)));
 			   	break;
 			   case "status":
-			   	// Ist bei allen bisherigen Raspberry Pi GPIO 2&3, außer beim Modell 1 Revision 1, muss noch angepasst werden!
+			   	// Muss noch angepasst werden
 			   	If (($data->Pin == 2) OR ($data->Pin == 3)){
 			   		$this->SetStatus($data->Status);
 			   	}
