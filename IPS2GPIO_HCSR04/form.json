@@ -9,6 +9,7 @@
     ],
     "elements":
     [
+        { "type": "Label", "label": "Angabe der GPIO-Nummer (Broadcom-Number)" },
         { "type": "Select", "name": "Pin_I", "caption": "Pin Echo",
             "options": [
                 { "label": "ungesetzt", "value": -1 },
