@@ -32,6 +32,9 @@ class IPS2GPIO_IO extends IPSModule
 		IPS_SetHidden($this->GetIDForIdent("PinNotify"), true);
 		$this->RegisterVariableInteger("Handle", "Handle");
 		$this->DisableAction("Handle");
+		IPS_SetHidden($this->GetIDForIdent("PinI2C"), true);
+		$this->RegisterVariableString("PinI2C", "PinI2C");
+		$this->DisableAction("PinI2C");
 		IPS_SetHidden($this->GetIDForIdent("Handle"), true);
 		$this->RegisterVariableBoolean("I2C_Used", "I2C_Used");
 		$this->DisableAction("I2C_Used");
@@ -419,15 +422,18 @@ class IPS2GPIO_IO extends IPSModule
 	           			SetValueInteger($this->GetIDForIdent("HardwareRev"), $response[4]);
 	           			
 	           			if (in_array($response[4], $Model[0])) {
-	    					SetValueString($this->GetIDForIdent("PinPossible"), serialize($Typ[0]));
+	    					SetValueString($this->GetIDForIdent("PinPossible"), serialize(array(0, 1, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 21, 22, 23, 24, 25)));
+	    					SetValueString($this->GetIDForIdent("PinI2C"), serialize(array(0, 1)));
 	    					IPS_LogMessage("GPIO Hardwareermittlung: ","Raspberry Pi Typ 0");
 					}
 					else if (in_array($response[4], $Model[1])) {
-						SetValueString($this->GetIDForIdent("PinPossible"), serialize($Typ[1]));
+						SetValueString($this->GetIDForIdent("PinPossible"), serialize(array(2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27)));
+						SetValueString($this->GetIDForIdent("PinI2C"), serialize(array(2, 3)));
 						IPS_LogMessage("GPIO Hardwareermittlung: ","Raspberry Pi Typ 1");
 					}
 					else if ($response[4] >= 16) {
-						SetValueString($this->GetIDForIdent("PinPossible"), serialize($Typ[2]));
+						SetValueString($this->GetIDForIdent("PinPossible"), serialize(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27)));
+						SetValueString($this->GetIDForIdent("PinI2C"), serialize(array(2, 3)));
 						IPS_LogMessage("GPIO Hardwareermittlung: ","Raspberry Pi Typ 2");
 					}
 					else
