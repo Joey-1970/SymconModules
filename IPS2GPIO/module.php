@@ -158,7 +158,10 @@ class IPS2GPIO_IO extends IPSModule
 		   case "set_used_i2c":
 		   	SetValueBoolean($this->GetIDForIdent("I2C_Used"), true);
 		   	$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
-		   	
+		   	$PinI2C = unserialize(GetValueString($this->GetIDForIdent("PinI2C")));
+		   	// Arrays zusammenfügen
+		   	$PinUsed = array_merge($PinUsed, $PinI2C);
+		   	// Arrays auf doppelte Einträge prüfen
 		   	If (GetValueInteger($this->GetIDForIdent("HardwareRev")) <=3) {
 		   		If (is_array($PinUsed)) {	
 					// Prüft, ob der ausgeählte Pin schon einmal genutzt wird
