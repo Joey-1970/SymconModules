@@ -27,7 +27,9 @@
 	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 	    	//Status-Variablen anlegen
 	    	$this->RegisterVariableInteger("HardwareRev", "HardwareRev");
-          	
+          	$this->DisableAction("HardwareRev");
+		IPS_SetHidden($this->GetIDForIdent("HardwareRev"), true);
+		
           	$this->RegisterVariableInteger("Handle", "Handle");
 		$this->DisableAction("Handle");
 		IPS_SetHidden($this->GetIDForIdent("Handle"), true);
