@@ -152,7 +152,7 @@ class IPS2GPIO_IO extends IPSModule
 		   		$this->ClientSocket(pack("LLLLL", 54, 0, $data->Address, 4, 0), 16);	
 		   	}
 		   	elseif (GetValueInteger($this->GetIDForIdent("HardwareRev")) >3) {
-		   		$this->ClientSocket(pack("LLLLL", 54, 0, $data->Address, 4, 0), 16);
+		   		$this->ClientSocket(pack("LLLLL", 54, 1, $data->Address, 4, 0), 16);
 		   	}
 		   	break;
 		   case "set_used_i2c":
@@ -161,38 +161,9 @@ class IPS2GPIO_IO extends IPSModule
 		   	$PinI2C = unserialize(GetValueString($this->GetIDForIdent("PinI2C")));
 		   	// Arrays zusammenfügen
 		   	$PinUsed = array_merge($PinUsed, $PinI2C);
-		   	// Arrays auf doppelte Einträge prüfen
-		   	If (GetValueInteger($this->GetIDForIdent("HardwareRev")) <=3) {
-		   		If (is_array($PinUsed)) {	
-					// Prüft, ob der ausgeählte Pin schon einmal genutzt wird
-				        If (in_array(0, $PinUsed)) {
-				        	IPS_LogMessage("GPIO Pin", "Achtung: Pin 0 wird mehrfach genutzt!");
-				        	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>200)));
-				        }
-				        If (in_array(1, $PinUsed)) {
-				        	IPS_LogMessage("GPIO Pin", "Achtung: Pin 1 wird mehrfach genutzt!");
-				        	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>200)));
-				        }
-			        }
-			        $PinUsed[] = 0;
-			        $PinUsed[] = 1;
-		   	}
-		   	elseif (GetValueInteger($this->GetIDForIdent("HardwareRev")) >3) {
-		   		If (is_array($PinUsed)) {	
-					// Prüft, ob der ausgeählte Pin schon einmal genutzt wird
-				        If (in_array(2, $PinUsed)) {
-				        	IPS_LogMessage("GPIO Pin", "Achtung: Pin 2 wird mehrfach genutzt!");
-				        	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>200)));
-				        }
-				        If (in_array(3, $PinUsed)) {
-				        	IPS_LogMessage("GPIO Pin", "Achtung: Pin 3 wird mehrfach genutzt!");
-				        	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>200)));
-				        }
-			        }
-			        $PinUsed[] = 2;
-			        $PinUsed[] = 3;
-		   	}
-			SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));	
+		   	// doppelte Einträge löschen
+		   	$PinUsed = array_unique($PinUsed);
+		   	SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));	
 		   	break;
 		   case "i2c_read_byte":
 		   	$this->CommandClientSocket(pack("LLLL", 61, $data->Handle, $data->Register, 0), 16);
