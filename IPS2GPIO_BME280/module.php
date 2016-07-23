@@ -59,6 +59,7 @@
 				   	If (($data->Pin == 0) OR ($data->Pin == 1)) {
 				   		$this->SetStatus($data->Status);		
 				   	}
+			   	}
 				else if (GetValueInteger($this->GetIDForIdent("HardwareRev")) > 3) {
 					If (($data->Pin == 2) OR ($data->Pin == 3)) {
 				   		$this->SetStatus($data->Status);
@@ -74,7 +75,7 @@
 	public function Measurement()
 	{
 		// Temperatur
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_Read_byte", "Handle" => $this->ReadPropertyInteger("Handle"), "Register" => "0xFA")));
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "Handle" => $this->ReadPropertyInteger("Handle"), "Register" => "0xFA")));
 	return;
 	}	
 	
