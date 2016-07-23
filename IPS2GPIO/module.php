@@ -285,8 +285,8 @@ class IPS2GPIO_IO extends IPSModule
 		$this->CommandClientSocket(pack("LLLL", 97, $Pin, $Value, 0), 16);
 		IPS_LogMessage("SetGlitchFilter Parameter : ",$Pin." , ".$Value);  
 	return;
-*/	}
-	
+	}
+*/	
 	// Dimmt den gewaehlten Pin
 /*	private function Set_Intensity($Pin, $Value)
 	{
