@@ -149,10 +149,10 @@ class IPS2GPIO_IO extends IPSModule
 		   	break;
 		   case "get_handle_i2c":
 		   	If (GetValueInteger($this->GetIDForIdent("HardwareRev")) <=3) {
-		   		$this->ClientSocket(pack("LLLLL", 54, 0, $data->Register, 4, 0), 16);	
+		   		$this->ClientSocket(pack("LLLLL", 54, 0, $data->DeviceAddress, 4, 0), 16);	
 		   	}
 		   	elseif (GetValueInteger($this->GetIDForIdent("HardwareRev")) >3) {
-		   		$this->ClientSocket(pack("LLLLL", 54, 1, $data->Register, 4, 0), 16);
+		   		$this->ClientSocket(pack("LLLLL", 54, 1, $data->DeviceAddress, 4, 0), 16);
 		   	}
 		   	break;
 		   case "set_used_i2c":
