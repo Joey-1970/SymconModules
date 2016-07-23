@@ -292,24 +292,24 @@ class IPS2GPIO_IO extends IPSModule
 	{
 		$this->CommandClientSocket(pack("LLLL", 5, $Pin, $Value, 0), 16);
 		IPS_LogMessage("Set Intensity : ",$Pin." , ".$Value);  
-*/	return;
+	return;
 	}
-	
+*/	
 	// Setzt die Farbe der RGB-LED
 /*	private function Set_Intensity_RGB($Pin_R, $Value_R, $Pin_G, $Value_G, $Pin_B, $Value_B)
 	{
 		$this->CommandClientSocket(pack("LLLL", 5, $Pin_R, $Value_R, 0).pack("LLLL", 5, $Pin_G, $Value_G, 0).pack("LLLL", 5, $Pin_B, $Value_B, 0), 48);
 		IPS_LogMessage("Set Intensity RGB : ",$Pin_R." , ".$Value_R." ".$Pin_G." , ".$Value_G." ".$Pin_B." , ".$Value_B);  
 	return;
-*/	}
-			
+	}
+*/			
 	// Schaltet den gewaehlten Pin
 /*	private function Set_Status($Pin, $Value)
 	{
 		$this->CommandClientSocket(pack("LLLL", 5, $Pin, $Value, 0), 16);
 	return;
-*/	}
-
+	}
+*/
 	private function ClientSocket($message)
 	{
 		$res = $this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode($message))));  
