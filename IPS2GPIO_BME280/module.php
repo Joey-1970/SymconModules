@@ -47,7 +47,7 @@
 			   case "notify":
 			   // leer
 			   	break;
-			   case "set_i2c-handle":
+			   case "set_i2c_handle":
 			   	If ($data->Address == $this->ReadPropertyString("DeviceAddress")) {
 			   		SetValueInteger($this->GetIDForIdent("Handle"), $data->Handle);
 			   		SetValueInteger($this->GetIDForIdent("HardwareRev"), $data->HardwareRev);
