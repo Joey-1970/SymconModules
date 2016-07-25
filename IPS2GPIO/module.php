@@ -168,6 +168,10 @@ class IPS2GPIO_IO extends IPSModule
 		   	$this->CommandClientSocket(pack("LLLLL", 62, $data->Handle, $data->Register, 4, $date->Value), 16);
 			IPS_LogMessage("I2C Write Byte Parameter : ",$data->Handle." , ".$data->Register." , ".$data->Value);  	
 		   	break;
+		   case "i2c_read_word":
+		   	$this->CommandClientSocket(pack("LLLL", 63, $data->Handle, $data->Register, 0), 16);
+			IPS_LogMessage("I2C Write Word Parameter : ",$data->Handle." , ".$data->Register);  	
+		   	break;
 		   case "get_freepin":
 		   	$PinPossible = unserialize(GetValueString($this->GetIDForIdent("PinPossible")));
 		   	$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
@@ -374,10 +378,13 @@ class IPS2GPIO_IO extends IPSModule
 	           			
 			        	break;
 			        case "61":
-	           			IPS_LogMessage("GPIO I2C Read: ",$response[4]);
+	           			IPS_LogMessage("GPIO I2C Read Byte: ",$response[4]);
 			            	break;
 			        case "62":
-	           			IPS_LogMessage("GPIO I2C Write: ",$response[4]);
+	           			IPS_LogMessage("GPIO I2C Write Byte: ",$response[4]);
+			            	break;
+			        case "63":
+	           			IPS_LogMessage("GPIO I2C Read Word: ",$response[4]);
 			            	break;
 			        case "97":
 	           			IPS_LogMessage("GPIO GlitchFilter: ","gesetzt");
