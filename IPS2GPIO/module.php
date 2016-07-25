@@ -378,7 +378,7 @@ class IPS2GPIO_IO extends IPSModule
 	           			
 			        	break;
 			        case "61":
-	           			IPS_LogMessage("GPIO I2C Read Byte: ",$response[4]);
+	           			IPS_LogMessage("GPIO I2C Read Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
 			            	break;
 			        case "62":
 	           			IPS_LogMessage("GPIO I2C Write Byte: ",$response[4]);
