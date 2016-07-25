@@ -39,6 +39,7 @@
              	}
             	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
             	$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
+            	$this->Calibrate();
         }
 	
 	public function ReceiveData($JSONString) 
@@ -84,6 +85,14 @@
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => "250")));
 	return;
 	}	
+	
+	
+	private function Calibrate()
+	{
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_word", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => "0x88")));
+	
+	return;	
+	}
 	
 	// pi.i2c_open(0, YL_40, 0) => I2CO 54 bus device 4 uint32_t flags 
 	// BME280_I2CADDR = 0x77
