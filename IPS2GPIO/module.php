@@ -169,7 +169,7 @@ class IPS2GPIO_IO extends IPSModule
 			IPS_LogMessage("I2C Write Byte Parameter : ",$data->Handle." , ".$data->Register." , ".$data->Value);  	
 		   	break;
 		   case "i2c_read_word":
-		   	$this->CommandClientSocket(pack("LLLL", 63, $data->Handle, $data->Register, 0), 16);
+		   	$this->ClientSocket(pack("LLLL", 63, $data->Handle, $data->Register, 0));
 			IPS_LogMessage("I2C Write Word Parameter : ",$data->Handle." , ".$data->Register);  	
 		   	break;
 		   case "get_freepin":
