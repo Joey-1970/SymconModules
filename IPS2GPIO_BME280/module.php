@@ -94,11 +94,11 @@
 
 		
 		// T1 0x88
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_exchange_word", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => "136")));
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_exchange_word", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => "136", "Value" => "136")));
 		// T2 0x8A
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_exchange_word", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => "138")));
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_exchange_word", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => "138", "Value" => "138")));
 		// T3 0x8C
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_exchange_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => "140")));
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_exchange_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => "140", "Value" => "140")));
 
 		// P1 0xBE
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_word", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => "142")));
