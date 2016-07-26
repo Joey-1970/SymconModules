@@ -89,6 +89,10 @@
 	
 	private function Calibrate()
 	{
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => "242", "Value" => "1")));
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => "244", "Value" => "1")));
+
+		
 		// T1 0x88
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_exchange_word", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => "136")));
 		// T2 0x8A
