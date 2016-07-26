@@ -176,6 +176,10 @@ class IPS2GPIO_IO extends IPSModule
 		   	$this->CommandClientSocket(pack("LLLLL", 69, $data->Handle, $data->Register, 4, $data->Register), 16);
 			IPS_LogMessage("I2C Exchange Word Parameter : ",$data->Handle." , ".$data->Register);  	
 		   	break;
+		   case "i2c_exchange_byte":
+		   	$this->CommandClientSocket(pack("LLLLL", 70, $data->Handle, $data->Register, 4, $data->Register), 16);
+			IPS_LogMessage("I2C Exchange Word Parameter : ",$data->Handle." , ".$data->Register);  	
+		   	break;
 		   case "get_freepin":
 		   	$PinPossible = unserialize(GetValueString($this->GetIDForIdent("PinPossible")));
 		   	$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
@@ -393,6 +397,9 @@ class IPS2GPIO_IO extends IPSModule
 			        case "69":
 	           			IPS_LogMessage("GPIO I2C Exchange Word: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
 			            	break;
+			        case "70":
+	           			IPS_LogMessage("GPIO I2C Exchange Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
+			            	break;
 			        case "97":
 	           			IPS_LogMessage("GPIO GlitchFilter: ","gesetzt");
 			            	break;
@@ -413,7 +420,7 @@ class IPS2GPIO_IO extends IPSModule
 			
 			$response = unpack("L*", $Message);
 					
-			IPS_LogMessage("GPIO Notify: ","Meldung: ".count($response)." ".$response[1]." ".$response[2]." ".$response[3]);
+			//IPS_LogMessage("GPIO Notify: ","Meldung: ".count($response)." ".$response[1]." ".$response[2]." ".$response[3]);
 
 			$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
 
