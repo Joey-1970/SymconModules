@@ -88,6 +88,9 @@
 			  			$CalibrateData = unserialize(GetValueString($this->GetIDForIdent("CalibrateData")));
 			  			$CalibrateData[$data->Register] = $data->Value;
 			  			SetValueString($this->GetIDForIdent("CalibrateData"), serialize($CalibrateData));
+			  			If (count($CalibrateData)  == 32) {
+			  				$this->UpgradeCalibrateData();
+			  			}
 			  		}
 			  	}
 			  	break;
@@ -141,6 +144,11 @@
 	return;	
 	}
 	
+	private function UpgradeCalibrateData()
+	{
+		
+	return;
+	}
 
 }
 ?>
