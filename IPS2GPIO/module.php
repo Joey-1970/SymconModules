@@ -151,7 +151,7 @@ class IPS2GPIO_IO extends IPSModule
 		   	}
 		   	break;
 		   case "close_handle_i2c":
-		   		$this->ClientSocket(pack("LLLL", 55, $data->handle, 0, 0), 16);
+		   		$this->ClientSocket(pack("LLLL", 55, $data->Handle, 0, 0), 16);
 		   	break;
 		   case "set_used_i2c":
 		   	SetValueBoolean($this->GetIDForIdent("I2C_Used"), true);
