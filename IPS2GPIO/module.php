@@ -150,6 +150,9 @@ class IPS2GPIO_IO extends IPSModule
 		   		$this->ClientSocket(pack("LLLLL", 54, 1, $data->DeviceAddress, 4, 0), 16);
 		   	}
 		   	break;
+		   case "close_handle_i2c":
+		   		$this->ClientSocket(pack("LLLL", 55, $data->handle, 0, 0), 16);
+		   	break;
 		   case "set_used_i2c":
 		   	SetValueBoolean($this->GetIDForIdent("I2C_Used"), true);
 		   	$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
@@ -385,6 +388,9 @@ class IPS2GPIO_IO extends IPSModule
 	           			}
 	           			
 			        	break;
+			        case "55":
+	           			IPS_LogMessage("GPIO I2C Close Handle: ","Handle: ".$response[2]." Value: ".$response[4]);
+			            	break;
 			        case "61":
 	           			IPS_LogMessage("GPIO I2C Read Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
 			            	break;
