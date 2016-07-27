@@ -165,7 +165,7 @@ class IPS2GPIO_IO extends IPSModule
 		   	break;
 		   case "i2c_read_byte":
 		   	$this->CommandClientSocket(pack("LLLL", 61, $data->Handle, $data->Register, 0), 16);
-			IPS_LogMessage("I2C Read Byte Parameter : ",$data->Handle." , ".$data->Register);  	
+			IPS_LogMessage("I2C Read Byte Parameter : ",$data->Handle." , ".$data->Register." , ".$data->Value);  	
 		   	break;
 		   case "i2c_write_byte":
 		   	$this->CommandClientSocket(pack("LLLLL", 62, $data->Handle, $data->Register, 4, $data->Value), 16);
@@ -207,11 +207,11 @@ class IPS2GPIO_IO extends IPSModule
 	    	$Data = json_decode($JSONString);
 	    	$Message = utf8_decode($Data->Buffer);
 	    	$MessageLen = strlen($Message);
-	    	IPS_LogMessage("GPIO ReceiveData", "Länge: ".$MessageLen);
+	    	//IPS_LogMessage("GPIO ReceiveData", "Länge: ".$MessageLen);
 	    	If (in_array($MessageLen, $RDlen[0])) {
 	    		// wenn es sich um mehrere Standarddatensätze handelt
 	    		$DataArray = str_split($Message, 16);
-	    		IPS_LogMessage("GPIO ReceiveData", "Überlänge: ".Count($DataArray)." Command-Datensätze");
+	    		//IPS_LogMessage("GPIO ReceiveData", "Überlänge: ".Count($DataArray)." Command-Datensätze");
 	    		for ($i = 0; $i < Count($DataArray); $i++) {
     				$this->ClientResponse($DataArray[$i]);
 			}
@@ -219,7 +219,7 @@ class IPS2GPIO_IO extends IPSModule
 		elseif (in_array($MessageLen, $RDlen[1])) {
 	    		// wenn es sich um mehrere Notifikationen handelt
 	    		$DataArray = str_split($Message, 12);
-	    		IPS_LogMessage("GPIO ReceiveData", "Überlänge: ".Count($DataArray)." Notify-Datensätze");
+	    		//IPS_LogMessage("GPIO ReceiveData", "Überlänge: ".Count($DataArray)." Notify-Datensätze");
 	    		for ($i = 0; $i < Count($DataArray); $i++) {
     				$this->ClientResponse($DataArray[$i]);
 			}
@@ -311,7 +311,7 @@ class IPS2GPIO_IO extends IPSModule
 		}
 		
 		$DataArray = str_split($buf, 16);
-	    	IPS_LogMessage("GPIO ReceiveData", Count($DataArray)." Command-Datensätze");
+	    	//IPS_LogMessage("GPIO ReceiveData", Count($DataArray)." Command-Datensätze");
 	    	for ($i = 0; $i < Count($DataArray); $i++) {
     			$this->ClientResponse($DataArray[$i]);
 		}
