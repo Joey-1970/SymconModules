@@ -393,9 +393,11 @@ class IPS2GPIO_IO extends IPSModule
 			            	break;
 			        case "61":
 	           			IPS_LogMessage("GPIO I2C Read Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
+			            	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "Handle" => $response[2], "Register" => $response[3], "Value" => $response[4])));
 			            	break;
 			        case "62":
 	           			IPS_LogMessage("GPIO I2C Write Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
+			            	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "Handle" => $response[2], "Register" => $response[3], "Value" => $response[4])));
 			            	break;
 			        case "63":
 	           			IPS_LogMessage("GPIO I2C Read Word: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
