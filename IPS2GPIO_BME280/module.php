@@ -38,6 +38,10 @@
 		$this->DisableAction("CalibrateData");
 		IPS_SetHidden($this->GetIDForIdent("CalibrateData"), true);
              	
+             	$this->RegisterVariableString("MeasumentData", "MeasumentData");
+		$this->DisableAction("MeasumentData");
+		IPS_SetHidden($this->GetIDForIdent("MeasumentData"), true);
+             	
              	If (GetValueInteger($this->GetIDForIdent("Handle")) > 0) {
              		// Handle löschen
              		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "close_handle_i2c", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")))));
@@ -88,9 +92,6 @@
 			  			$CalibrateData = unserialize(GetValueString($this->GetIDForIdent("CalibrateData")));
 			  			$CalibrateData[$data->Register] = $data->Value;
 			  			SetValueString($this->GetIDForIdent("CalibrateData"), serialize($CalibrateData));
-			  			If (count($CalibrateData)  == 32) {
-			  				$this->UpgradeCalibrateData();
-			  			}
 			  		}
 			  	}
 			  	break;
@@ -102,6 +103,8 @@
 	// Führt eine Messung aus
 	public function Measurement()
 	{
+		$CalibrateData = unserialize(GetValueString($this->GetIDForIdent("CalibrateData")));
+		$Dig_T1 = 
 		// Temperatur
 		//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => "250", "Value" => "4")));
 
@@ -144,8 +147,20 @@
 	return;	
 	}
 	
-	private function UpgradeCalibrateData()
+	private function ReadData()
 	{
+		for ($i = hexdec("F7"); $i < (hexdec("F7") + 8); $i++) {
+    			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => $i, "Value" => $i)));
+		}
+	return;
+	}
+	
+	private function CalibrateTemp()
+	{
+		$CalibrateData = unserialize(GetValueString($this->GetIDForIdent("CalibrateData")));
+		$Dig_T1 = $CalibrateData[137] << 8 | $CalibrateData[136];
+		$Dig_T2 = $CalibrateData[139] << 8 | $CalibrateData[138];
+		$Dig_T3 = $CalibrateData[141] << 8 | $CalibrateData[140];
 		
 	return;
 	}
