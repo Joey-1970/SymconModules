@@ -38,9 +38,21 @@
 		$this->DisableAction("CalibrateData");
 		IPS_SetHidden($this->GetIDForIdent("CalibrateData"), true);
              	
-             	$this->RegisterVariableString("MeasumentData", "MeasumentData");
-		$this->DisableAction("MeasumentData");
-		IPS_SetHidden($this->GetIDForIdent("MeasumentData"), true);
+             	$this->RegisterVariableString("MeasurementData", "MeasurementData");
+		$this->DisableAction("MeasurementData");
+		IPS_SetHidden($this->GetIDForIdent("MeasurementData"), true);
+             	
+             	$this->RegisterVariableFloat("Temperatur", "Temperatur");
+		$this->DisableAction("Temperatur");
+		IPS_SetHidden($this->GetIDForIdent("Temperatur"), false);
+		
+		$this->RegisterVariableFloat("Luftdruck", "Luftdruck");
+		$this->DisableAction("Luftdruck");
+		IPS_SetHidden($this->GetIDForIdent("Luftdruck"), false);
+		
+		$this->RegisterVariableFloat("Luftfeuchtigkeit", "Luftfeuchtigkeit");
+		$this->DisableAction("Luftfeuchtigkeit");
+		IPS_SetHidden($this->GetIDForIdent("Luftfeuchtigkeit"), false);
              	
              	If (GetValueInteger($this->GetIDForIdent("Handle")) > 0) {
              		// Handle löschen
@@ -53,7 +65,7 @@
             	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
             	$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
             	$this->Setup();
-            	$this->Get_CalibrateData();
+            	$this->ReadCalibrateData();
         }
 	
 	public function ReceiveData($JSONString) 
@@ -93,6 +105,12 @@
 			  			$CalibrateData[$data->Register] = $data->Value;
 			  			SetValueString($this->GetIDForIdent("CalibrateData"), serialize($CalibrateData));
 			  		}
+			  		// Daten der Messung
+			  		If (($data->Register >= hexdec("F7")) AND ($data->Register < hexdec("FF"))) {
+			  			$MeasurementData = unserialize(GetValueString($this->GetIDForIdent("MeasurementData")));
+			  			$MeasurementData[$data->Register] = $data->Value;
+			  			SetValueString($this->GetIDForIdent("MeasurementData"), serialize($MeasurementData));
+			  		}
 			  	}
 			  	break;
 	 	}
@@ -103,12 +121,7 @@
 	// Führt eine Messung aus
 	public function Measurement()
 	{
-		$CalibrateData = unserialize(GetValueString($this->GetIDForIdent("CalibrateData")));
-		$Dig_T1 = 
-		// Temperatur
-		//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => "250", "Value" => "4")));
-
-		//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => "250")));
+		$this->ReadData();
 	return;
 	}	
 	
@@ -131,7 +144,7 @@
 	return;
 	}
 	
-	private function Get_CalibrateData()
+	private function ReadCalibrateData()
 	{
 		SetValueString($this->GetIDForIdent("CalibrateData"), "");
 		
@@ -149,6 +162,7 @@
 	
 	private function ReadData()
 	{
+		SetValueString($this->GetIDForIdent("MeasurementData"), "");
 		for ($i = hexdec("F7"); $i < (hexdec("F7") + 8); $i++) {
     			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => $i, "Value" => $i)));
 		}
