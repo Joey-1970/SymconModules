@@ -181,7 +181,7 @@ class IPS2GPIO_IO extends IPSModule
 		   	break;
 		   case "i2c_exchange_byte":
 		   	$this->CommandClientSocket(pack("LLLLL", 70, $data->Handle, $data->Register, 2, $data->Value), 16);
-			IPS_LogMessage("I2C Exchange Word Parameter : ",$data->Handle." , ".$data->Register);  	
+			IPS_LogMessage("I2C Exchange Byte Parameter : ",$data->Handle." , ".$data->Register." , ".$data->Value);  	
 		   	break;
 		   case "get_freepin":
 		   	$PinPossible = unserialize(GetValueString($this->GetIDForIdent("PinPossible")));
