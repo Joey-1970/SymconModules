@@ -84,7 +84,7 @@
 			  case "set_i2c_data":
 			  	If ($data->Handle == GetValueInteger($this->GetIDForIdent("Handle"))) {
 			  		// Daten zur Kalibrierung
-			  		If (($data->Register >= hexdec("88")) AND ($data->Register <= hexdec("E6"))) {
+			  		If (($data->Register >= hexdec("88")) AND ($data->Register < hexdec("E8"))) {
 			  			$CalibrateData = unserialize(GetValueString($this->GetIDForIdent("CalibrateData")));
 			  			$CalibrateData[$data->Register] = $data->Value;
 			  			SetValueString($this->GetIDForIdent("CalibrateData"), serialize($CalibrateData));
