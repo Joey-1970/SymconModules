@@ -33,6 +33,11 @@
           	$this->RegisterVariableInteger("Handle", "Handle");
 		$this->DisableAction("Handle");
 		IPS_SetHidden($this->GetIDForIdent("Handle"), true);
+             	
+             	$this->RegisterVariableString("CalibrateData", "CalibrateData");
+		$this->DisableAction("CalibrateData");
+		IPS_SetHidden($this->GetIDForIdent("CalibrateData"), true);
+             	
              	If (GetValueInteger($this->GetIDForIdent("Handle")) > 0) {
              		// Handle löschen
              		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "close_handle_i2c", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")))));
@@ -76,6 +81,13 @@
 				   	}
 				}
 			   	break;
+			  case "add_calibrate_data":
+			  	If ($data->Handle == GetValueInteger($this->GetIDForIdent("Handle"))) {
+			  		$CalibrateData = unserialize(GetValueString($this->GetIDForIdent("CalibrateData")));
+			  		$CalibrateData[$data->Register] = $data->Value;
+			  		SetValueString($this->GetIDForIdent("CalibrateData"), serialize($CalibrateData));
+			  	}
+			  	break;
 	 	}
 	return;
  	}
