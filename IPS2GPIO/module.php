@@ -177,7 +177,7 @@ class IPS2GPIO_IO extends IPSModule
 		   	break;
 		   case "i2c_exchange_word":
 		   	$this->CommandClientSocket(pack("LLLLL", 69, $data->Handle, $data->Register, 4, $data->Value), 16);
-			IPS_LogMessage("I2C Exchange Word Parameter : ",$data->Handle." , ".$data->Register);  	
+			IPS_LogMessage("I2C Exchange Word Parameter : ",$data->Handle." , ".$data->Register." , ".$data->Value);  	
 		   	break;
 		   case "i2c_exchange_byte":
 		   	$this->CommandClientSocket(pack("LLLLL", 70, $data->Handle, $data->Register, 2, $data->Value), 16);
