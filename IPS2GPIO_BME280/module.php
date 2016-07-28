@@ -42,17 +42,17 @@
 		$this->DisableAction("MeasurementData");
 		IPS_SetHidden($this->GetIDForIdent("MeasurementData"), true);
              	
-             	$this->RegisterVariableFloat("Temperatur", "Temperatur");
-		$this->DisableAction("Temperatur");
-		IPS_SetHidden($this->GetIDForIdent("Temperatur"), false);
+             	$this->RegisterVariableFloat("Temperature", "Temperature");
+		$this->DisableAction("Temperature");
+		IPS_SetHidden($this->GetIDForIdent("Temperature"), false);
 		
-		$this->RegisterVariableFloat("Luftdruck", "Luftdruck");
-		$this->DisableAction("Luftdruck");
-		IPS_SetHidden($this->GetIDForIdent("Luftdruck"), false);
+		$this->RegisterVariableFloat("Pressure", "Pressure");
+		$this->DisableAction("Pressure");
+		IPS_SetHidden($this->GetIDForIdent("Pressure"), false);
 		
-		$this->RegisterVariableFloat("Luftfeuchtigkeit", "Luftfeuchtigkeit");
-		$this->DisableAction("Luftfeuchtigkeit");
-		IPS_SetHidden($this->GetIDForIdent("Luftfeuchtigkeit"), false);
+		$this->RegisterVariableFloat("Humidity", "Humidity");
+		$this->DisableAction("Humidity");
+		IPS_SetHidden($this->GetIDForIdent("Humidity"), false);
              	
              	If (GetValueInteger($this->GetIDForIdent("Handle")) > 0) {
              		// Handle löschen
