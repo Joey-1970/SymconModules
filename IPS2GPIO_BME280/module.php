@@ -71,6 +71,7 @@
             	$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
             	$this->Setup();
             	$this->ReadCalibrateData();
+            	$this->SetStatus(102);
         }
 	
 	public function ReceiveData($JSONString) 
@@ -129,7 +130,6 @@
 		// Messwerte aktualisieren
 		$this->ReadData();
 		// Kalibrierungsdatan aufbereiten
-		IPS_Sleep(50);
 		$CalibrateData = unserialize(GetValueString($this->GetIDForIdent("CalibrateData")));
 		$Dig_T[0] = (($CalibrateData[137] << 8) | $CalibrateData[136]);
 		$Dig_T[1] = (($CalibrateData[139] << 8) | $CalibrateData[138]);
