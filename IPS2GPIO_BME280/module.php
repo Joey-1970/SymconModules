@@ -144,12 +144,12 @@
 		$Dig_P[7] = (($CalibrateData[157] << 8) | $CalibrateData[156]);
 		$Dig_P[8] = (($CalibrateData[159] << 8) | $CalibrateData[158]);
 		
-		$Dig_H1 = $CalibrateData[160];
-		$Dig_H2 = (($CalibrateData[162] << 8) | $CalibrateData[161]);
-		$Dig_H3 = $CalibrateData[163];
-		$Dig_H4 = (($CalibrateData[164] << 4) | (hexdec("0F") & $CalibrateData[165]));
-		$Dig_H5 = (($CalibrateData[166] << 4) | (($CalibrateData[165] >> 4) & hexdec("0F")));
-		$Dig_H6 = $CalibrateData[167];
+		$Dig_H[0] = $CalibrateData[160];
+		$Dig_H[1] = (($CalibrateData[162] << 8) | $CalibrateData[161]);
+		$Dig_H[2] = $CalibrateData[163];
+		$Dig_H[3] = (($CalibrateData[164] << 4) | (hexdec("0F") & $CalibrateData[165]));
+		$Dig_H[4] = (($CalibrateData[166] << 4) | (($CalibrateData[165] >> 4) & hexdec("0F")));
+		$Dig_H[5] = $CalibrateData[167];
 		// Messwerte aufbereiten
 		$MeasurementData = unserialize(GetValueString($this->GetIDForIdent("MeasurementData")));
 		$Pres_raw = (($MeasurementData[247] << 12) | ($MeasurementData[248] << 4) | ($MeasurementData[249] << 4));
@@ -192,7 +192,7 @@
 		// Luftfeuchtigkeit
 		$Hum = $FineCalibrate - 76800;
 		If ($Hum <> 0) {
-			$Hum = ($Hum_raw - ($Dig_H4 * 64 + $Dig_H5 / 16384 * $Hum)) * ($Dig_H2  / 65536 * (1 + $Dig_H6 / 67108864 * $Hum * (1 + $Dig_H3 / 67108864 * $Hum)));
+			$Hum = ($Hum_raw - ($Dig_H[3] * 64 + $Dig_H[4] / 16384 * $Hum)) * ($Dig_H[1]  / 65536 * (1 + $Dig_H[5] / 67108864 * $Hum * (1 + $Dig_H[2] / 67108864 * $Hum)));
 		}
 		else {
 			SetValueFloat($this->GetIDForIdent("Humidity"), 0);
