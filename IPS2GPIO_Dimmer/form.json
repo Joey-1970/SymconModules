@@ -43,10 +43,5 @@
                 { "label": "27", "value": 27 }
                 ]
         }
-    ],
-    "actions":
-    [
-        { "type": "Button", "label": "Switch", "onClick": "" },
-        { "type": "HorizontalSlider", "name": "Slider", "minimum": 0, "maxmaximum": 255, "onChange": "" }
     ]
 }
