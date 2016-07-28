@@ -26,11 +26,11 @@
 	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 	   
 	    //Status-Variablen anlegen
-	    $this->RegisterVariableBoolean("Status", "Status", "~Switch", 1);
+	    $this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
             $this->DisableAction("Status");
-            $this->RegisterVariableBoolean("Toggle", "Toggle", "~Switch", 1);
+            $this->RegisterVariableBoolean("Toggle", "Toggle", "~Switch", 20);
             $this->DisableAction("Toggle");
-            $this->RegisterVariableBoolean("Trigger", "Trigger", "~Switch", 1);
+            $this->RegisterVariableBoolean("Trigger", "Trigger", "~Switch", 30);
             $this->DisableAction("Trigger");
             If ($this->ReadPropertyInteger("Pin") >= 0) {
             	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
