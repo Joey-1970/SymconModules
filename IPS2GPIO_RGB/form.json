@@ -111,15 +111,5 @@
                 { "label": "27", "value": 27 }
                 ]
         }
-    ],
-    "actions":
-    [
-        { "type": "Button", "label": "Switch", "onClick": "" },
-        { "type": "Label", "label": "Rot" },
-        { "type": "HorizontalSlider", "name": "Slider_R", "minimum": 0, "maxmaximum": 255, "onChange": "" },
-        { "type": "Label", "label": "Grün" },
-        { "type": "HorizontalSlider", "name": "Slider_G", "minimum": 0, "maxmaximum": 255, "onChange": "" },
-        { "type": "Label", "label": "Blau" },
-        { "type": "HorizontalSlider", "name": "Slider_B", "minimum": 0, "maxmaximum": 255, "onChange": "" }
     ]
 }
