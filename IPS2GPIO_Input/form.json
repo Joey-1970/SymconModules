@@ -10,7 +10,7 @@
     "elements":
     [
         { "type": "Label", "label": "Angabe der GPIO-Nummer (Broadcom-Number)" },
-        { "type": "Select", "name": "Pin", "caption": "Pin",
+        { "type": "Select", "name": "Pin", "caption": "GPIO-Nr.",
             "options": [
                 { "label": "ungesetzt", "value": -1 },
                 { "label": "0", "value": 0 },
