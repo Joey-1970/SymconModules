@@ -145,12 +145,12 @@
 		$Dig_P[7] = (($CalibrateData[157] << 8) | $CalibrateData[156]);
 		$Dig_P[8] = (($CalibrateData[159] << 8) | $CalibrateData[158]);
 		
-		$Dig_H[0] = $CalibrateData[160];
-		$Dig_H[1] = (($CalibrateData[225] << 8) | $CalibrateData[161]);
-		$Dig_H[2] = $CalibrateData[226];
-		$Dig_H[3] = (($CalibrateData[227] << 4) | (hexdec("0F") & $CalibrateData[228]));
-		$Dig_H[4] = (($CalibrateData[229] << 4) | (($CalibrateData[228] >> 4) & hexdec("0F")));
-		$Dig_H[5] = $CalibrateData[230];
+		$Dig_H[0] = $CalibrateData[161];
+		$Dig_H[1] = (($CalibrateData[226] << 8) | $CalibrateData[225]);
+		$Dig_H[2] = $CalibrateData[227];
+		$Dig_H[3] = (($CalibrateData[228] << 4) | (hexdec("0F") & $CalibrateData[229]));
+		$Dig_H[4] = (($CalibrateData[230] << 4) | (($CalibrateData[229] >> 4) & hexdec("0F")));
+		$Dig_H[5] = $CalibrateData[231];
 
 		for ($i = 1; $i < 2; $i++) {
 			If ($Dig_T[$i] & hexdec("8000")) {
