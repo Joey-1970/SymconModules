@@ -41,7 +41,7 @@
              	$this->RegisterVariableString("MeasurementData", "MeasurementData", "", 130);
 		$this->DisableAction("MeasurementData");
 		IPS_SetHidden($this->GetIDForIdent("MeasurementData"), true);
-             	
+
              	$this->RegisterVariableFloat("Temperature", "Temperature", "~Temperature", 10);
 		$this->DisableAction("Temperature");
 		IPS_SetHidden($this->GetIDForIdent("Temperature"), false);
@@ -154,13 +154,38 @@
 		// Temperatur
 		$V1 = ($Temp_raw / 16384 - $Dig_T1 / 1024) * $Dig_T2;
 		$V2 = ($Temp_raw / 131072 - $Dig_T1 / 8192) * ($Temp_raw / 131072 - $Dig_T1 / 8192) * $Dig_T3;
-		SetValueFloat($this->GetIDForIdent("Temperature"), $V1 + $V2 / 5120);
+		$FineCalibrate = $V1 + $V2;
+		SetValueFloat($this->GetIDForIdent("Temperature"), $FineCalibrate / 5120);
+		
+		// Luftdruck
+		$V1 = ($FineCalibrate / 2) - 64000;
+		$V2 = ((($V1 / 4) * ($V1 / 4)) / 2048) * $Dig_P6;
+		$V2 = $V2 + (($V1 * $Dig_P5) * 2);
+		$V2 = ($V2 / 4) + ($Dig_P4 * 65536);
+		$V1 = ((($Dig_P3 * ((($V1 / 4) * ($V1 / 4)) / 8192)) / 8) + (($Dig_P2 * $V1) / 2)) / 262144;
+		$V1 = ((32768 + $V1) * $Dig_P0) / 32768;
+		
+		If ($V1 == 0) {
+			SetValueFloat($this->GetIDForIdent("Pressure"), "0");
+		}
+		$Pressure = ((1048576 - $Pres_raw) - ($V2 / 4096)) * 3125;
+		
+		If ($Pressure < 0x80000000) {
+			$Pressure = ($Pressure * 2) * $V1;
+		}
+		else {
+			$Pressure = ($Pressure / $V1) * 2;
+		}
+		$V1 = ($Dig_P9 * ((($Pressure / 8) * ($Pressure / 8)) / 8192)) / 4096;
+		$V2 = (($Pressure / 4) * $Dig_P8) / 8192;
+		$Pressure = $Pressure + (($V1 + $V2 + $Dig_P7) / 16);
+		
+		SetValueFloat($this->GetIDForIdent("Pressure"), $Pressure);
 		
 		// Luftfeuchtigkeit
 		SetValueFloat($this->GetIDForIdent("Humidity"), $Hum_raw);
 		
-		// Luftdruck
-		SetValueFloat($this->GetIDForIdent("Pressure"), $Pres_raw);
+		
 		
 	return;
 	}	
