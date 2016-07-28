@@ -125,13 +125,13 @@
 		$this->ReadData();
 		// Kalibrierungsdatan aufbereiten
 		$CalibrateData = unserialize(GetValueString($this->GetIDForIdent("CalibrateData")));
-		$Dig_T1 = $CalibrateData[137] << 8 | $CalibrateData[136];
-		$Dig_T2 = $CalibrateData[139] << 8 | $CalibrateData[138];
-		$Dig_T3 = $CalibrateData[141] << 8 | $CalibrateData[140];
+		$Dig_T1 = (($CalibrateData[137] << 8) | $CalibrateData[136]);
+		$Dig_T2 = (($CalibrateData[139] << 8) | $CalibrateData[138]);
+		$Dig_T3 = (($CalibrateData[141] << 8) | $CalibrateData[140]);
 		
-		$Dig_P1 = $CalibrateData[143] << 8 | $CalibrateData[142];
-		$Dig_P2 = $CalibrateData[145] << 8 | $CalibrateData[144];
-		$Dig_P3 = $CalibrateData[147] << 8 | $CalibrateData[146];
+		$Dig_P1 = ($CalibrateData[143] << 8) | $CalibrateData[142];
+		$Dig_P2 = ($CalibrateData[145] << 8) | $CalibrateData[144];
+		$Dig_P3 = ($CalibrateData[147] << 8) | $CalibrateData[146];
 		$Dig_P4 = $CalibrateData[149] << 8 | $CalibrateData[148];
 		$Dig_P5 = $CalibrateData[151] << 8 | $CalibrateData[150];
 		$Dig_P6 = $CalibrateData[153] << 8 | $CalibrateData[152];
@@ -154,7 +154,7 @@
 		// Temperatur
 		$V1 = ($Temp_raw / 16384 - $Dig_T1 / 1024) * $Dig_T2;
 		$V2 = ($Temp_raw / 131072 - $Dig_T1 / 8192) * ($Temp_raw / 131072 - $Dig_T1 / 8192) * $Dig_T3;
-		
+		SetValue($this->GetIDForIdent("Temperature"), $V1 + $V2 / 5120);
 		
 		
 		
