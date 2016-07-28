@@ -10,7 +10,7 @@
     "elements":
     [
         { "type": "Label", "label": "Angabe der GPIO-Nummer (Broadcom-Number)" },
-        { "type": "Select", "name": "Pin_I", "caption": "Pin Echo",
+        { "type": "Select", "name": "Pin_I", "caption": "GPIO-Nr. Echo",
             "options": [
                 { "label": "ungesetzt", "value": -1 },
                 { "label": "0", "value": 0 },
@@ -43,7 +43,7 @@
                 { "label": "27", "value": 27 }
                 ]
         },
-            { "type": "Select", "name": "Pin_O", "caption": "Pin Trigger",
+            { "type": "Select", "name": "Pin_O", "caption": "GPIO-Nr. Trigger",
             "options": [
                 { "label": "ungesetzt", "value": -1 },
                 { "label": "0", "value": 0 },
