@@ -199,7 +199,7 @@
 		$Pressure = ((1048576 - $Pres_raw) - ($V2 / 4096)) * 3125;
 		
 		If ($Pressure < hexdec("80000000")) {
-			$Pressure = ($Pressure * 2) * $V1;
+			$Pressure = ($Pressure * 2) / $V1;
 		}
 		else {
 			$Pressure = ($Pressure / $V1) * 2;
