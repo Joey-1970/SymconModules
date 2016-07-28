@@ -41,6 +41,11 @@
              	$this->RegisterVariableString("MeasurementData", "MeasurementData", "", 130);
 		$this->DisableAction("MeasurementData");
 		IPS_SetHidden($this->GetIDForIdent("MeasurementData"), true);
+		
+		// Test!
+		$this->RegisterVariableString("tmpMeasurementData", "tmpMeasurementData", "", 130);
+		$this->DisableAction("tmpMeasurementData");
+		IPS_SetHidden($this->GetIDForIdent("tmpMeasurementData"), true);
 
              	$this->RegisterVariableFloat("Temperature", "Temperature", "~Temperature", 10);
 		$this->DisableAction("Temperature");
@@ -242,6 +247,8 @@
 		for ($i = hexdec("F7"); $i < (hexdec("F7") + 8); $i++) {
     			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => $i, "Value" => $i)));
 		}
+		// Test!
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_block_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => hexdec("F7"), "Count" => 8)));
 	return;
 	}
 
