@@ -146,12 +146,12 @@
 		$Dig_P[8] = (($CalibrateData[159] << 8) | $CalibrateData[158]);
 		
 		$Dig_H[0] = $CalibrateData[160];
-		$Dig_H[1] = (($CalibrateData[162] << 8) | $CalibrateData[161]);
-		$Dig_H[2] = $CalibrateData[163];
-		$Dig_H[3] = (($CalibrateData[164] << 4) | (hexdec("0F") & $CalibrateData[165]));
-		$Dig_H[4] = (($CalibrateData[166] << 4) | (($CalibrateData[165] >> 4) & hexdec("0F")));
-		$Dig_H[5] = $CalibrateData[167];
-		
+		$Dig_H[1] = (($CalibrateData[225] << 8) | $CalibrateData[161]);
+		$Dig_H[2] = $CalibrateData[226];
+		$Dig_H[3] = (($CalibrateData[227] << 4) | (hexdec("0F") & $CalibrateData[228]));
+		$Dig_H[4] = (($CalibrateData[229] << 4) | (($CalibrateData[228] >> 4) & hexdec("0F")));
+		$Dig_H[5] = $CalibrateData[230];
+
 		for ($i = 1; $i < 2; $i++) {
 			If ($Dig_T[$i] & hexdec("8000")) {
 				$Dig_T[$i] = (-$Dig_T[$i] ^ hexdec("FFFF")) + 1;
@@ -271,11 +271,6 @@
 		for ($i = hexdec("F7"); $i < (hexdec("F7") + 8); $i++) {
     			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => $i)));
 		}
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => hexdec("A1"))));
-		for ($i = hexdec("E1"); $i < (hexdec("E1") + 7); $i++) {
-    			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => $i)));
-		}
-		
 		// Test!
 		SetValueString($this->GetIDForIdent("tmpMeasurementData"), "");
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_block_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => hexdec("F7"), "Count" => 8)));
