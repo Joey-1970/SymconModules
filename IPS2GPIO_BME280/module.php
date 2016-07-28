@@ -197,6 +197,7 @@
 		else {
 			SetValueFloat($this->GetIDForIdent("Humidity"), 0);
 		}
+		$Hum = $Hum * (1 - $Dig_H[0] * $Hum / 524288);
 		If ($Hum > 100) {
 			$Hum = 100;
 		}
