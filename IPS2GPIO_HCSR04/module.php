@@ -29,9 +29,10 @@
 	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 	   
 	    //Status-Variablen anlegen
-	    $this->RegisterVariableFloat("Distanz", "Distanz", "", 0);
-            $this->DisableAction("Distanz");
-            $this->RegisterVariableInteger("Timestamp", "Timestamp", "", 0);
+	    $this->RegisterVariableFloat("Distance", "Distance", "", 10);
+            $this->DisableAction("Distance");
+            IPS_SetHidden($this->GetIDForIdent("Distanz"), false);
+            $this->RegisterVariableInteger("Timestamp", "Timestamp", "", 20);
             $this->DisableAction("Timestamp");
             IPS_SetHidden($this->GetIDForIdent("Timestamp"), true);
             
@@ -53,7 +54,7 @@
 			   		$TimeDiff = $data->Timestamp - GetValueInteger($this->GetIDForIdent("Timestamp"));
 			   		$TimeDiff = abs($TimeDiff/1000000);
    					$Distance = round(($TimeDiff * 34300 / 2), 1);
-   					SetValueFloat($this->GetIDForIdent("Distanz"), $Distance);
+   					SetValueFloat($this->GetIDForIdent("Distance"), $Distance);
 			   	}
 			   	elseif (($data->Pin == $this->ReadPropertyInteger("Pin_I")) AND ($data->Value == true)) {
 			   		SetValueInteger($this->GetIDForIdent("Timestamp"), $data->Timestamp);	
