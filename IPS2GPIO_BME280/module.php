@@ -122,6 +122,33 @@
 	public function Measurement()
 	{
 		$this->ReadData();
+		
+		$CalibrateData = unserialize(GetValueString($this->GetIDForIdent("CalibrateData")));
+		$Dig_T1 = $CalibrateData[137] << 8 | $CalibrateData[136];
+		$Dig_T2 = $CalibrateData[139] << 8 | $CalibrateData[138];
+		$Dig_T3 = $CalibrateData[141] << 8 | $CalibrateData[140];
+		
+		$Dig_P1 = $CalibrateData[143] << 8 | $CalibrateData[142];
+		$Dig_P2 = $CalibrateData[145] << 8 | $CalibrateData[144];
+		$Dig_P3 = $CalibrateData[147] << 8 | $CalibrateData[146];
+		$Dig_P4 = $CalibrateData[149] << 8 | $CalibrateData[148];
+		$Dig_P5 = $CalibrateData[151] << 8 | $CalibrateData[150];
+		$Dig_P6 = $CalibrateData[153] << 8 | $CalibrateData[152];
+		$Dig_P7 = $CalibrateData[155] << 8 | $CalibrateData[154];
+		$Dig_P8 = $CalibrateData[157] << 8 | $CalibrateData[156];
+		$Dig_P9 = $CalibrateData[159] << 8 | $CalibrateData[158];
+		
+		$Dig_H1 = $CalibrateData[160];
+		$Dig_H2 = $CalibrateData[162] << 8 | $CalibrateData[161];
+		$Dig_H3 = $CalibrateData[163];
+		$Dig_H4 = $CalibrateData[164] << 4 | (hexdec("0F") & $CalibrateData[165]);
+		$Dig_H5 = $CalibrateData[166] << 4 | (($CalibrateData[165] >> 4) & hexdec("0F"));
+		$Dig_H6 = $CalibrateData[167];
+		
+		$MeasurementData = unserialize(GetValueString($this->GetIDForIdent("MeasurementData")));
+		
+		
+		
 	return;
 	}	
 	
