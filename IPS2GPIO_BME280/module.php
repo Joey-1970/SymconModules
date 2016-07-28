@@ -172,8 +172,8 @@
 		
 		// Messwerte aufbereiten
 		$MeasurementData = unserialize(GetValueString($this->GetIDForIdent("MeasurementData")));
-		$Pres_raw = (($MeasurementData[247] << 12) | ($MeasurementData[248] << 4) | ($MeasurementData[249] << 4));
-		$Temp_raw = (($MeasurementData[250] << 12) | ($MeasurementData[251] << 4) | ($MeasurementData[252] << 4));
+		$Pres_raw = (($MeasurementData[247] << 12) | ($MeasurementData[248] << 4) | ($MeasurementData[249] >> 4));
+		$Temp_raw = (($MeasurementData[250] << 12) | ($MeasurementData[251] << 4) | ($MeasurementData[252] >> 4));
 		$Hum_raw =  (($MeasurementData[253] << 8) | $MeasurementData[254]);
 		
 		$FineCalibrate = 0;
