@@ -26,31 +26,31 @@
             	//Connect to available splitter or create a new one
 	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 	    	//Status-Variablen anlegen
-	    	$this->RegisterVariableInteger("HardwareRev", "HardwareRev");
+	    	$this->RegisterVariableInteger("HardwareRev", "HardwareRev", "", 100);
           	$this->DisableAction("HardwareRev");
 		IPS_SetHidden($this->GetIDForIdent("HardwareRev"), true);
 		
-          	$this->RegisterVariableInteger("Handle", "Handle");
+          	$this->RegisterVariableInteger("Handle", "Handle", "", 110);
 		$this->DisableAction("Handle");
 		IPS_SetHidden($this->GetIDForIdent("Handle"), true);
              	
-             	$this->RegisterVariableString("CalibrateData", "CalibrateData");
+             	$this->RegisterVariableString("CalibrateData", "CalibrateData", "", 120);
 		$this->DisableAction("CalibrateData");
 		IPS_SetHidden($this->GetIDForIdent("CalibrateData"), true);
              	
-             	$this->RegisterVariableString("MeasurementData", "MeasurementData");
+             	$this->RegisterVariableString("MeasurementData", "MeasurementData", "", 130);
 		$this->DisableAction("MeasurementData");
 		IPS_SetHidden($this->GetIDForIdent("MeasurementData"), true);
              	
-             	$this->RegisterVariableFloat("Temperature", "Temperature");
+             	$this->RegisterVariableFloat("Temperature", "Temperature", "~Temperature", 10);
 		$this->DisableAction("Temperature");
 		IPS_SetHidden($this->GetIDForIdent("Temperature"), false);
 		
-		$this->RegisterVariableFloat("Pressure", "Pressure");
+		$this->RegisterVariableFloat("Pressure", "Pressure", "~AirPressure", 20);
 		$this->DisableAction("Pressure");
 		IPS_SetHidden($this->GetIDForIdent("Pressure"), false);
 		
-		$this->RegisterVariableFloat("Humidity", "Humidity");
+		$this->RegisterVariableFloat("Humidity", "Humidity", "~Humidity", 30);
 		$this->DisableAction("Humidity");
 		IPS_SetHidden($this->GetIDForIdent("Humidity"), false);
              	
