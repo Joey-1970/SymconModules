@@ -121,8 +121,9 @@
 	// Führt eine Messung aus
 	public function Measurement()
 	{
+		// Messwerte aktualisieren
 		$this->ReadData();
-		
+		// Kalibrierungsdatan aufbereiten
 		$CalibrateData = unserialize(GetValueString($this->GetIDForIdent("CalibrateData")));
 		$Dig_T1 = $CalibrateData[137] << 8 | $CalibrateData[136];
 		$Dig_T2 = $CalibrateData[139] << 8 | $CalibrateData[138];
@@ -144,8 +145,12 @@
 		$Dig_H4 = $CalibrateData[164] << 4 | (hexdec("0F") & $CalibrateData[165]);
 		$Dig_H5 = $CalibrateData[166] << 4 | (($CalibrateData[165] >> 4) & hexdec("0F"));
 		$Dig_H6 = $CalibrateData[167];
-		
+		// Messwerte aufbereiten
 		$MeasurementData = unserialize(GetValueString($this->GetIDForIdent("MeasurementData")));
+		$Pres_raw = $MeasurementData[247] << 12 | $MeasurementData[248] << 4 | $MeasurementData[249] << 4;
+		$Temp_raw = $MeasurementData[250] << 12 | $MeasurementData[251] << 4 | $MeasurementData[252] << 4;
+		$Hum_raw =  $MeasurementData[253] << 8 | $MeasurementData[254];
+		
 		
 		
 		
