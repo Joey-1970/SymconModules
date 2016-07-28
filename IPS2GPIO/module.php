@@ -169,7 +169,12 @@ class IPS2GPIO_IO extends IPSModule
 		   	break;
 		   case "i2c_read_byte":
 		   	$this->CommandClientSocket(pack("LLLL", 61, $data->Handle, $data->Register, 0), 16);
-			IPS_LogMessage("I2C Read Byte Parameter : ",$data->Handle." , ".$data->Register." , ".$data->Value);  	
+			IPS_LogMessage("I2C Read Byte Parameter : ",$data->Handle." , ".$data->Register);  	
+		   	break;
+		    case "i2c_read_block_byte":
+		   	//$this->CommandClientSocket(pack("LLLLL", 67, $data->Handle, $data->Register, 4, $data->Count), 16 + ($data->Count * 2));
+			$this->CommandClientSocket(pack("LLLLL", 67, $data->Handle, $data->Register, 4, $data->Count), 16);
+			IPS_LogMessage("I2C Read Block Byte Parameter : ",$data->Handle." , ".$data->Register);  	
 		   	break;
 		   case "i2c_write_byte":
 		   	$this->CommandClientSocket(pack("LLLLL", 62, $data->Handle, $data->Register, 4, $data->Value), 16);
@@ -405,6 +410,9 @@ class IPS2GPIO_IO extends IPSModule
 			            	break;
 			        case "63":
 	           			IPS_LogMessage("GPIO I2C Read Word: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
+			            	break;
+			        case "67":
+	           			IPS_LogMessage("GPIO I2C Read Block Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Count: ".$response[4]);
 			            	break;
 			        case "69":
 	           			IPS_LogMessage("GPIO I2C Exchange Word: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
