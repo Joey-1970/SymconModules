@@ -208,7 +208,7 @@
 		$V2 = (($Pressure / 4) * $Dig_P[7]) / 8192;
 		$Pressure = $Pressure + (($V1 + $V2 + $Dig_P[6]) / 16);
 		
-		SetValueFloat($this->GetIDForIdent("Pressure"), $Pressure);
+		SetValueFloat($this->GetIDForIdent("Pressure"), $Pressure / 100);
 		
 		// Luftfeuchtigkeit
 		$Hum = $FineCalibrate - 76800;
