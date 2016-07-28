@@ -151,19 +151,19 @@
 		$Dig_H[4] = (($CalibrateData[166] << 4) | (($CalibrateData[165] >> 4) & hexdec("0F")));
 		$Dig_H[5] = $CalibrateData[167];
 		
-		for ($i = 1; $i < 2); $i++) {
+		for ($i = 1; $i < 2; $i++) {
 			If ($Dig_T[$i] & hexdec("8000") {
 				$Dig_T[i] = (-$Dig_T ^ hexdec("FFFF")) + 1;
 			}
 		}
 		
-		for ($i = 1; $i < 8); $i++) {
+		for ($i = 1; $i < 8; $i++) {
 			If ($Dig_P[$i] & hexdec("8000") {
 				$Dig_P[i] = (-$Dig_P ^ hexdec("FFFF")) + 1;
 			}
 		}
 		
-		for ($i = 0; $i < 6); $i++) {
+		for ($i = 0; $i < 6; $i++) {
 			If ($Dig_H[$i] & hexdec("8000") {
 				$Dig_H[i] = (-$Dig_H ^ hexdec("FFFF")) + 1;
 			}
