@@ -198,9 +198,6 @@
 		}
 		
 		SetValueFloat($this->GetIDForIdent("Humidity"), $Hum);
-		
-		
-		
 	return;
 	}	
 	
