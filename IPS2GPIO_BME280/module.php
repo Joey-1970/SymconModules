@@ -129,27 +129,27 @@
 		$Dig_T2 = (($CalibrateData[139] << 8) | $CalibrateData[138]);
 		$Dig_T3 = (($CalibrateData[141] << 8) | $CalibrateData[140]);
 		
-		$Dig_P1 = ($CalibrateData[143] << 8) | $CalibrateData[142];
-		$Dig_P2 = ($CalibrateData[145] << 8) | $CalibrateData[144];
-		$Dig_P3 = ($CalibrateData[147] << 8) | $CalibrateData[146];
-		$Dig_P4 = $CalibrateData[149] << 8 | $CalibrateData[148];
-		$Dig_P5 = $CalibrateData[151] << 8 | $CalibrateData[150];
-		$Dig_P6 = $CalibrateData[153] << 8 | $CalibrateData[152];
-		$Dig_P7 = $CalibrateData[155] << 8 | $CalibrateData[154];
-		$Dig_P8 = $CalibrateData[157] << 8 | $CalibrateData[156];
-		$Dig_P9 = $CalibrateData[159] << 8 | $CalibrateData[158];
+		$Dig_P1 = (($CalibrateData[143] << 8) | $CalibrateData[142]);
+		$Dig_P2 = (($CalibrateData[145] << 8) | $CalibrateData[144]);
+		$Dig_P3 = (($CalibrateData[147] << 8) | $CalibrateData[146]);
+		$Dig_P4 = (($CalibrateData[149] << 8) | $CalibrateData[148]);
+		$Dig_P5 = (($CalibrateData[151] << 8) | $CalibrateData[150]);
+		$Dig_P6 = (($CalibrateData[153] << 8) | $CalibrateData[152]);
+		$Dig_P7 = (($CalibrateData[155] << 8) | $CalibrateData[154]);
+		$Dig_P8 = (($CalibrateData[157] << 8) | $CalibrateData[156]);
+		$Dig_P9 = (($CalibrateData[159] << 8) | $CalibrateData[158]);
 		
 		$Dig_H1 = $CalibrateData[160];
-		$Dig_H2 = $CalibrateData[162] << 8 | $CalibrateData[161];
+		$Dig_H2 = (($CalibrateData[162] << 8) | $CalibrateData[161]);
 		$Dig_H3 = $CalibrateData[163];
-		$Dig_H4 = $CalibrateData[164] << 4 | (hexdec("0F") & $CalibrateData[165]);
-		$Dig_H5 = $CalibrateData[166] << 4 | (($CalibrateData[165] >> 4) & hexdec("0F"));
+		$Dig_H4 = (($CalibrateData[164] << 4) | (hexdec("0F") & $CalibrateData[165]));
+		$Dig_H5 = (($CalibrateData[166] << 4) | (($CalibrateData[165] >> 4) & hexdec("0F")));
 		$Dig_H6 = $CalibrateData[167];
 		// Messwerte aufbereiten
 		$MeasurementData = unserialize(GetValueString($this->GetIDForIdent("MeasurementData")));
-		$Pres_raw = $MeasurementData[247] << 12 | $MeasurementData[248] << 4 | $MeasurementData[249] << 4;
-		$Temp_raw = $MeasurementData[250] << 12 | $MeasurementData[251] << 4 | $MeasurementData[252] << 4;
-		$Hum_raw =  $MeasurementData[253] << 8 | $MeasurementData[254];
+		$Pres_raw = (($MeasurementData[247] << 12) | ($MeasurementData[248] << 4) | ($MeasurementData[249] << 4));
+		$Temp_raw = (($MeasurementData[250] << 12) | ($MeasurementData[251] << 4) | ($MeasurementData[252] << 4));
+		$Hum_raw =  (($MeasurementData[253] << 8) | $MeasurementData[254]);
 		
 		// Temperatur
 		$V1 = ($Temp_raw / 16384 - $Dig_T1 / 1024) * $Dig_T2;
