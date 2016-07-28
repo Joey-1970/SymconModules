@@ -31,7 +31,7 @@
 	    //Status-Variablen anlegen
 	    $this->RegisterVariableFloat("Distance", "Distance", "", 10);
             $this->DisableAction("Distance");
-            IPS_SetHidden($this->GetIDForIdent("Distanz"), false);
+            IPS_SetHidden($this->GetIDForIdent("Distance"), false);
             $this->RegisterVariableInteger("Timestamp", "Timestamp", "", 20);
             $this->DisableAction("Timestamp");
             IPS_SetHidden($this->GetIDForIdent("Timestamp"), true);
