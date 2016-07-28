@@ -154,9 +154,13 @@
 		// Temperatur
 		$V1 = ($Temp_raw / 16384 - $Dig_T1 / 1024) * $Dig_T2;
 		$V2 = ($Temp_raw / 131072 - $Dig_T1 / 8192) * ($Temp_raw / 131072 - $Dig_T1 / 8192) * $Dig_T3;
-		SetValue($this->GetIDForIdent("Temperature"), $V1 + $V2 / 5120);
+		SetValueFloat($this->GetIDForIdent("Temperature"), $V1 + $V2 / 5120);
 		
+		// Luftfeuchtigkeit
+		SetValueFloat($this->GetIDForIdent("Humidity"), $Hum_raw);
 		
+		// Luftdruck
+		SetValueFloat($this->GetIDForIdent("Pressure"), $Pres_raw);
 		
 	return;
 	}	
