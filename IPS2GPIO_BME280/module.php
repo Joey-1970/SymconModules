@@ -244,16 +244,6 @@
 		}
 	return;
 	}
-	
-	private function CalibrateTemp()
-	{
-		$CalibrateData = unserialize(GetValueString($this->GetIDForIdent("CalibrateData")));
-		$Dig_T1 = $CalibrateData[137] << 8 | $CalibrateData[136];
-		$Dig_T2 = $CalibrateData[139] << 8 | $CalibrateData[138];
-		$Dig_T3 = $CalibrateData[141] << 8 | $CalibrateData[140];
-		
-	return;
-	}
 
 }
 ?>
