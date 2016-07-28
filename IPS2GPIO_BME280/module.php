@@ -151,6 +151,10 @@
 		$Temp_raw = $MeasurementData[250] << 12 | $MeasurementData[251] << 4 | $MeasurementData[252] << 4;
 		$Hum_raw =  $MeasurementData[253] << 8 | $MeasurementData[254];
 		
+		// Temperatur
+		$V1 = ($Temp_raw / 16384 - $Dig_T1 / 1024) * $Dig_T2;
+		$V2 = ($Temp_raw / 131072 - $Dig_T1 / 8192) * ($Temp_raw / 131072 - $Dig_T1 / 8192) * $Dig_T3;
+		
 		
 		
 		
