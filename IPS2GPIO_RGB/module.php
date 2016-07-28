@@ -27,15 +27,15 @@
 	   	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 	   
 	        //Status-Variablen anlegen
-	        $this->RegisterVariableBoolean("Status", "Status", "~Switch", 1);
+	        $this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
            	$this->EnableAction("Status");
-           	$this->RegisterVariableInteger("Intensity_R", "Intensity Rot", "~Intensity.255");
+           	$this->RegisterVariableInteger("Intensity_R", "Intensity Rot", "~Intensity.255",20);
            	$this->EnableAction("Intensity_R");
-           	$this->RegisterVariableInteger("Intensity_G", "Intensity Grün", "~Intensity.255");
+           	$this->RegisterVariableInteger("Intensity_G", "Intensity Grün", "~Intensity.255", 30);
            	$this->EnableAction("Intensity_G");
-           	$this->RegisterVariableInteger("Intensity_B", "Intensity Blau", "~Intensity.255");
+           	$this->RegisterVariableInteger("Intensity_B", "Intensity Blau", "~Intensity.255", 40);
            	$this->EnableAction("Intensity_B");
-           	$this->RegisterVariableInteger("Color", "Farbe", "~HexColor");
+           	$this->RegisterVariableInteger("Color", "Farbe", "~HexColor", 50);
            	$this->EnableAction("Color");
            	If (($this->ReadPropertyInteger("Pin_R") >= 0) AND ($this->ReadPropertyInteger("Pin_G") >= 0) AND ($this->ReadPropertyInteger("Pin_B") >= 0)) {
            		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
