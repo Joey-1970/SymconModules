@@ -164,7 +164,7 @@
 			}
 		}
 		
-		for ($i = 0; $i <= 6; $i++) {
+		for ($i = 0; $i <= 5; $i++) {
 			If ($Dig_H[$i] & hexdec("8000")) {
 				$Dig_H[$i] = (-$Dig_H[$i] ^ hexdec("FFFF")) + 1;
 			}
