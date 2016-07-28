@@ -10,7 +10,7 @@
     "elements":
     [
         { "type": "Label", "label": "Angabe der GPIO-Nummer (Broadcom-Number)" },
-        { "type": "Select", "name": "Pin_R", "caption": "Pin Rot",
+        { "type": "Select", "name": "Pin_R", "caption": "GPIO-Nr. Rot",
             "options": [
                 { "label": "ungesetzt", "value": -1 },
                 { "label": "0", "value": 0 },
@@ -44,7 +44,7 @@
                 ]
         },
     
-        { "type": "Select", "name": "Pin_G", "caption": "Pin Grün",
+        { "type": "Select", "name": "Pin_G", "caption": "GPIO-Nr. Grün",
             "options": [
                 { "label": "ungesetzt", "value": -1 },
                 { "label": "0", "value": 0 },
@@ -78,7 +78,7 @@
                 ]
         },
 
-        { "type": "Select", "name": "Pin_B", "caption": "Pin Blau",
+        { "type": "Select", "name": "Pin_B", "caption": "GPIO-Nr. Blau",
             "options": [
                 { "label": "ungesetzt", "value": -1 },
                 { "label": "0", "value": 0 },
