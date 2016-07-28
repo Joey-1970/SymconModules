@@ -190,7 +190,7 @@
 		// Luftfeuchtigkeit
 		$Hum = $FineCalibrate - 76800;
 		If ($Hum <> 0) {
-			$Hum = ($Hum_raw - ($Dig_H4 * 64 + $Dig_H5 / 16384 * $Hum)) * ($Dig_H2  / 65536 * (1 + $Dig_H6 / 67108864 * $Hum * (1 + $Dig_H3 / 67108864 * $Hum)))
+			$Hum = ($Hum_raw - ($Dig_H4 * 64 + $Dig_H5 / 16384 * $Hum)) * ($Dig_H2  / 65536 * (1 + $Dig_H6 / 67108864 * $Hum * (1 + $Dig_H3 / 67108864 * $Hum)));
 		}
 		else {
 			SetValueFloat($this->GetIDForIdent("Humidity"), 0);
