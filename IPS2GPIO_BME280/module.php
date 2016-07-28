@@ -150,6 +150,25 @@
 		$Dig_H[3] = (($CalibrateData[164] << 4) | (hexdec("0F") & $CalibrateData[165]));
 		$Dig_H[4] = (($CalibrateData[166] << 4) | (($CalibrateData[165] >> 4) & hexdec("0F")));
 		$Dig_H[5] = $CalibrateData[167];
+		
+		for ($i = 1; $i < 2); $i++) {
+			If ($Dig_T[$i] & hexdec("8000") {
+				$Dig_T[i] = (-$Dig_T ^ hexdec("FFFF")) + 1;
+			}
+		}
+		
+		for ($i = 1; $i < 8); $i++) {
+			If ($Dig_P[$i] & hexdec("8000") {
+				$Dig_P[i] = (-$Dig_P ^ hexdec("FFFF")) + 1;
+			}
+		}
+		
+		for ($i = 0; $i < 6); $i++) {
+			If ($Dig_H[$i] & hexdec("8000") {
+				$Dig_H[i] = (-$Dig_H ^ hexdec("FFFF")) + 1;
+			}
+		}
+		
 		// Messwerte aufbereiten
 		$MeasurementData = unserialize(GetValueString($this->GetIDForIdent("MeasurementData")));
 		$Pres_raw = (($MeasurementData[247] << 12) | ($MeasurementData[248] << 4) | ($MeasurementData[249] << 4));
@@ -165,6 +184,7 @@
 		SetValueFloat($this->GetIDForIdent("Temperature"), $FineCalibrate / 5120);
 		
 		// Luftdruck
+		$Pressure = 0;
 		$V1 = ($FineCalibrate / 2) - 64000;
 		$V2 = ((($V1 / 4) * ($V1 / 4)) / 2048) * $Dig_P[5];
 		$V2 = $V2 + (($V1 * $Dig_P[4]) * 2);
@@ -177,7 +197,7 @@
 		}
 		$Pressure = ((1048576 - $Pres_raw) - ($V2 / 4096)) * 3125;
 		
-		If ($Pressure < 0x80000000) {
+		If ($Pressure < hexdec("80000000")) {
 			$Pressure = ($Pressure * 2) * $V1;
 		}
 		else {
