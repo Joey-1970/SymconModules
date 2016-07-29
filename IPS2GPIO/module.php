@@ -319,10 +319,15 @@ class IPS2GPIO_IO extends IPSModule
 			return;
 		}
 		
-		$DataArray = str_split($buf, 16);
-	    	IPS_LogMessage("GPIO ReceiveData", strlen($buf)." Zeichen");
-	    	for ($i = 0; $i < Count($DataArray); $i++) {
-    			$this->ClientResponse($DataArray[$i]);
+		If (($buf / 16) == intval($buf / 16)) {
+			$DataArray = str_split($buf, 16);
+	    		IPS_LogMessage("GPIO ReceiveData", strlen($buf)." Zeichen");
+	    		for ($i = 0; $i < Count($DataArray); $i++) {
+    				$this->ClientResponse($DataArray[$i]);
+			}
+		}
+		else {
+			
 		}
 		
 	return;	
