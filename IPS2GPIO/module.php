@@ -263,7 +263,7 @@ class IPS2GPIO_IO extends IPSModule
 	private function Get_PinUpdate()
 	{
 		// Pins ermitteln für die ein Notify erforderlich ist
-		SetValueString($this->GetIDForIdent("PinNotify"), "");
+		SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify()));
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_notifypin")));
 		// Notify setzen	
 		If (GetValueInteger($this->GetIDForIdent("Handle")) > 0) {
@@ -273,7 +273,7 @@ class IPS2GPIO_IO extends IPSModule
 		SetValueBoolean($this->GetIDForIdent("I2C_Used"), false);
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_used_i2c")));
 		// Pins ermitteln die genutzt werden
-		SetValueString($this->GetIDForIdent("PinUsed"), "");
+		SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed()));
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_usedpin")));
 			return;
 	}
