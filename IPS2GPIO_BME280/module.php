@@ -122,6 +122,7 @@
 			  case "set_i2c_byte_block":
 			   	If ($data->Handle == GetValueInteger($this->GetIDForIdent("Handle"))) {
 			   		SetValueString($this->GetIDForIdent("tmpMeasurementData"), $data->ByteArray);
+			   	}
 			   	break;
 	 	}
 	return;
