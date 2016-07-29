@@ -54,7 +54,7 @@
 			   		$TimeDiff = $data->Timestamp - GetValueInteger($this->GetIDForIdent("Timestamp"));
 			   		$TimeDiff = abs($TimeDiff/1000000);
    					$Distance = round(($TimeDiff * 34300 / 2), 1);
-   					SetValueFloat($this->GetIDForIdent("Distance"), $Distance);
+   					SetValueFloat($this->GetIDForIdent("Distance"), min($Distance, 999.99));
 			   	}
 			   	elseif (($data->Pin == $this->ReadPropertyInteger("Pin_I")) AND ($data->Value == true)) {
 			   		SetValueInteger($this->GetIDForIdent("Timestamp"), $data->Timestamp);	
