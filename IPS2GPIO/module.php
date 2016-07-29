@@ -342,7 +342,6 @@ class IPS2GPIO_IO extends IPSModule
 			        		IPS_LogMessage("GPIO Write: ", "Pin: ".$response[2]." Wert: ".$response[3]." konnte nicht erfolgreich gesendet werden!");
 			        	}
 			        	break;
-			        	break;
 			        case "5":
 			        	If ($response[4] == 0) {
 			        		IPS_LogMessage("GPIO PWM: ", "Pin: ".$response[2]." Wert: ".$response[3]." erfolgreich gesendet");
@@ -452,8 +451,17 @@ class IPS2GPIO_IO extends IPSModule
 			}
 		}
 		else {
-			
-			
+			$CommandMessage = substr($Message, 0, 16);
+			$response = unpack("L*", $CommandMessage);
+			switch($response[1]) {	
+				case "67":
+	           			IPS_LogMessage("GPIO I2C Read Block Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Count: ".$response[4]);
+			            		$ByteMessage = substr($Message, 17, 17 + (2 * .$response[4]));
+			            		$ByteResponse = unpack("S*", $ByteMessage);
+			            		$ByteArray = serialize($ByteResponse);
+ 						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_byte_block", "Handle" => $response[2], "Register" => $response[3], "Count" => $response[4], "ByteArray" => $ByteArray)));
+			            	break;
+			            	
 			IPS_LogMessage("GPIO Notify: ","Meldung konnte nicht dekodiert werden!");		
 		}
 	return;
