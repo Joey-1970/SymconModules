@@ -172,7 +172,7 @@ class IPS2GPIO_IO extends IPSModule
 			IPS_LogMessage("I2C Read Byte Parameter : ",$data->Handle." , ".$data->Register);  	
 		   	break;
 		    case "i2c_read_block_byte":
-		   	$this->CommandClientSocket(pack("LLLLL", 67, $data->Handle, $data->Register, 4, $data->Count), 16 + ($data->Count * 2));
+		   	$this->CommandClientSocket(pack("LLLLL", 67, $data->Handle, $data->Register, 4, $data->Count), 16 + ($data->Count));
 			//$this->CommandClientSocket(pack("LLLLL", 67, $data->Handle, $data->Register, 4, $data->Count), 16);
 			IPS_LogMessage("I2C Read Block Byte Parameter : ",$data->Handle." , ".$data->Register);  	
 		   	break;
@@ -461,7 +461,7 @@ class IPS2GPIO_IO extends IPSModule
 			            		$ByteArray = serialize($ByteResponse);
  						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_byte_block", "Handle" => $response[2], "Register" => $response[3], "Count" => $response[4], "ByteArray" => $ByteArray)));
 			            	break;
-			}           	
+			            	
 			IPS_LogMessage("GPIO Notify: ","Meldung konnte nicht dekodiert werden!");		
 		}
 	return;
