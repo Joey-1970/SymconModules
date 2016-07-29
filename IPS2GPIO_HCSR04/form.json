@@ -77,6 +77,12 @@
                 ]
         },
     { "type": "Label", "label": "Wiederholungszyklus in Sekunden (0 -> aus, 1 sek -> Minimum)" },
-    { "type": "IntervalBox", "name": "Messzyklus", "caption": "Messzyklus (sek)" }
+    { "type": "IntervalBox", "name": "Messzyklus", "caption": "Messzyklus (sek)" },
+    { "type": "Label", "label": "Hinweise:" },
+    { "type": "Label", "label": "- ein Distanz Wert von 999,99cm wird als Maximum-Ergebnis angezeigt" },
+    { "type": "Label", "label": "- VCC an Pin 2 (5 Volt)" },
+    { "type": "Label", "label": "- GND an Pin 6" },
+    { "type": "Label", "label": "- Trigger an freien GPIO-Pin nach Wahl" },
+    { "type": "Label", "label": "- Echo über Spannungsteiler an freien GPIO-Pin nach Wahl" }
     ]
 }
