@@ -320,7 +320,7 @@ class IPS2GPIO_IO extends IPSModule
 		}
 		
 		$DataArray = str_split($buf, 16);
-	    	//IPS_LogMessage("GPIO ReceiveData", Count($DataArray)." Command-Datensätze");
+	    	IPS_LogMessage("GPIO ReceiveData", strlen($buf)." Zeichen");
 	    	for ($i = 0; $i < Count($DataArray); $i++) {
     			$this->ClientResponse($DataArray[$i]);
 		}
