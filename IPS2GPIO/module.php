@@ -172,7 +172,7 @@ class IPS2GPIO_IO extends IPSModule
 			IPS_LogMessage("I2C Read Byte Parameter : ",$data->Handle." , ".$data->Register);  	
 		   	break;
 		    case "i2c_read_block_byte":
-		   	$this->CommandClientSocket(pack("LLLLL", 67, $data->Handle, $data->Register, 4, $data->Count), 16 + ($data->Count / 2));
+		   	$this->CommandClientSocket(pack("LLLLL", 67, $data->Handle, $data->Register, 4, $data->Count), 16 + ($data->Count));
 			//$this->CommandClientSocket(pack("LLLLL", 67, $data->Handle, $data->Register, 4, $data->Count), 16);
 			IPS_LogMessage("I2C Read Block Byte Parameter : ",$data->Handle." , ".$data->Register);  	
 		   	break;
