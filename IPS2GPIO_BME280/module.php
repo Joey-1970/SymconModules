@@ -272,11 +272,13 @@
 	
 	private function ReadData()
 	{
+		$MeasurementData = $MeasurementData();
 		SetValueString($this->GetIDForIdent("MeasurementData"), serialize($MeasurementData()));
 		for ($i = hexdec("F7"); $i < (hexdec("F7") + 8); $i++) {
     			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => $i)));
 		}
 		// Test!
+		$tmpMeasurementData = $tmpMeasurementData();
 		SetValueString($this->GetIDForIdent("tmpMeasurementData"), serialize($tmpMeasurementData()));
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_block_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => hexdec("F7"), "Count" => 8)));
 	return;
