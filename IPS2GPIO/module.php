@@ -173,7 +173,6 @@ class IPS2GPIO_IO extends IPSModule
 		   	break;
 		    case "i2c_read_block_byte":
 		   	$this->CommandClientSocket(pack("LLLLL", 67, $data->Handle, $data->Register, 4, $data->Count), 16 + ($data->Count));
-			//$this->CommandClientSocket(pack("LLLLL", 67, $data->Handle, $data->Register, 4, $data->Count), 16);
 			IPS_LogMessage("I2C Read Block Byte Parameter : ",$data->Handle." , ".$data->Register." , ".$data->Count);  	
 		   	break;
 		   case "i2c_write_byte":
@@ -338,7 +337,8 @@ class IPS2GPIO_IO extends IPSModule
 		$MessageArray = unpack("L*", $message);
 		$Command = $MessageArray[1];
 		If (in_array($Command, $CmdVarLen)) {
-			$this->ClientResponse($message);		
+			$this->ClientResponse($message);
+			IPS_LogMessage("GPIO ReceiveData", strlen($buf)." Zeichen");
 		}
 		elseIf (($buf / 16) == intval($buf / 16)) {
 			$DataArray = str_split($buf, 16);
@@ -443,7 +443,6 @@ class IPS2GPIO_IO extends IPSModule
 			            	$ByteArray = serialize($ByteResponse);
 			            	IPS_LogMessage("GPIO I2C Read Block Byte: ", strlen($Message)."  ".count($ByteResponse));
  					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_byte_block", "Handle" => $response[2], "Register" => $response[3], "Count" => $response[4], "ByteArray" => $ByteArray)));
-			            	break;
 			            	break;
 			        case "69":
 	           			IPS_LogMessage("GPIO I2C Exchange Word: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
