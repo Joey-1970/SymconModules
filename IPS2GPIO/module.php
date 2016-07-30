@@ -276,7 +276,8 @@ class IPS2GPIO_IO extends IPSModule
 	private function Get_PinUpdate()
 	{
 		// Pins ermitteln für die ein Notify erforderlich ist
-		SetValueString($this->GetIDForIdent("PinNotify"), "");
+		$PinNotify = array();
+		SetValueString($this->GetIDForIdent("PinNotify"), $PinNotify);
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_notifypin")));
 		// Notify setzen	
 		If (GetValueInteger($this->GetIDForIdent("Handle")) > 0) {
@@ -286,9 +287,10 @@ class IPS2GPIO_IO extends IPSModule
 		SetValueBoolean($this->GetIDForIdent("I2C_Used"), false);
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_used_i2c")));
 		// Pins ermitteln die genutzt werden
-		SetValueString($this->GetIDForIdent("PinUsed"), "");
+		$PinUsed = array();
+		SetValueString($this->GetIDForIdent("PinUsed"), $PinUsed);
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_usedpin")));
-			return;
+	return;
 	}
 
 	private function ClientSocket($message)
@@ -356,117 +358,115 @@ class IPS2GPIO_IO extends IPSModule
 	
 	private function ClientResponse($Message)
 	{
-//		If (strlen($Message) == 16) {
-			$response = unpack("L*", $Message);
-			switch($response[1]) {
-			        case "4":
-			        	If ($response[4] == 0) {
-			        		IPS_LogMessage("GPIO Write: ", "Pin: ".$response[2]." Wert: ".$response[3]." erfolgreich gesendet");
-			        		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"result", "Pin" => $response[2], "Value"=> $response[3])));
-			        	}
-			        	else {
-			        		IPS_LogMessage("GPIO Write: ", "Pin: ".$response[2]." Wert: ".$response[3]." konnte nicht erfolgreich gesendet werden!");
-			        	}
-			        	break;
-			        case "5":
-			        	If ($response[4] == 0) {
-			        		IPS_LogMessage("GPIO PWM: ", "Pin: ".$response[2]." Wert: ".$response[3]." erfolgreich gesendet");
-			        		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"result", "Pin" => $response[2], "Value"=> $response[3])));
-			        	}
-			        	else {
-			        		IPS_LogMessage("GPIO PWM: ", "Pin: ".$response[2]." Wert: ".$response[3]." konnte nicht erfolgreich gesendet werden!");
-			        	}
-			        	break;
-			        case "17":
-			            	IPS_LogMessage("GPIO Hardwareermittlung: ","gestartet");
-			            	$Model[0] = array(2, 3);
-			            	$Model[1] = array(4, 5, 6, 13, 14, 15);
-			            	$Model[2] = array(16);
-			            	$Typ[0] = array(0, 1, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 21, 22, 23, 24, 25);	
-	           			$Typ[1] = array(2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27);
-	           			$Typ[2] = array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27);
-	           			
-	           			SetValueInteger($this->GetIDForIdent("HardwareRev"), $response[4]);
-	           			
-	           			if (in_array($response[4], $Model[0])) {
-	    					SetValueString($this->GetIDForIdent("PinPossible"), serialize(array(0, 1, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 21, 22, 23, 24, 25)));
-	    					SetValueString($this->GetIDForIdent("PinI2C"), serialize(array(0, 1)));
-	    					IPS_LogMessage("GPIO Hardwareermittlung: ","Raspberry Pi Typ 0");
-					}
-					else if (in_array($response[4], $Model[1])) {
-						SetValueString($this->GetIDForIdent("PinPossible"), serialize(array(2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27)));
-						SetValueString($this->GetIDForIdent("PinI2C"), serialize(array(2, 3)));
-						IPS_LogMessage("GPIO Hardwareermittlung: ","Raspberry Pi Typ 1");
-					}
-					else if ($response[4] >= 16) {
-						SetValueString($this->GetIDForIdent("PinPossible"), serialize(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27)));
-						SetValueString($this->GetIDForIdent("PinI2C"), serialize(array(2, 3)));
-						IPS_LogMessage("GPIO Hardwareermittlung: ","Raspberry Pi Typ 2");
-					}
-					else
-						IPS_LogMessage("GPIO Hardwareermittlung: ","nicht erfolgreich!");
-					break;
-	           		case "19":
-	           			IPS_LogMessage("GPIO Notify: ","gestartet");
-			            	break;
-	           		case "21":
-	           			IPS_LogMessage("GPIO Notify: ","gestoppt");
-			            	break;
-			        case "54":
-			        	If ($response[4] > 0 ) {
-	           				IPS_LogMessage("GPIO I2C-Handle: ",$response[4]." für Device ".$response[3]);
-	           				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_handle", "Address" => $response[3], "Handle" => $response[4], "HardwareRev" => GetValueInteger($this->GetIDForIdent("HardwareRev")))));
-	           			}
-	           			else {
-	           				IPS_LogMessage("GPIO I2C-Handle: ",$response[4]." für Device ".$response[3]." nicht vergeben!");
-	           			}
-	           			
-			        	break;
-			        case "55":
-	           			IPS_LogMessage("GPIO I2C Close Handle: ","Handle: ".$response[2]." Value: ".$response[4]);
-			            	break;
-			        case "61":
-	           			IPS_LogMessage("GPIO I2C Read Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
-			            	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "Handle" => $response[2], "Register" => $response[3], "Value" => $response[4])));
-			            	break;
-			        case "62":
-	           			IPS_LogMessage("GPIO I2C Write Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
-			            	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "Handle" => $response[2], "Register" => $response[3], "Value" => $response[4])));
-			            	break;
-			        case "63":
-	           			IPS_LogMessage("GPIO I2C Read Word: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
-			            	break;
-			        case "67":
-	           			IPS_LogMessage("GPIO I2C Read Block Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Count: ".$response[4]);
-			            	$ByteMessage = substr($Message, -($response[4]));
-			            	$ByteResponse = unpack("C*", $ByteMessage);
-			            	$ByteArray = serialize($ByteResponse);
-			            	IPS_LogMessage("GPIO I2C Read Block Byte: ", strlen($Message)."  ".count($ByteResponse));
- 					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_byte_block", "Handle" => $response[2], "Register" => $response[3], "Count" => $response[4], "ByteArray" => $ByteArray)));
-			            	break;
-			        case "69":
-	           			IPS_LogMessage("GPIO I2C Exchange Word: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
-			            	break;
-			        case "70":
-	           			IPS_LogMessage("GPIO I2C Exchange Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
-			            	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "Handle" => $response[2], "Register" => $response[3], "Value" => $response[4])));
-			            	break;
-			        case "97":
-	           			IPS_LogMessage("GPIO GlitchFilter: ","gesetzt");
-			            	break;
-			        case "99":
-	           			If ($response[4] > 0 ) {
-	           				IPS_LogMessage("GPIO Handle: ",$response[4]);
-	           				SetValueInteger($this->GetIDForIdent("Handle"), $response[4]);
-	           				
-	           				$this->ClientSocket(pack("LLLL", 19, $response[4], $this->CalcBitmask(), 0));
-	           			}
-	           			else {
-	           				$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));		
-	           			}
-	           			break;
-			    }
-//		}
+		$response = unpack("L*", $Message);
+		switch($response[1]) {
+		        case "4":
+		        	If ($response[4] == 0) {
+		        		IPS_LogMessage("GPIO Write: ", "Pin: ".$response[2]." Wert: ".$response[3]." erfolgreich gesendet");
+		        		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"result", "Pin" => $response[2], "Value"=> $response[3])));
+		        	}
+		        	else {
+		        		IPS_LogMessage("GPIO Write: ", "Pin: ".$response[2]." Wert: ".$response[3]." konnte nicht erfolgreich gesendet werden!");
+		        	}
+		        	break;
+		        case "5":
+		        	If ($response[4] == 0) {
+		        		IPS_LogMessage("GPIO PWM: ", "Pin: ".$response[2]." Wert: ".$response[3]." erfolgreich gesendet");
+		        		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"result", "Pin" => $response[2], "Value"=> $response[3])));
+		        	}
+		        	else {
+		        		IPS_LogMessage("GPIO PWM: ", "Pin: ".$response[2]." Wert: ".$response[3]." konnte nicht erfolgreich gesendet werden!");
+		        	}
+		        	break;
+		        case "17":
+		            	IPS_LogMessage("GPIO Hardwareermittlung: ","gestartet");
+		            	$Model[0] = array(2, 3);
+		            	$Model[1] = array(4, 5, 6, 13, 14, 15);
+		            	$Model[2] = array(16);
+		            	$Typ[0] = array(0, 1, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 21, 22, 23, 24, 25);	
+           			$Typ[1] = array(2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27);
+           			$Typ[2] = array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27);
+           			
+           			SetValueInteger($this->GetIDForIdent("HardwareRev"), $response[4]);
+           			
+           			if (in_array($response[4], $Model[0])) {
+    					SetValueString($this->GetIDForIdent("PinPossible"), serialize(array(0, 1, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 21, 22, 23, 24, 25)));
+    					SetValueString($this->GetIDForIdent("PinI2C"), serialize(array(0, 1)));
+    					IPS_LogMessage("GPIO Hardwareermittlung: ","Raspberry Pi Typ 0");
+				}
+				else if (in_array($response[4], $Model[1])) {
+					SetValueString($this->GetIDForIdent("PinPossible"), serialize(array(2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27)));
+					SetValueString($this->GetIDForIdent("PinI2C"), serialize(array(2, 3)));
+					IPS_LogMessage("GPIO Hardwareermittlung: ","Raspberry Pi Typ 1");
+				}
+				else if ($response[4] >= 16) {
+					SetValueString($this->GetIDForIdent("PinPossible"), serialize(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27)));
+					SetValueString($this->GetIDForIdent("PinI2C"), serialize(array(2, 3)));
+					IPS_LogMessage("GPIO Hardwareermittlung: ","Raspberry Pi Typ 2");
+				}
+				else
+					IPS_LogMessage("GPIO Hardwareermittlung: ","nicht erfolgreich!");
+				break;
+           		case "19":
+           			IPS_LogMessage("GPIO Notify: ","gestartet");
+		            	break;
+           		case "21":
+           			IPS_LogMessage("GPIO Notify: ","gestoppt");
+		            	break;
+		        case "54":
+		        	If ($response[4] > 0 ) {
+           				IPS_LogMessage("GPIO I2C-Handle: ",$response[4]." für Device ".$response[3]);
+           				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_handle", "Address" => $response[3], "Handle" => $response[4], "HardwareRev" => GetValueInteger($this->GetIDForIdent("HardwareRev")))));
+           			}
+           			else {
+           				IPS_LogMessage("GPIO I2C-Handle: ",$response[4]." für Device ".$response[3]." nicht vergeben!");
+           			}
+           			
+		        	break;
+		        case "55":
+           			IPS_LogMessage("GPIO I2C Close Handle: ","Handle: ".$response[2]." Value: ".$response[4]);
+		            	break;
+		        case "61":
+           			IPS_LogMessage("GPIO I2C Read Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
+		            	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "Handle" => $response[2], "Register" => $response[3], "Value" => $response[4])));
+		            	break;
+		        case "62":
+           			IPS_LogMessage("GPIO I2C Write Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
+		            	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "Handle" => $response[2], "Register" => $response[3], "Value" => $response[4])));
+		            	break;
+		        case "63":
+           			IPS_LogMessage("GPIO I2C Read Word: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
+		            	break;
+		        case "67":
+           			IPS_LogMessage("GPIO I2C Read Block Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Count: ".$response[4]);
+		            	$ByteMessage = substr($Message, -($response[4]));
+		            	$ByteResponse = unpack("C*", $ByteMessage);
+		            	$ByteArray = serialize($ByteResponse);
+		            	IPS_LogMessage("GPIO I2C Read Block Byte: ", strlen($Message)."  ".count($ByteResponse));
+ 				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_byte_block", "Handle" => $response[2], "Register" => $response[3], "Count" => $response[4], "ByteArray" => $ByteArray)));
+		            	break;
+		        case "69":
+           			IPS_LogMessage("GPIO I2C Exchange Word: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
+		            	break;
+		        case "70":
+           			IPS_LogMessage("GPIO I2C Exchange Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
+		            	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "Handle" => $response[2], "Register" => $response[3], "Value" => $response[4])));
+		            	break;
+		        case "97":
+           			IPS_LogMessage("GPIO GlitchFilter: ","gesetzt");
+		            	break;
+		        case "99":
+           			If ($response[4] > 0 ) {
+           				IPS_LogMessage("GPIO Handle: ",$response[4]);
+           				SetValueInteger($this->GetIDForIdent("Handle"), $response[4]);
+           				
+           				$this->ClientSocket(pack("LLLL", 19, $response[4], $this->CalcBitmask(), 0));
+           			}
+           			else {
+           				$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));		
+           			}
+           			break;
+		    }
 	return;
 	}
 	
