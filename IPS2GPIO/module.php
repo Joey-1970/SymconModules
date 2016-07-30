@@ -211,7 +211,6 @@ class IPS2GPIO_IO extends IPSModule
 	 public function ReceiveData($JSONString) {
  	    	$CmdPossible = array(19, 21, 99);
  	    	$RDlen = array(16, 32);	
-	        //$RDlen[1] = array(12, 24, 36, 48, 60, 72, 84, 96, 108, 120, 132, 144, 156, 168, 180);
  	    	// Empfangene Daten vom I/O
 	    	$Data = json_decode($JSONString);
 	    	$Message = utf8_decode($Data->Buffer);
@@ -232,11 +231,6 @@ class IPS2GPIO_IO extends IPSModule
 	    		$DataArray = str_split($Message, 12);
 	    		//IPS_LogMessage("GPIO ReceiveData", "Überlänge: ".Count($DataArray)." Notify-Datensätze");
 	    		for ($i = 0; $i < Count($DataArray); $i++) {
-    				//$this->ClientResponse($DataArray[$i]);
-    				//$response = unpack("L*", $Message);
-					
-				//IPS_LogMessage("GPIO Notify: ","Meldung: ".count($response)." ".$response[1]." ".$response[2]." ".$response[3]);
-	
 				$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
 	
 				for ($i = 0; $i < Count($PinNotify); $i++) {
@@ -269,7 +263,6 @@ class IPS2GPIO_IO extends IPSModule
 		        default:
 		            throw new Exception("Invalid Ident");
 		    }
-	 
 	   }
   
 	// Aktualisierung der genutzten Pins und der Notifikation
@@ -340,11 +333,11 @@ class IPS2GPIO_IO extends IPSModule
 		$Command = $MessageArray[1];
 		If (in_array($Command, $CmdVarLen)) {
 			$this->ClientResponse($buf);
-			IPS_LogMessage("GPIO ReceiveData", strlen($buf)." Zeichen");
+			//IPS_LogMessage("GPIO ReceiveData", strlen($buf)." Zeichen");
 		}
 		elseIf (($buf / 16) == intval($buf / 16)) {
 			$DataArray = str_split($buf, 16);
-	    		IPS_LogMessage("GPIO ReceiveData", strlen($buf)." Zeichen");
+	    		//IPS_LogMessage("GPIO ReceiveData", strlen($buf)." Zeichen");
 	    		for ($i = 0; $i < Count($DataArray); $i++) {
     				$this->ClientResponse($DataArray[$i]);
 			}
