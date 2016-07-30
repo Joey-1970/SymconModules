@@ -211,8 +211,8 @@ class IPS2GPIO_IO extends IPSModule
 	
 	 public function ReceiveData($JSONString) {
  	    	$CmdPossible = array(19, 21, 99);
- 	    	$RDlen[0] = array(16, 32);	
-	        $RDlen[1] = array(12, 24, 36, 48, 60, 72, 84, 96, 108, 120, 132, 144, 156, 168, 180);
+ 	    	$RDlen = array(16, 32);	
+	        //$RDlen[1] = array(12, 24, 36, 48, 60, 72, 84, 96, 108, 120, 132, 144, 156, 168, 180);
  	    	// Empfangene Daten vom I/O
 	    	$Data = json_decode($JSONString);
 	    	$Message = utf8_decode($Data->Buffer);
@@ -220,7 +220,7 @@ class IPS2GPIO_IO extends IPSModule
 	    	$MessageArray = unpack("L*", $Message);
 		$Command = $MessageArray[1];
 	    	
-	    	If ((in_array($Command, $CmdPossible)) AND (in_array($MessageLen, $RDlen[0]))) {
+	    	If ((in_array($Command, $CmdPossible)) AND (in_array($MessageLen, $RDlen))) {
 	    		// wenn es sich um mehrere Standarddatensätze handelt
 	    		$DataArray = str_split($Message, 16);
 	    		//IPS_LogMessage("GPIO ReceiveData", "Überlänge: ".Count($DataArray)." Command-Datensätze");
@@ -228,7 +228,7 @@ class IPS2GPIO_IO extends IPSModule
     				$this->ClientResponse($DataArray[$i]);
 			}
 	    	}
-		elseif (in_array($MessageLen, $RDlen[1])) {
+		elseif (($MessageLen / 12) == intval($MessageLen / 12)) {
 	    		// wenn es sich um mehrere Notifikationen handelt
 	    		$DataArray = str_split($Message, 12);
 	    		//IPS_LogMessage("GPIO ReceiveData", "Überlänge: ".Count($DataArray)." Notify-Datensätze");
