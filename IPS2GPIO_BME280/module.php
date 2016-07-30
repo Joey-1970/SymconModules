@@ -41,11 +41,6 @@
              	$this->RegisterVariableString("MeasurementData", "MeasurementData", "", 130);
 		$this->DisableAction("MeasurementData");
 		IPS_SetHidden($this->GetIDForIdent("MeasurementData"), true);
-		
-		// Test!
-//		$this->RegisterVariableString("tmpMeasurementData", "tmpMeasurementData", "", 130);
-//		$this->DisableAction("tmpMeasurementData");
-//		IPS_SetHidden($this->GetIDForIdent("tmpMeasurementData"), true);
 
              	$this->RegisterVariableFloat("Temperature", "Temperature", "~Temperature", 10);
 		$this->DisableAction("Temperature");
@@ -177,9 +172,6 @@
 		
 		// Messwerte aufbereiten
 		$MeasurementData = unserialize(GetValueString($this->GetIDForIdent("MeasurementData")));
-//		$Pres_raw = (($MeasurementData[247] << 12) | ($MeasurementData[248] << 4) | ($MeasurementData[249] >> 4));
-//		$Temp_raw = (($MeasurementData[250] << 12) | ($MeasurementData[251] << 4) | ($MeasurementData[252] >> 4));
-//		$Hum_raw =  (($MeasurementData[253] << 8) | $MeasurementData[254]);
 		$Pres_raw = (($MeasurementData[1] << 12) | ($MeasurementData[2] << 4) | ($MeasurementData[3] >> 4));
 		$Temp_raw = (($MeasurementData[4] << 12) | ($MeasurementData[5] << 4) | ($MeasurementData[6] >> 4));
 		$Hum_raw =  (($MeasurementData[7] << 8) | $MeasurementData[8]);
@@ -275,11 +267,6 @@
 	
 	private function ReadData()
 	{
-		SetValueString($this->GetIDForIdent("MeasurementData"), "");
-//		for ($i = hexdec("F7"); $i < (hexdec("F7") + 8); $i++) {
-//    			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => $i)));
-//		}
-		// Test!
 		SetValueString($this->GetIDForIdent("MeasurementData"), "");
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_block_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => hexdec("F7"), "Count" => 8)));
 	return;
