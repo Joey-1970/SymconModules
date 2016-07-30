@@ -359,7 +359,7 @@ class IPS2GPIO_IO extends IPSModule
 	
 	private function ClientResponse($Message)
 	{
-		If (strlen($Message) == 16) {
+//		If (strlen($Message) == 16) {
 			$response = unpack("L*", $Message);
 			switch($response[1]) {
 			        case "4":
@@ -441,6 +441,12 @@ class IPS2GPIO_IO extends IPSModule
 			            	break;
 			        case "67":
 	           			IPS_LogMessage("GPIO I2C Read Block Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Count: ".$response[4]);
+			            	$ByteMessage = substr($Message, 17, 17 + ($response[4]));
+			            	$ByteResponse = unpack("S*", $ByteMessage);
+			            	$ByteArray = serialize($ByteResponse);
+			            	IPS_LogMessage("GPIO I2C Read Block Byte: ", strlen($Message)."  ".count($ByteResponse));
+ 					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_byte_block", "Handle" => $response[2], "Register" => $response[3], "Count" => $response[4], "ByteArray" => $ByteArray)));
+			            	break;
 			            	break;
 			        case "69":
 	           			IPS_LogMessage("GPIO I2C Exchange Word: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
@@ -464,36 +470,7 @@ class IPS2GPIO_IO extends IPSModule
 	           			}
 	           			break;
 			    }
-		}
-/*		elseif (strlen($Message) == 12) {
-			
-			$response = unpack("L*", $Message);
-					
-			//IPS_LogMessage("GPIO Notify: ","Meldung: ".count($response)." ".$response[1]." ".$response[2]." ".$response[3]);
-
-			$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
-
-			for ($i = 0; $i < Count($PinNotify); $i++) {
-    				$Bitvalue = boolval($response[3]&(1<<$PinNotify[$i]));
-    				IPS_LogMessage("GPIO Notify: ","Pin ".$PinNotify[$i]." Value ->".$Bitvalue);
-    				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$i], "Value"=> $Bitvalue, "Timestamp"=> $response[2])));
-			}
-		}
-*/		else {
-			$CommandMessage = substr($Message, 0, 16);
-			$response = unpack("L*", $CommandMessage);
-			switch($response[1]) {	
-				case "67":
-	           			IPS_LogMessage("GPIO I2C Read Block Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Count: ".$response[4]);
-			            	$ByteMessage = substr($Message, 17, 17 + (2 * $response[4]));
-			            	$ByteResponse = unpack("S*", $ByteMessage);
-			            	$ByteArray = serialize($ByteResponse);
-			            	IPS_LogMessage("GPIO I2C Read Block Byte: ", strlen($Message)."  ".count($ByteResponse));
- 					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_byte_block", "Handle" => $response[2], "Register" => $response[3], "Count" => $response[4], "ByteArray" => $ByteArray)));
-			            	break;
-			}   	
-					
-		}
+//		}
 	return;
 	}
 	
