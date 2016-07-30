@@ -319,6 +319,14 @@ class IPS2GPIO_IO extends IPSModule
 			return;
 		}
 		
+		
+		$CmdVarLen = array(56, 67, 70);
+		$Message = unpack("L*", $Message);
+		$Command = $Message[1];
+		
+		
+		
+		
 		If (($buf / 16) == intval($buf / 16)) {
 			$DataArray = str_split($buf, 16);
 	    		IPS_LogMessage("GPIO ReceiveData", strlen($buf)." Zeichen");
