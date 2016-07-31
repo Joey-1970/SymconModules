@@ -28,7 +28,7 @@
 	            //Connect to available splitter or create a new one
 		    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 		    // Profil anlegen
-		    $this->RegisterProfileFloat("length.cm", $Icon, "", " cm", 0, 1000, 0.1);
+		    $this->RegisterProfileFloat("length.cm", "Distance", "", " cm", 0, 1000, 0.1);
 		   
 		    //Status-Variablen anlegen
 		    $this->RegisterVariableFloat("Distance", "Distance", "length.cm", 10);
@@ -105,7 +105,7 @@
 	        IPS_SetVariableProfileIcon($Name, $Icon);
 	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
 	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
-	    }
+	}
 	
 }
 ?>
