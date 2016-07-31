@@ -46,11 +46,11 @@
 		$this->DisableAction("Temperature");
 		IPS_SetHidden($this->GetIDForIdent("Temperature"), false);
 		
-		$this->RegisterVariableFloat("Pressure", "Pressure", "~AirPressure", 20);
+		$this->RegisterVariableFloat("Pressure", "Pressure", "~AirPressure.F", 20);
 		$this->DisableAction("Pressure");
 		IPS_SetHidden($this->GetIDForIdent("Pressure"), false);
 		
-		$this->RegisterVariableFloat("Humidity", "Humidity", "~Humidity", 30);
+		$this->RegisterVariableFloat("Humidity", "Humidity", "~Humidity.F", 30);
 		$this->DisableAction("Humidity");
 		IPS_SetHidden($this->GetIDForIdent("Humidity"), false);
              	
