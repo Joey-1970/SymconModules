@@ -129,7 +129,7 @@
 	{
 		// Messwerte aktualisieren
 		$CalibrateData = unserialize(GetValueString($this->GetIDForIdent("CalibrateData")));
-		If (count($CalibrateData) = 32) {
+		If (count($CalibrateData) == 32) {
 			$this->ReadData();
 			// Kalibrierungsdatan aufbereiten
 			$Dig_T[0] = (($CalibrateData[137] << 8) | $CalibrateData[136]);
