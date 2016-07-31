@@ -128,10 +128,10 @@
 	public function Measurement()
 	{
 		// Messwerte aktualisieren
-		$this->ReadData();
-		// Kalibrierungsdatan aufbereiten
 		$CalibrateData = unserialize(GetValueString($this->GetIDForIdent("CalibrateData")));
 		If (count($CalibrateData) = 32) {
+			$this->ReadData();
+			// Kalibrierungsdatan aufbereiten
 			$Dig_T[0] = (($CalibrateData[137] << 8) | $CalibrateData[136]);
 			$Dig_T[1] = (($CalibrateData[139] << 8) | $CalibrateData[138]);
 			$Dig_T[2] = (($CalibrateData[141] << 8) | $CalibrateData[140]);
@@ -270,12 +270,9 @@
 	
 	private function ReadData()
 	{
-		$CalibrateData = unserialize(GetValueString($this->GetIDForIdent("CalibrateData")));
-		If (count($CalibrateData) == 8) {
-			$MeasurementData = array();
-			SetValueString($this->GetIDForIdent("MeasurementData"), serialize($MeasurementData));
-			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_block_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => hexdec("F7"), "Count" => 8)));
-		}
+		$MeasurementData = array();
+		SetValueString($this->GetIDForIdent("MeasurementData"), serialize($MeasurementData));
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_block_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => hexdec("F7"), "Count" => 8)));
 	return;
 	}
 
