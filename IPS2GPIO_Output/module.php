@@ -2,11 +2,6 @@
     // Klassendefinition
     class IPS2GPIO_Output extends IPSModule 
     {
-	public function __construct($InstanceID) {
-            // Diese Zeile nicht löschen
-            parent::__construct($InstanceID);
-        }
-
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
@@ -84,6 +79,5 @@
 		$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")));
 	return;
 	}
-
 }
 ?>
