@@ -207,7 +207,7 @@ class IPS2GPIO_IO extends IPSModule
 	   		$this->ClientSocket(pack("LLLLL", 76, 38400, 0, strlen($Device), $Device), 16);
 		   	break;
 		   case "write_bytes_serial":
-		   	$this->ClientSocket(pack("LLLLL", 81, $data->Handle, 0, strlen($data->Message), $data->Message), 16);
+		   	$this->ClientSocket(pack("L*", 81, $data->Handle, 0, strlen($data->Message), $data->Message), 16);
 		   	break;
 		}
 	    
