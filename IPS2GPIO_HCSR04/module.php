@@ -25,7 +25,6 @@
 		    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 		    // Profil anlegen
 		    $this->RegisterProfileFloat("length.cm", "Distance", "", " cm", 0, 1000, 0.1, 1);
-		   
 		    //Status-Variablen anlegen
 		    $this->RegisterVariableFloat("Distance", "Distance", "length.cm", 10);
 	            $this->DisableAction("Distance");
@@ -33,7 +32,6 @@
 	            $this->RegisterVariableInteger("Timestamp", "Timestamp", "", 20);
 	            $this->DisableAction("Timestamp");
 	            IPS_SetHidden($this->GetIDForIdent("Timestamp"), true);
-	            
 	            
 	            If (($this->ReadPropertyInteger("Pin_I") >= 0) AND ($this->ReadPropertyInteger("Pin_O")) >= 0) {
 	            	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
