@@ -119,7 +119,7 @@ class IPS2GPIO_IO extends IPSModule
 				// Prüfen, ob der gewählte GPIO bei dem Modell überhaupt vorhanden ist
 				$PinPossible = unserialize(GetValueString($this->GetIDForIdent("PinPossible")));
 				if (in_array($data->Pin, $PinPossible)) {
-			    		IPS_LogMessage("GPIO Pin: ","Gewählter Pin ist bei diesem Modell verfügbar");
+			    		//IPS_LogMessage("GPIO Pin: ","Gewählter Pin ist bei diesem Modell verfügbar");
 			    		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>102)));
 				}
 				else {
@@ -169,27 +169,15 @@ class IPS2GPIO_IO extends IPSModule
 		   	break;
 		   case "i2c_read_byte":
 		   	$this->CommandClientSocket(pack("LLLL", 61, $data->Handle, $data->Register, 0), 16);
-			IPS_LogMessage("I2C Read Byte Parameter : ",$data->Handle." , ".$data->Register);  	
+			//IPS_LogMessage("I2C Read Byte Parameter : ",$data->Handle." , ".$data->Register);  	
 		   	break;
 		    case "i2c_read_block_byte":
 		   	$this->CommandClientSocket(pack("LLLLL", 67, $data->Handle, $data->Register, 4, $data->Count), 16 + ($data->Count));
-			IPS_LogMessage("I2C Read Block Byte Parameter : ",$data->Handle." , ".$data->Register." , ".$data->Count);  	
+			//IPS_LogMessage("I2C Read Block Byte Parameter : ",$data->Handle." , ".$data->Register." , ".$data->Count);  	
 		   	break;
 		   case "i2c_write_byte":
 		   	$this->CommandClientSocket(pack("LLLLL", 62, $data->Handle, $data->Register, 4, $data->Value), 16);
-			IPS_LogMessage("I2C Write Byte Parameter : ",$data->Handle." , ".$data->Register." , ".$data->Value);  	
-		   	break;
-		   case "i2c_read_word":
-		   	$this->CommandClientSocket(pack("LLLL", 63, $data->Handle, $data->Register, 0), 16);
-			IPS_LogMessage("I2C Write Word Parameter : ",$data->Handle." , ".$data->Register);  	
-		   	break;
-		   case "i2c_exchange_word":
-		   	$this->CommandClientSocket(pack("LLLLL", 69, $data->Handle, $data->Register, 4, $data->Value), 16);
-			IPS_LogMessage("I2C Exchange Word Parameter : ",$data->Handle." , ".$data->Register." , ".$data->Value);  	
-		   	break;
-		   case "i2c_exchange_byte":
-		   	$this->CommandClientSocket(pack("LLLLL", 70, $data->Handle, $data->Register, 2, $data->Value), 16);
-			IPS_LogMessage("I2C Exchange Byte Parameter : ",$data->Handle." , ".$data->Register." , ".$data->Value);  	
+			//IPS_LogMessage("I2C Write Byte Parameter : ",$data->Handle." , ".$data->Register." , ".$data->Value);  	
 		   	break;
 		   case "get_freepin":
 		   	$PinPossible = unserialize(GetValueString($this->GetIDForIdent("PinPossible")));
@@ -301,7 +289,6 @@ class IPS2GPIO_IO extends IPSModule
 		    	IPS_LogMessage("GPIO Socket: ", "Fehler beim Erstellen ".[$errorcode]." ".$errormsg);
 		    	return;
 		}
-		
 		// Verbindung aufbauen
 		if(!socket_connect($sock, $this->ReadPropertyString("IPAddress"), 8888)) {
 			$errorcode = socket_last_error();
@@ -309,7 +296,6 @@ class IPS2GPIO_IO extends IPSModule
 			IPS_LogMessage("GPIO Socket: ", "Fehler beim Verbindungsaufbaus ".[$errorcode]." ".$errormsg);
 			return;
 		}
-		
 		// Message senden
 		if( ! socket_send ($sock, $message, strlen($message), 0))
 		{
@@ -318,7 +304,6 @@ class IPS2GPIO_IO extends IPSModule
 			IPS_LogMessage("GPIO Socket: ", "Fehler beim beim Senden ".[$errorcode]." ".$errormsg);
 			return;
 		}
-		
 		//Now receive reply from server
 		if(socket_recv ($sock, $buf, $ResponseLen, MSG_WAITALL ) === FALSE) {
 		    	$errorcode = socket_last_error();
@@ -326,8 +311,7 @@ class IPS2GPIO_IO extends IPSModule
 			IPS_LogMessage("GPIO Socket: ", "Fehler beim beim Empfangen ".[$errorcode]." ".$errormsg);
 			return;
 		}
-		
-		
+		// Anfragen mit variabler Rückgabelänge
 		$CmdVarLen = array(56, 67, 70, 73, 75, 80, 88, 91, 92, 106, 109);
 		$MessageArray = unpack("L*", $buf);
 		$Command = $MessageArray[1];
@@ -335,6 +319,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->ClientResponse($buf);
 			//IPS_LogMessage("GPIO ReceiveData", strlen($buf)." Zeichen");
 		}
+		// Standardantworten
 		elseIf (($buf / 16) == intval($buf / 16)) {
 			$DataArray = str_split($buf, 16);
 	    		//IPS_LogMessage("GPIO ReceiveData", strlen($buf)." Zeichen");
@@ -427,23 +412,13 @@ class IPS2GPIO_IO extends IPSModule
            			IPS_LogMessage("GPIO I2C Write Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
 		            	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "Handle" => $response[2], "Register" => $response[3], "Value" => $response[4])));
 		            	break;
-		        case "63":
-           			IPS_LogMessage("GPIO I2C Read Word: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
-		            	break;
 		        case "67":
            			IPS_LogMessage("GPIO I2C Read Block Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Count: ".$response[4]);
 		            	$ByteMessage = substr($Message, -($response[4]));
 		            	$ByteResponse = unpack("C*", $ByteMessage);
 		            	$ByteArray = serialize($ByteResponse);
-		            	IPS_LogMessage("GPIO I2C Read Block Byte: ", strlen($Message)."  ".count($ByteResponse));
+		            	//IPS_LogMessage("GPIO I2C Read Block Byte: ", strlen($Message)."  ".count($ByteResponse));
  				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_byte_block", "Handle" => $response[2], "Register" => $response[3], "Count" => $response[4], "ByteArray" => $ByteArray)));
-		            	break;
-		        case "69":
-           			IPS_LogMessage("GPIO I2C Exchange Word: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
-		            	break;
-		        case "70":
-           			IPS_LogMessage("GPIO I2C Exchange Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
-		            	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "Handle" => $response[2], "Register" => $response[3], "Value" => $response[4])));
 		            	break;
 		        case "97":
            			IPS_LogMessage("GPIO GlitchFilter: ","gesetzt");
