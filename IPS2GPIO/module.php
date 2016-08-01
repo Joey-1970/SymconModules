@@ -184,7 +184,7 @@ class IPS2GPIO_IO extends IPSModule
 		   	break;
 		   case "get_handle_serial":
 		   		// Unfertig!!!
-		   		$this->ClientSocket(pack("LLLLL", 76, 38400, 0, 0), 16);
+		   		$this->ClientSocket(pack("LLLLL", 76, 38400, 0, 12, "/dev/ttyAMA0"), 16);
 		   	break;
 		   case "get_freepin":
 		   	$PinPossible = unserialize(GetValueString($this->GetIDForIdent("PinPossible")));
