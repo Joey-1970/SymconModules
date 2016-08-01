@@ -19,6 +19,19 @@
 	        $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 	   
 		//Status-Variablen anlegen
+		$this->RegisterVariableInteger("Handle", "Handle", "", 110);
+		$this->DisableAction("Handle");
+		IPS_SetHidden($this->GetIDForIdent("Handle"), true);
+
+             	If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
+             		// Handle löschen
+             		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "close_handle_serial", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")))));
+             		SetValueInteger($this->GetIDForIdent("Handle"), -1);
+             	}
+            	// den Handle für dieses Gerät ermitteln
+            	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_handle_serial")));
+
+
             }
         }
 
