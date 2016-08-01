@@ -179,6 +179,12 @@ class IPS2GPIO_IO extends IPSModule
 		   	$this->CommandClientSocket(pack("LLLLL", 62, $data->Handle, $data->Register, 4, $data->Value), 16);
 			//IPS_LogMessage("I2C Write Byte Parameter : ",$data->Handle." , ".$data->Register." , ".$data->Value);  	
 		   	break;
+		   case "close_handle_serial":
+		   		$this->ClientSocket(pack("LLLL", 77, $data->Handle, 0, 0), 16);
+		   	break;
+		   case "get_handle_serial":
+		   		$this->ClientSocket(pack("LLLLL", 76, 38400, 0, 0), 16);
+		   	break;
 		   case "get_freepin":
 		   	$PinPossible = unserialize(GetValueString($this->GetIDForIdent("PinPossible")));
 		   	$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
@@ -419,6 +425,9 @@ class IPS2GPIO_IO extends IPSModule
 		            	$ByteArray = serialize($ByteResponse);
 		            	//IPS_LogMessage("GPIO I2C Read Block Byte: ", strlen($Message)."  ".count($ByteResponse));
  				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_byte_block", "Handle" => $response[2], "Register" => $response[3], "Count" => $response[4], "ByteArray" => $ByteArray)));
+		            	break;
+		        case "77":
+           			IPS_LogMessage("GPIO Serial Close Handle: ","Handle: ".$response[2]." Value: ".$response[4]);
 		            	break;
 		        case "97":
            			IPS_LogMessage("GPIO GlitchFilter: ","gesetzt");
