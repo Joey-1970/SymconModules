@@ -13,12 +13,12 @@
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
         {
-            // Diese Zeile nicht löschen
-            parent::ApplyChanges();
-            //Connect to available splitter or create a new on
-            $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+	        // Diese Zeile nicht löschen
+	      	parent::ApplyChanges();
+	        //Connect to available splitter or create a new on
+	        $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 	   
-	          //Status-Variablen anlegen
+		//Status-Variablen anlegen
             }
         }
 
