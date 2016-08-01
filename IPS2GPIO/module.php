@@ -446,6 +446,9 @@ class IPS2GPIO_IO extends IPSModule
 		        case "77":
            			IPS_LogMessage("GPIO Serial Close Handle: ","Serial Handle: ".$response[2]." Value: ".$response[4]);
 		            	break;
+		        case "81":
+           			IPS_LogMessage("GPIO Serial Write: ","Serial Handle: ".$response[2]." Value: ".$response[4]);
+		            	break;
 		        case "97":
            			IPS_LogMessage("GPIO GlitchFilter: ","gesetzt");
 		            	break;
