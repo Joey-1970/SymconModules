@@ -51,18 +51,14 @@
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
 			  case "get_usedpin":
-			   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin"), "Modus" => "W")));
+			   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => 14, "Modus" => "W")));
+			   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => 15, "Modus" => "R")));
 			   	break;
 			 case "status":
-			   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
+			   	If (($data->Pin == 14) OR ($data->Pin == 15)) {
 			   		$this->SetStatus($data->Status);
 			   	}
 			   	break;
-			case "result":
-				If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
-			   		$this->SetValueInteger($this->GetIDForIdent("Status"), $data->Value);
-				}
-				break;
 			case "set_serial_handle":
 			   	SetValueInteger($this->GetIDForIdent("Handle"), $data->Handle);
 			   	break;
