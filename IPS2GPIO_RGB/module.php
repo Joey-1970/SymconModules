@@ -2,11 +2,6 @@
    // Klassendefinition
     class IPS2GPIO_RGB extends IPSModule 
     {
-        public function __construct($InstanceID) {
-            // Diese Zeile nicht löschen
-            parent::__construct($InstanceID);
-        }
-
         // Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
@@ -120,8 +115,6 @@
 	// Dimmt den gewaehlten Pin
 	public function Set_RGB($R, $G, $B)
 	{
- 		
- 		 
  		If (GetValueBoolean($this->GetIDForIdent("Status")) == true) { 
  			$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => $R, "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => $G, "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => $B))); 
 		}
@@ -137,12 +130,10 @@
 	{
 		SetValue($this->GetIDForIdent("Status"), $value);
 		
-		If ($value == true)
-		{
+		If ($value == true) {
 			$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => GetValueInteger($this->GetIDForIdent("Intensity_R")), "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => GetValueInteger($this->GetIDForIdent("Intensity_G")), "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => GetValueInteger($this->GetIDForIdent("Intensity_B"))))); 
 		}
-		else
-		{
+		else {
 			$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => 0, "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => 0, "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => 0))); 
 		}
 	return;
@@ -166,7 +157,6 @@
 	private function RGB2Hex($r, $g, $b)
 	{
 		$Hex = hexdec(str_pad(dechex($r), 2,'0', STR_PAD_LEFT).str_pad(dechex($g), 2,'0', STR_PAD_LEFT).str_pad(dechex($b), 2,'0', STR_PAD_LEFT));
-	
 	return $Hex;
 	}
 
