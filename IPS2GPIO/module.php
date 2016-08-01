@@ -183,6 +183,7 @@ class IPS2GPIO_IO extends IPSModule
 		   		$this->ClientSocket(pack("LLLL", 77, $data->Handle, 0, 0), 16);
 		   	break;
 		   case "get_handle_serial":
+		   		// Unfertig!!!
 		   		$this->ClientSocket(pack("LLLLL", 76, 38400, 0, 0), 16);
 		   	break;
 		   case "get_freepin":
