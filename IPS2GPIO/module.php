@@ -338,7 +338,7 @@ class IPS2GPIO_IO extends IPSModule
 			//IPS_LogMessage("GPIO ReceiveData", strlen($buf)." Zeichen");
 		}
 		// Standardantworten
-		elseIf (($buf / 16) == intval($buf / 16)) {
+		elseIf ($buf == 16) OR (($buf / 16) == intval($buf / 16)) {
 			$DataArray = str_split($buf, 16);
 	    		//IPS_LogMessage("GPIO ReceiveData", strlen($buf)." Zeichen");
 	    		for ($i = 0; $i < Count($DataArray); $i++) {
