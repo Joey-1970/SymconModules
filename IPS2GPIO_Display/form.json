@@ -1,0 +1,18 @@
+{
+    "status":
+    [
+        { "code": 101, "icon": "inactive", "caption": "Instanz wird erstellt" },
+        { "code": 102, "icon": "active", "caption": "Instanz ist aktiv" },
+        { "code": 104, "icon": "inactive", "caption": "Instanz ist inaktiv" },
+        { "code": 200, "icon": "error", "caption": "Pin wird doppelt genutzt!" },
+        { "code": 201, "icon": "error", "caption": "Pin wird an diesem Raspberry Pi Modell nicht vorhanden!" }
+    ],
+    "elements":
+    [
+        { "type": "Label", "label": "Steuerung eines Nextion Enhanced Displays" },
+        { "type": "Label", "label": "Hinweise:" },
+        { "type": "Label", "label": "- die UART-Nutzung muss in der Raspberry Pi-Konfiguration freigegeben werden (sudo raspi-config -> Advanced Options -> Serial Enable = true)" },
+        { "type": "Label", "label": "- die korrekte Nutzung der GPIO ist zwingend erforderlich (GPIO-Nr. 14/15) " },
+        { "type": "Label", "label": "- auf den korrekten Anschluss von RX/TX achten" }
+    ]
+}
