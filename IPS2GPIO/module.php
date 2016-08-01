@@ -410,7 +410,7 @@ class IPS2GPIO_IO extends IPSModule
            			IPS_LogMessage("GPIO Notify: ","gestoppt");
 		            	break;
 		        case "54":
-		        	If ($response[4] > 0 ) {
+		        	If ($response[4] >= 0 ) {
            				IPS_LogMessage("GPIO I2C-Handle: ",$response[4]." für Device ".$response[3]);
            				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_handle", "Address" => $response[3], "Handle" => $response[4], "HardwareRev" => GetValueInteger($this->GetIDForIdent("HardwareRev")))));
            			}
