@@ -2,10 +2,6 @@
     // Klassendefinition
     class IPS2GPIO_HCSR04 extends IPSModule 
     {
-	public function __construct($InstanceID) {
-            // Diese Zeile nicht löschen
-            parent::__construct($InstanceID);
-        }
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
