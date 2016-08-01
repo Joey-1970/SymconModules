@@ -75,6 +75,7 @@ class IPS2GPIO_IO extends IPSModule
 	    	$data = json_decode($JSONString);
 	    	
 	 	switch ($data->Function) {
+		    // GPIO Kommunikation
 		    case "set_PWM_dutycycle":
 		    	// Dimmt einen Pin
 		    	If ($data->Pin >= 0) {
@@ -103,6 +104,8 @@ class IPS2GPIO_IO extends IPSModule
 				IPS_LogMessage("SetTrigger Parameter : ",$data->Pin." , ".$data->Time);  
 		    	}
 		        break;
+		    
+		    // interne Kommunikation
 		    case "set_notifypin":
 		    	If ($data->Pin >= 0) {
 			        // Erstellt ein Array für alle Pins für die die Notifikation erforderlich ist 
@@ -146,6 +149,20 @@ class IPS2GPIO_IO extends IPSModule
 		   case "get_pinupdate":
 		   	$this->Get_PinUpdate();
 		   	break;
+		   case "get_freepin":
+		   	$PinPossible = unserialize(GetValueString($this->GetIDForIdent("PinPossible")));
+		   	$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
+		   	$PinFreeArray = array_diff_assoc($PinPossible, $PinUsed);
+		   	If (is_array($PinFreeArray)) {
+		   		IPS_LogMessage("GPIO Pin", "Pin ".$PinFreeArray[0]." ist noch ungenutzt");
+			        $this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"freepin", "Pin"=>$PinFreeArray[0])));
+		   	}
+		   	else {
+		   		IPS_LogMessage("GPIO Pin", "Achtung: Kein ungenutzter Pin gefunden");	
+		   	}
+		   	break;
+
+		   // I2C Kommunikation
 		   case "get_handle_i2c":
 		   	If (GetValueInteger($this->GetIDForIdent("HardwareRev")) <=3) {
 		   		$this->ClientSocket(pack("LLLLL", 54, 0, $data->DeviceAddress, 4, 0), 16);	
@@ -179,25 +196,18 @@ class IPS2GPIO_IO extends IPSModule
 		   	$this->CommandClientSocket(pack("LLLLL", 62, $data->Handle, $data->Register, 4, $data->Value), 16);
 			//IPS_LogMessage("I2C Write Byte Parameter : ",$data->Handle." , ".$data->Register." , ".$data->Value);  	
 		   	break;
+		   
+		   // Serielle Kommunikation
 		   case "close_handle_serial":
-		   		$this->ClientSocket(pack("LLLL", 77, $data->Handle, 0, 0), 16);
+		   	$this->ClientSocket(pack("LLLL", 77, $data->Handle, 0, 0), 16);
 		   	break;
 		   case "get_handle_serial":
-		   		// Unfertig!!!
-		   		$Device = "/dev/ttyAMA0";
-		   		$this->ClientSocket(pack("LLLLL", 76, 38400, 0, strlen($Device), $Device), 16);
+	   		// Unfertig!!!
+	   		$Device = "/dev/ttyAMA0";
+	   		$this->ClientSocket(pack("LLLLL", 76, 38400, 0, strlen($Device), $Device), 16);
 		   	break;
-		   case "get_freepin":
-		   	$PinPossible = unserialize(GetValueString($this->GetIDForIdent("PinPossible")));
-		   	$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
-		   	$PinFreeArray = array_diff_assoc($PinPossible, $PinUsed);
-		   	If (is_array($PinFreeArray)) {
-		   		IPS_LogMessage("GPIO Pin", "Pin ".$PinFreeArray[0]." ist noch ungenutzt");
-			        $this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"freepin", "Pin"=>$PinFreeArray[0])));
-		   	}
-		   	else {
-		   		IPS_LogMessage("GPIO Pin", "Achtung: Kein ungenutzter Pin gefunden");	
-		   	}
+		   case "write_bytes_serial":
+		   	$this->ClientSocket(pack("LLLLL", 81, $data->Handle, 0, strlen($data->Message), $data->Message), 16);
 		   	break;
 		}
 	    
