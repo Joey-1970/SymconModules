@@ -54,10 +54,10 @@
 		$this->DisableAction("Humidity");
 		IPS_SetHidden($this->GetIDForIdent("Humidity"), false);
              	
-             	If (GetValueInteger($this->GetIDForIdent("Handle")) > 0) {
+             	If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
              		// Handle löschen
              		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "close_handle_i2c", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")))));
-             		SetValueInteger($this->GetIDForIdent("Handle"), 0);
+             		SetValueInteger($this->GetIDForIdent("Handle"), -1);
              	}
             	// den Handle für dieses Gerät ermitteln
             	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_handle_i2c", "DeviceAddress" => $this->ReadPropertyString("DeviceAddress"))));
@@ -129,7 +129,7 @@
 	{
 		// Messwerte aktualisieren
 		$CalibrateData = unserialize(GetValueString($this->GetIDForIdent("CalibrateData")));
-		If (count($CalibrateData) == 32) {
+		If ((count($CalibrateData) == 32) AND (GetValueInteger($this->GetIDForIdent("Handle")) >= 0)) {
 			$this->ReadData();
 			// Kalibrierungsdatan aufbereiten
 			$Dig_T[0] = (($CalibrateData[137] << 8) | $CalibrateData[136]);
