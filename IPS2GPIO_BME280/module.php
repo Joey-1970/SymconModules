@@ -172,61 +172,63 @@
 			
 			// Messwerte aufbereiten
 			$MeasurementData = unserialize(GetValueString($this->GetIDForIdent("MeasurementData")));
-			$Pres_raw = (($MeasurementData[1] << 12) | ($MeasurementData[2] << 4) | ($MeasurementData[3] >> 4));
-			$Temp_raw = (($MeasurementData[4] << 12) | ($MeasurementData[5] << 4) | ($MeasurementData[6] >> 4));
-			$Hum_raw =  (($MeasurementData[7] << 8) | $MeasurementData[8]);
-			
-			$FineCalibrate = 0;
-			
-			// Temperatur
-			$V1 = ($Temp_raw / 16384 - $Dig_T[0] / 1024) * $Dig_T[1];
-			$V2 = ($Temp_raw / 131072 - $Dig_T[0] / 8192) * ($Temp_raw / 131072 - $Dig_T[0] / 8192) * $Dig_T[2];
-			$FineCalibrate = $V1 + $V2;
-			SetValueFloat($this->GetIDForIdent("Temperature"), $FineCalibrate / 5120);
-			
-			// Luftdruck
-			$Pressure = 0;
-			$V1 = ($FineCalibrate / 2) - 64000;
-			$V2 = ((($V1 / 4) * ($V1 / 4)) / 2048) * $Dig_P[5];
-			$V2 = $V2 + (($V1 * $Dig_P[4]) * 2);
-			$V2 = ($V2 / 4) + ($Dig_P[3] * 65536);
-			$V1 = ((($Dig_P[2] * ((($V1 / 4) * ($V1 / 4)) / 8192)) / 8) + (($Dig_P[1] * $V1) / 2)) / 262144;
-			$V1 = ((32768 + $V1) * $Dig_P[0]) / 32768;
-			
-			If ($V1 == 0) {
-				SetValueFloat($this->GetIDForIdent("Pressure"), "0");
+			If (count($MeasurementData) == 8) {
+				$Pres_raw = (($MeasurementData[1] << 12) | ($MeasurementData[2] << 4) | ($MeasurementData[3] >> 4));
+				$Temp_raw = (($MeasurementData[4] << 12) | ($MeasurementData[5] << 4) | ($MeasurementData[6] >> 4));
+				$Hum_raw =  (($MeasurementData[7] << 8) | $MeasurementData[8]);
+				
+				$FineCalibrate = 0;
+				
+				// Temperatur
+				$V1 = ($Temp_raw / 16384 - $Dig_T[0] / 1024) * $Dig_T[1];
+				$V2 = ($Temp_raw / 131072 - $Dig_T[0] / 8192) * ($Temp_raw / 131072 - $Dig_T[0] / 8192) * $Dig_T[2];
+				$FineCalibrate = $V1 + $V2;
+				SetValueFloat($this->GetIDForIdent("Temperature"), $FineCalibrate / 5120);
+				
+				// Luftdruck
+				$Pressure = 0;
+				$V1 = ($FineCalibrate / 2) - 64000;
+				$V2 = ((($V1 / 4) * ($V1 / 4)) / 2048) * $Dig_P[5];
+				$V2 = $V2 + (($V1 * $Dig_P[4]) * 2);
+				$V2 = ($V2 / 4) + ($Dig_P[3] * 65536);
+				$V1 = ((($Dig_P[2] * ((($V1 / 4) * ($V1 / 4)) / 8192)) / 8) + (($Dig_P[1] * $V1) / 2)) / 262144;
+				$V1 = ((32768 + $V1) * $Dig_P[0]) / 32768;
+				
+				If ($V1 == 0) {
+					SetValueFloat($this->GetIDForIdent("Pressure"), "0");
+				}
+				$Pressure = ((1048576 - $Pres_raw) - ($V2 / 4096)) * 3125;
+				
+				If ($Pressure < hexdec("80000000")) {
+					$Pressure = ($Pressure * 2) / $V1;
+				}
+				else {
+					$Pressure = ($Pressure / $V1) * 2;
+				}
+				$V1 = ($Dig_P[8] * ((($Pressure / 8) * ($Pressure / 8)) / 8192)) / 4096;
+				$V2 = (($Pressure / 4) * $Dig_P[7]) / 8192;
+				$Pressure = $Pressure + (($V1 + $V2 + $Dig_P[6]) / 16);
+				
+				SetValueFloat($this->GetIDForIdent("Pressure"), $Pressure / 100);
+				
+				// Luftfeuchtigkeit
+				$Hum = $FineCalibrate - 76800;
+				If ($Hum <> 0) {
+					$Hum = ($Hum_raw - ($Dig_H[3] * 64 + $Dig_H[4] / 16384 * $Hum)) * ($Dig_H[1]  / 65536 * (1 + $Dig_H[5] / 67108864 * $Hum * (1 + $Dig_H[2] / 67108864 * $Hum)));
+				}
+				else {
+					SetValueFloat($this->GetIDForIdent("Humidity"), 0);
+				}
+				$Hum = $Hum * (1 - $Dig_H[0] * $Hum / 524288);
+				If ($Hum > 100) {
+					$Hum = 100;
+				}
+				elseif ($Hum < 0) {
+					$Hum = 0;
+				}
+				
+				SetValueFloat($this->GetIDForIdent("Humidity"), $Hum);
 			}
-			$Pressure = ((1048576 - $Pres_raw) - ($V2 / 4096)) * 3125;
-			
-			If ($Pressure < hexdec("80000000")) {
-				$Pressure = ($Pressure * 2) / $V1;
-			}
-			else {
-				$Pressure = ($Pressure / $V1) * 2;
-			}
-			$V1 = ($Dig_P[8] * ((($Pressure / 8) * ($Pressure / 8)) / 8192)) / 4096;
-			$V2 = (($Pressure / 4) * $Dig_P[7]) / 8192;
-			$Pressure = $Pressure + (($V1 + $V2 + $Dig_P[6]) / 16);
-			
-			SetValueFloat($this->GetIDForIdent("Pressure"), $Pressure / 100);
-			
-			// Luftfeuchtigkeit
-			$Hum = $FineCalibrate - 76800;
-			If ($Hum <> 0) {
-				$Hum = ($Hum_raw - ($Dig_H[3] * 64 + $Dig_H[4] / 16384 * $Hum)) * ($Dig_H[1]  / 65536 * (1 + $Dig_H[5] / 67108864 * $Hum * (1 + $Dig_H[2] / 67108864 * $Hum)));
-			}
-			else {
-				SetValueFloat($this->GetIDForIdent("Humidity"), 0);
-			}
-			$Hum = $Hum * (1 - $Dig_H[0] * $Hum / 524288);
-			If ($Hum > 100) {
-				$Hum = 100;
-			}
-			elseif ($Hum < 0) {
-				$Hum = 0;
-			}
-			
-			SetValueFloat($this->GetIDForIdent("Humidity"), $Hum);
 		}
 	return;
 	}	
