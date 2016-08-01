@@ -7,6 +7,7 @@
         {
             // Diese Zeile nicht löschen.
             parent::Create();
+            $this->RegisterPropertyInteger("Brightness", 100);
             $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
  
@@ -19,6 +20,7 @@
 	        $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 	   
 		//Status-Variablen anlegen
+		
 		$this->RegisterVariableInteger("Handle", "Handle", "", 110);
 		$this->DisableAction("Handle");
 		IPS_SetHidden($this->GetIDForIdent("Handle"), true);
