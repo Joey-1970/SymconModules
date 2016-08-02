@@ -85,11 +85,11 @@
 	{
 		date_default_timezone_set("Europe/Berlin");
 		$timestamp = time();
-		$Message = "rtc3=".date("H",$timestamp)."\xFF\xFF\xFF");
+		$Message = "rtc3=".date("H",$timestamp)."\xFF\xFF\xFF";
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Command" => $Message)));
-		$Message = "rtc4=".date("i",$timestamp)."\xFF\xFF\xFF"); 
+		$Message = "rtc4=".date("i",$timestamp)."\xFF\xFF\xFF"; 
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Command" => $Message)));
-		$Message = "rtc5=".date("s",$timestamp)."\xFF\xFF\xFF");
+		$Message = "rtc5=".date("s",$timestamp)."\xFF\xFF\xFF";
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Command" => $Message)));
 	return;	
 	}
@@ -98,11 +98,11 @@
 	{
 		date_default_timezone_set("Europe/Berlin");
 		$timestamp = time();
-		$Message = "rtc0=".date("Y",$timestamp)."\xFF\xFF\xFF");
+		$Message = "rtc0=".date("Y",$timestamp)."\xFF\xFF\xFF";
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Command" => $Message)));
-		$Message = "rtc1=".date("m",$timestamp)."\xFF\xFF\xFF"); 
+		$Message = "rtc1=".date("m",$timestamp)."\xFF\xFF\xFF"; 
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Command" => $Message)));
-		$Message = "rtc2=".date("d",$timestamp)."\xFF\xFF\xFF");
+		$Message = "rtc2=".date("d",$timestamp)."\xFF\xFF\xFF";
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Command" => $Message)));
 	return;	
 	}
