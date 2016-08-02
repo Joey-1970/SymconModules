@@ -209,8 +209,8 @@ class IPS2GPIO_IO extends IPSModule
 	   		$this->CommandClientSocket(pack("L*", 76, 115200, 0, strlen($data->Device)).$data->Device, 16);
 		   	break;
 		   case "write_bytes_serial":
-		   	IPS_LogMessage("GPIO Write Bytes Serial", "Handle: ".$data->Handle." Message: ".$data->Message);
-		   	$this->CommandClientSocket(pack("L*", 81, $data->Handle, 0, strlen($data->Message)).$data->Message, 16);
+		   	IPS_LogMessage("GPIO Write Bytes Serial", "Handle: ".$data->Handle." Command: ".$data->Command);
+		   	$this->CommandClientSocket(pack("L*", 81, $data->Handle, 0, strlen($data->Command)).$data->Command, 16);
 		   	break;
 		}
 	    
