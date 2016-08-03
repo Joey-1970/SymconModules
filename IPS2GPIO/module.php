@@ -185,16 +185,16 @@ class IPS2GPIO_IO extends IPSModule
 		   	SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));	
 		   	break;
 		   case "i2c_read_byte":
+		   	//IPS_LogMessage("I2C Read Byte Parameter : ",$data->Handle." , ".$data->Register); 
 		   	$this->CommandClientSocket(pack("LLLL", 61, $data->Handle, $data->Register, 0), 16);
-			//IPS_LogMessage("I2C Read Byte Parameter : ",$data->Handle." , ".$data->Register);  	
 		   	break;
 		    case "i2c_read_block_byte":
+		   	//IPS_LogMessage("I2C Read Block Byte Parameter : ",$data->Handle." , ".$data->Register." , ".$data->Count);  	
 		   	$this->CommandClientSocket(pack("LLLLL", 67, $data->Handle, $data->Register, 4, $data->Count), 16 + ($data->Count));
-			//IPS_LogMessage("I2C Read Block Byte Parameter : ",$data->Handle." , ".$data->Register." , ".$data->Count);  	
-		   	break;
+			break;
 		   case "i2c_write_byte":
+		   	//IPS_LogMessage("I2C Write Byte Parameter : ",$data->Handle." , ".$data->Register." , ".$data->Value);  	
 		   	$this->CommandClientSocket(pack("LLLLL", 62, $data->Handle, $data->Register, 4, $data->Value), 16);
-			//IPS_LogMessage("I2C Write Byte Parameter : ",$data->Handle." , ".$data->Register." , ".$data->Value);  	
 		   	break;
 		   
 		   // Serielle Kommunikation
@@ -427,23 +427,22 @@ class IPS2GPIO_IO extends IPSModule
            			IPS_LogMessage("GPIO I2C Close Handle: ","Handle: ".$response[2]." Value: ".$response[4]);
 		            	break;
 		        case "61":
-           			IPS_LogMessage("GPIO I2C Read Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
+           			//IPS_LogMessage("GPIO I2C Read Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
 		            	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "Handle" => $response[2], "Register" => $response[3], "Value" => $response[4])));
 		            	break;
 		        case "62":
-           			IPS_LogMessage("GPIO I2C Write Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
+           			//IPS_LogMessage("GPIO I2C Write Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
 		            	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "Handle" => $response[2], "Register" => $response[3], "Value" => $response[4])));
 		            	break;
 		        case "67":
-           			IPS_LogMessage("GPIO I2C Read Block Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Count: ".$response[4]);
+           			//IPS_LogMessage("GPIO I2C Read Block Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Count: ".$response[4]);
 		            	$ByteMessage = substr($Message, -($response[4]));
 		            	$ByteResponse = unpack("C*", $ByteMessage);
 		            	$ByteArray = serialize($ByteResponse);
-		            	//IPS_LogMessage("GPIO I2C Read Block Byte: ", strlen($Message)."  ".count($ByteResponse));
  				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_byte_block", "Handle" => $response[2], "Register" => $response[3], "Count" => $response[4], "ByteArray" => $ByteArray)));
 		            	break;
 		        case "76":
-           			IPS_LogMessage("GPIO Serial Handle: ","Serial Handle: ".$response[4]);
+           			//IPS_LogMessage("GPIO Serial Handle: ","Serial Handle: ".$response[4]);
            			$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_handle", "Handle" => $response[4], )));
 
 		            	break;
