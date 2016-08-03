@@ -24,6 +24,9 @@
 		$this->RegisterVariableInteger("Handle", "Handle", "", 110);
 		$this->DisableAction("Handle");
 		IPS_SetHidden($this->GetIDForIdent("Handle"), true);
+		$this->RegisterVariableInteger("Baud", "Baud", "", 110);
+		$this->DisableAction("Baud");
+		IPS_SetHidden($this->GetIDForIdent("Baud"), true);
 
              	If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
              		// Handle löschen
@@ -31,7 +34,7 @@
              		SetValueInteger($this->GetIDForIdent("Handle"), -1);
              	}
             	// den Handle für dieses Gerät ermitteln
-            	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_handle_serial", "Device" => "/dev/ttyAMA0")));
+            	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_handle_serial", "Baud" => 9600, "Device" => "/dev/ttyAMA0")));
 
 
   
@@ -75,7 +78,7 @@
 	public function Brightness($Value)
 	{
 		$Value = min(100, max(0, $Value));
-		$Message = utf8_decode("dims=".$Value); 
+		$Message = utf8_encode("dims=".$Value)."\xFF\xFF\xFF"; 
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Command" => $Message)));
 
 	return;
