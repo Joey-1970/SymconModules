@@ -20,6 +20,8 @@
 	        $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 	   
 		//Status-Variablen anlegen
+		$this->RegisterVariableInteger("Brightness", "Brightness", "~Intensity.100", 10);
+           	$this->EnableAction("Brightness");
 		
 		$this->RegisterVariableInteger("Handle", "Handle", "", 110);
 		$this->DisableAction("Handle");
@@ -43,7 +45,11 @@
 	public function RequestAction($Ident, $Value) 
 	{
   		switch($Ident) {
-
+		case "Brightness":
+	            $this->Set_Brightness($Value);
+	            //Neuen Wert in die Statusvariable schreiben
+	            SetValueInteger($this->GetIDForIdent($Ident), $Value);
+	            break;
 	        default:
 	            throw new Exception("Invalid Ident");
 	    }
@@ -75,7 +81,7 @@
  	}
 	// Beginn der Funktionen
 	
-	public function Brightness($Value)
+	public function Set_Brightness($Value)
 	{
 		$Value = min(100, max(0, $Value));
 		$Message = utf8_encode("dims=".$Value).chr(255).chr(255).chr(255); 
