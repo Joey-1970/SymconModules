@@ -19,7 +19,7 @@
                 { "label": "57600", "value": 6 },
                 { "label": "115200", "value": 7 }
                 ]
-        }
+        },
         { "type": "IntervalBox", "name": "Brightness", "caption": "Brightness (Default)" },
         { "type": "Label", "label": "Steuerung eines Nextion Enhanced Displays" },
         { "type": "Label", "label": "Hinweise:" },
