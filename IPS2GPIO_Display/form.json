@@ -9,6 +9,17 @@
     ],
     "elements":
     [
+        { "type": "Select", "name": "Baud", "caption": "Baudrate (Default)",
+            "options": [
+                { "label": "2400", "value": 1 },
+                { "label": "4800", "value": 2 },
+                { "label": "9600", "value": 3 },
+                { "label": "19200", "value": 4 },
+                { "label": "38400", "value": 5 },
+                { "label": "57600", "value": 6 },
+                { "label": "115200", "value": 7 }
+                ]
+        }
         { "type": "IntervalBox", "name": "Brightness", "caption": "Brightness (Default)" },
         { "type": "Label", "label": "Steuerung eines Nextion Enhanced Displays" },
         { "type": "Label", "label": "Hinweise:" },
