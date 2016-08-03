@@ -203,13 +203,11 @@ class IPS2GPIO_IO extends IPSModule
 		   	$this->CommandClientSocket(pack("LLLL", 77, $data->Handle, 0, 0), 16);
 		   	break;
 		   case "get_handle_serial":
-	   		// Unfertig!!!
 	   		IPS_LogMessage("GPIO Get Handle Serial", "Handle anfordern");
-	   		//$Device = "/dev/ttyAMA0";
 	   		$this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device, 16);
 		   	break;
 		   case "write_bytes_serial":
-		   	$Command = utf8_decode($data->Command);
+		   	$Command = utf8_encode($data->Command);
 		   	IPS_LogMessage("GPIO Write Bytes Serial", "Handle: ".$data->Handle." Command: ".$Command);
 		   	$this->CommandClientSocket(pack("L*", 81, $data->Handle, 0, strlen($Command)).$Command, 16);
 		   	break;
