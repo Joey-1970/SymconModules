@@ -93,7 +93,7 @@
 	public function Set_Brightness($Value)
 	{
 		$Value = min(100, max(0, $Value));
-		$Message = utf8_decode("dim=".$Value).chr(255).chr(255).chr(255); 
+		$Message = utf8_encode("dim=".$Value.chr(255).chr(255).chr(255)); 
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Command" => $Message)));
 
 	return;
