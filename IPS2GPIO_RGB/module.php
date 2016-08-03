@@ -97,13 +97,13 @@
 			break;
 		case "result":
 			If (($data->Pin == $this->ReadPropertyInteger("Pin_R")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
-			   	$this->SetValueInteger($this->GetIDForIdent("Intensity_R"), $data->Value);
+			   	SetValueInteger($this->GetIDForIdent("Intensity_R"), $data->Value);
 			}
 			ElseIf (($data->Pin == $this->ReadPropertyInteger("Pin_G")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
-			   	$this->SetValueInteger($this->GetIDForIdent("Intensity_G"), $data->Value);
+			   	SetValueInteger($this->GetIDForIdent("Intensity_G"), $data->Value);
 			}
 			If (($data->Pin == $this->ReadPropertyInteger("Pin_B")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
-			   	$this->SetValueInteger($this->GetIDForIdent("Intensity_B"), $data->Value);
+			   	SetValueInteger($this->GetIDForIdent("Intensity_B"), $data->Value);
 			}
 			break;
     		}
