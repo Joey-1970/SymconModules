@@ -81,6 +81,7 @@
 			  		// Daten der Messung
 			  		If ($data->Register >= hexdec("10"))  {
 			  			$Lux = (($data->Value & 0xff00)>>8) | (($data->Value & 0x00ff)<<8);
+			  			$Lux = max(0, $Lux);
 			  			SetValueString($this->GetIDForIdent("Brightness"), $Lux);
 			  		}
 			  		
