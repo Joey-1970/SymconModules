@@ -5,7 +5,7 @@
         { "code": 102, "icon": "active", "caption": "Instanz ist aktiv" },
         { "code": 104, "icon": "inactive", "caption": "Instanz ist inaktiv" },
         { "code": 200, "icon": "error", "caption": "Pin wird doppelt genutzt!" },
-        { "code": 201, "icon": "error", "caption": "Pin wird an diesem Raspberry Pi Modell nicht vorhanden!" }
+        { "code": 201, "icon": "error", "caption": "Pin ist an diesem Raspberry Pi Modell nicht vorhanden!" }
     ],
     "elements":
     [
