@@ -81,7 +81,7 @@
 			  case "set_i2c_data":
 			  	If ($data->Handle == GetValueInteger($this->GetIDForIdent("Handle"))) {
 			  		// Daten der Messung
-			  		If ($data->Register >= hexdec("10"))  {
+			  		If ($data->Register == $this->ReadPropertyInteger("DeviceAddress"))  {
 			  			$Lux = (($data->Value & 0xff00)>>8) | (($data->Value & 0x00ff)<<8);
 			  			$Lux = max(0, $Lux);
 			  			SetValueString($this->GetIDForIdent("Illuminance"), $Lux);
