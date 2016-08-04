@@ -29,15 +29,7 @@
 		$this->DisableAction("Handle");
 		IPS_SetHidden($this->GetIDForIdent("Handle"), true);
              	
-             	$this->RegisterVariableString("CalibrateData", "CalibrateData", "", 120);
-		$this->DisableAction("CalibrateData");
-		IPS_SetHidden($this->GetIDForIdent("CalibrateData"), true);
-             	
-             	$this->RegisterVariableString("MeasurementData", "MeasurementData", "", 130);
-		$this->DisableAction("MeasurementData");
-		IPS_SetHidden($this->GetIDForIdent("MeasurementData"), true);
-
-             	$this->RegisterVariableFloat("Brightness", "Brightness", "", 10);
+             	$this->RegisterVariableInteger("Brightness", "Brightness", "", 10);
 		$this->DisableAction("Brightness");
 		IPS_SetHidden($this->GetIDForIdent("Brightness"), false);
 
@@ -52,12 +44,8 @@
             	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
             	$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
             	If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
-	            	// Parameterdaten zum Baustein senden
-	            	//$this->Setup();
-	            	// Kalibrirungsdaten einlesen
-	            	//$this->ReadCalibrateData();
 	            	// Erste Messdaten einlesen
-	            	//$this->Measurement();
+	            	$this->Measurement();
 	            	$this->SetStatus(102);
             	}
         }
@@ -67,9 +55,6 @@
 	    	// Empfangene Daten vom Gateway/Splitter
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
-			   case "notify":
-			   // leer
-			   	break;
 			   case "set_i2c_handle":
 			   	If ($data->Address == $this->ReadPropertyInteger("DeviceAddress")) {
 			   		SetValueInteger($this->GetIDForIdent("Handle"), $data->Handle);
@@ -93,25 +78,14 @@
 			   	break;
 			  case "set_i2c_data":
 			  	If ($data->Handle == GetValueInteger($this->GetIDForIdent("Handle"))) {
-			  		// Daten zur Kalibrierung
-			  		If (($data->Register >= hexdec("88")) AND ($data->Register < hexdec("E8"))) {
-			  			$CalibrateData = unserialize(GetValueString($this->GetIDForIdent("CalibrateData")));
-			  			$CalibrateData[$data->Register] = $data->Value;
-			  			SetValueString($this->GetIDForIdent("CalibrateData"), serialize($CalibrateData));
-			  		}
 			  		// Daten der Messung
-			  		If (($data->Register >= hexdec("F7")) AND ($data->Register < hexdec("FF"))) {
-			  			$MeasurementData = unserialize(GetValueString($this->GetIDForIdent("MeasurementData")));
-			  			$MeasurementData[$data->Register] = $data->Value;
-			  			SetValueString($this->GetIDForIdent("MeasurementData"), serialize($MeasurementData));
+			  		If ($data->Register >= hexdec("10"))  {
+			  			$Lux = (($data->Value & 0xff00)>>8) | (($data->Value & 0x00ff)<<8);
+			  			SetValueString($this->GetIDForIdent("Brightness"), $Lux);
 			  		}
+			  		
 			  	}
 			  	break;
-			  case "set_i2c_byte_block":
-			   	If ($data->Handle == GetValueInteger($this->GetIDForIdent("Handle"))) {
-			   		SetValueString($this->GetIDForIdent("MeasurementData"), $data->ByteArray);
-			   	}
-			   	break;
 	 	}
 	return;
  	}
@@ -121,27 +95,11 @@
 	public function Measurement()
 	{
 		// Messwerte aktualisieren
-		
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => $this->ReadPropertyInteger("DeviceAddress"), "Value" => hexdec("10"))));
+		IPS_Sleep(120);
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => $this->ReadPropertyInteger("DeviceAddress"), "Value" => hexdec("10"))));
 	return;
 	}	
-	
-	private function Setup()
-	{
-	
-	return;
-	}
-	
-	private function ReadCalibrateData()
-	{
-		
-	return;	
-	}
-	
-	private function ReadData()
-	{
-			
-	return;
-	}
 
 }
 ?>
