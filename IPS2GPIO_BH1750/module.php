@@ -20,6 +20,8 @@
             	parent::ApplyChanges();
             	//Connect to available splitter or create a new one
 	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+	    	// Profil anlegen
+		$this->RegisterProfileInteger("illuminance.lx", "Illuminance", "", " lx", 0, 1000000, 1);
 	    	//Status-Variablen anlegen
 	    	$this->RegisterVariableInteger("HardwareRev", "HardwareRev", "", 100);
           	$this->DisableAction("HardwareRev");
@@ -29,9 +31,9 @@
 		$this->DisableAction("Handle");
 		IPS_SetHidden($this->GetIDForIdent("Handle"), true);
              	
-             	$this->RegisterVariableInteger("Brightness", "Brightness", "", 10);
-		$this->DisableAction("Brightness");
-		IPS_SetHidden($this->GetIDForIdent("Brightness"), false);
+             	$this->RegisterVariableInteger("Illuminance", "Illuminance", "illuminance.lx", 10);
+		$this->DisableAction("Illuminance");
+		IPS_SetHidden($this->GetIDForIdent("Illuminance"), false);
 
              	If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
              		// Handle löschen
@@ -82,7 +84,7 @@
 			  		If ($data->Register >= hexdec("10"))  {
 			  			$Lux = (($data->Value & 0xff00)>>8) | (($data->Value & 0x00ff)<<8);
 			  			$Lux = max(0, $Lux);
-			  			SetValueString($this->GetIDForIdent("Brightness"), $Lux);
+			  			SetValueString($this->GetIDForIdent("Illuminance"), $Lux);
 			  		}
 			  		
 			  	}
@@ -101,6 +103,24 @@
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => $this->ReadPropertyInteger("DeviceAddress"))));
 	return;
 	}	
+
+	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
+	{
+	        if (!IPS_VariableProfileExists($Name))
+	        {
+	            IPS_CreateVariableProfile($Name, 1);
+	        }
+	        else
+	        {
+	            $profile = IPS_GetVariableProfile($Name);
+	            if ($profile['ProfileType'] != 1)
+	                throw new Exception("Variable profile type does not match for profile " . $Name);
+	        }
+	        IPS_SetVariableProfileIcon($Name, $Icon);
+	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
+	        
+	}
 
 }
 ?>
