@@ -20,7 +20,7 @@
             	parent::ApplyChanges();
             	//Connect to available splitter or create a new one
 	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
-	    	// Dive Adresse prüfen
+	    	// Device Adresse prüfen
 	    	If (($this->ReadPropertyInteger("DeviceAddress") < 0) OR ($this->ReadPropertyInteger("DeviceAddress") > 128)) {
 	    		IPS_LogMessage("GPIO : ","I2C-Device Adresse in einem nicht definierten Bereich!");  
 	    	}
