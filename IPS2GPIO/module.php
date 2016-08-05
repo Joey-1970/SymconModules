@@ -57,11 +57,12 @@ class IPS2GPIO_IO extends IPSModule
 			// Hardware feststellen
 			$this->CommandClientSocket(pack("LLLL", 17, 0, 0, 0), 16);
 			// Notify Handle zurücksetzen falls gesetzt
-			If (GetValueInteger($this->GetIDForIdent("Handle")) > 0) {
-				$this->ClientSocket(pack("LLLL", 21, GetValueInteger($this->GetIDForIdent("Handle")), 0, 0));
+			If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
+				// Handle löschen
+				//$this->ClientSocket(pack("LLLL", 21, GetValueInteger($this->GetIDForIdent("Handle")), 0, 0));
 			}
 			// Notify Starten
-			SetValueInteger($this->GetIDForIdent("Handle"), 0);
+			SetValueInteger($this->GetIDForIdent("Handle"), -1);
 			$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));
 			
 			$this->Get_PinUpdate();
