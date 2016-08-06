@@ -29,23 +29,27 @@
           	$this->DisableAction("HardwareRev");
 		IPS_SetHidden($this->GetIDForIdent("HardwareRev"), true);
 		
-		$this->RegisterVariableInteger("Channel_0", "Channel 0", "", 100);
+		$this->RegisterVariableString("MeasurementData", "MeasurementData", "", 130);
+		$this->DisableAction("MeasurementData");
+		IPS_SetHidden($this->GetIDForIdent("MeasurementData"), true);
+		
+		$this->RegisterVariableInteger("Channel_0", "Channel 0", "", 10);
           	$this->DisableAction("Channel_0");
 		IPS_SetHidden($this->GetIDForIdent("Channel_0"), false);
 		
-		$this->RegisterVariableInteger("Channel_1", "Channel 1", "", 100);
+		$this->RegisterVariableInteger("Channel_1", "Channel 1", "", 20);
           	$this->DisableAction("Channel_1");
 		IPS_SetHidden($this->GetIDForIdent("Channel_1"), false);
 		
-		$this->RegisterVariableInteger("Channel_2", "Channel 2", "", 100);
+		$this->RegisterVariableInteger("Channel_2", "Channel 2", "", 30);
           	$this->DisableAction("Channel_2");
 		IPS_SetHidden($this->GetIDForIdent("Channel_2"), false);
 		
-		$this->RegisterVariableInteger("Channel_3", "Channel 3", "", 100);
+		$this->RegisterVariableInteger("Channel_3", "Channel 3", "", 40);
           	$this->DisableAction("Channel_3");
 		IPS_SetHidden($this->GetIDForIdent("Channel_3"), false);
 		
-		$this->RegisterVariableInteger("Output", "Output", "", 100);
+		$this->RegisterVariableInteger("Output", "Output", "", 50);
           	$this->EnableAction("Output");
 		IPS_SetHidden($this->GetIDForIdent("Output"), false);
 		
@@ -100,14 +104,16 @@
 			  case "set_i2c_data":
 			  	If ($data->Handle == GetValueInteger($this->GetIDForIdent("Handle"))) {
 			  		// Daten der Messung
-			  		If ($data->Register == $this->ReadPropertyInteger("DeviceAddress"))  {
-			  			$Lux = (($data->Value & 0xff00)>>8) | (($data->Value & 0x00ff)<<8);
-			  			$Lux = max(0, $Lux);
-			  			SetValueInteger($this->GetIDForIdent("Illuminance"), $Lux);
+			  		
 			  		}
 			  		
 			  	}
 			  	break;
+			  case "set_i2c_byte_block":
+			   	If ($data->Handle == GetValueInteger($this->GetIDForIdent("Handle"))) {
+			   		SetValueString($this->GetIDForIdent("MeasurementData"), $data->ByteArray);
+			   	}
+			   	break;
 	 	}
 	return;
  	}
@@ -118,7 +124,14 @@
 		//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_word", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => $this->ReadPropertyInteger("DeviceAddress"))));
 		
 	return;
-	}	
-
+	}
+	
+	private function ReadData()
+	{
+		$MeasurementData = array();
+		SetValueString($this->GetIDForIdent("MeasurementData"), serialize($MeasurementData));
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_block_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => hexdec("40"), "Count" => 4)));
+	return;
+	}
 }
 ?>
