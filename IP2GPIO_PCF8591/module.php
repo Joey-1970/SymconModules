@@ -112,6 +112,11 @@
 			  case "set_i2c_byte_block":
 			   	If ($data->Handle == GetValueInteger($this->GetIDForIdent("Handle"))) {
 			   		SetValueString($this->GetIDForIdent("MeasurementData"), $data->ByteArray);
+			   		$MeasurementData = unserialize(GetValueString($this->GetIDForIdent("MeasurementData")));
+			   		SetValueInteger($this->GetIDForIdent("Channel_0"), $MeasurementData[0]);
+			   		SetValueInteger($this->GetIDForIdent("Channel_1"), $MeasurementData[1]);
+			   		SetValueInteger($this->GetIDForIdent("Channel_2"), $MeasurementData[2]);
+			   		SetValueInteger($this->GetIDForIdent("Channel_3"), $MeasurementData[3]);
 			   	}
 			   	break;
 	 	}
