@@ -29,6 +29,26 @@
           	$this->DisableAction("HardwareRev");
 		IPS_SetHidden($this->GetIDForIdent("HardwareRev"), true);
 		
+		$this->RegisterVariableInteger("Channel_0", "Channel 0", "", 100);
+          	$this->DisableAction("Channel_0");
+		IPS_SetHidden($this->GetIDForIdent("Channel_0"), false);
+		
+		$this->RegisterVariableInteger("Channel_1", "Channel 1", "", 100);
+          	$this->DisableAction("Channel_1");
+		IPS_SetHidden($this->GetIDForIdent("Channel_1"), false);
+		
+		$this->RegisterVariableInteger("Channel_2", "Channel 2", "", 100);
+          	$this->DisableAction("Channel_2");
+		IPS_SetHidden($this->GetIDForIdent("Channel_2"), false);
+		
+		$this->RegisterVariableInteger("Channel_3", "Channel 3", "", 100);
+          	$this->DisableAction("Channel_3");
+		IPS_SetHidden($this->GetIDForIdent("Channel_3"), false);
+		
+		$this->RegisterVariableInteger("Output", "Output", "", 100);
+          	$this->EnableAction("Output");
+		IPS_SetHidden($this->GetIDForIdent("Output"), false);
+		
           	$this->RegisterVariableInteger("Handle", "Handle", "", 110);
 		$this->DisableAction("Handle");
 		IPS_SetHidden($this->GetIDForIdent("Handle"), true);
