@@ -66,7 +66,7 @@
 			   break;
 		case "result":
 			If (($data->Pin == $this->ReadPropertyInteger("Pin")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
-			   	$this->SetValueInteger($this->GetIDForIdent("Intensity"), $data->Value);
+			   	SetValueInteger($this->GetIDForIdent("Intensity"), $data->Value);
 			}
 			break;
  	}
