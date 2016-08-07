@@ -56,7 +56,7 @@
 			   	break;
 			  case "result":
 				If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
-			   		$this->SetValueInteger($this->GetIDForIdent("Status"), $data->Value);
+			   		SetValueInteger($this->GetIDForIdent("Status"), $data->Value);
 				}
 			break;
 			   case "freepin":
