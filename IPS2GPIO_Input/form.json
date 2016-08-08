@@ -43,6 +43,8 @@
                 { "label": "27", "value": 27 }
                 ]
         },
+    { "type": "Label", "label": "Der Trigger soll reagieren auf: " },
+    { "type": "CheckBox", "name": "ActionValue", "caption": "Aktions Wert" },
     { "type": "Label", "label": "Zur Software-Entprellung angeschlossener Taster/Schalter (0-300000ms)" },
     { "type": "IntervalBox", "name": "GlitchFilter", "caption": "ms" }
     ]
