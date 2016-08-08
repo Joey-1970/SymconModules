@@ -41,7 +41,7 @@
 			   case "notify":
 			   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
 			   		// Trigger kurzzeitig setzen
-			   		If ($data->Value == true) {
+			   		If ($data->Value == $this->ReadPropertyBoolean("ActionValue") ) {
 			   			SetValueBoolean($this->GetIDForIdent("Trigger"), true);
 			   			SetValueBoolean($this->GetIDForIdent("Trigger"), false);
 			   		}
