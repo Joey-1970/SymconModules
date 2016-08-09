@@ -68,7 +68,7 @@
             	$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
             	If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
 	            	// Setup
-	            	$this->Setup();
+	            	//$this->Setup();
 	            	// Erste Messdaten einlesen
 	            	$this->Measurement();
 	            	$this->SetStatus(102);
