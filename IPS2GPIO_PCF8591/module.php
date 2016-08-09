@@ -8,7 +8,7 @@
             	// Diese Zeile nicht löschen.
             	parent::Create();
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
- 	    	$this->RegisterPropertyInteger("DeviceAddress", 48);
+ 	    	$this->RegisterPropertyInteger("DeviceAddress", 72);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GAD1_Measurement($_IPS["TARGET"]);');
         }
