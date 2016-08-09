@@ -111,14 +111,6 @@
 			  			$CalibrateData[$data->Register] = $data->Value;
 			  			SetValueString($this->GetIDForIdent("CalibrateData"), serialize($CalibrateData));
 			  		}
-/*
-			  		// Daten der Messung
-			  		If (($data->Register >= hexdec("F7")) AND ($data->Register < hexdec("FF"))) {
-			  			$MeasurementData = unserialize(GetValueString($this->GetIDForIdent("MeasurementData")));
-			  			$MeasurementData[$data->Register] = $data->Value;
-			  			SetValueString($this->GetIDForIdent("MeasurementData"), serialize($MeasurementData));
-			  		}
-*/			  	
 			  	}
 			  	break;
 			  case "set_i2c_byte_block":
