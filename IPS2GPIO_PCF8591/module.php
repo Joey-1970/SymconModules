@@ -117,9 +117,18 @@
 			  case "set_i2c_data":
 			  	If ($data->Handle == GetValueInteger($this->GetIDForIdent("Handle"))) {
 			  		// Daten der Messung
-			  		
+			  		If ($data->Register == 40) {
+			  			SetValueInteger($this->GetIDForIdent("Channel_0"), $data->Value);
 			  		}
-			  		
+			   		If ($data->Register == 41) {
+			   			SetValueInteger($this->GetIDForIdent("Channel_1"), $data->Value);
+			   		}	
+			   		If ($data->Register == 42) {
+			   			SetValueInteger($this->GetIDForIdent("Channel_2"), $data->Value);
+			   		}
+			   		If ($data->Register == 43) {
+			   			SetValueInteger($this->GetIDForIdent("Channel_3"), $data->Value);
+			   		}
 			  	}
 			  	break;
 			  case "set_i2c_byte_block":
