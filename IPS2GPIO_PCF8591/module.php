@@ -117,30 +117,20 @@
 			  case "set_i2c_data":
 			  	If ($data->Handle == GetValueInteger($this->GetIDForIdent("Handle"))) {
 			  		// Daten der Messung
-			  		If ($data->Register == 40) {
+			  		If ($data->Register == hexdec("40") {
 			  			SetValueInteger($this->GetIDForIdent("Channel_0"), $data->Value);
 			  		}
-			   		If ($data->Register == 41) {
+			   		If ($data->Register == hexdec("41")) {
 			   			SetValueInteger($this->GetIDForIdent("Channel_1"), $data->Value);
 			   		}	
-			   		If ($data->Register == 42) {
+			   		If ($data->Register == hexdec("42")) {
 			   			SetValueInteger($this->GetIDForIdent("Channel_2"), $data->Value);
 			   		}
-			   		If ($data->Register == 43) {
+			   		If ($data->Register == hexdec("43")) {
 			   			SetValueInteger($this->GetIDForIdent("Channel_3"), $data->Value);
 			   		}
 			  	}
 			  	break;
-			  case "set_i2c_byte_block":
-			   	If ($data->Handle == GetValueInteger($this->GetIDForIdent("Handle"))) {
-			   		SetValueString($this->GetIDForIdent("MeasurementData"), $data->ByteArray);
-			   		$MeasurementData = unserialize(GetValueString($this->GetIDForIdent("MeasurementData")));
-			   		SetValueInteger($this->GetIDForIdent("Channel_0"), $MeasurementData[0]);
-			   		SetValueInteger($this->GetIDForIdent("Channel_1"), $MeasurementData[1]);
-			   		SetValueInteger($this->GetIDForIdent("Channel_2"), $MeasurementData[2]);
-			   		SetValueInteger($this->GetIDForIdent("Channel_3"), $MeasurementData[3]);
-			   	}
-			   	break;
 	 	}
 	return;
  	}
@@ -162,14 +152,5 @@
 	return;
 	}
 	
-	private function ReadData()
-	{
-
-
-		//$MeasurementData = array();
-		//SetValueString($this->GetIDForIdent("MeasurementData"), serialize($MeasurementData));
-		//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_block_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => hexdec("40"), "Count" => 4)));
-	return;
-	}
 }
 ?>
