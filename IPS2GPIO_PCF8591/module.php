@@ -33,23 +33,23 @@
 		$this->DisableAction("MeasurementData");
 		IPS_SetHidden($this->GetIDForIdent("MeasurementData"), true);
 		
-		$this->RegisterVariableInteger("Channel_0", "Channel 0", "", 10);
+		$this->RegisterVariableInteger("Channel_0", "Channel 0", "~Intensity.255", 10);
           	$this->DisableAction("Channel_0");
 		IPS_SetHidden($this->GetIDForIdent("Channel_0"), false);
 		
-		$this->RegisterVariableInteger("Channel_1", "Channel 1", "", 20);
+		$this->RegisterVariableInteger("Channel_1", "Channel 1", "~Intensity.255", 20);
           	$this->DisableAction("Channel_1");
 		IPS_SetHidden($this->GetIDForIdent("Channel_1"), false);
 		
-		$this->RegisterVariableInteger("Channel_2", "Channel 2", "", 30);
+		$this->RegisterVariableInteger("Channel_2", "Channel 2", "~Intensity.255", 30);
           	$this->DisableAction("Channel_2");
 		IPS_SetHidden($this->GetIDForIdent("Channel_2"), false);
 		
-		$this->RegisterVariableInteger("Channel_3", "Channel 3", "", 40);
+		$this->RegisterVariableInteger("Channel_3", "Channel 3", "~Intensity.255", 40);
           	$this->DisableAction("Channel_3");
 		IPS_SetHidden($this->GetIDForIdent("Channel_3"), false);
 		
-		$this->RegisterVariableInteger("Output", "Output", "", 50);
+		$this->RegisterVariableInteger("Output", "Output", "~Intensity.255", 50);
           	$this->EnableAction("Output");
 		IPS_SetHidden($this->GetIDForIdent("Output"), false);
 		
@@ -125,6 +125,13 @@
 	// Beginn der Funktionen
 	// Führt eine Messung aus
 	public function Measurement()
+	{
+		//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_word", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => $this->ReadPropertyInteger("DeviceAddress"))));
+		
+	return;
+	}
+	
+	public function Set_Output($Value)
 	{
 		//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_word", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => $this->ReadPropertyInteger("DeviceAddress"))));
 		
