@@ -29,9 +29,9 @@
           	$this->DisableAction("HardwareRev");
 		IPS_SetHidden($this->GetIDForIdent("HardwareRev"), true);
 		
-		$this->RegisterVariableString("MeasurementData", "MeasurementData", "", 130);
-		$this->DisableAction("MeasurementData");
-		IPS_SetHidden($this->GetIDForIdent("MeasurementData"), true);
+		$this->RegisterVariableBoolean("WriteProtection", "WriteProtection", "", 130);
+		$this->DisableAction("WriteProtection");
+		IPS_SetHidden($this->GetIDForIdent("WriteProtection"), true);
 		
 		$this->RegisterVariableInteger("Channel_0", "Channel 0", "~Intensity.255", 10);
           	$this->DisableAction("Channel_0");
@@ -117,18 +117,20 @@
 			  case "set_i2c_data":
 			  	If ($data->Handle == GetValueInteger($this->GetIDForIdent("Handle"))) {
 			  		// Daten der Messung
-			  		If ($data->Register == hexdec("40") {
-			  			SetValueInteger($this->GetIDForIdent("Channel_0"), $data->Value);
+			  		If (GetValueBoolean($this->GetIDForIdent("WriteProtection")) == false) {
+			  			If ($data->Register == hexdec("40")) {
+				  			SetValueInteger($this->GetIDForIdent("Channel_0"), $data->Value);
+				  		}
+				   		If ($data->Register == hexdec("41")) {
+				   			SetValueInteger($this->GetIDForIdent("Channel_1"), $data->Value);
+				   		}	
+				   		If ($data->Register == hexdec("42")) {
+				   			SetValueInteger($this->GetIDForIdent("Channel_2"), $data->Value);
+				   		}
+				   		If ($data->Register == hexdec("43")) {
+				   			SetValueInteger($this->GetIDForIdent("Channel_3"), $data->Value);
+				   		}
 			  		}
-			   		If ($data->Register == hexdec("41")) {
-			   			SetValueInteger($this->GetIDForIdent("Channel_1"), $data->Value);
-			   		}	
-			   		If ($data->Register == hexdec("42")) {
-			   			SetValueInteger($this->GetIDForIdent("Channel_2"), $data->Value);
-			   		}
-			   		If ($data->Register == hexdec("43")) {
-			   			SetValueInteger($this->GetIDForIdent("Channel_3"), $data->Value);
-			   		}
 			  	}
 			  	break;
 	 	}
@@ -139,7 +141,9 @@
 	public function Measurement()
 	{
 		for ($i = 0; $i <= 3; $i++) {
+		    	SetValueBoolean($this->GetIDForIdent("WriteProtection"), true);
 		    	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => hexdec("40")|($i & 3) )));
+			SetValueBoolean($this->GetIDForIdent("WriteProtection"), false);
 			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => hexdec("40")|($i & 3) )));
 		}
 	return;
