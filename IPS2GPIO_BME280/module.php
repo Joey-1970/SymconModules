@@ -273,6 +273,7 @@
 	
 	private function ReadData()
 	{
+		// Liest die Messdaten ein
 		If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
 			$MeasurementData = array();
 			SetValueString($this->GetIDForIdent("MeasurementData"), serialize($MeasurementData));
