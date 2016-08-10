@@ -67,8 +67,6 @@
             	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
             	$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
             	If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
-	            	// Setup
-	            	//$this->Setup();
 	            	// Erste Messdaten einlesen
 	            	$this->Measurement();
 	            	$this->SetStatus(102);
@@ -140,11 +138,13 @@
 	// Führt eine Messung aus
 	public function Measurement()
 	{
-		for ($i = 0; $i <= 3; $i++) {
-		    	SetValueBoolean($this->GetIDForIdent("WriteProtection"), true);
-		    	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => hexdec("40")|($i & 3) )));
-			SetValueBoolean($this->GetIDForIdent("WriteProtection"), false);
-			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => hexdec("40")|($i & 3) )));
+		If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
+			for ($i = 0; $i <= 3; $i++) {
+			    	SetValueBoolean($this->GetIDForIdent("WriteProtection"), true);
+			    	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => hexdec("40")|($i & 3) )));
+				SetValueBoolean($this->GetIDForIdent("WriteProtection"), false);
+				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => hexdec("40")|($i & 3) )));
+			}
 		}
 	return;
 	}
