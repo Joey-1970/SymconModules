@@ -103,8 +103,9 @@
 	// Führt eine Messung aus
 	public function Measurement()
 	{
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_word", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => $this->ReadPropertyInteger("DeviceAddress"))));
-		IPS_Sleep(150);
+		If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
+			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_word", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => $this->ReadPropertyInteger("DeviceAddress"))));
+		}
 	return;
 	}	
 
@@ -128,12 +129,13 @@
 
 	private function Setup()
 	{
-		IPS_Sleep(100);
-		// Einschalten
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte_onhandle", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Value" => hexdec("01"))));
-		IPS_Sleep(100);
-		// Messwerterfassung setzen
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte_onhandle", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Value" => hexdec("10"))));
+		If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
+			// Einschalten
+			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte_onhandle", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Value" => hexdec("01"))));
+			IPS_Sleep(100);
+			// Messwerterfassung setzen
+			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte_onhandle", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Value" => hexdec("10"))));
+		}
 	return;
 	}
 
