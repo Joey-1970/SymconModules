@@ -76,7 +76,7 @@
           	$this->EnableAction("P6");
 		IPS_SetHidden($this->GetIDForIdent("P6"), false);
 		
-		$this->RegisterVariableBoolean("P7", "P7", "~Switch", 10);
+		$this->RegisterVariableBoolean("P7", "P7", "~Switch", 80);
           	$this->EnableAction("P7");
 		IPS_SetHidden($this->GetIDForIdent("P7"), false);
 		
