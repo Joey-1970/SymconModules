@@ -42,35 +42,35 @@
 		IPS_SetHidden($this->GetIDForIdent("MeasurementData"), true);
 		
 		$this->RegisterVariableBoolean("P0", "P0", "~Switch", 10);
-          	$this->EnableAction(P0");
+          	$this->EnableAction("P0");
 		IPS_SetHidden($this->GetIDForIdent("P0"), false);
 		
 		$this->RegisterVariableBoolean("P1", "P1", "~Switch", 20);
-          	$this->EnableAction(P1");
+          	$this->EnableAction("P1");
 		IPS_SetHidden($this->GetIDForIdent("P1"), false);
 		
 		$this->RegisterVariableBoolean("P2", "P2", "~Switch", 30);
-          	$this->EnableAction(P0");
+          	$this->EnableAction("P0");
 		IPS_SetHidden($this->GetIDForIdent("P2"), false);
 		
 		$this->RegisterVariableBoolean("P3", "P3", "~Switch", 40);
-          	$this->EnableAction(P3");
+          	$this->EnableAction("P3");
 		IPS_SetHidden($this->GetIDForIdent("P3"), false);
 		
 		$this->RegisterVariableBoolean("P4", "P4", "~Switch", 50);
-          	$this->EnableAction(P0");
+          	$this->EnableAction("P0");
 		IPS_SetHidden($this->GetIDForIdent("P4"), false);
 		
 		$this->RegisterVariableBoolean("P5", "P5", "~Switch", 60);
-          	$this->EnableAction(P5");
+          	$this->EnableAction("P5");
 		IPS_SetHidden($this->GetIDForIdent("P5"), false);
 		
 		$this->RegisterVariableBoolean("P6", "P6", "~Switch", 70);
-          	$this->EnableAction(P6");
+          	$this->EnableAction("P6");
 		IPS_SetHidden($this->GetIDForIdent("P6"), false);
 		
 		$this->RegisterVariableBoolean("P7", "P7", "~Switch", 10);
-          	$this->EnableAction(P7");
+          	$this->EnableAction("P7");
 		IPS_SetHidden($this->GetIDForIdent("P7"), false);
 		
           	$this->RegisterVariableInteger("Handle", "Handle", "", 110);
