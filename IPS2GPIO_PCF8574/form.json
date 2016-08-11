@@ -27,14 +27,14 @@
                 { "label": "60 dez. / 0x3Ch", "value": 60 },
                 { "label": "61 dez. / 0x3Dh", "value": 61 },
                 { "label": "62 dez. / 0x3Eh", "value": 62 },
-                { "label": "63 dez. / 0x3Fh", "value": 63 },
+                { "label": "63 dez. / 0x3Fh", "value": 63 }
                 ]
         },
         { "type": "Label", "label": "Wiederholungszyklus in Sekunden (0 -> aus, 1 sek -> Minimum)" },
         { "type": "IntervalBox", "name": "Messzyklus", "caption": "Messzyklus (sek)" },
         { "type": "Label", "label": "Hinweise:" },
-        { "type": "Label", "label": "- die Device Adresse lautet 118 dez (0x76h) bei SDO an GND" },
-        { "type": "Label", "label": "- die Device Adresse lautet 119 dez (0x77h) als Default" },
+        { "type": "Label", "label": "- die Device Adresse lautet 32 bis 39 dez (0x20h - 0x27h) bei einem PCF8574" },
+        { "type": "Label", "label": "- die Device Adresse lautet 56 bis 63 dez (0x38h - 0x3Fh) bei einem PCF8574A" },
         { "type": "Label", "label": "- die I2C-Nutzung muss in der Raspberry Pi-Konfiguration freigegeben werden (sudo raspi-config -> Advanced Options -> I2C Enable = true)" },
         { "type": "Label", "label": "- die korrekte Nutzung der GPIO ist zwingend erforderlich (GPIO-Nr. 0/1 nur beim Raspberry Pi Model B Revision 1, alle anderen GPIO-Nr. 2/3) " },
         { "type": "Label", "label": "- auf den korrekten Anschluss von SDA/SCL achten" }
