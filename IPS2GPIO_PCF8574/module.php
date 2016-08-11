@@ -8,9 +8,17 @@
             	// Diese Zeile nicht löschen.
             	parent::Create();
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
- 	    	$this->RegisterPropertyInteger("DeviceAddress", 72);
+ 	    	$this->RegisterPropertyInteger("DeviceAddress", 32);
+ 	    	$this->RegisterPropertyBoolean("P0", false);
+ 	    	$this->RegisterPropertyBoolean("P1", false);
+ 	    	$this->RegisterPropertyBoolean("P2", false);
+ 	    	$this->RegisterPropertyBoolean("P3", false);
+ 	    	$this->RegisterPropertyBoolean("P4", false);
+ 	    	$this->RegisterPropertyBoolean("P5", false);
+ 	    	$this->RegisterPropertyBoolean("P6", false);
+ 	    	$this->RegisterPropertyBoolean("P7", false);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
-            	$this->RegisterTimer("Messzyklus", 0, 'I2GAD1_Measurement($_IPS["TARGET"]);');
+            	$this->RegisterTimer("Messzyklus", 0, 'I2GIO1_Measurement($_IPS["TARGET"]);');
         }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -28,34 +36,42 @@
 	    	$this->RegisterVariableInteger("HardwareRev", "HardwareRev", "", 100);
           	$this->DisableAction("HardwareRev");
 		IPS_SetHidden($this->GetIDForIdent("HardwareRev"), true);
-		
-		$this->RegisterVariableBoolean("WriteProtection", "WriteProtection", "", 130);
-		$this->DisableAction("WriteProtection");
-		IPS_SetHidden($this->GetIDForIdent("WriteProtection"), true);
-		
+
 		$this->RegisterVariableString("MeasurementData", "MeasurementData", "", 140);
 		$this->DisableAction("MeasurementData");
 		IPS_SetHidden($this->GetIDForIdent("MeasurementData"), true);
 		
-		$this->RegisterVariableInteger("Channel_0", "Channel 0", "~Intensity.255", 10);
-          	$this->DisableAction("Channel_0");
-		IPS_SetHidden($this->GetIDForIdent("Channel_0"), false);
+		$this->RegisterVariableBoolean("P0", "P0", "~Switch", 10);
+          	$this->EnableAction(P0");
+		IPS_SetHidden($this->GetIDForIdent("P0"), false);
 		
-		$this->RegisterVariableInteger("Channel_1", "Channel 1", "~Intensity.255", 20);
-          	$this->DisableAction("Channel_1");
-		IPS_SetHidden($this->GetIDForIdent("Channel_1"), false);
+		$this->RegisterVariableBoolean("P1", "P1", "~Switch", 20);
+          	$this->EnableAction(P1");
+		IPS_SetHidden($this->GetIDForIdent("P1"), false);
 		
-		$this->RegisterVariableInteger("Channel_2", "Channel 2", "~Intensity.255", 30);
-          	$this->DisableAction("Channel_2");
-		IPS_SetHidden($this->GetIDForIdent("Channel_2"), false);
+		$this->RegisterVariableBoolean("P2", "P2", "~Switch", 30);
+          	$this->EnableAction(P0");
+		IPS_SetHidden($this->GetIDForIdent("P2"), false);
 		
-		$this->RegisterVariableInteger("Channel_3", "Channel 3", "~Intensity.255", 40);
-          	$this->DisableAction("Channel_3");
-		IPS_SetHidden($this->GetIDForIdent("Channel_3"), false);
+		$this->RegisterVariableBoolean("P3", "P3", "~Switch", 40);
+          	$this->EnableAction(P3");
+		IPS_SetHidden($this->GetIDForIdent("P3"), false);
 		
-		$this->RegisterVariableInteger("Output", "Output", "~Intensity.255", 50);
-          	$this->EnableAction("Output");
-		IPS_SetHidden($this->GetIDForIdent("Output"), false);
+		$this->RegisterVariableBoolean("P4", "P4", "~Switch", 50);
+          	$this->EnableAction(P0");
+		IPS_SetHidden($this->GetIDForIdent("P4"), false);
+		
+		$this->RegisterVariableBoolean("P5", "P5", "~Switch", 60);
+          	$this->EnableAction(P5");
+		IPS_SetHidden($this->GetIDForIdent("P5"), false);
+		
+		$this->RegisterVariableBoolean("P6", "P6", "~Switch", 70);
+          	$this->EnableAction(P6");
+		IPS_SetHidden($this->GetIDForIdent("P6"), false);
+		
+		$this->RegisterVariableBoolean("P7", "P7", "~Switch", 10);
+          	$this->EnableAction(P7");
+		IPS_SetHidden($this->GetIDForIdent("P7"), false);
 		
           	$this->RegisterVariableInteger("Handle", "Handle", "", 110);
 		$this->DisableAction("Handle");
