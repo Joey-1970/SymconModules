@@ -41,6 +41,13 @@
 		$this->DisableAction("MeasurementData");
 		IPS_SetHidden($this->GetIDForIdent("MeasurementData"), true);
 		
+		$this->RegisterVariableString("PinData", "PinData", "", 140);
+		$this->DisableAction("PinData");
+		IPS_SetHidden($this->GetIDForIdent("PinData"), true);
+		
+		$Pin = array("P0", "P1", "P2", "P3", "P4", "P5", "P6", "P7");
+		SetValueString($this->GetIDForIdent("PinData"), serialize($Pin));
+		
 		$this->RegisterVariableBoolean("P0", "P0", "~Switch", 10);
           	$this->EnableAction("P0");
 		IPS_SetHidden($this->GetIDForIdent("P0"), false);
@@ -72,6 +79,16 @@
 		$this->RegisterVariableBoolean("P7", "P7", "~Switch", 10);
           	$this->EnableAction("P7");
 		IPS_SetHidden($this->GetIDForIdent("P7"), false);
+		
+		for ($i = 0; $i < Count($Pin); $i++) {
+			If ($this->ReadPropertyBoolean($Pin[$i]) == true) {
+				$this->DisableAction($Pin[$i]);
+			}
+			else {
+				$this->EnableAction($Pin[$i]);	
+			}
+			
+		}
 		
           	$this->RegisterVariableInteger("Handle", "Handle", "", 110);
 		$this->DisableAction("Handle");
