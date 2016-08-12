@@ -170,7 +170,7 @@
 			$Bitmask = 0;
 			$NewBitmask = 0;
 			for ($i = 0; $i < 7; $i++) {
-				If (GetValueBoolean($this->GetIDForIdent("P".$i)) == true) {
+				If ($this->ReadProbertyBoolean("P".$i)) == true) {
 					$Bitmask = $Bitmask + pow(2, $i);
 				}
 			}
