@@ -37,10 +37,6 @@
           	$this->DisableAction("HardwareRev");
 		IPS_SetHidden($this->GetIDForIdent("HardwareRev"), true);
 
-		$this->RegisterVariableString("MeasurementData", "MeasurementData", "", 140);
-		$this->DisableAction("MeasurementData");
-		IPS_SetHidden($this->GetIDForIdent("MeasurementData"), true);
-
 		$this->RegisterVariableBoolean("P0", "P0", "~Switch", 10);
           	IPS_SetHidden($this->GetIDForIdent("P0"), false);
 		
