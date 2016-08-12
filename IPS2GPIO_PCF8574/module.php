@@ -68,11 +68,11 @@
 		for ($i = 0; $i < 7; $i++) {
 			If ($this->ReadPropertyBoolean("P".$i) == true) {
 				// wenn true dann Eingang, dann disable
-				$this->DisableAction(("P".$i);
+				$this->DisableAction("P".$i);
 			}
 			else {
 				// Ausgang muss manipulierbar sein
-				$this->EnableAction(("P".$i);	
+				$this->EnableAction("P".$i);	
 			}
 			
 		}
