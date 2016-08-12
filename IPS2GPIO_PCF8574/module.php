@@ -18,7 +18,7 @@
  	    	$this->RegisterPropertyBoolean("P6", false);
  	    	$this->RegisterPropertyBoolean("P7", false);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
-            	$this->RegisterTimer("Messzyklus", 0, 'I2GIO1_Measurement($_IPS["TARGET"]);');
+            	$this->RegisterTimer("Messzyklus", 0, 'I2GIO1_Read_Status($_IPS["TARGET"]);');
         }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
