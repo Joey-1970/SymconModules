@@ -65,7 +65,7 @@
 		$this->RegisterVariableBoolean("P7", "P7", "~Switch", 80);
           	IPS_SetHidden($this->GetIDForIdent("P7"), false);
 		
-		for ($i = 0; $i < 7; $i++) {
+		for ($i = 0; $i <= 7; $i++) {
 			If ($this->ReadPropertyBoolean("P".$i) == true) {
 				// wenn true dann Eingang, dann disable
 				$this->DisableAction("P".$i);
@@ -139,7 +139,7 @@
 			  case "set_i2c_data":
 			  	If ($data->Handle == GetValueInteger($this->GetIDForIdent("Handle"))) {
 			  		// Daten der Messung
-			  		for ($i = 0; $i < 7; $i++) {
+			  		for ($i = 0; $i <= 7; $i++) {
 		    				$Bitvalue = boolval($data->Value & (1<<$i));
 		    				SetValueBoolean($this->GetIDForIdent("P".$i), $Bitvalue);
 		    			}
@@ -169,7 +169,7 @@
 			// Bitmaske erstellen
 			$Bitmask = 0;
 			$NewBitmask = 0;
-			for ($i = 0; $i < 7; $i++) {
+			for ($i = 0; $i <= 7; $i++) {
 				If ($this->ReadProbertyBoolean("P".$i) == true) {
 					$Bitmask = $Bitmask + pow(2, $i);
 				}
