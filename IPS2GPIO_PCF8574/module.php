@@ -40,14 +40,7 @@
 		$this->RegisterVariableString("MeasurementData", "MeasurementData", "", 140);
 		$this->DisableAction("MeasurementData");
 		IPS_SetHidden($this->GetIDForIdent("MeasurementData"), true);
-		
-		$this->RegisterVariableString("PinData", "PinData", "", 140);
-		$this->DisableAction("PinData");
-		IPS_SetHidden($this->GetIDForIdent("PinData"), true);
-		
-		$Pin = array("P0", "P1", "P2", "P3", "P4", "P5", "P6", "P7");
-		SetValueString($this->GetIDForIdent("PinData"), serialize($Pin));
-		
+
 		$this->RegisterVariableBoolean("P0", "P0", "~Switch", 10);
           	IPS_SetHidden($this->GetIDForIdent("P0"), false);
 		
@@ -72,14 +65,14 @@
 		$this->RegisterVariableBoolean("P7", "P7", "~Switch", 80);
           	IPS_SetHidden($this->GetIDForIdent("P7"), false);
 		
-		for ($i = 0; $i < Count($Pin); $i++) {
-			If ($this->ReadPropertyBoolean($Pin[$i]) == true) {
+		for ($i = 0; $i < 7; $i++) {
+			If ($this->ReadPropertyBoolean("P".$i) == true) {
 				// wenn true dann Eingang, dann disable
-				$this->DisableAction($Pin[$i]);
+				$this->DisableAction(("P".$i);
 			}
 			else {
 				// Ausgang muss manipulierbar sein
-				$this->EnableAction($Pin[$i]);	
+				$this->EnableAction(("P".$i);	
 			}
 			
 		}
@@ -168,7 +161,20 @@
 	
 	public function Set_Output($Pin, $Value)
 	{
+		$Pin = min(7, max(0, $Pin));
+		$Value = 
+		// Aktuellen Status abfragen
+		$this->Read_Status();
+		// Bitmaske erstellen
+		$Bitmask = 0;
+		$NewBitmask = 0;
+		for ($i = 0; $i < 7; $i++) {
+			If (GetValueBoolean($this->GetIDForIdent("P".$i)) == true) {
+				$Bitmask = $Bitmask + pow(2, $i);
+			}
+		}
 		// Setzen der Ausgänge
+		$NewBitmask = $Bitmask | pow(2, $Pin);
 	return;
 	}
 	
