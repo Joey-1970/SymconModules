@@ -149,23 +149,15 @@
 			  		
 			  	}
 			  	break;
-			  case "set_i2c_byte_block":
-			   	If ($data->Handle == GetValueInteger($this->GetIDForIdent("Handle"))) {
-			   		SetValueString($this->GetIDForIdent("MeasurementData"), $data->ByteArray);
-			   		$MeasurementData = unserialize(GetValueString($this->GetIDForIdent("MeasurementData")));
-			   		
-			   		
-			   	}
-			   	break;
 	 	}
 	return;
  	}
 	// Beginn der Funktionen
 	// Führt eine Messung aus
-	public function Measurement()
+	public function Read_Status()
 	{
 		If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
-		
+			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => GetValueInteger($this->GetIDForIdent("DeviceAddress")) )));
 		}
 	return;
 	}
