@@ -146,6 +146,11 @@
 			  case "set_i2c_data":
 			  	If ($data->Handle == GetValueInteger($this->GetIDForIdent("Handle"))) {
 			  		// Daten der Messung
+			  		for ($i = 0; $i < 7; $i++) {
+		    				$Bitvalue = boolval($MessageArray[3]&(1<<$i));
+		    				IPS_LogMessage("GPIO Notify: ","Pin ".$PinNotify[$i]." Value ->".$Bitvalue);
+		    				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$i], "Value"=> $Bitvalue, "Timestamp"=> $MessageArray[2])));
+					}
 			  		
 			  	}
 			  	break;
