@@ -13,7 +13,13 @@
         { "type": "Select", "name": "DeviceAddress", "caption": "Device Adresse",
             "options": [
                 { "label": "72 dez. / 0x48h", "value": 72 },
-                { "label": "73 dez. / 0x49h", "value": 73 }
+                { "label": "73 dez. / 0x49h", "value": 73 },
+                { "label": "74 dez. / 0x4Ah", "value": 74 },
+                { "label": "75 dez. / 0x4Bh", "value": 75 },
+                { "label": "76 dez. / 0x4Ch", "value": 76 },
+                { "label": "77 dez. / 0x4Dh", "value": 77 },
+                { "label": "78 dez. / 0x4Eh", "value": 78 },
+                { "label": "79 dez. / 0x4Fh", "value": 79 }
                 ]
         },
         { "type": "Label", "label": "Wiederholungszyklus in Sekunden (0 -> aus, 1 sek -> Minimum)" },
@@ -21,6 +27,7 @@
         { "type": "Label", "label": "Hinweise:" },
         { "type": "Label", "label": "- die Device Adresse lautet 72 dez (0x48h) bei A0 an GND" },
         { "type": "Label", "label": "- die Device Adresse lautet 73 dez (0x49h) bei A0 an 5V" },
+        { "type": "Label", "label": "- die Device Adresse kann weitere Werte bei direkter Beschaltung haben" },
         { "type": "Label", "label": "- die I2C-Nutzung muss in der Raspberry Pi-Konfiguration freigegeben werden (sudo raspi-config -> Advanced Options -> I2C Enable = true)" },
         { "type": "Label", "label": "- die korrekte Nutzung der GPIO ist zwingend erforderlich (GPIO-Nr. 0/1 nur beim Raspberry Pi Model B Revision 1, alle anderen GPIO-Nr. 2/3) " },
         { "type": "Label", "label": "- auf den korrekten Anschluss von SDA/SCL achten" }
