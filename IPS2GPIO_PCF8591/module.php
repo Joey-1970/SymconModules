@@ -152,6 +152,10 @@
 					// Messwerte einlesen
 					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => hexdec("40")|($i & 3) )));
 			    	}
+			    	else {
+			    		SetValueInteger($this->GetIDForIdent("Channel_".$i), 0);
+			    	}
+			    
 			}
 		}
 	return;
