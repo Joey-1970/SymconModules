@@ -161,20 +161,23 @@
 	
 	public function Set_Output($Pin, $Value)
 	{
-		$Pin = min(7, max(0, $Pin));
-		$Value = 
-		// Aktuellen Status abfragen
-		$this->Read_Status();
-		// Bitmaske erstellen
-		$Bitmask = 0;
-		$NewBitmask = 0;
-		for ($i = 0; $i < 7; $i++) {
-			If (GetValueBoolean($this->GetIDForIdent("P".$i)) == true) {
-				$Bitmask = $Bitmask + pow(2, $i);
+		If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
+			$Pin = min(7, max(0, $Pin));
+			$Value = boolval($Value);
+			// Aktuellen Status abfragen
+			$this->Read_Status();
+			// Bitmaske erstellen
+			$Bitmask = 0;
+			$NewBitmask = 0;
+			for ($i = 0; $i < 7; $i++) {
+				If (GetValueBoolean($this->GetIDForIdent("P".$i)) == true) {
+					$Bitmask = $Bitmask + pow(2, $i);
+				}
 			}
+			// Setzen der Ausgänge
+			$NewBitmask = $Bitmask | pow(2, $Pin);
+			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => GetValueInteger($this->GetIDForIdent("DeviceAddress")), "Value" => $NewBitmask)));
 		}
-		// Setzen der Ausgänge
-		$NewBitmask = $Bitmask | pow(2, $Pin);
 	return;
 	}
 	
