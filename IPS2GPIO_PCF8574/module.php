@@ -99,7 +99,7 @@
             	$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
             	If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
 	            	// Erste Messdaten einlesen
-	            	//$this->Measurement();
+	            	$this->Read_Status();
 	            	$this->SetStatus(102);
             	}
         }
@@ -147,10 +147,9 @@
 			  	If ($data->Handle == GetValueInteger($this->GetIDForIdent("Handle"))) {
 			  		// Daten der Messung
 			  		for ($i = 0; $i < 7; $i++) {
-		    				$Bitvalue = boolval($MessageArray[3]&(1<<$i));
-		    				IPS_LogMessage("GPIO Notify: ","Pin ".$PinNotify[$i]." Value ->".$Bitvalue);
-		    				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$i], "Value"=> $Bitvalue, "Timestamp"=> $MessageArray[2])));
-					}
+		    				$Bitvalue = boolval($data->Value & (1<<$i));
+		    				SetValueBoolean($this->GetIDForIdent("P".$i), $Bitvalue);
+		    			}
 			  		
 			  	}
 			  	break;
