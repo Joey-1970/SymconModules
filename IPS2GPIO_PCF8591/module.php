@@ -9,6 +9,10 @@
             	parent::Create();
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
  	    	$this->RegisterPropertyInteger("DeviceAddress", 72);
+ 	    	$this->RegisterPropertyBoolean("Ain0", true);
+ 	    	$this->RegisterPropertyBoolean("Ain1", true);
+ 	    	$this->RegisterPropertyBoolean("Ain2", true);
+ 	    	$this->RegisterPropertyBoolean("Ain3", true);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GAD1_Measurement($_IPS["TARGET"]);');
         }
