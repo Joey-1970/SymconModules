@@ -60,6 +60,13 @@
           	$this->RegisterVariableInteger("Handle", "Handle", "", 110);
 		$this->DisableAction("Handle");
 		IPS_SetHidden($this->GetIDForIdent("Handle"), true);
+		
+		$this->RegisterVariableString("PinData", "PinData", "", 140);
+		$this->DisableAction("PinData");
+		IPS_SetHidden($this->GetIDForIdent("PinData"), true);
+		
+		$Pin = array("Ain0", "Ain1", "Ain2", "Ain3");
+		SetValueString($this->GetIDForIdent("PinData"), serialize($Pin));
              	
             	If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
              		// Handle löschen
@@ -143,13 +150,16 @@
 	public function Measurement()
 	{
 		If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
+			$PinData = unserialize(GetValueString($this->GetIDForIdent("PinData")));
 			for ($i = 0; $i <= 3; $i++) {
-			    	SetValueBoolean($this->GetIDForIdent("WriteProtection"), true);
-			    	// Aktualisierung der Messerte anfordern
-			    	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => hexdec("40")|($i & 3) )));
-				SetValueBoolean($this->GetIDForIdent("WriteProtection"), false);
-				// Messwerte einlesen
-				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => hexdec("40")|($i & 3) )));
+			    	If (GetValueBoolean($this->GetIDForIdent($PinData[$i])) == true) {
+				    	SetValueBoolean($this->GetIDForIdent("WriteProtection"), true);
+				    	// Aktualisierung der Messerte anfordern
+				    	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => hexdec("40")|($i & 3) )));
+					SetValueBoolean($this->GetIDForIdent("WriteProtection"), false);
+					// Messwerte einlesen
+					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Register" => hexdec("40")|($i & 3) )));
+			    	}
 			}
 		}
 	return;
