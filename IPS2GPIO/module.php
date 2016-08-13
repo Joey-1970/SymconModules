@@ -429,7 +429,7 @@ class IPS2GPIO_IO extends IPSModule
            				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_handle", "Address" => $response[3], "Handle" => $response[4], "HardwareRev" => GetValueInteger($this->GetIDForIdent("HardwareRev")))));
            			}
            			else {
-           				IPS_LogMessage("GPIO I2C-Handle: ",$response[4]." für Device ".$response[3]." nicht vergeben!");
+           				IPS_LogMessage("GPIO I2C-Handle: ","Fehler: ".GetErrorText(abs($response[4]))." Handle für Device ".$response[3]." nicht vergeben!");
            			}
            			
 		        	break;
