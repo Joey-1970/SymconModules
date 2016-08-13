@@ -568,7 +568,7 @@ class IPS2GPIO_IO extends IPSModule
 			$ErrorText = $ErrorMessage[$ErrorNumber];
 		}
 		else {
-			$ErrorText = "unknown Error";
+			$ErrorText = "unknown Error -".$ErrorNumber;
 		}
 	return $ErrorText;
 	}
