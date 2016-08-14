@@ -442,8 +442,8 @@ class IPS2GPIO_IO extends IPSModule
 		            	break;
 		        case "60":
            			If ($response[4] >= 0) {
-           				IPS_LogMessage("IPS2GPIO I2C Write Byte Handle: ","Handle: ".$response[2]." Value: ".$response[4]);
-		            		//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "Handle" => $response[2], "Register" => $response[3], "Value" => $response[4])));
+           				//IPS_LogMessage("IPS2GPIO I2C Write Byte Handle: ","Handle: ".$response[2]." Value: ".$response[4]);
+		            		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "Handle" => $response[2], "Register" => $response[3], "Value" => $response[4])));
            			}
            			else {
            				IPS_LogMessage("IPS2GPIO I2C Write Byte Handle: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$this->GetErrorText(abs($response[4])));
