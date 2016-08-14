@@ -80,29 +80,29 @@ class IPS2GPIO_IO extends IPSModule
 		    case "set_PWM_dutycycle":
 		    	// Dimmt einen Pin
 		    	If ($data->Pin >= 0) {
+		        	//IPS_LogMessage("Set Intensity : ",$data->Pin." , ".$data->Value);
 		        	$this->CommandClientSocket(pack("LLLL", 5, $data->Pin, $data->Value, 0), 16);
-				IPS_LogMessage("Set Intensity : ",$data->Pin." , ".$data->Value);  
 		        }
 		        break;
 		    case "set_PWM_dutycycle_RGB":
 		    	// Setzt die RGB-Farben
 		    	If (($data->Pin_R >= 0) AND ($data->Pin_G >= 0) AND ($data->Pin_B >= 0)) {
+		        	//IPS_LogMessage("Set Intensity RGB : ",$data->Pin_R." , ".$data->Value_R." ".$data->Pin_G." , ".$data->Value_G." ".$data->Pin_B." , ".$data->Value_B);  
 		        	$this->CommandClientSocket(pack("LLLL", 5, $data->Pin_R, $data->Value_R, 0).pack("LLLL", 5, $data->Pin_G, $data->Value_G, 0).pack("LLLL", 5, $data->Pin_B, $data->Value_B, 0), 48);
-				IPS_LogMessage("Set Intensity RGB : ",$data->Pin_R." , ".$data->Value_R." ".$data->Pin_G." , ".$data->Value_G." ".$data->Pin_B." , ".$data->Value_B);  
 		    	}
 		        break;
 		    case "set_value":
 		    	// Schaltet den Pin
 		    	If ($data->Pin >= 0) {
+		    		//IPS_LogMessage("SetValue Parameter : ",$data->Pin." , ".$data->Value); 
 		    		$this->CommandClientSocket(pack("LLLL", 4, $data->Pin, $data->Value, 0), 16);
-				IPS_LogMessage("SetValue Parameter : ",$data->Pin." , ".$data->Value); 
 		    	}
 		        break;
 		    case "set_trigger":
 		    	// Setzten einen Trigger
 		    	If ($data->Pin >= 0) {
+		        	//IPS_LogMessage("SetTrigger Parameter : ",$data->Pin." , ".$data->Time);
 		        	$this->CommandClientSocket(pack("LLLLL", 37, $data->Pin, $data->Time, 4, 1), 16);
-				IPS_LogMessage("SetTrigger Parameter : ",$data->Pin." , ".$data->Time);  
 		    	}
 		        break;
 		    
@@ -114,8 +114,8 @@ class IPS2GPIO_IO extends IPSModule
 			        $PinNotify[] = $data->Pin;
 				SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
 				// Setzt den Glitch Filter
+				//IPS_LogMessage("SetGlitchFilter Parameter : ",$data->Pin." , ".$data->GlitchFilter);
 				$this->CommandClientSocket(pack("LLLL", 97, $data->Pin, $data->GlitchFilter, 0), 16);
-				IPS_LogMessage("SetGlitchFilter Parameter : ",$data->Pin." , ".$data->GlitchFilter);  
 		    	}
 		        break;
 		   case "set_usedpin":
@@ -141,9 +141,8 @@ class IPS2GPIO_IO extends IPSModule
 			        }
 			        $PinUsed[] = $data->Pin;
 			        // Pin in den entsprechenden Mode setzen
+			        //IPS_LogMessage("SetMode Parameter : ",$data->Pin." , ".$data->Modus);
 			        $this->CommandClientSocket(pack("LLLL", 0, $data->Pin, $data->Modus, 0), 16);
-				IPS_LogMessage("SetMode Parameter : ",$data->Pin." , ".$data->Modus);  
-			        //$this->Set_Mode($data->Pin, $data->Modus);
 				SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
 		   	}
 		        break;
@@ -186,11 +185,11 @@ class IPS2GPIO_IO extends IPSModule
 		   	SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));	
 		   	break;
 		   case "i2c_read_byte":
-		   	IPS_LogMessage("I2C Read Byte Parameter : ",$data->Handle." , ".$data->Register); 
+		   	//IPS_LogMessage("I2C Read Byte Parameter : ",$data->Handle." , ".$data->Register); 
 		   	$this->CommandClientSocket(pack("L*", 61, $data->Handle, $data->Register, 0), 16);
 		   	break;
 		   case "i2c_read_word":
-		   	IPS_LogMessage("I2C Read Word Parameter : ",$data->Handle." , ".$data->Register); 
+		   	//IPS_LogMessage("I2C Read Word Parameter : ",$data->Handle." , ".$data->Register); 
 		   	$this->CommandClientSocket(pack("L*", 63, $data->Handle, $data->Register, 0), 16);
 		   	break; 
 		   case "i2c_read_block_byte":
@@ -198,11 +197,11 @@ class IPS2GPIO_IO extends IPSModule
 		   	$this->CommandClientSocket(pack("L*", 67, $data->Handle, $data->Register, 4, $data->Count), 16 + ($data->Count));
 			break;
 		   case "i2c_write_byte":
-		   	IPS_LogMessage("I2C Write Byte Parameter : ",$data->Handle." , ".$data->Register." , ".$data->Value);  	
+		   	//IPS_LogMessage("I2C Write Byte Parameter : ",$data->Handle." , ".$data->Register." , ".$data->Value);  	
 		   	$this->CommandClientSocket(pack("L*", 62, $data->Handle, $data->Register, 4, $data->Value), 16);
 		   	break;
 		   case "i2c_write_byte_onhandle":
-		   	IPS_LogMessage("I2C Write Byte Handle Parameter : ",$data->Handle." , ".$data->Value);  	
+		   	//IPS_LogMessage("I2C Write Byte Handle Parameter : ",$data->Handle." , ".$data->Value);  	
 		   	$this->CommandClientSocket(pack("L*", 60, $data->Handle, $data->Value, 0), 16);
 		   	break;	
 		   	
