@@ -564,7 +564,7 @@ class IPS2GPIO_IO extends IPSModule
 			130 => "PI_BAD_FILE_FLAG", 131 => "PI_BAD_FILE_READ", 132 => "PI_BAD_FILE_WRITE", 133 => "PI_FILE_NOT_ROPEN",
 			134 => "PI_FILE_NOT_WOPEN", 135 => "PI_BAD_FILE_SEEK", 136 => "PI_NO_FILE_MATCH", 137 => "PI_NO_FILE_ACCESS",
 			138 => "PI_FILE_IS_A_DIR", 139 => "PI_BAD_SHELL_STATUS", 140 => "PI_BAD_SCRIPT_NAME");
-		If (in_array($ErrorNumber, $ErrorMessage)) {
+		If (array_key_exists($ErrorNumber, $ErrorMessage)) {
 			$ErrorText = $ErrorMessage[$ErrorNumber];
 		}
 		else {
