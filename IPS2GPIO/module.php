@@ -372,20 +372,20 @@ class IPS2GPIO_IO extends IPSModule
 		switch($response[1]) {
 		        case "4":
 		        	If ($response[4] == 0) {
-		        		IPS_LogMessage("GPIO Write: ", "Pin: ".$response[2]." Wert: ".$response[3]." erfolgreich gesendet");
+		        		//IPS_LogMessage("GPIO Write: ", "Pin: ".$response[2]." Wert: ".$response[3]." erfolgreich gesendet");
 		        		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"result", "Pin" => $response[2], "Value"=> $response[3])));
 		        	}
 		        	else {
-		        		IPS_LogMessage("GPIO Write: ", "Pin: ".$response[2]." Wert: ".$response[3]." konnte nicht erfolgreich gesendet werden!");
+		        		IPS_LogMessage("GPIO Write: ", "Pin: ".$response[2]." Wert: ".$response[3]." konnte nicht erfolgreich gesendet werden! Fehler:".$this->GetErrorText(abs($response[4])));
 		        	}
 		        	break;
 		        case "5":
 		        	If ($response[4] == 0) {
-		        		IPS_LogMessage("GPIO PWM: ", "Pin: ".$response[2]." Wert: ".$response[3]." erfolgreich gesendet");
+		        		//IPS_LogMessage("GPIO PWM: ", "Pin: ".$response[2]." Wert: ".$response[3]." erfolgreich gesendet");
 		        		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"result", "Pin" => $response[2], "Value"=> $response[3])));
 		        	}
 		        	else {
-		        		IPS_LogMessage("GPIO PWM: ", "Pin: ".$response[2]." Wert: ".$response[3]." konnte nicht erfolgreich gesendet werden!");
+		        		IPS_LogMessage("GPIO PWM: ", "Pin: ".$response[2]." Wert: ".$response[3]." konnte nicht erfolgreich gesendet werden! Fehler:".$this->GetErrorText(abs($response[4])));
 		        	}
 		        	break;
 		        case "17":
@@ -415,7 +415,7 @@ class IPS2GPIO_IO extends IPSModule
 					IPS_LogMessage("GPIO Hardwareermittlung: ","Raspberry Pi Typ 2");
 				}
 				else
-					IPS_LogMessage("GPIO Hardwareermittlung: ","nicht erfolgreich!");
+					IPS_LogMessage("GPIO Hardwareermittlung: ","nicht erfolgreich! Fehler:".$this->GetErrorText(abs($response[4])));
 				break;
            		case "19":
            			IPS_LogMessage("GPIO Notify: ","gestartet");
@@ -425,7 +425,7 @@ class IPS2GPIO_IO extends IPSModule
 		            	break;
 		        case "54":
 		        	If ($response[4] >= 0 ) {
-           				IPS_LogMessage("GPIO I2C-Handle: ",$response[4]." für Device ".$response[3]);
+           				//IPS_LogMessage("GPIO I2C-Handle: ",$response[4]." für Device ".$response[3]);
            				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_handle", "Address" => $response[3], "Handle" => $response[4], "HardwareRev" => GetValueInteger($this->GetIDForIdent("HardwareRev")))));
            			}
            			else {
@@ -452,7 +452,7 @@ class IPS2GPIO_IO extends IPSModule
 		            	break;
 		        case "61":
 		            	If ($response[4] >= 0) {
-		            		IPS_LogMessage("GPIO I2C Read Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
+		            		//IPS_LogMessage("GPIO I2C Read Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
 		            		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "Handle" => $response[2], "Register" => $response[3], "Value" => $response[4])));
 		            	}
 		            	else {
@@ -460,8 +460,13 @@ class IPS2GPIO_IO extends IPSModule
 		            	}
 		            	break;
 		        case "62":
-           			IPS_LogMessage("GPIO I2C Write Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
-		            	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "Handle" => $response[2], "Register" => $response[3], "Value" => $response[4])));
+           			If ($response[4] >= 0) {
+           				//IPS_LogMessage("GPIO I2C Write Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$response[4]);
+		            		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "Handle" => $response[2], "Register" => $response[3], "Value" => $response[4])));
+           			}
+           			else {
+           				IPS_LogMessage("GPIO I2C Write Byte: ","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$this->GetErrorText(abs($response[4])));
+           			}
 		            	break;
 		        case "63":
 		            	If ($response[4] >= 0) {
