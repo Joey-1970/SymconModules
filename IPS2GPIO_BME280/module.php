@@ -25,11 +25,7 @@
 	    		IPS_LogMessage("GPIO : ","I2C-Device Adresse in einem nicht definierten Bereich!");  
 	    	}
 	    	//Status-Variablen anlegen
-	    	$this->RegisterVariableInteger("HardwareRev", "HardwareRev", "", 100);
-          	$this->DisableAction("HardwareRev");
-		IPS_SetHidden($this->GetIDForIdent("HardwareRev"), true);
-
-             	$this->RegisterVariableString("CalibrateData", "CalibrateData", "", 120);
+            	$this->RegisterVariableString("CalibrateData", "CalibrateData", "", 120);
 		$this->DisableAction("CalibrateData");
 		IPS_SetHidden($this->GetIDForIdent("CalibrateData"), true);
              	
@@ -65,24 +61,16 @@
 	    	// Empfangene Daten vom Gateway/Splitter
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
-			   case "notify":
-			   // leer
-			   	break;
-			   case "set_i2c_handle":
-			   	If ($data->Address == $this->ReadPropertyInteger("DeviceAddress")) {
-			   		SetValueInteger($this->GetIDForIdent("HardwareRev"), $data->HardwareRev);
-			   	}
-			   	break;
 			   case "get_used_i2c":
 			   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "Value" => true, "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"))));
 			   	break;
 			   case "status":
-			   	If (GetValueInteger($this->GetIDForIdent("HardwareRev")) <= 3) {
+			   	If ($data->HardwareRev <= 3) {
 				   	If (($data->Pin == 0) OR ($data->Pin == 1)) {
 				   		$this->SetStatus($data->Status);		
 				   	}
 			   	}
-				else if (GetValueInteger($this->GetIDForIdent("HardwareRev")) > 3) {
+				else if ($data->HardwareRev > 3) {
 					If (($data->Pin == 2) OR ($data->Pin == 3)) {
 				   		$this->SetStatus($data->Status);
 				   	}
