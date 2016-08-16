@@ -39,6 +39,9 @@ class IPS2GPIO_IO extends IPSModule
 		$this->RegisterVariableBoolean("I2C_Used", "I2C_Used");
 		$this->DisableAction("I2C_Used");
 		IPS_SetHidden($this->GetIDForIdent("I2C_Used"), true);
+		$this->RegisterVariableString("I2C_Handle", "I2C_Handle");
+		$this->DisableAction("I2C_Handle");
+		IPS_SetHidden($this->GetIDForIdent("I2C_Handle"), true);
 		$this->RegisterVariableInteger("HardwareRev", "HardwareRev");
 		$this->DisableAction("HardwareRev");
 		IPS_SetHidden($this->GetIDForIdent("HardwareRev"), true);
@@ -426,6 +429,9 @@ class IPS2GPIO_IO extends IPSModule
 		        	If ($response[4] >= 0 ) {
            				//IPS_LogMessage("IPS2GPIO I2C-Handle: ",$response[4]." für Device ".$response[3]);
            				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_handle", "Address" => $response[3], "Handle" => $response[4], "HardwareRev" => GetValueInteger($this->GetIDForIdent("HardwareRev")))));
+ 					$I2C_HandleData = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
+ 					$I2C_HandleData[$response[3]] = $response[4]);
+ 					SetValueString($this->GetIDForIdent("$I2C_Handle"), serialize($I2C_Handle));
            			}
            			else {
            				IPS_LogMessage("IPS2GPIO I2C-Handle: ","Fehler: ".$this->GetErrorText(abs($response[4]))." Handle für Device ".$response[3]." nicht vergeben!");
