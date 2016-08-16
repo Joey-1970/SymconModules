@@ -185,7 +185,11 @@ class IPS2GPIO_IO extends IPSModule
 		   	$PinUsed = array_merge($PinUsed, $PinI2C);
 		   	// doppelte Einträge löschen
 		   	$PinUsed = array_unique($PinUsed);
-		   	SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));	
+		   	SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
+		   	// die genutzten Device Adressen anlegen
+		   	$I2C_DeviceHandle = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
+		   	$I2C_DeviceHandle[$data->DeviceAddress] = -1;
+		   	SetValueString($this->GetIDForIdent("I2C_Handle"), serialize($I2C_DeviceHandle));
 		   	break;
 		   case "i2c_read_byte":
 		   	//IPS_LogMessage("IPS2GPIO I2C Read Byte Parameter : ",$data->Handle." , ".$data->Register); 
@@ -296,8 +300,10 @@ class IPS2GPIO_IO extends IPSModule
 		If (GetValueInteger($this->GetIDForIdent("Handle")) > 0) {
 	           	$this->CommandClientSocket(pack("LLLL", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
 		}
-		// Ermitteln ob der I2C-Bus genutzt wird
+		// Ermitteln ob der I2C-Bus genutzt wird und welcher Device Adressen
 		SetValueBoolean($this->GetIDForIdent("I2C_Used"), false);
+		$I2C_DeviceHandle = array();
+		SetValueString($this->GetIDForIdent("I2C_Handle"), serialize($I2C_DeviceHandle));
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_used_i2c")));
 		// Pins ermitteln die genutzt werden
 		$PinUsed = array();
