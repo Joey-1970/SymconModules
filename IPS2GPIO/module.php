@@ -559,6 +559,18 @@ class IPS2GPIO_IO extends IPSModule
 	return $result;
 	}
 	
+	private function GetI2C_HandleDevice($DeviceAddress)
+	{
+		$I2C_HandleData = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
+ 		If (array_key_exists($DeviceAddress, $I2C_HandleData)) {
+ 			$I2C_Handle = $I2C_HandleData[$DeviceAddress];
+ 		}
+ 		else {
+ 			$I2C_Handle = -1;	
+ 		}			  
+	return $I2C_Handle;
+	}
+	
 	private function GetParentID()
 	{
 		$ParentID = (IPS_GetInstance($this->InstanceID)['ConnectionID']);  
