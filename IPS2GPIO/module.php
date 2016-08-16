@@ -559,7 +559,7 @@ class IPS2GPIO_IO extends IPSModule
 	return $result;
 	}
 	
-	private function GetI2C_HandleDevice($DeviceAddress)
+	private function GetI2C_DeviceHandle($DeviceAddress)
 	{
 		$I2C_HandleData = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
  		If (array_key_exists($DeviceAddress, $I2C_HandleData)) {
