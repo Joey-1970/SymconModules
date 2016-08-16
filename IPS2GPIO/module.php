@@ -200,23 +200,23 @@ class IPS2GPIO_IO extends IPSModule
 		   	break;
 		   case "i2c_read_byte":
 		   	//IPS_LogMessage("IPS2GPIO I2C Read Byte Parameter : ",$data->Handle." , ".$data->Register); 
-		   	$this->CommandClientSocket(pack("L*", 61, GetI2C_DeviceHandle($data->DeviceAddress), $data->Register, 0), 16);
+		   	$this->CommandClientSocket(pack("L*", 61, $this->GetI2C_DeviceHandle($data->DeviceAddress), $data->Register, 0), 16);
 		   	break;
 		   case "i2c_read_word":
 		   	//IPS_LogMessage("IPS2GPIO I2C Read Word Parameter : ",$data->Handle." , ".$data->Register); 
-		   	$this->CommandClientSocket(pack("L*", 63, GetI2C_DeviceHandle($data->DeviceAddress), $data->Register, 0), 16);
+		   	$this->CommandClientSocket(pack("L*", 63, $this->GetI2C_DeviceHandle($data->DeviceAddress), $data->Register, 0), 16);
 		   	break; 
 		   case "i2c_read_block_byte":
 		   	//IPS_LogMessage("IPS2GPIO I2C Read Block Byte Parameter : ",$data->Handle." , ".$data->Register." , ".$data->Count);  	
-		   	$this->CommandClientSocket(pack("L*", 67, GetI2C_DeviceHandle($data->DeviceAddress), $data->Register, 4, $data->Count), 16 + ($data->Count));
+		   	$this->CommandClientSocket(pack("L*", 67, $this->GetI2C_DeviceHandle($data->DeviceAddress), $data->Register, 4, $data->Count), 16 + ($data->Count));
 			break;
 		   case "i2c_write_byte":
 		   	//IPS_LogMessage("IPS2GPIO I2C Write Byte Parameter : ",$data->Handle." , ".$data->Register." , ".$data->Value);  	
-		   	$this->CommandClientSocket(pack("L*", 62, GetI2C_DeviceHandle($data->DeviceAddress), $data->Register, 4, $data->Value), 16);
+		   	$this->CommandClientSocket(pack("L*", 62, $this->GetI2C_DeviceHandle($data->DeviceAddress), $data->Register, 4, $data->Value), 16);
 		   	break;
 		   case "i2c_write_byte_onhandle":
 		   	//IPS_LogMessage("IPS2GPIO I2C Write Byte Handle Parameter : ",$data->Handle." , ".$data->Value);  	
-		   	$this->CommandClientSocket(pack("L*", 60, GetI2C_DeviceHandle($data->DeviceAddress), $data->Value, 0), 16);
+		   	$this->CommandClientSocket(pack("L*", 60, $this->GetI2C_DeviceHandle($data->DeviceAddress), $data->Value, 0), 16);
 		   	break;	
 		   	
 		   
