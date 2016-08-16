@@ -193,6 +193,7 @@ class IPS2GPIO_IO extends IPSModule
 		   	$I2C_DeviceHandle[$data->DeviceAddress] = -1;
 		   	SetValueString($this->GetIDForIdent("I2C_Handle"), serialize($I2C_DeviceHandle));
 		   	// Handle ermitteln
+		   	IPS_LogMessage("IPS2GPIO I2C Handle: ","Device Adresse: ".$data->DeviceAddress.", Hardware Rev:: ".GetValueInteger($this->GetIDForIdent("HardwareRev"))); 
 		   	If (GetValueInteger($this->GetIDForIdent("HardwareRev")) <=3) {
 		   		$this->CommandClientSocket(pack("LLLLL", 54, 0, $data->DeviceAddress, 4, 0), 16);	
 		   	}
