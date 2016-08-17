@@ -264,7 +264,7 @@ class IPS2GPIO_IO extends IPSModule
 	    		// wenn es sich um mehrere Notifikationen handelt
 	    		$DataArray = str_split($Message, 12);
 	    		//IPS_LogMessage("IPS2GPIO ReceiveData", "Überlänge: ".Count($DataArray)." Notify-Datensätze");
-	    		for ($i = 0; $i < Count($DataArray); $i++) {
+	    		for ($i = 0; $i < min(6, Count($DataArray)); $i++) {
 				$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
 	
 				for ($i = 0; $i < Count($PinNotify); $i++) {
