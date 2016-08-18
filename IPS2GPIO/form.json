@@ -10,6 +10,10 @@
    "elements": 
    [ 
      { "name": "Open", "type": "CheckBox",  "caption": "Open" },
-     { "name": "IPAddress", "type": "ValidationTextBox",  "caption": "IP" }
+     { "name": "IPAddress", "type": "ValidationTextBox",  "caption": "IP" },
+     { "type": "Label", "label": "Auswahl der erforderlichen Schnittstellen:" },
+     { "type": "CheckBox", "name": "I2C_Used", "caption": "I²C Schnittstelle" },
+     { "type": "CheckBox", "name": "Serial_Used", "caption": "Serielle Schnittstelle" },
+     { "type": "CheckBox", "name": "SPI_Used", "caption": "SPI Schnittstelle" }
    ]
 } 
