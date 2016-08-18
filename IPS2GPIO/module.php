@@ -268,13 +268,12 @@ class IPS2GPIO_IO extends IPSModule
 	    		// wenn es sich um mehrere Notifikationen handelt
 	    		$DataArray = str_split($Message, 12);
 	    		//IPS_LogMessage("IPS2GPIO ReceiveData", "Überlänge: ".Count($DataArray)." Notify-Datensätze");
-	    		for ($i = 0; $i < min(6, Count($DataArray)); $i++) {
-				$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
-	
-				for ($i = 0; $i < Count($PinNotify); $i++) {
-	    				$Bitvalue = boolval($MessageArray[3]&(1<<$PinNotify[$i]));
-	    				IPS_LogMessage("IPS2GPIO Notify: ","Pin ".$PinNotify[$i]." Value ->".$Bitvalue);
-	    				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$i], "Value"=> $Bitvalue, "Timestamp"=> $MessageArray[2])));
+	    		$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
+	    		for ($i = 0; $i < min(5, Count($DataArray)); $i++) {
+				for ($j = 0; $j < Count($PinNotify); $j++) {
+	    				$Bitvalue = boolval($DataArray[$i]&(1<<$PinNotify[$j]));
+	    				IPS_LogMessage("IPS2GPIO Notify: ","Pin ".$PinNotify[$j]." Value ->".$Bitvalue);
+	    				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $MessageArray[2])));
 				}
 			}
 		}
@@ -548,7 +547,7 @@ class IPS2GPIO_IO extends IPSModule
 		            	break;
 		        case "99":
            			If ($response[4] > 0 ) {
-           				IPS_LogMessage("GPIO Handle: ",$response[4]);
+           				IPS_LogMessage("IPS2GPIO Handle: ",$response[4]);
            				SetValueInteger($this->GetIDForIdent("Handle"), $response[4]);
            				
            				$this->ClientSocket(pack("LLLL", 19, $response[4], $this->CalcBitmask(), 0));
