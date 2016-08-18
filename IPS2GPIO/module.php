@@ -21,32 +21,47 @@ class IPS2GPIO_IO extends IPSModule
 	  {
 		//Never delete this line!
 		parent::ApplyChanges();
-		$this->RegisterVariableString("PinPossible", "PinPossible");
-		$this->DisableAction("PinPossible");
-		IPS_SetHidden($this->GetIDForIdent("PinPossible"), true);
-		$this->RegisterVariableString("PinUsed", "PinUsed");
-		$this->DisableAction("PinUsed");
-		IPS_SetHidden($this->GetIDForIdent("PinUsed"), true);
-		$this->RegisterVariableString("PinNotify", "PinNotify");
-		$this->DisableAction("PinNotify");
-		IPS_SetHidden($this->GetIDForIdent("PinNotify"), true);
-		$this->RegisterVariableInteger("Handle", "Handle");
+		$this->RegisterVariableInteger("Handle", "Handle", "", 100);
 		$this->DisableAction("Handle");
 		IPS_SetHidden($this->GetIDForIdent("Handle"), true);
-		$this->RegisterVariableString("PinI2C", "PinI2C");
-		$this->DisableAction("PinI2C");
-		IPS_SetHidden($this->GetIDForIdent("PinI2C"), true);
-		$this->RegisterVariableBoolean("I2C_Used", "I2C_Used");
+		
+		$this->RegisterVariableInteger("HardwareRev", "HardwareRev", "", 105);
+		$this->DisableAction("HardwareRev");
+		IPS_SetHidden($this->GetIDForIdent("HardwareRev"), true);
+		
+		$this->RegisterVariableString("PinPossible", "PinPossible", "", 110);
+		$this->DisableAction("PinPossible");
+		IPS_SetHidden($this->GetIDForIdent("PinPossible"), true);
+		
+		$this->RegisterVariableString("PinUsed", "PinUsed", "", 120);
+		$this->DisableAction("PinUsed");
+		IPS_SetHidden($this->GetIDForIdent("PinUsed"), true);
+		
+		$this->RegisterVariableString("PinNotify", "PinNotify", "", 130);
+		$this->DisableAction("PinNotify");
+		IPS_SetHidden($this->GetIDForIdent("PinNotify"), true);
+		
+		$this->RegisterVariableBoolean("I2C_Used", "I2C_Used", "", 140);
 		$this->DisableAction("I2C_Used");
 		IPS_SetHidden($this->GetIDForIdent("I2C_Used"), true);
-		$this->RegisterVariableString("I2C_Handle", "I2C_Handle");
+		
+		$this->RegisterVariableString("PinI2C", "PinI2C", "", 150);
+		$this->DisableAction("PinI2C");
+		IPS_SetHidden($this->GetIDForIdent("PinI2C"), true);
+		
+		$this->RegisterVariableString("I2C_Handle", "I2C_Handle", "", 160);
 		$this->DisableAction("I2C_Handle");
 		IPS_SetHidden($this->GetIDForIdent("I2C_Handle"), true);
 		$I2C_DeviceHandle = array();
 		SetValueString($this->GetIDForIdent("I2C_Handle"), serialize($I2C_DeviceHandle));
-		$this->RegisterVariableInteger("HardwareRev", "HardwareRev");
-		$this->DisableAction("HardwareRev");
-		IPS_SetHidden($this->GetIDForIdent("HardwareRev"), true);
+		
+		$this->RegisterVariableBoolean("Serial_Used", "Serial_Used", "", 170);
+		$this->DisableAction("Serial_Used");
+		IPS_SetHidden($this->GetIDForIdent("Serial_Used"), true);
+		
+		$this->RegisterVariableInteger("Serial_Handle", "Serial_Handle", "", 180);
+		$this->DisableAction("Serial_Handle");
+		IPS_SetHidden($this->GetIDForIdent("Serial_Handle"), true);
 		
 		$ParentID = $this->GetParentID();
 		If ($ParentID > 0) {
