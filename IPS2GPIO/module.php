@@ -14,6 +14,9 @@ class IPS2GPIO_IO extends IPSModule
 	    // Modul-Eigenschaftserstellung
 	    $this->RegisterPropertyBoolean("Open", 0);
 	    $this->RegisterPropertyString("IPAddress", "127.0.0.1");
+	    $this->RegisterPropertyBoolean("I2C_Used", true);
+	    $this->RegisterPropertyBoolean("Serial_Used", true);
+	    $this->RegisterPropertyBoolean("SPI_Used", true);
 	    $this->ConnectParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
 	  }
   
