@@ -360,7 +360,7 @@ class IPS2GPIO_IO extends IPSModule
 		// Timeout setzen
 		socket_set_option($sock,SOL_SOCKET, SO_RCVTIMEO, array("sec"=>2, "usec"=>0));
 		// Verbindung aufbauen
-		if(!socket_connect($sock, $this->ReadPropertyString("IPAddress"), 8888)) {
+		if(!(socket_connect($sock, $this->ReadPropertyString("IPAddress"), 8888))) {
 			$errorcode = socket_last_error();
 		    	$errormsg = socket_strerror($errorcode);
 			IPS_LogMessage("IPS2GPIO Socket: ", "Fehler beim Verbindungsaufbaus ".[$errorcode]." ".$errormsg);
