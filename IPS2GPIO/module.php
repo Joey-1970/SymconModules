@@ -329,11 +329,29 @@ class IPS2GPIO_IO extends IPSModule
 	           	$this->CommandClientSocket(pack("LLLL", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
 		}
 		// Ermitteln ob der I2C-Bus genutzt wird und welcher Device Adressen
-		SetValueBoolean($this->GetIDForIdent("I2C_Used"), false);
+		
+		//SetValueBoolean($this->GetIDForIdent("I2C_Used"), false);
 		
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_used_i2c")));
 		// Pins ermitteln die genutzt werden
 		$PinUsed = array();
+		If (($this->ReadPropertyBoolean("I2C_Used") == true) AND (GetValueInteger($this->GetIDForIdent("HardwareRev"))) <= 3) {
+			$PinUsed[] = 0; 
+			$PinUsed[] = 1;
+		}
+		elseif (($this->ReadPropertyBoolean("I2C_Used") == true) AND (GetValueInteger($this->GetIDForIdent("HardwareRev"))) > 3) {
+			$PinUsed[] = 2; 
+			$PinUsed[] = 3;
+		}
+		elseif ($this->ReadPropertyBoolean("Serial_Used") == true)  {
+			$PinUsed[] = 2; 
+			$PinUsed[] = 3;
+		}
+		elseif ($this->ReadPropertyBoolean("SPI_Used") == true)  {
+			for ($i = 0; $i < Count($DataArray); $i++) {
+    				$this->ClientResponse($DataArray[$i]);
+			}
+		}
 		SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_usedpin")));
 	return;
