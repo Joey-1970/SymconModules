@@ -575,15 +575,15 @@ class IPS2GPIO_IO extends IPSModule
 	{
 	      $result = false;
 	      If (Sys_Ping($this->ReadPropertyString("IPAddress"), 2000)) {
-			IPS_LogMessage("GPIO Netzanbindung: ","Raspberry Pi gefunden");
+			IPS_LogMessage("IPS2GPIO Netzanbindung: ","Raspberry Pi gefunden");
 			$status = @fsockopen($this->ReadPropertyString("IPAddress"), 8888, $errno, $errstr, 10);
 				if (!$status) {
-					IPS_LogMessage("GPIO Netzanbindung: ","Port ist geschlossen!");
+					IPS_LogMessage("IPS2GPIO Netzanbindung: ","Port ist geschlossen!");
 					$this->SetStatus(104);
 	   			}
 	   			else {
 	   				fclose($status);
-					IPS_LogMessage("GPIO Netzanbindung: ","Port ist geöffnet");
+					IPS_LogMessage("IPS2GPIO Netzanbindung: ","Port ist geöffnet");
 					$result = true;
 					$this->SetStatus(102);
 	   			}
