@@ -186,26 +186,12 @@ class IPS2GPIO_IO extends IPSModule
 		   	break;
 
 		   // I2C Kommunikation
-		   case "get_handle_i2c":
-		   	If (GetValueInteger($this->GetIDForIdent("HardwareRev")) <=3) {
-		   		$this->CommandClientSocket(pack("LLLLL", 54, 0, $data->DeviceAddress, 4, 0), 16);	
-		   	}
-		   	elseif (GetValueInteger($this->GetIDForIdent("HardwareRev")) >3) {
-		   		$this->CommandClientSocket(pack("LLLLL", 54, 1, $data->DeviceAddress, 4, 0), 16);
-		   	}
-		   	break;
 		   case "close_handle_i2c":
 		   		$this->CommandClientSocket(pack("LLLL", 55, $data->Handle, 0, 0), 16);
 		   	break;
 		   case "set_used_i2c":
 		   	SetValueBoolean($this->GetIDForIdent("I2C_Used"), true);
-		   	$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
-		   	$PinI2C = unserialize(GetValueString($this->GetIDForIdent("PinI2C")));
-		   	// Arrays zusammenfügen
-		   	$PinUsed = array_merge($PinUsed, $PinI2C);
-		   	// doppelte Einträge löschen
-		   	$PinUsed = array_unique($PinUsed);
-		   	SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
+		   	
 		   	// die genutzten Device Adressen anlegen
 		   	$I2C_DeviceHandle = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
 		   	$I2C_DeviceHandle[$data->DeviceAddress] = -1;
