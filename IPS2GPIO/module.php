@@ -344,12 +344,12 @@ class IPS2GPIO_IO extends IPSModule
 			$PinUsed[] = 3;
 		}
 		elseif ($this->ReadPropertyBoolean("Serial_Used") == true)  {
-			$PinUsed[] = 2; 
-			$PinUsed[] = 3;
+			$PinUsed[] = 14; 
+			$PinUsed[] = 15;
 		}
 		elseif ($this->ReadPropertyBoolean("SPI_Used") == true)  {
-			for ($i = 0; $i < Count($DataArray); $i++) {
-    				$this->ClientResponse($DataArray[$i]);
+			for ($i = 7; $i < 11; $i++) {
+    				$PinUsed[] = $i;
 			}
 		}
 		SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
