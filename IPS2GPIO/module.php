@@ -161,7 +161,7 @@ class IPS2GPIO_IO extends IPSModule
 			        	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>200, "HardwareRev"=>GetValueInteger($this->GetIDForIdent("HardwareRev")))));
 			        }
 			        $PinUsed[] = $data->Pin;
-			        // Pin in den entsprechenden Mode setzen
+			        // Pin in den entsprechenden R/W-Mode setzen
 			        //IPS_LogMessage("SetMode Parameter : ",$data->Pin." , ".$data->Modus);
 			        $this->CommandClientSocket(pack("LLLL", 0, $data->Pin, $data->Modus, 0), 16);
 				SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
@@ -193,15 +193,16 @@ class IPS2GPIO_IO extends IPSModule
 		   	// die genutzten Device Adressen anlegen
 		   	$I2C_DeviceHandle = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
 		   	$I2C_DeviceHandle[$data->DeviceAddress] = -1;
+		   	// genutzte Device-Adressen noch ohne Handle sichern
 		   	SetValueString($this->GetIDForIdent("I2C_Handle"), serialize($I2C_DeviceHandle));
 		   	// Handle ermitteln
-		   	IPS_LogMessage("IPS2GPIO I2C Handle: ","Device Adresse: ".$data->DeviceAddress.", Hardware Rev:: ".GetValueInteger($this->GetIDForIdent("HardwareRev"))); 
 		   	If (GetValueInteger($this->GetIDForIdent("HardwareRev")) <=3) {
 		   		$this->CommandClientSocket(pack("LLLLL", 54, 0, $data->DeviceAddress, 4, 0), 16);	
 		   	}
 		   	elseif (GetValueInteger($this->GetIDForIdent("HardwareRev")) >3) {
 		   		$this->CommandClientSocket(pack("LLLLL", 54, 1, $data->DeviceAddress, 4, 0), 16);
 		   	}
+		   	IPS_LogMessage("IPS2GPIO I2C Handle: ","Device Adresse: ".$data->DeviceAddress.", Hardware Rev:: ".GetValueInteger($this->GetIDForIdent("HardwareRev"))); 
 		   	break;
 		   case "i2c_read_byte":
 		   	//IPS_LogMessage("IPS2GPIO I2C Read Byte Parameter : ",$data->Handle." , ".$data->Register); 
@@ -323,12 +324,10 @@ class IPS2GPIO_IO extends IPSModule
 	           	$this->CommandClientSocket(pack("LLLL", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
 		}
 		// Ermitteln ob der I2C-Bus genutzt wird und welcher Device Adressen
-		
-		//SetValueBoolean($this->GetIDForIdent("I2C_Used"), false);
-		
-		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_used_i2c")));
 		// Pins ermitteln die genutzt werden
 		$PinUsed = array();
+		SetValueBoolean($this->GetIDForIdent("I2C_Used"), false);
+		// Reservieren der Schnittstellen GPIO
 		If (($this->ReadPropertyBoolean("I2C_Used") == true) AND (GetValueInteger($this->GetIDForIdent("HardwareRev"))) <= 3) {
 			$PinUsed[] = 0; 
 			$PinUsed[] = 1;
@@ -346,7 +345,11 @@ class IPS2GPIO_IO extends IPSModule
     				$PinUsed[] = $i;
 			}
 		}
+		// Sichern der Voreinstellungen
 		SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
+		// Ermitteln der genutzten I2C-Adressen
+		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_used_i2c")));
+		// Ermitteln der sonstigen genutzen GPIO
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_usedpin")));
 	return;
 	}
@@ -473,8 +476,7 @@ class IPS2GPIO_IO extends IPSModule
 		        case "54":
 		        	If ($response[4] >= 0 ) {
            				IPS_LogMessage("IPS2GPIO I2C-Handle: ",$response[4]." für Device ".$response[3]);
-           				//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_handle", "Address" => $response[3], "Handle" => $response[4], "HardwareRev" => GetValueInteger($this->GetIDForIdent("HardwareRev")))));
- 					$I2C_DeviceHandle = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
+           				$I2C_DeviceHandle = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
  					$I2C_DeviceHandle[$response[3]] = $response[4];
  					SetValueString($this->GetIDForIdent("I2C_Handle"), serialize($I2C_DeviceHandle));
            			}
