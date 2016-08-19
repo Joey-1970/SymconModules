@@ -47,7 +47,8 @@
     { "type": "CheckBox", "name": "ActionValue", "caption": "Aktions Wert" },
     { "type": "Label", "label": "Zur Software-Entprellung angeschlossener Taster/Schalter (0-300000ms)" },
     { "type": "NumberSpinner", "name": "GlitchFilter", "caption": "Glitchfilter (ms)" },
-    { "type": "SelectScript", "name": "TriggerScript", "caption": "Reaktion auf Triggerimpuls" },
-    { "type": "SelectScript", "name": "ToggleScript", "caption": "Reaktion auf Toggle Status" }
+    { "type": "Label", "label": "Skriptausführung als Reaktion auf: " },
+    { "type": "SelectScript", "name": "TriggerScript", "caption": "Triggerimpuls" },
+    { "type": "SelectScript", "name": "ToggleScript", "caption": "Toggle Status" }
     ]
  }
