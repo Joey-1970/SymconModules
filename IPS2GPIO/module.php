@@ -248,7 +248,8 @@ class IPS2GPIO_IO extends IPSModule
 		   case "write_bytes_serial":
 		   	$Command = utf8_decode($data->Command);
 		   	IPS_LogMessage("IPS2GPIO Write Bytes Serial", "Handle: ".$data->Handle." Command: ".$Command);
-		   	$this->CommandClientSocket(pack("L*", 81, $data->Handle, 0, strlen($Command)).$Command, 16);
+//	   		$this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device, 16);
+
 		   	break;
 		}
 	    
@@ -339,6 +340,8 @@ class IPS2GPIO_IO extends IPSModule
 		elseif ($this->ReadPropertyBoolean("Serial_Used") == true)  {
 			$PinUsed[] = 14; 
 			$PinUsed[] = 15;
+			SetValueInteger($this->GetIDForIdent("Serial_Handle"), -1);
+			
 		}
 		elseif ($this->ReadPropertyBoolean("SPI_Used") == true)  {
 			for ($i = 7; $i < 11; $i++) {
@@ -537,9 +540,13 @@ class IPS2GPIO_IO extends IPSModule
  				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_byte_block", "DeviceAddress" => $this->GetI2C_HandleDevice($response[2]), "Register" => $response[3], "Count" => $response[4], "ByteArray" => $ByteArray)));
 		            	break;
 		        case "76":
-           			//IPS_LogMessage("IPS2GPIO Serial Handle: ","Serial Handle: ".$response[4]);
-           			$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_handle", "Handle" => $response[4], )));
-
+           			If ($response[4] >= 0) {
+           				//IPS_LogMessage("IPS2GPIO Serial Handle: ","Serial Handle: ".$response[4]);
+           				SetValueInteger($this->GetIDForIdent("Serial_Handle"), $response[4]);
+				}
+				else {
+					IPS_LogMessage("IPS2GPIO I2C Get Serial Handle: ","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
+				}
 		            	break;
 		        case "77":
            			IPS_LogMessage("IPS2GPIO Serial Close Handle: ","Serial Handle: ".$response[2]." Value: ".$response[4]);
