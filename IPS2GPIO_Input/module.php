@@ -45,11 +45,17 @@
 			   		// Trigger kurzzeitig setzen
 			   		If ($data->Value == $this->ReadPropertyBoolean("ActionValue") ) {
 			   			SetValueBoolean($this->GetIDForIdent("Trigger"), true);
+			   			If ($this->ReadPropertyInteger("TriggerScript") > 0) {
+			   				IPS_RunScript($this->ReadPropertyInteger("TriggerScript"));
+			   			}
 			   			SetValueBoolean($this->GetIDForIdent("Trigger"), false);
 			   		}
 			   		// Toggle-Variable
 			   		If ((GetValueBoolean($this->GetIDForIdent("Status")) == false) and ($data->Value == true)) {
 			   			SetValueBoolean($this->GetIDForIdent("Toggle"), !GetValueBoolean($this->GetIDForIdent("Toggle")));
+			   			If ($this->ReadPropertyInteger("ToggleScript") > 0) {
+			   				IPS_RunScript($this->ReadPropertyInteger("ToggleScript"));
+			   			}
 			   		}
 			   		// Status setzen
 			   		SetValueBoolean($this->GetIDForIdent("Status"), $data->Value);
