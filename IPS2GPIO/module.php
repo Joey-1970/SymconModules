@@ -429,6 +429,14 @@ class IPS2GPIO_IO extends IPSModule
 	{
 		$response = unpack("L*", $Message);
 		switch($response[1]) {
+		        case "0":
+		        	If ($response[4] == 0) {
+		        		IPS_LogMessage("IPS2GPIO Set Mode: ", "Pin: ".$response[2]." Wert: ".$response[3]." erfolgreich gesendet");
+		        	}
+		        	else {
+		        		IPS_LogMessage("IPS2GPIO Set Mode: ", "Pin: ".$response[2]." Wert: ".$response[3]." konnte nicht erfolgreich gesendet werden! Fehler:".$this->GetErrorText(abs($response[4])));
+		        	}
+		        	break;
 		        case "4":
 		        	If ($response[4] == 0) {
 		        		//IPS_LogMessage("IPS2GPIO Write: ", "Pin: ".$response[2]." Wert: ".$response[3]." erfolgreich gesendet");
