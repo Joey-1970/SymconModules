@@ -27,19 +27,11 @@
 		$this->RegisterVariableInteger("BrightnessDefault", "Brightness (Default)", "~Intensity.100", 20);
            	$this->EnableAction("BrightnessDefault");
 		
-		$this->RegisterVariableInteger("Handle", "Handle", "", 110);
-		$this->DisableAction("Handle");
-		IPS_SetHidden($this->GetIDForIdent("Handle"), true);
 		$this->RegisterVariableInteger("Baud", "Baud", "", 110);
 		$this->DisableAction("Baud");
 		IPS_SetHidden($this->GetIDForIdent("Baud"), true);
 
-             	If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
-             		// Handle löschen
-             		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "close_handle_serial", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")))));
-             		SetValueInteger($this->GetIDForIdent("Handle"), -1);
-             	}
-            	// den Handle für dieses Gerät ermitteln
+           	// den Handle für dieses Gerät ermitteln
             	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_handle_serial", "Baud" => 9600, "Device" => "/dev/ttyAMA0")));
 
 
@@ -70,17 +62,10 @@
 	    	// Empfangene Daten vom Gateway/Splitter
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
-			  case "get_usedpin":
-			   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => 14, "Modus" => "W")));
-			   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => 15, "Modus" => "R")));
-			   	break;
 			 case "status":
 			   	If (($data->Pin == 14) OR ($data->Pin == 15)) {
 			   		$this->SetStatus($data->Status);
 			   	}
-			   	break;
-			case "set_serial_handle":
-			   	SetValueInteger($this->GetIDForIdent("Handle"), $data->Handle);
 			   	break;
 			case "freepin":
 			   	// Funktion zum erstellen dynamischer Pulldown-Menüs
@@ -95,7 +80,7 @@
 		$Value = min(100, max(0, $Value));
 		//$Message = utf8_encode("dim=".$Value.chr(255).chr(255).chr(255)); 
 		$Message = utf8_encode("dim=".$Value."\xFF\xFF\xFF"); 
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Command" => $Message)));
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Command" => $Message)));
 
 	return;
 	}
