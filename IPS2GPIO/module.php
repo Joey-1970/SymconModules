@@ -332,7 +332,7 @@ class IPS2GPIO_IO extends IPSModule
 			$PinUsed[] = 0; 
 			$PinUsed[] = 1;
 			$this->CommandClientSocket(pack("LLLL", 0, 0, 0, 0), 16);
-			$this->CommandClientSocket(pack("LLLL", 0, 1, "0, 0), 16);
+			$this->CommandClientSocket(pack("LLLL", 0, 1, 0, 0), 16);
 		}
 		elseif (($this->ReadPropertyBoolean("I2C_Used") == true) AND (GetValueInteger($this->GetIDForIdent("HardwareRev"))) > 3) {
 			$PinUsed[] = 2; 
