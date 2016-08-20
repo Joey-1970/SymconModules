@@ -256,7 +256,7 @@ class IPS2GPIO_IO extends IPSModule
 	  }
 	
 	 public function ReceiveData($JSONString) {
- 	    	$CmdPossible = array(19, 21, 99);
+ 	    	$CmdPossible = array(19, 21, 76, 99);
  	    	$RDlen = array(16, 32);	
  	    	// Empfangene Daten vom I/O
 	    	$Data = json_decode($JSONString);
