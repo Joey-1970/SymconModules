@@ -340,6 +340,7 @@ class IPS2GPIO_IO extends IPSModule
 			$PinUsed[] = 14; 
 			$PinUsed[] = 15;
 			SetValueInteger($this->GetIDForIdent("Serial_Handle"), -1);
+			SetValueBoolean($this->GetIDForIdent("Serial_Used"), false);
 			
 		}
 		elseif ($this->ReadPropertyBoolean("SPI_Used") == true)  {
@@ -542,6 +543,7 @@ class IPS2GPIO_IO extends IPSModule
            			If ($response[4] >= 0) {
            				//IPS_LogMessage("IPS2GPIO Serial Handle: ","Serial Handle: ".$response[4]);
            				SetValueInteger($this->GetIDForIdent("Serial_Handle"), $response[4]);
+           				SetValueBoolean($this->GetIDForIdent("Serial_Used"), true);
 				}
 				else {
 					IPS_LogMessage("IPS2GPIO I2C Get Serial Handle: ","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
