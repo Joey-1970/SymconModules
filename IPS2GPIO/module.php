@@ -238,8 +238,8 @@ class IPS2GPIO_IO extends IPSModule
 		   
 		   // Serielle Kommunikation
 		   case "close_handle_serial":
-		   	IPS_LogMessage("IPS2GPIO Close Handle Serial", "Handle: ".$data->Handle);
-		   	$this->CommandClientSocket(pack("LLLL", 77, $data->Handle, 0, 0), 16);
+		   	IPS_LogMessage("IPS2GPIO Close Handle Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle")));
+		   	$this->CommandClientSocket(pack("LLLL", 77, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
 		   	break;
 		   case "get_handle_serial":
 	   		IPS_LogMessage("IPS2GPIO Get Handle Serial", "Handle anfordern");
