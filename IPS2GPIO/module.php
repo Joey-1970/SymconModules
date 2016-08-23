@@ -337,14 +337,14 @@ class IPS2GPIO_IO extends IPSModule
 		elseif (($this->ReadPropertyBoolean("I2C_Used") == true) AND (GetValueInteger($this->GetIDForIdent("HardwareRev"))) > 3) {
 			$PinUsed[] = 2; 
 			$PinUsed[] = 3;
-			$this->CommandClientSocket(pack("LLLL", 0, 2, "0", 0), 16);
-			$this->CommandClientSocket(pack("LLLL", 0, 3, "0", 0), 16);
+			//$this->CommandClientSocket(pack("LLLL", 0, 2, "0", 0), 16);
+			//$this->CommandClientSocket(pack("LLLL", 0, 3, "0", 0), 16);
 		}
 		elseif ($this->ReadPropertyBoolean("Serial_Used") == true)  {
 			$PinUsed[] = 14; 
 			$PinUsed[] = 15;
-			$this->CommandClientSocket(pack("LLLL", 0, 14, "0", 0), 16);
-			$this->CommandClientSocket(pack("LLLL", 0, 15, "0", 0), 16);
+			//$this->CommandClientSocket(pack("LLLL", 0, 14, "0", 0), 16);
+			//$this->CommandClientSocket(pack("LLLL", 0, 15, "0", 0), 16);
 			SetValueInteger($this->GetIDForIdent("Serial_Handle"), -1);
 			SetValueBoolean($this->GetIDForIdent("Serial_Used"), false);
 			
