@@ -585,7 +585,7 @@ class IPS2GPIO_IO extends IPSModule
          
 		            	break;
 		        case "99":
-           			If ($response[4] > 0 ) {
+           			If ($response[4] >= 0 ) {
            				IPS_LogMessage("IPS2GPIO Handle: ",$response[4]);
            				SetValueInteger($this->GetIDForIdent("Handle"), $response[4]);
            				
