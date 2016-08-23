@@ -211,7 +211,7 @@ class IPS2GPIO_IO extends IPSModule
 		   	}
 		   	break;
 		   case "i2c_read_word":
-		   	//IPS_LogMessage("IPS2GPIO I2C Read Word Parameter : ",$data->Handle." , ".$data->Register);
+		   	IPS_LogMessage("IPS2GPIO I2C Read Word Parameter : ","DeviceAdresse: ".$data->DeviceAddress.", Handle".$this->GetI2C_DeviceHandle($data->DeviceAddress)." ,Register".$data->Register);
 		   	If ($this->GetI2C_DeviceHandle($data->DeviceAddress) >= 0) {
 		   		$this->CommandClientSocket(pack("L*", 63, $this->GetI2C_DeviceHandle($data->DeviceAddress), $data->Register, 0), 16);
 		   	}
