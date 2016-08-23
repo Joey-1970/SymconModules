@@ -229,7 +229,7 @@ class IPS2GPIO_IO extends IPSModule
 		   	}
 		   	break;
 		   case "i2c_write_byte_onhandle":
-		   	IPS_LogMessage("IPS2GPIO I2C Write Byte Handle: ","Handle: ".$this->GetI2C_DeviceHandle($data->DeviceAddress).", Wert: ".$data->Value);  	
+		   	IPS_LogMessage("IPS2GPIO I2C Write Byte Handle: ","Handle: ".$this->GetI2C_DeviceHandle($data->DeviceAddress).", DeviceAdresse: ".$data->DeviceAddress.", Wert: ".$data->Value);  	
 		   	If ($this->GetI2C_DeviceHandle($data->DeviceAddress) >= 0) {
 		   		$this->CommandClientSocket(pack("L*", 60, $this->GetI2C_DeviceHandle($data->DeviceAddress), $data->Value, 0), 16);
 		   	}
