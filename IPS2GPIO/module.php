@@ -365,7 +365,7 @@ class IPS2GPIO_IO extends IPSModule
 
 	private function ClientSocket($message)
 	{
-		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus == 102)) {
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
 			$res = $this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode($message))));  
 		}
 	return;	
@@ -373,7 +373,7 @@ class IPS2GPIO_IO extends IPSModule
 	
 	private function CommandClientSocket($message, $ResponseLen = 16)
 	{
-		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus == 102)) {
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
 			// Socket erstellen
 			if(!($sock = socket_create(AF_INET, SOCK_STREAM, 0))) {
 				$errorcode = socket_last_error();
