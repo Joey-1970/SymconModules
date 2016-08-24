@@ -57,7 +57,7 @@
 		$this->RegisterVariableBoolean("P7", "P7", "~Switch", 80);
           	IPS_SetHidden($this->GetIDForIdent("P7"), false);
           	
-          	$this->RegisterVariableBoolean("Value", "Value", "", 90);
+          	$this->RegisterVariableInteger("Value", "Value", "", 90);
           	IPS_SetHidden($this->GetIDForIdent("Value"), false);
 		
 		for ($i = 0; $i <= 7; $i++) {
