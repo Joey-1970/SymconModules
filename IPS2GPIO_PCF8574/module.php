@@ -56,6 +56,9 @@
 		
 		$this->RegisterVariableBoolean("P7", "P7", "~Switch", 80);
           	IPS_SetHidden($this->GetIDForIdent("P7"), false);
+          	
+          	$this->RegisterVariableBoolean("Value", "Value", "", 90);
+          	IPS_SetHidden($this->GetIDForIdent("Value"), false);
 		
 		for ($i = 0; $i <= 7; $i++) {
 			If ($this->ReadPropertyBoolean("P".$i) == true) {
@@ -112,11 +115,11 @@
 			  case "set_i2c_data":
 			  	If ($data->DeviceAddress == $this->ReadPropertyInteger("DeviceAddress")) {
 			  		// Daten der Messung
+			  		SetValueInteger($this->GetIDForIdent("Value"), $data->Value);
+			  		$result = str_pad (decbin($data->Value), 8, '0', STR_PAD_LEFT );
 			  		for ($i = 0; $i <= 7; $i++) {
-		    				$Bitvalue = boolval($data->Value & (1<<$i));
-		    				SetValueBoolean($this->GetIDForIdent("P".$i), $Bitvalue);
-		    			}
-			  		
+						SetValueBoolean($this->GetIDForIdent("P".$i), substr ($result , 7-$i, 1));
+					}
 			  	}
 			  	break;
 	 	}
