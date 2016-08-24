@@ -140,16 +140,15 @@
 		// Aktuellen Status abfragen
 		$this->Read_Status();
 		// Bitmaske erstellen
-		$Bitmask = 0;
-		$NewBitmask = 0;
-		for ($i = 0; $i <= 7; $i++) {
-			If ($this->ReadPropertyBoolean("P".$i) == true) {
-				$Bitmask = $Bitmask + pow(2, $i);
-			}
+		$Bitmask = GetValueInteger($this->GetIDForIdent("Value"));
+		If ($Value == true) {
+			$Bitmask += ($Pin + 1);
 		}
-		// Setzen der Ausgänge
-		$NewBitmask = $Bitmask | pow(2, $Pin);
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => $this->ReadPropertyInteger("DeviceAddress"), "Value" => $NewBitmask)));
+		else {
+			$Bitmask -= ($Pin + 1);
+		}
+		$Bitmask = min(255, max(0, $Bitmask));
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => $this->ReadPropertyInteger("DeviceAddress"), "Value" => $Bitmask)));
 		$this->Read_Status();
 	return;
 	}
