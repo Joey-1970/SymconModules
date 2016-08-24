@@ -148,7 +148,7 @@
 			$Bitmask -= ($Pin + 1);
 		}
 		$Bitmask = min(255, max(0, $Bitmask));
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => $this->ReadPropertyInteger("DeviceAddress"), "Value" => $Bitmask)));
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte_onhandle", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Value" => $Bitmask)));
 		$this->Read_Status();
 	return;
 	}
