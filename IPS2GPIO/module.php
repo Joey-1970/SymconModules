@@ -671,7 +671,7 @@ class IPS2GPIO_IO extends IPSModule
   	
   	private function GetParentStatus()
 	{
-		$Status = (IPS_GetInstance($this->InstanceID)['InstanceStatus']);  
+		$Status = (IPS_GetInstance($this->GetParentID)['InstanceStatus']);  
 	return $Status;
 	}
   	
