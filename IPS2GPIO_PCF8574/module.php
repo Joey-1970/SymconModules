@@ -83,31 +83,31 @@
 	{
   		switch($Ident) {
 	        case "P0":
-	            $this->Set_Pin_Output(0, $Value);
+	            $this->SetPinOutput(0, $Value);
 	            break;
 	        case "P1":
-	            $this->Set_Pin_Output(1, $Value);
+	            $this->SetPinOutput(1, $Value);
 	            break;
 	        case "P2":
-	            $this->Set_Pin_Output(2, $Value);
+	            $this->SetPinOutput(2, $Value);
 	            break;
 	        case "P3":
-	            $this->Set_Pin_Output(3, $Value);
+	            $this->SetPinOutput(3, $Value);
 	            break;
 	        case "P4":
-	            $this->Set_Pin_Output(4, $Value);
+	            $this->SetPinOutput(4, $Value);
 	            break;
 	        case "P5":
-	            $this->Set_Pin_Output(5, $Value);
+	            $this->SetPinOutput(5, $Value);
 	            break;    
 	        case "P6":
-	            $this->Set_Pin_Output(6, $Value);
+	            $this->SetPinOutput(6, $Value);
 	            break;
 	        case "P7":
-	            $this->Set_Pin_Output(7, $Value);
+	            $this->SetPinOutput(7, $Value);
 	            break;
 	        case "Value":
-	            $this->Set_Output($Value);
+	            $this->SetOutput($Value);
 	            break;
 	        default:
 	            throw new Exception("Invalid Ident");
