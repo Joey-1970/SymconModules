@@ -142,10 +142,10 @@
 		// Bitmaske erstellen
 		$Bitmask = GetValueInteger($this->GetIDForIdent("Value"));
 		If ($Value == true) {
-			$Bitmask += ($Pin + 1);
+			$Bitmask = $this->setBit($Bitmask, $Pin);
 		}
 		else {
-			$Bitmask -= ($Pin + 1);
+			$Bitmask = $this->unsetBit($Bitmask, $Pin);
 		}
 		$Bitmask = min(255, max(0, $Bitmask));
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte_onhandle", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Value" => $Bitmask)));
@@ -153,5 +153,15 @@
 	return;
 	}
 	
+	private function setBit($byte, $significance) { 
+ 		// ein bestimmtes Bit auf 1 setzen
+ 		return $byte | 1<<$significance;   
+ 	} 
+
+	private function unsetBit($byte, $significance) {
+	    // ein bestimmtes Bit auf 0 setzen
+	    return $byte & ~(1<<$significance);
+	}
+
 }
 ?>
