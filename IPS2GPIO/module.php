@@ -241,10 +241,6 @@ class IPS2GPIO_IO extends IPSModule
 		   	
 		   
 		   // Serielle Kommunikation
-		   case "close_handle_serial":
-		   	IPS_LogMessage("IPS2GPIO Close Handle Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle")));
-		   	$this->CommandClientSocket(pack("LLLL", 77, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
-		   	break;
 		   case "get_handle_serial":
 	   		IPS_LogMessage("IPS2GPIO Get Handle Serial", "Handle anfordern");
 	   		$this->ClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device, 16);
@@ -354,6 +350,9 @@ class IPS2GPIO_IO extends IPSModule
 			$PinUsed[] = 15;
 			$this->CommandClientSocket(pack("LLLL", 0, 14, 4, 0), 16);
 			$this->CommandClientSocket(pack("LLLL", 0, 15, 4, 0), 16);
+			If (GetValueInteger($this->GetIDForIdent("Serial_Handle")) >= 0) {
+				$this->CommandClientSocket(pack("L*", 77, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
+			}
 			SetValueInteger($this->GetIDForIdent("Serial_Handle"), -1);
 			SetValueBoolean($this->GetIDForIdent("Serial_Used"), false);
 			
@@ -585,7 +584,13 @@ class IPS2GPIO_IO extends IPSModule
 				}
 		            	break;
 		        case "77":
-           			IPS_LogMessage("IPS2GPIO Serial Close Handle: ","Serial Handle: ".$response[2]." Value: ".$response[4]);
+           			If ($response[4] >= 0) {
+           				//IPS_LogMessage("IPS2GPIO Serial Close Handle: ","Serial Handle: ".$response[2]." Value: ".$response[4]);
+           			}
+           			else {
+           				IPS_LogMessage("IPS2GPIO Serial Close Handle: ","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));	
+           			}
+           			
 		            	break;
 		        case "81":
            			If ($response[4] >= 0) {
