@@ -324,6 +324,11 @@ class IPS2GPIO_IO extends IPSModule
 	           	$this->CommandClientSocket(pack("LLLL", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
 		}
 		// Ermitteln ob der I2C-Bus genutzt wird und welcher Device Adressen
+		// Bisherige I2C-Handle löschen
+		$I2C_DeviceHandle = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
+		for ($i = 0; $i < Count($I2C_DeviceHandle); $i++) {
+			//$this->CommandClientSocket(pack("L*", 55, $data->Handle, 0, 0), 16);
+		}
 		// Pins ermitteln die genutzt werden
 		$PinUsed = array();
 		SetValueBoolean($this->GetIDForIdent("I2C_Used"), false);
