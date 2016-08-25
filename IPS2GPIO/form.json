@@ -12,8 +12,13 @@
      { "name": "Open", "type": "CheckBox",  "caption": "Open" },
      { "name": "IPAddress", "type": "ValidationTextBox",  "caption": "IP" },
      { "type": "Label", "label": "Auswahl der erforderlichen Schnittstellen:" },
-     { "type": "CheckBox", "name": "I2C_Used", "caption": "I²C Schnittstelle" },
-     { "type": "CheckBox", "name": "Serial_Used", "caption": "Serielle Schnittstelle" },
-     { "type": "CheckBox", "name": "SPI_Used", "caption": "SPI Schnittstelle" }
+     { "type": "CheckBox", "name": "I2C_Used", "caption": "I²C" },
+     { "type": "CheckBox", "name": "Serial_Used", "caption": "Seriell" },
+     { "type": "CheckBox", "name": "SPI_Used", "caption": "SPI" },
+     { "type": "Label", "label": "Hinweise:" },
+     { "type": "Label", "label": "- es sollte PIGPIO in der aktuellsten Version installiert sein" },
+     { "type": "Label", "label": "Link: http://abyz.co.uk/rpi/pigpio/index.html" },
+     { "type": "Label", "label": "- es sollte in der raspi-config der GPIO-Server aktiviert sein" },
+     { "type": "Label", "label": "- die genutzten Schnittstellen sollten in der raspi-config aktiviert sein" },
    ]
 } 
