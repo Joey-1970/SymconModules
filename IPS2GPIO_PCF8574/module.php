@@ -69,9 +69,12 @@
 				// Ausgang muss manipulierbar sein
 				$this->EnableAction("P".$i);	
 			}
-			
 		}
 		
+		$this->RegisterVariableBoolean("WriteProtection", "WriteProtection", "", 130);
+		$this->DisableAction("WriteProtection");
+		IPS_SetHidden($this->GetIDForIdent("WriteProtection"), true);
+
            	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
 		$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
 	        // Erste Messdaten einlesen
@@ -137,11 +140,13 @@
 			  case "set_i2c_data":
 			  	If ($data->DeviceAddress == $this->ReadPropertyInteger("DeviceAddress")) {
 			  		// Daten der Messung
-			  		SetValueInteger($this->GetIDForIdent("Value"), $data->Value);
-			  		$result = str_pad (decbin($data->Value), 8, '0', STR_PAD_LEFT );
-			  		for ($i = 0; $i <= 7; $i++) {
-						SetValueBoolean($this->GetIDForIdent("P".$i), substr ($result , 7-$i, 1));
-					}
+			  		If (GetValueBoolean($this->GetIDForIdent("WriteProtection")) == false) {
+				  		SetValueInteger($this->GetIDForIdent("Value"), $data->Value);
+				  		$result = str_pad (decbin($data->Value), 8, '0', STR_PAD_LEFT );
+				  		for ($i = 0; $i <= 7; $i++) {
+							SetValueBoolean($this->GetIDForIdent("P".$i), substr ($result , 7-$i, 1));
+						}
+			  		}
 			  	}
 			  	break;
 	 	}
@@ -151,6 +156,9 @@
 	// Führt eine Messung aus
 	public function Read_Status()
 	{
+		SetValueBoolean($this->GetIDForIdent("WriteProtection"), true);
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte_onhandle", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"))));
+		SetValueBoolean($this->GetIDForIdent("WriteProtection"), false);
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte_onhandle", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"))));
 	return;
 	}
