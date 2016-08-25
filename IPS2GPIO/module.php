@@ -199,7 +199,7 @@ class IPS2GPIO_IO extends IPSModule
 		   	elseif (GetValueInteger($this->GetIDForIdent("HardwareRev")) >3) {
 		   		$this->CommandClientSocket(pack("LLLLL", 54, 1, $data->DeviceAddress, 4, 0), 16);
 		   	}
-		   	IPS_LogMessage("IPS2GPIO I2C Handle: ","Device Adresse: ".$data->DeviceAddress.", Hardware Rev:: ".GetValueInteger($this->GetIDForIdent("HardwareRev"))); 
+		   	//IPS_LogMessage("IPS2GPIO I2C Handle: ","Device Adresse: ".$data->DeviceAddress.", Hardware Rev:: ".GetValueInteger($this->GetIDForIdent("HardwareRev"))); 
 		   	break;
 		   case "i2c_read_byte":
 		   	//IPS_LogMessage("IPS2GPIO I2C Read Byte Parameter : ",$data->Handle." , ".$data->Register); 
@@ -436,7 +436,7 @@ class IPS2GPIO_IO extends IPSModule
 		switch($response[1]) {
 		        case "0":
 		        	If ($response[4] == 0) {
-		        		IPS_LogMessage("IPS2GPIO Set Mode: ", "Pin: ".$response[2]." Wert: ".$response[3]." erfolgreich gesendet");
+		        		//IPS_LogMessage("IPS2GPIO Set Mode: ", "Pin: ".$response[2]." Wert: ".$response[3]." erfolgreich gesendet");
 		        	}
 		        	else {
 		        		IPS_LogMessage("IPS2GPIO Set Mode: ", "Pin: ".$response[2]." Wert: ".$response[3]." konnte nicht erfolgreich gesendet werden! Fehler:".$this->GetErrorText(abs($response[4])));
@@ -497,13 +497,13 @@ class IPS2GPIO_IO extends IPSModule
 		            	break;
 		        case "54":
 		        	If ($response[4] >= 0 ) {
-           				IPS_LogMessage("IPS2GPIO I2C-Handle: ",$response[4]." für Device ".$response[3]);
+           				//IPS_LogMessage("IPS2GPIO I2C Handle: ",$response[4]." für Device ".$response[3]);
            				$I2C_DeviceHandle = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
  					$I2C_DeviceHandle[$response[3]] = $response[4];
  					SetValueString($this->GetIDForIdent("I2C_Handle"), serialize($I2C_DeviceHandle));
            			}
            			else {
-           				IPS_LogMessage("IPS2GPIO I2C-Handle: ","Fehler: ".$this->GetErrorText(abs($response[4]))." Handle für Device ".$response[3]." nicht vergeben!");
+           				IPS_LogMessage("IPS2GPIO I2C Handle: ","Fehler: ".$this->GetErrorText(abs($response[4]))." Handle für Device ".$response[3]." nicht vergeben!");
            			}
            			
 		        	break;
