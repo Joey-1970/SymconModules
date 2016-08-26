@@ -8,6 +8,7 @@
             // Diese Zeile nicht löschen.
             parent::Create();
             $this->RegisterPropertyInteger("Baud", 3);
+            $this->RegisterPropertyString("ConnectionString", "/dev/ttyAMA0");
             $this->RegisterPropertyInteger("Brightness", 100);
             $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
@@ -30,9 +31,9 @@
 		$this->RegisterVariableInteger("Baud", "Baud", "", 110);
 		$this->DisableAction("Baud");
 		IPS_SetHidden($this->GetIDForIdent("Baud"), true);
-
-           	// den Handle für dieses Gerät ermitteln
-            	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_handle_serial", "Baud" => 9600, "Device" => "/dev/ttyAMA0")));
+		
+         	// den Handle für dieses Gerät ermitteln
+            	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_handle_serial", "Baud" => 9600, "Device" => $this->ReadPropertyString('ConnectionString') )));
 
 
   
