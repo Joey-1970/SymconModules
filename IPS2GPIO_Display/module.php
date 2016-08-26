@@ -9,7 +9,6 @@
             parent::Create();
             $this->RegisterPropertyInteger("Baud", 3);
             $this->RegisterPropertyString("ConnectionString", "/dev/ttyAMA0");
-            $this->RegisterPropertyInteger("Brightness", 100);
             $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
  
@@ -43,12 +42,12 @@
 	{
   		switch($Ident) {
 		case "Brightness":
-	            $this->Set_Brightness($Value);
+	            $this->SetBrightness($Value);
 	            //Neuen Wert in die Statusvariable schreiben
 	            SetValueInteger($this->GetIDForIdent($Ident), $Value);
 	            break;
 	        case "BrightnessDefault":
-	            $this->Set_Brightness_Default($Value);
+	            $this->SetBrightnessDefault($Value);
 	            //Neuen Wert in die Statusvariable schreiben
 	            SetValueInteger($this->GetIDForIdent($Ident), $Value);
 	            break;
@@ -76,26 +75,25 @@
  	}
 	// Beginn der Funktionen
 	
-	public function Set_Brightness($Value)
+	public function SetBrightness($Value)
 	{
 		$Value = min(100, max(0, $Value));
-		//$Message = utf8_encode("dim=".$Value.chr(255).chr(255).chr(255)); 
 		$Message = utf8_encode("dim=".$Value."\xFF\xFF\xFF"); 
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Command" => $Message)));
 
 	return;
 	}
 	
-	public function Set_Brightness_Default($Value)
+	public function SetBrightnessDefault($Value)
 	{
 		$Value = min(100, max(0, $Value));
-		$Message = utf8_encode("dims=".$Value.chr(255).chr(255).chr(255));
+		$Message = utf8_encode("dims=".$Value."\xFF\xFF\xFF"); 
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Command" => $Message)));
 
 	return;
 	}
 	
-	public function Set_Time()
+	public function SetDateTime()
 	{
 		date_default_timezone_set("Europe/Berlin");
 		$timestamp = time();
@@ -105,13 +103,6 @@
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Command" => $Message)));
 		$Message = "rtc5=".date("s",$timestamp)."\xFF\xFF\xFF";
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Command" => $Message)));
-	return;	
-	}
-	
-	public function Set_Date()
-	{
-		date_default_timezone_set("Europe/Berlin");
-		$timestamp = time();
 		$Message = "rtc0=".date("Y",$timestamp)."\xFF\xFF\xFF";
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Command" => $Message)));
 		$Message = "rtc1=".date("m",$timestamp)."\xFF\xFF\xFF"; 
@@ -120,6 +111,8 @@
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Handle" => GetValueInteger($this->GetIDForIdent("Handle")), "Command" => $Message)));
 	return;	
 	}
+	
+
 	
 }
 ?>
