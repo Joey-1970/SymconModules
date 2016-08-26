@@ -20,7 +20,7 @@
                 { "label": "115200", "value": 7 }
                 ]
         },
-        { "type": "Label", "label": "Connection String der Seriellen Schnittstelle (z.B. /dev/tty...) },
+        { "type": "Label", "label": "Connection String der Seriellen Schnittstelle (z.B. /dev/tty...)" },
         { "type": "ValidationTextBox", "name": "ConnectionString", "caption": "Connection String" },
         { "type": "IntervalBox", "name": "Brightness", "caption": "Brightness (Default)" },
         { "type": "Label", "label": "Steuerung eines Nextion Enhanced Displays" },
