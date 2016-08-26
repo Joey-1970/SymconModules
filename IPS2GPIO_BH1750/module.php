@@ -31,8 +31,10 @@
              	$this->RegisterVariableInteger("Illuminance", "Illuminance", "illuminance.lx", 10);
 		$this->DisableAction("Illuminance");
 		IPS_SetHidden($this->GetIDForIdent("Illuminance"), false);
+		// Logging setzen
 		//AC_SetLoggingStatus(39147 /*[Archive]*/, $this->GetIDForIdent("Illuminance"), $this->ReadPropertyBoolean("Logging"));
-
+		//IPS_ApplyChanges(39147 /*[Archive]*/);
+		
             	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
             	$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
             	// Setup
