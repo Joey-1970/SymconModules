@@ -12,6 +12,7 @@
             // Pin Trigger
             $this->RegisterPropertyInteger("Pin_O", -1);
             $this->RegisterPropertyInteger("Messzyklus", 5);
+            $this->RegisterPropertyBoolean("Logging", false);
             $this->RegisterTimer("Messzyklus", 0, 'I2GSR4_Measurement($_IPS["TARGET"]);');
  	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
@@ -29,9 +30,15 @@
 		    $this->RegisterVariableFloat("Distance", "Distance", "length.cm", 10);
 	            $this->DisableAction("Distance");
 	            IPS_SetHidden($this->GetIDForIdent("Distance"), false);
+	            
 	            $this->RegisterVariableInteger("Timestamp", "Timestamp", "", 20);
 	            $this->DisableAction("Timestamp");
 	            IPS_SetHidden($this->GetIDForIdent("Timestamp"), true);
+	            
+	            // Logging setzen
+		    AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Distance"), $this->ReadPropertyBoolean("Logging"));
+		    IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
+
 	            
 	            If (($this->ReadPropertyInteger("Pin_I") >= 0) AND ($this->ReadPropertyInteger("Pin_O")) >= 0) {
 	            	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
