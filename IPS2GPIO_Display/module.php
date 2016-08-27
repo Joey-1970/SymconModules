@@ -9,6 +9,8 @@
             parent::Create();
             $this->RegisterPropertyInteger("Baud", 3);
             $this->RegisterPropertyString("ConnectionString", "/dev/ttyAMA0");
+            $this->RegisterPropertyBoolean("DateTime", true);
+            $this->RegisterPropertyInteger("Brightness", 100);
             $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
  
@@ -23,17 +25,15 @@
 		//Status-Variablen anlegen
 		$this->RegisterVariableInteger("Brightness", "Brightness", "~Intensity.100", 10);
            	$this->EnableAction("Brightness");
-		
-		$this->RegisterVariableInteger("BrightnessDefault", "Brightness (Default)", "~Intensity.100", 20);
-           	$this->EnableAction("BrightnessDefault");
-		
+
 		$this->RegisterVariableInteger("Baud", "Baud", "", 110);
 		$this->DisableAction("Baud");
 		IPS_SetHidden($this->GetIDForIdent("Baud"), true);
 		
          	// den Handle für dieses Gerät ermitteln
             	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_handle_serial", "Baud" => 9600, "Device" => $this->ReadPropertyString('ConnectionString') )));
-
+		
+		$this->Setup();
 
   
         }
@@ -83,6 +83,16 @@
 	return;
 	}
 	
+	private function Setup($Message)
+	{
+		// Uhrzeit und Datum aktualisieren
+		If ($this->ReadPropertyBoolean("DateTime") == true) {
+			$this->SetDateTime();
+		}
+		// Default-Wert der Helligkeit setzen
+		$this->SetBrightnessDefault($this->ReadPropertyInteger("Brightness"))
+	return;
+	}
 	public function SetBrightness($Value)
 	{
 		$Value = min(100, max(0, $Value));
@@ -90,14 +100,14 @@
 	return;
 	}
 	
-	public function SetBrightnessDefault($Value)
+	private function SetBrightnessDefault($Value)
 	{
 		$Value = min(100, max(0, $Value));
 		$this->Send("dims=".$Value);
 	return;
 	}
 	
-	public function SetDateTime()
+	private function SetDateTime()
 	{
 		date_default_timezone_set("Europe/Berlin");
 		$timestamp = time();
