@@ -11,6 +11,9 @@
             $this->RegisterPropertyString("ConnectionString", "/dev/ttyAMA0");
             $this->RegisterPropertyBoolean("DateTime", true);
             $this->RegisterPropertyInteger("Brightness", 100);
+            $this->RegisterPropertyInteger("SleepNoSerial", 60);
+            $this->RegisterPropertyInteger("SleepNoTouch", 60);
+            $this->RegisterPropertyBoolean("TouchAwake", true);
             $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
  
@@ -90,7 +93,13 @@
 			$this->SetDateTime();
 		}
 		// Default-Wert der Helligkeit setzen
-		$this->SetBrightnessDefault($this->ReadPropertyInteger("Brightness"))
+		$this->SetBrightnessDefault($this->ReadPropertyInteger("Brightness"));
+		// Zeit für Sleep Modus ohne Serielle Kommunikation
+		$this->SetSleepNoSerial($this->ReadPropertyInteger("SleepNoSerial"));
+		// Zeit für Sleep Modus ohne Touch
+		$this->SetSleepNoTouch($this->ReadPropertyInteger("SleepNoTouch"));
+		// Touch soll aus Sleep Modus wecken
+		$this->SetTouchAwake($this->ReadPropertyBoolean("TouchAwake"));
 	return;
 	}
 	public function SetBrightness($Value)
@@ -120,7 +129,26 @@
 	return;	
 	}
 	
-
+	private function SetSleepNoSerial($Value)
+	{
+		$Value = min(65535, max(0, $Value));
+		$this->Send("ussp=".$Value);
+	return;
+	}
+	
+	private function SetSleepNoTouch($Value)
+	{
+		$Value = min(65535, max(0, $Value));
+		$this->Send("thsp=".$Value);
+	return;
+	}
+	
+	private function SetTouchAwake($Value)
+	{
+		$Value = min(1, max(0, $Value));
+		$this->Send("thup=".$Value);
+	return;
+	}
 	
 }
 ?>
