@@ -86,7 +86,7 @@
 	return;
 	}
 	
-	private function Setup($Message)
+	private function Setup()
 	{
 		// Uhrzeit und Datum aktualisieren
 		If ($this->ReadPropertyBoolean("DateTime") == true) {
