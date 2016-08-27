@@ -75,21 +75,25 @@
  	}
 	// Beginn der Funktionen
 	
+	private function Send($Message)
+	{
+		$Message = utf8_encode($Message."\xFF\xFF\xFF");
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Command" => $Message)));
+
+	return;
+	}
+	
 	public function SetBrightness($Value)
 	{
 		$Value = min(100, max(0, $Value));
-		$Message = utf8_encode("dim=".$Value."\xFF\xFF\xFF"); 
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Command" => $Message)));
-
+		$this->Send("dim=".$Value); 
 	return;
 	}
 	
 	public function SetBrightnessDefault($Value)
 	{
 		$Value = min(100, max(0, $Value));
-		$Message = utf8_encode("dims=".$Value."\xFF\xFF\xFF"); 
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Command" => $Message)));
-
+		$this->Send("dims=".$Value);
 	return;
 	}
 	
@@ -97,18 +101,12 @@
 	{
 		date_default_timezone_set("Europe/Berlin");
 		$timestamp = time();
-		$Message = "rtc3=".date("H",$timestamp)."\xFF\xFF\xFF";
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Command" => $Message)));
-		$Message = "rtc4=".date("i",$timestamp)."\xFF\xFF\xFF"; 
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Command" => $Message)));
-		$Message = "rtc5=".date("s",$timestamp)."\xFF\xFF\xFF";
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Command" => $Message)));
-		$Message = "rtc0=".date("Y",$timestamp)."\xFF\xFF\xFF";
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Command" => $Message)));
-		$Message = "rtc1=".date("m",$timestamp)."\xFF\xFF\xFF"; 
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Command" => $Message)));
-		$Message = "rtc2=".date("d",$timestamp)."\xFF\xFF\xFF";
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Command" => $Message)));
+		$this->Send("rtc0=".date("Y",$timestamp));
+		$this->Send("rtc1=".date("m",$timestamp));
+		$this->Send("rtc2=".date("d",$timestamp));
+		$this->Send("rtc3=".date("H",$timestamp));
+		$this->Send("rtc4=".date("i",$timestamp));
+		$this->Send("rtc5=".date("s",$timestamp));
 	return;	
 	}
 	
