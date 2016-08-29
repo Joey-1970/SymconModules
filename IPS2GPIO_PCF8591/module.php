@@ -16,6 +16,13 @@
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GAD1_Measurement($_IPS["TARGET"]);');
         }
+
+        // Überschreibt die interne IPS_Destroy($id) Funktion
+        public function Destroy() {
+            // Diese Zeile nicht löschen.
+            parent::Destroy();
+            $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_destroy", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"))));
+        }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
