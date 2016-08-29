@@ -17,6 +17,14 @@
  	    	$this->RegisterPropertyBoolean("P5", false);
  	    	$this->RegisterPropertyBoolean("P6", false);
  	    	$this->RegisterPropertyBoolean("P7", false);
+ 	    	$this->RegisterPropertyBoolean("LoggingP0", false);
+ 	    	$this->RegisterPropertyBoolean("LoggingP1", false);
+ 	    	$this->RegisterPropertyBoolean("LoggingP2", false);
+ 	    	$this->RegisterPropertyBoolean("LoggingP3", false);
+ 	    	$this->RegisterPropertyBoolean("LoggingP4", false);
+ 	    	$this->RegisterPropertyBoolean("LoggingP5", false);
+ 	    	$this->RegisterPropertyBoolean("LoggingP6", false);
+ 	    	$this->RegisterPropertyBoolean("LoggingP7", false);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GIO1_Read_Status($_IPS["TARGET"]);');
         }
@@ -70,6 +78,12 @@
 				$this->EnableAction("P".$i);	
 			}
 		}
+
+		// Logging setzen
+		for ($i = 0; $i <= 7; $i++) {
+			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("P".$i), $this->ReadPropertyBoolean("LoggingP".$i)); 
+		} 
+		IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
 
            	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
 		$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
