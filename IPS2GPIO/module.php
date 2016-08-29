@@ -201,8 +201,20 @@ class IPS2GPIO_IO extends IPSModule
 		   	}
 		   	//IPS_LogMessage("IPS2GPIO I2C Handle: ","Device Adresse: ".$data->DeviceAddress.", Hardware Rev:: ".GetValueInteger($this->GetIDForIdent("HardwareRev"))); 
 		   	break;
+		   case "i2c_destroy":
+		   	//IPS_LogMessage("IPS2GPIO I2C Destroy: ",$data->DeviceAddress." , ".$data->Register); 
+		   	If ($this->GetI2C_DeviceHandle($data->DeviceAddress) >= 0) {
+		   		$I2C_DeviceHandle = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
+		   		// Handle für das Device löschen
+		   		$this->CommandClientSocket(pack("L*", 55, GetI2C_DeviceHandle($data->DeviceAddress), 0, 0), 16);
+		   		// Device aus dem Array löschen
+				$key = array_search($this->GetI2C_DeviceHandle($data->DeviceAddress), $I2C_DeviceHandle); 
+				array_splice($I2C_DeviceHandle, $key, 1); 
+				SetValueString($this->GetIDForIdent("I2C_Handle"), serialize($I2C_DeviceHandle));
+		   	}
+		   	break;
 		   case "i2c_read_byte":
-		   	//IPS_LogMessage("IPS2GPIO I2C Read Byte Parameter : ",$data->Handle." , ".$data->Register); 
+		   	//IPS_LogMessage("IPS2GPIO I2C Read Byte Parameter: ",$data->Handle." , ".$data->Register); 
 		   	If ($this->GetI2C_DeviceHandle($data->DeviceAddress) >= 0) {
 		   		$this->CommandClientSocket(pack("L*", 61, $this->GetI2C_DeviceHandle($data->DeviceAddress), $data->Register, 0), 16);
 		   	}
