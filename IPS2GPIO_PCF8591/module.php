@@ -10,9 +10,14 @@
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
  	    	$this->RegisterPropertyInteger("DeviceAddress", 72);
  	    	$this->RegisterPropertyBoolean("Ain0", true);
+ 	    	$this->RegisterPropertyBoolean("LoggingAin0", false);
  	    	$this->RegisterPropertyBoolean("Ain1", true);
+ 	    	$this->RegisterPropertyBoolean("LoggingAin1", false);
  	    	$this->RegisterPropertyBoolean("Ain2", true);
+ 	    	$this->RegisterPropertyBoolean("LoggingAin2", false);
  	    	$this->RegisterPropertyBoolean("Ain3", true);
+ 	    	$this->RegisterPropertyBoolean("LoggingAin3", false);
+ 	    	$this->RegisterPropertyBoolean("LoggingOut", false);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GAD1_Measurement($_IPS["TARGET"]);');
         }
@@ -59,6 +64,13 @@
 		$this->RegisterVariableInteger("Output", "Output", "~Intensity.255", 50);
           	$this->EnableAction("Output");
 		IPS_SetHidden($this->GetIDForIdent("Output"), false);
+
+		// Logging setzen
+		for ($i = 0; $i <= 3; $i++) {
+			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Channel_".$i), $this->ReadPropertyBoolean("LoggingAin".$i)); 
+		} 
+		AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Output"), $this->ReadPropertyBoolean("LoggingOut")); 
+		IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
 
             	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
             	$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
