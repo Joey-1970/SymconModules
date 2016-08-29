@@ -111,9 +111,13 @@ class IPS2GPIO_IO extends IPSModule
 		        // aus der Liste der Notify-GPIO
 		        $PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
 		        if (in_array($data->Pin, $PinNotify)) {
-		    		array_splice($PinNotify, $data->Pin, 1);	
+		    		array_splice($PinNotify, $data->Pin, 1);
+		    		SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
+		    		If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
+			           	// Notify neu setzen
+			           	$this->CommandClientSocket(pack("LLLL", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
+				}
 		    	}
-		    	SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
 		        break;
 		    case "set_PWM_dutycycle":
 		    	// Dimmt einen Pin
