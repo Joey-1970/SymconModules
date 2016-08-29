@@ -21,8 +21,9 @@
         public function Destroy() {
             // Diese Zeile nicht löschen.
             parent::Destroy();
+            IPS_LogMessage("IPS2GPIO GPIO Destroy: ","Genutzte Pin löschen");
             $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "gpio_destroy", "Pin" => $this->ReadPropertyInteger("Pin_I"))));
-            $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "gpio_destroy", "Pin" => $this->ReadPropertyInteger("Pin_I"))));
+            $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "gpio_destroy", "Pin" => $this->ReadPropertyInteger("Pin_O"))));
 
         }
 
