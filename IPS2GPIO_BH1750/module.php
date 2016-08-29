@@ -14,7 +14,7 @@
             	$this->RegisterTimer("Messzyklus", 0, 'I2GBH_Measurement($_IPS["TARGET"]);');
         }
  
-        // Überschreibt die interne IPS_Create($id) Funktion
+        // Überschreibt die interne IPS_Destroy($id) Funktion
         public function Destroy() {
             // Diese Zeile nicht löschen.
             parent::Destroy();
