@@ -21,6 +21,7 @@
         { "type": "CheckBox", "name": "LoggingTemp", "caption": "Logging Temperatur aktivieren" },
         { "type": "CheckBox", "name": "LoggingHum", "caption": "Logging Luftfeuchtigkeit aktivieren" },
         { "type": "CheckBox", "name": "LoggingPres", "caption": "Logging Luftdruck aktivieren" },
+        { "type": "CheckBox", "name": "CalibrateData", "caption": "Kalibrierungsdaten nur einlesen wenn erforderlich" },
         { "type": "Label", "label": "Hinweise:" },
         { "type": "Label", "label": "- die Device Adresse lautet 118 dez (0x76h) bei SDO an GND" },
         { "type": "Label", "label": "- die Device Adresse lautet 119 dez (0x77h) als Default" },
