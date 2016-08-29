@@ -14,6 +14,7 @@
             $this->RegisterPropertyInteger("SleepNoSerial", 60);
             $this->RegisterPropertyInteger("SleepNoTouch", 60);
             $this->RegisterPropertyBoolean("TouchAwake", true);
+            $this->RegisterPropertyInteger("CmdRet", 60);
             $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
  
@@ -100,6 +101,8 @@
 		$this->SetSleepNoTouch($this->ReadPropertyInteger("SleepNoTouch"));
 		// Touch soll aus Sleep Modus wecken
 		$this->SetTouchAwake($this->ReadPropertyBoolean("TouchAwake"));
+		// Rückgabeverhalten auf kommandos
+		$this->SetCommandReturn($this->ReadPropertyInteger("CmdRet"));
 	return;
 	}
 	public function SetBrightness($Value)
@@ -147,10 +150,14 @@
 	{
 		$Value = min(1, max(0, $Value));
 		$this->Send("thup=".$Value);
-		// Workaround für nicht aufweckbares Display!!!
-		$this->Send("bkcmd=2");
 	return;
 	}
 	
+	private function SetCommandReturn($Value)
+	{
+		$Value = min(3, max(0, $Value));
+		$this->Send("bkcmd=".$Value);
+	return;
+	}
 }
 ?>
