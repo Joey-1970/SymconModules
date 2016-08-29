@@ -13,6 +13,7 @@
  	    	$this->RegisterPropertyBoolean("LoggingTemp", false);
  	    	$this->RegisterPropertyBoolean("LoggingHum", false);
  	    	$this->RegisterPropertyBoolean("LoggingPres", false);
+ 	    	$this->RegisterPropertyBoolean("CalibrateData", true);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GBME_Measurement($_IPS["TARGET"]);');
         }
  
@@ -65,7 +66,7 @@
             	$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
             	// Parameterdaten zum Baustein senden
             	$this->Setup();
-            	// Kalibrirungsdaten einlesen
+            	// Kalibrierungsdaten einlesen
             	$this->ReadCalibrateData();
             	// Erste Messdaten einlesen
             	$this->Measurement();
