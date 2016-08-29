@@ -100,6 +100,21 @@ class IPS2GPIO_IO extends IPSModule
 	    	
 	 	switch ($data->Function) {
 		    // GPIO Kommunikation
+		    case "gpio_destroy":
+		    	// Löschen einer GPIO-Belegung
+		    	// aus der Liste der genutzten GPIO
+		    	$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
+		    	if (in_array($data->Pin, $PinUsed)) {
+		    		array_splice($PinUsed, $data->Pin, 1);	
+		    	}
+		    	SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
+		        // aus der Liste der Notify-GPIO
+		        $PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
+		        if (in_array($data->Pin, $PinNotify)) {
+		    		array_splice($PinNotify, $data->Pin, 1);	
+		    	}
+		    	SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
+		        break;
 		    case "set_PWM_dutycycle":
 		    	// Dimmt einen Pin
 		    	If ($data->Pin >= 0) {
