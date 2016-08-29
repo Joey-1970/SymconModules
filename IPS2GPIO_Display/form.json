@@ -30,6 +30,14 @@
         { "type": "Label", "label": "Display Sleep Modus ohne Touch (0->aus, 3-65535 Sekunden)" },
         { "type": "NumberSpinner", "name": "SleepNoTouch", "caption": "Sekunden" },
         { "type": "CheckBox", "name": "TouchAwake", "caption": "Touch beendet Sleep Modus" },
+        { "type": "Select", "name": "CmdRet", "caption": "Return der Kommandos",
+            "options": [
+                { "label": "Keine Rückgabe", "value": 0 },
+                { "label": "Nur erfolgreiche Daten", "value": 1 },
+                { "label": "Nur fehlerhafte Daten", "value": 2 },
+                { "label": "Alle Daten", "value": 3 }
+                ]
+        },
         { "type": "Label", "label": "Steuerung eines Nextion Enhanced Displays" },
         { "type": "Label", "label": "Hinweise:" },
         { "type": "Label", "label": "- die UART-Nutzung muss in der Raspberry Pi-Konfiguration freigegeben werden (sudo raspi-config -> Advanced Options -> Serial Enable = false)" },
