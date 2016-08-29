@@ -10,6 +10,13 @@
             $this->RegisterPropertyInteger("Pin", -1);
  	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
+
+        // Überschreibt die interne IPS_Destroy($id) Funktion
+        public function Destroy() {
+            // Diese Zeile nicht löschen.
+            parent::Destroy();
+            $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "gpio_destroy", "Pin" => $this->ReadPropertyInteger("Pin"))));
+        }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
