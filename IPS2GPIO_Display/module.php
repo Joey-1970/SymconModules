@@ -147,6 +147,8 @@
 	{
 		$Value = min(1, max(0, $Value));
 		$this->Send("thup=".$Value);
+		// Workaround für nicht aufweckbares Display!!!
+		$this->Send("bkcmd=2");
 	return;
 	}
 	
