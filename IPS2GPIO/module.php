@@ -104,13 +104,16 @@ class IPS2GPIO_IO extends IPSModule
 		    	// Löschen einer GPIO-Belegung
 		    	// aus der Liste der genutzten GPIO
 		    	$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
+		    	IPS_LogMessage("IPS2GPIO GPIO Destroy: ",$data->Pin);
 		    	if (in_array($data->Pin, $PinUsed)) {
+		    		IPS_LogMessage("IPS2GPIO GPIO Destroy: ","Pin in PinUsed");
 		    		array_splice($PinUsed, $data->Pin, 1);	
 		    	}
 		    	SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
 		        // aus der Liste der Notify-GPIO
 		        $PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
 		        if (in_array($data->Pin, $PinNotify)) {
+		    		IPS_LogMessage("IPS2GPIO GPIO Destroy: ","Pin in PinNotify");
 		    		array_splice($PinNotify, $data->Pin, 1);
 		    		SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
 		    		If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
