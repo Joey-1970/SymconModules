@@ -209,6 +209,9 @@ class IPS2GPIO_IO extends IPSModule
 		   		$this->CommandClientSocket(pack("L*", 55, GetI2C_DeviceHandle($data->DeviceAddress), 0, 0), 16);
 		   		// Device aus dem Array löschen
 				array_splice($I2C_DeviceHandle, $data->DeviceAddress, 1); 
+				If (Count($I2C_DeviceHandle) = 0) {
+					SetValueBoolean($this->GetIDForIdent("I2C_Used"), false);
+				}
 				SetValueString($this->GetIDForIdent("I2C_Handle"), serialize($I2C_DeviceHandle));
 		   	}
 		   	break;
