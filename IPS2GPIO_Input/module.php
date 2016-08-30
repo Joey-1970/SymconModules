@@ -39,7 +39,7 @@
                 $this->DisableAction("Trigger");
             
                 //ReceiveData-Filter setzen
-		$Filter = '.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*|.*"Function":status.*|.*"Function":get_usedpin.*|.*"Function":get_notifypin.*';
+		$Filter = '.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*|.*"Function":get_usedpin.*|.*"Function":get_notifypin.*';
 		//$this->SetReceiveDataFilter($Filter);
 
             
