@@ -88,7 +88,7 @@
 
 			   	break;
 			   case "status":
-			   	If ($data->Pin == $this->ReadPropertyInteger("Pin_I")) OR ($data->Pin == $this->ReadPropertyInteger("Pin_O")) {
+			   	If (($data->Pin == $this->ReadPropertyInteger("Pin_I")) OR ($data->Pin == $this->ReadPropertyInteger("Pin_O"))) {
 			   		$this->SetStatus($data->Status);
 			   	}
 			   	break;
