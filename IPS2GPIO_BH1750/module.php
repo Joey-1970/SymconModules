@@ -44,7 +44,8 @@
 		
 		//ReceiveData-Filter setzen
 		//$Filter = '.*"DeviceAddress":'.$this->ReadPropertyInteger("DeviceAddress").'.*|.*"Function":"status".*|.*"Function":"get_used_i2c".*';
-		$Filter = '.*"'.$this->ReadPropertyInteger("DeviceAddress").'".*|.*"status".*|.*"get_used_i2c".*';
+		//$Filter = '.*"'.$this->ReadPropertyInteger("DeviceAddress").'".*|.*"status".*|.*"get_used_i2c".*';
+		$Filter = '.*"get_used_i2c".*';
 		$this->SendDebug("IPS2GPIO", $Filter, 0);
 		$this->SetReceiveDataFilter($Filter);
 
