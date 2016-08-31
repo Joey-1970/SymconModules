@@ -73,8 +73,8 @@
 		IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
 
 		//ReceiveData-Filter setzen
-		$Filter = '.*"DeviceAddress":'.$this->ReadPropertyInteger("DeviceAddress").'.*|.*"Function":status.*|.*"Function":get_used_i2c.*';
-		//$this->SetReceiveDataFilter($Filter);
+		$Filter = '.*"Function":"get_used_i2c".*|.*"DeviceAddress":'.$this->ReadPropertyInteger("DeviceAddress").'.*|.*"Function":"status".*';
+		$this->SetReceiveDataFilter($Filter);
 
             	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
             	$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
