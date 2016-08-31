@@ -23,11 +23,13 @@ class IPS2GPIO_IO extends IPSModule
 	  public function ApplyChanges()
 	  {
 		// Nachrichten abonnieren
-/*		$this->RegisterMessage(0, IPS_KERNELMESSAGE);
+		$this->RegisterMessage(0, 10103);
+		$this->RegisterMessage($this->InstanceID, 10412);
+		$this->RegisterMessage($this->InstanceID, 10413);
+		$this->RegisterMessage($this->InstanceID, 10403);
+		$this->RegisterMessage($this->InstanceID, 10503);
+		$this->RegisterMessage($this->InstanceID, 10504);
 		
-		if (IPS_GetKernelRunlevel() <> KR_READY)
-            	return;
-*/		
 		//Never delete this line!
 		parent::ApplyChanges();
 		
@@ -104,6 +106,8 @@ class IPS2GPIO_IO extends IPSModule
     	{
         switch ($Message)
         {
+        	IPS_LogMessage("IPS2GPIO MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
+}
 /*            case IPS_KERNELMESSAGE:
                 if ($Data[0] == KR_READY) {
                     try {
