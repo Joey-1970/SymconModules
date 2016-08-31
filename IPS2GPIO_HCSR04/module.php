@@ -40,11 +40,7 @@
 		    $this->RegisterVariableFloat("Distance", "Distance", "length.cm", 10);
 	            $this->DisableAction("Distance");
 	            IPS_SetHidden($this->GetIDForIdent("Distance"), false);
-	            
-	            $this->RegisterVariableInteger("Timestamp", "Timestamp", "", 20);
-	            $this->DisableAction("Timestamp");
-	            IPS_SetHidden($this->GetIDForIdent("Timestamp"), true);
-	            
+
 	            // Logging setzen
 		    AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Distance"), $this->ReadPropertyBoolean("Logging"));
 		    IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
@@ -69,13 +65,13 @@
 	 	switch ($data->Function) {
 			   case "notify":
 			   	If (($data->Pin == $this->ReadPropertyInteger("Pin_I")) AND ($data->Value == false)) {
-			   		$TimeDiff = $data->Timestamp - GetValueInteger($this->GetIDForIdent("Timestamp"));
+			   		$TimeDiff = $data->Timestamp - intval($this->GetBuffer("Timestamp"));
 			   		$TimeDiff = abs($TimeDiff/1000000);
    					$Distance = round(($TimeDiff * 34300 / 2), 1);
    					SetValueFloat($this->GetIDForIdent("Distance"), min($Distance, 999.99));
 			   	}
 			   	elseif (($data->Pin == $this->ReadPropertyInteger("Pin_I")) AND ($data->Value == true)) {
-			   		SetValueInteger($this->GetIDForIdent("Timestamp"), $data->Timestamp);	
+			   		$this->SetBuffer("Timestamp", $data->Timestamp);	
 			   	}
 			   	break;
 			   case "get_usedpin":
