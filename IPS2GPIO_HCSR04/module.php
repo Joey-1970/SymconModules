@@ -50,10 +50,9 @@
 		    IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
 
 	            //ReceiveData-Filter setzen
-		    $Filter = '.*"Pin":'.$this->ReadPropertyInteger("Pin_I").'.*|.*"Pin":'.$this->ReadPropertyInteger("Pin_O").'.*|.*"Function":get_usedpin.*|.*"Function":get_notifypin.*';
-		    //$this->SetReceiveDataFilter($Filter);
+		    $Filter = '((.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_I").'.*)|(.*"Function":"get_notifypin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_O").'.*)))';
+		    $this->SetReceiveDataFilter($Filter);
 
-	            
 	            If (($this->ReadPropertyInteger("Pin_I") >= 0) AND ($this->ReadPropertyInteger("Pin_O")) >= 0) {
 	            	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
 	            	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_O"), "Value" => 0)));
