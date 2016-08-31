@@ -22,8 +22,15 @@ class IPS2GPIO_IO extends IPSModule
   
 	  public function ApplyChanges()
 	  {
+		// Nachrichten abonnieren
+		$this->RegisterMessage(0, IPS_KERNELMESSAGE);
+		
+		if (IPS_GetKernelRunlevel() <> KR_READY)
+            	return;
+		
 		//Never delete this line!
 		parent::ApplyChanges();
+		
 		$this->RegisterVariableInteger("Handle", "Handle", "", 100);
 		$this->DisableAction("Handle");
 		IPS_SetHidden($this->GetIDForIdent("Handle"), true);
@@ -76,9 +83,6 @@ class IPS2GPIO_IO extends IPSModule
 			}
 		}
 
-		// Nachrichten abonnieren
-		$this->RegisterMessage($this->InstanceID, 10103);
-		
 		If($this->ConnectionTest()) {
 			// Hardware feststellen
 			$this->CommandClientSocket(pack("LLLL", 17, 0, 0, 0), 16);
@@ -96,14 +100,22 @@ class IPS2GPIO_IO extends IPSModule
 		}
 	  }
 
-	public function MessageSink($TimeStamp, $SenderID, $Message, $Data) {
-		IPS_LogMessage("IPS2GPIO MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
-		switch ($Message) {
-			case 10103:
-				$this->Get_PinUpdate();
-			break;
-		}
-	}	
+	    public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
+    {
+        switch ($Message)
+        {
+            case IPS_KERNELMESSAGE:
+                if ($Data[0] == KR_READY) {
+                    try {
+                        $this->Get_PinUpdate();
+                    }
+                    catch (Exception $exc){
+                        return;
+                    }
+                }
+                break;
+        }
+    }
 	  
 	 public function ForwardData($JSONString) 
 	 {
