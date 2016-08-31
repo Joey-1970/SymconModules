@@ -152,17 +152,6 @@ class IPS2GPIO_IO extends IPSModule
 		        break;
 		    
 		    // interne Kommunikation
-		    case "set_notifypin":
-		    	If ($data->Pin >= 0) {
-			        // Erstellt ein Array für alle Pins für die die Notifikation erforderlich ist 
-			        $PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
-			        $PinNotify[] = $data->Pin;
-				SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
-				// Setzt den Glitch Filter
-				//IPS_LogMessage("IPS2GPIO SetGlitchFilter Parameter : ",$data->Pin." , ".$data->GlitchFilter);
-				$this->CommandClientSocket(pack("LLLL", 97, $data->Pin, $data->GlitchFilter, 0), 16);
-		    	}
-		        break;
 		   case "set_usedpin":
 		   	If ($data->Pin >= 0) {
 				// Prüfen, ob der gewählte GPIO bei dem Modell überhaupt vorhanden ist
@@ -363,8 +352,7 @@ class IPS2GPIO_IO extends IPSModule
 		// Pins ermitteln für die ein Notify erforderlich ist
 		$PinNotify = array();
 		SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
-		//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_notifypin")));
-		// Notify setzen	
+		// Notify zurücksetzen	
 		If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
 	           	$this->CommandClientSocket(pack("LLLL", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
 		}
