@@ -76,6 +76,9 @@ class IPS2GPIO_IO extends IPSModule
 			}
 		}
 
+		// Nachrichten abonnieren
+		$this->RegisterMessage($InstanceID, 10103);
+		
 		If($this->ConnectionTest()) {
 			// Hardware feststellen
 			$this->CommandClientSocket(pack("LLLL", 17, 0, 0, 0), 16);
@@ -93,8 +96,17 @@ class IPS2GPIO_IO extends IPSModule
 		}
 	  }
 
-	  public function ForwardData($JSONString) 
-	  {
+	public function MessageSink($TimeStamp, $SenderID, $Message, $Data) {
+		IPS_LogMessage("IPS2GPIO MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
+		switch ($Message) {
+			case 10103:
+				$this->Get_PinUpdate();
+			break;
+		}
+	}	
+	  
+	 public function ForwardData($JSONString) 
+	 {
 	 	// Empfangene Daten von der Device Instanz
 	    	$data = json_decode($JSONString);
 	    	
@@ -151,8 +163,8 @@ class IPS2GPIO_IO extends IPSModule
 		    	}
 		        break;
 		    
-		    // interne Kommunikation
-		   case "set_usedpin":
+		// interne Kommunikation
+		case "set_usedpin":
 		   	If ($data->Pin >= 0) {
 				// Prüfen, ob der gewählte GPIO bei dem Modell überhaupt vorhanden ist
 				$PinPossible = unserialize(GetValueString($this->GetIDForIdent("PinPossible")));
