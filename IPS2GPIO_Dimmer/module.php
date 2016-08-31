@@ -34,8 +34,6 @@
            
            	//ReceiveData-Filter setzen
 		$Filter = '.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*';
-
-		//$Filter = '.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*|.*"Function":get_usedpin.*';
 		$this->SetReceiveDataFilter($Filter);
 		
 	        If ($this->ReadPropertyInteger("Pin") >= 0) {
