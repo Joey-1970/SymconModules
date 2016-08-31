@@ -401,7 +401,10 @@ class IPS2GPIO_IO extends IPSModule
 		// Sichern der Voreinstellungen
 		SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
 		// Ermitteln der genutzten I2C-Adressen
-		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_used_i2c")));
+		$Data = json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_used_i2c"));
+		$this->SendDebug('IPS_SendDataToChildren', $Data, 0);
+		$this->SendDataToChildren($Data);  
+		//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_used_i2c")));
 		// Ermitteln der sonstigen genutzen GPIO
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_usedpin")));
 	return;
