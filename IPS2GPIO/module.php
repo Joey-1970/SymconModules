@@ -355,7 +355,7 @@ class IPS2GPIO_IO extends IPSModule
 		$PinNotify = array();
 		SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
 		
-		$Data = json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_notifypin"))
+		$Data = json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_notifypin"));
 		$this->SendDebug('IPS_SendDataToChildren', $Data, 0);
 		$this->SendDataToChildren($Data);  
 		
