@@ -41,10 +41,6 @@
 	    		IPS_LogMessage("GPIO : ","I2C-Device Adresse in einem nicht definierten Bereich!");  
 	    	}
 	    	//Status-Variablen anlegen
-		$this->RegisterVariableBoolean("WriteProtection", "WriteProtection", "", 130);
-		$this->DisableAction("WriteProtection");
-		IPS_SetHidden($this->GetIDForIdent("WriteProtection"), true);
-
 		$this->RegisterVariableInteger("Channel_0", "Channel 0", "~Intensity.255", 10);
           	$this->DisableAction("Channel_0");
 		IPS_SetHidden($this->GetIDForIdent("Channel_0"), false);
@@ -119,7 +115,7 @@
 			  case "set_i2c_data":
 			  	If ($data->DeviceAddress == $this->ReadPropertyInteger("DeviceAddress")) {
 			  		// Daten der Messung
-			  		If (GetValueBoolean($this->GetIDForIdent("WriteProtection")) == false) {
+			  		If ($this->GetBuffer("WriteProtection") == false) {
 			  			If ($data->Register == hexdec("40")) {
 				  			SetValueInteger($this->GetIDForIdent("Channel_0"), $data->Value);
 				  		}
@@ -144,10 +140,10 @@
 	{
 		for ($i = 0; $i <= 3; $i++) {
 		    	If ($this->ReadPropertyBoolean("Ain".$i) == true) {
-			    	SetValueBoolean($this->GetIDForIdent("WriteProtection"), true);
+			    	$this->SetBuffer("WriteProtection", true);
 			    	// Aktualisierung der Messerte anfordern
 			    	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => hexdec("40")|($i & 3) )));
-				SetValueBoolean($this->GetIDForIdent("WriteProtection"), false);
+				$this->SetBuffer("WriteProtection", false);
 				// Messwerte einlesen
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => hexdec("40")|($i & 3) )));
 		    	}
