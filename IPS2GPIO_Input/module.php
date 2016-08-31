@@ -40,6 +40,7 @@
             
                 //ReceiveData-Filter setzen
 		$Filter = '.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*|.*"Function":"get_notifypin".*';
+		$this->SendDebug("IPS2GPIO", $Filter, 0);
 		$this->SetReceiveDataFilter($Filter);
 
                 If ($this->ReadPropertyInteger("Pin") >= 0) {
