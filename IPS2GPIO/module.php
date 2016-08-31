@@ -77,7 +77,7 @@ class IPS2GPIO_IO extends IPSModule
 		}
 
 		// Nachrichten abonnieren
-		$this->RegisterMessage($InstanceID, 10103);
+		$this->RegisterMessage($this->$InstanceID, 10103);
 		
 		If($this->ConnectionTest()) {
 			// Hardware feststellen
