@@ -183,6 +183,15 @@ class IPS2GPIO_IO extends IPSModule
 			        	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>200, "HardwareRev"=>GetValueInteger($this->GetIDForIdent("HardwareRev")))));
 			        }
 			        $PinUsed[] = $data->Pin;
+			        // Erstellt ein Array für alle Pins für die die Notifikation erforderlich ist
+			        If ($data->Notify == true) {
+			        	$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
+				        $PinNotify[] = $data->Pin;
+					SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
+					// Setzt den Glitch Filter
+					//IPS_LogMessage("IPS2GPIO SetGlitchFilter Parameter : ",$data->Pin." , ".$data->GlitchFilter);
+					$this->CommandClientSocket(pack("LLLL", 97, $data->Pin, $data->GlitchFilter, 0), 16);
+			        }
 			        // Pin in den entsprechenden R/W-Mode setzen
 			        //IPS_LogMessage("SetMode Parameter : ",$data->Pin." , ".$data->Modus);
 			        $this->CommandClientSocket(pack("LLLL", 0, $data->Pin, $data->Modus, 0), 16);
@@ -354,11 +363,6 @@ class IPS2GPIO_IO extends IPSModule
 		// Pins ermitteln für die ein Notify erforderlich ist
 		$PinNotify = array();
 		SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
-		
-		$Data = json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_notifypin"));
-		$this->SendDebug('IPS_SendDataToChildren', $Data, 0);
-		$this->SendDataToChildren($Data);  
-		
 		//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_notifypin")));
 		// Notify setzen	
 		If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
