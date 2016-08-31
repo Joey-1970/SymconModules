@@ -104,23 +104,10 @@ class IPS2GPIO_IO extends IPSModule
 
 	public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     	{
-        switch ($Message)
-        {
-        	IPS_LogMessage("IPS2GPIO MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
-}
-/*            case IPS_KERNELMESSAGE:
-                if ($Data[0] == KR_READY) {
-                    try {
-                        $this->Get_PinUpdate();
-                    }
-                    catch (Exception $exc){
-                        return;
-                    }
-                }
-                break;
-*/
-        }
-    }
+        IPS_LogMessage("IPS2GPIO MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
+
+
+    	}
 	  
 	 public function ForwardData($JSONString) 
 	 {
