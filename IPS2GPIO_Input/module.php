@@ -39,7 +39,7 @@
                 $this->DisableAction("Trigger");
             
                 //ReceiveData-Filter setzen
-		$Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*|.*"Function":"get_notifypin".*)';
+		$Filter = '((.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*)|.*"Function":"get_notifypin".*)';
 		//$Filter = '(.*"Function":"get_usedpin".*|.*"Function":"get_notifypin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*)';
 
 		$this->SendDebug("IPS2GPIO", $Filter, 0);
