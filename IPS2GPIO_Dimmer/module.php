@@ -33,7 +33,7 @@
 	        $this->EnableAction("Intensity");
            
            	//ReceiveData-Filter setzen
-		$Filter = '.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*';
+		$Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*)';
 		$this->SetReceiveDataFilter($Filter);
 		
 	        If ($this->ReadPropertyInteger("Pin") >= 0) {
