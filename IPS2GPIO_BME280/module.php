@@ -249,16 +249,23 @@
 	private function ReadCalibrateData()
 	{
 		$CalibrateData = array();
-		SetValueString($this->GetIDForIdent("CalibrateData"), serialize($CalibrateData));
-		
-		for ($i = hexdec("88"); $i < (hexdec("88") + 24); $i++) {
-    			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => $i, "Value" => $i)));
+		$CalibrateData = unserialize(GetValueString($this->GetIDForIdent("CalibrateData")));
+		If ((count($CalibrateData) == 32) AND ($this->ReadPropertyBoolean("CalibrateData")== true)) {
+			// Kalibrierungsdaten so belassen
 		}
-
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => hexdec("A1"), "Value" => $i)));
-
-		for ($i = hexdec("E1"); $i < (hexdec("E1") + 7); $i++) {
-    			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => $i, "Value" => $i)));
+		else {
+			// Kalibrierungsdaten neu einlesen
+			SetValueString($this->GetIDForIdent("CalibrateData"), serialize($CalibrateData));
+			
+			for ($i = hexdec("88"); $i < (hexdec("88") + 24); $i++) {
+	    			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => $i, "Value" => $i)));
+			}
+	
+			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => hexdec("A1"), "Value" => $i)));
+	
+			for ($i = hexdec("E1"); $i < (hexdec("E1") + 7); $i++) {
+	    			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => $i, "Value" => $i)));
+			}
 		}
 	return;	
 	}
