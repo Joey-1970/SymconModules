@@ -36,14 +36,6 @@
 	    		IPS_LogMessage("GPIO : ","I2C-Device Adresse in einem nicht definierten Bereich!");  
 	    	}
 	    	//Status-Variablen anlegen
-            	$this->RegisterVariableString("CalibrateData", "CalibrateData", "", 120);
-		$this->DisableAction("CalibrateData");
-		IPS_SetHidden($this->GetIDForIdent("CalibrateData"), true);
-             	
-             	$this->RegisterVariableString("MeasurementData", "MeasurementData", "", 130);
-		$this->DisableAction("MeasurementData");
-		IPS_SetHidden($this->GetIDForIdent("MeasurementData"), true);
-
              	$this->RegisterVariableFloat("Temperature", "Temperature", "~Temperature", 10);
 		$this->DisableAction("Temperature");
 		IPS_SetHidden($this->GetIDForIdent("Temperature"), false);
@@ -101,15 +93,15 @@
 			  	If ($data->DeviceAddress == $this->ReadPropertyInteger("DeviceAddress")) {
 			  		// Daten zur Kalibrierung
 			  		If (($data->Register >= hexdec("88")) AND ($data->Register < hexdec("E8"))) {
-			  			$CalibrateData = unserialize(GetValueString($this->GetIDForIdent("CalibrateData")));
+			  			$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
 			  			$CalibrateData[$data->Register] = $data->Value;
-			  			SetValueString($this->GetIDForIdent("CalibrateData"), serialize($CalibrateData));
+			  			$this->SetBuffer("CalibrateData", serialize($CalibrateData));
 			  		}
 			  	}
 			  	break;
 			  case "set_i2c_byte_block":
 			   	If ($data->DeviceAddress == $this->ReadPropertyInteger("DeviceAddress")) {
-			   		SetValueString($this->GetIDForIdent("MeasurementData"), $data->ByteArray);
+			   		$this->SetBuffer("MeasurementData", $data->ByteArray);
 			   	}
 			   	break;
 	 	}
@@ -121,7 +113,7 @@
 	public function Measurement()
 	{
 		// Messwerte aktualisieren
-		$CalibrateData = unserialize(GetValueString($this->GetIDForIdent("CalibrateData")));
+		$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
 		If (count($CalibrateData) == 32)  {
 			$this->ReadData();
 			// Kalibrierungsdatan aufbereiten
@@ -165,7 +157,7 @@
 			}
 			
 			// Messwerte aufbereiten
-			$MeasurementData = unserialize(GetValueString($this->GetIDForIdent("MeasurementData")));
+			$MeasurementData = unserialize($this->GetBuffer("MeasurementData"));
 			If (count($MeasurementData) == 8) {
 				$Pres_raw = (($MeasurementData[1] << 12) | ($MeasurementData[2] << 4) | ($MeasurementData[3] >> 4));
 				$Temp_raw = (($MeasurementData[4] << 12) | ($MeasurementData[5] << 4) | ($MeasurementData[6] >> 4));
@@ -248,14 +240,14 @@
 	
 	private function ReadCalibrateData()
 	{
-		$CalibrateData = array();
-		$CalibrateData = unserialize(GetValueString($this->GetIDForIdent("CalibrateData")));
+		$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
 		If ((count($CalibrateData) == 32) AND ($this->ReadPropertyBoolean("CalibrateData")== true)) {
 			// Kalibrierungsdaten so belassen
 		}
 		else {
 			// Kalibrierungsdaten neu einlesen
-			SetValueString($this->GetIDForIdent("CalibrateData"), serialize($CalibrateData));
+			$CalibrateData = array();
+			$this->SetBuffer("CalibrateData", serialize($CalibrateData));
 			
 			for ($i = hexdec("88"); $i < (hexdec("88") + 24); $i++) {
 	    			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => $i, "Value" => $i)));
@@ -274,7 +266,7 @@
 	{
 		// Liest die Messdaten ein
 		$MeasurementData = array();
-		SetValueString($this->GetIDForIdent("MeasurementData"), serialize($MeasurementData));
+		$this->SetBuffer("MeasurementData"), serialize($MeasurementData));
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_block_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => hexdec("F7"), "Count" => 8)));
 	return;
 	}
