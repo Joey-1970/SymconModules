@@ -50,7 +50,7 @@
 		    IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
 
 	            //ReceiveData-Filter setzen
-		    $Filter = '((.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_I").'.*)|(.*"Function":"get_notifypin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_O").'.*)))';
+		    $Filter = '((.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_I").'.*)|.*"Pin":'.$this->ReadPropertyInteger("Pin_O").'.*))';
 		    $this->SetReceiveDataFilter($Filter);
 
 	            If (($this->ReadPropertyInteger("Pin_I") >= 0) AND ($this->ReadPropertyInteger("Pin_O")) >= 0) {
@@ -78,13 +78,9 @@
 			   		SetValueInteger($this->GetIDForIdent("Timestamp"), $data->Timestamp);	
 			   	}
 			   	break;
-			   case "get_notifypin":
-			   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_notifypin", "Pin" => $this->ReadPropertyInteger("Pin_I"), "GlitchFilter" => 0)));
-			   	break;
 			   case "get_usedpin":
 			   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_I"), "Modus" => 0, "Notify" => true, "GlitchFilter" => 0)));
 			   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_O"), "Modus" => 1, "Notify" => false)));
-
 			   	break;
 			   case "status":
 			   	If (($data->Pin == $this->ReadPropertyInteger("Pin_I")) OR ($data->Pin == $this->ReadPropertyInteger("Pin_O"))) {
