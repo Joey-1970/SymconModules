@@ -22,17 +22,20 @@ class IPS2GPIO_IO extends IPSModule
   
 	  public function ApplyChanges()
 	  {
-		// Nachrichten abonnieren
-		$this->RegisterMessage(0, 10103);
-		$this->RegisterMessage($this->InstanceID, 10412);
-		$this->RegisterMessage($this->InstanceID, 10413);
-		$this->RegisterMessage($this->InstanceID, 10403);
-		$this->RegisterMessage($this->InstanceID, 10503);
-		$this->RegisterMessage($this->InstanceID, 10504);
-		
 		//Never delete this line!
 		parent::ApplyChanges();
 		
+		// Nachrichten abonnieren
+		 // Kernel
+	        $this->RegisterMessage(0, 10100); // Alle Kernelmessages (10103 muss im MessageSink ausgewertet werden.)
+	
+	        // Änderung an den untergeordneten Instanzen
+	        $this->RegisterMessage($this->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
+	        $this->RegisterMessage($this->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
+	
+	        // INSTANCEMESSAGE
+	        $this->RegisterMessage($ParentId, 10505); // Status hat sich geändert
+	        
 		$this->RegisterVariableInteger("Handle", "Handle", "", 100);
 		$this->DisableAction("Handle");
 		IPS_SetHidden($this->GetIDForIdent("Handle"), true);
