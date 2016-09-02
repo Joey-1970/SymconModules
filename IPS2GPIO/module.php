@@ -188,11 +188,13 @@ class IPS2GPIO_IO extends IPSModule
 				// Erstellt ein Array für alle Pins die genutzt werden 	
 				$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
 				// Prüft, ob der ausgeählte Pin schon einmal genutzt wird
-			        If (in_array($data->Pin, $PinUsed)) {
-			        	IPS_LogMessage("IPS2GPIO Pin", "Achtung: Pin ".$data->Pin." wird mehrfach genutzt!");
-			        	$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>200, "HardwareRev"=>GetValueInteger($this->GetIDForIdent("HardwareRev")))));
+			        If (array_key_exists($data->Pin, $PinUsed)) {
+			        	If ($PinUsed[$data->Pin] <> $data->InstanceID) {
+			        		IPS_LogMessage("IPS2GPIO Pin", "Achtung: Pin ".$data->Pin." wird mehrfach genutzt!");
+			        		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>200, "HardwareRev"=>GetValueInteger($this->GetIDForIdent("HardwareRev")))));
+			        	}	
 			        }
-			        $PinUsed[] = $data->Pin;
+			        $PinUsed[$data->Pin] = $data->InstanceID;
 			        // Erstellt ein Array für alle Pins für die die Notifikation erforderlich ist
 			        If ($data->Notify == true) {
 			        	$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
