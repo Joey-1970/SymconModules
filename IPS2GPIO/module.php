@@ -78,7 +78,7 @@ class IPS2GPIO_IO extends IPSModule
 	        $this->RegisterMessage($this->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
 	
 	        // INSTANCEMESSAGE
-	        $this->RegisterMessage($ParentId, 10505); // Status hat sich geändert
+	        $this->RegisterMessage($ParentID, 10505); // Status hat sich geändert
 
 		
 		If ($ParentID > 0) {
