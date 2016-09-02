@@ -25,17 +25,6 @@ class IPS2GPIO_IO extends IPSModule
 		//Never delete this line!
 		parent::ApplyChanges();
 		
-		// Nachrichten abonnieren
-		 // Kernel
-	        $this->RegisterMessage(0, 10100); // Alle Kernelmessages (10103 muss im MessageSink ausgewertet werden.)
-	
-	        // Änderung an den untergeordneten Instanzen
-	        $this->RegisterMessage($this->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
-	        $this->RegisterMessage($this->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
-	
-	        // INSTANCEMESSAGE
-	        $this->RegisterMessage($ParentId, 10505); // Status hat sich geändert
-	        
 		$this->RegisterVariableInteger("Handle", "Handle", "", 100);
 		$this->DisableAction("Handle");
 		IPS_SetHidden($this->GetIDForIdent("Handle"), true);
@@ -79,6 +68,19 @@ class IPS2GPIO_IO extends IPSModule
 		IPS_SetHidden($this->GetIDForIdent("Serial_Handle"), true);
 		
 		$ParentID = $this->GetParentID();
+		
+		// Nachrichten abonnieren
+		// Kernel
+	        $this->RegisterMessage(0, 10100); // Alle Kernelmessages (10103 muss im MessageSink ausgewertet werden.)
+	
+	        // Änderung an den untergeordneten Instanzen
+	        $this->RegisterMessage($this->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
+	        $this->RegisterMessage($this->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
+	
+	        // INSTANCEMESSAGE
+	        $this->RegisterMessage($ParentId, 10505); // Status hat sich geändert
+
+		
 		If ($ParentID > 0) {
 			If (IPS_GetProperty($ParentID, 'Host') <> $this->ReadPropertyString('IPAddress')) {
 	                	IPS_SetProperty($ParentID, 'Host', $this->ReadPropertyString('IPAddress'));
