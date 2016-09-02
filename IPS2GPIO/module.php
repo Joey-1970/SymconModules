@@ -392,20 +392,20 @@ class IPS2GPIO_IO extends IPSModule
 		SetValueBoolean($this->GetIDForIdent("I2C_Used"), false);
 		// Reservieren der Schnittstellen GPIO
 		If (($this->ReadPropertyBoolean("I2C_Used") == true) AND (GetValueInteger($this->GetIDForIdent("HardwareRev"))) <= 3) {
-			$PinUsed[] = 0; 
-			$PinUsed[] = 1;
+			$PinUsed[0] = 99999; 
+			$PinUsed[1] = 99999;
 			$this->CommandClientSocket(pack("LLLL", 0, 0, 4, 0), 16);
 			$this->CommandClientSocket(pack("LLLL", 0, 1, 4, 0), 16);
 		}
 		elseif (($this->ReadPropertyBoolean("I2C_Used") == true) AND (GetValueInteger($this->GetIDForIdent("HardwareRev"))) > 3) {
-			$PinUsed[] = 2; 
-			$PinUsed[] = 3;
+			$PinUsed[2] = 99999; 
+			$PinUsed[3] = 99999;
 			$this->CommandClientSocket(pack("LLLL", 0, 2, 4, 0), 16);
 			$this->CommandClientSocket(pack("LLLL", 0, 3, 4, 0), 16);
 		}
 		elseif ($this->ReadPropertyBoolean("Serial_Used") == true)  {
-			$PinUsed[] = 14; 
-			$PinUsed[] = 15;
+			$PinUsed[14] = 99999; 
+			$PinUsed[15] = 99999;
 			$this->CommandClientSocket(pack("LLLL", 0, 14, 4, 0), 16);
 			$this->CommandClientSocket(pack("LLLL", 0, 15, 4, 0), 16);
 			If (GetValueInteger($this->GetIDForIdent("Serial_Handle")) >= 0) {
@@ -417,7 +417,7 @@ class IPS2GPIO_IO extends IPSModule
 		}
 		elseif ($this->ReadPropertyBoolean("SPI_Used") == true)  {
 			for ($i = 7; $i < 11; $i++) {
-    				$PinUsed[] = $i;
+    				$PinUsed[$i] = 99999;
 			}
 		}
 		// Sichern der Voreinstellungen
