@@ -103,6 +103,8 @@
 		$this->SetTouchAwake($this->ReadPropertyBoolean("TouchAwake"));
 		// Rückgabeverhalten auf kommandos
 		$this->SetCommandReturn($this->ReadPropertyInteger("CmdRet"));
+		// Senden der Koordniaten bei Touch
+		$this->SetSendTouchCoordinate(1);
 	return;
 	}
 	public function SetBrightness($Value)
@@ -157,6 +159,13 @@
 	{
 		$Value = min(3, max(0, $Value));
 		$this->Send("bkcmd=".$Value);
+	return;
+	}
+	
+	private function SetSendTouchCoordinate($Value)
+	{
+		$Value = min(1, max(0, $Value));
+		$this->Send("sendxy=".$Value);
 	return;
 	}
 }
