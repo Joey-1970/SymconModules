@@ -651,16 +651,37 @@ class IPS2GPIO_IO extends IPSModule
            				//IPS_LogMessage("IPS2GPIO Serial Close Handle: ","Serial Handle: ".$response[2]." Value: ".$response[4]);
            			}
            			else {
-           				IPS_LogMessage("IPS2GPIO Serial Close Handle: ","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));	
+           				IPS_LogMessage("IPS2GPIO Serial Close Handle","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));	
            			}
            			
 		            	break;
-		        case "81":
+		        case "80":
            			If ($response[4] >= 0) {
-           				IPS_LogMessage("IPS2GPIO Serial Write: ","Serial Handle: ".$response[2]." Value: ".$response[4]);
+           				IPS_LogMessage("IPS2GPIO Serial Read","Serial Handle: ".$response[2]." Value: ".$response[4]);
            			}
            			else {
-           				IPS_LogMessage("IPS2GPIO Serial Write: ","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
+           				IPS_LogMessage("IPS2GPIO Serial Read","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
+ 
+           			}
+  		            	break;
+		        case "81":
+           			If ($response[4] >= 0) {
+           				IPS_LogMessage("IPS2GPIO Serial Write","Serial Handle: ".$response[2]." Value: ".$response[4]);
+           			}
+           			else {
+           				IPS_LogMessage("IPS2GPIO Serial Write","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
+ 
+           			}
+  		            	break;
+  		        case "83":
+           			If ($response[4] >= 0) {
+           				IPS_LogMessage("IPS2GPIO Check Serial Bytes","Serial Handle: ".$response[2]." Bytes zum Lesen: ".$response[4]);
+           				If ($response[4] > 0) {
+           					$this->ClientSocket(pack("L*", 80, GetValueInteger($this->GetIDForIdent("Serial_Handle")), $response[4], 0), 16);
+           				}
+           			}
+           			else {
+           				IPS_LogMessage("IPS2GPIO Check Serial Bytes","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
  
            			}
   		            	break;
