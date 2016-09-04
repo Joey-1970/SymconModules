@@ -363,7 +363,7 @@ class IPS2GPIO_IO extends IPSModule
 	    					elseif (($PinNotify[$j] == 15) AND ($i = 0)) {
 	    						// Einlesen der Seriellen Daten veranlassen
 	    						IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle"))." Command: ".$Command);
-		   					$this->ClientSocket(pack("L*", 83, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
+		   					//$this->ClientSocket(pack("L*", 83, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
 	    					}
 	    				}
 				}
