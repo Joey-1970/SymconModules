@@ -303,6 +303,11 @@ class IPS2GPIO_IO extends IPSModule
 		   case "get_handle_serial":
 	   		IPS_LogMessage("IPS2GPIO Get Handle Serial", "Handle anfordern");
 	   		$this->ClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device, 16);
+	   		// Denn Notify für den TxD-Pin einschalten
+	   		$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
+			$PinNotify[] = 15;
+			SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
+			$this->CommandClientSocket(pack("LLLL", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
 		   	break;
 		   case "write_bytes_serial":
 		   	$Command = utf8_decode($data->Command);
@@ -418,7 +423,6 @@ class IPS2GPIO_IO extends IPSModule
 			}
 			SetValueInteger($this->GetIDForIdent("Serial_Handle"), -1);
 			SetValueBoolean($this->GetIDForIdent("Serial_Used"), false);
-			
 		}
 		elseif ($this->ReadPropertyBoolean("SPI_Used") == true)  {
 			for ($i = 7; $i < 11; $i++) {
