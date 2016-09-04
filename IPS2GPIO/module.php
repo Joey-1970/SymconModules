@@ -360,7 +360,7 @@ class IPS2GPIO_IO extends IPSModule
 	    						// alle Pins außer dem RxD werden normal verarbeitet
 	    						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $MessageArray[2])));
 	    					}
-	    					elseif (($PinNotify[$j] == 15) AND ($j = 0)) {
+	    					elseif (($PinNotify[$j] == 15) AND ($i = 0)) {
 	    						// Einlesen der Seriellen Daten veranlassen
 	    						IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle"))." Command: ".$Command);
 		   					$this->ClientSocket(pack("L*", 83, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
