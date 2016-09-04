@@ -168,5 +168,12 @@
 		$this->Send("sendxy=".$Value);
 	return;
 	}
+	
+	public function SetSleep($Value)
+	{
+		$Value = min(1, max(0, $Value));
+		$this->Send("sleep=".$Value);
+	return;
+	}
 }
 ?>
