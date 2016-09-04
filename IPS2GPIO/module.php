@@ -307,7 +307,7 @@ class IPS2GPIO_IO extends IPSModule
 		   case "write_bytes_serial":
 		   	$Command = utf8_decode($data->Command);
 		   	IPS_LogMessage("IPS2GPIO Write Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle"))." Command: ".$Command);
-		   	$this->CommandClientSocket(pack("L*", 81, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, strlen($Command)).$Command, 16);
+		   	$this->ClientSocket(pack("L*", 81, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, strlen($Command)).$Command, 16);
 		   	break;
 		}
 	    
@@ -315,7 +315,7 @@ class IPS2GPIO_IO extends IPSModule
 	  }
 	
 	 public function ReceiveData($JSONString) {
- 	    	$CmdPossible = array(19, 21, 76, 99);
+ 	    	$CmdPossible = array(19, 21, 76, 81, 99);
  	    	$RDlen = array(16, 32);	
  	    	// Empfangene Daten vom I/O
 	    	$Data = json_decode($JSONString);
