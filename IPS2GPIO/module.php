@@ -309,6 +309,11 @@ class IPS2GPIO_IO extends IPSModule
 		   	IPS_LogMessage("IPS2GPIO Write Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle"))." Command: ".$Command);
 		   	$this->ClientSocket(pack("L*", 81, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, strlen($Command)).$Command, 16);
 		   	break;
+		   case "check_bytes_serial":
+		   	$Command = utf8_decode($data->Command);
+		   	IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle"))." Command: ".$Command);
+		   	$this->ClientSocket(pack("L*", 83, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
+		   	break;
 		}
 	    
 	    return;
