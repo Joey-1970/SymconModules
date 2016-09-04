@@ -315,7 +315,6 @@ class IPS2GPIO_IO extends IPSModule
 		   	$this->ClientSocket(pack("L*", 81, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, strlen($Command)).$Command, 16);
 		   	break;
 		   case "check_bytes_serial":
-		   	$Command = utf8_decode($data->Command);
 		   	IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle"))." Command: ".$Command);
 		   	$this->ClientSocket(pack("L*", 83, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
 		   	break;
@@ -352,7 +351,21 @@ class IPS2GPIO_IO extends IPSModule
 				for ($j = 0; $j < Count($PinNotify); $j++) {
 	    				$Bitvalue = boolval($MessageParts[3]&(1<<$PinNotify[$j]));
 	    				IPS_LogMessage("IPS2GPIO Notify: ","Pin ".$PinNotify[$j]." Value ->".$Bitvalue);
-	    				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $MessageArray[2])));
+	    				If ($this->ReadPropertyBoolean("Serial_Used") == false) {
+	    					// Serieller Port ist deaktiviert
+	    					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $MessageArray[2])));
+	    				}
+	    				else {
+	    					If ($PinNotify[$j] <> 15) {
+	    						// alle Pins außer dem RxD werden normal verarbeitet
+	    						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $MessageArray[2])));
+	    					}
+	    					elseif (($PinNotify[$j] == 15) AND ($j = 0)) {
+	    						// Einlesen der Seriellen Daten veranlassen
+	    						IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle"))." Command: ".$Command);
+		   					$this->ClientSocket(pack("L*", 83, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
+	    					}
+	    				}
 				}
 			}
 		}
