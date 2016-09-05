@@ -25,92 +25,105 @@ class IPS2GPIO_IO extends IPSModule
 		//Never delete this line!
 		parent::ApplyChanges();
 		
-		$this->RegisterVariableInteger("Handle", "Handle", "", 100);
-		$this->DisableAction("Handle");
-		IPS_SetHidden($this->GetIDForIdent("Handle"), true);
-		
-		$this->RegisterVariableInteger("HardwareRev", "HardwareRev", "", 105);
-		$this->DisableAction("HardwareRev");
-		IPS_SetHidden($this->GetIDForIdent("HardwareRev"), true);
-		
-		$this->RegisterVariableString("PinPossible", "PinPossible", "", 110);
-		$this->DisableAction("PinPossible");
-		IPS_SetHidden($this->GetIDForIdent("PinPossible"), true);
-		
-		$this->RegisterVariableString("PinUsed", "PinUsed", "", 120);
-		$this->DisableAction("PinUsed");
-		IPS_SetHidden($this->GetIDForIdent("PinUsed"), true);
-		
-		$this->RegisterVariableString("PinNotify", "PinNotify", "", 130);
-		$this->DisableAction("PinNotify");
-		IPS_SetHidden($this->GetIDForIdent("PinNotify"), true);
-		
-		$this->RegisterVariableBoolean("I2C_Used", "I2C_Used", "", 140);
-		$this->DisableAction("I2C_Used");
-		IPS_SetHidden($this->GetIDForIdent("I2C_Used"), true);
-		
-		$this->RegisterVariableString("PinI2C", "PinI2C", "", 150);
-		$this->DisableAction("PinI2C");
-		IPS_SetHidden($this->GetIDForIdent("PinI2C"), true);
-		
-		$this->RegisterVariableString("I2C_Handle", "I2C_Handle", "", 160);
-		$this->DisableAction("I2C_Handle");
-		IPS_SetHidden($this->GetIDForIdent("I2C_Handle"), true);
-		$I2C_DeviceHandle = array();
-		SetValueString($this->GetIDForIdent("I2C_Handle"), serialize($I2C_DeviceHandle));
-		
-		$this->RegisterVariableBoolean("Serial_Used", "Serial_Used", "", 170);
-		$this->DisableAction("Serial_Used");
-		IPS_SetHidden($this->GetIDForIdent("Serial_Used"), true);
-		
-		$this->RegisterVariableInteger("Serial_Handle", "Serial_Handle", "", 180);
-		$this->DisableAction("Serial_Handle");
-		IPS_SetHidden($this->GetIDForIdent("Serial_Handle"), true);
-		
-		$ParentID = $this->GetParentID();
-		
 		// Nachrichten abonnieren
 		// Kernel
 	        $this->RegisterMessage(0, 10100); // Alle Kernelmessages (10103 muss im MessageSink ausgewertet werden.)
-	
-	        // Änderung an den untergeordneten Instanzen
-	        $this->RegisterMessage($this->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
-	        $this->RegisterMessage($this->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
-	
-	        // INSTANCEMESSAGE
-	        $this->RegisterMessage($ParentID, 10505); // Status hat sich geändert
-
 		
-		If ($ParentID > 0) {
-			If (IPS_GetProperty($ParentID, 'Host') <> $this->ReadPropertyString('IPAddress')) {
-	                	IPS_SetProperty($ParentID, 'Host', $this->ReadPropertyString('IPAddress'));
-			}
-			If (IPS_GetProperty($ParentID, 'Port') <> 8888) {
-	                	IPS_SetProperty($ParentID, 'Port', 8888);
-			}
-		}
-
-		If($this->ConnectionTest()) {
-			// Hardware feststellen
-			$this->CommandClientSocket(pack("LLLL", 17, 0, 0, 0), 16);
-			// Notify Handle zurücksetzen falls gesetzt
-			If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
-				// Handle löschen
-				//$this->ClientSocket(pack("LLLL", 21, GetValueInteger($this->GetIDForIdent("Handle")), 0, 0));
-			}
-			// Notify Starten
-			SetValueInteger($this->GetIDForIdent("Handle"), -1);
-			$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));
+		If (IPS_GetKernelRunlevel() == 10103) {
+			$this->RegisterVariableInteger("Handle", "Handle", "", 100);
+			$this->DisableAction("Handle");
+			IPS_SetHidden($this->GetIDForIdent("Handle"), true);
 			
-			$this->Get_PinUpdate();
-			$this->SetStatus(102);
+			$this->RegisterVariableInteger("HardwareRev", "HardwareRev", "", 105);
+			$this->DisableAction("HardwareRev");
+			IPS_SetHidden($this->GetIDForIdent("HardwareRev"), true);
+			
+			$this->RegisterVariableString("PinPossible", "PinPossible", "", 110);
+			$this->DisableAction("PinPossible");
+			IPS_SetHidden($this->GetIDForIdent("PinPossible"), true);
+			
+			$this->RegisterVariableString("PinUsed", "PinUsed", "", 120);
+			$this->DisableAction("PinUsed");
+			IPS_SetHidden($this->GetIDForIdent("PinUsed"), true);
+			
+			$this->RegisterVariableString("PinNotify", "PinNotify", "", 130);
+			$this->DisableAction("PinNotify");
+			IPS_SetHidden($this->GetIDForIdent("PinNotify"), true);
+			
+			$this->RegisterVariableBoolean("I2C_Used", "I2C_Used", "", 140);
+			$this->DisableAction("I2C_Used");
+			IPS_SetHidden($this->GetIDForIdent("I2C_Used"), true);
+			
+			$this->RegisterVariableString("PinI2C", "PinI2C", "", 150);
+			$this->DisableAction("PinI2C");
+			IPS_SetHidden($this->GetIDForIdent("PinI2C"), true);
+			
+			$this->RegisterVariableString("I2C_Handle", "I2C_Handle", "", 160);
+			$this->DisableAction("I2C_Handle");
+			IPS_SetHidden($this->GetIDForIdent("I2C_Handle"), true);
+			$I2C_DeviceHandle = array();
+			SetValueString($this->GetIDForIdent("I2C_Handle"), serialize($I2C_DeviceHandle));
+			
+			$this->RegisterVariableBoolean("Serial_Used", "Serial_Used", "", 170);
+			$this->DisableAction("Serial_Used");
+			IPS_SetHidden($this->GetIDForIdent("Serial_Used"), true);
+			
+			$this->RegisterVariableInteger("Serial_Handle", "Serial_Handle", "", 180);
+			$this->DisableAction("Serial_Handle");
+			IPS_SetHidden($this->GetIDForIdent("Serial_Handle"), true);
+			
+			$ParentID = $this->GetParentID();
+		        // Änderung an den untergeordneten Instanzen
+		        $this->RegisterMessage($this->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
+		        $this->RegisterMessage($this->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
+		        // INSTANCEMESSAGE
+		        $this->RegisterMessage($ParentID, 10505); // Status hat sich geändert
+	
+			If ($ParentID > 0) {
+				If (IPS_GetProperty($ParentID, 'Host') <> $this->ReadPropertyString('IPAddress')) {
+		                	IPS_SetProperty($ParentID, 'Host', $this->ReadPropertyString('IPAddress'));
+				}
+				If (IPS_GetProperty($ParentID, 'Port') <> 8888) {
+		                	IPS_SetProperty($ParentID, 'Port', 8888);
+				}
+			}
+	
+			If($this->ConnectionTest()) {
+				// Hardware feststellen
+				$this->CommandClientSocket(pack("LLLL", 17, 0, 0, 0), 16);
+				// Notify Handle zurücksetzen falls gesetzt
+				If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
+					// Handle löschen
+					//$this->ClientSocket(pack("LLLL", 21, GetValueInteger($this->GetIDForIdent("Handle")), 0, 0));
+				}
+				// Notify Starten
+				SetValueInteger($this->GetIDForIdent("Handle"), -1);
+				$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));
+				
+				$this->Get_PinUpdate();
+				$this->SetStatus(102);
+			}
 		}
-	  }
+		else {
+			return;
+		}
+	}
 
 	public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     	{
         IPS_LogMessage("IPS2GPIO MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
-
+		switch ($Message) {
+			case 10100:
+				If ($Data[0] == 10103) {
+					$this->ApplyChanges();
+				}
+				break;
+			case 10505:
+				If ($Data[0] == 102) {
+					$this->ApplyChanges();
+				}
+				break;
+		}
 
     	}
 	  
