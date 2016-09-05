@@ -434,12 +434,10 @@ class IPS2GPIO_IO extends IPSModule
 			SetValueInteger($this->GetIDForIdent("Serial_Handle"), -1);
 			SetValueBoolean($this->GetIDForIdent("Serial_Used"), false);
 			// den Notify für den TxD-Pin einschalten
-	   		/*
 	   		$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
 			$PinNotify[0] = 15;
 			SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
 			$this->CommandClientSocket(pack("L*", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
-			*/
 		}
 		If ($this->ReadPropertyBoolean("SPI_Used") == true)  {
 			for ($i = 7; $i < 11; $i++) {
