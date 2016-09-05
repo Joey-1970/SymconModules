@@ -450,6 +450,9 @@ class IPS2GPIO_IO extends IPSModule
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_used_i2c")));
 		// Ermitteln der sonstigen genutzen GPIO
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_usedpin")));
+		// Ermitteln der sonstigen Seriellen Schnittstellen-Daten
+		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_serial")));
+
 	return;
 	}
 
