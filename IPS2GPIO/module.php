@@ -72,6 +72,8 @@ class IPS2GPIO_IO extends IPSModule
 			$this->DisableAction("Serial_Handle");
 			IPS_SetHidden($this->GetIDForIdent("Serial_Handle"), true);
 			
+			$this->SetBuffer("SerialNotify", "false");
+			
 			$ParentID = $this->GetParentID();
 		        // Änderung an den untergeordneten Instanzen
 		        $this->RegisterMessage($this->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
@@ -384,11 +386,14 @@ class IPS2GPIO_IO extends IPSModule
 	    						IPS_LogMessage("IPS2GPIO Notify: ","Pin ".$PinNotify[$j]." Value ->".$Bitvalue);
 	    						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $MessageArray[2])));
 	    					}
-	    					elseif (($PinNotify[$j] == 15) AND ($i < 2) AND ($Bitvalue == false)) {
-	    						// Einlesen der Seriellen Daten veranlassen
-	    						IPS_LogMessage("IPS2GPIO Notify: ","Pin ".$PinNotify[$j]." Value ->".$Bitvalue);
-	    						IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle"))." Command: ".$Command);
-		   					$this->CommandClientSocket(pack("L*", 83, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
+	    					elseif (($PinNotify[$j] == 15) AND ($i < 2)) {
+	    						If ($this->GetBuffer("SerialNotify") <> $Bitvalue) {
+		    						// Einlesen der Seriellen Daten veranlassen
+		    						IPS_LogMessage("IPS2GPIO Notify: ","Pin ".$PinNotify[$j]." Value ->".$Bitvalue);
+		    						IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle"))." Command: ".$Command);
+			   					$this->CommandClientSocket(pack("L*", 83, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
+			   				 	$this->SetBuffer("SerialNotify", $Bitvalue);	
+	    						}
 	    					}
 	    				}
 				}
