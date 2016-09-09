@@ -118,6 +118,12 @@ class IPS2GPIO_IO extends IPSModule
 					$this->ApplyChanges();
 				}
 				break;
+			case 11101:
+				IPS_LogMessage("IPS2GPIO MessageSink", "Instanz wurde verbunden");
+				break;
+			case 11102:
+				IPS_LogMessage("IPS2GPIO MessageSink", "Instanz wurde getrennt");
+				break;	
 			case 10505:
 				If ($Data[0] == 102) {
 					$this->ApplyChanges();
@@ -253,6 +259,9 @@ class IPS2GPIO_IO extends IPSModule
 		   	$I2C_DeviceHandle[$data->DeviceAddress] = -1;
 		   	// genutzte Device-Adressen noch ohne Handle sichern
 		   	SetValueString($this->GetIDForIdent("I2C_Handle"), serialize($I2C_DeviceHandle));
+		   	// Messages einrichten
+			$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
+		        $this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
 		   	// Handle ermitteln
 		   	If (GetValueInteger($this->GetIDForIdent("HardwareRev")) <=3) {
 		   		$this->CommandClientSocket(pack("LLLLL", 54, 0, $data->DeviceAddress, 4, 0), 16);	
@@ -319,6 +328,9 @@ class IPS2GPIO_IO extends IPSModule
 		   case "get_handle_serial":
 	   		IPS_LogMessage("IPS2GPIO Get Handle Serial", "Handle anfordern");
 	   		$this->ClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device, 16);
+	   		// Messages einrichten
+			$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
+		        $this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
 	   		break;
 		   case "write_bytes_serial":
 		   	$Command = utf8_decode($data->Command);
