@@ -208,6 +208,9 @@ class IPS2GPIO_IO extends IPSModule
 			        	}	
 			        }
 			        $PinUsed[$data->Pin] = $data->InstanceID;
+			        // Messages einrichten
+			        $this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
+		        	$this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
 			        // Erstellt ein Array für alle Pins für die die Notifikation erforderlich ist
 			        If ($data->Notify == true) {
 			        	$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
