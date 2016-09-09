@@ -430,7 +430,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->CommandClientSocket(pack("LLLL", 0, 0, 4, 0), 16);
 			$this->CommandClientSocket(pack("LLLL", 0, 1, 4, 0), 16);
 		}
-		If (($this->ReadPropertyBoolean("I2C_Used") == true) AND (GetValueInteger($this->GetIDForIdent("HardwareRev"))) > 3) {
+		elseif (($this->ReadPropertyBoolean("I2C_Used") == true) AND (GetValueInteger($this->GetIDForIdent("HardwareRev"))) > 3) {
 			$PinUsed[2] = 99999; 
 			$PinUsed[3] = 99999;
 			$this->CommandClientSocket(pack("LLLL", 0, 2, 4, 0), 16);
@@ -446,12 +446,12 @@ class IPS2GPIO_IO extends IPSModule
 			}
 			SetValueInteger($this->GetIDForIdent("Serial_Handle"), -1);
 			SetValueBoolean($this->GetIDForIdent("Serial_Used"), false);
-/*			// den Notify für den TxD-Pin einschalten
+			// den Notify für den TxD-Pin einschalten
 	   		$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
 			$PinNotify[0] = 15;
 			SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
 			$this->CommandClientSocket(pack("L*", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
-*/
+
 		}
 		If ($this->ReadPropertyBoolean("SPI_Used") == true)  {
 			for ($i = 7; $i < 11; $i++) {
