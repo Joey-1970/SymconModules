@@ -34,8 +34,12 @@
 		$this->DisableAction("Baud");
 		IPS_SetHidden($this->GetIDForIdent("Baud"), true);
 		
+		$this->RegisterVariableString("Response", "Response", "", 120);
+		$this->DisableAction("Response");
+		IPS_SetHidden($this->GetIDForIdent("Response"), false);
+		
 		//ReceiveData-Filter setzen 		    
-		$Filter = '((.*"Function":"get_serial".*|.*"Pin":14.*)|.*"Pin":15.*))'; 
+		$Filter = '((.*"Function":"get_serial".*|.*"Pin":14.*)|(.*"Pin":15.*|.*"Function":"set_serial_data".*)))'; 
  		$this->SetReceiveDataFilter($Filter); 
  
         	// den Handle für dieses Gerät ermitteln
@@ -72,6 +76,9 @@
 	 	switch ($data->Function) {
 			 case "get_serial":
 			   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_handle_serial", "Baud" => 9600, "Device" => $this->ReadPropertyString('ConnectionString'), "InstanceID" => $this->InstanceID )));
+			   	break;
+			 case "set_serial_data":
+			   	SetValueString($this->GetIDForIdent("Response"), $Data->Data);
 			   	break;
 			 case "status":
 			   	If (($data->Pin == 14) OR ($data->Pin == 15)) {
