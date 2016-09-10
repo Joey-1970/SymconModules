@@ -340,7 +340,7 @@ class IPS2GPIO_IO extends IPSModule
 		   	$this->CommandClientSocket(pack("L*", 81, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, strlen($Command)).$Command, 16);
 		   	break;
 		   case "check_bytes_serial":
-		   	IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle"))." Command: ".$Command);
+		   	IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle")));
 		   	$this->CommandClientSocket(pack("L*", 83, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
 		   	break;
 		}
@@ -390,7 +390,7 @@ class IPS2GPIO_IO extends IPSModule
 	    						If ($this->GetBuffer("SerialNotify") <> $Bitvalue) {
 		    						// Einlesen der Seriellen Daten veranlassen
 		    						IPS_LogMessage("IPS2GPIO Notify: ","Pin ".$PinNotify[$j]." Value ->".$Bitvalue);
-		    						IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle"))." Command: ".$Command);
+		    						IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle")));
 			   					IPS_Sleep(75);
 			   					$this->CommandClientSocket(pack("L*", 82, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
 			   				 	$this->SetBuffer("SerialNotify", $Bitvalue);	
@@ -732,14 +732,14 @@ class IPS2GPIO_IO extends IPSModule
   		            	break;
   		        case "82":
            			If ($response[4] >= 0) {
-           				IPS_LogMessage("IPS2GPIO Check Serial Bytes","Serial Handle: ".$response[2]." Bytes zum Lesen: ".$response[4]);
+           				IPS_LogMessage("IPS2GPIO Check Bytes Serial","Serial Handle: ".$response[2]." Bytes zum Lesen: ".$response[4]);
            				If ($response[4] > 0) {
            					// Einlesen der vorliegenden Daten
            					$this->CommandClientSocket(pack("L*", 80, GetValueInteger($this->GetIDForIdent("Serial_Handle")), $response[4], 0), 16 + $response[4]);
            				}
            			}
            			else {
-           				IPS_LogMessage("IPS2GPIO Check Serial Bytes","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
+           				IPS_LogMessage("IPS2GPIO Check Bytes Serial","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
  
            			}
   		            	break;
