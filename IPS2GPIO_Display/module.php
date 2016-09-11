@@ -79,8 +79,8 @@
 			   	break;
 			 case "set_serial_data":
 			   	$Response = unserialize($data->Value);
-			   	$Test = $this->hex2str($Response[1]);
-			   	SetValueString($this->GetIDForIdent("Response"), $Test);
+			   	//Test = $this->hex2str($Response[1]);
+			   	SetValueString($this->GetIDForIdent("Response"), $Response[1]);
 			   	break;
 			 case "status":
 			   	If (($data->Pin == 14) OR ($data->Pin == 15)) {
