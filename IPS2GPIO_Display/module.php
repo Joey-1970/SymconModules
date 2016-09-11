@@ -78,9 +78,12 @@
 			   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_handle_serial", "Baud" => 9600, "Device" => $this->ReadPropertyString('ConnectionString'), "InstanceID" => $this->InstanceID )));
 			   	break;
 			 case "set_serial_data":
-			   	$Response = unserialize($data->Value);
-			   	//Test = $this->hex2str($Response[1]);
-			   	SetValueString($this->GetIDForIdent("Response"), $Response[1]);
+			   	$ByteMessage = utf8_decode($data->Value);
+			        $ByteResponse = unpack("H*", $ByteMessage);
+			        $Messages = explode('ffffff', $ByteResponse[1]);
+			   	for($i=1;$i<=Count($Messages);$i++) {
+			   		SetValueString($this->GetIDForIdent("Response"), $Messages[$i]);
+			   	}
 			   	break;
 			 case "status":
 			   	If (($data->Pin == 14) OR ($data->Pin == 15)) {
