@@ -81,7 +81,7 @@
 			   	$ByteMessage = utf8_decode($data->Value);
 			        $ByteResponse = unpack("H*", $ByteMessage);
 			        $Messages = explode('ffffff', $ByteResponse[1]);
-			   	for($i=1;$i<=Count($Messages);$i++) {
+			   	for($i=1;$i<Count($Messages);$i++) {
 			   		SetValueString($this->GetIDForIdent("Response"), $Messages[$i]);
 			   	}
 			   	break;
