@@ -717,7 +717,7 @@ class IPS2GPIO_IO extends IPSModule
            				IPS_LogMessage("IPS2GPIO Serial Read","Serial Handle: ".$response[2]." Value: ".substr($Message, -($response[4])));
            				If ($response[4] > 0) {
 	           				$ByteMessage = substr($Message, -($response[4]));
-			            		$ByteResponse = unpack("C*", $ByteMessage);
+			            		$ByteResponse = unpack("h*", $ByteMessage);
 			            		$ByteArray = serialize($ByteResponse);
 	           				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_data", "Value"=>$ByteArray )));
            				}
