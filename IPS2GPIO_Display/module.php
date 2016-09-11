@@ -97,7 +97,7 @@
 	private function array2str($array)
 	{
 		$str = '';
-    		for($i=0;$i<Count($array);$i++) $str .= chr($array[$i]);
+    		for($i=1;$i<Count($array);$i++) $str .= chr($array[$i]);
     	return $str;
 	}
 	
