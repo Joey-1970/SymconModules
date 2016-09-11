@@ -79,7 +79,7 @@
 			   	break;
 			 case "set_serial_data":
 			   	$Response = $this->array2str(unserialize($data->Value));
-			   	SetValueString($this->GetIDForIdent("Response"), $Response);
+			   	SetValueString($this->GetIDForIdent("Response"), $data->Value." ".$Response);
 			   	break;
 			 case "status":
 			   	If (($data->Pin == 14) OR ($data->Pin == 15)) {
@@ -97,7 +97,7 @@
 	private function array2str($array)
 	{
 		$str = '';
-    		for($i=1;$i<Count($array);$i++) $str .= chr($array[$i]);
+    		for($i=1;$i<=Count($array);$i++) $str .= chr($array[$i]);
     	return $str;
 	}
 	
