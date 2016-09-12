@@ -103,43 +103,43 @@
 	{
 		switch(substr($Message, 0, 2)) {
 			case "00": // Invalid instruction 
-			
+				IPS_LogMessage("IPS2GPIO Display","Fehler: Ungültiger Befehlsaufruf durch den Nutzer");	
 			break;
 			case "01": // Successful execution of instruction 
-			
+				IPS_LogMessage("IPS2GPIO Display","Erfolgreicher Befehlsaufruf durch den Nutzer");
 			break;
 			case "03": // Page ID invalid  
-			
+				IPS_LogMessage("IPS2GPIO Display","Fehler: Aufruf einer ungültigen PageID");
 			break;
 			case "04": // Picture ID invalid  
-			
+				IPS_LogMessage("IPS2GPIO Display","Fehler: Aufruf einer ungültigen PictureID");
 			break;
 			case "05": // Font ID invalid  
-			
+				IPS_LogMessage("IPS2GPIO Display","Fehler: Aufruf einer ungültigen FontID");
 			break;
 			case "11": // Baud rate setting invalid
-			
+				IPS_LogMessage("IPS2GPIO Display","Fehler: Setzen einer ungültigen Baud-Rate");
 			break;
 			case "12": // Curve control ID number or channel number is invalid
-			
+				IPS_LogMessage("IPS2GPIO Display","Fehler: Aufruf einer ungültigen CurveControlID oder ChannelNumber");
 			break;
 			case "1a": // Variable name invalid
-			
+				IPS_LogMessage("IPS2GPIO Display","Fehler: Aufruf einer ungültigen Variablen");
 			break;
 			case "1b": // Variable operation invalid 
-			
+				IPS_LogMessage("IPS2GPIO Display","Fehler: Variablen-Operation fehlgeschlagen");
 			break;
 			case "1c": // Failed to assign   
-			
+				IPS_LogMessage("IPS2GPIO Display","Fehler: Ungültige Attribut-Zuordnung");
 			break;
 			case "1d": // Operate PERFROM failed   
-			
+				IPS_LogMessage("IPS2GPIO Display","Fehler: PERFORM-Operation fehlgeschlagen");
 			break;
 			case "1e": // Parameter quantity invalid   
-			
+				IPS_LogMessage("IPS2GPIO Display","Fehler: Ungültige Parameter-Werte");
 			break;
 			case "1f": // IO operate failed 
-			
+				IPS_LogMessage("IPS2GPIO Display","Fehler: I/O-Operation fehlgeschlagen");
 			break;
 			case "65": // Touch event return data 
 			
