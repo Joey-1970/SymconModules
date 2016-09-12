@@ -62,6 +62,10 @@
 		$this->EnableAction("SleepMode");
 		IPS_SetHidden($this->GetIDForIdent("SleepMode"), false);
 		
+		$this->RegisterVariableString("StringReturn", "StringReturn", "", 120);
+		$this->DisableAction("StringReturn");
+		IPS_SetHidden($this->GetIDForIdent("StringReturn"), false);
+		
 		$this->RegisterVariableString("Response", "Response", "", 120);
 		$this->DisableAction("Response");
 		IPS_SetHidden($this->GetIDForIdent("Response"), false);
@@ -192,7 +196,8 @@
 				SetValueInteger($this->GetIDForIdent("Coordinate_Y"), $Coordinate_Y);
 			break;
 			case "70": // String variable data returns  
-			
+				$Value = $this->hex2str(substr($Message, 2));
+				SetValueInteger($this->GetIDForIdent("StringReturn"), $Value);
 			break;
 			case "71": // Numeric variable data returns
 			
