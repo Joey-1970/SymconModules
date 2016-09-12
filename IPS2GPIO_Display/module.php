@@ -306,6 +306,7 @@
 	public function SetSleep($Value)
 	{
 		$Value = min(1, max(0, $Value));
+		SetValueBoolean($this->GetIDForIdent("SleepMode"), $Value);
 		$this->Send("sleep=".$Value);
 	return;
 	}
