@@ -42,6 +42,14 @@
 		$this->EnableAction("PageNumber");
 		IPS_SetHidden($this->GetIDForIdent("PageNumber"), false);
 		
+		$this->RegisterVariableBoolean("ButtonState", "ButtonState", "", 110);
+		$this->DisableAction("ButtonState");
+		IPS_SetHidden($this->GetIDForIdent("ButtonState"), false);
+		
+		$this->RegisterVariableString("ButtonSummary", "ButtonSummary", "", 120);
+		$this->DisableAction("ButtonSummary");
+		IPS_SetHidden($this->GetIDForIdent("ButtonSummary"), false);
+		
 		$this->RegisterVariableInteger("Coordinate_X", "Coordinate_X", "", 110);
 		$this->DisableAction("Coordinate_X");
 		IPS_SetHidden($this->GetIDForIdent("Coordinate_X"), false);
@@ -162,22 +170,25 @@
 				IPS_LogMessage("IPS2GPIO Display","Fehler: I/O-Operation fehlgeschlagen");
 			break;
 			case "65": // Touch event return data 
-				SetValueInteger($this->GetIDForIdent("PageNumber"), hexdec(substr($Message, 2, 2)));
-				SetValueInteger($this->GetIDForIdent("ButtonNumber"), hexdec(substr($Message, 4, 2)));
+				SetValueInteger($this->GetIDForIdent("PageNumber"), intval(hexdec(substr($Message, 2, 2))));
+				SetValueInteger($this->GetIDForIdent("ButtonNumber"), intval(hexdec(substr($Message, 4, 2))));
+				SetValueBoolean($this->GetIDForIdent("ButtonState"), boolval(hexdec(substr($Message, 6, 2))));
+				SetValueString($this->GetIDForIdent("ButtonSummary"), hexdec(substr($Message, 2, 2)).", ".hexdec(substr($Message, 4, 2)).", ".hexdec(substr($Message, 6, 2)));
+				
 			break;
 			case "66": // Current page ID number returns 
-				SetValueInteger($this->GetIDForIdent("PageNumber"), hexdec(substr($Message, 2, 2)));
+				SetValueInteger($this->GetIDForIdent("PageNumber"), intval(hexdec(substr($Message, 2, 2))));
 			break;
 			case "67": // Touch coordinate data returns 
-				$Coordinate_X = hexdec(substr($Message, 2, 2) + hexdec(substr($Message, 4, 2);
+				$Coordinate_X = intval(hexdec(substr($Message, 2, 2) + hexdec(substr($Message, 4, 2));
 				SetValueInteger($this->GetIDForIdent("Coordinate_X"), $Coordinate_X);
-				$Coordinate_Y = hexdec(substr($Message, 6, 2) + hexdec(substr($Message, 8, 2);
+				$Coordinate_Y = intval(hexdec(substr($Message, 6, 2) + hexdec(substr($Message, 8, 2));
 				SetValueInteger($this->GetIDForIdent("Coordinate_Y"), $Coordinate_Y);
 			break;
 			case "68": // Touch Event in sleep mode 
-				$Coordinate_X = hexdec(substr($Message, 2, 2) + hexdec(substr($Message, 4, 2);
+				$Coordinate_X = intval(hexdec(substr($Message, 2, 2) + hexdec(substr($Message, 4, 2));
 				SetValueInteger($this->GetIDForIdent("Coordinate_X"), $Coordinate_X);
-				$Coordinate_Y = hexdec(substr($Message, 6, 2) + hexdec(substr($Message, 8, 2);
+				$Coordinate_Y = intval(hexdec(substr($Message, 6, 2) + hexdec(substr($Message, 8, 2));
 				SetValueInteger($this->GetIDForIdent("Coordinate_Y"), $Coordinate_Y);
 			break;
 			case "70": // String variable data returns  
