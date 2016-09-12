@@ -34,6 +34,10 @@
 		$this->DisableAction("Baud");
 		IPS_SetHidden($this->GetIDForIdent("Baud"), true);
 		
+		$this->RegisterVariableInteger("ButtonNumber", "ButtonNumber", "", 110);
+		$this->DisableAction("ButtonNumber");
+		IPS_SetHidden($this->GetIDForIdent("ButtonNumber"), false);
+		
 		$this->RegisterVariableInteger("PageNumber", "PageNumber", "", 110);
 		$this->EnableAction("PageNumber");
 		IPS_SetHidden($this->GetIDForIdent("PageNumber"), false);
@@ -159,7 +163,7 @@
 			break;
 			case "65": // Touch event return data 
 				SetValueInteger($this->GetIDForIdent("PageNumber"), hexdec(substr($Message, 2, 2)));
-				
+				SetValueInteger($this->GetIDForIdent("ButtonNumber"), hexdec(substr($Message, 4, 2)));
 			break;
 			case "66": // Current page ID number returns 
 				SetValueInteger($this->GetIDForIdent("PageNumber"), hexdec(substr($Message, 2, 2)));
