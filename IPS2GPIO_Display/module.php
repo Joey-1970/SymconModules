@@ -66,6 +66,10 @@
 		$this->DisableAction("StringReturn");
 		IPS_SetHidden($this->GetIDForIdent("StringReturn"), false);
 		
+		$this->RegisterVariableInteger("IntegerReturn", "IntegerReturn", "", 120);
+		$this->DisableAction("IntegerReturn");
+		IPS_SetHidden($this->GetIDForIdent("IntegerReturn"), false);
+		
 		$this->RegisterVariableString("Response", "Response", "", 120);
 		$this->DisableAction("Response");
 		IPS_SetHidden($this->GetIDForIdent("Response"), false);
@@ -197,10 +201,11 @@
 			break;
 			case "70": // String variable data returns  
 				$Value = $this->hex2str(substr($Message, 2));
-				SetValueInteger($this->GetIDForIdent("StringReturn"), $Value);
+				SetValueString($this->GetIDForIdent("StringReturn"), $Value);
 			break;
 			case "71": // Numeric variable data returns
-			
+				$Value = unpack("V*", substr($Message, 2, 8));
+				SetValueInteger($this->GetIDForIdent("IntegerReturn"), $Value);
 			break;
 			case "86": // Device automatically enters into sleep mode 
 				SetValueBoolean($this->GetIDForIdent("SleepMode"), true);
