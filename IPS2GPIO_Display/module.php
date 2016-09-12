@@ -205,7 +205,7 @@
 			break;
 			case "71": // Numeric variable data returns
 				$Value = unpack("V*", substr($Message, 2, 8));
-				SetValueInteger($this->GetIDForIdent("IntegerReturn"), $Value);
+				SetValueInteger($this->GetIDForIdent("IntegerReturn"), $Value[1]);
 			break;
 			case "86": // Device automatically enters into sleep mode 
 				SetValueBoolean($this->GetIDForIdent("SleepMode"), true);
