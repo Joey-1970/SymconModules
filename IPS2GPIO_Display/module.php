@@ -82,6 +82,7 @@
 			        $ByteResponse = unpack("H*", $ByteMessage);
 			        $Messages = explode('ffffff', $ByteResponse[1]);
 			   	for($i=1;$i<Count($Messages);$i++) {
+			   		$this->DisplayResponse($Messages[$i]);
 			   		SetValueString($this->GetIDForIdent("Response"), $Messages[$i]);
 			   	}
 			   	break;
@@ -98,11 +99,45 @@
  	}
 	// Beginn der Funktionen
 	
-	private function array2str($array)
+	private function DisplayResponse($Message)
 	{
-		$str = '';
-    		for($i=1;$i<=Count($array);$i++) $str .= chr($array[$i]);
-    	return $str;
+		switch(substr($Message, 0, 2)) {
+			case "65": // Touch event return data 
+			
+			break;
+			case "66": // Current page ID number returns 
+			
+			break;
+			case "67": // Touch coordinate data returns 
+			
+			break;
+			case "68": // Touch Event in sleep mode 
+			
+			break;
+			case "70": // String variable data returns  
+			
+			break;
+			case "71": // Numeric variable data returns
+			
+			break;
+			case "86": // Device automatically enters into sleep mode 
+			
+			break;
+			case "87": // Device automatically wake up 
+			
+			break;
+			case "88": // System successful start up 
+			
+			break;
+			case "89": // Start SD card upgrade 
+			
+			break;
+			case "fe": // Data transparent transmit ready 
+			
+			break;
+			
+		}
+    	return;
 	}
 	
 	private function hex2str($hex)
