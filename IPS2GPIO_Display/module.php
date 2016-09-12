@@ -102,6 +102,45 @@
 	private function DisplayResponse($Message)
 	{
 		switch(substr($Message, 0, 2)) {
+			case "00": // Invalid instruction 
+			
+			break;
+			case "01": // Successful execution of instruction 
+			
+			break;
+			case "03": // Page ID invalid  
+			
+			break;
+			case "04": // Picture ID invalid  
+			
+			break;
+			case "05": // Font ID invalid  
+			
+			break;
+			case "11": // Baud rate setting invalid
+			
+			break;
+			case "12": // Curve control ID number or channel number is invalid
+			
+			break;
+			case "1a": // Variable name invalid
+			
+			break;
+			case "1b": // Variable operation invalid 
+			
+			break;
+			case "1c": // Failed to assign   
+			
+			break;
+			case "1d": // Operate PERFROM failed   
+			
+			break;
+			case "1e": // Parameter quantity invalid   
+			
+			break;
+			case "1f": // IO operate failed 
+			
+			break;
 			case "65": // Touch event return data 
 			
 			break;
