@@ -188,15 +188,15 @@
 				SetValueInteger($this->GetIDForIdent("PageNumber"), intval(hexdec(substr($Message, 2, 2))));
 			break;
 			case "67": // Touch coordinate data returns 
-				$Coordinate_X = intval(hexdec(substr($Message, 2, 2) + hexdec(substr($Message, 4, 2));
+				$Coordinate_X = intval(hexdec(substr($Message, 2, 2)) + hexdec(substr($Message, 4, 2)));
 				SetValueInteger($this->GetIDForIdent("Coordinate_X"), $Coordinate_X);
-				$Coordinate_Y = intval(hexdec(substr($Message, 6, 2) + hexdec(substr($Message, 8, 2));
+				$Coordinate_Y = intval(hexdec(substr($Message, 6, 2)) + hexdec(substr($Message, 8, 2)));
 				SetValueInteger($this->GetIDForIdent("Coordinate_Y"), $Coordinate_Y);
 			break;
 			case "68": // Touch Event in sleep mode 
-				$Coordinate_X = intval(hexdec(substr($Message, 2, 2) + hexdec(substr($Message, 4, 2));
+				$Coordinate_X = intval(hexdec(substr($Message, 2, 2)) + hexdec(substr($Message, 4, 2)));
 				SetValueInteger($this->GetIDForIdent("Coordinate_X"), $Coordinate_X);
-				$Coordinate_Y = intval(hexdec(substr($Message, 6, 2) + hexdec(substr($Message, 8, 2));
+				$Coordinate_Y = intval(hexdec(substr($Message, 6, 2)) + hexdec(substr($Message, 8, 2)));
 				SetValueInteger($this->GetIDForIdent("Coordinate_Y"), $Coordinate_Y);
 			break;
 			case "70": // String variable data returns  
