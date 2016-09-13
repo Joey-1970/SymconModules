@@ -22,7 +22,8 @@
         { "type": "CheckBox", "name": "LoggingHum", "caption": "Logging Luftfeuchtigkeit aktivieren" },
         { "type": "CheckBox", "name": "LoggingPres", "caption": "Logging Luftdruck aktivieren" },
         { "type": "CheckBox", "name": "CalibrateData", "caption": "Kalibrierungsdaten nur einlesen wenn erforderlich" },
-        { "type": "Label", "label": "Oversampling Temperatur (Default x1):" },
+        { "type": "Label", "label": "An den folgenden Werten muss in der Regel nichts verändert werden" },
+        { "type": "Label", "label": "Oversampling Temperatur (Default: x1)" },
         { "type": "Select", "name": "OSRS_T", "caption": "Oversampling",
             "options": [
                 { "label": "0 (aus)", "value": 0 },
@@ -33,7 +34,7 @@
                 { "label": "x16", "value": 5 }
                 ]
         },
-        { "type": "Label", "label": "Oversampling Luftfeuchtigkeit (Default x1):" },
+        { "type": "Label", "label": "Oversampling Luftfeuchtigkeit (Default: x1)" },
         { "type": "Select", "name": "OSRS_H", "caption": "Oversampling",
             "options": [
                 { "label": "0 (aus)", "value": 0 },
@@ -44,7 +45,7 @@
                 { "label": "x16", "value": 5 }
                 ]
         },
-        { "type": "Label", "label": "Oversampling Luftdruck (Default x1):" },
+        { "type": "Label", "label": "Oversampling Luftdruck (Default: x1)" },
         { "type": "Select", "name": "OSRS_P", "caption": "Oversampling",
             "options": [
                 { "label": "0 (aus)", "value": 0 },
