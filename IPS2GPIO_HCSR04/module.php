@@ -17,16 +17,6 @@
  	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
 
-        // Überschreibt die interne IPS_Destroy($id) Funktion
-        public function Destroy() {
-            // Diese Zeile nicht löschen.
-            parent::Destroy();
-            IPS_LogMessage("IPS2GPIO GPIO Destroy: ","Genutzte Pin löschen");
-            $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "gpio_destroy", "Pin" => $this->ReadPropertyInteger("Pin_I"))));
-            $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "gpio_destroy", "Pin" => $this->ReadPropertyInteger("Pin_O"))));
-
-        }
-
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
         {
@@ -50,7 +40,6 @@
 		    $this->SetReceiveDataFilter($Filter);
 
 	            If (($this->ReadPropertyInteger("Pin_I") >= 0) AND ($this->ReadPropertyInteger("Pin_O")) >= 0) {
-	            	  //$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
 	            	  $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_I"), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 0)));
 			  $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_O"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 	            	  $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_O"), "Value" => 0)));
