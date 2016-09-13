@@ -22,6 +22,70 @@
         { "type": "CheckBox", "name": "LoggingHum", "caption": "Logging Luftfeuchtigkeit aktivieren" },
         { "type": "CheckBox", "name": "LoggingPres", "caption": "Logging Luftdruck aktivieren" },
         { "type": "CheckBox", "name": "CalibrateData", "caption": "Kalibrierungsdaten nur einlesen wenn erforderlich" },
+        { "type": "Label", "label": "Oversampling Temperatur (Default x1):" },
+        { "type": "Select", "name": "OSRS_T", "caption": "Oversampling",
+            "options": [
+                { "label": "0 (aus)", "value": 0 },
+                { "label": "x1 (Default)", "value": 1 },
+                { "label": "x2", "value": 2 },
+                { "label": "x4", "value": 3 },
+                { "label": "x8", "value": 4 },
+                { "label": "x16", "value": 5 }
+                ]
+        },
+        { "type": "Label", "label": "Oversampling Luftfeuchtigkeit (Default x1):" },
+        { "type": "Select", "name": "OSRS_H", "caption": "Oversampling",
+            "options": [
+                { "label": "0 (aus)", "value": 0 },
+                { "label": "x1 (Default)", "value": 1 },
+                { "label": "x2", "value": 2 },
+                { "label": "x4", "value": 3 },
+                { "label": "x8", "value": 4 },
+                { "label": "x16", "value": 5 }
+                ]
+        },
+        { "type": "Label", "label": "Oversampling Luftdruck (Default x1):" },
+        { "type": "Select", "name": "OSRS_P", "caption": "Oversampling",
+            "options": [
+                { "label": "0 (aus)", "value": 0 },
+                { "label": "x1 (Default)", "value": 1 },
+                { "label": "x2", "value": 2 },
+                { "label": "x4", "value": 3 },
+                { "label": "x8", "value": 4 },
+                { "label": "x16", "value": 5 }
+                ]
+        },
+        { "type": "Label", "label": "Mode (Default: Normal Mode)" },
+        { "type": "Select", "name": "Mode", "caption": "Mode",
+            "options": [
+                { "label": "Sleep Mode", "value": 0 },
+                { "label": "Forced Mode", "value": 1 },
+                { "label": "Normal Mode (Default)", "value": 3 }
+                ]
+        },
+        { "type": "Label", "label": "IIR-Filter (Default: 0->aus)" },
+        { "type": "Select", "name": "IIR_Filter", "caption": "IIR-Filter",
+            "options": [
+                { "label": "0 (aus)", "value": 0 },
+                { "label": "2", "value": 1 },
+                { "label": "4", "value": 2 },
+                { "label": "8", "value": 3 },
+                { "label": "16", "value": 4 }
+                ]
+        },
+        { "type": "Label", "label": "StandBy Zeit (Default: 1000ms)" },
+        { "type": "Select", "name": "SB_T", "caption": "StandBy Zeit (ms)",
+            "options": [
+                { "label": "0.5", "value": 0 },
+                { "label": "62.5", "value": 1 },
+                { "label": "125", "value": 2 },
+                { "label": "250", "value": 3 },
+                { "label": "500", "value": 4 },
+                { "label": "1000 (Default)", "value": 5 },
+                { "label": "10", "value": 6 },
+                { "label": "20", "value": 7 }
+                ]
+        },
         { "type": "Label", "label": "Hinweise:" },
         { "type": "Label", "label": "- die Device Adresse lautet 118 dez (0x76h) bei SDO an GND" },
         { "type": "Label", "label": "- die Device Adresse lautet 119 dez (0x77h) als Default" },
