@@ -14,6 +14,12 @@
  	    	$this->RegisterPropertyBoolean("LoggingHum", false);
  	    	$this->RegisterPropertyBoolean("LoggingPres", false);
  	    	$this->RegisterPropertyBoolean("CalibrateData", true);
+ 	    	$this->RegisterPropertyInteger("OSRS_T", 1);
+ 	    	$this->RegisterPropertyInteger("OSRS_H", 1);
+ 	    	$this->RegisterPropertyInteger("OSRS_P", 1);
+ 	    	$this->RegisterPropertyInteger("Mode", 3);
+ 	    	$this->RegisterPropertyInteger("SB_T", 5);
+ 	    	$this->RegisterPropertyInteger("IIR_Filter", 0);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GBME_Measurement($_IPS["TARGET"]);');
         }
  
