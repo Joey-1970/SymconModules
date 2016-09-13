@@ -214,12 +214,12 @@
 	
 	private function Setup()
 	{
-		$osrs_t = 1;
-		$osrs_p = 1;
-		$osrs_h = 1;
-		$mode = 3;
-		$t_sb = 5;
-		$filter = 0;
+		$osrs_t = 1; // Oversampling Measure temperature x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
+		$osrs_p = 1; // Oversampling Measure pressure x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
+		$osrs_h = 1; // Oversampling Measure humidity x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
+		$mode = 3; // 0 = Power Off (Sleep Mode), x01 und x10 Force Mode, 11 Normal Mode
+		$t_sb = 5; // StandBy Time: dec: 0 (0.5ms) - 5 (1000ms), 6 (10ms), 7 (20ms)
+		$filter = 0; // IIR-Filter 0-> off - 2, 4, 8, 16 (dec: 0 (off) - 4)
 		$spi3w_en = 0;
 		
 		$ctrl_meas_reg = (($osrs_t << 5)|($osrs_p << 2)|$mode);
