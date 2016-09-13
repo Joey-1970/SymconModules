@@ -29,13 +29,6 @@
             	$this->RegisterTimer("Messzyklus", 0, 'I2GIO1_Read_Status($_IPS["TARGET"]);');
         }
 
-        // Überschreibt die interne IPS_Destroy($id) Funktion
-        public function Destroy() {
-            // Diese Zeile nicht löschen.
-            parent::Destroy();
-            $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_destroy", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"))));
-        }
- 
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
         {
@@ -97,7 +90,6 @@
 		$this->SetReceiveDataFilter($Filter);
 		
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "InstanceID" => $this->InstanceID)));
-           	//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_pinupdate")));
 		$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
 	        $this->Setup();
 	        // Erste Messdaten einlesen
