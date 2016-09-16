@@ -220,9 +220,11 @@
 				IPS_LogMessage("IPS2GPIO Display","SD-Card-Upgrade gestartet");
 			break;
 			case "fe": // Data transparent transmit ready 
-			
+				IPS_LogMessage("IPS2GPIO Display","Transparenter Datentransport abgeschlossen");
 			break;
-			
+			case "co": // Data transparent transmit ready 
+				IPS_LogMessage("IPS2GPIO Display", $Message);
+			break;
 		}
     	return;
 	}
