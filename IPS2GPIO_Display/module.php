@@ -115,9 +115,9 @@
 			   	break;
 			 case "set_serial_data":
 			   	$ByteMessage = utf8_decode($data->Value);
-			        IPS_LogMessage("IPS2GPIO Display", $ByteMessage);	
+			        //IPS_LogMessage("IPS2GPIO Display", $ByteMessage);	
 			        If (substr($ByteMessage, 0, 5) == "comok") {
-			        	$Messages = $ByteMessage; 
+			        	$Messages = substr($ByteMessage, 7, -3); 
 			        	IPS_LogMessage("IPS2GPIO Display", $Messages);
 			        	SetValueString($this->GetIDForIdent("Response"), $Messages);
 			        }
