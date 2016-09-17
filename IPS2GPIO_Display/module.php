@@ -115,12 +115,18 @@
 			   	break;
 			 case "set_serial_data":
 			   	$ByteMessage = utf8_decode($data->Value);
-			        $ByteResponse = unpack("H*", $ByteMessage);
-			        $Messages = explode('ffffff', $ByteResponse[1]);
-			   	for($i=1;$i<Count($Messages);$i++) {
-			   		$this->DisplayResponse($Messages[$i]);
-			   		SetValueString($this->GetIDForIdent("Response"), $Messages[$i]);
-			   	}
+			        If (substr($ByteMessage, 0, 6) == "comok") {
+			        	$Messages = $ByteMessage; 
+			        	SetValueString($this->GetIDForIdent("Response"), $Messages);
+			        }
+			        else {
+				        $ByteResponse = unpack("H*", $ByteMessage);
+				        $Messages = explode('ffffff', $ByteResponse[1]);
+				   	for($i=1;$i<Count($Messages);$i++) {
+				   		$this->DisplayResponse($Messages[$i]);
+				   		SetValueString($this->GetIDForIdent("Response"), $Messages[$i]);
+				   	}
+			        }
 			   	break;
 			 case "status":
 			   	If (($data->Pin == 14) OR ($data->Pin == 15)) {
