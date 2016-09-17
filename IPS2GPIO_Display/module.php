@@ -117,9 +117,10 @@
 			   	$ByteMessage = utf8_decode($data->Value);
 			        //IPS_LogMessage("IPS2GPIO Display", $ByteMessage);	
 			        If (substr($ByteMessage, 0, 5) == "comok") {
-			        	$Messages = substr($ByteMessage, 7, -3); 
+			        	$Messages = substr($ByteMessage, 6, -3); 
 			        	IPS_LogMessage("IPS2GPIO Display", $Messages);
 			        	SetValueString($this->GetIDForIdent("Response"), $Messages);
+			        	$Messages = explode(',', $Messages);
 			        }
 			        else {
 				        $ByteResponse = unpack("H*", $ByteMessage);
