@@ -330,6 +330,7 @@ class IPS2GPIO_IO extends IPSModule
 		   case "get_handle_serial":
 	   		IPS_LogMessage("IPS2GPIO Get Handle Serial", "Handle anfordern");
 	   		$this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device, 16);
+	   		$this->CommandClientSocket(pack("L*", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
 	   		// Messages einrichten
 			$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
 		        $this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
