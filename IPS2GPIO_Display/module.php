@@ -90,7 +90,7 @@
 		$this->DisableAction("SerialNumber");
 		IPS_SetHidden($this->GetIDForIdent("SerialNumber"), false);
 		
-		$this->RegisterVariableInteger("FlashSize", "FlashSize", "", 120);
+		$this->RegisterVariableString("FlashSize", "FlashSize", "", 120);
 		$this->DisableAction("FlashSize");
 		IPS_SetHidden($this->GetIDForIdent("FlashSize"), false);
 		
@@ -144,7 +144,7 @@
 			        	SetValueString($this->GetIDForIdent("DisplayModel"), $Messages[2]);
 			        	SetValueInteger($this->GetIDForIdent("MCU_Code"), $Messages[3]);
 			        	SetValueString($this->GetIDForIdent("SerialNumber"), $Messages[4]);
-			        	SetValueInteger($this->GetIDForIdent("FlashSize"), $Messages[5]);
+			        	SetValueString($this->GetIDForIdent("FlashSize"), $Messages[5]);
 			        }
 			        else {
 				        $ByteResponse = unpack("H*", $ByteMessage);
