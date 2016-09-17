@@ -74,25 +74,29 @@
 		$this->DisableAction("Response");
 		IPS_SetHidden($this->GetIDForIdent("Response"), false);
 		
-		$this->RegisterVariableBoolean("Touchdisplay", "Touchdisplay", "", 110);
+		$this->RegisterVariableBoolean("Touchdisplay", "Touchdisplay", "", 300);
 		$this->DisableAction("Touchdisplay");
 		IPS_SetHidden($this->GetIDForIdent("Touchdisplay"), false);
 		
-		$this->RegisterVariableString("DisplayModel", "DisplayModel", "", 120);
+		$this->RegisterVariableString("DisplayModel", "DisplayModel", "", 310);
 		$this->DisableAction("DisplayModel");
 		IPS_SetHidden($this->GetIDForIdent("DisplayModel"), false);
 		
-		$this->RegisterVariableInteger("MCU_Code", "MCU_Code", "", 120);
+		$this->RegisterVariableInteger("MCU_Code", "MCU_Code", "", 320);
 		$this->DisableAction("MCU_Code");
 		IPS_SetHidden($this->GetIDForIdent("MCU_Code"), false);
 		
-		$this->RegisterVariableString("SerialNumber", "SerialNumber", "", 120);
+		$this->RegisterVariableString("SerialNumber", "SerialNumber", "", 330);
 		$this->DisableAction("SerialNumber");
 		IPS_SetHidden($this->GetIDForIdent("SerialNumber"), false);
 		
-		$this->RegisterVariableString("FlashSize", "FlashSize", "", 120);
+		$this->RegisterVariableString("FlashSize", "FlashSize", "", 340);
 		$this->DisableAction("FlashSize");
 		IPS_SetHidden($this->GetIDForIdent("FlashSize"), false);
+		
+		$this->RegisterVariableInteger("FirmwareVersion", "FirmwareVersion", "", 350);
+		$this->DisableAction("FirmwareVersion");
+		IPS_SetHidden($this->GetIDForIdent("FirmwareVersion"), false);
 		
 		//ReceiveData-Filter setzen 		    
 		$Filter = '((.*"Function":"get_serial".*|.*"Pin":14.*)|(.*"Pin":15.*|.*"Function":"set_serial_data".*)))'; 
@@ -142,9 +146,10 @@
 			        	$Messages = explode(',', $Messages);
 			        	SetValueBoolean($this->GetIDForIdent("Touchdisplay"), $Messages[0]);
 			        	SetValueString($this->GetIDForIdent("DisplayModel"), $Messages[2]);
-			        	SetValueInteger($this->GetIDForIdent("MCU_Code"), $Messages[3]);
-			        	SetValueString($this->GetIDForIdent("SerialNumber"), $Messages[4]);
-			        	SetValueString($this->GetIDForIdent("FlashSize"), $Messages[5]);
+			        	SetValueInteger($this->GetIDForIdent("FirmwareVersion"), $Messages[3]);
+			        	SetValueInteger($this->GetIDForIdent("MCU_Code"), $Messages[4]);
+			        	SetValueString($this->GetIDForIdent("SerialNumber"), $Messages[5]);
+			        	SetValueString($this->GetIDForIdent("FlashSize"), $Messages[6]);
 			        }
 			        else {
 				        $ByteResponse = unpack("H*", $ByteMessage);
