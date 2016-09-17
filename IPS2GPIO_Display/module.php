@@ -116,7 +116,7 @@
 			 case "set_serial_data":
 			   	$ByteMessage = utf8_decode($data->Value);
 			        $ByteResponse = unpack("H*", $ByteMessage);
-			        $Messages = explode('fff', $ByteResponse[1]);
+			        $Messages = explode('ffffff', $ByteResponse[1]);
 			   	for($i=1;$i<Count($Messages);$i++) {
 			   		$this->DisplayResponse($Messages[$i]);
 			   		SetValueString($this->GetIDForIdent("Response"), $Messages[$i]);
