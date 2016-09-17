@@ -74,6 +74,26 @@
 		$this->DisableAction("Response");
 		IPS_SetHidden($this->GetIDForIdent("Response"), false);
 		
+		$this->RegisterVariableBoolean("Touchdisplay", "Touchdisplay", "", 110);
+		$this->DisableAction("Touchdisplay");
+		IPS_SetHidden($this->GetIDForIdent("Touchdisplay"), false);
+		
+		$this->RegisterVariableString("DisplayModel", "DisplayModel", "", 120);
+		$this->DisableAction("DisplayModel");
+		IPS_SetHidden($this->GetIDForIdent("DisplayModel"), false);
+		
+		$this->RegisterVariableInteger("MCU_Code", "MCU_Code", "", 120);
+		$this->DisableAction("MCU_Code");
+		IPS_SetHidden($this->GetIDForIdent("MCU_Code"), false);
+		
+		$this->RegisterVariableString("SerialNumber", "SerialNumber", "", 120);
+		$this->DisableAction("SerialNumber");
+		IPS_SetHidden($this->GetIDForIdent("SerialNumber"), false);
+		
+		$this->RegisterVariableInteger("FlashSize", "FlashSize", "", 120);
+		$this->DisableAction("FlashSize");
+		IPS_SetHidden($this->GetIDForIdent("FlashSize"), false);
+		
 		//ReceiveData-Filter setzen 		    
 		$Filter = '((.*"Function":"get_serial".*|.*"Pin":14.*)|(.*"Pin":15.*|.*"Function":"set_serial_data".*)))'; 
  		$this->SetReceiveDataFilter($Filter); 
@@ -118,9 +138,13 @@
 			        //IPS_LogMessage("IPS2GPIO Display", $ByteMessage);	
 			        If (substr($ByteMessage, 0, 5) == "comok") {
 			        	$Messages = substr($ByteMessage, 6, -3); 
-			        	IPS_LogMessage("IPS2GPIO Display", $Messages);
-			        	SetValueString($this->GetIDForIdent("Response"), $Messages);
+			        	//IPS_LogMessage("IPS2GPIO Display", $Messages);
 			        	$Messages = explode(',', $Messages);
+			        	SetValueBoolean($this->GetIDForIdent("Touchdisplay"), $Messages[0]);
+			        	SetValueString($this->GetIDForIdent("DisplayModel"), $Messages[2]);
+			        	SetValueInteger($this->GetIDForIdent("MCU_Code"), $Messages[3]);
+			        	SetValueString($this->GetIDForIdent("SerialNumber"), $Messages[4]);
+			        	SetValueInteger($this->GetIDForIdent("FlashSize"), $Messages[5]);
 			        }
 			        else {
 				        $ByteResponse = unpack("H*", $ByteMessage);
@@ -271,6 +295,8 @@
 		$this->SetCommandReturn($this->ReadPropertyInteger("CmdRet"));
 		// Senden der Koordniaten bei Touch
 		$this->SetSendTouchCoordinate(1);
+		// Display-Daten anfordern
+		$this->Send("connect");
 	return;
 	}
 	public function SetBrightness($Value)
