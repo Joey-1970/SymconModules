@@ -166,7 +166,7 @@
 						$contents = fread($handle, $this->GetBuffer("FileSize"));
 						fclose($handle);
 						// Datei in Einheiten <4096 Bytes teilen
-						$contentarray = str_split($contents, 4096);
+						$contentarray = str_split($contents, 1024);
 						for($i=0; $i<Count($contentarray); $i++) {
 							$Message = utf8_encode($contentarray[$i]);
 							IPS_LogMessage("IPS2GPIO Display","Senden Datenpaket ".$i." von ".Count($contentarray));
