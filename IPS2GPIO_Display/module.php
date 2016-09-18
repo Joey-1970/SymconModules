@@ -99,6 +99,8 @@
 		IPS_SetHidden($this->GetIDForIdent("FirmwareVersion"), false);
 		
 		$this->SetBuffer("Update", false);
+		$this->SetBuffer("FileName", "");
+		$this->SetBuffer("FileSize", 0);
 		
 		//ReceiveData-Filter setzen 		    
 		$Filter = '((.*"Function":"get_serial".*|.*"Pin":14.*)|(.*"Pin":15.*|.*"Function":"set_serial_data".*)))'; 
@@ -199,7 +201,11 @@
 					fclose($handle);
 					// Datei in Einheiten <4096 Bytes teilen
 					$contentarray = str_split($contents, 4096);
-					for($i=0; $i<Count($hex);$i+=2) 
+					for($i=0; $i<Count($contentarray); $i++) {
+						$Message = utf8_encode($contentarray[$i]);
+						$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Command" => $Message)));
+					}
+					$this->SetBuffer("Update", false);
 				}
 				else {
 					IPS_LogMessage("IPS2GPIO Display","Fehler: Aufruf einer ungültigen FontID");
