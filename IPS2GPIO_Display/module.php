@@ -98,6 +98,8 @@
 		$this->DisableAction("FirmwareVersion");
 		IPS_SetHidden($this->GetIDForIdent("FirmwareVersion"), false);
 		
+		$this->SetBuffer("Update", false);
+		
 		//ReceiveData-Filter setzen 		    
 		$Filter = '((.*"Function":"get_serial".*|.*"Pin":14.*)|(.*"Pin":15.*|.*"Function":"set_serial_data".*)))'; 
  		$this->SetReceiveDataFilter($Filter); 
@@ -188,7 +190,8 @@
 			case "04": // Picture ID invalid  
 				IPS_LogMessage("IPS2GPIO Display","Fehler: Aufruf einer ungültigen PictureID");
 			break;
-			case "05": // Font ID invalid  
+			case "05": // Font ID invalid
+				
 				IPS_LogMessage("IPS2GPIO Display","Fehler: Aufruf einer ungültigen FontID");
 			break;
 			case "11": // Baud rate setting invalid
@@ -378,8 +381,11 @@
 	{
 		if (file_exists($Filename)) {
 		    IPS_LogMessage("IPS2GPIO Display","Der angegebene Datei ".$Filename." wurde gefunden.");
-		    $this->SetBuffer("Filesize", filesize($Filename));
-		    IPS_LogMessage("IPS2GPIO Display","Der angegebene Datei ".$Filename." hat eine Größe von ".$this->GetBuffer("Filesize")." Bytes");
+		    $this->SetBuffer("FileSize", filesize($Filename));
+		    IPS_LogMessage("IPS2GPIO Display","Der angegebene Datei ".$Filename." hat eine Größe von ".$this->GetBuffer("FileSize")." Bytes");
+		    // der Update-Prozess kann beginnen
+		    $this->SetBuffer("Update", true);
+		    $this->Send("whmi-wri ".$this->GetBuffer("FileSize").",9600,0");
 		} else {
 		    IPS_LogMessage("IPS2GPIO Display","Der angegebene Datei ".$Filename." wurde nicht gefunden!");
 		}		
