@@ -166,12 +166,12 @@
 						$contents = fread($handle, $this->GetBuffer("FileSize"));
 						fclose($handle);
 						// Datei in Einheiten <4096 Bytes teilen
-						$contentarray = str_split($contents, 1024);
+						$contentarray = str_split($contents, 512);
 						for($i=0; $i<Count($contentarray); $i++) {
 							$Message = utf8_encode($contentarray[$i]);
 							IPS_LogMessage("IPS2GPIO Display","Senden Datenpaket ".$i." von ".Count($contentarray));
 							$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Command" => $Message)));
-							IPS_Sleep(200);
+							IPS_Sleep(250);
 						}
 						$this->SetBuffer("Update", false);
 					}
