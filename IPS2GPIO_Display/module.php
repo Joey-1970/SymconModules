@@ -157,6 +157,7 @@
 			        }
 			        else {
 				        $ByteResponse = unpack("H*", $ByteMessage);
+				        IPS_LogMessage("IPS2GPIO Display","Empfangene Daten: ".$ByteResponse[1]);
 				        $Messages = explode('ffffff', $ByteResponse[1]);
 				   	for($i=1;$i<Count($Messages);$i++) {
 				   		$this->DisplayResponse($Messages[$i]);
