@@ -158,7 +158,7 @@
 			        else {
 				        $ByteResponse = unpack("H*", $ByteMessage);
 				        IPS_LogMessage("IPS2GPIO Display","Empfangene Daten: ".$ByteResponse[1]);
-				        If ($this->GetBuffer("Update") == true) AND ($ByteResponse[1] == "05" {
+				        If (($this->GetBuffer("Update") == true) AND ($ByteResponse[1] == "05")) {
 						// Update starten
 						// Datei öffnen und einlesen
 						IPS_LogMessage("IPS2GPIO Display","Öffnen der Update-Datei");
