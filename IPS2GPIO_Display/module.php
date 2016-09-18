@@ -373,5 +373,11 @@
 		$this->Send("sleep=".$Value);
 	return;
 	}
+	
+	public function Update($Filename)
+	{
+		
+	return;
+	}
 }
 ?>
