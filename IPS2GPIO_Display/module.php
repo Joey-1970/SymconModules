@@ -191,8 +191,19 @@
 				IPS_LogMessage("IPS2GPIO Display","Fehler: Aufruf einer ungültigen PictureID");
 			break;
 			case "05": // Font ID invalid
-				
-				IPS_LogMessage("IPS2GPIO Display","Fehler: Aufruf einer ungültigen FontID");
+				If ($this->GetBuffer("Update") == true) {
+					// Update starten
+					// Datei öffnen und einlesen
+					$handle = fopen($this->GetBuffer("FileName"), "r");
+					$contents = fread($handle, $this->GetBuffer("FileSize"));
+					fclose($handle);
+					// Datei in Einheiten <4096 Bytes teilen
+					$contentarray = str_split($contents, 4096);
+					for($i=0; $i<Count($hex);$i+=2) 
+				}
+				else {
+					IPS_LogMessage("IPS2GPIO Display","Fehler: Aufruf einer ungültigen FontID");
+				}
 			break;
 			case "11": // Baud rate setting invalid
 				IPS_LogMessage("IPS2GPIO Display","Fehler: Setzen einer ungültigen Baud-Rate");
@@ -380,6 +391,7 @@
 	public function Update($Filename)
 	{
 		if (file_exists($Filename)) {
+		    $this->SetBuffer("FileName", $Filename);
 		    IPS_LogMessage("IPS2GPIO Display","Der angegebene Datei ".$Filename." wurde gefunden.");
 		    $this->SetBuffer("FileSize", filesize($Filename));
 		    IPS_LogMessage("IPS2GPIO Display","Der angegebene Datei ".$Filename." hat eine Größe von ".$this->GetBuffer("FileSize")." Bytes");
