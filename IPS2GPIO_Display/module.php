@@ -196,6 +196,7 @@
 				If ($this->GetBuffer("Update") == true) {
 					// Update starten
 					// Datei öffnen und einlesen
+					IPS_LogMessage("IPS2GPIO Display","Öffnen der Update-Datei");
 					$handle = fopen($this->GetBuffer("FileName"), "r");
 					$contents = fread($handle, $this->GetBuffer("FileSize"));
 					fclose($handle);
@@ -203,6 +204,7 @@
 					$contentarray = str_split($contents, 4096);
 					for($i=0; $i<Count($contentarray); $i++) {
 						$Message = utf8_encode($contentarray[$i]);
+						IPS_LogMessage("IPS2GPIO Display","Senden Datenpaket ".$i." von ".Count($contentarray));
 						$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Command" => $Message)));
 					}
 					$this->SetBuffer("Update", false);
