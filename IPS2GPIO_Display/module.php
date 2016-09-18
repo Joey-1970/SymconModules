@@ -158,11 +158,29 @@
 			        else {
 				        $ByteResponse = unpack("H*", $ByteMessage);
 				        IPS_LogMessage("IPS2GPIO Display","Empfangene Daten: ".$ByteResponse[1]);
-				        $Messages = explode('ffffff', $ByteResponse[1]);
-				   	for($i=1;$i<Count($Messages);$i++) {
-				   		$this->DisplayResponse($Messages[$i]);
-				   		SetValueString($this->GetIDForIdent("Response"), $Messages[$i]);
-				   	}
+				        If ($this->GetBuffer("Update") == true) AND ($ByteResponse[1] == "05" {
+						// Update starten
+						// Datei öffnen und einlesen
+						IPS_LogMessage("IPS2GPIO Display","Öffnen der Update-Datei");
+						$handle = fopen($this->GetBuffer("FileName"), "r");
+						$contents = fread($handle, $this->GetBuffer("FileSize"));
+						fclose($handle);
+						// Datei in Einheiten <4096 Bytes teilen
+						$contentarray = str_split($contents, 4096);
+						for($i=0; $i<Count($contentarray); $i++) {
+							$Message = utf8_encode($contentarray[$i]);
+							IPS_LogMessage("IPS2GPIO Display","Senden Datenpaket ".$i." von ".Count($contentarray));
+							$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Command" => $Message)));
+						}
+						$this->SetBuffer("Update", false);
+					}
+				        else {
+				        	$Messages = explode('ffffff', $ByteResponse[1]);
+					   	for($i=1;$i<Count($Messages);$i++) {
+					   		$this->DisplayResponse($Messages[$i]);
+					   		SetValueString($this->GetIDForIdent("Response"), $Messages[$i]);
+					   	}
+				        }
 			        }
 			   	break;
 			 case "status":
@@ -194,25 +212,7 @@
 				IPS_LogMessage("IPS2GPIO Display","Fehler: Aufruf einer ungültigen PictureID");
 			break;
 			case "05": // Font ID invalid
-				If ($this->GetBuffer("Update") == true) {
-					// Update starten
-					// Datei öffnen und einlesen
-					IPS_LogMessage("IPS2GPIO Display","Öffnen der Update-Datei");
-					$handle = fopen($this->GetBuffer("FileName"), "r");
-					$contents = fread($handle, $this->GetBuffer("FileSize"));
-					fclose($handle);
-					// Datei in Einheiten <4096 Bytes teilen
-					$contentarray = str_split($contents, 4096);
-					for($i=0; $i<Count($contentarray); $i++) {
-						$Message = utf8_encode($contentarray[$i]);
-						IPS_LogMessage("IPS2GPIO Display","Senden Datenpaket ".$i." von ".Count($contentarray));
-						$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Command" => $Message)));
-					}
-					$this->SetBuffer("Update", false);
-				}
-				else {
-					IPS_LogMessage("IPS2GPIO Display","Fehler: Aufruf einer ungültigen FontID");
-				}
+				IPS_LogMessage("IPS2GPIO Display","Fehler: Aufruf einer ungültigen FontID");
 			break;
 			case "11": // Baud rate setting invalid
 				IPS_LogMessage("IPS2GPIO Display","Fehler: Setzen einer ungültigen Baud-Rate");
