@@ -421,6 +421,7 @@
 		    $this->SetBuffer("FileCounter", 0);
 		    $this->SetBuffer("FileParts", 0);
 		    $this->SetBuffer("FileContent", "");
+		    $this->Send("0000");
 		    $this->Send("whmi-wri ".$this->GetBuffer("FileSize").",9600,0");
 		} else {
 		    IPS_LogMessage("IPS2GPIO Display","Der angegebene Datei ".$Filename." wurde nicht gefunden!");
