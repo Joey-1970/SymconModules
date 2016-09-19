@@ -164,7 +164,7 @@
 							// Datei öffnen und einlesen
 							IPS_LogMessage("IPS2GPIO Display","Öffnen der Update-Datei");
 							$handle = fopen($this->GetBuffer("FileName"), "r");
-							$FileContent = fread($handle, $this->GetBuffer("FileSize")));
+							$FileContent = fread($handle, $this->GetBuffer("FileSize"));
 							fclose($handle);
 							// Datei in Einheiten <4096 Bytes teilen
 							$contentarray = str_split($FileContent, 4096);
@@ -176,7 +176,7 @@
 						}
 						elseif ($this->GetBuffer("FileCounter") > 0) {
 							$handle = fopen($this->GetBuffer("FileName"), "r");
-							$FileContent = fread($handle, $this->GetBuffer("FileSize")));
+							$FileContent = fread($handle, $this->GetBuffer("FileSize"));
 							fclose($handle);
 							// Datei in Einheiten <4096 Bytes teilen
 							$contentarray = str_split($FileContent, 4096);
