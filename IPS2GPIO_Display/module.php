@@ -412,7 +412,7 @@
 	public function Update($Filename)
 	{
 		if (file_exists($Filename)) {
-		    $this->Send("connect");
+		    //$this->Send("connect");
 		    $this->SetBuffer("FileName", $Filename);
 		    IPS_LogMessage("IPS2GPIO Display","Der angegebene Datei ".$Filename." wurde gefunden.");
 		    $this->SetBuffer("FileSize", filesize($Filename));
@@ -422,7 +422,7 @@
 		    $this->SetBuffer("FileCounter", 0);
 		    $this->SetBuffer("FileParts", 0);
 		    $this->SetBuffer("FileContent", "");
-		    $this->Send("0000");
+		    
 		    $this->Send("whmi-wri ".$this->GetBuffer("FileSize").",9600,0");
 		} else {
 		    IPS_LogMessage("IPS2GPIO Display","Der angegebene Datei ".$Filename." wurde nicht gefunden!");
