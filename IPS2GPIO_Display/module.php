@@ -412,6 +412,7 @@
 	public function Update($Filename)
 	{
 		if (file_exists($Filename)) {
+		    $this->Send("connect");
 		    $this->SetBuffer("FileName", $Filename);
 		    IPS_LogMessage("IPS2GPIO Display","Der angegebene Datei ".$Filename." wurde gefunden.");
 		    $this->SetBuffer("FileSize", filesize($Filename));
