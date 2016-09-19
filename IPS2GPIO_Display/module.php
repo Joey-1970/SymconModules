@@ -170,7 +170,7 @@
 							$contentarray = str_split($this->GetBuffer("FileContent"), 4096);
 							$this->SetBuffer("FileParts", Count($contentarray));
 							$Message = utf8_encode($contentarray[0]);
-							IPS_LogMessage("IPS2GPIO Display","Senden Datenpaket 0 von "$this->GetBuffer("FileParts"));
+							IPS_LogMessage("IPS2GPIO Display","Senden Datenpaket 0 von ".$this->GetBuffer("FileParts"));
 							$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Command" => $Message)));
 							$this->SetBuffer("FileCounter", 1);
 						}
