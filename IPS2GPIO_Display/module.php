@@ -419,18 +419,17 @@
 		if (file_exists($Filename)) {
 		    //$this->Send("connect");
 		    $this->SetBuffer("FileName", $Filename);
-		    IPS_LogMessage("IPS2GPIO Display","Der angegebene Datei ".$Filename." wurde gefunden.");
+		    //IPS_LogMessage("IPS2GPIO Display","Die angegebene Datei ".$Filename." wurde gefunden.");
 		    $this->SetBuffer("FileSize", filesize($Filename));
-		    IPS_LogMessage("IPS2GPIO Display","Der angegebene Datei ".$Filename." hat eine Größe von ".$this->GetBuffer("FileSize")." Bytes");
+		    //IPS_LogMessage("IPS2GPIO Display","Der angegebene Datei ".$Filename." hat eine Größe von ".$this->GetBuffer("FileSize")." Bytes");
 		    // der Update-Prozess kann beginnen
 		    $this->SetBuffer("Update", true);
 		    $this->SetBuffer("FileCounter", 0);
 		    $this->SetBuffer("FileParts", 0);
-		    
 		    $this->Send("0000");
 		    $this->Send("whmi-wri ".$this->GetBuffer("FileSize").",9600,0");
 		} else {
-		    IPS_LogMessage("IPS2GPIO Display","Der angegebene Datei ".$Filename." wurde nicht gefunden!");
+		    IPS_LogMessage("IPS2GPIO Display","Fehler: Die angegebene Datei ".$Filename." wurde nicht gefunden!");
 		}		
 	return;
 	}
