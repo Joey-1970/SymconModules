@@ -161,35 +161,28 @@
 				        IPS_LogMessage("IPS2GPIO Display","Empfangene Daten: ".$ByteResponse[1]);
 				        If (($this->GetBuffer("Update") == true) AND ($ByteResponse[1] == "05")) {
 						// Update starten
+						// Datei öffnen und einlesen
+						IPS_LogMessage("IPS2GPIO Display","Öffnen der Update-Datei");
+						$handle = fopen($this->GetBuffer("FileName"), "r");
+						$FileContent = fread($handle, $this->GetBuffer("FileSize"));
+						fclose($handle);
+						// Datei in Einheiten <4096 Bytes teilen
+						$contentarray = str_split($FileContent, 4096);
+						$Message = utf8_encode($contentarray[$this->GetBuffer("FileCounter")]);
+						IPS_LogMessage("IPS2GPIO Display","Senden Datenpaket ".$this->GetBuffer("FileCounter")." von ".$this->GetBuffer("FileParts"));
+						
 						If ($this->GetBuffer("FileCounter") == 0) {
-							// Datei öffnen und einlesen
-							IPS_LogMessage("IPS2GPIO Display","Öffnen der Update-Datei");
-							$handle = fopen($this->GetBuffer("FileName"), "r");
-							$FileContent = fread($handle, $this->GetBuffer("FileSize"));
-							fclose($handle);
-							// Datei in Einheiten <4096 Bytes teilen
-							$contentarray = str_split($FileContent, 4096);
+							// Sichern der Anzahl der Datei-Teile
 							$this->SetBuffer("FileParts", Count($contentarray));
-							$Message = utf8_encode($contentarray[0]);
-							IPS_LogMessage("IPS2GPIO Display","Senden Datenpaket 0 von ".$this->GetBuffer("FileParts"));
-							$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Command" => $Message)));
-							$this->SetBuffer("FileCounter", 1);
 						}
-						elseif ($this->GetBuffer("FileCounter") > 0) {
-							$handle = fopen($this->GetBuffer("FileName"), "r");
-							$FileContent = fread($handle, $this->GetBuffer("FileSize"));
-							fclose($handle);
-							// Datei in Einheiten <4096 Bytes teilen
-							$contentarray = str_split($FileContent, 4096);
-							
-							$Message = utf8_encode($contentarray[$this->GetBuffer("FileCounter")]);
-							IPS_LogMessage("IPS2GPIO Display","Senden Datenpaket ".$this->GetBuffer("FileCounter")." von ".$this->GetBuffer("FileParts"));
-							$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Command" => $Message)));
-							$this->SetBuffer("FileCounter", $this->GetBuffer("FileCounter") + 1);
-							If ($this->GetBuffer("FileCounter") == $this->GetBuffer("FileParts")) {
-								$this->SetBuffer("Update", false);
-								IPS_LogMessage("IPS2GPIO Display","Update beendet");
-							}
+						// Senden der Daten
+						$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Command" => $Message)));
+						$this->SetBuffer("FileCounter", $this->GetBuffer("FileCounter") + 1);
+
+						// Prüfen, ob es sich um den letzten Datei-Teil handelt
+						If ($this->GetBuffer("FileCounter") == $this->GetBuffer("FileParts")) {
+							$this->SetBuffer("Update", false);
+							IPS_LogMessage("IPS2GPIO Display","Update beendet");
 						}
 					}
 				        else {
