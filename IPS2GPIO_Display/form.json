@@ -30,6 +30,7 @@
         { "type": "Label", "label": "Display Sleep Modus ohne Touch (0->aus, 3-65535 Sekunden)" },
         { "type": "NumberSpinner", "name": "SleepNoTouch", "caption": "Sekunden" },
         { "type": "CheckBox", "name": "TouchAwake", "caption": "Touch beendet Sleep Modus" },
+        { "type": "CheckBox", "name": "SendTouchCoordinate", "caption": "Sende XY" },
         { "type": "Select", "name": "CmdRet", "caption": "Return der Kommandos",
             "options": [
                 { "label": "Keine Rückgabe", "value": 0 },
