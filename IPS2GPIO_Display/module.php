@@ -14,6 +14,7 @@
             $this->RegisterPropertyInteger("SleepNoSerial", 60);
             $this->RegisterPropertyInteger("SleepNoTouch", 60);
             $this->RegisterPropertyBoolean("TouchAwake", true);
+            $this->RegisterPropertyBoolean("SendTouchCoordinate", true);
             $this->RegisterPropertyInteger("CmdRet", 2);
             $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
@@ -339,7 +340,7 @@
 		// Rückgabeverhalten auf kommandos
 		$this->SetCommandReturn($this->ReadPropertyInteger("CmdRet"));
 		// Senden der Koordniaten bei Touch
-		$this->SetSendTouchCoordinate(1);
+		$this->SetSendTouchCoordinate($this->ReadPropertyBoolean("SendTouchCoordinate"));
 		// Display-Daten anfordern
 		$this->Send("connect");
 	return;
