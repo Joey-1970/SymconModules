@@ -414,6 +414,12 @@
 	return;
 	}
 	
+	public function Reset()
+	{
+		$this->Send("rest");
+	return;
+	}
+	
 	public function Update($Filename)
 	{
 		if (file_exists($Filename)) {
