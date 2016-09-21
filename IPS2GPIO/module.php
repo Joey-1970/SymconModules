@@ -391,7 +391,7 @@ class IPS2GPIO_IO extends IPSModule
 	    						If ($this->GetBuffer("SerialNotify") <> $Bitvalue) {
 		    						// Einlesen der Seriellen Daten veranlassen
 		    						IPS_LogMessage("IPS2GPIO Notify: ","Pin ".$PinNotify[$j]." Value ->".$Bitvalue);
-		    						IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle")));
+		    						//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle")));
 			   					IPS_Sleep(75);
 			   					$this->CommandClientSocket(pack("L*", 82, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
 			   				 	$this->SetBuffer("SerialNotify", $Bitvalue);	
@@ -717,13 +717,11 @@ class IPS2GPIO_IO extends IPSModule
            			If ($response[4] >= 0) {
            				//IPS_LogMessage("IPS2GPIO Serial Read","Serial Handle: ".$response[2]." Value: ".substr($Message, -($response[4])));
            				If ($response[4] > 0) {
-	           				
 	           				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_data", "Value"=>utf8_encode(substr($Message, -($response[4]))) )));
            				}
            			}
            			else {
            				IPS_LogMessage("IPS2GPIO Serial Read","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
- 
            			}
   		            	break;
 		        case "81":
@@ -732,7 +730,6 @@ class IPS2GPIO_IO extends IPSModule
            			}
            			else {
            				IPS_LogMessage("IPS2GPIO Serial Write","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
- 
            			}
   		            	break;
   		        case "82":
