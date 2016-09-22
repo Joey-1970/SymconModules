@@ -216,6 +216,9 @@
 			case "01": // Successful execution of instruction 
 				IPS_LogMessage("IPS2GPIO Display","Erfolgreicher Befehlsaufruf durch den Nutzer");
 			break;
+			case "02": // Component ID invalid 
+				IPS_LogMessage("IPS2GPIO Display","Fehler: Aufruf einer ungültigen KomponentenID");
+			break;
 			case "03": // Page ID invalid  
 				IPS_LogMessage("IPS2GPIO Display","Fehler: Aufruf einer ungültigen PageID");
 			break;
