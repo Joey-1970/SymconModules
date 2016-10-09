@@ -139,7 +139,8 @@
 	 	switch ($data->Function) {
 			   case "get_used_i2c":
 			   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "InstanceID" => $this->InstanceID)));
-			   	break;
+			   	$this->ApplyChanges();
+				break;
 			   case "status":
 			   	If ($data->HardwareRev <= 3) {
 				   	If (($data->Pin == 0) OR ($data->Pin == 1)) {
