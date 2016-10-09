@@ -222,7 +222,9 @@ class IPS2GPIO_IO extends IPSModule
 			        // Erstellt ein Array für alle Pins für die die Notifikation erforderlich ist
 			        If ($data->Notify == true) {
 			        	$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
-				        $PinNotify[] = $data->Pin;
+				        if (in_array($data->Pin, $PinNotify) == false) {
+						$PinNotify[] = $data->Pin;
+					}
 					SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
 					// startet das Notify neu
 					$this->CommandClientSocket(pack("LLLL", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
