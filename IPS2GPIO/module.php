@@ -38,6 +38,10 @@ class IPS2GPIO_IO extends IPSModule
 			$this->DisableAction("HardwareRev");
 			IPS_SetHidden($this->GetIDForIdent("HardwareRev"), true);
 			
+			$this->RegisterVariableInteger("Hardware", "Hardware", "", 107);
+			$this->DisableAction("Hardware");
+			IPS_SetHidden($this->GetIDForIdent("Hardware"), true);
+			
 			$this->RegisterVariableString("PinPossible", "PinPossible", "", 110);
 			$this->DisableAction("PinPossible");
 			IPS_SetHidden($this->GetIDForIdent("PinPossible"), true);
