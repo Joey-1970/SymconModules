@@ -408,9 +408,15 @@ class IPS2GPIO_IO extends IPSModule
 			}
 		}
 	 	else {
-	 		IPS_LogMessage("IPS2GPIO ReceiveData", "Überlänge: Datensätze nicht differenzierbar!");
+	 		// Prüfen ob Daten im Serial Buffer vorhanden sind
+			If ($this->ReadPropertyBoolean("Serial_Used") == true) {
+				IPS_Sleep(75);
+				$this->CommandClientSocket(pack("L*", 82, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
+			}
+			else {
+				IPS_LogMessage("IPS2GPIO ReceiveData", "Überlänge: Datensätze nicht differenzierbar!");
+			}
 	 	}
-	 	
 	 }
  
 	  public function RequestAction($Ident, $Value) 
