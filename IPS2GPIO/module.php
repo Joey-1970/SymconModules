@@ -470,6 +470,13 @@ class IPS2GPIO_IO extends IPSModule
 			$this->CommandClientSocket(pack("LLLL", 0, 2, 4, 0), 16);
 			$this->CommandClientSocket(pack("LLLL", 0, 3, 4, 0), 16);
 		}
+		elseif ($this->ReadPropertyBoolean("I2C_Used") == false) {
+			// wird I²C nicht benötigt die Pin auf in Input setzen
+			$this->CommandClientSocket(pack("LLLL", 0, 0, 0, 0), 16);
+			$this->CommandClientSocket(pack("LLLL", 0, 1, 0, 0), 16);
+			$this->CommandClientSocket(pack("LLLL", 0, 2, 0, 0), 16);
+			$this->CommandClientSocket(pack("LLLL", 0, 3, 0, 0), 16);
+		}
 		If ($this->ReadPropertyBoolean("Serial_Used") == true)  {
 			$PinUsed[14] = 99999; 
 			$PinUsed[15] = 99999;
@@ -487,10 +494,18 @@ class IPS2GPIO_IO extends IPSModule
 			$this->CommandClientSocket(pack("L*", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
 
 		}
+		else {
+			// wird Serial nicht benötigt die Pin auf in Input setzen
+			$this->CommandClientSocket(pack("LLLL", 0, 14, 0, 0), 16);
+			$this->CommandClientSocket(pack("LLLL", 0, 15, 0, 0), 16);
+		}
 		If ($this->ReadPropertyBoolean("SPI_Used") == true)  {
 			for ($i = 7; $i < 11; $i++) {
     				$PinUsed[$i] = 99999;
 			}
+		}
+		else {
+			// wird SPI nicht benötigt die Pin auf in Input setzen
 		}
 		// Sichern der Voreinstellungen
 		SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
