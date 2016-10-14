@@ -37,10 +37,14 @@ class IPS2GPIO_IO extends IPSModule
 			$this->RegisterVariableInteger("HardwareRev", "HardwareRev", "", 105);
 			$this->DisableAction("HardwareRev");
 			IPS_SetHidden($this->GetIDForIdent("HardwareRev"), true);
-			
+		
 			$this->RegisterVariableString("Hardware", "Hardware", "", 107);
 			$this->DisableAction("Hardware");
 			IPS_SetHidden($this->GetIDForIdent("Hardware"), true);
+			
+			$this->RegisterVariableInteger("SoftwareVersion", "SoftwareVersion", "", 108);
+			$this->DisableAction("SoftwareVersion");
+			IPS_SetHidden($this->GetIDForIdent("SoftwareVersion"), true);
 			
 			$this->RegisterVariableString("PinPossible", "PinPossible", "", 110);
 			$this->DisableAction("PinPossible");
@@ -97,6 +101,8 @@ class IPS2GPIO_IO extends IPSModule
 			If($this->ConnectionTest()) {
 				// Hardware feststellen
 				$this->CommandClientSocket(pack("LLLL", 17, 0, 0, 0), 16);
+				// PigPio SoftwareVersion ermitteln
+				$this->CommandClientSocket(pack("LLLL", 26, 0, 0, 0), 16);
 				// Notify Handle zurücksetzen falls gesetzt
 				If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
 					// Handle löschen
@@ -649,6 +655,14 @@ class IPS2GPIO_IO extends IPSModule
 		            	break;
            		case "21":
            			IPS_LogMessage("IPS2GPIO Notify: ","gestoppt");
+		            	break;
+			case "26":
+           			If ($response[4] >= 0 ) {
+					SetValueInteger($this->GetIDForIdent("SoftwareVersion"), $response[4]);
+				}
+           			else {
+           				IPS_LogMessage("IPS2GPIO Software Version: ","Fehler: ".$this->GetErrorText(abs($response[4])));
+           			}
 		            	break;
 		        case "54":
 		        	If ($response[4] >= 0 ) {
