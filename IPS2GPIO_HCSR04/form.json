@@ -78,6 +78,7 @@
         },
     { "type": "Label", "label": "Wiederholungszyklus in Sekunden (0 -> aus, 1 sek -> Minimum)" },
     { "type": "IntervalBox", "name": "Messzyklus", "caption": "Messzyklus (sek)" },
+    { "type": "Label", "label": "Setzen der internen Pull Up/Down Widerstände" },
     { "type": "Select", "name": "PUL", "caption": "Widerstand setzen",
             "options": [
                 { "label": "Kein", "value": "o" },
