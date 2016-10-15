@@ -11,6 +11,7 @@
             $this->RegisterPropertyInteger("Pin_I", -1);
             // Pin Trigger
             $this->RegisterPropertyInteger("Pin_O", -1);
+	    $this->RegisterPropertyString("PUL", "o");
             $this->RegisterPropertyInteger("Messzyklus", 5);
             $this->RegisterPropertyBoolean("Logging", false);
             $this->RegisterTimer("Messzyklus", 0, 'I2GSR4_Measurement($_IPS["TARGET"]);');
