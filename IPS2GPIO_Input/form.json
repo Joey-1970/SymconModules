@@ -43,12 +43,19 @@
                 { "label": "27", "value": 27 }
                 ]
         },
-    { "type": "Label", "label": "Der Trigger soll reagieren auf (aktiviert => True): " },
-    { "type": "CheckBox", "name": "ActionValue", "caption": "Aktions Wert" },
-    { "type": "Label", "label": "Zur Software-Entprellung angeschlossener Taster/Schalter (0-300000ms)" },
-    { "type": "NumberSpinner", "name": "GlitchFilter", "caption": "Glitchfilter (ms)" },
-    { "type": "Label", "label": "Skriptausführung als Reaktion auf: " },
-    { "type": "SelectScript", "name": "TriggerScript", "caption": "Triggerimpuls" },
-    { "type": "SelectScript", "name": "ToggleScript", "caption": "Toggle Status" }
-    ]
+        { "type": "Label", "label": "Der Trigger soll reagieren auf (aktiviert => True): " },
+        { "type": "CheckBox", "name": "ActionValue", "caption": "Aktions Wert" },
+        { "type": "Label", "label": "Zur Software-Entprellung angeschlossener Taster/Schalter (0-300000ms)" },
+        { "type": "NumberSpinner", "name": "GlitchFilter", "caption": "Glitchfilter (ms)" },
+        { "type": "Select", "name": "PUL", "caption": "Widerstand setzen",
+            "options": [
+                { "label": "Kein", "value": 0 },
+                { "label": "Pull-Down", "value": 1 },
+                { "label": "Pull-Up", "value": 2 }
+                ]
+        },
+        { "type": "Label", "label": "Skriptausführung als Reaktion auf: " },
+        { "type": "SelectScript", "name": "TriggerScript", "caption": "Triggerimpuls" },
+        { "type": "SelectScript", "name": "ToggleScript", "caption": "Toggle Status" }
+        ]
  }
