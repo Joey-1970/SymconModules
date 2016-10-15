@@ -246,9 +246,12 @@ class IPS2GPIO_IO extends IPSModule
 			        //IPS_LogMessage("IPS2GPIO SetMode",$data->Pin." , ".$data->Modus);
 			        $this->CommandClientSocket(pack("LLLL", 0, $data->Pin, $data->Modus, 0), 16);
 				SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
-				// Pull Up/Down Widerstände für den Pin setzen
-				//IPS_LogMessage("IPS2GPIO Set Pull Up/Down",$data->Pin." , ".$data->Resistance);
-			        $this->CommandClientSocket(pack("LLLL", 2, $data->Pin, $data->Resistance, 0), 16);
+				
+				If ($data->Modus == 0) {
+					// Pull Up/Down Widerstände für den Pin setzen
+					//IPS_LogMessage("IPS2GPIO Set Pull Up/Down",$data->Pin." , ".$data->Resistance);
+			        	$this->CommandClientSocket(pack("LLLL", 2, $data->Pin, $data->Resistance, 0), 16);
+				}
 		   	}
 		        break;
 		   case "get_pinupdate":
