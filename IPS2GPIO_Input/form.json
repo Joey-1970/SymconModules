@@ -47,6 +47,7 @@
         { "type": "CheckBox", "name": "ActionValue", "caption": "Aktions Wert" },
         { "type": "Label", "label": "Zur Software-Entprellung angeschlossener Taster/Schalter (0-300000ms)" },
         { "type": "NumberSpinner", "name": "GlitchFilter", "caption": "Glitchfilter (ms)" },
+        { "type": "Label", "label": "Setzen der internen Pull Up/Down Widerstände" },
         { "type": "Select", "name": "PUL", "caption": "Widerstand setzen",
             "options": [
                 { "label": "Kein", "value": "o" },
