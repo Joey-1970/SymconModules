@@ -248,7 +248,7 @@ class IPS2GPIO_IO extends IPSModule
 				SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
 				// Pull Up/Down Widerstände für den Pin setzen
 				//IPS_LogMessage("IPS2GPIO Set Pull Up/Down",$data->Pin." , ".$data->Resistance);
-			        $this->CommandClientSocket(pack("LLLL", 0, $data->Pin, $data->Resistance, 0), 16);
+			        $this->CommandClientSocket(pack("LLLL", 2, $data->Pin, $data->Resistance, 0), 16);
 		   	}
 		        break;
 		   case "get_pinupdate":
