@@ -10,6 +10,7 @@
             $this->RegisterPropertyInteger("Pin", -1);
             $this->RegisterPropertyBoolean("ActionValue", true);
             $this->RegisterPropertyInteger("GlitchFilter", 10);
+	    $this->RegisterPropertyInteger("PUL", 0);
             $this->RegisterPropertyInteger("TriggerScript", 0);
             $this->RegisterPropertyInteger("ToggleScript", 0);
  	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
