@@ -49,9 +49,9 @@
         { "type": "NumberSpinner", "name": "GlitchFilter", "caption": "Glitchfilter (ms)" },
         { "type": "Select", "name": "PUL", "caption": "Widerstand setzen",
             "options": [
-                { "label": "Kein", "value": 0 },
-                { "label": "Pull-Down", "value": 1 },
-                { "label": "Pull-Up", "value": 2 }
+                { "label": "Kein", "value": "o" },
+                { "label": "Pull-Down", "value": "d" },
+                { "label": "Pull-Up", "value": "u" }
                 ]
         },
         { "type": "Label", "label": "Skriptausführung als Reaktion auf: " },
