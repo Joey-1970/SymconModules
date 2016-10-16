@@ -99,10 +99,12 @@ class IPS2GPIO_IO extends IPSModule
 			}
 	
 			If($this->ConnectionTest()) {
-				// Hardware feststellen
-				$this->CommandClientSocket(pack("LLLL", 17, 0, 0, 0), 16);
+				// Hardware und Softwareversion feststellen
+				$this->CommandClientSocket(pack("LLLL", 17, 0, 0, 0).pack("LLLL", 26, 0, 0, 0), 32);
+				
 				// PigPio SoftwareVersion ermitteln
-				$this->CommandClientSocket(pack("LLLL", 26, 0, 0, 0), 16);
+				//$this->CommandClientSocket(pack("LLLL", 26, 0, 0, 0), 16);
+				
 				// Notify Handle zurücksetzen falls gesetzt
 				If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
 					// Handle löschen
@@ -347,7 +349,8 @@ class IPS2GPIO_IO extends IPSModule
 		   // Serielle Kommunikation
 		   case "get_handle_serial":
 	   		//IPS_LogMessage("IPS2GPIO Get Handle Serial", "Handle anfordern");
-	   		$this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device, 16);
+	   		
+			$this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device, 16);
 	   		$this->CommandClientSocket(pack("L*", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
 	   		// Messages einrichten
 			$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
@@ -473,27 +476,31 @@ class IPS2GPIO_IO extends IPSModule
 		If (($this->ReadPropertyBoolean("I2C_Used") == true) AND (GetValueInteger($this->GetIDForIdent("HardwareRev"))) <= 3) {
 			$PinUsed[0] = 99999; 
 			$PinUsed[1] = 99999;
-			$this->CommandClientSocket(pack("LLLL", 0, 0, 4, 0), 16);
-			$this->CommandClientSocket(pack("LLLL", 0, 1, 4, 0), 16);
+			$this->CommandClientSocket(pack("LLLL", 0, 0, 4, 0).pack("LLLL", 0, 1, 4, 0), 32);
+			//$this->CommandClientSocket(pack("LLLL", 0, 0, 4, 0), 16);
+			//$this->CommandClientSocket(pack("LLLL", 0, 1, 4, 0), 16);
 		}
 		elseif (($this->ReadPropertyBoolean("I2C_Used") == true) AND (GetValueInteger($this->GetIDForIdent("HardwareRev"))) > 3) {
 			$PinUsed[2] = 99999; 
 			$PinUsed[3] = 99999;
-			$this->CommandClientSocket(pack("LLLL", 0, 2, 4, 0), 16);
-			$this->CommandClientSocket(pack("LLLL", 0, 3, 4, 0), 16);
+			$this->CommandClientSocket(pack("LLLL", 0, 2, 4, 0).pack("LLLL", 0, 3, 4, 0), 32);
+			//$this->CommandClientSocket(pack("LLLL", 0, 2, 4, 0), 16);
+			//$this->CommandClientSocket(pack("LLLL", 0, 3, 4, 0), 16);
 		}
 		elseif ($this->ReadPropertyBoolean("I2C_Used") == false) {
 			// wird I²C nicht benötigt die Pin auf in Input setzen
-			$this->CommandClientSocket(pack("LLLL", 0, 0, 0, 0), 16);
-			$this->CommandClientSocket(pack("LLLL", 0, 1, 0, 0), 16);
-			$this->CommandClientSocket(pack("LLLL", 0, 2, 0, 0), 16);
-			$this->CommandClientSocket(pack("LLLL", 0, 3, 0, 0), 16);
+			$this->CommandClientSocket(pack("LLLL", 0, 0, 0, 0).pack("LLLL", 0, 1, 0, 0).pack("LLLL", 0, 2, 0, 0).pack("LLLL", 0, 3, 0, 0), 64);
+			//$this->CommandClientSocket(pack("LLLL", 0, 0, 0, 0), 16);
+			//$this->CommandClientSocket(pack("LLLL", 0, 1, 0, 0), 16);
+			//$this->CommandClientSocket(pack("LLLL", 0, 2, 0, 0), 16);
+			//$this->CommandClientSocket(pack("LLLL", 0, 3, 0, 0), 16);
 		}
 		If ($this->ReadPropertyBoolean("Serial_Used") == true)  {
 			$PinUsed[14] = 99999; 
 			$PinUsed[15] = 99999;
-			$this->CommandClientSocket(pack("LLLL", 0, 14, 4, 0), 16);
-			$this->CommandClientSocket(pack("LLLL", 0, 15, 4, 0), 16);
+			$this->CommandClientSocket(pack("LLLL", 0, 14, 4, 0).pack("LLLL", 0, 15, 4, 0), 32);
+			//$this->CommandClientSocket(pack("LLLL", 0, 14, 4, 0), 16);
+			//$this->CommandClientSocket(pack("LLLL", 0, 15, 4, 0), 16);
 			If (GetValueInteger($this->GetIDForIdent("Serial_Handle")) >= 0) {
 				$this->CommandClientSocket(pack("L*", 77, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
 			}
@@ -508,8 +515,9 @@ class IPS2GPIO_IO extends IPSModule
 		}
 		else {
 			// wird Serial nicht benötigt die Pin auf in Input setzen
-			$this->CommandClientSocket(pack("LLLL", 0, 14, 0, 0), 16);
-			$this->CommandClientSocket(pack("LLLL", 0, 15, 0, 0), 16);
+			$this->CommandClientSocket(pack("LLLL", 0, 14, 0, 0).pack("LLLL", 0, 15, 0, 0), 16);
+			//$this->CommandClientSocket(pack("LLLL", 0, 14, 0, 0), 16);
+			//$this->CommandClientSocket(pack("LLLL", 0, 15, 0, 0), 16);
 		}
 		If ($this->ReadPropertyBoolean("SPI_Used") == true)  {
 			for ($i = 7; $i < 11; $i++) {
