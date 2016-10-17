@@ -16,7 +16,7 @@
 	    $this->RegisterPropertyBoolean("LoggingMAC3", false);
 	    $this->RegisterPropertyString("MAC4", "");
 	    $this->RegisterPropertyBoolean("LoggingMAC4", false);
-	    $this->RegisterPropertyInteger("Messzyklus", false);
+	    $this->RegisterTimer("Messzyklus", 0, 'I2GBT_Measurement($_IPS["TARGET"]);');
  	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
