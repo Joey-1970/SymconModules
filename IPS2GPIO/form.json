@@ -23,32 +23,5 @@
          { "type": "Label", "label": "Link: http://abyz.co.uk/rpi/pigpio/index.html" },
          { "type": "Label", "label": "- es sollte in der raspi-config der GPIO-Server aktiviert sein" },
          { "type": "Label", "label": "- die genutzten Schnittstellen sollten in der raspi-config aktiviert sein" },{ 
-    "status":
-   [
-            { "code": 101, "icon": "inactive", "caption": "Instanz wird erstellt" },
-            { "code": 102, "icon": "active", "caption": "Instanz ist aktiv" },
-            { "code": 104, "icon": "inactive", "caption": "Instanz ist inaktiv" },
-            { "code": 200, "icon": "error", "caption": "Instanz ist fehlerhaft" }
-   ],
-   
-   "elements": 
-   [ 
-         { "name": "Open", "type": "CheckBox",  "caption": "Open" },
-         { "name": "IPAddress", "type": "ValidationTextBox",  "caption": "IP" },
-         { "type": "Label", "label": "Daten zum Raspberry-Pi SSH-Zugang: " },
-         { "name": "User", "type": "ValidationTextBox",  "caption": "User" },
-         { "type": "PasswordTextBox", "name": "Password", "caption": "Passwort" },
-         { "type": "Label", "label": "Auswahl der erforderlichen Schnittstellen:" },
-         { "type": "CheckBox", "name": "I2C_Used", "caption": "I²C" },
-         { "type": "CheckBox", "name": "Serial_Used", "caption": "Seriell" },
-         { "type": "CheckBox", "name": "SPI_Used", "caption": "SPI" },
-         { "type": "Label", "label": "Hinweise:" },
-         { "type": "Label", "label": "- es sollte PIGPIO in der aktuellsten Version installiert sein" },
-         { "type": "Label", "label": "Link: http://abyz.co.uk/rpi/pigpio/index.html" },
-         { "type": "Label", "label": "- es sollte in der raspi-config der GPIO-Server aktiviert sein" },
-         { "type": "Label", "label": "- die genutzten Schnittstellen sollten in der raspi-config aktiviert sein" }
-   ]
-} 
-
    ]
 } 
