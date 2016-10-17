@@ -93,11 +93,12 @@
  	}
 	// Beginn der Funktionen
 	
-	// Schaltet den gewaehlten Pin
-	public function Set_Status($Value)
+
+	// Führt eine Messung aus
+	public function Measurement()
 	{
+		
 	}
-	
 	
 }
 ?>
