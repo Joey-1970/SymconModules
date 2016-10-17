@@ -372,7 +372,7 @@ class IPS2GPIO_IO extends IPSModule
 		   	// SSH Connection
 			IPS_LogMessage("IPS2GPIO SSH-Connect", $data->MAC );
 			$Result = $this->SSH_Connect("hcitool name ".$data->MAC);
-			$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_BT_connect")));
+			$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_BT_connect", "MAC_Number" => $data->MAC_Number, "Result"=>utf8_encode($Result)  )));
 		   	break;
 		}
 	    
