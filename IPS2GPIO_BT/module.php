@@ -50,7 +50,7 @@
                  $this->EnableAction("MAC4Name");
                 
 		//ReceiveData-Filter setzen
-                $Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*)';
+                $Filter = '(.*"Function":"set_BT_connect".*)';
 		$this->SetReceiveDataFilter($Filter);
 		If (IPS_GetKernelRunlevel() == 10103) {
 			If ($this->ReadPropertyInteger("Pin") >= 0) {
@@ -73,13 +73,12 @@
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
 			   case "set_BT_connect":
-			   	//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+			   	SetValueString;
 			   	break;
 	 	}
 	return;
  	}
 	// Beginn der Funktionen
-	
 
 	// Führt eine Messung aus
 	public function Measurement()
