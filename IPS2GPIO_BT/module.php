@@ -73,7 +73,13 @@
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
 			   case "set_BT_connect":
-			   	SetValueString;
+			   	SetValueString($this->GetIDForIdent("MAC".$data->MAC_Number."Name"), $data->Result);
+				If (strlen($data->Result) > 0) {
+					SetValueBoolean($this->GetIDForIdent("MAC".$data->MAC_Number), true);
+				}
+				else {
+					SetValueBoolean($this->GetIDForIdent("MAC".$data->MAC_Number), false);
+				}
 			   	break;
 	 	}
 	return;
