@@ -115,6 +115,9 @@ class IPS2GPIO_IO extends IPSModule
 				
 				$this->Get_PinUpdate();
 				$this->SetStatus(102);
+				
+				// SSH Connection Test
+				IPS_LogMessage("IPS2GPIO SSH-Connect Test", $this->SSH_Connect("hcitool name f4:31:c3:2e:cf:06"));
 			}
 		}
 		else {
@@ -823,6 +826,24 @@ class IPS2GPIO_IO extends IPSModule
 	return;
 	}
 	
+	private function SSH_Connect($Command)
+	{
+	        set_include_path(__DIR__);
+		require_once (__DIR__ . '/Net/SSH2.php');
+		
+		$ssh = new Net_SSH2($this->ReadPropertyString("IPAddress"));
+		$login = @$ssh->login($this->ReadPropertyString("User"), $this->ReadPropertyString("Password"));
+		if ($login == false)
+		{
+		    IPS_LogMessage("IPS2GPIO SSH-Connect","Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert nicht!");
+		    return false;
+		}
+		$Result = $ssh->exec($Command);
+		
+		$ssh->disconnect();
+        return $Result;
+	}
+	
 	private function CalcBitmask()
 	{
 		$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
@@ -838,7 +859,7 @@ class IPS2GPIO_IO extends IPSModule
 	{
 	      $result = false;
 	      If (Sys_Ping($this->ReadPropertyString("IPAddress"), 2000)) {
-			IPS_LogMessage("IPS2GPIO Netzanbindung: ","Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert");
+			IPS_LogMessage("IPS2GPIO Netzanbindung","Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert");
 			$status = @fsockopen($this->ReadPropertyString("IPAddress"), 8888, $errno, $errstr, 10);
 				if (!$status) {
 					IPS_LogMessage("IPS2GPIO Netzanbindung: ","Port ist geschlossen!");
