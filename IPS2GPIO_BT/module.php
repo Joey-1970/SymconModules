@@ -64,7 +64,7 @@
 	       
 	        default:
 	            throw new Exception("Invalid Ident");
-	    }
+	    	}
 	}
 	
 	public function ReceiveData($JSONString) 
