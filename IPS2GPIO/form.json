@@ -22,6 +22,6 @@
          { "type": "Label", "label": "- es sollte PIGPIO in der aktuellsten Version installiert sein" },
          { "type": "Label", "label": "Link: http://abyz.co.uk/rpi/pigpio/index.html" },
          { "type": "Label", "label": "- es sollte in der raspi-config der GPIO-Server aktiviert sein" },
-         { "type": "Label", "label": "- die genutzten Schnittstellen sollten in der raspi-config aktiviert sein" },{ 
+         { "type": "Label", "label": "- die genutzten Schnittstellen sollten in der raspi-config aktiviert sein" } 
    ]
 } 
