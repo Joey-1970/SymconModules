@@ -116,8 +116,6 @@ class IPS2GPIO_IO extends IPSModule
 				$this->Get_PinUpdate();
 				$this->SetStatus(102);
 				
-				// SSH Connection Test
-				IPS_LogMessage("IPS2GPIO SSH-Connect Test", $this->SSH_Connect("hcitool name f4:31:c3:2e:cf:06"));
 			}
 		}
 		else {
@@ -367,6 +365,14 @@ class IPS2GPIO_IO extends IPSModule
 		   case "check_bytes_serial":
 		   	//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle")));
 		   	$this->CommandClientSocket(pack("L*", 83, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
+		   	break;
+		    
+		    // Bluetooth Kommunikation
+		    case "get_BT_connect":
+		   	// SSH Connection
+			IPS_LogMessage("IPS2GPIO SSH-Connect", $data->MAC );
+			$Result = $this->SSH_Connect("hcitool name ".$data->MAC);
+			$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_BT_connect")));
 		   	break;
 		}
 	    
