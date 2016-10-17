@@ -28,10 +28,28 @@
 	         $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 	   
 	         //Status-Variablen anlegen
-	         $this->RegisterVariableBoolean("MAC 0", "MAC 0", "~Switch", 10);
-                 $this->EnableAction("Status");
-            
-                //ReceiveData-Filter setzen
+	         $this->RegisterVariableBoolean("MAC0", "MAC 1", "~Switch", 10);
+		 $this->EnableAction("MAC0");
+		 $this->RegisterVariableString("MAC0Name", "MAC 1 Name", "", 20);
+                 $this->EnableAction("MAC0Name");
+                 $this->RegisterVariableBoolean("MAC1", "MAC 2", "~Switch", 30);
+		 $this->EnableAction("MAC1");
+		 $this->RegisterVariableString("MAC1Name", "MAC 2 Name", "", 40);
+                 $this->EnableAction("MAC1Name");
+		 $this->RegisterVariableBoolean("MAC2", "MAC 3", "~Switch", 50);
+		 $this->EnableAction("MAC2");
+		 $this->RegisterVariableString("MAC2Name", "MAC 3 Name", "", 60);
+                 $this->EnableAction("MAC2Name");
+		 $this->RegisterVariableBoolean("MAC3", "MAC 4", "~Switch", 70);
+		 $this->EnableAction("MAC3");
+		 $this->RegisterVariableString("MAC3Name", "MAC 4 Name", "", 80);
+                 $this->EnableAction("MAC3Name");
+		 $this->RegisterVariableBoolean("MAC4", "MAC 5", "~Switch", 90);
+		 $this->EnableAction("MAC4");
+		 $this->RegisterVariableString("MAC4Name", "MAC 5 Name", "", 1000);
+                 $this->EnableAction("MAC4Name");
+                
+		//ReceiveData-Filter setzen
                 $Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*)';
 		$this->SetReceiveDataFilter($Filter);
 		If (IPS_GetKernelRunlevel() == 10103) {
