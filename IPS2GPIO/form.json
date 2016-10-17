@@ -10,9 +10,9 @@
    "elements": 
    [ 
          { "name": "Open", "type": "CheckBox",  "caption": "Open" },
-         { "name": "IPAddress", "type": "ValidationTextBox",  "caption": "IP" },
+         { "name": "IPAddress", "type": "ValidationTextBox", "caption": "IP" },
          { "type": "Label", "label": "Daten zum Raspberry-Pi SSH-Zugang: " },
-         { "name": "User", "type": "ValidationTextBox",  "caption": "User" },
+         { "name": "User", "type": "ValidationTextBox", "caption": "User" },
          { "type": "PasswordTextBox", "name": "Password", "caption": "Passwort" },
          { "type": "Label", "label": "Auswahl der erforderlichen Schnittstellen:" },
          { "type": "CheckBox", "name": "I2C_Used", "caption": "I²C" },
