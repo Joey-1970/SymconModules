@@ -72,21 +72,8 @@
 	    	// Empfangene Daten vom Gateway/Splitter
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
-			   case "get_usedpin":
-			   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
-			   	break;
-			   case "status":
-			   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
-			   		$this->SetStatus($data->Status);
-			   	}
-			   	break;
-			  case "result":
-				If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
-			   		SetValueInteger($this->GetIDForIdent("Status"), $data->Value);
-				}
-			break;
-			   case "freepin":
-			   	// Funktion zum erstellen dynamischer Pulldown-Menüs
+			   case "set_BT_connect":
+			   	//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 			   	break;
 	 	}
 	return;
