@@ -6,8 +6,16 @@
         public function Create() 
         {
             // Diese Zeile nicht löschen.
-            parent::Create();
-            $this->RegisterPropertyInteger("Pin", -1);
+	    $this->RegisterPropertyString("MAC0", "");
+	    $this->RegisterPropertyBoolean("LoggingMAC0", false);
+	    $this->RegisterPropertyString("MAC1", "");
+	    $this->RegisterPropertyBoolean("LoggingMAC1", false);
+	    $this->RegisterPropertyString("MAC2", "");
+	    $this->RegisterPropertyBoolean("LoggingMAC2", false);
+	    $this->RegisterPropertyString("MAC3", "");
+	    $this->RegisterPropertyBoolean("LoggingMAC3", false);
+	    $this->RegisterPropertyString("MAC4", "");
+	    $this->RegisterPropertyBoolean("LoggingMAC4", false);
  	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
