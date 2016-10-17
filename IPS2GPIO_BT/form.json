@@ -10,15 +10,15 @@
     "elements":
     [
         { "type": "Label", "label": "Angabe der MAC-Adresse(n) (Format 00:00:00:00:00:00):" },
-        { "type": "ValidationTextBox", "name": "MAC0", "caption": "MAC-Adresse:" },
+        { "type": "ValidationTextBox", "name": "MAC0", "caption": "MAC-Adresse 1:" },
         { "type": "CheckBox", "name": "LoggingMAC0", "caption": "Logging aktivieren" },
-        { "type": "ValidationTextBox", "name": "MAC1", "caption": "MAC-Adresse:" },
+        { "type": "ValidationTextBox", "name": "MAC1", "caption": "MAC-Adresse 2:" },
         { "type": "CheckBox", "name": "LoggingMAC1", "caption": "Logging aktivieren" },
-        { "type": "ValidationTextBox", "name": "MAC2", "caption": "MAC-Adresse:" },
+        { "type": "ValidationTextBox", "name": "MAC2", "caption": "MAC-Adresse 3:" },
         { "type": "CheckBox", "name": "LoggingMAC2", "caption": "Logging aktivieren" },
-        { "type": "ValidationTextBox", "name": "MAC3", "caption": "MAC-Adresse:" },
+        { "type": "ValidationTextBox", "name": "MAC3", "caption": "MAC-Adresse 4:" },
         { "type": "CheckBox", "name": "LoggingMAC3", "caption": "Logging aktivieren" },
-        { "type": "ValidationTextBox", "name": "MAC4", "caption": "MAC-Adresse:" },
+        { "type": "ValidationTextBox", "name": "MAC4", "caption": "MAC-Adresse 5:" },
         { "type": "CheckBox", "name": "LoggingMAC4", "caption": "Logging aktivieren" },
         { "type": "Label", "label": "Wiederholungszyklus in Sekunden (0 -> aus, 30 sek -> Minimum)" },
         { "type": "IntervalBox", "name": "Messzyklus", "caption": "Messzyklus (sek)" }
