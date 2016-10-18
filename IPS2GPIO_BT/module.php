@@ -53,7 +53,7 @@
                 $Filter = '(.*"Function":"set_BT_connect".*)';
 		$this->SetReceiveDataFilter($Filter);
 		If (IPS_GetKernelRunlevel() == 10103) {
-			//$this->Measurement();
+			$this->Measurement();
 		}
         }
 	public function RequestAction($Ident, $Value) 
@@ -87,11 +87,11 @@
 	// Führt eine Messung aus
 	public function Measurement()
 	{
-		for ($i = 0; $i <= 4; $i++) {
-			If (strlen($this->ReadPropertyString("MAC".$i)) == 17) {
-				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_BT_connect", "MAC" => $this->ReadPropertyString("MAC".$i), "MAC_Number" => $i )));
+		//for ($i = 0; $i <= 4; $i++) {
+			If (strlen($this->ReadPropertyString("MAC0")) == 17) {
+				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_BT_connect", "MAC" => $this->ReadPropertyString("MAC0"), "MAC_Number" => $i )));
 			}
-		}
+		//}
 	}
 	
 }
