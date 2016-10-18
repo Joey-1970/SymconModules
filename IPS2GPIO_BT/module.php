@@ -49,15 +49,20 @@
                  $this->EnableAction("MAC3Name");
 		 $this->RegisterVariableBoolean("MAC4Connect", "MAC 5", "~Switch", 90);
 		 $this->EnableAction("MAC4Connect");
-		 $this->RegisterVariableString("MAC4Name", "MAC 5 Name", "", 1000);
+		 $this->RegisterVariableString("MAC4Name", "MAC 5 Name", "", 100);
                  $this->EnableAction("MAC4Name");
                 
+		// Logging setzen
+		//AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Illuminance"), $this->ReadPropertyBoolean("Logging"));
+		//IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
+		
 		//ReceiveData-Filter setzen
                 $Filter = '(.*"Function":"set_BT_connect".*)';
 		$this->SetReceiveDataFilter($Filter);
 		If (IPS_GetKernelRunlevel() == 10103) {
 			$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
 			$this->Measurement();
+			$this->SetStatus(102);
 		}
         }
 	public function RequestAction($Ident, $Value) 
