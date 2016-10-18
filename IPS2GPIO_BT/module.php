@@ -53,7 +53,7 @@
                 $Filter = '(.*"Function":"set_BT_connect".*)';
 		$this->SetReceiveDataFilter($Filter);
 		If (IPS_GetKernelRunlevel() == 10103) {
-			$this->Measurement();
+			//$this->Measurement();
 		}
         }
 	public function RequestAction($Ident, $Value) 
