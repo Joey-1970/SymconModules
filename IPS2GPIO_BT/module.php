@@ -55,6 +55,7 @@
                 $Filter = '(.*"Function":"set_BT_connect".*)';
 		$this->SetReceiveDataFilter($Filter);
 		If (IPS_GetKernelRunlevel() == 10103) {
+			$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
 			$this->Measurement();
 		}
         }
