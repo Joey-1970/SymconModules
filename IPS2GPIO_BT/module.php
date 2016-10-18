@@ -6,15 +6,15 @@
         public function Create() 
         {
             // Diese Zeile nicht löschen.
-	    $this->RegisterPropertyString("MAC0", "");
+	    $this->RegisterPropertyString("MAC0", " ");
 	    $this->RegisterPropertyBoolean("LoggingMAC0", false);
-	    $this->RegisterPropertyString("MAC1", "");
+	    $this->RegisterPropertyString("MAC1", " ");
 	    $this->RegisterPropertyBoolean("LoggingMAC1", false);
-	    $this->RegisterPropertyString("MAC2", "");
+	    $this->RegisterPropertyString("MAC2", " ");
 	    $this->RegisterPropertyBoolean("LoggingMAC2", false);
-	    $this->RegisterPropertyString("MAC3", "");
+	    $this->RegisterPropertyString("MAC3", " ");
 	    $this->RegisterPropertyBoolean("LoggingMAC3", false);
-	    $this->RegisterPropertyString("MAC4", "");
+	    $this->RegisterPropertyString("MAC4", " ");
 	    $this->RegisterPropertyBoolean("LoggingMAC4", false);
 	    $this->RegisterTimer("Messzyklus", 0, 'I2GBT_Measurement($_IPS["TARGET"]);');
  	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
@@ -88,7 +88,7 @@
 	public function Measurement()
 	{
 		for ($i = 0; $i <= 4; $i++) {
-			If ($this->ReadPropertyString("MAC".$i) <> "") {
+			If (strlen($this->ReadPropertyString("MAC".$i)) == 17) {
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_BT_connect", "MAC" => $this->ReadPropertyString("MAC".$i), "MAC_Number" => $i )));
 			}
 		}
