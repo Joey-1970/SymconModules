@@ -28,24 +28,24 @@
 	         $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 	   
 	         //Status-Variablen anlegen
-	         $this->RegisterVariableBoolean("MAC0", "MAC 1", "~Switch", 10);
-		 $this->EnableAction("MAC0");
+	         $this->RegisterVariableBoolean("MAC0Connect", "MAC 1", "~Switch", 10);
+		 $this->EnableAction("MAC0Connect");
 		 $this->RegisterVariableString("MAC0Name", "MAC 1 Name", "", 20);
                  $this->EnableAction("MAC0Name");
-                 $this->RegisterVariableBoolean("MAC1", "MAC 2", "~Switch", 30);
-		 $this->EnableAction("MAC1");
+                 $this->RegisterVariableBoolean("MAC1Connect", "MAC 2", "~Switch", 30);
+		 $this->EnableAction("MAC1Connect");
 		 $this->RegisterVariableString("MAC1Name", "MAC 2 Name", "", 40);
                  $this->EnableAction("MAC1Name");
-		 $this->RegisterVariableBoolean("MAC2", "MAC 3", "~Switch", 50);
-		 $this->EnableAction("MAC2");
+		 $this->RegisterVariableBoolean("MAC2Connect", "MAC 3", "~Switch", 50);
+		 $this->EnableAction("MAC2Connect");
 		 $this->RegisterVariableString("MAC2Name", "MAC 3 Name", "", 60);
                  $this->EnableAction("MAC2Name");
-		 $this->RegisterVariableBoolean("MAC3", "MAC 4", "~Switch", 70);
-		 $this->EnableAction("MAC3");
+		 $this->RegisterVariableBoolean("MAC3Connect", "MAC 4", "~Switch", 70);
+		 $this->EnableAction("MAC3Connect");
 		 $this->RegisterVariableString("MAC3Name", "MAC 4 Name", "", 80);
                  $this->EnableAction("MAC3Name");
-		 $this->RegisterVariableBoolean("MAC4", "MAC 5", "~Switch", 90);
-		 $this->EnableAction("MAC4");
+		 $this->RegisterVariableBoolean("MAC4Connect", "MAC 5", "~Switch", 90);
+		 $this->EnableAction("MAC4Connect");
 		 $this->RegisterVariableString("MAC4Name", "MAC 5 Name", "", 1000);
                  $this->EnableAction("MAC4Name");
                 
@@ -73,10 +73,10 @@
 			   case "set_BT_connect":
 			   	SetValueString($this->GetIDForIdent("MAC".$data->MAC_Number."Name"), utf8_decode($data->Result));
 				If (strlen($data->Result) > 0) {
-					SetValueBoolean($this->GetIDForIdent("MAC".$data->MAC_Number), true);
+					SetValueBoolean($this->GetIDForIdent("MAC".$data->MAC_Number."Connect"), true);
 				}
 				else {
-					SetValueBoolean($this->GetIDForIdent("MAC".$data->MAC_Number), false);
+					SetValueBoolean($this->GetIDForIdent("MAC".$data->MAC_Number."Connect"), false);
 				}
 			   	break;
 	 	}
