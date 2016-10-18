@@ -92,7 +92,8 @@
 	public function Measurement()
 	{
 		for ($i = 0; $i <= 4; $i++) {
-			If (strlen($this->ReadPropertyString("MAC".$i)) == 17) {
+			If (strlen($this->ReadPropertyString("MAC".$i)) > 10) {
+				IPS_LogMessage("IPS2GPIO SSH-Connect", "Sende MAC ".$i+1 );
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_BT_connect", "MAC" => $this->ReadPropertyString("MAC".$i), "MAC_Number" => $i )));
 			}
 		}
