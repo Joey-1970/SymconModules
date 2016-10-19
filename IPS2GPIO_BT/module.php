@@ -102,6 +102,7 @@
 	{
 		for ($i = 0; $i <= 4; $i++) {
 			//If (filter_var($this->ReadPropertyString("MAC".$i), FILTER_VALIDATE_MAC)) {
+			//if (filter_var($this->ReadPropertyString("MAC".$i), FILTER_VALIDATE_MAC)) { 
 			If (strlen($this->ReadPropertyString("MAC".$i)) > 10) {
 				IPS_LogMessage("IPS2GPIO SSH-Connect", "Sende MAC ".$i+1 );
 				$Command = "hcitool name ".$this->ReadPropertyString("MAC".$i);
