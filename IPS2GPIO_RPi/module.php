@@ -23,9 +23,9 @@
 	         $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 	   
 		//Status-Variablen anlegen
-		$this->RegisterVariableInteger("RPiData0", "Temperatur CPU", "~Temperature", 10);
+		$this->RegisterVariableFloat("TemperaturCPU", "Temperatur CPU", "~Temperature", 10);
 		$this->DisableAction("RPiData0");
-		$this->RegisterVariableInteger("RPiData1", "Temperatur GPU", "~Temperature", 20);
+		$this->RegisterVariableFloatr("TemperaturGPU", "Temperatur GPU", "~Temperature", 20);
 		$this->DisableAction("RPiData1");
 		 
                 
@@ -38,8 +38,9 @@
 		*/
 		
 		//ReceiveData-Filter setzen
-                $Filter = '(.*"Function":"set_BT_connect".*|.*"InstanceID":'.$this->InstanceID.'.*))';
+                $Filter = '(.*"Function":"set_RPi_connect".*|.*"InstanceID":'.$this->InstanceID.'.*))';
 		$this->SetReceiveDataFilter($Filter);
+		
 		If (IPS_GetKernelRunlevel() == 10103) {
 			$this->SetTimerInterval("Messzyklus1", ($this->ReadPropertyInteger("Messzyklus1") * 1000));
 			$this->SetTimerInterval("Messzyklus2", ($this->ReadPropertyInteger("Messzyklus2") * 1000));
@@ -61,8 +62,16 @@
 	    	// Empfangene Daten vom Gateway/Splitter
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
-			   case "set_BT_connect":
-			   	
+			   case "set_RPi_connect":
+			   	switch($data->CommandNumber) {
+					case "0":
+						SetValue($this->GetIDForIdent("TemperaturCPU"), utf8_decode($data->Result));
+						break;
+					case "1":
+						SetValue($this->GetIDForIdent("TemperaturGPU"), utf8_decode($data->Result));
+						break;
+	        
+	    			}
 	 	}
 	return;
  	}
@@ -70,7 +79,8 @@
 	// Führt eine Messung aus
 	public function Measurement()
 	{
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_BT_connect", "InstanceID" => $this->InstanceID,  "MAC" => $this->ReadPropertyString("MAC".$i), "MAC_Number" => $i )));
+		$Command = '/opt/vc/bin/vcgencmd measure_temp | tr -d "temp=" | tr -d "'C"';
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => 0 )));
 		
 	}
 
