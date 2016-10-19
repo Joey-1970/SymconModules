@@ -33,7 +33,7 @@
 		IPS_SetHidden($this->GetIDForIdent("Illuminance"), false);
 		// Logging setzen
 		AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Illuminance"), $this->ReadPropertyBoolean("Logging"));
-		//IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
+		IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
 		
 		//ReceiveData-Filter setzen
 		$Filter = '((.*"Function":"get_used_i2c".*|.*"DeviceAddress":'.$this->ReadPropertyInteger("DeviceAddress").'.*)|.*"Function":"status".*)';
