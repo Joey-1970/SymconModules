@@ -1,1 +1,17 @@
-   
+{
+    "status":
+    [
+        { "code": 101, "icon": "inactive", "caption": "Instanz wird erstellt" },
+        { "code": 102, "icon": "active", "caption": "Instanz ist aktiv" },
+        { "code": 104, "icon": "inactive", "caption": "Instanz ist inaktiv" }
+      ],
+    "elements":
+    [
+        { "type": "Label", "label": "Daten Kategorie 1 (Temperatur, Auslastung etc.:" },
+        { "type": "Label", "label": "Wiederholungszyklus in Sekunden (0 -> aus, 15 sek -> Minimum)" },
+        { "type": "IntervalBox", "name": "Messzyklus1", "caption": "Messzyklus (sek)" },
+        { "type": "Label", "label": "Daten Kategorie 2 (Speicher, etc.:" },
+        { "type": "Label", "label": "Wiederholungszyklus in Sekunden (0 -> aus, 15 sek -> Minimum)" },
+        { "type": "IntervalBox", "name": "Messzyklus2", "caption": "Messzyklus (sek)" }
+    ]
+}
