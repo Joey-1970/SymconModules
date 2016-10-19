@@ -38,7 +38,7 @@
 		*/
 		
 		//ReceiveData-Filter setzen
-                $Filter = '(.*"Function":"set_RPi_connect".*|.*"InstanceID":'.$this->InstanceID.'.*))';
+                $Filter = '(.*"Function":"set_RPi_connect".*|.*"InstanceID":'.$this->InstanceID.'.*)';
 		$this->SetReceiveDataFilter($Filter);
 		
 		If (IPS_GetKernelRunlevel() == 10103) {
