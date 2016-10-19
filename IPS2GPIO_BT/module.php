@@ -60,8 +60,9 @@
 
 			
 		//ReceiveData-Filter setzen
-                $Filter = '(.*"Function":"set_BT_connect".*|.*"InstanceID":'.$this->InstanceID.'.*))';
+                $Filter = '(.*"Function":"set_RPi_connect".*|.*"InstanceID":'.$this->InstanceID.'.*))';
 		$this->SetReceiveDataFilter($Filter);
+		
 		If (IPS_GetKernelRunlevel() == 10103) {
 			$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
 			$this->Measurement();
@@ -82,13 +83,13 @@
 	    	// Empfangene Daten vom Gateway/Splitter
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
-			   case "set_BT_connect":
-			   	SetValueString($this->GetIDForIdent("MAC".$data->MAC_Number."Name"), utf8_decode($data->Result));
+			   case "set_RPi_connect":
+			   	SetValueString($this->GetIDForIdent("MAC".$data->CommandNumber."Name"), utf8_decode($data->Result));
 				If (strlen($data->Result) > 0) {
-					SetValueBoolean($this->GetIDForIdent("MAC".$data->MAC_Number."Connect"), true);
+					SetValueBoolean($this->GetIDForIdent("MAC".$data->CommandNumber."Connect"), true);
 				}
 				else {
-					SetValueBoolean($this->GetIDForIdent("MAC".$data->MAC_Number."Connect"), false);
+					SetValueBoolean($this->GetIDForIdent("MAC".$data->CommandNumber."Connect"), false);
 				}
 			   	break;
 	 	}
