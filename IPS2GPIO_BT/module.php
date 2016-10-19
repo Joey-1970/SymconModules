@@ -53,11 +53,14 @@
                  $this->EnableAction("MAC4Name");
                 
 		// Logging setzen
-		//AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Illuminance"), $this->ReadPropertyBoolean("Logging"));
-		//IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
-		
+		for ($i = 0; $i <= 4; $i++) {
+			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("MAC".$i), $this->ReadPropertyBoolean("LoggingMAC".$i)); 
+		} 
+		IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
+
+			
 		//ReceiveData-Filter setzen
-                $Filter = '(.*"Function":"set_BT_connect".*)';
+                $Filter = '(.*"Function":"set_BT_connect".*|.*"InstanceID":'.$this->InstanceID.'.*))';
 		$this->SetReceiveDataFilter($Filter);
 		If (IPS_GetKernelRunlevel() == 10103) {
 			$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
@@ -99,7 +102,7 @@
 		for ($i = 0; $i <= 4; $i++) {
 			If (strlen($this->ReadPropertyString("MAC".$i)) > 10) {
 				IPS_LogMessage("IPS2GPIO SSH-Connect", "Sende MAC ".$i+1 );
-				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_BT_connect", "MAC" => $this->ReadPropertyString("MAC".$i), "MAC_Number" => $i )));
+				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_BT_connect", "InstanceID" => $this->InstanceID,  "MAC" => $this->ReadPropertyString("MAC".$i), "MAC_Number" => $i )));
 			}
 		}
 	}
