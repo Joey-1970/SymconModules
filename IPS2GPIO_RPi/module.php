@@ -10,7 +10,7 @@
             $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
             $this->RegisterPropertyInteger("Messzyklus1", 60);
             $this->RegisterTimer("Messzyklus1", 0, 'I2GRPi_Measurement($_IPS["TARGET"]);');
-            this->RegisterPropertyInteger("Messzyklus2", 60);
+            $this->RegisterPropertyInteger("Messzyklus2", 60);
             $this->RegisterTimer("Messzyklus2", 0, 'I2GRPi_Measurement($_IPS["TARGET"]);');
         }
  
@@ -22,39 +22,27 @@
                  //Connect to available splitter or create a new one
 	         $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 	   
-	         //Status-Variablen anlegen
-	         $this->RegisterVariableBoolean("MAC0Connect", "MAC 1", "~Switch", 10);
-		 $this->EnableAction("MAC0Connect");
-		 $this->RegisterVariableString("MAC0Name", "MAC 1 Name", "", 20);
-                 $this->EnableAction("MAC0Name");
-                 $this->RegisterVariableBoolean("MAC1Connect", "MAC 2", "~Switch", 30);
-		 $this->EnableAction("MAC1Connect");
-		 $this->RegisterVariableString("MAC1Name", "MAC 2 Name", "", 40);
-                 $this->EnableAction("MAC1Name");
-		 $this->RegisterVariableBoolean("MAC2Connect", "MAC 3", "~Switch", 50);
-		 $this->EnableAction("MAC2Connect");
-		 $this->RegisterVariableString("MAC2Name", "MAC 3 Name", "", 60);
-                 $this->EnableAction("MAC2Name");
-		 $this->RegisterVariableBoolean("MAC3Connect", "MAC 4", "~Switch", 70);
-		 $this->EnableAction("MAC3Connect");
-		 $this->RegisterVariableString("MAC3Name", "MAC 4 Name", "", 80);
-                 $this->EnableAction("MAC3Name");
-		 $this->RegisterVariableBoolean("MAC4Connect", "MAC 5", "~Switch", 90);
-		 $this->EnableAction("MAC4Connect");
-		 $this->RegisterVariableString("MAC4Name", "MAC 5 Name", "", 100);
-                 $this->EnableAction("MAC4Name");
+		//Status-Variablen anlegen
+		$this->RegisterVariableInteger("RPiData0", "Temperatur CPU", "~Temperature", 10);
+		$this->DisableAction("RPiData0");
+		$this->RegisterVariableInteger("RPiData1", "Temperatur GPU", "~Temperature", 20);
+		$this->DisableAction("RPiData1");
+		 
                 
 		// Logging setzen
+		/*
 		for ($i = 0; $i <= 4; $i++) {
 			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("MAC".$i), $this->ReadPropertyBoolean("LoggingMAC".$i)); 
 		} 
 		IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
-			
+		*/
+		
 		//ReceiveData-Filter setzen
                 $Filter = '(.*"Function":"set_BT_connect".*|.*"InstanceID":'.$this->InstanceID.'.*))';
 		$this->SetReceiveDataFilter($Filter);
 		If (IPS_GetKernelRunlevel() == 10103) {
-			$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
+			$this->SetTimerInterval("Messzyklus1", ($this->ReadPropertyInteger("Messzyklus1") * 1000));
+			$this->SetTimerInterval("Messzyklus2", ($this->ReadPropertyInteger("Messzyklus2") * 1000));
 			$this->Measurement();
 			$this->SetStatus(102);
 		}
@@ -74,14 +62,7 @@
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
 			   case "set_BT_connect":
-			   	SetValueString($this->GetIDForIdent("MAC".$data->MAC_Number."Name"), utf8_decode($data->Result));
-				If (strlen($data->Result) > 0) {
-					SetValueBoolean($this->GetIDForIdent("MAC".$data->MAC_Number."Connect"), true);
-				}
-				else {
-					SetValueBoolean($this->GetIDForIdent("MAC".$data->MAC_Number."Connect"), false);
-				}
-			   	break;
+			   	
 	 	}
 	return;
  	}
@@ -89,12 +70,7 @@
 	// Führt eine Messung aus
 	public function Measurement()
 	{
-		for ($i = 0; $i <= 4; $i++) {
-			If (filter_var($this->ReadPropertyString("MAC".$i), FILTER_VALIDATE_MAC)) {
-				IPS_LogMessage("IPS2GPIO SSH-Connect", "Sende MAC ".$i+1 );
-				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_BT_connect", "InstanceID" => $this->InstanceID,  "MAC" => $this->ReadPropertyString("MAC".$i), "MAC_Number" => $i )));
-			}
-		}
+		
 	}
 	
 }
