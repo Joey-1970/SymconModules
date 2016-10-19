@@ -367,7 +367,7 @@ class IPS2GPIO_IO extends IPSModule
 		   	$this->CommandClientSocket(pack("L*", 83, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
 		   	break;
 		    
-		    // Bluetooth Kommunikation
+		    // Raspberry Pi Kommunikation
 		    case "get_RPi_connect":
 		   	// SSH Connection
 			IPS_LogMessage("IPS2GPIO SSH-Connect", $data->Command );
