@@ -105,7 +105,7 @@
 		$CommandArray = array();
 		// Alle gültigen MAC-Adressen in einem Array erfassen
 		for ($i = 0; $i <= 4; $i++) {
-		    If (filter_var($MAC[$i], FILTER_VALIDATE_MAC)) {
+		    If (filter_var(trim($this->ReadPropertyString("MAC".$i)), FILTER_VALIDATE_MAC)) {
 			$CommandArray[] = $MAC[$i]; 
 		    }
 		}
@@ -119,7 +119,9 @@
 		    }
 		}
 		// Befehl senden
-		echo $Command;
+		If (strlen($Command)) {
+			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => 0 )));
+		}
 		*/
 		for ($i = 0; $i <= 4; $i++) {
 			If (filter_var(trim($this->ReadPropertyString("MAC".$i)), FILTER_VALIDATE_MAC)) {
