@@ -18,7 +18,6 @@
 	    $this->RegisterPropertyBoolean("LoggingMAC3", false);
 	    $this->RegisterPropertyString("MAC4", " ");
 	    $this->RegisterPropertyBoolean("LoggingMAC4", false);
-	    $this->RegisterPropertyInteger("Messzyklus", 60);
 	    $this->RegisterTimer("Messzyklus", 0, 'I2GBT_Measurement($_IPS["TARGET"]);');
       }
  
