@@ -100,13 +100,32 @@
 	// Führt eine Messung aus
 	public function Measurement()
 	{
+		/*
+		$Command = "";
+		$CommandArray = array();
+		// Alle gültigen MAC-Adressen in einem Array erfassen
+		for ($i = 0; $i <= 4; $i++) {
+		    If (filter_var($MAC[$i], FILTER_VALIDATE_MAC)) {
+			$CommandArray[] = $MAC[$i]; 
+		    }
+		}
+		// Die gültigen MAC-Adressen in einen Befehl zusammenfassen
+		for ($i = 0; $i < Count($CommandArray); $i++) {
+		    If ($i < (Count($CommandArray) - 1)) {
+			$Command = $Command."hcitool name ".$CommandArray[$i]." && ";
+		    }
+		    else {
+			$Command = $Command."hcitool name ".$CommandArray[$i];
+		    }
+		}
+		// Befehl senden
+		echo $Command;
+		*/
 		for ($i = 0; $i <= 4; $i++) {
 			If (filter_var(trim($this->ReadPropertyString("MAC".$i)), FILTER_VALIDATE_MAC)) {
 			//If (strlen($this->ReadPropertyString("MAC".$i)) > 10) {
 				IPS_LogMessage("IPS2GPIO SSH-Connect", "Sende MAC ".$i+1 );
-				
 				$Command = "hcitool name ".$this->ReadPropertyString("MAC".$i);
-				
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => $i )));
 			}
 		}
