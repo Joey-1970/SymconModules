@@ -25,7 +25,7 @@
 		//Status-Variablen anlegen
 		$this->RegisterVariableFloat("TemperaturCPU", "Temperatur CPU", "~Temperature", 10);
 		$this->DisableAction("RPiData0");
-		$this->RegisterVariableFloatr("TemperaturGPU", "Temperatur GPU", "~Temperature", 20);
+		$this->RegisterVariableFloat("TemperaturGPU", "Temperatur GPU", "~Temperature", 20);
 		$this->DisableAction("RPiData1");
 		 
                 
