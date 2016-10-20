@@ -52,19 +52,19 @@
 		 $this->RegisterVariableString("MAC4Name", "MAC 5 Name", "", 100);
                  $this->EnableAction("MAC4Name");
                 
-		// Logging setzen
-		for ($i = 0; $i <= 4; $i++) {
-			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("MAC".$i."Connect"),  $this->ReadPropertyBoolean("LoggingMAC".$i)); 
-		} 
-		IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
-
-			
-		//ReceiveData-Filter setzen
-		$Filter = '(.*"Function":"set_RPi_connect".*|.*"InstanceID":'.$this->InstanceID.'.*)';
-		$this->SetReceiveDataFilter($Filter);
-		
 		If (IPS_GetKernelRunlevel() == 10103) {
-			$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
+			// Logging setzen
+			for ($i = 0; $i <= 4; $i++) {
+				AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("MAC".$i."Connect"),  $this->ReadPropertyBoolean("LoggingMAC".$i)); 
+			} 
+			IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
+
+
+			//ReceiveData-Filter setzen
+			$Filter = '(.*"Function":"set_RPi_connect".*|.*"InstanceID":'.$this->InstanceID.'.*)';
+			$this->SetReceiveDataFilter($Filter);
+			
+			$this->SetTimerInterval("Messzyklus", $this->ReadPropertyInteger("Messzyklus") * 1000);
 			$this->Measurement();
 			$this->SetStatus(102);
 		}
