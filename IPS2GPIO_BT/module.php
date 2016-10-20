@@ -124,8 +124,7 @@
 		}
 		*/
 		for ($i = 0; $i <= 4; $i++) {
-			//If (filter_var(trim($this->ReadPropertyString("MAC".$i)), FILTER_VALIDATE_MAC)) {
-			If (strlen($this->ReadPropertyString("MAC".$i)) > 10) {
+			If (filter_var(trim($this->ReadPropertyString("MAC".$i)), FILTER_VALIDATE_MAC)) {
 				IPS_LogMessage("IPS2GPIO SSH-Connect", "Sende MAC ".$i+1 );
 				$Command = "hcitool name ".$this->ReadPropertyString("MAC".$i);
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => $i )));
