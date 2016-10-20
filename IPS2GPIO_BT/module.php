@@ -8,6 +8,7 @@
             // Diese Zeile nicht löschen.
             parent::Create();
 	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+	    $this->RegisterPropertyInteger("Messzyklus", 60);
 	    $this->RegisterPropertyString("MAC0", " ");
 	    $this->RegisterPropertyBoolean("LoggingMAC0", false);
 	    $this->RegisterPropertyString("MAC1", " ");
