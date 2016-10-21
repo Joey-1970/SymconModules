@@ -61,7 +61,7 @@
 
 
 			//ReceiveData-Filter setzen
-			$Filter = '(.*"Function":"set_RPi_connect".*|.*"InstanceID":'.$this->InstanceID.'.*)';
+			$Filter = '((.*"Function":"set_RPi_connect".*|.*"InstanceID":'.$this->InstanceID.'.*)|(.*"Function":"get_start_trigger".*))';
 			$this->SetReceiveDataFilter($Filter);
 			
 			$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
@@ -92,6 +92,9 @@
 					SetValueBoolean($this->GetIDForIdent("MAC".$data->CommandNumber."Connect"), false);
 				}
 			   	break;
+			  case "get_start_trigger":
+			   	$this->ApplyChanges();
+				break;
 	 	}
 	return;
  	}
