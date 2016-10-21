@@ -122,7 +122,7 @@
 	// Beginn der Funktionen
 
 	// Dimmt den gewaehlten Pin
-	public function Set_RGB(Integer $R, Integer $G, Integer $B)
+	public function Set_RGB(Int $R, Int $G, Int $B)
 	{
  		$R = min(255, max(0, $R));
  		$G = min(255, max(0, $G));
@@ -138,7 +138,7 @@
 	return;
 	}
 	
-	public function Set_Status(Boolean $value)
+	public function Set_Status(Bool $value)
 	{
 		SetValue($this->GetIDForIdent("Status"), $value);
 		
