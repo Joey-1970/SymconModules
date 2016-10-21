@@ -343,14 +343,14 @@
 		$this->Send("connect");
 	return;
 	}
-	public function SetBrightness(Integer $Value)
+	public function SetBrightness(Int $Value)
 	{
 		$Value = min(100, max(0, $Value));
 		$this->Send("dim=".$Value); 
 	return;
 	}
 	
-	private function SetBrightnessDefault($Value)
+	private function SetBrightnessDefault(Int $Value)
 	{
 		$Value = min(100, max(0, $Value));
 		$this->Send("dims=".$Value);
@@ -358,8 +358,7 @@
 	}
 	
 	private function SetDateTime()
-	{
-		date_default_timezone_set("Europe/Berlin");
+	{		date_default_timezone_set("Europe/Berlin");
 		$timestamp = time();
 		$this->Send("rtc0=".date("Y",$timestamp));
 		$this->Send("rtc1=".date("m",$timestamp));
@@ -370,42 +369,42 @@
 	return;	
 	}
 	
-	private function SetSleepNoSerial(Integer $Value)
+	private function SetSleepNoSerial(Int $Value)
 	{
 		$Value = min(65535, max(0, $Value));
 		$this->Send("ussp=".$Value);
 	return;
 	}
 	
-	private function SetSleepNoTouch(Integer $Value)
+	private function SetSleepNoTouch(Int $Value)
 	{
 		$Value = min(65535, max(0, $Value));
 		$this->Send("thsp=".$Value);
 	return;
 	}
 	
-	private function SetTouchAwake(Boolean $Value)
+	private function SetTouchAwake(Bool $Value)
 	{
 		$Value = min(1, max(0, $Value));
 		$this->Send("thup=".$Value);
 	return;
 	}
 	
-	private function SetCommandReturn(Integer $Value)
+	private function SetCommandReturn(Int $Value)
 	{
 		$Value = min(3, max(0, $Value));
 		$this->Send("bkcmd=".$Value);
 	return;
 	}
 	
-	private function SetSendTouchCoordinate(Boolean $Value)
+	private function SetSendTouchCoordinate(Bool $Value)
 	{
 		$Value = min(1, max(0, $Value));
 		$this->Send("sendxy=".$Value);
 	return;
 	}
 	
-	public function SetSleep(Boolean $Value)
+	public function SetSleep(Bool $Value)
 	{
 		$Value = min(1, max(0, $Value));
 		SetValueBoolean($this->GetIDForIdent("SleepMode"), $Value);
