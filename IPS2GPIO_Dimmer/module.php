@@ -83,7 +83,7 @@
 	// Beginn der Funktionen
 
 	// Dimmt den gewaehlten Pin
-	public function Set_Intensity($value)
+	public function Set_Intensity(Integer $value)
 	{
 		$value = min(255, max(0, $value));
 		If (GetValueBoolean($this->GetIDForIdent("Status")) == true) {
@@ -96,7 +96,7 @@
 	}
 	
 	// Schaltet den gewaehlten Pin
-	public function Set_Status($value)
+	public function Set_Status(Boolean $value)
 	{
 		SetValueBoolean($this->GetIDForIdent("Status"), $value);
 		
