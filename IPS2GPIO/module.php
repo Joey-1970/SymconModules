@@ -537,7 +537,7 @@ class IPS2GPIO_IO extends IPSModule
 	return;
 	}
 
-	private function ClientSocket($message)
+	private function ClientSocket(String $message)
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
 			$res = $this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode($message))));  
@@ -545,7 +545,7 @@ class IPS2GPIO_IO extends IPSModule
 	return;	
 	}
 	
-	private function CommandClientSocket($message, $ResponseLen = 16)
+	private function CommandClientSocket(String $message, $ResponseLen = 16)
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
 			// Socket erstellen
@@ -602,7 +602,7 @@ class IPS2GPIO_IO extends IPSModule
 	return;	
 	}
 	
-	private function ClientResponse($Message)
+	private function ClientResponse(String $Message)
 	{
 		$response = unpack("L*", $Message);
 		switch($response[1]) {
@@ -833,7 +833,7 @@ class IPS2GPIO_IO extends IPSModule
 	return;
 	}
 	
-	private function SSH_Connect($Command)
+	private function SSH_Connect(String $Command)
 	{
 	        set_include_path(__DIR__);
 		require_once (__DIR__ . '/Net/SSH2.php');
@@ -886,7 +886,7 @@ class IPS2GPIO_IO extends IPSModule
 	return $result;
 	}
 	
-	private function GetI2C_DeviceHandle($DeviceAddress)
+	private function GetI2C_DeviceHandle(Integer $DeviceAddress)
 	{
 		// Gibt für ein Device den verknüpften Handle aus
 		$I2C_HandleData = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
@@ -899,7 +899,7 @@ class IPS2GPIO_IO extends IPSModule
 	return $I2C_Handle;
 	}
 	
-	private function GetI2C_HandleDevice($I2C_Handle)
+	private function GetI2C_HandleDevice(Integer $I2C_Handle)
 	{
 		// Gibt für ein I2C-Device die Adresse aus
 		$I2C_HandleData = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
@@ -924,7 +924,7 @@ class IPS2GPIO_IO extends IPSModule
 	return $Status;
 	}
   	
-  	private function GetErrorText($ErrorNumber)
+  	private function GetErrorText(Integer $ErrorNumber)
 	{
 		$ErrorMessage = array(2 => "PI_BAD_USER_GPIO", 3 => "PI_BAD_GPIO", 4 => "PI_BAD_MODE", 5 => "PI_BAD_LEVEL", 6 => "PI_BAD_PUD", 7 => "PI_BAD_PULSEWIDTH",
 			8 => "PI_BAD_DUTYCYCLE", 15 => "PI_BAD_WDOG_TIMEOUT", 21 => "PI_BAD_DUTYRANGE", 24 => "PI_NO_HANDLE", 25 => "PI_BAD_HANDLE",
@@ -958,7 +958,7 @@ class IPS2GPIO_IO extends IPSModule
 	return $ErrorText;
 	}
   	
-	private function GetHardware($RevNumber)
+	private function GetHardware(Integer $RevNumber)
 	{
 		$Hardware = array(2 => "Rev.0002 Model B PCB-Rev. 1.0 256MB", 3 => "Rev.0003 Model B PCB-Rev. 1.0 256MB", 4 => "Rev.0004 Model B PCB-Rev. 2.0 256MB Sony", 5 => "Rev.0005 Model B PCB-Rev. 2.0 256MB Qisda", 
 			6 => "Rev.0006 Model B PCB-Rev. 2.0 256MB Egoman", 7 => "Rev.0007 Model A PCB-Rev. 2.0 256MB Egoman", 8 => "Rev.0008 Model A PCB-Rev. 2.0 256MB Sony", 9 => "Rev.0009 Model A PCB-Rev. 2.0 256MB Qisda",
