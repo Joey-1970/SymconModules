@@ -151,7 +151,7 @@
 	return;
 	}
 	
-	public function Set_Output(Integer $Value)
+	public function Set_Output(Int $Value)
 	{
 		$Value = min(255, max(0, $Value));
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => hexdec("40"), "Value" => $Value)));
