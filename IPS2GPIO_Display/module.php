@@ -209,7 +209,7 @@
  	}
 	// Beginn der Funktionen
 	
-	private function DisplayResponse($Message)
+	private function DisplayResponse(String $Message)
 	{
 		switch(substr($Message, 0, 2)) {
 			case "00": // Invalid instruction 
@@ -306,14 +306,14 @@
     	return;
 	}
 	
-	private function hex2str($hex)
+	private function hex2str(String $hex)
 	{
 		$str = '';
     		for($i=0;$i<strlen($hex);$i+=2) $str .= chr(hexdec(substr($hex,$i,2)));
     	return $str;
 	}
 	
-	public function Send($Message)
+	public function Send(String $Message)
 	{
 		$Message = utf8_encode($Message."\xFF\xFF\xFF");
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Command" => $Message)));
@@ -343,7 +343,7 @@
 		$this->Send("connect");
 	return;
 	}
-	public function SetBrightness($Value)
+	public function SetBrightness(Integer $Value)
 	{
 		$Value = min(100, max(0, $Value));
 		$this->Send("dim=".$Value); 
@@ -370,42 +370,42 @@
 	return;	
 	}
 	
-	private function SetSleepNoSerial($Value)
+	private function SetSleepNoSerial(Integer $Value)
 	{
 		$Value = min(65535, max(0, $Value));
 		$this->Send("ussp=".$Value);
 	return;
 	}
 	
-	private function SetSleepNoTouch($Value)
+	private function SetSleepNoTouch(Integer $Value)
 	{
 		$Value = min(65535, max(0, $Value));
 		$this->Send("thsp=".$Value);
 	return;
 	}
 	
-	private function SetTouchAwake($Value)
+	private function SetTouchAwake(Boolean $Value)
 	{
 		$Value = min(1, max(0, $Value));
 		$this->Send("thup=".$Value);
 	return;
 	}
 	
-	private function SetCommandReturn($Value)
+	private function SetCommandReturn(Integer $Value)
 	{
 		$Value = min(3, max(0, $Value));
 		$this->Send("bkcmd=".$Value);
 	return;
 	}
 	
-	private function SetSendTouchCoordinate($Value)
+	private function SetSendTouchCoordinate(Boolean $Value)
 	{
 		$Value = min(1, max(0, $Value));
 		$this->Send("sendxy=".$Value);
 	return;
 	}
 	
-	public function SetSleep($Value)
+	public function SetSleep(Boolean $Value)
 	{
 		$Value = min(1, max(0, $Value));
 		SetValueBoolean($this->GetIDForIdent("SleepMode"), $Value);
@@ -419,7 +419,7 @@
 	return;
 	}
 	
-	public function Update($Filename)
+	public function Update(String $Filename)
 	{
 		if (file_exists($Filename)) {
 		    //$this->Send("connect");
