@@ -886,7 +886,7 @@ class IPS2GPIO_IO extends IPSModule
 	return $result;
 	}
 	
-	private function GetI2C_DeviceHandle(Integer $DeviceAddress)
+	private function GetI2C_DeviceHandle(Int $DeviceAddress)
 	{
 		// Gibt für ein Device den verknüpften Handle aus
 		$I2C_HandleData = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
@@ -899,7 +899,7 @@ class IPS2GPIO_IO extends IPSModule
 	return $I2C_Handle;
 	}
 	
-	private function GetI2C_HandleDevice(Integer $I2C_Handle)
+	private function GetI2C_HandleDevice(Int $I2C_Handle)
 	{
 		// Gibt für ein I2C-Device die Adresse aus
 		$I2C_HandleData = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
@@ -924,7 +924,7 @@ class IPS2GPIO_IO extends IPSModule
 	return $Status;
 	}
   	
-  	private function GetErrorText(Integer $ErrorNumber)
+  	private function GetErrorText(Int $ErrorNumber)
 	{
 		$ErrorMessage = array(2 => "PI_BAD_USER_GPIO", 3 => "PI_BAD_GPIO", 4 => "PI_BAD_MODE", 5 => "PI_BAD_LEVEL", 6 => "PI_BAD_PUD", 7 => "PI_BAD_PULSEWIDTH",
 			8 => "PI_BAD_DUTYCYCLE", 15 => "PI_BAD_WDOG_TIMEOUT", 21 => "PI_BAD_DUTYRANGE", 24 => "PI_NO_HANDLE", 25 => "PI_BAD_HANDLE",
@@ -958,7 +958,7 @@ class IPS2GPIO_IO extends IPSModule
 	return $ErrorText;
 	}
   	
-	private function GetHardware(Integer $RevNumber)
+	private function GetHardware(Int $RevNumber)
 	{
 		$Hardware = array(2 => "Rev.0002 Model B PCB-Rev. 1.0 256MB", 3 => "Rev.0003 Model B PCB-Rev. 1.0 256MB", 4 => "Rev.0004 Model B PCB-Rev. 2.0 256MB Sony", 5 => "Rev.0005 Model B PCB-Rev. 2.0 256MB Qisda", 
 			6 => "Rev.0006 Model B PCB-Rev. 2.0 256MB Egoman", 7 => "Rev.0007 Model A PCB-Rev. 2.0 256MB Egoman", 8 => "Rev.0008 Model A PCB-Rev. 2.0 256MB Sony", 9 => "Rev.0009 Model A PCB-Rev. 2.0 256MB Qisda",
