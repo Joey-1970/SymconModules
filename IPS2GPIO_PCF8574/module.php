@@ -182,7 +182,7 @@
 	return;	
 	}
 	
-	public function SetPinOutput($Pin, $Value)
+	public function SetPinOutput(Integer $Pin, $Value)
 	{
 		// Setzt einen bestimmten Pin auf den vorgegebenen Wert
 		$Pin = min(7, max(0, $Pin));
@@ -203,7 +203,7 @@
 	return;
 	}
 	
-	public function SetOutput($Value)
+	public function SetOutput(Integer $Value)
 	{
 		// Setzt alle Ausgänge
 		$Value = min(255, max(0, $Value));
