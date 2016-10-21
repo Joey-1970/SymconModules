@@ -370,9 +370,9 @@ class IPS2GPIO_IO extends IPSModule
 		    // Raspberry Pi Kommunikation
 		    case "get_RPi_connect":
 		   	// SSH Connection
-			IPS_LogMessage("IPS2GPIO SSH-Connect", $data->Command );
+			//IPS_LogMessage("IPS2GPIO SSH-Connect", $data->Command );
 			$Result = $this->SSH_Connect($data->Command);
-			IPS_LogMessage("IPS2GPIO SSH-Connect", $Result );
+			//IPS_LogMessage("IPS2GPIO SSH-Connect", $Result );
 			$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_RPi_connect", "InstanceID" => $this->InstanceID, "CommandNumber" => $data->CommandNumber, "Result"=>utf8_encode($Result)  )));
 		   	break;
 		}
