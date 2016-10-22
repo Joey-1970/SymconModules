@@ -64,28 +64,30 @@
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
 			case "set_RPi_connect":
-			   	switch($data->CommandNumber) {
-					case "0":
-						// GPU Temperatur
-						$Result = floatval(substr(utf8_decode($data->Result), 5, -2));
-						SetValue($this->GetIDForIdent("TemperaturGPU"), $Result);
-						break;
+			   	If ($data->InstanceID == $this->InstanceID) {
+					switch($data->CommandNumber) {
+						case "0":
+							// GPU Temperatur
+							$Result = floatval(substr(utf8_decode($data->Result), 5, -2));
+							SetValue($this->GetIDForIdent("TemperaturGPU"), $Result);
+							break;
 
-					case "1":
-						// CPU Temperatur
-						$Result = floatval(intval(utf8_decode($data->Result)) / 1000);
-						SetValue($this->GetIDForIdent("TemperaturCPU"), $Result);
-						break;
-					case "2":
-						// CPU Spannung
-						$Result = floatval(substr(utf8_decode($data->Result), 5, -1));
-						SetValue($this->GetIDForIdent("VoltageCPU"), $Result);
-						break;
-					case "3":
-						// 
-						//$Result = floatval(substr(utf8_decode($data->Result), 5, -1));
-						//SetValue($this->GetIDForIdent("VoltageCPU"), $Result);
-						break;
+						case "1":
+							// CPU Temperatur
+							$Result = floatval(intval(utf8_decode($data->Result)) / 1000);
+							SetValue($this->GetIDForIdent("TemperaturCPU"), $Result);
+							break;
+						case "2":
+							// CPU Spannung
+							$Result = floatval(substr(utf8_decode($data->Result), 5, -1));
+							SetValue($this->GetIDForIdent("VoltageCPU"), $Result);
+							break;
+						case "3":
+							// 
+							//$Result = floatval(substr(utf8_decode($data->Result), 5, -1));
+							//SetValue($this->GetIDForIdent("VoltageCPU"), $Result);
+							break;
+					}
 				}
 				break;
 			case "get_start_trigger":
