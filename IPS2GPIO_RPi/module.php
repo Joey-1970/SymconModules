@@ -67,7 +67,7 @@
 			   	switch($data->CommandNumber) {
 					case "0":
 						$Result = floatval(substr(utf8_decode($data->Result), 5, -2));
-						SetValue($this->GetIDForIdent("TemperaturGPU"), utf8_decode($data->Result));
+						SetValue($this->GetIDForIdent("TemperaturGPU"), $Result);
 						break;
 
 					case "1":
@@ -89,10 +89,10 @@
 	// Führt eine Messung aus
 	public function Measurement_1()
 	{
-		// GPU temperatur
+		// GPU Temperatur
 		$Command = "/opt/vc/bin/vcgencmd measure_temp";
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => 0 )));
-		// CPU temperatur
+		// CPU Temperatur
 		$Command = "cat /sys/class/thermal/thermal_zone0/temp";
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => 1 )));
 		// Spannung
