@@ -38,9 +38,9 @@
 			*/
 
 			//ReceiveData-Filter setzen
-			$Filter = '(.*"Function":"set_RPi_connect".*|.*"InstanceID":'.$this->InstanceID.'.*)';
+			$Filter = '((.*"Function":"set_RPi_connect".*|.*"InstanceID":'.$this->InstanceID.'.*)|(.*"Function":"get_start_trigger".*))';
 			$this->SetReceiveDataFilter($Filter);
-		
+				
 			$this->SetTimerInterval("Messzyklus1", ($this->ReadPropertyInteger("Messzyklus1") * 1000));
 			$this->SetTimerInterval("Messzyklus2", ($this->ReadPropertyInteger("Messzyklus2") * 1000));
 			$this->Measurement();
@@ -61,7 +61,7 @@
 	    	// Empfangene Daten vom Gateway/Splitter
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
-			   case "set_RPi_connect":
+			case "set_RPi_connect":
 			   	switch($data->CommandNumber) {
 					case "0":
 						SetValue($this->GetIDForIdent("TemperaturCPU"), utf8_decode($data->Result));
@@ -69,8 +69,10 @@
 					case "1":
 						SetValue($this->GetIDForIdent("TemperaturGPU"), utf8_decode($data->Result));
 						break;
-	        
-	    			}
+				}
+			case "get_start_trigger":
+			   	$this->ApplyChanges();
+				break;
 	 	}
 	return;
  	}
