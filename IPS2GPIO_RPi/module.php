@@ -10,8 +10,8 @@
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 		$this->RegisterPropertyInteger("Messzyklus1", 60);
 		$this->RegisterPropertyInteger("Messzyklus2", 60);
-		$this->RegisterTimer("Messzyklus1", 0, 'I2GRPi_Measurement($_IPS["TARGET"]);');
-		$this->RegisterTimer("Messzyklus2", 0, 'I2GRPi_Measurement($_IPS["TARGET"]);');
+		$this->RegisterTimer("Messzyklus1", 0, 'I2GRPi_Measurement_1($_IPS["TARGET"]);');
+		$this->RegisterTimer("Messzyklus2", 0, 'I2GRPi_Measurement_2($_IPS["TARGET"]);');
         }
  
 	// Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -28,20 +28,19 @@
 		$this->RegisterVariableFloat("TemperaturGPU", "Temperatur GPU", "~Temperature", 20);
 		$this->DisableAction("TemperaturGPU");
 		 
-                
-		// Logging setzen
-		/*
-		for ($i = 0; $i <= 4; $i++) {
-			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("MAC".$i), $this->ReadPropertyBoolean("LoggingMAC".$i)); 
-		} 
-		IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
-		*/
+                If (IPS_GetKernelRunlevel() == 10103) {
+			// Logging setzen
+			/*
+			for ($i = 0; $i <= 4; $i++) {
+				AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("MAC".$i), $this->ReadPropertyBoolean("LoggingMAC".$i)); 
+			} 
+			IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
+			*/
+
+			//ReceiveData-Filter setzen
+			$Filter = '(.*"Function":"set_RPi_connect".*|.*"InstanceID":'.$this->InstanceID.'.*)';
+			$this->SetReceiveDataFilter($Filter);
 		
-		//ReceiveData-Filter setzen
-                $Filter = '(.*"Function":"set_RPi_connect".*|.*"InstanceID":'.$this->InstanceID.'.*)';
-		$this->SetReceiveDataFilter($Filter);
-		
-		If (IPS_GetKernelRunlevel() == 10103) {
 			$this->SetTimerInterval("Messzyklus1", ($this->ReadPropertyInteger("Messzyklus1") * 1000));
 			$this->SetTimerInterval("Messzyklus2", ($this->ReadPropertyInteger("Messzyklus2") * 1000));
 			$this->Measurement();
