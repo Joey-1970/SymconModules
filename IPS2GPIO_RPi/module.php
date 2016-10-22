@@ -43,9 +43,9 @@
 			$Filter = '((.*"Function":"set_RPi_connect".*|.*"InstanceID":'.$this->InstanceID.'.*)|(.*"Function":"get_start_trigger".*))';
 			$this->SetReceiveDataFilter($Filter);
 				
-			$this->SetTimerInterval("Messzyklus1", ($this->ReadPropertyInteger("Messzyklus1") * 1000));
-			$this->SetTimerInterval("Messzyklus2", ($this->ReadPropertyInteger("Messzyklus2") * 1000));
-			$this->Measurement_1();
+			//$this->SetTimerInterval("Messzyklus1", ($this->ReadPropertyInteger("Messzyklus1") * 1000));
+			//$this->SetTimerInterval("Messzyklus2", ($this->ReadPropertyInteger("Messzyklus2") * 1000));
+			//$this->Measurement_1();
 			$this->SetStatus(102);
 		}
         }
