@@ -66,7 +66,7 @@
 			case "set_RPi_connect":
 			   	switch($data->CommandNumber) {
 					case "0":
-						$Result = floatval(substr(utf8_decode($data->Result), 5, 4));
+						$Result = floatval(substr(utf8_decode($data->Result), 5, -2));
 						SetValue($this->GetIDForIdent("TemperaturCPU"), $Result);
 						break;
 					case "1":
