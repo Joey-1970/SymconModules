@@ -40,7 +40,8 @@
 			*/
 
 			//ReceiveData-Filter setzen
-			$Filter = '((.*"Function":"set_RPi_connect".*|.*"InstanceID":'.$this->InstanceID.'.*)|.*"Function":"get_start_trigger".*)';
+			//$Filter = '((.*"Function":"set_RPi_connect".*|.*"InstanceID":'.$this->InstanceID.'.*)|.*"Function":"get_start_trigger".*)';
+			$Filter = '(.*"Function":"get_start_trigger".*|.*"InstanceID":'.$this->InstanceID.'.*)';
 			$this->SetReceiveDataFilter($Filter);
 				
 			$this->SetTimerInterval("Messzyklus1", ($this->ReadPropertyInteger("Messzyklus1") * 1000));
@@ -64,7 +65,7 @@
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
 			case "set_RPi_connect":
-			   	If ($data->InstanceID == $this->InstanceID) {
+			   	//If ($data->InstanceID == $this->InstanceID) {
 					switch($data->CommandNumber) {
 						case "0":
 							// GPU Temperatur
@@ -88,7 +89,7 @@
 							//SetValue($this->GetIDForIdent("VoltageCPU"), $Result);
 							break;
 					}
-				}
+				//}
 				break;
 			case "get_start_trigger":
 			   	$this->ApplyChanges();
