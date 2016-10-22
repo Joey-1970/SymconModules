@@ -61,7 +61,8 @@
 
 
 			//ReceiveData-Filter setzen
-			$Filter = '((.*"Function":"set_RPi_connect".*|.*"InstanceID":'.$this->InstanceID.'.*)|.*"Function":"get_start_trigger".*)';
+			//$Filter = '((.*"Function":"set_RPi_connect".*|.*"InstanceID":'.$this->InstanceID.'.*)|.*"Function":"get_start_trigger".*)';
+			$Filter = '(.*"Function":"get_start_trigger".*|.*"InstanceID":'.$this->InstanceID.'.*)';
 			$this->SetReceiveDataFilter($Filter);
 			
 			$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
@@ -84,7 +85,7 @@
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
 			   case "set_RPi_connect":
-			   	If ($data->InstanceID == $this->InstanceID) {
+			   	//If ($data->InstanceID == $this->InstanceID) {
 					SetValueString($this->GetIDForIdent("MAC".$data->CommandNumber."Name"), utf8_decode($data->Result));
 					If (strlen($data->Result) > 0) {
 						SetValueBoolean($this->GetIDForIdent("MAC".$data->CommandNumber."Connect"), true);
@@ -92,7 +93,7 @@
 					else {
 						SetValueBoolean($this->GetIDForIdent("MAC".$data->CommandNumber."Connect"), false);
 					}
-				}
+				//}
 			   	break;
 			  case "get_start_trigger":
 			   	$this->ApplyChanges();
