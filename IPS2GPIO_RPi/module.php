@@ -5,11 +5,13 @@
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
-            // Diese Zeile nicht löschen.
-            parent::Create();
-            $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
-            $this->RegisterTimer("Messzyklus1", 0, 'I2GRPi_Measurement($_IPS["TARGET"]);');
-            $this->RegisterTimer("Messzyklus2", 0, 'I2GRPi_Measurement($_IPS["TARGET"]);');
+		// Diese Zeile nicht löschen.
+		parent::Create();
+		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+		$this->RegisterPropertyInteger("Messzyklus1", 60);
+		$this->RegisterPropertyInteger("Messzyklus2", 60);
+		$this->RegisterTimer("Messzyklus1", 0, 'I2GRPi_Measurement($_IPS["TARGET"]);');
+		$this->RegisterTimer("Messzyklus2", 0, 'I2GRPi_Measurement($_IPS["TARGET"]);');
         }
  
 	// Überschreibt die intere IPS_ApplyChanges($id) Funktion
