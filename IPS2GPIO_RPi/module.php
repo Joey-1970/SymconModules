@@ -43,9 +43,9 @@
 			$Filter = '((.*"Function":"set_RPi_connect".*|.*"InstanceID":'.$this->InstanceID.'.*)|(.*"Function":"get_start_trigger".*))';
 			$this->SetReceiveDataFilter($Filter);
 				
-			//$this->SetTimerInterval("Messzyklus1", ($this->ReadPropertyInteger("Messzyklus1") * 1000));
+			$this->SetTimerInterval("Messzyklus1", ($this->ReadPropertyInteger("Messzyklus1") * 1000));
 			//$this->SetTimerInterval("Messzyklus2", ($this->ReadPropertyInteger("Messzyklus2") * 1000));
-			//$this->Measurement_1();
+			$this->Measurement_1();
 			$this->SetStatus(102);
 		}
         }
@@ -96,7 +96,7 @@
  	
 	public function Measurement_2()
 	{
-		$Command = "/opt/vc/bin/vcgencmd measure_temp";
+		//$Command = "/opt/vc/bin/vcgencmd measure_temp";
 		//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => 0 )));
 		
 	}
