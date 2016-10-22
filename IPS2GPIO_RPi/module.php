@@ -81,6 +81,11 @@
 						$Result = floatval(substr(utf8_decode($data->Result), 5, -1));
 						SetValue($this->GetIDForIdent("VoltageCPU"), $Result);
 						break;
+					case "3":
+						// 
+						//$Result = floatval(substr(utf8_decode($data->Result), 5, -1));
+						//SetValue($this->GetIDForIdent("VoltageCPU"), $Result);
+						break;
 				}
 			case "get_start_trigger":
 			   	$this->ApplyChanges();
