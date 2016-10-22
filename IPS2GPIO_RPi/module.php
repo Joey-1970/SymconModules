@@ -27,7 +27,7 @@
 		$this->DisableAction("TemperaturCPU");
 		$this->RegisterVariableFloat("TemperaturGPU", "Temperatur GPU", "~Temperature", 20);
 		$this->DisableAction("TemperaturGPU");
-		$this->RegisterVariableFloat("VoltageCPU", "Spannung CPU", "", 30);
+		$this->RegisterVariableFloat("VoltageCPU", "Spannung CPU", "~Volt", 30);
 		$this->DisableAction("VoltageCPU");
 		 
                 If (IPS_GetKernelRunlevel() == 10103) {
