@@ -87,6 +87,7 @@
 						//SetValue($this->GetIDForIdent("VoltageCPU"), $Result);
 						break;
 				}
+				break;
 			case "get_start_trigger":
 			   	$this->ApplyChanges();
 				break;
