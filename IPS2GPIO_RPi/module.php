@@ -73,7 +73,7 @@
 						SetValue($this->GetIDForIdent("TemperaturGPU"), utf8_decode($data->Result));
 						break;
 					case "2":
-						$Result = floatval(substr(utf8_decode($data->Result), 5, 4));
+						$Result = floatval(substr(utf8_decode($data->Result), 5, -1));
 						SetValue($this->GetIDForIdent("VoltageCPU"), $Result);
 						break;
 				}
