@@ -45,7 +45,7 @@
 				
 			$this->SetTimerInterval("Messzyklus1", ($this->ReadPropertyInteger("Messzyklus1") * 1000));
 			$this->SetTimerInterval("Messzyklus2", ($this->ReadPropertyInteger("Messzyklus2") * 1000));
-			$this->Measurement();
+			$this->Measurement_1();
 			$this->SetStatus(102);
 		}
         }
