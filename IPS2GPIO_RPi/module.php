@@ -27,6 +27,8 @@
 		$this->DisableAction("TemperaturCPU");
 		$this->RegisterVariableFloat("TemperaturGPU", "Temperatur GPU", "~Temperature", 20);
 		$this->DisableAction("TemperaturGPU");
+		$this->RegisterVariableFloat("VoltageCPU", "Spannung CPU", "", 30);
+		$this->DisableAction("VoltageCPU");
 		 
                 If (IPS_GetKernelRunlevel() == 10103) {
 			// Logging setzen
@@ -70,6 +72,10 @@
 					case "1":
 						SetValue($this->GetIDForIdent("TemperaturGPU"), utf8_decode($data->Result));
 						break;
+					case "2":
+						$Result = floatval(substr(utf8_decode($data->Result), 5, 4));
+						SetValue($this->GetIDForIdent("VoltageCPU"), $Result);
+						break;
 				}
 			case "get_start_trigger":
 			   	$this->ApplyChanges();
@@ -79,13 +85,21 @@
  	}
 	// Beginn der Funktionen
 	// Führt eine Messung aus
-	public function Measurement()
+	public function Measurement_1()
 	{
 		$Command = "/opt/vc/bin/vcgencmd measure_temp";
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => 0 )));
+		$Command = "/opt/vc/bin/vcgencmd measure_volts";
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => 2 )));
+
+	}
+ 	
+	public function Measurement_2()
+	{
+		$Command = "/opt/vc/bin/vcgencmd measure_temp";
+		//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => 0 )));
 		
 	}
-
 	
 }
 ?>
