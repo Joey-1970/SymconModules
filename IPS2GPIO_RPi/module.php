@@ -67,10 +67,12 @@
 			   	switch($data->CommandNumber) {
 					case "0":
 						$Result = floatval(substr(utf8_decode($data->Result), 5, -2));
-						SetValue($this->GetIDForIdent("TemperaturCPU"), $Result);
-						break;
-					case "1":
 						SetValue($this->GetIDForIdent("TemperaturGPU"), utf8_decode($data->Result));
+						break;
+
+					case "1":
+						$Result = floatval(intval(utf8_decode($data->Result)) / 1000);
+						SetValue($this->GetIDForIdent("TemperaturCPU"), $Result);
 						break;
 					case "2":
 						$Result = floatval(substr(utf8_decode($data->Result), 5, -1));
@@ -87,8 +89,13 @@
 	// Führt eine Messung aus
 	public function Measurement_1()
 	{
+		// GPU temperatur
 		$Command = "/opt/vc/bin/vcgencmd measure_temp";
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => 0 )));
+		// CPU temperatur
+		$Command = "cat /sys/class/thermal/thermal_zone0/temp";
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => 1 )));
+		// Spannung
 		$Command = "/opt/vc/bin/vcgencmd measure_volts";
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => 2 )));
 
