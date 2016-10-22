@@ -40,7 +40,7 @@
 			*/
 
 			//ReceiveData-Filter setzen
-			$Filter = '((.*"Function":"set_RPi_connect".*|.*"InstanceID":'.$this->InstanceID.'.*)|(.*"Function":"get_start_trigger".*))';
+			$Filter = '((.*"Function":"set_RPi_connect".*|.*"InstanceID":'.$this->InstanceID.'.*)|.*"Function":"get_start_trigger".*))';
 			$this->SetReceiveDataFilter($Filter);
 				
 			$this->SetTimerInterval("Messzyklus1", ($this->ReadPropertyInteger("Messzyklus1") * 1000));
