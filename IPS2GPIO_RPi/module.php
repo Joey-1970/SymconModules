@@ -101,6 +101,17 @@
 	// Führt eine Messung aus
 	public function Measurement_1()
 	{
+		$CommandArray = Array();
+		// GPU Temperatur
+		$CommandArray[0] = "/opt/vc/bin/vcgencmd measure_temp";
+		// CPU Temperatur
+		$CommandArray[1] = "cat /sys/class/thermal/thermal_zone0/temp";
+		// Spannung
+		$CommandArray[2] = "/opt/vc/bin/vcgencmd measure_volts";
+		
+		
+		//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 0, "IsArray" => true )));
+		
 		// GPU Temperatur
 		$Command = "/opt/vc/bin/vcgencmd measure_temp";
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => 0, "IsArray" => false )));
