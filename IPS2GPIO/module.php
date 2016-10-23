@@ -370,11 +370,18 @@ class IPS2GPIO_IO extends IPSModule
 		    // Raspberry Pi Kommunikation
 		    case "get_RPi_connect":
 		   	// SSH Connection
-			//IPS_LogMessage("IPS2GPIO SSH-Connect", $data->Command );
-			$Result = $this->SSH_Connect($data->Command);
-			//IPS_LogMessage("IPS2GPIO SSH-Connect", $Result );
-			$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_RPi_connect", "InstanceID" => $data->InstanceID, "CommandNumber" => $data->CommandNumber, "Result"=>utf8_encode($Result)  )));
-		   	break;
+			If ($data->IsArray == false) {
+				// wenn es sich um ein einzelnes Kommando handelt
+				//IPS_LogMessage("IPS2GPIO SSH-Connect", $data->Command );
+				$Result = $this->SSH_Connect($data->Command);
+				//IPS_LogMessage("IPS2GPIO SSH-Connect", $Result );
+				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_RPi_connect", "InstanceID" => $data->InstanceID, "CommandNumber" => $data->CommandNumber, "Result"=>utf8_encode($Result)  )));
+			}
+			else {
+				// wenn es sich um ein Array von Kommandos handelt
+				
+			}
+			break;
 		}
 	    
 	    return;
@@ -850,6 +857,28 @@ class IPS2GPIO_IO extends IPSModule
 		$Result = $ssh->exec($Command);
 		
 		$ssh->disconnect();
+        return $Result;
+	}
+
+	private function SSH_Connect_Array(String $Command)
+	{
+	        set_include_path(__DIR__);
+		require_once (__DIR__ . '/Net/SSH2.php');
+		
+		$ssh = new Net_SSH2($this->ReadPropertyString("IPAddress"));
+		$login = @$ssh->login($this->ReadPropertyString("User"), $this->ReadPropertyString("Password"));
+		if ($login == false)
+		{
+		    IPS_LogMessage("IPS2GPIO SSH-Connect","Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert nicht!");
+		    return false;
+		}
+		$ResultArray = Array();
+		$CommandArray = unserialize($Command);
+		for ($i = 0; $i < Count($CommandArray); $i++) {
+			$ResultArray[$i] = $ssh->exec($CommandArray[$i]);
+		}
+		$ssh->disconnect();
+		$Result = serialize($ResultArray[$i]);
         return $Result;
 	}
 	
