@@ -29,6 +29,10 @@
 		$this->DisableAction("TemperaturGPU");
 		$this->RegisterVariableFloat("VoltageCPU", "Spannung CPU", "~Volt", 30);
 		$this->DisableAction("VoltageCPU");
+		$this->RegisterVariableInteger("MemoryCPU", "Speicher CPU", "", 40);
+		$this->DisableAction("MemoryCPU");
+		$this->RegisterVariableInteger("MemoryGPU", "Speicher GPU", "", 50);
+		$this->DisableAction("MemoryGPU");
 		 
                 If (IPS_GetKernelRunlevel() == 10103) {
 			// Logging setzen
@@ -64,33 +68,6 @@
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
 			case "set_RPi_connect":
-			   	/*
-				//If ($data->InstanceID == $this->InstanceID) {
-					switch($data->CommandNumber) {
-						case "0":
-							// GPU Temperatur
-							$Result = floatval(substr(utf8_decode($data->Result), 5, -2));
-							SetValue($this->GetIDForIdent("TemperaturGPU"), $Result);
-							break;
-
-						case "1":
-							// CPU Temperatur
-							$Result = floatval(intval(utf8_decode($data->Result)) / 1000);
-							SetValue($this->GetIDForIdent("TemperaturCPU"), $Result);
-							break;
-						case "2":
-							// CPU Spannung
-							$Result = floatval(substr(utf8_decode($data->Result), 5, -1));
-							SetValue($this->GetIDForIdent("VoltageCPU"), $Result);
-							break;
-						case "3":
-							// 
-							//$Result = floatval(substr(utf8_decode($data->Result), 5, -1));
-							//SetValue($this->GetIDForIdent("VoltageCPU"), $Result);
-							break;
-					}
-				//}
-				*/
 				$ResultArray = unserialize(utf8_decode($data->Result));
 				for ($i = 0; $i < Count($ResultArray); $i++) {
 					switch(key($ResultArray)) {
@@ -111,9 +88,14 @@
 							SetValueFloat($this->GetIDForIdent("VoltageCPU"), $Result);
 							break;
 						case "3":
-							// 
-							//$Result = floatval(substr(utf8_decode($data->Result), 5, -1));
-							//SetValue($this->GetIDForIdent("VoltageCPU"), $Result);
+							// CPU Speicher
+							$Result = intval(substr($ResultArray[key($ResultArray)], 4, -1));
+							SetValueInteger($this->GetIDForIdent("MemoryCPU"), $Result);
+							break;
+						case "4":
+							// CPU Speicher
+							$Result = intval(substr($ResultArray[key($ResultArray)], 4, -1));
+							SetValueInteger($this->GetIDForIdent("MemoryGPU"), $Result);
 							break;
 					}
 					Next($ResultArray);
@@ -136,20 +118,12 @@
 		$CommandArray[1] = "cat /sys/class/thermal/thermal_zone0/temp";
 		// Spannung
 		$CommandArray[2] = "/opt/vc/bin/vcgencmd measure_volts";
-		
+		// CPU Speicher
+		$CommandArray[3] = "vcgencmd get_mem arm";
+		// GPU Speicher
+		$CommandArray[4] = "vcgencmd get_mem gpu";
 		
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 0, "IsArray" => true )));
-		/*
-		// GPU Temperatur
-		$Command = "/opt/vc/bin/vcgencmd measure_temp";
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => 0, "IsArray" => false )));
-		// CPU Temperatur
-		$Command = "cat /sys/class/thermal/thermal_zone0/temp";
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => 1, "IsArray" => false )));
-		// Spannung
-		$Command = "/opt/vc/bin/vcgencmd measure_volts";
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => 2, "IsArray" => false )));
-		*/
 	}
  	
 	public function Measurement_2()
