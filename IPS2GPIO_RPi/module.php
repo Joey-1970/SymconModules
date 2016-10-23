@@ -36,6 +36,8 @@
 		$this->DisableAction("MemoryCPU");
 		$this->RegisterVariableInteger("MemoryGPU", "Speicher GPU", "megabyte", 50);
 		$this->DisableAction("MemoryGPU");
+		$this->RegisterVariableFloat("ARM_Frequenzy", "Taktung ARM", "", 60);
+		$this->DisableAction("ARM_Frequenzy");
 		 
                 If (IPS_GetKernelRunlevel() == 10103) {
 			// Logging setzen
@@ -100,6 +102,11 @@
 							$Result = intval(substr($ResultArray[key($ResultArray)], 4, -1));
 							SetValueInteger($this->GetIDForIdent("MemoryGPU"), $Result);
 							break;
+						case "5":
+							// ARM Frequenz
+							$Result = intval(substr($ResultArray[key($ResultArray)], 14))/1000000
+							SetValueFloat($this->GetIDForIdent("ARM_Frequenzy"), $Result);
+							break;
 					}
 					Next($ResultArray);
 				}
@@ -125,6 +132,8 @@
 		$CommandArray[3] = "vcgencmd get_mem arm";
 		// GPU Speicher
 		$CommandArray[4] = "vcgencmd get_mem gpu";
+		// ARM Frequenz
+		$CommandArray[5] = " vcgencmd measure_clock arm";
 		
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 0, "IsArray" => true )));
 	}
