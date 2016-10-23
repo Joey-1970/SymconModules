@@ -21,7 +21,10 @@
                  parent::ApplyChanges();
                  //Connect to available splitter or create a new one
 	         $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
-	   
+	   	
+		// Profil anlegen
+		$this->RegisterProfileInteger("megabyte", "Information", "", " MB", 0, 1000000, 1);
+		
 		//Status-Variablen anlegen
 		$this->RegisterVariableFloat("TemperaturCPU", "Temperatur CPU", "~Temperature", 10);
 		$this->DisableAction("TemperaturCPU");
@@ -29,9 +32,9 @@
 		$this->DisableAction("TemperaturGPU");
 		$this->RegisterVariableFloat("VoltageCPU", "Spannung CPU", "~Volt", 30);
 		$this->DisableAction("VoltageCPU");
-		$this->RegisterVariableInteger("MemoryCPU", "Speicher CPU", "", 40);
+		$this->RegisterVariableInteger("MemoryCPU", "Speicher CPU", "megabyte", 40);
 		$this->DisableAction("MemoryCPU");
-		$this->RegisterVariableInteger("MemoryGPU", "Speicher GPU", "", 50);
+		$this->RegisterVariableInteger("MemoryGPU", "Speicher GPU", "megabyte", 50);
 		$this->DisableAction("MemoryGPU");
 		 
                 If (IPS_GetKernelRunlevel() == 10103) {
@@ -133,5 +136,22 @@
 		
 	}
 	
+	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
+	{
+	        if (!IPS_VariableProfileExists($Name))
+	        {
+	            IPS_CreateVariableProfile($Name, 1);
+	        }
+	        else
+	        {
+	            $profile = IPS_GetVariableProfile($Name);
+	            if ($profile['ProfileType'] != 1)
+	                throw new Exception("Variable profile type does not match for profile " . $Name);
+	        }
+	        IPS_SetVariableProfileIcon($Name, $Icon);
+	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
+	        
+	}
 }
 ?>
