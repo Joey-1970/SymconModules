@@ -99,7 +99,7 @@
 				$ResultArray = unserialize($data->Result);
 				for ($i = 0; $i < Count($ResultArray); $i++) {
 					SetValueString($this->GetIDForIdent("MAC".key($CommandArray)."Name"), utf8_decode($ResultArray[key($ResultArray)]));
-					f (strlen($ResultArray[key($ResultArray)]) > 0) {
+					if (strlen($ResultArray[key($ResultArray)]) > 0) {
 						SetValueBoolean($this->GetIDForIdent("MAC".key($CommandArray)."Connect"), true);
 					}
 					else {
