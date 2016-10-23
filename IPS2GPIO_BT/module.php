@@ -85,7 +85,8 @@
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
 			   case "set_RPi_connect":
-			   	//If ($data->InstanceID == $this->InstanceID) {
+			   	/*
+				//If ($data->InstanceID == $this->InstanceID) {
 					SetValueString($this->GetIDForIdent("MAC".$data->CommandNumber."Name"), utf8_decode($data->Result));
 					If (strlen($data->Result) > 0) {
 						SetValueBoolean($this->GetIDForIdent("MAC".$data->CommandNumber."Connect"), true);
@@ -94,6 +95,19 @@
 						SetValueBoolean($this->GetIDForIdent("MAC".$data->CommandNumber."Connect"), false);
 					}
 				//}
+				*/
+				$ResultArray = unserialize($data->Result);
+				for ($i = 0; $i < Count($ResultArray); $i++) {
+					SetValueString($this->GetIDForIdent("MAC".key($CommandArray)."Name"), utf8_decode($ResultArray[key($ResultArray)]));
+					f (strlen($ResultArray[key($ResultArray)]) > 0) {
+						SetValueBoolean($this->GetIDForIdent("MAC".key($CommandArray)."Connect"), true);
+					}
+					else {
+						SetValueBoolean($this->GetIDForIdent("MAC".key($CommandArray)."Connect"), false);
+					}
+					Next($ResultArray);
+				}
+				
 			   	break;
 			  case "get_start_trigger":
 			   	$this->ApplyChanges();
