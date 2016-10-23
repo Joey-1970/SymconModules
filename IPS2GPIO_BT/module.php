@@ -96,7 +96,8 @@
 					}
 				//}
 				*/
-				$ResultArray = unserialize($data->Result);
+				IPS_LogMessage("IPS2GPIO SSH-Connect","Ergebnis: ".utf8_decode($data->Result));
+				$ResultArray = unserialize(utf8_decode($data->Result));
 				for ($i = 0; $i < Count($ResultArray); $i++) {
 					SetValueString($this->GetIDForIdent("MAC".key($CommandArray)."Name"), utf8_decode($ResultArray[key($ResultArray)]));
 					if (strlen($ResultArray[key($ResultArray)]) > 0) {
