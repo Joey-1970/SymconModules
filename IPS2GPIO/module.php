@@ -880,7 +880,7 @@ class IPS2GPIO_IO extends IPSModule
 			$ResultArray[$i] = $ssh->exec($CommandArray[$i]);
 		}
 		$ssh->disconnect();
-		$Result = serialize($ResultArray[$i]);
+		$Result = serialize($ResultArray);
         return $Result;
 	}
 	
