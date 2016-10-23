@@ -40,7 +40,6 @@
 			*/
 
 			//ReceiveData-Filter setzen
-			//$Filter = '((.*"Function":"set_RPi_connect".*|.*"InstanceID":'.$this->InstanceID.'.*)|.*"Function":"get_start_trigger".*)';
 			$Filter = '(.*"Function":"get_start_trigger".*|.*"InstanceID":'.$this->InstanceID.'.*)';
 			$this->SetReceiveDataFilter($Filter);
 				
@@ -90,6 +89,7 @@
 							break;
 					}
 				//}
+				$ResultArray = unserialize(utf8_decode($data->Result));
 				break;
 			case "get_start_trigger":
 			   	$this->ApplyChanges();
