@@ -56,12 +56,13 @@
 			// Logging setzen
 			for ($i = 0; $i <= 4; $i++) {
 				AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("MAC".$i."Connect"),  $this->ReadPropertyBoolean("LoggingMAC".$i)); 
+				SetValueString($this->GetIDForIdent("MAC".$i."Name", "");
+				SetValueBoolean($this->GetIDForIdent("MAC".$i, false);
 			} 
 			IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
 
 
 			//ReceiveData-Filter setzen
-			//$Filter = '((.*"Function":"set_RPi_connect".*|.*"InstanceID":'.$this->InstanceID.'.*)|.*"Function":"get_start_trigger".*)';
 			$Filter = '(.*"Function":"get_start_trigger".*|.*"InstanceID":'.$this->InstanceID.'.*)';
 			$this->SetReceiveDataFilter($Filter);
 			
@@ -85,21 +86,10 @@
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
 			   case "set_RPi_connect":
-			   	/*
-				//If ($data->InstanceID == $this->InstanceID) {
-					SetValueString($this->GetIDForIdent("MAC".$data->CommandNumber."Name"), utf8_decode($data->Result));
-					If (strlen($data->Result) > 0) {
-						SetValueBoolean($this->GetIDForIdent("MAC".$data->CommandNumber."Connect"), true);
-					}
-					else {
-						SetValueBoolean($this->GetIDForIdent("MAC".$data->CommandNumber."Connect"), false);
-					}
-				//}
-				*/
-				IPS_LogMessage("IPS2GPIO SSH-Connect","Ergebnis: ".utf8_decode($data->Result));
+				//IPS_LogMessage("IPS2GPIO SSH-Connect","Ergebnis: ".utf8_decode($data->Result));
 				$ResultArray = unserialize(utf8_decode($data->Result));
 				for ($i = 0; $i < Count($ResultArray); $i++) {
-					SetValueString($this->GetIDForIdent("MAC".key($ResultArray)."Name"), utf8_decode($ResultArray[key($ResultArray)]));
+					SetValueString($this->GetIDForIdent("MAC".key($ResultArray)."Name"), $ResultArray[key($ResultArray)]);
 					if (strlen($ResultArray[key($ResultArray)]) > 0) {
 						SetValueBoolean($this->GetIDForIdent("MAC".key($ResultArray)."Connect"), true);
 					}
@@ -120,31 +110,8 @@
 
 	// Führt eine Messung aus
 	public function Measurement()
-	{
-		/*
-		$Command = "";
-		$CommandArray = array();
-		// Alle gültigen MAC-Adressen in einem Array erfassen
-		for ($i = 0; $i <= 4; $i++) {
-		    If (filter_var(trim($this->ReadPropertyString("MAC".$i)), FILTER_VALIDATE_MAC)) {
-			$CommandArray[] = $MAC[$i]; 
-		    }
-		}
-		// Die gültigen MAC-Adressen in einen Befehl zusammenfassen
-		for ($i = 0; $i < Count($CommandArray); $i++) {
-		    If ($i < (Count($CommandArray) - 1)) {
-			$Command = $Command."hcitool name ".$CommandArray[$i]." && ";
-		    }
-		    else {
-			$Command = $Command."hcitool name ".$CommandArray[$i];
-		    }
-		}
-		// Befehl senden
-		If (strlen($Command)) {
-			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => 0 )));
-		}
-		*/
-		$CommandArray = Array();
+	{	
+	$CommandArray = Array();
 		for ($i = 0; $i <= 4; $i++) {
 			If (filter_var(trim($this->ReadPropertyString("MAC".$i)), FILTER_VALIDATE_MAC)) {
 				//IPS_LogMessage("IPS2GPIO SSH-Connect", "Sende MAC ".$i+1 );
@@ -152,17 +119,6 @@
 			}
 		}	
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 0, "IsArray" => true )));
-		
-		
-		/*
-		for ($i = 0; $i <= 4; $i++) {
-			If (filter_var(trim($this->ReadPropertyString("MAC".$i)), FILTER_VALIDATE_MAC)) {
-				//IPS_LogMessage("IPS2GPIO SSH-Connect", "Sende MAC ".$i+1 );
-				$Command = "hcitool name ".$this->ReadPropertyString("MAC".$i);
-				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => $i, "IsArray" => false )));
-			}
-		}
-		*/
 	}
 	
 }
