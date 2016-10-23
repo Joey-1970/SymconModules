@@ -882,7 +882,7 @@ class IPS2GPIO_IO extends IPSModule
 		}
 		$ssh->disconnect();
 		$Result = serialize($ResultArray);
-		IPS_LogMessage("IPS2GPIO SSH-Connect","Ergebnis: ".$Result);
+		//IPS_LogMessage("IPS2GPIO SSH-Connect","Ergebnis: ".$Result);
         return $Result;
 	}
 	
