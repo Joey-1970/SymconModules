@@ -64,7 +64,8 @@
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
 			case "set_RPi_connect":
-			   	//If ($data->InstanceID == $this->InstanceID) {
+			   	/*
+				//If ($data->InstanceID == $this->InstanceID) {
 					switch($data->CommandNumber) {
 						case "0":
 							// GPU Temperatur
@@ -89,7 +90,34 @@
 							break;
 					}
 				//}
+				*/
 				$ResultArray = unserialize(utf8_decode($data->Result));
+				for ($i = 0; $i < Count($ResultArray); $i++) {
+					switch(key($ResultArray)) {
+						case "0":
+							// GPU Temperatur
+							$Result = floatval(substr($ResultArray[key($ResultArray)], 5, -2));
+							SetValueFloat($this->GetIDForIdent("TemperaturGPU"), $Result);
+							break;
+
+						case "1":
+							// CPU Temperatur
+							$Result = floatval(intval($ResultArray[key($ResultArray)]) / 1000);
+							SetValueFloat($this->GetIDForIdent("TemperaturCPU"), $Result);
+							break;
+						case "2":
+							// CPU Spannung
+							$Result = floatval(substr($ResultArray[key($ResultArray)], 5, -1));
+							SetValueFloat($this->GetIDForIdent("VoltageCPU"), $Result);
+							break;
+						case "3":
+							// 
+							//$Result = floatval(substr(utf8_decode($data->Result), 5, -1));
+							//SetValue($this->GetIDForIdent("VoltageCPU"), $Result);
+							break;
+					}
+					Next($ResultArray);
+				}
 				break;
 			case "get_start_trigger":
 			   	$this->ApplyChanges();
@@ -110,8 +138,8 @@
 		$CommandArray[2] = "/opt/vc/bin/vcgencmd measure_volts";
 		
 		
-		//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 0, "IsArray" => true )));
-		
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 0, "IsArray" => true )));
+		/*
 		// GPU Temperatur
 		$Command = "/opt/vc/bin/vcgencmd measure_temp";
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => 0, "IsArray" => false )));
@@ -121,7 +149,7 @@
 		// Spannung
 		$Command = "/opt/vc/bin/vcgencmd measure_volts";
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => 2, "IsArray" => false )));
-
+		*/
 	}
  	
 	public function Measurement_2()
