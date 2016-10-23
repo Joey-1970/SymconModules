@@ -104,7 +104,7 @@
 							break;
 						case "5":
 							// ARM Frequenz
-							$Result = intval(substr($ResultArray[key($ResultArray)], 14))/1000000
+							$Result = intval(substr($ResultArray[key($ResultArray)], 14))/1000000;
 							SetValueFloat($this->GetIDForIdent("ARM_Frequenzy"), $Result);
 							break;
 					}
