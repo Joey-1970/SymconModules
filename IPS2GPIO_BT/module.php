@@ -99,12 +99,12 @@
 				IPS_LogMessage("IPS2GPIO SSH-Connect","Ergebnis: ".utf8_decode($data->Result));
 				$ResultArray = unserialize(utf8_decode($data->Result));
 				for ($i = 0; $i < Count($ResultArray); $i++) {
-					SetValueString($this->GetIDForIdent("MAC".key($CommandArray)."Name"), utf8_decode($ResultArray[key($ResultArray)]));
+					SetValueString($this->GetIDForIdent("MAC".key($ResultArray)."Name"), utf8_decode($ResultArray[key($ResultArray)]));
 					if (strlen($ResultArray[key($ResultArray)]) > 0) {
-						SetValueBoolean($this->GetIDForIdent("MAC".key($CommandArray)."Connect"), true);
+						SetValueBoolean($this->GetIDForIdent("MAC".key($ResultArray)."Connect"), true);
 					}
 					else {
-						SetValueBoolean($this->GetIDForIdent("MAC".key($CommandArray)."Connect"), false);
+						SetValueBoolean($this->GetIDForIdent("MAC".key($ResultArray)."Connect"), false);
 					}
 					Next($ResultArray);
 				}
