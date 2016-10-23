@@ -24,6 +24,7 @@
 	   	
 		// Profil anlegen
 		$this->RegisterProfileInteger("megabyte", "Information", "", " MB", 0, 1000000, 1);
+		$this->RegisterProfileFloat("frequenzy.mhz", "Speedo", "", " MHz", 0, 10000, 0.1, 1);
 		
 		//Status-Variablen anlegen
 		$this->RegisterVariableFloat("TemperaturCPU", "Temperatur CPU", "~Temperature", 10);
@@ -36,7 +37,7 @@
 		$this->DisableAction("MemoryCPU");
 		$this->RegisterVariableInteger("MemoryGPU", "Speicher GPU", "megabyte", 50);
 		$this->DisableAction("MemoryGPU");
-		$this->RegisterVariableFloat("ARM_Frequenzy", "Taktung ARM", "", 60);
+		$this->RegisterVariableFloat("ARM_Frequenzy", "Taktung ARM", "frequenzy.mhz", 60);
 		$this->DisableAction("ARM_Frequenzy");
 		 
                 If (IPS_GetKernelRunlevel() == 10103) {
@@ -161,6 +162,24 @@
 	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
 	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
 	        
+	}
+	
+	private function RegisterProfileFloat($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits)
+	{
+	        if (!IPS_VariableProfileExists($Name))
+	        {
+	            IPS_CreateVariableProfile($Name, 2);
+	        }
+	        else
+	        {
+	            $profile = IPS_GetVariableProfile($Name);
+	            if ($profile['ProfileType'] != 2)
+	                throw new Exception("Variable profile type does not match for profile " . $Name);
+	        }
+	        IPS_SetVariableProfileIcon($Name, $Icon);
+	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
+	        IPS_SetVariableProfileDigits($Name, $Digits);
 	}
 }
 ?>
