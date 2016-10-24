@@ -119,7 +119,21 @@
 	return;
  	}
 	// Beginn der Funktionen
-	// Führt eine Messung aus
+	public function Measurement()
+	{
+		// Daten werden nur einmalig nach Start oder bei Änderung eingelesen
+		$CommandArray = Array();
+		// Betriebsystem
+		$CommandArray[100] = "cat /proc/version";
+		// Hardware-Daten
+		$CommandArray[101] = "cat /proc/cpuinfo";
+		
+		
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 0, "IsArray" => true )));
+	}
+	    
+	    
+	 // Führt eine Messung aus
 	public function Measurement_1()
 	{
 		$CommandArray = Array();
@@ -134,7 +148,12 @@
 		// GPU Speicher
 		$CommandArray[4] = "vcgencmd get_mem gpu";
 		// ARM Frequenz
-		$CommandArray[5] = " vcgencmd measure_clock arm";
+		$CommandArray[5] = "vcgencmd measure_clock arm";
+		// CPU Auslastung
+		$CommandArray[6] = "cat /proc/loadavg";
+		// Speicher
+		$CommandArray[7] = "cat /proc/meminfo | grep Mem";
+		
 		
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 0, "IsArray" => true )));
 	}
