@@ -39,6 +39,12 @@
 		$this->DisableAction("MemoryGPU");
 		$this->RegisterVariableFloat("ARM_Frequenzy", "Taktung ARM", "frequenzy.mhz", 60);
 		$this->DisableAction("ARM_Frequenzy");
+		$this->RegisterVariableFloat("AverageLoad1Min", "CPU Auslastung 1 Min", "~Intensity.1", 70);
+		$this->DisableAction("AverageLoad1Min");
+		$this->RegisterVariableFloat("AverageLoad5Min", "CPU Auslastung 5 Min", "~Intensity.1", 70);
+		$this->DisableAction("AverageLoad5Min");
+		$this->RegisterVariableFloat("AverageLoad15Min", "CPU Auslastung 15 Min", "~Intensity.1", 70);
+		$this->DisableAction("AverageLoad15Min");
 		 
                 If (IPS_GetKernelRunlevel() == 10103) {
 			// Logging setzen
@@ -131,9 +137,9 @@
 							case "6":
 								// Auslastung
 								$ResultPart = preg_Split("/[\s,]+/", $Result);
-								SetValueFloat($this->GetIDForIdent("AvarageLoad1Min"), $ResultPart[0]);
-								SetValueFloat($this->GetIDForIdent("AvarageLoad5Min"), $ResultPart[1]);
-								SetValueFloat($this->GetIDForIdent("AvarageLoad15Min"), $ResultPart[2]);
+								SetValueFloat($this->GetIDForIdent("AverageLoad1Min"), $ResultPart[0]);
+								SetValueFloat($this->GetIDForIdent("AverageLoad5Min"), $ResultPart[1]);
+								SetValueFloat($this->GetIDForIdent("AverageLoad15Min"), $ResultPart[2]);
 								break;
 						}
 						Next($ResultArray);
@@ -180,7 +186,7 @@
 		// CPU Auslastung
 		$CommandArray[6] = "cat /proc/loadavg";
 		// Speicher
-		$CommandArray[7] = "cat /proc/meminfo | grep Mem";
+		//$CommandArray[7] = "cat /proc/meminfo | grep Mem";
 		
 		
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 1, "IsArray" => true )));
