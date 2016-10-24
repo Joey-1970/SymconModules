@@ -75,41 +75,69 @@
 	 	switch ($data->Function) {
 			case "set_RPi_connect":
 				$ResultArray = unserialize(utf8_decode($data->Result));
-				for ($i = 0; $i < Count($ResultArray); $i++) {
-					switch(key($ResultArray)) {
-						case "0":
-							// GPU Temperatur
-							$Result = floatval(substr($ResultArray[key($ResultArray)], 5, -2));
-							SetValueFloat($this->GetIDForIdent("TemperaturGPU"), $Result);
-							break;
+				If ($data->CommandNumber == 0) {
+					for ($i = 0; $i < Count($ResultArray); $i++) {
+						switch(key($ResultArray)) {
+							case "0":
+								// Betriebssystem
+								$Result = floatval(substr($ResultArray[key($ResultArray)], 5, -2));
+								SetValueFloat($this->GetIDForIdent("TemperaturGPU"), $Result);
+								break;
 
-						case "1":
-							// CPU Temperatur
-							$Result = floatval(intval($ResultArray[key($ResultArray)]) / 1000);
-							SetValueFloat($this->GetIDForIdent("TemperaturCPU"), $Result);
-							break;
-						case "2":
-							// CPU Spannung
-							$Result = floatval(substr($ResultArray[key($ResultArray)], 5, -1));
-							SetValueFloat($this->GetIDForIdent("VoltageCPU"), $Result);
-							break;
-						case "3":
-							// CPU Speicher
-							$Result = intval(substr($ResultArray[key($ResultArray)], 4, -1));
-							SetValueInteger($this->GetIDForIdent("MemoryCPU"), $Result);
-							break;
-						case "4":
-							// CPU Speicher
-							$Result = intval(substr($ResultArray[key($ResultArray)], 4, -1));
-							SetValueInteger($this->GetIDForIdent("MemoryGPU"), $Result);
-							break;
-						case "5":
-							// ARM Frequenz
-							$Result = intval(substr($ResultArray[key($ResultArray)], 14))/1000000;
-							SetValueFloat($this->GetIDForIdent("ARM_Frequenzy"), $Result);
-							break;
+							case "1":
+								// Hardware-Daten
+								$Result = floatval(intval($ResultArray[key($ResultArray)]) / 1000);
+								SetValueFloat($this->GetIDForIdent("TemperaturCPU"), $Result);
+								break;
+							
+						}
+						Next($ResultArray);
 					}
-					Next($ResultArray);
+				}
+				elseIf ($data->CommandNumber == 1) {
+					for ($i = 0; $i < Count($ResultArray); $i++) {
+						switch(key($ResultArray)) {
+							case "0":
+								// GPU Temperatur
+								$Result = floatval(substr($ResultArray[key($ResultArray)], 5, -2));
+								SetValueFloat($this->GetIDForIdent("TemperaturGPU"), $Result);
+								break;
+
+							case "1":
+								// CPU Temperatur
+								$Result = floatval(intval($ResultArray[key($ResultArray)]) / 1000);
+								SetValueFloat($this->GetIDForIdent("TemperaturCPU"), $Result);
+								break;
+							case "2":
+								// CPU Spannung
+								$Result = floatval(substr($ResultArray[key($ResultArray)], 5, -1));
+								SetValueFloat($this->GetIDForIdent("VoltageCPU"), $Result);
+								break;
+							case "3":
+								// CPU Speicher
+								$Result = intval(substr($ResultArray[key($ResultArray)], 4, -1));
+								SetValueInteger($this->GetIDForIdent("MemoryCPU"), $Result);
+								break;
+							case "4":
+								// CPU Speicher
+								$Result = intval(substr($ResultArray[key($ResultArray)], 4, -1));
+								SetValueInteger($this->GetIDForIdent("MemoryGPU"), $Result);
+								break;
+							case "5":
+								// ARM Frequenz
+								$Result = intval(substr($ResultArray[key($ResultArray)], 14))/1000000;
+								SetValueFloat($this->GetIDForIdent("ARM_Frequenzy"), $Result);
+								break;
+							case "6":
+								// Auslastung
+								$ResultPart = preg_Split("/[\s,]+/", $Result);
+								SetValueFloat($this->GetIDForIdent("AvarageLoad1Min"), $ResultPart[0]);
+								SetValueFloat($this->GetIDForIdent("AvarageLoad5Min"), $ResultPart[1]);
+								SetValueFloat($this->GetIDForIdent("AvarageLoad15Min"), $ResultPart[2]);
+								break;
+						}
+						Next($ResultArray);
+					}
 				}
 				break;
 			case "get_start_trigger":
@@ -124,9 +152,9 @@
 		// Daten werden nur einmalig nach Start oder bei Änderung eingelesen
 		$CommandArray = Array();
 		// Betriebsystem
-		$CommandArray[100] = "cat /proc/version";
+		$CommandArray[0] = "cat /proc/version";
 		// Hardware-Daten
-		$CommandArray[101] = "cat /proc/cpuinfo";
+		$CommandArray[1] = "cat /proc/cpuinfo";
 		
 		
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 0, "IsArray" => true )));
@@ -155,7 +183,7 @@
 		$CommandArray[7] = "cat /proc/meminfo | grep Mem";
 		
 		
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 0, "IsArray" => true )));
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 1, "IsArray" => true )));
 	}
  	
 	public function Measurement_2()
