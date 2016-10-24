@@ -136,7 +136,7 @@
 								break;
 							case "6":
 								// Auslastung
-								$ResultPart = preg_Split("/[\s,]+/", $Result);
+								$ResultPart = preg_Split("/[\s,]+/", $ResultArray[key($ResultArray)]);
 								SetValueFloat($this->GetIDForIdent("AverageLoad1Min"), $ResultPart[0]);
 								SetValueFloat($this->GetIDForIdent("AverageLoad5Min"), $ResultPart[1]);
 								SetValueFloat($this->GetIDForIdent("AverageLoad15Min"), $ResultPart[2]);
