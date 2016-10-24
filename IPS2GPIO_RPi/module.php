@@ -41,9 +41,9 @@
 		$this->DisableAction("ARM_Frequenzy");
 		$this->RegisterVariableFloat("AverageLoad1Min", "CPU Auslastung 1 Min", "~Intensity.1", 70);
 		$this->DisableAction("AverageLoad1Min");
-		$this->RegisterVariableFloat("AverageLoad5Min", "CPU Auslastung 5 Min", "~Intensity.1", 70);
+		$this->RegisterVariableFloat("AverageLoad5Min", "CPU Auslastung 5 Min", "~Intensity.1", 80);
 		$this->DisableAction("AverageLoad5Min");
-		$this->RegisterVariableFloat("AverageLoad15Min", "CPU Auslastung 15 Min", "~Intensity.1", 70);
+		$this->RegisterVariableFloat("AverageLoad15Min", "CPU Auslastung 15 Min", "~Intensity.1", 90);
 		$this->DisableAction("AverageLoad15Min");
 		 
                 If (IPS_GetKernelRunlevel() == 10103) {
