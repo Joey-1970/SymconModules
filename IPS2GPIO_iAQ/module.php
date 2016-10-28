@@ -26,13 +26,13 @@
 	    		IPS_LogMessage("IPS2GPIO BH1750","I2C-Device Adresse in einem nicht definierten Bereich!");  
 	    	}
 	    	// Profil anlegen
-		/*
-		$this->RegisterProfileInteger("illuminance.lx", "Illuminance", "", " lx", 0, 1000000, 1);
+		$this->RegisterProfileInteger("CO2.ppm", "Gauge", "", " ppm", 0, 2500, 1);
+		
 	    	//Status-Variablen anlegen
-             	$this->RegisterVariableInteger("Illuminance", "Illuminance", "illuminance.lx", 10);
-		$this->DisableAction("Illuminance");
-		IPS_SetHidden($this->GetIDForIdent("Illuminance"), false);
-		*/
+             	$this->RegisterVariableInteger("CO2", "CO2", "CO2.ppm", 10);
+		$this->DisableAction("CO2");
+		IPS_SetHidden($this->GetIDForIdent("Prediction_CO2"), false);
+		
 		
 		If (IPS_GetKernelRunlevel() == 10103) {
 			// Logging setzen
