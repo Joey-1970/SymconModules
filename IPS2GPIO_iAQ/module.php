@@ -108,6 +108,7 @@
 	public function Measurement()
 	{
 		// Daten anfordern
+		IPS_LogMessage("IPS2GPIO GPIO iAQ", "Daten sind angefordert");
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_block_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => hexdec("5A"), "Count" => 9)));
 
 		//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => hexdec("5B") )));
