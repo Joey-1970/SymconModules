@@ -29,7 +29,7 @@
 	    	// Profil anlegen
 		$this->RegisterProfileInteger("CO2.ppm", "Gauge", "", " ppm", 450, 2000, 1);
 		$this->RegisterProfileInteger("TVOC.ppb", "Gauge", "", " ppb", 125, 600, 1);
-		$this->RegisterProfileInteger("resistance.ohm", "Gauge", "", " OHM", 0, 1000000, 1);
+		$this->RegisterProfileInteger("resistance.ohm", "Gauge", "", " Ohm", 0, 1000000, 1);
 	    	
 		//Status-Variablen anlegen
              	$this->RegisterVariableInteger("CO2", "CO2", "CO2.ppm", 10);
@@ -38,10 +38,10 @@
 		$this->RegisterVariableInteger("TVOC", "TVOC", "TVOC.ppb", 20);
 		$this->DisableAction("TVOC");
 		IPS_SetHidden($this->GetIDForIdent("TVOC"), false);
-		$this->RegisterVariableInteger("Resistance", "Resistance", "resistance.ohm", 20);
+		$this->RegisterVariableInteger("Resistance", "Resistance", "resistance.ohm", 30);
 		$this->DisableAction("Resistance");
 		IPS_SetHidden($this->GetIDForIdent("Resistance"), false);
-		$this->RegisterVariableString("Status", "Status", "", 20);
+		$this->RegisterVariableString("Status", "Status", "", 40);
 		$this->DisableAction("Status");
 		IPS_SetHidden($this->GetIDForIdent("Status"), false);
 		
