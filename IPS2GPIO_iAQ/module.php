@@ -97,8 +97,9 @@
 			  			$Lux = (($data->Value & 0xff00)>>8) | (($data->Value & 0x00ff)<<8);
 			  			$Lux = max(0, $Lux);
 			  			SetValueInteger($this->GetIDForIdent("Illuminance"), $Lux);
+					}
 					*/
-			  		}
+			  		
 			  		
 			  	}
 			  	break;
