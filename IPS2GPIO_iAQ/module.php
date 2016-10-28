@@ -93,7 +93,7 @@
 			  		IPS_LogMessage("IPS2GPIO GPIO iAQ", "Daten sind angekommen");
 					If ($data->Register == $this->ReadPropertyInteger("DeviceAddress"))  {
 			  			
-			  			SetValueInteger($this->GetIDForIdent("Status"), "Test: ".$data->ByteArray);
+			  			SetValueString($this->GetIDForIdent("Status"), "Test: ".$data->ByteArray);
 					}
 					
 			  		
