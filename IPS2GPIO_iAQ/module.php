@@ -90,13 +90,12 @@
 			  case "set_i2c_data":
 			  	If ($data->DeviceAddress == $this->ReadPropertyInteger("DeviceAddress")) {
 			  		// Daten der Messung
-			  		/*
+			  		
 					If ($data->Register == $this->ReadPropertyInteger("DeviceAddress"))  {
-			  			$Lux = (($data->Value & 0xff00)>>8) | (($data->Value & 0x00ff)<<8);
-			  			$Lux = max(0, $Lux);
-			  			SetValueInteger($this->GetIDForIdent("Illuminance"), $Lux);
+			  			
+			  			SetValueInteger($this->GetIDForIdent("Status"), "Test: ".$data->ByteArray);
 					}
-					*/
+					
 			  		
 			  		
 			  	}
@@ -109,8 +108,9 @@
 	public function Measurement()
 	{
 		// Daten anfordern
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => hexdec("5B") )));
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_block_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => hexdec("5B"), "Count" => 8)));
 
+		//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => hexdec("5B") )));
 		//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => hexdec("5B"), "Value" => $Value)));
 		//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_word", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => $this->ReadPropertyInteger("DeviceAddress"))));
 	return;
