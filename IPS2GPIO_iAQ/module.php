@@ -90,7 +90,7 @@
 			  case "set_i2c_data":
 			  	If ($data->DeviceAddress == $this->ReadPropertyInteger("DeviceAddress")) {
 			  		// Daten der Messung
-			  		IPS_LogMessage("IPS2GPIO GPIO iAQ", "Daten sind angekommen";
+			  		IPS_LogMessage("IPS2GPIO GPIO iAQ", "Daten sind angekommen");
 					If ($data->Register == $this->ReadPropertyInteger("DeviceAddress"))  {
 			  			
 			  			SetValueInteger($this->GetIDForIdent("Status"), "Test: ".$data->ByteArray);
