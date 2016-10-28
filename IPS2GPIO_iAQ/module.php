@@ -26,12 +26,23 @@
 	    		IPS_LogMessage("IPS2GPIO BH1750","I2C-Device Adresse in einem nicht definierten Bereich!");  
 	    	}
 	    	// Profil anlegen
-		$this->RegisterProfileInteger("CO2.ppm", "Gauge", "", " ppm", 0, 2500, 1);
-		
-	    	//Status-Variablen anlegen
+		$this->RegisterProfileInteger("CO2.ppm", "Gauge", "", " ppm", 450, 2000, 1);
+		$this->RegisterProfileInteger("TVOC.ppb", "Gauge", "", " ppb", 125, 600, 1);
+		$this->RegisterProfileInteger("resistance.ohm", "Gauge", "", " OHM", 0, 1000000, 1);
+	    	
+		//Status-Variablen anlegen
              	$this->RegisterVariableInteger("CO2", "CO2", "CO2.ppm", 10);
 		$this->DisableAction("CO2");
-		IPS_SetHidden($this->GetIDForIdent("Prediction_CO2"), false);
+		IPS_SetHidden($this->GetIDForIdent("CO2"), false);
+		$this->RegisterVariableInteger("TVOC", "TVOC", "TVOC.ppb", 20);
+		$this->DisableAction("TVOC");
+		IPS_SetHidden($this->GetIDForIdent("TVOC"), false);
+		$this->RegisterVariableInteger("Resistance", "Resistance", "resistance.ohm", 20);
+		$this->DisableAction("Resistance");
+		IPS_SetHidden($this->GetIDForIdent("Resistance"), false);
+		$this->RegisterVariableString("Status", "Status", "", 20);
+		$this->DisableAction("Status");
+		IPS_SetHidden($this->GetIDForIdent("Status"), false);
 		
 		
 		If (IPS_GetKernelRunlevel() == 10103) {
