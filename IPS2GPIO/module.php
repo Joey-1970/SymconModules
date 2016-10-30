@@ -288,12 +288,17 @@ class IPS2GPIO_IO extends IPSModule
 			$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
 		        $this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
 		   	// Handle ermitteln
-		   	If (GetValueInteger($this->GetIDForIdent("HardwareRev")) <=3) {
-		   		$this->CommandClientSocket(pack("LLLLL", 54, 0, $data->DeviceAddress, 4, 0), 16);	
-		   	}
-		   	elseif (GetValueInteger($this->GetIDForIdent("HardwareRev")) >3) {
-		   		$this->CommandClientSocket(pack("LLLLL", 54, 1, $data->DeviceAddress, 4, 0), 16);
-		   	}
+		   	If ($data->DeviceAddress <> 90) {
+				If (GetValueInteger($this->GetIDForIdent("HardwareRev")) <=3) OR {
+					$this->CommandClientSocket(pack("LLLLL", 54, 0, $data->DeviceAddress, 4, 0), 16);	
+				}
+				elseif (GetValueInteger($this->GetIDForIdent("HardwareRev")) >3) {
+					$this->CommandClientSocket(pack("LLLLL", 54, 1, $data->DeviceAddress, 4, 0), 16);
+				}
+			}
+			else {
+				$this->CommandClientSocket(pack("LLLLL", 54, 0, $data->DeviceAddress, 4, 0), 16);
+			}
 		   	//IPS_LogMessage("IPS2GPIO I2C Handle: ","Device Adresse: ".$data->DeviceAddress.", Hardware Rev:: ".GetValueInteger($this->GetIDForIdent("HardwareRev"))); 
 		   	break;
 		   case "i2c_destroy":
