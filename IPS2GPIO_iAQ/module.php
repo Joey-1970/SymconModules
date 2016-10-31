@@ -71,11 +71,11 @@
 	    	// Empfangene Daten vom Gateway/Splitter
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
-			   case "get_used_i2c":
+			case "get_used_i2c":
 			   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "InstanceID" => $this->InstanceID)));
 			   	$this->ApplyChanges();
 				break;
-			   case "status":
+			case "status":
 			   	If ($data->HardwareRev <= 3) {
 				   	If (($data->Pin == 0) OR ($data->Pin == 1)) {
 				   		$this->SetStatus($data->Status);		
@@ -87,15 +87,6 @@
 				   	}
 				}
 			   	break;
-			  case "set_i2c_data":
-			  	If ($data->DeviceAddress == $this->ReadPropertyInteger("DeviceAddress")) {
-			  		// Daten der Messung
-			  		IPS_LogMessage("IPS2GPIO GPIO iAQ", "Daten sind angekommen");
-					If ($data->Register == $this->ReadPropertyInteger("DeviceAddress"))  {
-			  			SetValueString($this->GetIDForIdent("Status"), "Test: ".$data->ByteArray);
-					}
-			  	}
-			  	break;
 			case "set_i2c_byte_block":
 			   	If ($data->DeviceAddress == $this->ReadPropertyInteger("DeviceAddress")) {
 			   		// Daten der Messung
@@ -111,14 +102,8 @@
 	public function Measurement()
 	{
 		// Daten anfordern
-		IPS_LogMessage("IPS2GPIO GPIO iAQ", "Daten sind angefordert");
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_bytes", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => hexdec("5A"), "Count" => 7)));
-		/*
-		for ($i = 0; $i <= 7; $i++) {
-			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => hexdec("5B") + $i )));
-
-		}
-		*/
+		//IPS_LogMessage("IPS2GPIO GPIO iAQ", "Daten sind angefordert");
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_bytes", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => hexdec("5A"), "Count" => 9)));
 	return;
 	}	
 	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
