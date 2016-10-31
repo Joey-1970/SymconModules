@@ -92,14 +92,17 @@
 			  		// Daten der Messung
 			  		IPS_LogMessage("IPS2GPIO GPIO iAQ", "Daten sind angekommen");
 					If ($data->Register == $this->ReadPropertyInteger("DeviceAddress"))  {
-			  			
 			  			SetValueString($this->GetIDForIdent("Status"), "Test: ".$data->ByteArray);
 					}
-					
-			  		
-			  		
 			  	}
 			  	break;
+			case "set_i2c_byte_block":
+			   	If ($data->DeviceAddress == $this->ReadPropertyInteger("DeviceAddress")) {
+			   		// Daten der Messung
+			  		IPS_LogMessage("IPS2GPIO GPIO iAQ", "Daten sind angekommen");
+					SetValueString($this->GetIDForIdent("Status"), "Test: ".$data->ByteArray);
+			   	}
+			   	break;
 	 	}
 	return;
  	}
