@@ -19,7 +19,7 @@
         { "type": "Select", "name": "DeviceBus", "caption": "Device Bus",
             "options": [
                 { "label": "I²C-Bus 0", "value": 0 },
-                { "label": "I²C-Bus 1", "value": 1 },
+                { "label": "I²C-Bus 1", "value": 1 }
                 ]
         },
         { "type": "Label", "label": "Wiederholungszyklus in Sekunden (0 -> aus, 1 sek -> Minimum)" },
