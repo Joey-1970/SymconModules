@@ -91,7 +91,15 @@
 			   	If ($data->DeviceAddress == $this->ReadPropertyInteger("DeviceAddress")) {
 			   		// Daten der Messung
 			  		IPS_LogMessage("IPS2GPIO GPIO iAQ", "Daten sind angekommen");
-					SetValueString($this->GetIDForIdent("Status"), "Test: ".$data->ByteArray);
+					$MeasurementArray = unserialize($data->ByteArray);
+					// CO2 berechnen
+					SetValueInteger($this->GetIDForIdent("CO2"), ($MeasurementArray[90] << 8) + $MeasurementArray[91]);
+					// Status
+					SetValueString($this->GetIDForIdent("Status"), $MeasurementArray[92]);
+					// Widerstand ausgeben
+					SetValueInteger($this->GetIDForIdent("CO2"), ($MeasurementArray[93] << 16) + ($MeasurementArray[94] << 8) + $MeasurementArray[95]);
+					// TVOC berechnen
+					SetValueInteger($this->GetIDForIdent("CO2"), ($MeasurementArray[96] << 8) + $MeasurementArray[97]);
 			   	}
 			   	break;
 	 	}
