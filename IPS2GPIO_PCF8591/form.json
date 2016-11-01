@@ -22,6 +22,13 @@
                 { "label": "79 dez. / 0x4Fh", "value": 79 }
                 ]
         },
+        { "type": "Label", "label": "I²C-Bus (Default ist 1)" },
+        { "type": "Select", "name": "DeviceBus", "caption": "Device Bus",
+            "options": [
+                { "label": "I²C-Bus 0", "value": 0 },
+                { "label": "I²C-Bus 1", "value": 1 }
+                ]
+        },
         { "type": "Label", "label": "Genutzte Eingänge: " },
         { "type": "CheckBox", "name": "Ain0", "caption": "Ain0" },
         { "type": "CheckBox", "name": "LoggingAin0", "caption": "Logging Ain0 aktivieren" },
