@@ -9,6 +9,7 @@
             	parent::Create();
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
  	    	$this->RegisterPropertyInteger("DeviceAddress", 118);
+		$this->RegisterPropertyInteger("DeviceBus", 1);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
  	    	$this->RegisterPropertyBoolean("LoggingTemp", false);
  	    	$this->RegisterPropertyBoolean("LoggingHum", false);
