@@ -9,6 +9,7 @@
             	parent::Create();
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
  	    	$this->RegisterPropertyInteger("DeviceAddress", 32);
+		$this->RegisterPropertyInteger("DeviceBus", 1);
  	    	$this->RegisterPropertyBoolean("P0", false);
  	    	$this->RegisterPropertyBoolean("P1", false);
  	    	$this->RegisterPropertyBoolean("P2", false);
