@@ -16,6 +16,13 @@
                 { "label": "119 dez. / 0x77h", "value": 119 }
                 ]
         },
+        { "type": "Label", "label": "I²C-Bus (Default ist 1)" },
+        { "type": "Select", "name": "DeviceBus", "caption": "Device Bus",
+            "options": [
+                { "label": "I²C-Bus 0", "value": 0 },
+                { "label": "I²C-Bus 1", "value": 1 }
+                ]
+        },
         { "type": "Label", "label": "Wiederholungszyklus in Sekunden (0 -> aus, 1 sek -> Minimum)" },
         { "type": "IntervalBox", "name": "Messzyklus", "caption": "Messzyklus (sek)" },
         { "type": "CheckBox", "name": "LoggingTemp", "caption": "Logging Temperatur aktivieren" },
