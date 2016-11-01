@@ -12,7 +12,12 @@
         { "type": "Label", "label": "Die GPIO-Nummer (Broadcom-Number) ist je nach Raspberry Pi Modell fest definiert (GPIO 0/1 oder GPIO 2/3)" },
         { "type": "Select", "name": "DeviceAddress", "caption": "Device Adresse",
             "options": [
-                { "label": "90 dez. / 0x5Ah", "value": 90 }
+                { "label": "90 dez. / 0x5Ah", "value": 90 },
+                { "label": "91 dez. / 0x5Bh", "value": 91 },
+                { "label": "92 dez. / 0x5Ch", "value": 92 },
+                { "label": "93 dez. / 0x5Dh", "value": 93 },
+                { "label": "94 dez. / 0x5Eh", "value": 94 },
+                { "label": "95 dez. / 0x5Fh", "value": 95 }
                 ]
         },
         { "type": "Label", "label": "I²C-Bus (Default ist 1)" },
