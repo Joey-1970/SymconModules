@@ -90,7 +90,7 @@
 			case "set_i2c_byte_block":
 			   	If ($data->DeviceAddress == $this->ReadPropertyInteger("DeviceAddress")) {
 			   		// Daten der Messung
-			  		IPS_LogMessage("IPS2GPIO GPIO iAQ", "Daten sind angekommen");
+			  		//IPS_LogMessage("IPS2GPIO GPIO iAQ", "Daten sind angekommen");
 					$MeasurementArray = unserialize($data->ByteArray);
 					// CO2 berechnen
 					SetValueInteger($this->GetIDForIdent("CO2"), ($MeasurementArray[90] << 8) + $MeasurementArray[91]);
