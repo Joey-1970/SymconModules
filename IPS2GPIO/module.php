@@ -522,6 +522,7 @@ class IPS2GPIO_IO extends IPSModule
 			// wird I²C nicht benötigt die Pin auf in Input setzen
 			$this->CommandClientSocket(pack("LLLL", 0, 0, 0, 0).pack("LLLL", 0, 1, 0, 0).pack("LLLL", 0, 2, 0, 0).pack("LLLL", 0, 3, 0, 0), 64);
 		}
+		SetValueBoolean($this->GetIDForIdent("Serial_Used"), false);
 		If ($this->ReadPropertyBoolean("Serial_Used") == true)  {
 			$PinUsed[14] = 99999; 
 			$PinUsed[15] = 99999;
