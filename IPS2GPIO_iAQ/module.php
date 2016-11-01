@@ -100,9 +100,9 @@
 					$StatusArray = Array(0 => "OK", 1 => "BUSY", 16 => "RUNNIN", 128 => "ERROR");
 					SetValueString($this->GetIDForIdent("Status"), $StatusArray[$MeasurementArray[3]]);
 					// Widerstand ausgeben
-					SetValueInteger($this->GetIDForIdent("CO2"), ($MeasurementArray[5] << 16) + ($MeasurementArray[6] << 8) + $MeasurementArray[7]);
+					SetValueInteger($this->GetIDForIdent("Resistance"), ($MeasurementArray[5] << 16) + ($MeasurementArray[6] << 8) + $MeasurementArray[7]);
 					// TVOC berechnen
-					SetValueInteger($this->GetIDForIdent("CO2"), ($MeasurementArray[8] << 8) + $MeasurementArray[9]);
+					SetValueInteger($this->GetIDForIdent("TVOC"), ($MeasurementArray[8] << 8) + $MeasurementArray[9]);
 			   	}
 			   	break;
 	 	}
