@@ -89,19 +89,20 @@
 				}
 			   	break;
 			case "set_i2c_byte_block":
+				//PS2GPIO GPIO iAQ | a:9:{i:1;i:1;i:2;i:199;i:3;i:0;i:4;i:0;i:5;i:3;i:6;i:50;i:7;i:140;i:8;i:0;i:9;i:255;}
 			   	If ($data->DeviceAddress == $this->ReadPropertyInteger("DeviceAddress")) {
 			   		// Daten der Messung
 			  		IPS_LogMessage("IPS2GPIO GPIO iAQ", $data->ByteArray);
 					$MeasurementArray = unserialize($data->ByteArray);
 					// CO2 berechnen
-					SetValueInteger($this->GetIDForIdent("CO2"), ($MeasurementArray[90] << 8) + $MeasurementArray[91]);
+					SetValueInteger($this->GetIDForIdent("CO2"), ($MeasurementArray[1] << 8) + $MeasurementArray[2]);
 					// Status
 					$StatusArray = Array(0 => "OK", 1 => "BUSY", 16 => "RUNNIN", 128 => "ERROR");
-					SetValueString($this->GetIDForIdent("Status"), $StatusArray[$MeasurementArray[92]]);
+					SetValueString($this->GetIDForIdent("Status"), $StatusArray[$MeasurementArray[3]]);
 					// Widerstand ausgeben
-					SetValueInteger($this->GetIDForIdent("CO2"), ($MeasurementArray[94] << 16) + ($MeasurementArray[95] << 8) + $MeasurementArray[96]);
+					SetValueInteger($this->GetIDForIdent("CO2"), ($MeasurementArray[5] << 16) + ($MeasurementArray[6] << 8) + $MeasurementArray[7]);
 					// TVOC berechnen
-					SetValueInteger($this->GetIDForIdent("CO2"), ($MeasurementArray[97] << 8) + $MeasurementArray[98]);
+					SetValueInteger($this->GetIDForIdent("CO2"), ($MeasurementArray[8] << 8) + $MeasurementArray[9]);
 			   	}
 			   	break;
 	 	}
