@@ -30,6 +30,13 @@
                 { "label": "63 dez. / 0x3Fh", "value": 63 }
                 ]
         },
+        { "type": "Label", "label": "I²C-Bus (Default ist 1)" },
+        { "type": "Select", "name": "DeviceBus", "caption": "Device Bus",
+            "options": [
+                { "label": "I²C-Bus 0", "value": 0 },
+                { "label": "I²C-Bus 1", "value": 1 }
+                ]
+        },
         { "type": "Label", "label": "Definition der Ein- und Ausgänge (aktiviert => Eingang)" },
         { "type": "CheckBox", "name": "P0", "caption": "P0" },
         { "type": "CheckBox", "name": "LoggingP0", "caption": "Logging P0 aktivieren" },
