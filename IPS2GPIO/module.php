@@ -331,7 +331,7 @@ class IPS2GPIO_IO extends IPSModule
 		   	}
 		   	break;
 		 case "i2c_read_bytes":
-		   	IPS_LogMessage("IPS2GPIO I2C Read Bytes",$this->GetI2C_DeviceHandle($data->DeviceAddress)." , ".$data->Register." , ".$data->Count);  	
+		   	//IPS_LogMessage("IPS2GPIO I2C Read Bytes",$this->GetI2C_DeviceHandle($data->DeviceAddress)." , ".$data->Register." , ".$data->Count);  	
 		   	If ($this->GetI2C_DeviceHandle($data->DeviceAddress) >= 0) {
 		   		$this->CommandClientSocket(pack("L*", 56, $this->GetI2C_DeviceHandle($data->DeviceAddress), $data->Count, 0), 16 + ($data->Count));
 		   	}
