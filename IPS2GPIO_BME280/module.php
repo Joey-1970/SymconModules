@@ -178,7 +178,8 @@
 				$V1 = ($Temp_raw / 16384 - $Dig_T[0] / 1024) * $Dig_T[1];
 				$V2 = ($Temp_raw / 131072 - $Dig_T[0] / 8192) * ($Temp_raw / 131072 - $Dig_T[0] / 8192) * $Dig_T[2];
 				$FineCalibrate = $V1 + $V2;
-				SetValueFloat($this->GetIDForIdent("Temperature"), $FineCalibrate / 5120);
+				$Temp = $FineCalibrate / 5120;
+				SetValueFloat($this->GetIDForIdent("Temperature"), $Temp);
 				
 				// Luftdruck
 				$Pressure = 0;
@@ -223,6 +224,10 @@
 				}
 				
 				SetValueFloat($this->GetIDForIdent("Humidity"), $Hum);
+				
+				// Taupunkttemperatur
+				$DPT = pow($Hum, (1 / 8.02)) * (109.8 + $temp) - 109.8;
+				SetValueFloat($this->GetIDForIdent("DewPointTemperature"), $DPT);
 			}
 		}
 	return;
