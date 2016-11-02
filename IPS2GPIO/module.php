@@ -282,8 +282,11 @@ class IPS2GPIO_IO extends IPSModule
 		   	// die genutzten Device Adressen anlegen
 		   	$I2C_DeviceHandle = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
 		   	// Bei Bus 1 Addition von 128
+			//$I2C_DeviceHandle[($data->DeviceBus << 7) + $data->DeviceAddress] = -1;
+			
 			$I2C_DeviceHandle[$data->DeviceAddress] = -1;
-		   	// genutzte Device-Adressen noch ohne Handle sichern
+		   	
+			// genutzte Device-Adressen noch ohne Handle sichern
 		   	SetValueString($this->GetIDForIdent("I2C_Handle"), serialize($I2C_DeviceHandle));
 		   	// Messages einrichten
 			$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
@@ -720,7 +723,10 @@ class IPS2GPIO_IO extends IPSModule
 		        	If ($response[4] >= 0 ) {
            				//IPS_LogMessage("IPS2GPIO I2C Handle",$response[4]." für Device ".$response[3]);
            				$I2C_DeviceHandle = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
- 					$I2C_DeviceHandle[$response[3]] = $response[4];
+ 					// Hier wird der ermittelte Handle der DiviceAdresse/Bus hinzugefügt
+					//$I2C_DeviceHandle[($response[2] << 7) + $response[3]] = $response[4];
+					
+					$I2C_DeviceHandle[$response[3]] = $response[4];
  					SetValueString($this->GetIDForIdent("I2C_Handle"), serialize($I2C_DeviceHandle));
            			}
            			else {
