@@ -95,19 +95,19 @@
 				}
 			   	break;
 			  case "set_i2c_data":
-			  	If ($data->DeviceAddress == $this->ReadPropertyInteger("DeviceAddress")) {
+			  	//If ($data->DeviceAddress == $this->ReadPropertyInteger("DeviceAddress")) {
 			  		// Daten zur Kalibrierung
 			  		If (($data->Register >= hexdec("88")) AND ($data->Register < hexdec("E8"))) {
 			  			$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
 			  			$CalibrateData[$data->Register] = $data->Value;
 			  			$this->SetBuffer("CalibrateData", serialize($CalibrateData));
 			  		}
-			  	}
+			  	//}
 			  	break;
 			  case "set_i2c_byte_block":
-			   	If ($data->DeviceAddress == $this->ReadPropertyInteger("DeviceAddress")) {
+			   	//If ($data->DeviceAddress == $this->ReadPropertyInteger("DeviceAddress")) {
 			   		$this->SetBuffer("MeasurementData", $data->ByteArray);
-			   	}
+			   	//}
 			   	break;
 	 	}
 	return;
