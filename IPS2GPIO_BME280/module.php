@@ -48,6 +48,11 @@
 		$this->DisableAction("Humidity");
 		IPS_SetHidden($this->GetIDForIdent("Humidity"), false);
 		
+		$this->RegisterVariableFloat("DewPointTemperature", "Dew Point Temperature", "~Temperature", 40);
+		$this->DisableAction("DewPointTemperature");
+		IPS_SetHidden($this->GetIDForIdent("DewPointTemperature"), false);
+		
+		
 		If (IPS_GetKernelRunlevel() == 10103) {
 			// Logging setzen
 			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Temperature"), $this->ReadPropertyBoolean("LoggingTemp"));
