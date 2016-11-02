@@ -56,9 +56,8 @@
 			IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
 
 			//ReceiveData-Filter setzen
-			$DeviceSign = (($this->ReadPropertyInteger("DeviceBus") << 7) + $this->ReadPropertyInteger("DeviceAddress"));
-			IPS_LogMessage("IPS2GPIO BME: ", $DeviceSign);
-			$Filter = '((.*"Function":"get_used_i2c".*|.*"DeviceAddress":'.$DeviceSign.'.*)|.*"Function":"status".*)';
+			$this->SetBuffer("DeviceIdent", (($this->ReadPropertyInteger("DeviceBus") << 7) + $this->ReadPropertyInteger("DeviceAddress")));
+			$Filter = '((.*"Function":"get_used_i2c".*|.*"DeviceAddress":'.$this->GetBuffer("DeviceIdent").'.*)|.*"Function":"status".*)';
 			$this->SetReceiveDataFilter($Filter);
 		
 			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
@@ -95,19 +94,19 @@
 				}
 			   	break;
 			  case "set_i2c_data":
-			  	//If ($data->DeviceAddress == $this->ReadPropertyInteger("DeviceAddress")) {
+			  	If ($data->DeviceIdent == $this->GetBuffer("DeviceIdent")) {
 			  		// Daten zur Kalibrierung
 			  		If (($data->Register >= hexdec("88")) AND ($data->Register < hexdec("E8"))) {
 			  			$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
 			  			$CalibrateData[$data->Register] = $data->Value;
 			  			$this->SetBuffer("CalibrateData", serialize($CalibrateData));
 			  		}
-			  	//}
+			  	}
 			  	break;
 			  case "set_i2c_byte_block":
-			   	//If ($data->DeviceAddress == $this->ReadPropertyInteger("DeviceAddress")) {
+			   	If ($data->DeviceIdent == $this->GetBuffer("DeviceIdent")) {
 			   		$this->SetBuffer("MeasurementData", $data->ByteArray);
-			   	//}
+			   	}
 			   	break;
 	 	}
 	return;
@@ -237,9 +236,9 @@
 		$ctrl_meas_reg = (($osrs_t << 5)|($osrs_p << 2)|$mode);
 		$config_reg = (($t_sb << 5)|($filter << 2)|$spi3w_en);
 		$ctrl_hum_reg = $osrs_h;
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => hexdec("F2"), "Value" => $ctrl_hum_reg)));
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => hexdec("F4"), "Value" => $ctrl_meas_reg)));
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => hexdec("F5"), "Value" => $config_reg)));
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F2"), "Value" => $ctrl_hum_reg)));
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F4"), "Value" => $ctrl_meas_reg)));
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F5"), "Value" => $config_reg)));
 	return;
 	}
 	
@@ -255,10 +254,10 @@
 			$this->SetBuffer("CalibrateData", serialize($CalibrateData));
 			
 			for ($i = hexdec("88"); $i < (hexdec("88") + 24); $i++) {
-	    			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => $i, "Value" => $i)));
+	    			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $i, "Value" => $i)));
 			}
 	
-			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => hexdec("A1"), "Value" => $i)));
+			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("A1"), "Value" => $i)));
 	
 			for ($i = hexdec("E1"); $i < (hexdec("E1") + 7); $i++) {
 	    			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => $i, "Value" => $i)));
@@ -272,7 +271,7 @@
 		// Liest die Messdaten ein
 		$MeasurementData = array();
 		$this->SetBuffer("MeasurementData", serialize($MeasurementData));
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_block_byte", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => hexdec("F7"), "Count" => 8)));
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_block_byte", "DeviceIdent" => $this->GetBuffer(", "Register" => hexdec("F7"), "Count" => 8)));
 	return;
 	}
 
