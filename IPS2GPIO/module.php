@@ -283,30 +283,13 @@ class IPS2GPIO_IO extends IPSModule
 		   	$I2C_DeviceHandle = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
 		   	// Bei Bus 1 Addition von 128
 			$I2C_DeviceHandle[($data->DeviceBus << 7) + $data->DeviceAddress] = -1;
-			
-			//$I2C_DeviceHandle[$data->DeviceAddress] = -1;
-		   	
-			// genutzte Device-Adressen noch ohne Handle sichern
+			// genutzte Device-Ident noch ohne Handle sichern
 		   	SetValueString($this->GetIDForIdent("I2C_Handle"), serialize($I2C_DeviceHandle));
 		   	// Messages einrichten
 			$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
 		        $this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
 		   	// Handle ermitteln
 		   	$this->CommandClientSocket(pack("LLLLL", 54, $data->DeviceBus, $data->DeviceAddress, 4, 0), 16);	
-			
-				/*
-			If ($data->DeviceAddress <> 90) {
-				If (GetValueInteger($this->GetIDForIdent("HardwareRev")) <=3) {
-					$this->CommandClientSocket(pack("LLLLL", 54, 0, $data->DeviceAddress, 4, 0), 16);	
-				}
-				elseif (GetValueInteger($this->GetIDForIdent("HardwareRev")) >3) {
-					$this->CommandClientSocket(pack("LLLLL", 54, 1, $data->DeviceAddress, 4, 0), 16);
-				}
-			}
-			else {
-				$this->CommandClientSocket(pack("LLLLL", 54, 0, $data->DeviceAddress, 4, 0), 16);
-			}
-			*/
 		   	
 			//IPS_LogMessage("IPS2GPIO I2C Handle: ","Device Adresse: ".$data->DeviceAddress.", Hardware Rev:: ".GetValueInteger($this->GetIDForIdent("HardwareRev"))); 
 		   	break;
@@ -326,45 +309,45 @@ class IPS2GPIO_IO extends IPSModule
 		   	break;
 		   case "i2c_read_byte":
 		   	//IPS_LogMessage("IPS2GPIO I2C Read Byte Parameter: ",$data->Handle." , ".$data->Register); 
-		   	If ($this->GetI2C_DeviceHandle($data->DeviceAddress) >= 0) {
-		   		$this->CommandClientSocket(pack("L*", 61, $this->GetI2C_DeviceHandle($data->DeviceAddress), $data->Register, 0), 16);
+		   	If ($this->GetI2C_DeviceHandle($data->DeviceIdent) >= 0) {
+		   		$this->CommandClientSocket(pack("L*", 61, $this->GetI2C_DeviceHandle($data->DeviceIdent), $data->Register, 0), 16);
 		   	}
 		   	break;
 		 case "i2c_read_bytes":
 		   	//IPS_LogMessage("IPS2GPIO I2C Read Bytes",$this->GetI2C_DeviceHandle($data->DeviceAddress)." , ".$data->Register." , ".$data->Count);  	
-		   	If ($this->GetI2C_DeviceHandle($data->DeviceAddress) >= 0) {
-		   		$this->CommandClientSocket(pack("L*", 56, $this->GetI2C_DeviceHandle($data->DeviceAddress), $data->Count, 0), 16 + ($data->Count));
+		   	If ($this->GetI2C_DeviceHandle($data->DeviceIdent) >= 0) {
+		   		$this->CommandClientSocket(pack("L*", 56, $this->GetI2C_DeviceHandle($data->DeviceIdent), $data->Count, 0), 16 + ($data->Count));
 		   	}
 			break;  
 		case "i2c_read_word":
 		   	//IPS_LogMessage("IPS2GPIO I2C Read Word Parameter : ","DeviceAdresse: ".$data->DeviceAddress.", Handle: ".$this->GetI2C_DeviceHandle($data->DeviceAddress)." ,Register: ".$data->Register);
-		   	If ($this->GetI2C_DeviceHandle($data->DeviceAddress) >= 0) {
-		   		$this->CommandClientSocket(pack("L*", 63, intval($this->GetI2C_DeviceHandle($data->DeviceAddress)), $data->Register, 0), 16);
+		   	If ($this->GetI2C_DeviceHandle($data->DeviceIdent) >= 0) {
+		   		$this->CommandClientSocket(pack("L*", 63, intval($this->GetI2C_DeviceHandle($data->DeviceIdent)), $data->Register, 0), 16);
 		   	}
 		   	break; 
 		   case "i2c_read_block_byte":
 		   	//IPS_LogMessage("IPS2GPIO I2C Read Block Byte Parameter : ",$data->Handle." , ".$data->Register." , ".$data->Count);  	
-		   	If ($this->GetI2C_DeviceHandle($data->DeviceAddress) >= 0) {
-		   		$this->CommandClientSocket(pack("L*", 67, $this->GetI2C_DeviceHandle($data->DeviceAddress), $data->Register, 4, $data->Count), 16 + ($data->Count));
+		   	If ($this->GetI2C_DeviceHandle($data->DeviceIdent) >= 0) {
+		   		$this->CommandClientSocket(pack("L*", 67, $this->GetI2C_DeviceHandle($data->DeviceIdent), $data->Register, 4, $data->Count), 16 + ($data->Count));
 		   	}
 			break;
 		   case "i2c_write_byte":
 		   	//IPS_LogMessage("IPS2GPIO I2C Write Byte : ",$data->Handle." , ".$data->Register." , ".$data->Value);  	
-		   	If ($this->GetI2C_DeviceHandle($data->DeviceAddress) >= 0) {
-		   		$this->CommandClientSocket(pack("L*", 62, $this->GetI2C_DeviceHandle($data->DeviceAddress), $data->Register, 4, $data->Value), 16);
+		   	If ($this->GetI2C_DeviceHandle($data->DeviceIdent) >= 0) {
+		   		$this->CommandClientSocket(pack("L*", 62, $this->GetI2C_DeviceHandle($data->DeviceIdent), $data->Register, 4, $data->Value), 16);
 		   	}
 		   	break;
 		   case "i2c_read_byte_onhandle":
 		   	//IPS_LogMessage("IPS2GPIO I2C Read Byte Handle: ","DeviceAdresse: ".$data->DeviceAddress.", Handle: ".$this->GetI2C_DeviceHandle($data->DeviceAddress));  	
-		   	If ($this->GetI2C_DeviceHandle($data->DeviceAddress) >= 0) {
-		   		$this->CommandClientSocket(pack("L*", 59, intval($this->GetI2C_DeviceHandle($data->DeviceAddress)), 0, 0), 16);
+		   	If ($this->GetI2C_DeviceHandle($data->DeviceIdent) >= 0) {
+		   		$this->CommandClientSocket(pack("L*", 59, intval($this->GetI2C_DeviceHandle($data->DeviceIdent)), 0, 0), 16);
 		   	}
 		   	break;	
 
 		   case "i2c_write_byte_onhandle":
 		   	//IPS_LogMessage("IPS2GPIO I2C Write Byte Handle: ","DeviceAdresse: ".$data->DeviceAddress.", Handle: ".$this->GetI2C_DeviceHandle($data->DeviceAddress).", Wert: ".$data->Value);  	
-		   	If ($this->GetI2C_DeviceHandle($data->DeviceAddress) >= 0) {
-		   		$this->CommandClientSocket(pack("L*", 60, intval($this->GetI2C_DeviceHandle($data->DeviceAddress)), $data->Value, 0), 16);
+		   	If ($this->GetI2C_DeviceHandle($data->DeviceIdent) >= 0) {
+		   		$this->CommandClientSocket(pack("L*", 60, intval($this->GetI2C_DeviceHandle($data->DeviceIdent)), $data->Value, 0), 16);
 		   	}
 		   	break;	
 		   	
