@@ -55,7 +55,8 @@
 			IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
 			
 			//ReceiveData-Filter setzen
-			$Filter = '((.*"Function":"get_used_i2c".*|.*"DeviceAddress":'.($this->ReadPropertyInteger("DeviceBus") << 7) + $this->ReadPropertyInteger("DeviceAddress").'.*)|.*"Function":"status".*)';
+			$this->SetBuffer("DeviceIdent", (($this->ReadPropertyInteger("DeviceBus") << 7) + $this->ReadPropertyInteger("DeviceAddress")));
+			$Filter = '((.*"Function":"get_used_i2c".*|.*"DeviceIdent":'.$this->GetBuffer("DeviceIdent").'.*)|.*"Function":"status".*)';
 			//$this->SendDebug("IPS2GPIO", $Filter, 0);
 			$this->SetReceiveDataFilter($Filter);
 		
@@ -89,8 +90,7 @@
 				}
 			   	break;
 			case "set_i2c_byte_block":
-				//PS2GPIO GPIO iAQ | a:9:{i:1;i:1;i:2;i:199;i:3;i:0;i:4;i:0;i:5;i:3;i:6;i:50;i:7;i:140;i:8;i:0;i:9;i:255;}
-			   	If ($data->DeviceAddress == $this->ReadPropertyInteger("DeviceAddress")) {
+				 If ($data->DeviceIdent == $this->GetBuffer("DeviceIdent")) {
 			   		// Daten der Messung
 			  		IPS_LogMessage("IPS2GPIO GPIO iAQ", $data->ByteArray);
 					$MeasurementArray = unserialize($data->ByteArray);
@@ -114,7 +114,7 @@
 	{
 		// Daten anfordern
 		//IPS_LogMessage("IPS2GPIO GPIO iAQ", "Daten sind angefordert");
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_bytes", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "Register" => hexdec("5A"), "Count" => 9)));
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_bytes", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("5A"), "Count" => 9)));
 	return;
 	}	
 	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
