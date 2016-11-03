@@ -233,9 +233,15 @@
 				SetValueFloat($this->GetIDForIdent("Humidity"), $Hum);
 				
 				// Berechnung von Taupunkt und absoluter Luftfeuchtigkeit
-				$a = 7.5;
-				$b = 237.3;
-				
+				if ($Temp < 0) {
+					$a = 7.6; 
+					&b = 240.7;
+				}  
+				else {
+					$a = 7.5;
+					$b = 237.3;
+				}
+
 				$sdd = 6.1078 * pow(10.0, (($a * $Temp) / ($b + $Temp)));
 				$dd = $Hum/100.0 * $sdd;
 				$v = log10($dd/6.1078);
