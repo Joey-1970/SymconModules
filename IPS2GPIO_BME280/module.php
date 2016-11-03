@@ -37,7 +37,7 @@
 	    	}
 	    	
 		// Profil anlegen
-		$this->RegisterProfileFloat("humidity.gm3", "", "", " g/m³", 0, 1000, 0.1, 1);
+		$this->RegisterProfileFloat("humidity.gm3", "Drops", "", " g/m³", 0, 1000, 0.1, 1);
 		
 		//Status-Variablen anlegen
              	$this->RegisterVariableFloat("Temperature", "Temperature", "~Temperature", 10);
