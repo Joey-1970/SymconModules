@@ -35,7 +35,11 @@
 	    	If (($this->ReadPropertyInteger("DeviceAddress") < 0) OR ($this->ReadPropertyInteger("DeviceAddress") > 128)) {
 	    		IPS_LogMessage("IPS2GPIO BME280","I2C-Device Adresse in einem nicht definierten Bereich!");  
 	    	}
-	    	//Status-Variablen anlegen
+	    	
+		// Profil anlegen
+		$this->RegisterProfileFloat("humidity.gm3", "", "", " g/m³", 0, 1000, 0.1, 1);
+		
+		//Status-Variablen anlegen
              	$this->RegisterVariableFloat("Temperature", "Temperature", "~Temperature", 10);
 		$this->DisableAction("Temperature");
 		IPS_SetHidden($this->GetIDForIdent("Temperature"), false);
@@ -44,7 +48,7 @@
 		$this->DisableAction("Pressure");
 		IPS_SetHidden($this->GetIDForIdent("Pressure"), false);
 		
-		$this->RegisterVariableFloat("Humidity", "Humidity", "~Humidity.F", 30);
+		$this->RegisterVariableFloat("Humidity", "Humidity (rel)", "~Humidity.F", 30);
 		$this->DisableAction("Humidity");
 		IPS_SetHidden($this->GetIDForIdent("Humidity"), false);
 		
@@ -52,6 +56,9 @@
 		$this->DisableAction("DewPointTemperature");
 		IPS_SetHidden($this->GetIDForIdent("DewPointTemperature"), false);
 		
+		$this->RegisterVariableFloat("HumidityAbs", "Humidity (abs)", "humidity.gm3", 50);
+		$this->DisableAction("HumidityAbs");
+		IPS_SetHidden($this->GetIDForIdent("HumidityAbs"), false);
 		
 		If (IPS_GetKernelRunlevel() == 10103) {
 			// Logging setzen
@@ -225,9 +232,22 @@
 				
 				SetValueFloat($this->GetIDForIdent("Humidity"), $Hum);
 				
+				// Berechnung von Taupunkt und absoluter Luftfeuchtigkeit
+				$a = 7.5;
+				$b = 237.3;
+				
+				$sdd = 6.1078 * pow(10.0, (($a * $Temp) / ($b + $Temp)));
+				$dd = $Hum/100.0 * $sdd;
+				$v = log10($dd/6.1078);
+				$td = $b * $v / ($a - $v);
+				$af = pow(10,5) * 18.016 / 8314.3 * $dd / ($Temp + 273.15);
+				
 				// Taupunkttemperatur
-				$DPT = pow($Hum, (1 / 8.02)) * (109.8 + $temp) - 109.8;
-				SetValueFloat($this->GetIDForIdent("DewPointTemperature"), $DPT);
+				//$DPT = pow($Hum, (1 / 8.02)) * (109.8 + $temp) - 109.8;
+				SetValueFloat($this->GetIDForIdent("DewPointTemperature"), $td);
+				
+				// Absolute Feuchtigkeit
+				SetValueFloat($this->GetIDForIdent("HumidityAbs"), $af);
 			}
 		}
 	return;
@@ -283,6 +303,24 @@
 		$this->SetBuffer("MeasurementData", serialize($MeasurementData));
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_block_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F7"), "Count" => 8)));
 	return;
+	}
+	
+	private function RegisterProfileFloat($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits)
+	{
+	        if (!IPS_VariableProfileExists($Name))
+	        {
+	            IPS_CreateVariableProfile($Name, 2);
+	        }
+	        else
+	        {
+	            $profile = IPS_GetVariableProfile($Name);
+	            if ($profile['ProfileType'] != 2)
+	                throw new Exception("Variable profile type does not match for profile " . $Name);
+	        }
+	        IPS_SetVariableProfileIcon($Name, $Icon);
+	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
+	        IPS_SetVariableProfileDigits($Name, $Digits);
 	}
 
 }
