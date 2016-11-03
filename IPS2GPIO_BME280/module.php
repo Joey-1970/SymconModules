@@ -235,9 +235,9 @@
 				// Berechnung von Taupunkt und absoluter Luftfeuchtigkeit
 				if ($Temp < 0) {
 					$a = 7.6; 
-					&b = 240.7;
+					$b = 240.7;
 				}  
-				else {
+				elseif ($Temp >= 0) {
 					$a = 7.5;
 					$b = 237.3;
 				}
@@ -249,7 +249,6 @@
 				$af = pow(10,5) * 18.016 / 8314.3 * $dd / ($Temp + 273.15);
 				
 				// Taupunkttemperatur
-				//$DPT = pow($Hum, (1 / 8.02)) * (109.8 + $temp) - 109.8;
 				SetValueFloat($this->GetIDForIdent("DewPointTemperature"), $td);
 				
 				// Absolute Feuchtigkeit
