@@ -1,4 +1,3 @@
-
 <?
     // Klassendefinition
     class IPS2GPIO_PCF8591 extends IPSModule 
