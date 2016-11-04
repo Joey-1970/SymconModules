@@ -60,22 +60,22 @@
 		$this->DisableAction("HumidityAbs");
 		IPS_SetHidden($this->GetIDForIdent("HumidityAbs"), false);
 		
-		$this->RegisterVariableFloat("PressureTrend1h", "Pressure trend 1h", "", 60);
+		$this->RegisterVariableFloat("PressureTrend1h", "Pressure trend 1h", "~AirPressure.F", 60);
 		$this->DisableAction("PressureTrend1h");
 		IPS_SetHidden($this->GetIDForIdent("PressureTrend1h"), false);
 		SetValueFloat($this->GetIDForIdent("PressureTrend1h"), 0);
 		
-		$this->RegisterVariableFloat("PressureTrend3h", "Pressure trend 3h", "", 70);
+		$this->RegisterVariableFloat("PressureTrend3h", "Pressure trend 3h", "~AirPressure.F", 70);
 		$this->DisableAction("PressureTrend3h");
 		IPS_SetHidden($this->GetIDForIdent("PressureTrend3h"), false);
 		SetValueFloat($this->GetIDForIdent("PressureTrend3h"), 0);
 		
-		$this->RegisterVariableFloat("PressureTrend12h", "Pressure trend 12h", "", 80);
+		$this->RegisterVariableFloat("PressureTrend12h", "Pressure trend 12h", "~AirPressure.F", 80);
 		$this->DisableAction("PressureTrend12h");
 		IPS_SetHidden($this->GetIDForIdent("PressureTrend12h"), false);
 		SetValueFloat($this->GetIDForIdent("PressureTrend12h"), 0);
 		
-		$this->RegisterVariableFloat("PressureTrend24h", "Pressure trend 24h", "", 90);
+		$this->RegisterVariableFloat("PressureTrend24h", "Pressure trend 24h", "~AirPressure.F", 90);
 		$this->DisableAction("PressureTrend24h");
 		IPS_SetHidden($this->GetIDForIdent("PressureTrend24h"), false);
 		SetValueFloat($this->GetIDForIdent("PressureTrend24h"), 0);
