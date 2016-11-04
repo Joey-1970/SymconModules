@@ -38,7 +38,6 @@
 
 	            //ReceiveData-Filter setzen
 		    $Filter = '((.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_I").'.*)|.*"Pin":'.$this->ReadPropertyInteger("Pin_O").'.*)';
-			//$Filter = '((.*"Function":"get_usedpin".*|.*"Pin":'.PIN_I.'.*)|.*"Pin":'.PIN_O.'.*))';
 		    $this->SetReceiveDataFilter($Filter);
 			
 		    If (IPS_GetKernelRunlevel() == 10103) {
