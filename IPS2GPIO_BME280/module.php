@@ -341,8 +341,8 @@
 	private function PressureTrend(int $interval)
 	{
 		$LoggingArray = AC_GetLoggedValues(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Pressure"), time()- (3600 * $interval), time(), 0); 
-		$Aktuell = $LoggingArray[0]['Value'];
-		$Historisch = array_pop($LoggingArray);
+		$Aktuell = intfloat($LoggingArray[0]['Value']);
+		$Historisch = intfloat(array_pop($LoggingArray));
 		$Result = $Aktuell - $Historisch; 
 	return $Result;
 	}
