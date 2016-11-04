@@ -115,7 +115,9 @@
 			  		// Daten der Messung
 			  		IPS_LogMessage("IPS2GPIO PCF8591","Ergebnisse sind angekommen für Register ".$data->Register." Wert ".$data->Value. " WP ".$this->GetBuffer("WriteProtection"));
 					If ($this->GetBuffer("WriteProtection") == false) {
+						IPS_LogMessage("IPS2GPIO PCF8591","WP = false");
 			  			If ($data->Register == hexdec("40")) {
+							IPS_LogMessage("IPS2GPIO PCF8591","Daten für 40");
 				  			SetValueInteger($this->GetIDForIdent("Channel_0"), $data->Value);
 				  		}
 				   		If ($data->Register == hexdec("41")) {
