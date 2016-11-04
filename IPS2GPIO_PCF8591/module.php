@@ -113,7 +113,7 @@
 			  case "set_i2c_data":
 			  	If ($data->DeviceIdent == $this->GetBuffer("DeviceIdent")) {
 			  		// Daten der Messung
-			  		IPS_LogMessage("IPS2GPIO PCF8591","Ergebnisse sind angekommen");
+			  		IPS_LogMessage("IPS2GPIO PCF8591","Ergebnisse sind angekommen für Register ".$data->Register);
 					If ($this->GetBuffer("WriteProtection") == false) {
 			  			If ($data->Register == hexdec("40")) {
 				  			SetValueInteger($this->GetIDForIdent("Channel_0"), $data->Value);
@@ -137,10 +137,10 @@
 	// Führt eine Messung aus
 	public function Measurement()
 	{
-		IPS_LogMessage("IPS2GPIO PCF8591","Messung durchführen"); 
+		//IPS_LogMessage("IPS2GPIO PCF8591","Messung durchführen"); 
 		for ($i = 0; $i <= 3; $i++) {
 		    	If ($this->ReadPropertyBoolean("Ain".$i) == true) {
-			    	IPS_LogMessage("IPS2GPIO PCF8591","Messung durchführen für Ain ".$i); 
+			    	//IPS_LogMessage("IPS2GPIO PCF8591","Messung durchführen für Ain ".$i); 
 				$this->SetBuffer("WriteProtection", true);
 			    	// Aktualisierung der Messerte anfordern
 			    	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("40")|($i & 3) )));
