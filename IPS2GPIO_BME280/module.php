@@ -60,6 +60,26 @@
 		$this->DisableAction("HumidityAbs");
 		IPS_SetHidden($this->GetIDForIdent("HumidityAbs"), false);
 		
+		$this->RegisterVariableFloat("PressureTrend1h", "Pressure trend 1h", "", 60);
+		$this->DisableAction("PressureTrend1h");
+		IPS_SetHidden($this->GetIDForIdent("PressureTrend1h"), false);
+		SetValueFloat($this->GetIDForIdent("PressureTrend1h"), 0);
+		
+		$this->RegisterVariableFloat("PressureTrend3h", "Pressure trend 3h", "", 70);
+		$this->DisableAction("PressureTrend3h");
+		IPS_SetHidden($this->GetIDForIdent("PressureTrend3h"), false);
+		SetValueFloat($this->GetIDForIdent("PressureTrend3h"), 0);
+		
+		$this->RegisterVariableFloat("PressureTrend12h", "Pressure trend 12h", "", 80);
+		$this->DisableAction("PressureTrend12h");
+		IPS_SetHidden($this->GetIDForIdent("PressureTrend12h"), false);
+		SetValueFloat($this->GetIDForIdent("PressureTrend12h"), 0);
+		
+		$this->RegisterVariableFloat("PressureTrend24h", "Pressure trend 24h", "", 90);
+		$this->DisableAction("PressureTrend24h");
+		IPS_SetHidden($this->GetIDForIdent("PressureTrend24h"), false);
+		SetValueFloat($this->GetIDForIdent("PressureTrend24h"), 0);
+		
 		If (IPS_GetKernelRunlevel() == 10103) {
 			// Logging setzen
 			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Temperature"), $this->ReadPropertyBoolean("LoggingTemp"));
@@ -253,6 +273,14 @@
 				
 				// Absolute Feuchtigkeit
 				SetValueFloat($this->GetIDForIdent("HumidityAbs"), $af);
+				
+				// Luftdruck Trends
+				If ($this->ReadPropertyBoolean("LoggingPres") == true) {
+					SetValueFloat($this->GetIDForIdent("PressureTrend1h"), $this->PressureTrend(1));
+					SetValueFloat($this->GetIDForIdent("PressureTrend3h"), $this->PressureTrend(3));
+					SetValueFloat($this->GetIDForIdent("PressureTrend12h"), $this->PressureTrend(12));
+					SetValueFloat($this->GetIDForIdent("PressureTrend24h"), $this->PressureTrend(24));
+				}
 			}
 		}
 	return;
@@ -312,8 +340,9 @@
 	
 	private function PressureTrend(int $interval)
 	{
-		$LogDatenAR = AC_GetLoggedValues(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Pressure"), time()- (3600 * $interval), time(), 0); 
-
+		$LoggingArray = AC_GetLoggedValues(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Pressure"), time()- (3600 * $interval), time(), 0); 
+		$Result = round($LoggingArray[0]["Value"] - end($LoggingArray), 1); 
+	return $Result;
 	}
 	    
 	private function RegisterProfileFloat($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits)
