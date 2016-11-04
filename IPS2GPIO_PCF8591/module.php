@@ -113,11 +113,11 @@
 			  case "set_i2c_data":
 			  	If ($data->DeviceIdent == $this->GetBuffer("DeviceIdent")) {
 			  		// Daten der Messung
-			  		IPS_LogMessage("IPS2GPIO PCF8591","Ergebnisse sind angekommen für Register ".$data->Register." Wert ".$data->Value. " WP ".$this->GetBuffer("WriteProtection"));
-					If (boolval($this->GetBuffer("WriteProtection")) == false) {
-						IPS_LogMessage("IPS2GPIO PCF8591","WP = false");
+			  		//IPS_LogMessage("IPS2GPIO PCF8591","Ergebnisse sind angekommen für Register ".$data->Register." Wert ".$data->Value. " WP ".$this->GetBuffer("WriteProtection"));
+					If ($this->GetBuffer("WriteProtection") == "false") {
+						//IPS_LogMessage("IPS2GPIO PCF8591","WP = false");
 			  			If ($data->Register == hexdec("40")) {
-							IPS_LogMessage("IPS2GPIO PCF8591","Daten für 40");
+							//IPS_LogMessage("IPS2GPIO PCF8591","Daten für 40");
 				  			SetValueInteger($this->GetIDForIdent("Channel_0"), $data->Value);
 				  		}
 				   		If ($data->Register == hexdec("41")) {
@@ -143,10 +143,10 @@
 		for ($i = 0; $i <= 3; $i++) {
 		    	If ($this->ReadPropertyBoolean("Ain".$i) == true) {
 			    	//IPS_LogMessage("IPS2GPIO PCF8591","Messung durchführen für Ain ".$i); 
-				$this->SetBuffer("WriteProtection", true);
+				$this->SetBuffer("WriteProtection", "true");
 			    	// Aktualisierung der Messerte anfordern
 			    	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("40")|($i & 3) )));
-				$this->SetBuffer("WriteProtection", false);
+				$this->SetBuffer("WriteProtection", "false");
 				// Messwerte einlesen
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("40")|($i & 3) )));
 		    	}
