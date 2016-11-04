@@ -113,7 +113,8 @@
 			  case "set_i2c_data":
 			  	If ($data->DeviceIdent == $this->GetBuffer("DeviceIdent")) {
 			  		// Daten der Messung
-			  		If ($this->GetBuffer("WriteProtection") == false) {
+			  		IPS_LogMessage("IPS2GPIO PCF8591","Ergebnisse sind angekommen");
+					If ($this->GetBuffer("WriteProtection") == false) {
 			  			If ($data->Register == hexdec("40")) {
 				  			SetValueInteger($this->GetIDForIdent("Channel_0"), $data->Value);
 				  		}
