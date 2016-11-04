@@ -37,7 +37,8 @@
 		    IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
 
 	            //ReceiveData-Filter setzen
-		    $Filter = '((.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_I").'.*)|.*"Pin":'.$this->ReadPropertyInteger("Pin_O").'.*))';
+		    $Filter = '((.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_I").'.*)|.*"Pin":'.$this->ReadPropertyInteger("Pin_O").'.*)';
+			//$Filter = '((.*"Function":"get_usedpin".*|.*"Pin":'.PIN_I.'.*)|.*"Pin":'.PIN_O.'.*))';
 		    $this->SetReceiveDataFilter($Filter);
 			
 		    If (IPS_GetKernelRunlevel() == 10103) {
