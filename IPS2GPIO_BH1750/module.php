@@ -1,4 +1,3 @@
-
 <?
     // Klassendefinition
     class IPS2GPIO_BH1750 extends IPSModule 
