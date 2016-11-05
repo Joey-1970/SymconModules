@@ -152,8 +152,8 @@
 								// Speicher
 								$MemArray = explode("\n", $ResultArray[key($ResultArray)]);
 								SetValueInteger($this->GetIDForIdent("MemoryTotal"), intval(substr($MemArray[0], 16, -3)));
-								SetValueInteger($this->GetIDForIdent("MemoryFree"), intval(substr($MemArray[2], 16, -3)));
-								SetValueInteger($this->GetIDForIdent("MemoryAvailable"), intval(substr($MemArray[3], 16, -3)));
+								SetValueInteger($this->GetIDForIdent("MemoryFree"), intval(substr($MemArray[1], 16, -3)));
+								SetValueInteger($this->GetIDForIdent("MemoryAvailable"), intval(substr($MemArray[2], 16, -3)));
 								break;
 						}
 						Next($ResultArray);
