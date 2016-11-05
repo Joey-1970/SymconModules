@@ -143,8 +143,10 @@
 								break;
 							case "7":
 								// Speicher
-								IPS_LogMessage("IPS2GPIO RPi", "Speicher: ".$ResultArray[key($ResultArray)]);
-								//$Result = intval(substr($ResultArray[key($ResultArray)], 14))/1000000;
+								$MemArray = explode("\n", $ResultArray[key($ResultArray)]);
+								IPS_LogMessage("IPS2GPIO RPi", "Speicher: ".$ResultArray[key($ResultArray)]. " Count: ".count($MemArray));
+								
+								//$MemTotal = floatval(substr($ResultArray[key($ResultArray)], 16, -3));
 								//SetValueFloat($this->GetIDForIdent("ARM_Frequenzy"), $Result);
 								break;
 						}
