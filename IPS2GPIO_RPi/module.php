@@ -45,6 +45,12 @@
 		$this->DisableAction("AverageLoad5Min");
 		$this->RegisterVariableFloat("AverageLoad15Min", "CPU Auslastung 15 Min", "~Intensity.1", 90);
 		$this->DisableAction("AverageLoad15Min");
+		$this->RegisterVariableInteger("MemoryTotal", "Memory Total", "", 100);
+		$this->DisableAction("MemoryTotal");
+		$this->RegisterVariableInteger("MemoryFree", "Memory Free", "", 110);
+		$this->DisableAction("MemoryFree");
+		$this->RegisterVariableInteger("MemoryAvailable", "Memory Available", "", 120);
+		$this->DisableAction("MemoryAvailable");
 		 
                 If (IPS_GetKernelRunlevel() == 10103) {
 			// Logging setzen
@@ -144,13 +150,9 @@
 							case "7":
 								// Speicher
 								$MemArray = explode("\n", $ResultArray[key($ResultArray)]);
-								//IPS_LogMessage("IPS2GPIO RPi", "Speicher: ".$ResultArray[key($ResultArray)]. " Count: ".count($MemArray));
-								IPS_LogMessage("IPS2GPIO RPi", "Teil 0: ".intval(substr($MemArray[0], 16, -3)));
-								IPS_LogMessage("IPS2GPIO RPi", "Teil 1: ".intval(substr($MemArray[1], 16, -3)));
-								IPS_LogMessage("IPS2GPIO RPi", "Teil 2: ".intval(substr($MemArray[2], 16, -3)));
-								
-								//$MemTotal = floatval(substr($ResultArray[key($ResultArray)], 16, -3));
-								//SetValueFloat($this->GetIDForIdent("ARM_Frequenzy"), $Result);
+								SetValueFloat($this->GetIDForIdent("MemoryTotal"), intval(substr($MemArray[0], 16, -3)));
+								SetValueFloat($this->GetIDForIdent("MemoryFree"), intval(substr($MemArray[2], 16, -3)));
+								SetValueFloat($this->GetIDForIdent("MemoryAvailable"), intval(substr($MemArray[3], 16, -3)));
 								break;
 						}
 						Next($ResultArray);
