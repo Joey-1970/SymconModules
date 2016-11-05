@@ -151,9 +151,9 @@
 							case "7":
 								// Speicher
 								$MemArray = explode("\n", $ResultArray[key($ResultArray)]);
-								SetValueFloat($this->GetIDForIdent("MemoryTotal"), intval(substr($MemArray[0], 16, -3)));
-								SetValueFloat($this->GetIDForIdent("MemoryFree"), intval(substr($MemArray[2], 16, -3)));
-								SetValueFloat($this->GetIDForIdent("MemoryAvailable"), intval(substr($MemArray[3], 16, -3)));
+								SetValueInteger($this->GetIDForIdent("MemoryTotal"), intval(substr($MemArray[0], 16, -3)));
+								SetValueInteger($this->GetIDForIdent("MemoryFree"), intval(substr($MemArray[2], 16, -3)));
+								SetValueInteger($this->GetIDForIdent("MemoryAvailable"), intval(substr($MemArray[3], 16, -3)));
 								break;
 						}
 						Next($ResultArray);
