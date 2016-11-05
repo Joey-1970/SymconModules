@@ -68,6 +68,7 @@
 				
 			$this->SetTimerInterval("Messzyklus1", ($this->ReadPropertyInteger("Messzyklus1") * 1000));
 			//$this->SetTimerInterval("Messzyklus2", ($this->ReadPropertyInteger("Messzyklus2") * 1000));
+			$this->Measurement();
 			$this->Measurement_1();
 			$this->SetStatus(102);
 		}
@@ -93,14 +94,16 @@
 						switch(key($ResultArray)) {
 							case "0":
 								// Betriebssystem
-								$Result = floatval(substr($ResultArray[key($ResultArray)], 5, -2));
-								SetValueFloat($this->GetIDForIdent("TemperaturGPU"), $Result);
+								//$Result = floatval(substr($ResultArray[key($ResultArray)], 5, -2));
+								//SetValueFloat($this->GetIDForIdent("TemperaturGPU"), $Result);
 								break;
 
 							case "1":
 								// Hardware-Daten
-								$Result = floatval(intval($ResultArray[key($ResultArray)]) / 1000);
-								SetValueFloat($this->GetIDForIdent("TemperaturCPU"), $Result);
+								$HardwareArray = explode("\n", $ResultArray[key($ResultArray)]);
+								IPS_LogMessage("IPS2GPIO RPi: ", "Daten: ".$ResultArray[key($ResultArray)]." Count: ".count));
+								//$Result = floatval(intval($ResultArray[key($ResultArray)]) / 1000);
+								//SetValueFloat($this->GetIDForIdent("TemperaturCPU"), $Result);
 								break;
 							
 						}
