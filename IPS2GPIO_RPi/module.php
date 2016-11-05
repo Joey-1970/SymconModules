@@ -145,9 +145,9 @@
 								// Speicher
 								$MemArray = explode("\n", $ResultArray[key($ResultArray)]);
 								//IPS_LogMessage("IPS2GPIO RPi", "Speicher: ".$ResultArray[key($ResultArray)]. " Count: ".count($MemArray));
-								IPS_LogMessage("IPS2GPIO RPi", "Teil 0: ".$MemArray[0]);
-								IPS_LogMessage("IPS2GPIO RPi", "Teil 1: ".$MemArray[1]);
-								IPS_LogMessage("IPS2GPIO RPi", "Teil 2: ".$MemArray[2]);
+								IPS_LogMessage("IPS2GPIO RPi", "Teil 0: ".intval(substr($MemArray[0], 16, -3)));
+								IPS_LogMessage("IPS2GPIO RPi", "Teil 1: ".intval(substr($MemArray[1], 16, -3)));
+								IPS_LogMessage("IPS2GPIO RPi", "Teil 2: ".intval(substr($MemArray[2], 16, -3)));
 								
 								//$MemTotal = floatval(substr($ResultArray[key($ResultArray)], 16, -3));
 								//SetValueFloat($this->GetIDForIdent("ARM_Frequenzy"), $Result);
