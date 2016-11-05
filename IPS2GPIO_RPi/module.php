@@ -24,6 +24,7 @@
 	   	
 		// Profil anlegen
 		$this->RegisterProfileInteger("megabyte", "Information", "", " MB", 0, 1000000, 1);
+		$this->RegisterProfileInteger("kilobyte", "Information", "", " kb", 0, 1000000, 1);
 		$this->RegisterProfileFloat("frequenzy.mhz", "Speedo", "", " MHz", 0, 10000, 0.1, 1);
 		
 		//Status-Variablen anlegen
@@ -45,11 +46,11 @@
 		$this->DisableAction("AverageLoad5Min");
 		$this->RegisterVariableFloat("AverageLoad15Min", "CPU Auslastung 15 Min", "~Intensity.1", 90);
 		$this->DisableAction("AverageLoad15Min");
-		$this->RegisterVariableInteger("MemoryTotal", "Memory Total", "", 100);
+		$this->RegisterVariableInteger("MemoryTotal", "Memory Total", "kilobyte", 100);
 		$this->DisableAction("MemoryTotal");
-		$this->RegisterVariableInteger("MemoryFree", "Memory Free", "", 110);
+		$this->RegisterVariableInteger("MemoryFree", "Memory Free", "kilobyte", 110);
 		$this->DisableAction("MemoryFree");
-		$this->RegisterVariableInteger("MemoryAvailable", "Memory Available", "", 120);
+		$this->RegisterVariableInteger("MemoryAvailable", "Memory Available", "kilobyte", 120);
 		$this->DisableAction("MemoryAvailable");
 		 
                 If (IPS_GetKernelRunlevel() == 10103) {
