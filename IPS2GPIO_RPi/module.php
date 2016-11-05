@@ -52,8 +52,14 @@
 		$this->DisableAction("MemoryFree");
 		$this->RegisterVariableInteger("MemoryAvailable", "Memory Available", "kilobyte", 120);
 		$this->DisableAction("MemoryAvailable");
-		$this->RegisterVariableString("Hardware", "Hardware", "", 130);
+		$this->RegisterVariableString("Revision", "Revision", "", 130);
+		$this->DisableAction("Revision");
+		$this->RegisterVariableString("Hardware", "Hardware", "", 140);
 		$this->DisableAction("Hardware");
+		$this->RegisterVariableString("Board", "Board", "", 150);
+		$this->DisableAction("Board");
+		$this->RegisterVariableString("Serial", "Serial", "", 160);
+		$this->DisableAction("Serial");
 		 
                 If (IPS_GetKernelRunlevel() == 10103) {
 			// Logging setzen
@@ -103,8 +109,25 @@
 							case "1":
 								// Hardware-Daten
 								$HardwareArray = explode("\n", $ResultArray[key($ResultArray)]);
-								IPS_LogMessage("IPS2GPIO RPi: ", "Daten: ".$ResultArray[key($ResultArray)]." Count: ".count($HardwareArray));
-								SetValueString($this->GetIDForIdent("Hardware"), serialize($HardwareArray));
+								for ($i = 0; $i <= Count($HardwareArray) - 1; $i++) {
+								    If (Substr($HardwareArray[$i], 0, 8) == "Hardware") {
+										$PartArray = explode(":", $HardwareArray[$i]);
+										SetValueString($this->GetIDForIdent("Hardware"), $PartArray[1]);
+									}
+									If (Substr($HardwareArray[$i], 0, 8) == "Revision") {
+										$PartArray = explode(":", $HardwareArray[$i]);
+										SetValueString($this->GetIDForIdent("Revision"), $PartArray[1]);
+									}
+									If (Substr($HardwareArray[$i], 0, 6) == "Serial") {
+										$PartArray = explode(":", $HardwareArray[$i]);
+										SetValueString($this->GetIDForIdent("Serial"), $PartArray[1]);
+									}
+
+								}
+								
+								
+								//IPS_LogMessage("IPS2GPIO RPi: ", "Daten: ".$ResultArray[key($ResultArray)]." Count: ".count($HardwareArray));
+								//SetValueString($this->GetIDForIdent("Hardware"), serialize($HardwareArray));
 								//$Result = floatval(intval($ResultArray[key($ResultArray)]) / 1000);
 								//SetValueFloat($this->GetIDForIdent("TemperaturCPU"), $Result);
 								break;
