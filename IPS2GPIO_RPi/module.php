@@ -101,7 +101,7 @@
 							case "1":
 								// Hardware-Daten
 								$HardwareArray = explode("\n", $ResultArray[key($ResultArray)]);
-								IPS_LogMessage("IPS2GPIO RPi: ", "Daten: ".$ResultArray[key($ResultArray)]." Count: ".count));
+								IPS_LogMessage("IPS2GPIO RPi: ", "Daten: ".$ResultArray[key($ResultArray)]." Count: ".count($HardwareArray));
 								//$Result = floatval(intval($ResultArray[key($ResultArray)]) / 1000);
 								//SetValueFloat($this->GetIDForIdent("TemperaturCPU"), $Result);
 								break;
