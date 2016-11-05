@@ -141,6 +141,12 @@
 								SetValueFloat($this->GetIDForIdent("AverageLoad5Min"), $ResultPart[1]);
 								SetValueFloat($this->GetIDForIdent("AverageLoad15Min"), $ResultPart[2]);
 								break;
+							case "7":
+								// Speicher
+								IPS_LogMessage("IPS2GPIO RPi", "Speicher: ".$Result);
+								//$Result = intval(substr($ResultArray[key($ResultArray)], 14))/1000000;
+								//SetValueFloat($this->GetIDForIdent("ARM_Frequenzy"), $Result);
+								break;
 						}
 						Next($ResultArray);
 					}
@@ -186,7 +192,7 @@
 		// CPU Auslastung
 		$CommandArray[6] = "cat /proc/loadavg";
 		// Speicher
-		//$CommandArray[7] = "cat /proc/meminfo | grep Mem";
+		$CommandArray[7] = "cat /proc/meminfo | grep Mem";
 		
 		
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 1, "IsArray" => true )));
