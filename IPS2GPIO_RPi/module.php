@@ -112,16 +112,16 @@
 								for ($i = 0; $i <= Count($HardwareArray) - 1; $i++) {
 								    If (Substr($HardwareArray[$i], 0, 8) == "Hardware") {
 										$PartArray = explode(":", $HardwareArray[$i]);
-										SetValueString($this->GetIDForIdent("Hardware"), $PartArray[1]);
+										SetValueString($this->GetIDForIdent("Hardware"), trim($PartArray[1]));
 									}
 									If (Substr($HardwareArray[$i], 0, 8) == "Revision") {
 										$PartArray = explode(":", $HardwareArray[$i]);
-										SetValueString($this->GetIDForIdent("Revision"), $PartArray[1]);
+										SetValueString($this->GetIDForIdent("Revision"), trim($PartArray[1]));
 										SetValueString($this->GetIDForIdent("Board"), $this->GetHardware(hexdec($PartArray[1])) );
 									}
 									If (Substr($HardwareArray[$i], 0, 6) == "Serial") {
 										$PartArray = explode(":", $HardwareArray[$i]);
-										SetValueString($this->GetIDForIdent("Serial"), $PartArray[1]);
+										SetValueString($this->GetIDForIdent("Serial"), trim($PartArray[1]));
 									}
 
 								}
