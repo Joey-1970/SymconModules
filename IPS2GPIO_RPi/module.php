@@ -117,7 +117,7 @@
 									If (Substr($HardwareArray[$i], 0, 8) == "Revision") {
 										$PartArray = explode(":", $HardwareArray[$i]);
 										SetValueString($this->GetIDForIdent("Revision"), $PartArray[1]);
-										SetValueString($this->GetIDForIdent("Board"), $this->GetHardware(hexdec($PartArray[1]));
+										SetValueString($this->GetIDForIdent("Board"), $this->GetHardware(hexdec($PartArray[1])) );
 									}
 									If (Substr($HardwareArray[$i], 0, 6) == "Serial") {
 										$PartArray = explode(":", $HardwareArray[$i]);
