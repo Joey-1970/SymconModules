@@ -28,23 +28,23 @@
 		$this->RegisterProfileFloat("frequenzy.mhz", "Speedo", "", " MHz", 0, 10000, 0.1, 1);
 		
 		//Status-Variablen anlegen
-		$this->RegisterVariableFloat("TemperaturCPU", "Temperatur CPU", "~Temperature", 10);
+		$this->RegisterVariableFloat("TemperaturCPU", "Temperature CPU", "~Temperature", 10);
 		$this->DisableAction("TemperaturCPU");
-		$this->RegisterVariableFloat("TemperaturGPU", "Temperatur GPU", "~Temperature", 20);
+		$this->RegisterVariableFloat("TemperaturGPU", "Temperature GPU", "~Temperature", 20);
 		$this->DisableAction("TemperaturGPU");
-		$this->RegisterVariableFloat("VoltageCPU", "Spannung CPU", "~Volt", 30);
+		$this->RegisterVariableFloat("VoltageCPU", "Voltage CPU", "~Volt", 30);
 		$this->DisableAction("VoltageCPU");
-		$this->RegisterVariableInteger("MemoryCPU", "Speicher CPU", "megabyte", 40);
+		$this->RegisterVariableInteger("MemoryCPU", "Memory CPU", "megabyte", 40);
 		$this->DisableAction("MemoryCPU");
-		$this->RegisterVariableInteger("MemoryGPU", "Speicher GPU", "megabyte", 50);
+		$this->RegisterVariableInteger("MemoryGPU", "Memory GPU", "megabyte", 50);
 		$this->DisableAction("MemoryGPU");
-		$this->RegisterVariableFloat("ARM_Frequenzy", "Taktung ARM", "frequenzy.mhz", 60);
+		$this->RegisterVariableFloat("ARM_Frequenzy", "ARM Frequenzy", "frequenzy.mhz", 60);
 		$this->DisableAction("ARM_Frequenzy");
-		$this->RegisterVariableFloat("AverageLoad1Min", "CPU Auslastung 1 Min", "~Intensity.1", 70);
+		$this->RegisterVariableFloat("AverageLoad1Min", "CPU AverageLoad 1 Min", "~Intensity.1", 70);
 		$this->DisableAction("AverageLoad1Min");
-		$this->RegisterVariableFloat("AverageLoad5Min", "CPU Auslastung 5 Min", "~Intensity.1", 80);
+		$this->RegisterVariableFloat("AverageLoad5Min", "CPU AverageLoad 5 Min", "~Intensity.1", 80);
 		$this->DisableAction("AverageLoad5Min");
-		$this->RegisterVariableFloat("AverageLoad15Min", "CPU Auslastung 15 Min", "~Intensity.1", 90);
+		$this->RegisterVariableFloat("AverageLoad15Min", "CPU AverageLoad 15 Min", "~Intensity.1", 90);
 		$this->DisableAction("AverageLoad15Min");
 		$this->RegisterVariableInteger("MemoryTotal", "Memory Total", "kilobyte", 100);
 		$this->DisableAction("MemoryTotal");
