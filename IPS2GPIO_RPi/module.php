@@ -52,6 +52,8 @@
 		$this->DisableAction("MemoryFree");
 		$this->RegisterVariableInteger("MemoryAvailable", "Memory Available", "kilobyte", 120);
 		$this->DisableAction("MemoryAvailable");
+		$this->RegisterVariableString("Hardware", "Hardware", "", 130);
+		$this->DisableAction("Hardware");
 		 
                 If (IPS_GetKernelRunlevel() == 10103) {
 			// Logging setzen
@@ -102,6 +104,7 @@
 								// Hardware-Daten
 								$HardwareArray = explode("\n", $ResultArray[key($ResultArray)]);
 								IPS_LogMessage("IPS2GPIO RPi: ", "Daten: ".$ResultArray[key($ResultArray)]." Count: ".count($HardwareArray));
+								SetValueString($this->GetIDForIdent("Hardware"), serialize($HardwareArray));
 								//$Result = floatval(intval($ResultArray[key($ResultArray)]) / 1000);
 								//SetValueFloat($this->GetIDForIdent("TemperaturCPU"), $Result);
 								break;
