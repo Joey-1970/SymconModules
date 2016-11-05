@@ -117,6 +117,7 @@
 									If (Substr($HardwareArray[$i], 0, 8) == "Revision") {
 										$PartArray = explode(":", $HardwareArray[$i]);
 										SetValueString($this->GetIDForIdent("Revision"), $PartArray[1]);
+										SetValueString($this->GetIDForIdent("Board"), $this->GetHardware(hexdec($PartArray[1]));
 									}
 									If (Substr($HardwareArray[$i], 0, 6) == "Serial") {
 										$PartArray = explode(":", $HardwareArray[$i]);
@@ -124,12 +125,6 @@
 									}
 
 								}
-								
-								
-								//IPS_LogMessage("IPS2GPIO RPi: ", "Daten: ".$ResultArray[key($ResultArray)]." Count: ".count($HardwareArray));
-								//SetValueString($this->GetIDForIdent("Hardware"), serialize($HardwareArray));
-								//$Result = floatval(intval($ResultArray[key($ResultArray)]) / 1000);
-								//SetValueFloat($this->GetIDForIdent("TemperaturCPU"), $Result);
 								break;
 							
 						}
@@ -276,6 +271,24 @@
 	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
 	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
 	        IPS_SetVariableProfileDigits($Name, $Digits);
+	}
+	
+	private function GetHardware(Int $RevNumber)
+	{
+		$Hardware = array(2 => "Rev.0002 Model B PCB-Rev. 1.0 256MB", 3 => "Rev.0003 Model B PCB-Rev. 1.0 256MB", 4 => "Rev.0004 Model B PCB-Rev. 2.0 256MB Sony", 5 => "Rev.0005 Model B PCB-Rev. 2.0 256MB Qisda", 
+			6 => "Rev.0006 Model B PCB-Rev. 2.0 256MB Egoman", 7 => "Rev.0007 Model A PCB-Rev. 2.0 256MB Egoman", 8 => "Rev.0008 Model A PCB-Rev. 2.0 256MB Sony", 9 => "Rev.0009 Model A PCB-Rev. 2.0 256MB Qisda",
+			13 => "Rev.000d Model B PCB-Rev. 2.0 512MB Egoman", 14 => "Rev.000e Model B PCB-Rev. 2.0 512MB Sony", 15 => "Rev.000f Model B PCB-Rev. 2.0 512MB Qisda", 16 => "Rev.0010 Model B+ PCB-Rev. 1.0 512MB Sony",
+			17 => "Rev.0011 Compute Module PCB-Rev. 1.0 512MB Sony", 18 => "Rev.0012 Model A+ PCB-Rev. 1.1 256MB Sony", 19 => "Rev.0013 Model B+ PCB-Rev. 1.2 512MB", 20 => "Rev.0014 Compute Module PCB-Rev. 1.0 512MB Embest",
+			21 => "Rev.0015 Model A+ PCB-Rev. 1.1 256/512MB Embest", 10489920 => "Rev.a01040 2 Model B PCB-Rev. 1.0 1GB", 10489921 => "Rev.a01041 2 Model B PCB-Rev. 1.1 1GB Sony", 10620993 => "Rev.a21041 2 Model B PCB-Rev. 1.1 1GB Embest",
+			10625090 => "Rev.a22042 2 Model B PCB-Rev. 1.2 1GB Embest", 9437330 => "Rev.900092 Zero PCB-Rev. 1.2 512MB Sony", 9437331 => "Rev.900093 Zero PCB-Rev. 1.3 512MB Sony", 10494082 => "Rev.a02082 3 Model B PCB-Rev. 1.2 1GB Sony",
+			10625154 => "Rev.a22082 3 Model B PCB-Rev. 1.2 1GB Embest");
+		If (array_key_exists($RevNumber, $Hardware)) {
+			$HardwareText = $Hardware[$RevNumber];
+		}
+		else {
+			$HardwareText = "Unbekannte Revisions Nummer!";
+		}
+	return $HardwareText;
 	}
 }
 ?>
