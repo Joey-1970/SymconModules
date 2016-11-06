@@ -12,7 +12,7 @@
 		$this->RegisterPropertyInteger("DeviceBus", 1);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
  	    	$this->RegisterPropertyBoolean("Logging", false);
-		$this->RegisterPropertyInteger("HysteresisOn", 0);
+		$this->RegisterPropertyInteger("HysteresisOn", 100);
 		$this->RegisterPropertyInteger("HysteresisOff", 0);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GBH_Measurement($_IPS["TARGET"]);');
         }
@@ -88,8 +88,12 @@
 			  			$Lux = (($data->Value & 0xff00)>>8) | (($data->Value & 0x00ff)<<8);
 			  			$Lux = max(0, $Lux);
 			  			SetValueInteger($this->GetIDForIdent("Illuminance"), $Lux);
+						// Hysteres Variablen setzen
 						If ($Lux >= $this->ReadPropertyInteger("HysteresisOn")) {
 							SetValueBoolean($this->GetIDForIdent("Hysteresis"), true);
+						}
+						elseif ($Lux <= $this->ReadPropertyInteger("HysteresisOff")) {
+							SetValueBoolean($this->GetIDForIdent("Hysteresis"), false);
 						}
 			  		}
 			  		
