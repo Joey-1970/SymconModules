@@ -240,6 +240,9 @@ class IPS2GPIO_IO extends IPSModule
 					SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
 					// startet das Notify neu
 					$this->CommandClientSocket(pack("LLLL", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
+					// Test: Event
+					$this->CommandClientSocket(pack("LLLL", 115, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
+					
 					// Setzt den Glitch Filter
 					//IPS_LogMessage("IPS2GPIO SetGlitchFilter Parameter",$data->Pin." , ".$data->GlitchFilter);
 					$this->CommandClientSocket(pack("LLLL", 97, $data->Pin, $data->GlitchFilter, 0), 16);
@@ -393,7 +396,7 @@ class IPS2GPIO_IO extends IPSModule
 	  }
 	
 	 public function ReceiveData($JSONString) {
- 	    	$CmdPossible = array(19, 21, 76, 81, 99);
+ 	    	$CmdPossible = array(19, 21, 76, 81, 99, 116);
  	    	$RDlen = array(16, 32);	
  	    	// Empfangene Daten vom I/O
 	    	$Data = json_decode($JSONString);
