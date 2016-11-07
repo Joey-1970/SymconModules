@@ -864,6 +864,24 @@ class IPS2GPIO_IO extends IPSModule
            				$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));		
            			}
            			break;
+			case "115":
+           			If ($response[4] >= 0) {
+           				IPS_LogMessage("IPS2GPIO Set Event Monitor","gesetzt");
+           			}
+           			else {
+           				IPS_LogMessage("IPS2GPIO Set Event Monitor","Fehler beim Setzen: ".$this->GetErrorText(abs($response[4])));
+           			}
+         
+		            	break;
+			case "116":
+           			If ($response[4] >= 0) {
+           				IPS_LogMessage("IPS2GPIO Trigger Event","gemeldet");
+           			}
+           			else {
+           				IPS_LogMessage("IPS2GPIO Trigger Event","Fehler: ".$this->GetErrorText(abs($response[4])));
+           			}
+         
+		            	break;
 		    }
 	return;
 	}
