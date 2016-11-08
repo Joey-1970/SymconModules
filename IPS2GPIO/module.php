@@ -240,8 +240,10 @@ class IPS2GPIO_IO extends IPSModule
 					SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
 					// startet das Notify neu
 					$this->CommandClientSocket(pack("LLLL", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
+					
 					// Test: Event
-					//$this->ClientSocket(pack("LLLL", 115, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0));
+					//$this->CommandClientSocket(pack("LLLL", 115, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
+					//$this->CommandClientSocket(pack("LLLL", 116, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
 					
 					// Setzt den Glitch Filter
 					//IPS_LogMessage("IPS2GPIO SetGlitchFilter Parameter",$data->Pin." , ".$data->GlitchFilter);
