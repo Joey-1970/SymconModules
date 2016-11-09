@@ -179,7 +179,7 @@
 								break;
 							case "6":
 								// SD-Card
-								$Result = trim(substr($ResultArray[key($ResultArray)], 10, -3));
+								$Result = trim(substr($ResultArray[key($ResultArray)], 10, -4));
 								$MemArray = explode(" ", $Result);
 								$MemArray = array_filter($MemArray);
 								IPS_LogMessage("IPS2GPIO RPi", serialize($MemArray));
