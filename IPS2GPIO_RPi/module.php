@@ -44,11 +44,11 @@
 		$this->DisableAction("AverageLoad5Min");
 		$this->RegisterVariableFloat("AverageLoad15Min", "CPU AverageLoad 15 Min", "~Intensity.1", 90);
 		$this->DisableAction("AverageLoad15Min");
-		$this->RegisterVariableInteger("MemoryTotal", "Memory Total", "kilobyte", 100);
+		$this->RegisterVariableFloat("MemoryTotal", "Memory Total", "kilobyte", 100);
 		$this->DisableAction("MemoryTotal");
-		$this->RegisterVariableInteger("MemoryFree", "Memory Free", "kilobyte", 110);
+		$this->RegisterVariableFloat("MemoryFree", "Memory Free", "kilobyte", 110);
 		$this->DisableAction("MemoryFree");
-		$this->RegisterVariableInteger("MemoryAvailable", "Memory Available", "kilobyte", 120);
+		$this->RegisterVariableFloat("MemoryAvailable", "Memory Available", "kilobyte", 120);
 		$this->DisableAction("MemoryAvailable");
 		$this->RegisterVariableString("Revision", "Revision", "", 130);
 		$this->DisableAction("Revision");
@@ -60,7 +60,15 @@
 		$this->DisableAction("Serial");
 		$this->RegisterVariableString("Software", "Software", "", 170);
 		$this->DisableAction("Software");
-		 
+		$this->RegisterVariableFloat("SD_Card_Total", "SD-Card Total", "kilobyte", 180);
+		$this->DisableAction("SD_Card_Total");
+		$this->RegisterVariableFloat("SD_Card_Used", "SD-Card Used", "kilobyte", 190);
+		$this->DisableAction("SD_Card_Used");
+		$this->RegisterVariableFloat("SD_Card_Available", "SD-Card Available", "kilobyte", 200);
+		$this->DisableAction("SD_Card_Available");
+		$this->RegisterVariableInteger("SD_Card_Used_rel", "SD-Card Used (rel)", "~Intensity.1", 210);
+		$this->DisableAction("SD_Card_Used_rel");
+		
                 If (IPS_GetKernelRunlevel() == 10103) {
 			// Logging setzen
 			/*
