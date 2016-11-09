@@ -179,7 +179,8 @@
 								break;
 							case "6":
 								// SD-Card
-								$MemArray = explode("\n", $ResultArray[key($ResultArray)]);
+								$Result = trim(substr($ResultArray[key($ResultArray)], 10, -2));
+								$MemArray = explode(" ", $Result);
 								IPS_LogMessage("IPS2GPIO RPi", serialize($MemArray));
 								//SetValueInteger($this->GetIDForIdent("MemoryTotal"), intval(substr($MemArray[0], 16, -3)));
 								//SetValueInteger($this->GetIDForIdent("MemoryFree"), intval(substr($MemArray[1], 16, -3)));
