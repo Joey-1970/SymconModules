@@ -191,9 +191,9 @@
 								$MemArray = explode(" ", $Result);
 								$MemArray = array_filter($MemArray);
 								//IPS_LogMessage("IPS2GPIO RPi", serialize($MemArray));
-								SetValueFloat($this->GetIDForIdent("SD_Card_Total"), intfloat($MemArray[0]));
-								SetValueFloat($this->GetIDForIdent("SD_Card_Used"), intfloat($MemArray[1]));
-								SetValueFloat($this->GetIDForIdent("SD_Card_Available"), intfloat($MemArray[2]));
+								SetValueFloat($this->GetIDForIdent("SD_Card_Total"), intval($MemArray[0]));
+								SetValueFloat($this->GetIDForIdent("SD_Card_Used"), intval($MemArray[1]));
+								SetValueFloat($this->GetIDForIdent("SD_Card_Available"), intval($MemArray[2]));
 								SetValueInteger($this->GetIDForIdent("SD_Card_Used_rel"), intval($MemArray[3]) / 100 );
 								break;
 						}
