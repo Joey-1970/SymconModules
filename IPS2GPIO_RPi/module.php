@@ -132,7 +132,7 @@
 								SetValueInteger($this->GetIDForIdent("MemoryCPU"), $Result);
 								break;
 							case "3":
-								// CPU Speicher
+								// GPU Speicher
 								$Result = intval(substr($ResultArray[key($ResultArray)], 4, -1));
 								SetValueInteger($this->GetIDForIdent("MemoryGPU"), $Result);
 								break;
