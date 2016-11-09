@@ -179,7 +179,7 @@
 								break;
 							case "6":
 								// SD-Card
-								$Result = trim(substr($ResultArray[key($ResultArray)], 10, -2));
+								$Result = trim(substr($ResultArray[key($ResultArray)], 10, -3));
 								$MemArray = explode(" ", $Result);
 								IPS_LogMessage("IPS2GPIO RPi", serialize($MemArray));
 								//SetValueInteger($this->GetIDForIdent("MemoryTotal"), intval(substr($MemArray[0], 16, -3)));
@@ -232,7 +232,7 @@
 		// Speicher
 		$CommandArray[5] = "cat /proc/meminfo | grep Mem";
 		// SD-Card
-		$CommandArray[6] = " df -P | grep /dev/root";
+		$CommandArray[6] = "df -P | grep /dev/root";
 		
 		
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 1, "IsArray" => true )));
