@@ -8,11 +8,9 @@
 		// Diese Zeile nicht löschen.
 		parent::Create();
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
-		$this->RegisterPropertyInteger("Messzyklus1", 60);
-		$this->RegisterPropertyInteger("Messzyklus2", 60);
-		$this->RegisterTimer("Messzyklus1", 0, 'I2GRPi_Measurement_1($_IPS["TARGET"]);');
-		$this->RegisterTimer("Messzyklus2", 0, 'I2GRPi_Measurement_2($_IPS["TARGET"]);');
-        }
+		$this->RegisterPropertyInteger("Messzyklus", 60);
+		$this->RegisterTimer("Messzyklus", 0, 'I2GRPi_Measurement_1($_IPS["TARGET"]);');
+       }
  
 	// Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
@@ -76,8 +74,7 @@
 			$Filter = '(.*"Function":"get_start_trigger".*|.*"InstanceID":'.$this->InstanceID.'.*)';
 			$this->SetReceiveDataFilter($Filter);
 				
-			$this->SetTimerInterval("Messzyklus1", ($this->ReadPropertyInteger("Messzyklus1") * 1000));
-			//$this->SetTimerInterval("Messzyklus2", ($this->ReadPropertyInteger("Messzyklus2") * 1000));
+			$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
 			$this->Measurement();
 			$this->Measurement_1();
 			$this->SetStatus(102);
@@ -232,13 +229,6 @@
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 1, "IsArray" => true )));
 	}
  	
-	public function Measurement_2()
-	{
-		//$Command = "/opt/vc/bin/vcgencmd measure_temp";
-		//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => 0 )));
-		
-	}
-	
 	public function PiReboot()
 	{
 		$Command = "sudo reboot";
