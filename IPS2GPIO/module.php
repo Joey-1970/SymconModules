@@ -888,42 +888,54 @@ class IPS2GPIO_IO extends IPSModule
 	
 	private function SSH_Connect(String $Command)
 	{
-	        set_include_path(__DIR__);
-		require_once (__DIR__ . '/Net/SSH2.php');
-		
-		$ssh = new Net_SSH2($this->ReadPropertyString("IPAddress"));
-		$login = @$ssh->login($this->ReadPropertyString("User"), $this->ReadPropertyString("Password"));
-		if ($login == false)
-		{
-		    IPS_LogMessage("IPS2GPIO SSH-Connect","Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert nicht!");
-		    return false;
+	        If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+			set_include_path(__DIR__);
+			require_once (__DIR__ . '/Net/SSH2.php');
+
+			$ssh = new Net_SSH2($this->ReadPropertyString("IPAddress"));
+			$login = @$ssh->login($this->ReadPropertyString("User"), $this->ReadPropertyString("Password"));
+			if ($login == false)
+			{
+			    IPS_LogMessage("IPS2GPIO SSH-Connect","Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert nicht!");
+			    return false;
+			}
+			$Result = $ssh->exec($Command);
+
+			$ssh->disconnect();
 		}
-		$Result = $ssh->exec($Command);
-		
-		$ssh->disconnect();
+		else {
+			$result = "";
+		}
+	
         return $Result;
 	}
 
 	private function SSH_Connect_Array(String $Command)
 	{
-	        set_include_path(__DIR__);
-		require_once (__DIR__ . '/Net/SSH2.php');
-		
-		$ssh = new Net_SSH2($this->ReadPropertyString("IPAddress"));
-		$login = @$ssh->login($this->ReadPropertyString("User"), $this->ReadPropertyString("Password"));
-		if ($login == false)
-		{
-		    IPS_LogMessage("IPS2GPIO SSH-Connect","Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert nicht!");
-		    return false;
+	        If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+			set_include_path(__DIR__);
+			require_once (__DIR__ . '/Net/SSH2.php');
+
+			$ssh = new Net_SSH2($this->ReadPropertyString("IPAddress"));
+			$login = @$ssh->login($this->ReadPropertyString("User"), $this->ReadPropertyString("Password"));
+			if ($login == false)
+			{
+			    IPS_LogMessage("IPS2GPIO SSH-Connect","Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert nicht!");
+			    return false;
+			}
+			$ResultArray = Array();
+			$CommandArray = unserialize($Command);
+			for ($i = 0; $i < Count($CommandArray); $i++) {
+				$ResultArray[key($CommandArray)] = $ssh->exec($CommandArray[key($CommandArray)]);
+				next($CommandArray);
+			}
+			$ssh->disconnect();
+			$Result = serialize($ResultArray);
 		}
-		$ResultArray = Array();
-		$CommandArray = unserialize($Command);
-		for ($i = 0; $i < Count($CommandArray); $i++) {
-			$ResultArray[key($CommandArray)] = $ssh->exec($CommandArray[key($CommandArray)]);
-			next($CommandArray);
+		else {
+			$ResultArray = Array();
+			$Result = serialize($ResultArray);
 		}
-		$ssh->disconnect();
-		$Result = serialize($ResultArray);
 		//IPS_LogMessage("IPS2GPIO SSH-Connect","Ergebnis: ".$Result);
         return $Result;
 	}
