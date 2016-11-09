@@ -181,9 +181,9 @@
 							case "5":
 								// Speicher
 								$MemArray = explode("\n", $ResultArray[key($ResultArray)]);
-								SetValueInteger($this->GetIDForIdent("MemoryTotal"), intval(substr($MemArray[0], 16, -3)));
-								SetValueInteger($this->GetIDForIdent("MemoryFree"), intval(substr($MemArray[1], 16, -3)));
-								SetValueInteger($this->GetIDForIdent("MemoryAvailable"), intval(substr($MemArray[2], 16, -3)));
+								SetValueFloat($this->GetIDForIdent("MemoryTotal"), intval(substr($MemArray[0], 16, -3)));
+								SetValueFloat($this->GetIDForIdent("MemoryFree"), intval(substr($MemArray[1], 16, -3)));
+								SetValueFloat($this->GetIDForIdent("MemoryAvailable"), intval(substr($MemArray[2], 16, -3)));
 								break;
 							case "6":
 								// SD-Card
@@ -191,9 +191,10 @@
 								$MemArray = explode(" ", $Result);
 								$MemArray = array_filter($MemArray);
 								IPS_LogMessage("IPS2GPIO RPi", serialize($MemArray));
-								//SetValueInteger($this->GetIDForIdent("MemoryTotal"), intval(substr($MemArray[0], 16, -3)));
-								//SetValueInteger($this->GetIDForIdent("MemoryFree"), intval(substr($MemArray[1], 16, -3)));
-								//SetValueInteger($this->GetIDForIdent("MemoryAvailable"), intval(substr($MemArray[2], 16, -3)));
+								SetValueFloat($this->GetIDForIdent("SD_Card_Total"), intfloat($MemArray[0]));
+								SetValueFloat($this->GetIDForIdent("SD_Card_Used"), intfloat($MemArray[1]));
+								SetValueFloat($this->GetIDForIdent("SD_Card_Available"), intfloat($MemArray[2]));
+								SetValueInteger($this->GetIDForIdent("SD_Card_Used_rel"), intval($MemArray[3]) / 100 );
 								break;
 						}
 						Next($ResultArray);
