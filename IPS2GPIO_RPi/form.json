@@ -7,11 +7,8 @@
       ],
     "elements":
     [
-        { "type": "Label", "label": "Daten Kategorie 1 (Temperatur, Auslastung etc.:" },
+        { "type": "Label", "label": "Daten (Temperatur, Auslastung etc.):" },
         { "type": "Label", "label": "Wiederholungszyklus in Sekunden (0 -> aus, 15 sek -> Minimum)" },
-        { "type": "IntervalBox", "name": "Messzyklus1", "caption": "Messzyklus (sek)" },
-        { "type": "Label", "label": "Daten Kategorie 2 (Speicher, etc.:" },
-        { "type": "Label", "label": "Wiederholungszyklus in Sekunden (0 -> aus, 15 sek -> Minimum)" },
-        { "type": "IntervalBox", "name": "Messzyklus2", "caption": "Messzyklus (sek)" }
+        { "type": "IntervalBox", "name": "Messzyklus", "caption": "Messzyklus (sek)" }
     ]
 }
