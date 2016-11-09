@@ -60,6 +60,8 @@
 		$this->DisableAction("Board");
 		$this->RegisterVariableString("Serial", "Serial", "", 160);
 		$this->DisableAction("Serial");
+		$this->RegisterVariableString("Software", "Software", "", 170);
+		$this->DisableAction("Software");
 		 
                 If (IPS_GetKernelRunlevel() == 10103) {
 			// Logging setzen
@@ -102,10 +104,9 @@
 						switch(key($ResultArray)) {
 							case "0":
 								// Betriebssystem
-								//$Result = floatval(substr($ResultArray[key($ResultArray)], 5, -2));
-								//SetValueFloat($this->GetIDForIdent("TemperaturGPU"), $Result);
+								$Result = intval($ResultArray[key($ResultArray)]);
+								SetValueString($this->GetIDForIdent("Software"), $Result);
 								break;
-
 							case "1":
 								// Hardware-Daten
 								$HardwareArray = explode("\n", $ResultArray[key($ResultArray)]);
