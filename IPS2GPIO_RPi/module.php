@@ -225,6 +225,8 @@
 		// Speicher
 		$CommandArray[5] = "cat /proc/meminfo | grep Mem";
 		
+		//https://znil.net/index.php?title=Temperatur_/_Spannung_etc._des_Raspberry_Pi_selbst_auslesen#Speicherplatz
+		
 		
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 1, "IsArray" => true )));
 	}
