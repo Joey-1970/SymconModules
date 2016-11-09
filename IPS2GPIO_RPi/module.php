@@ -193,8 +193,8 @@
 								IPS_LogMessage("IPS2GPIO RPi", serialize($MemArray));
 								SetValueFloat($this->GetIDForIdent("SD_Card_Total"), intval($MemArray[0]));
 								SetValueFloat($this->GetIDForIdent("SD_Card_Used"), intval($MemArray[1]));
-								SetValueFloat($this->GetIDForIdent("SD_Card_Available"), intval($MemArray[2]));
-								SetValueInteger($this->GetIDForIdent("SD_Card_Used_rel"), intval($MemArray[3]) / 100 );
+								//SetValueFloat($this->GetIDForIdent("SD_Card_Available"), intval($MemArray[2]));
+								//SetValueInteger($this->GetIDForIdent("SD_Card_Used_rel"), intval($MemArray[3]) / 100 );
 								break;
 						}
 						Next($ResultArray);
