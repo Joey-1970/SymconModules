@@ -190,7 +190,7 @@
 								$Result = trim(substr($ResultArray[key($ResultArray)], 10, -4));
 								$MemArray = explode(" ", $Result);
 								$MemArray = array_filter($MemArray);
-								IPS_LogMessage("IPS2GPIO RPi", serialize($MemArray));
+								//IPS_LogMessage("IPS2GPIO RPi", serialize($MemArray));
 								SetValueFloat($this->GetIDForIdent("SD_Card_Total"), intfloat($MemArray[0]));
 								SetValueFloat($this->GetIDForIdent("SD_Card_Used"), intfloat($MemArray[1]));
 								SetValueFloat($this->GetIDForIdent("SD_Card_Available"), intfloat($MemArray[2]));
