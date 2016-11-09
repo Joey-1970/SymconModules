@@ -236,6 +236,26 @@
 		
 	}
 	
+	public function PiReboot()
+	{
+		$Command = "sudo reboot";
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => 3, "IsArray" => false )));
+		
+	}    
+	
+	public function SetDisplayPower(bool $Value)
+	{
+		If ($Value == true) {
+			$Status = 1;
+		}
+		else {
+			$Status = 0;
+		}
+		$Command = "vcgencmd display_power ".$Status;
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => 3, "IsArray" => false )));
+		
+	}       
+	    
 	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
 	{
 	        if (!IPS_VariableProfileExists($Name))
