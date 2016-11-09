@@ -126,6 +126,16 @@
 
 								}
 								break;
+							case "2":
+								// CPU Speicher
+								$Result = intval(substr($ResultArray[key($ResultArray)], 4, -1));
+								SetValueInteger($this->GetIDForIdent("MemoryCPU"), $Result);
+								break;
+							case "3":
+								// CPU Speicher
+								$Result = intval(substr($ResultArray[key($ResultArray)], 4, -1));
+								SetValueInteger($this->GetIDForIdent("MemoryGPU"), $Result);
+								break;
 							
 						}
 						Next($ResultArray);
@@ -151,28 +161,18 @@
 								SetValueFloat($this->GetIDForIdent("VoltageCPU"), $Result);
 								break;
 							case "3":
-								// CPU Speicher
-								$Result = intval(substr($ResultArray[key($ResultArray)], 4, -1));
-								SetValueInteger($this->GetIDForIdent("MemoryCPU"), $Result);
-								break;
-							case "4":
-								// CPU Speicher
-								$Result = intval(substr($ResultArray[key($ResultArray)], 4, -1));
-								SetValueInteger($this->GetIDForIdent("MemoryGPU"), $Result);
-								break;
-							case "5":
 								// ARM Frequenz
 								$Result = intval(substr($ResultArray[key($ResultArray)], 14))/1000000;
 								SetValueFloat($this->GetIDForIdent("ARM_Frequenzy"), $Result);
 								break;
-							case "6":
+							case "4":
 								// Auslastung
 								$ResultPart = preg_Split("/[\s,]+/", $ResultArray[key($ResultArray)]);
 								SetValueFloat($this->GetIDForIdent("AverageLoad1Min"), $ResultPart[0]);
 								SetValueFloat($this->GetIDForIdent("AverageLoad5Min"), $ResultPart[1]);
 								SetValueFloat($this->GetIDForIdent("AverageLoad15Min"), $ResultPart[2]);
 								break;
-							case "7":
+							case "5":
 								// Speicher
 								$MemArray = explode("\n", $ResultArray[key($ResultArray)]);
 								SetValueInteger($this->GetIDForIdent("MemoryTotal"), intval(substr($MemArray[0], 16, -3)));
@@ -199,7 +199,10 @@
 		$CommandArray[0] = "cat /proc/version";
 		// Hardware-Daten
 		$CommandArray[1] = "cat /proc/cpuinfo";
-		
+		// CPU Speicher
+		$CommandArray[2] = "vcgencmd get_mem arm";
+		// GPU Speicher
+		$CommandArray[3] = "vcgencmd get_mem gpu";
 		
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 0, "IsArray" => true )));
 	}
@@ -215,16 +218,12 @@
 		$CommandArray[1] = "cat /sys/class/thermal/thermal_zone0/temp";
 		// Spannung
 		$CommandArray[2] = "/opt/vc/bin/vcgencmd measure_volts";
-		// CPU Speicher
-		$CommandArray[3] = "vcgencmd get_mem arm";
-		// GPU Speicher
-		$CommandArray[4] = "vcgencmd get_mem gpu";
 		// ARM Frequenz
-		$CommandArray[5] = "vcgencmd measure_clock arm";
+		$CommandArray[3] = "vcgencmd measure_clock arm";
 		// CPU Auslastung
-		$CommandArray[6] = "cat /proc/loadavg";
+		$CommandArray[4] = "cat /proc/loadavg";
 		// Speicher
-		$CommandArray[7] = "cat /proc/meminfo | grep Mem";
+		$CommandArray[5] = "cat /proc/meminfo | grep Mem";
 		
 		
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 1, "IsArray" => true )));
