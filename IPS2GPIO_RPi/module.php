@@ -44,11 +44,11 @@
 		$this->DisableAction("AverageLoad5Min");
 		$this->RegisterVariableFloat("AverageLoad15Min", "CPU AverageLoad 15 Min", "~Intensity.1", 90);
 		$this->DisableAction("AverageLoad15Min");
-		$this->RegisterVariableFloat("MemoryTotal", "Memory Total", "kilobyte", 100);
+		$this->RegisterVariableFloat("MemoryTotal", "Memory Total", "megabyte", 100);
 		$this->DisableAction("MemoryTotal");
-		$this->RegisterVariableFloat("MemoryFree", "Memory Free", "kilobyte", 110);
+		$this->RegisterVariableFloat("MemoryFree", "Memory Free", "megabyte", 110);
 		$this->DisableAction("MemoryFree");
-		$this->RegisterVariableFloat("MemoryAvailable", "Memory Available", "kilobyte", 120);
+		$this->RegisterVariableFloat("MemoryAvailable", "Memory Available", "megabyte", 120);
 		$this->DisableAction("MemoryAvailable");
 		$this->RegisterVariableString("Revision", "Revision", "", 130);
 		$this->DisableAction("Revision");
@@ -60,11 +60,11 @@
 		$this->DisableAction("Serial");
 		$this->RegisterVariableString("Software", "Software", "", 170);
 		$this->DisableAction("Software");
-		$this->RegisterVariableFloat("SD_Card_Total", "SD-Card Total", "kilobyte", 180);
+		$this->RegisterVariableFloat("SD_Card_Total", "SD-Card Total", "megabyte", 180);
 		$this->DisableAction("SD_Card_Total");
-		$this->RegisterVariableFloat("SD_Card_Used", "SD-Card Used", "kilobyte", 190);
+		$this->RegisterVariableFloat("SD_Card_Used", "SD-Card Used", "megabyte", 190);
 		$this->DisableAction("SD_Card_Used");
-		$this->RegisterVariableFloat("SD_Card_Available", "SD-Card Available", "kilobyte", 200);
+		$this->RegisterVariableFloat("SD_Card_Available", "SD-Card Available", "megabyte", 200);
 		$this->DisableAction("SD_Card_Available");
 		$this->RegisterVariableInteger("SD_Card_Used_rel", "SD-Card Used (rel)", "~Intensity.1", 210);
 		$this->DisableAction("SD_Card_Used_rel");
@@ -181,21 +181,24 @@
 							case "5":
 								// Speicher
 								$MemArray = explode("\n", $ResultArray[key($ResultArray)]);
-								SetValueFloat($this->GetIDForIdent("MemoryTotal"), intval(substr($MemArray[0], 16, -3)));
-								SetValueFloat($this->GetIDForIdent("MemoryFree"), intval(substr($MemArray[1], 16, -3)));
-								SetValueFloat($this->GetIDForIdent("MemoryAvailable"), intval(substr($MemArray[2], 16, -3)));
+								SetValueFloat($this->GetIDForIdent("MemoryTotal"), intval(substr($MemArray[0], 16, -3)) / 1000);
+								SetValueFloat($this->GetIDForIdent("MemoryFree"), intval(substr($MemArray[1], 16, -3)) / 1000);
+								SetValueFloat($this->GetIDForIdent("MemoryAvailable"), intval(substr($MemArray[2], 16, -3)) / 1000);
 								break;
 							case "6":
 								// SD-Card
 								$Result = trim(substr($ResultArray[key($ResultArray)], 10, -4));
+								// Array anhand der Leerzeichen trennen
 								$MemArray = explode(" ", $Result);
+								// Leere ArrayValues löschen
 								$MemArray = array_filter($MemArray);
+								// Array neu durchnummerieren
 								$MemArray = array_merge($MemArray);
-								IPS_LogMessage("IPS2GPIO RPi", serialize($MemArray));
-								SetValueFloat($this->GetIDForIdent("SD_Card_Total"), intval($MemArray[0]));
-								SetValueFloat($this->GetIDForIdent("SD_Card_Used"), intval($MemArray[1]));
-								//SetValueFloat($this->GetIDForIdent("SD_Card_Available"), intval($MemArray[2]));
-								//SetValueInteger($this->GetIDForIdent("SD_Card_Used_rel"), intval($MemArray[3]) / 100 );
+								//IPS_LogMessage("IPS2GPIO RPi", serialize($MemArray));
+								SetValueFloat($this->GetIDForIdent("SD_Card_Total"), intval($MemArray[0]) / 1000);
+								SetValueFloat($this->GetIDForIdent("SD_Card_Used"), intval($MemArray[1]) / 1000);
+								SetValueFloat($this->GetIDForIdent("SD_Card_Available"), intval($MemArray[2]) / 1000);
+								SetValueInteger($this->GetIDForIdent("SD_Card_Used_rel"), intval($MemArray[3]) / 100 );
 								break;
 						}
 						Next($ResultArray);
