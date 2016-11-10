@@ -197,11 +197,14 @@
 								$MemArray = array_filter($MemArray);
 								// Array neu durchnummerieren
 								$MemArray = array_merge($MemArray);
-								//IPS_LogMessage("IPS2GPIO RPi", serialize($MemArray));
 								SetValueFloat($this->GetIDForIdent("SD_Card_Total"), intval($MemArray[0]) / 1000);
 								SetValueFloat($this->GetIDForIdent("SD_Card_Used"), intval($MemArray[1]) / 1000);
 								SetValueFloat($this->GetIDForIdent("SD_Card_Available"), intval($MemArray[2]) / 1000);
 								SetValueInteger($this->GetIDForIdent("SD_Card_Used_rel"), intval($MemArray[3]) / 100 );
+								break;
+							case "7":
+								// Uptime
+								IPS_LogMessage("IPS2GPIO RPi", $ResultArray[key($ResultArray)]);
 								break;
 						}
 						Next($ResultArray);
@@ -250,7 +253,8 @@
 		$CommandArray[5] = "cat /proc/meminfo | grep Mem";
 		// SD-Card
 		$CommandArray[6] = "df -P | grep /dev/root";
-		
+		// Uptime
+		$CommandArray[7] = "uptime";
 		
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 1, "IsArray" => true )));
 	}
