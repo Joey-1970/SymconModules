@@ -26,47 +26,50 @@
 		$this->RegisterProfileFloat("frequenzy.mhz", "Speedo", "", " MHz", 0, 10000, 0.1, 1);
 		
 		//Status-Variablen anlegen
-		$this->RegisterVariableFloat("TemperaturCPU", "Temperature CPU", "~Temperature", 10);
-		$this->DisableAction("TemperaturCPU");
-		$this->RegisterVariableFloat("TemperaturGPU", "Temperature GPU", "~Temperature", 20);
-		$this->DisableAction("TemperaturGPU");
-		$this->RegisterVariableFloat("VoltageCPU", "Voltage CPU", "~Volt", 30);
-		$this->DisableAction("VoltageCPU");
-		$this->RegisterVariableInteger("MemoryCPU", "Memory CPU", "megabyte", 40);
-		$this->DisableAction("MemoryCPU");
-		$this->RegisterVariableInteger("MemoryGPU", "Memory GPU", "megabyte", 50);
-		$this->DisableAction("MemoryGPU");
-		$this->RegisterVariableFloat("ARM_Frequenzy", "ARM Frequenzy", "frequenzy.mhz", 60);
-		$this->DisableAction("ARM_Frequenzy");
-		$this->RegisterVariableFloat("AverageLoad1Min", "CPU AverageLoad 1 Min", "~Intensity.1", 70);
-		$this->DisableAction("AverageLoad1Min");
-		$this->RegisterVariableFloat("AverageLoad5Min", "CPU AverageLoad 5 Min", "~Intensity.1", 80);
-		$this->DisableAction("AverageLoad5Min");
-		$this->RegisterVariableFloat("AverageLoad15Min", "CPU AverageLoad 15 Min", "~Intensity.1", 90);
-		$this->DisableAction("AverageLoad15Min");
-		$this->RegisterVariableFloat("MemoryTotal", "Memory Total", "megabyte", 100);
-		$this->DisableAction("MemoryTotal");
-		$this->RegisterVariableFloat("MemoryFree", "Memory Free", "megabyte", 110);
-		$this->DisableAction("MemoryFree");
-		$this->RegisterVariableFloat("MemoryAvailable", "Memory Available", "megabyte", 120);
-		$this->DisableAction("MemoryAvailable");
-		$this->RegisterVariableString("Revision", "Revision", "", 130);
-		$this->DisableAction("Revision");
-		$this->RegisterVariableString("Hardware", "Hardware", "", 140);
-		$this->DisableAction("Hardware");
-		$this->RegisterVariableString("Board", "Board", "", 150);
+		$this->RegisterVariableString("Board", "Board", "", 10);
 		$this->DisableAction("Board");
-		$this->RegisterVariableString("Serial", "Serial", "", 160);
+		$this->RegisterVariableString("Revision", "Revision", "", 20);
+		$this->DisableAction("Revision");
+		$this->RegisterVariableString("Hardware", "Hardware", "", 30);
+		$this->DisableAction("Hardware");
+		$this->RegisterVariableString("Serial", "Serial", "", 40);
 		$this->DisableAction("Serial");
-		$this->RegisterVariableString("Software", "Software", "", 170);
+		$this->RegisterVariableString("Software", "Software", "", 50);
 		$this->DisableAction("Software");
-		$this->RegisterVariableFloat("SD_Card_Total", "SD-Card Total", "megabyte", 180);
+		$this->RegisterVariableInteger("MemoryCPU", "Memory CPU", "megabyte", 60);
+		$this->DisableAction("MemoryCPU");
+		$this->RegisterVariableInteger("MemoryGPU", "Memory GPU", "megabyte", 70);
+		$this->DisableAction("MemoryGPU");
+		// CPU/GPU
+		$this->RegisterVariableFloat("TemperaturCPU", "Temperature CPU", "~Temperature", 100);
+		$this->DisableAction("TemperaturCPU");
+		$this->RegisterVariableFloat("TemperaturGPU", "Temperature GPU", "~Temperature", 110);
+		$this->DisableAction("TemperaturGPU");
+		$this->RegisterVariableFloat("VoltageCPU", "Voltage CPU", "~Volt", 120);
+		$this->DisableAction("VoltageCPU");
+		$this->RegisterVariableFloat("ARM_Frequenzy", "ARM Frequenzy", "frequenzy.mhz", 130);
+		$this->DisableAction("ARM_Frequenzy");
+		$this->RegisterVariableFloat("AverageLoad1Min", "CPU AverageLoad 1 Min", "~Intensity.1", 140);
+		$this->DisableAction("AverageLoad1Min");
+		$this->RegisterVariableFloat("AverageLoad5Min", "CPU AverageLoad 5 Min", "~Intensity.1", 150);
+		$this->DisableAction("AverageLoad5Min");
+		$this->RegisterVariableFloat("AverageLoad15Min", "CPU AverageLoad 15 Min", "~Intensity.1", 160);
+		$this->DisableAction("AverageLoad15Min");
+		// Arbeitsspeicher
+		$this->RegisterVariableFloat("MemoryTotal", "Memory Total", "megabyte", 200);
+		$this->DisableAction("MemoryTotal");
+		$this->RegisterVariableFloat("MemoryFree", "Memory Free", "megabyte", 210);
+		$this->DisableAction("MemoryFree");
+		$this->RegisterVariableFloat("MemoryAvailable", "Memory Available", "megabyte", 220);
+		$this->DisableAction("MemoryAvailable");
+		// SD-Card
+		$this->RegisterVariableFloat("SD_Card_Total", "SD-Card Total", "megabyte", 300);
 		$this->DisableAction("SD_Card_Total");
-		$this->RegisterVariableFloat("SD_Card_Used", "SD-Card Used", "megabyte", 190);
+		$this->RegisterVariableFloat("SD_Card_Used", "SD-Card Used", "megabyte", 310);
 		$this->DisableAction("SD_Card_Used");
-		$this->RegisterVariableFloat("SD_Card_Available", "SD-Card Available", "megabyte", 200);
+		$this->RegisterVariableFloat("SD_Card_Available", "SD-Card Available", "megabyte", 320);
 		$this->DisableAction("SD_Card_Available");
-		$this->RegisterVariableInteger("SD_Card_Used_rel", "SD-Card Used (rel)", "~Intensity.1", 210);
+		$this->RegisterVariableInteger("SD_Card_Used_rel", "SD-Card Used (rel)", "~Intensity.1", 330);
 		$this->DisableAction("SD_Card_Used_rel");
 		
                 If (IPS_GetKernelRunlevel() == 10103) {
