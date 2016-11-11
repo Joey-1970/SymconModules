@@ -121,7 +121,7 @@
 							case "1":
 								// Hardware-Daten
 								$HardwareArray = explode("\n", $ResultArray[key($ResultArray)]);
-								for ($i = 0; $j <= Count($HardwareArray) - 1; $i++) {
+								for ($j = 0; $j <= Count($HardwareArray) - 1; $i++) {
 								    	If (Substr($HardwareArray[$j], 0, 8) == "Hardware") {
 										$PartArray = explode(":", $HardwareArray[$j]);
 										SetValueString($this->GetIDForIdent("Hardware"), trim($PartArray[1]));
