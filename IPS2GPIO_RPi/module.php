@@ -10,6 +10,9 @@
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 		$this->RegisterPropertyInteger("Messzyklus", 60);
 		$this->RegisterTimer("Messzyklus", 0, 'I2GRPi_Measurement_1($_IPS["TARGET"]);');
+		$this->RegisterPropertyBoolean("LoggingTempCPU", false);
+ 	    	$this->RegisterPropertyBoolean("LoggingTempGPU", false);
+ 	    	$this->RegisterPropertyBoolean("LoggingLoadAvg", false);
        }
  
 	// Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -74,12 +77,10 @@
 		
                 If (IPS_GetKernelRunlevel() == 10103) {
 			// Logging setzen
-			/*
-			for ($i = 0; $i <= 4; $i++) {
-				AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("MAC".$i), $this->ReadPropertyBoolean("LoggingMAC".$i)); 
-			} 
+			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("TemperaturCPU"), $this->ReadPropertyBoolean("LoggingTempCPU"));
+			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("TemperaturGPU"), $this->ReadPropertyBoolean("LoggingTempGPU"));
+			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("AverageLoad15Min"), $this->ReadPropertyBoolean("LoggingLoadAvg"));
 			IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
-			*/
 
 			//ReceiveData-Filter setzen
 			$Filter = '(.*"Function":"get_start_trigger".*|.*"InstanceID":'.$this->InstanceID.'.*)';
