@@ -151,7 +151,7 @@
 							case "4":
 								// Hostname
 								$Result = trim($ResultArray[key($ResultArray)]);
-								SetValueInteger($this->GetIDForIdent("Hostname"), $Result);
+								SetValueString($this->GetIDForIdent("Hostname"), $Result);
 								break;
 							
 						}
