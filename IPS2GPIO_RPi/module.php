@@ -205,7 +205,7 @@
 								$MemArray = array_filter($MemArray);
 								// Array neu durchnummerieren
 								$MemArray = array_merge($MemArray);
-								IPS_LogMessage("IPS2GPIO RPi", serialize($MemArray));
+								//IPS_LogMessage("IPS2GPIO RPi", serialize($MemArray));
 								SetValueFloat($this->GetIDForIdent("SD_Card_Total"), intval($MemArray[0]) / 1000);
 								SetValueFloat($this->GetIDForIdent("SD_Card_Used"), intval($MemArray[1]) / 1000);
 								SetValueFloat($this->GetIDForIdent("SD_Card_Available"), intval($MemArray[2]) / 1000);
