@@ -45,6 +45,8 @@
 		$this->DisableAction("MemoryGPU");
 		$this->RegisterVariableString("Hostname", "Hostname", "", 80);
 		$this->DisableAction("Hostname");
+		$this->RegisterVariableString("Uptime", "Uptime", "", 90);
+		$this->DisableAction("Uptime");
 		// CPU/GPU
 		$this->RegisterVariableFloat("TemperaturCPU", "Temperature CPU", "~Temperature", 100);
 		$this->DisableAction("TemperaturCPU");
@@ -213,7 +215,9 @@
 								break;
 							case "7":
 								// Uptime
-								IPS_LogMessage("IPS2GPIO RPi", $ResultArray[key($ResultArray)]);
+								$UptimeArray = explode(",", $ResultArray[key($ResultArray)]);
+								SetValueString($this->GetIDForIdent("Uptime"), $UptimeArray[0]." ".$UptimeArray[1]);
+								//IPS_LogMessage("IPS2GPIO RPi", $ResultArray[key($ResultArray)]);
 								break;
 						}
 						Next($ResultArray);
