@@ -216,7 +216,7 @@
 							case "7":
 								// Uptime
 								$UptimeArray = explode(",", $ResultArray[key($ResultArray)]);
-								SetValueString($this->GetIDForIdent("Uptime"), $UptimeArray[0]." ".$UptimeArray[1]);
+								SetValueString($this->GetIDForIdent("Uptime"), trim($UptimeArray[0].$UptimeArray[1]));
 								//IPS_LogMessage("IPS2GPIO RPi", $ResultArray[key($ResultArray)]);
 								break;
 						}
