@@ -74,7 +74,7 @@
 		$this->DisableAction("SD_Card_Used");
 		$this->RegisterVariableFloat("SD_Card_Available", "SD-Card Available", "megabyte", 320);
 		$this->DisableAction("SD_Card_Available");
-		$this->RegisterVariableInteger("SD_Card_Used_rel", "SD-Card Used (rel)", "~Intensity.1", 330);
+		$this->RegisterVariableFloat("SD_Card_Used_rel", "SD-Card Used (rel)", "~Intensity.1", 330);
 		$this->DisableAction("SD_Card_Used_rel");
 		
                 If (IPS_GetKernelRunlevel() == 10103) {
@@ -209,7 +209,7 @@
 								SetValueFloat($this->GetIDForIdent("SD_Card_Total"), intval($MemArray[0]) / 1000);
 								SetValueFloat($this->GetIDForIdent("SD_Card_Used"), intval($MemArray[1]) / 1000);
 								SetValueFloat($this->GetIDForIdent("SD_Card_Available"), intval($MemArray[2]) / 1000);
-								SetValueInteger($this->GetIDForIdent("SD_Card_Used_rel"), intval($MemArray[3]) / 100 );
+								SetValueFloat($this->GetIDForIdent("SD_Card_Used_rel"), intval($MemArray[3]) / 100 );
 								break;
 							case "7":
 								// Uptime
