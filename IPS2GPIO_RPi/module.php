@@ -115,7 +115,7 @@
 						switch(key($ResultArray)) {
 							case "0":
 								// Betriebssystem
-								$Result = intval($ResultArray[key($ResultArray)]);
+								$Result = $ResultArray[key($ResultArray)];
 								SetValueString($this->GetIDForIdent("Software"), $Result);
 								break;
 							case "1":
@@ -205,6 +205,7 @@
 								$MemArray = array_filter($MemArray);
 								// Array neu durchnummerieren
 								$MemArray = array_merge($MemArray);
+								IPS_LogMessage("IPS2GPIO RPi", serialize($MemArray));
 								SetValueFloat($this->GetIDForIdent("SD_Card_Total"), intval($MemArray[0]) / 1000);
 								SetValueFloat($this->GetIDForIdent("SD_Card_Used"), intval($MemArray[1]) / 1000);
 								SetValueFloat($this->GetIDForIdent("SD_Card_Available"), intval($MemArray[2]) / 1000);
