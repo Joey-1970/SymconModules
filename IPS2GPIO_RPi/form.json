@@ -9,6 +9,9 @@
     [
         { "type": "Label", "label": "Daten (Temperatur, Auslastung etc.):" },
         { "type": "Label", "label": "Wiederholungszyklus in Sekunden (0 -> aus, 15 sek -> Minimum)" },
-        { "type": "IntervalBox", "name": "Messzyklus", "caption": "Messzyklus (sek)" }
+        { "type": "IntervalBox", "name": "Messzyklus", "caption": "Messzyklus (sek)" },
+        { "type": "CheckBox", "name": "LoggingTempCPU", "caption": "Logging CPU-Temperatur aktivieren" },
+        { "type": "CheckBox", "name": "LoggingTempGPU", "caption": "Logging GPU-Temperatur aktivieren" },
+        { "type": "CheckBox", "name": "LoggingLoadAvg", "caption": "Logging Auslastung aktivieren" }
     ]
 }
