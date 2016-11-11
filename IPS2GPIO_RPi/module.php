@@ -121,18 +121,18 @@
 							case "1":
 								// Hardware-Daten
 								$HardwareArray = explode("\n", $ResultArray[key($ResultArray)]);
-								for ($i = 0; $i <= Count($HardwareArray) - 1; $i++) {
-								    If (Substr($HardwareArray[$i], 0, 8) == "Hardware") {
-										$PartArray = explode(":", $HardwareArray[$i]);
+								for ($i = 0; $j <= Count($HardwareArray) - 1; $i++) {
+								    	If (Substr($HardwareArray[$j], 0, 8) == "Hardware") {
+										$PartArray = explode(":", $HardwareArray[$j]);
 										SetValueString($this->GetIDForIdent("Hardware"), trim($PartArray[1]));
 									}
-									If (Substr($HardwareArray[$i], 0, 8) == "Revision") {
-										$PartArray = explode(":", $HardwareArray[$i]);
+									If (Substr($HardwareArray[$j], 0, 8) == "Revision") {
+										$PartArray = explode(":", $HardwareArray[$j]);
 										SetValueString($this->GetIDForIdent("Revision"), trim($PartArray[1]));
 										SetValueString($this->GetIDForIdent("Board"), $this->GetHardware(hexdec($PartArray[1])) );
 									}
-									If (Substr($HardwareArray[$i], 0, 6) == "Serial") {
-										$PartArray = explode(":", $HardwareArray[$i]);
+									If (Substr($HardwareArray[$j], 0, 6) == "Serial") {
+										$PartArray = explode(":", $HardwareArray[$j]);
 										SetValueString($this->GetIDForIdent("Serial"), trim($PartArray[1]));
 									}
 
@@ -161,7 +161,7 @@
 				elseIf ($data->CommandNumber == 1) {
 					for ($i = 0; $i < Count($ResultArray); $i++) {
 						switch(key($ResultArray)) {
-							case "0":
+							case "0
 								// GPU Temperatur
 								$Result = floatval(substr($ResultArray[key($ResultArray)], 5, -2));
 								SetValueFloat($this->GetIDForIdent("TemperaturGPU"), $Result);
