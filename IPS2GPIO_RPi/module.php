@@ -161,7 +161,7 @@
 				elseIf ($data->CommandNumber == 1) {
 					for ($i = 0; $i < Count($ResultArray); $i++) {
 						switch(key($ResultArray)) {
-							case "0
+							case "0":
 								// GPU Temperatur
 								$Result = floatval(substr($ResultArray[key($ResultArray)], 5, -2));
 								SetValueFloat($this->GetIDForIdent("TemperaturGPU"), $Result);
