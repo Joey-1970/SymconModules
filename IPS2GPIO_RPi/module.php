@@ -43,6 +43,8 @@
 		$this->DisableAction("MemoryCPU");
 		$this->RegisterVariableInteger("MemoryGPU", "Memory GPU", "megabyte", 70);
 		$this->DisableAction("MemoryGPU");
+		$this->RegisterVariableString("Hostname", "Hostname", "", 80);
+		$this->DisableAction("Hostname");
 		// CPU/GPU
 		$this->RegisterVariableFloat("TemperaturCPU", "Temperature CPU", "~Temperature", 100);
 		$this->DisableAction("TemperaturCPU");
@@ -146,6 +148,11 @@
 								$Result = intval(substr($ResultArray[key($ResultArray)], 4, -1));
 								SetValueInteger($this->GetIDForIdent("MemoryGPU"), $Result);
 								break;
+							case "4":
+								// Hostname
+								$Result = trim($ResultArray[key($ResultArray)]);
+								SetValueInteger($this->GetIDForIdent("Hostname"), $Result);
+								break;
 							
 						}
 						Next($ResultArray);
@@ -231,6 +238,8 @@
 		$CommandArray[2] = "vcgencmd get_mem arm";
 		// GPU Speicher
 		$CommandArray[3] = "vcgencmd get_mem gpu";
+		// Hostname
+		$CommandArray[4] = "hostname";
 		
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 0, "IsArray" => true )));
 	}
