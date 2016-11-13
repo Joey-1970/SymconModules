@@ -63,7 +63,7 @@
 			   	break;
 			  case "result":
 				If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
-			   		SetValueInteger($this->GetIDForIdent("Status"), $data->Value);
+			   		SetValueBoolean($this->GetIDForIdent("Status"), $data->Value);
 				}
 			break;
 			   case "freepin":
