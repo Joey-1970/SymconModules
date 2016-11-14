@@ -29,7 +29,7 @@
 	   
 		//Status-Variablen anlegen
 		$this->RegisterVariableInteger("Brightness", "Brightness", "~Intensity.100", 10);
-           	$this->EnableAction("Brightness");
+           	$this->DisableAction("Brightness");
 
 		$this->RegisterVariableInteger("Baud", "Baud", "", 110);
 		$this->DisableAction("Baud");
@@ -40,7 +40,7 @@
 		IPS_SetHidden($this->GetIDForIdent("ButtonNumber"), false);
 		
 		$this->RegisterVariableInteger("PageNumber", "PageNumber", "", 110);
-		$this->EnableAction("PageNumber");
+		$this->DisableAction("PageNumber");
 		IPS_SetHidden($this->GetIDForIdent("PageNumber"), false);
 		
 		$this->RegisterVariableBoolean("ButtonState", "ButtonState", "", 110);
@@ -60,7 +60,7 @@
 		IPS_SetHidden($this->GetIDForIdent("Coordinate_Y"), false);
 		
 		$this->RegisterVariableBoolean("SleepMode", "SleepMode", "", 110);
-		$this->EnableAction("SleepMode");
+		$this->DisableAction("SleepMode");
 		IPS_SetHidden($this->GetIDForIdent("SleepMode"), false);
 		
 		$this->RegisterVariableString("StringReturn", "StringReturn", "", 120);
