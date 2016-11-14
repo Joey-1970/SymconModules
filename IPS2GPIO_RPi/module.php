@@ -56,8 +56,8 @@
 		$this->DisableAction("VoltageCPU");
 		$this->RegisterVariableFloat("ARM_Frequenzy", "ARM Frequenzy", "frequenzy.mhz", 130);
 		$this->DisableAction("ARM_Frequenzy");
-		//$this->RegisterVariableFloat("AverageLoad", "CPU AverageLoad", "~Intensity.1", 140);
-		//$this->DisableAction("AverageLoad");
+		$this->RegisterVariableFloat("AverageLoad", "CPU AverageLoad", "~Intensity.1", 140);
+		$this->DisableAction("AverageLoad");
 		$this->RegisterVariableFloat("AverageLoad1Min", "CPU AverageLoad 1 Min", "~Intensity.1", 140);
 		$this->DisableAction("AverageLoad1Min");
 		$this->RegisterVariableFloat("AverageLoad5Min", "CPU AverageLoad 5 Min", "~Intensity.1", 150);
@@ -188,18 +188,19 @@
 								break;
 							case "4":
 								// Auslastung
+								/*
 								$ResultPart = preg_Split("/[\s,]+/", $ResultArray[key($ResultArray)]);
 								SetValueFloat($this->GetIDForIdent("AverageLoad1Min"), $ResultPart[0]);
 								SetValueFloat($this->GetIDForIdent("AverageLoad5Min"), $ResultPart[1]);
 								SetValueFloat($this->GetIDForIdent("AverageLoad15Min"), $ResultPart[2]);
-								/*
+								*/
 								$LoadAvgArray = explode("\n", $ResultArray[key($ResultArray)]);
 								$LineOneArray = explode(" ", $LoadAvgArray[0]);
 								IPS_LogMessage("IPS2GPIO RPi", serialize($LineOneArray));
-								$idle = (intval($LineOneArray[4]) * 100) / 
-									(intval($LineOneArray[1]) + intval($LineOneArray[2]) + intval($LineOneArray[3]) + intval($LineOneArray[4]) + intval($LineOneArray[5]) + intval($LineOneArray[6]) + intval($LineOneArray[7]));
+								$idle = (intval($LineOneArray[5]) * 100) / 
+									(intval($LineOneArray[2]) + intval($LineOneArray[3]) + intval($LineOneArray[4]) + intval($LineOneArray[5]) + intval($LineOneArray[6]) + intval($LineOneArray[7]) + intval($LineOneArray[8]));
 								SetValueFloat($this->GetIDForIdent("AverageLoad"), $idle / 100);
-								*/
+								
 								break;
 							case "5":
 								// Speicher
@@ -278,8 +279,8 @@
 		// ARM Frequenz
 		$CommandArray[3] = "vcgencmd measure_clock arm";
 		// CPU Auslastung
-		$CommandArray[4] = "cat /proc/loadavg";
-		//$CommandArray[4] = "cat /proc/stat";
+		//$CommandArray[4] = "cat /proc/loadavg";
+		$CommandArray[4] = "cat /proc/stat";
 		// Speicher
 		$CommandArray[5] = "cat /proc/meminfo | grep Mem";
 		// SD-Card
