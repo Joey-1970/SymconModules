@@ -21,9 +21,9 @@
 		   
 		//Status-Variablen anlegen
 		$this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
-	        $this->DisableAction("Status");
+	        $this->EnableAction("Status");
 	        $this->RegisterVariableInteger("Intensity", "Intensity", "~Intensity.255", 20);
-	        $this->DisableAction("Intensity");
+	        $this->EnableAction("Intensity");
            
            	//ReceiveData-Filter setzen
 		$Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*)';
