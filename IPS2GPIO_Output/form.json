@@ -42,6 +42,7 @@
                 { "label": "26", "value": 26 },
                 { "label": "27", "value": 27 }
                 ]
-        }    
+        },
+        { "type": "CheckBox", "name": "Logging", "caption": "Logging aktivieren" }
   ]
 }
