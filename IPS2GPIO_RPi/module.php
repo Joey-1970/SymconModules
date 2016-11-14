@@ -186,10 +186,15 @@
 								break;
 							case "4":
 								// Auslastung
+								/*
 								$ResultPart = preg_Split("/[\s,]+/", $ResultArray[key($ResultArray)]);
 								SetValueFloat($this->GetIDForIdent("AverageLoad1Min"), $ResultPart[0]);
 								SetValueFloat($this->GetIDForIdent("AverageLoad5Min"), $ResultPart[1]);
 								SetValueFloat($this->GetIDForIdent("AverageLoad15Min"), $ResultPart[2]);
+								*/
+								$LoadAvgArray = explode("\n", $ResultArray[key($ResultArray)]);
+								$LineOneArray = explode(" ", $LoadAvgArray[0]);
+								IPS_LogMessage("IPS2GPIO RPi", serialize($LineOneArray));
 								break;
 							case "5":
 								// Speicher
@@ -268,7 +273,8 @@
 		// ARM Frequenz
 		$CommandArray[3] = "vcgencmd measure_clock arm";
 		// CPU Auslastung
-		$CommandArray[4] = "cat /proc/loadavg";
+		//$CommandArray[4] = "cat /proc/loadavg";
+		$CommandArray[4] = "cat /proc/stat";
 		// Speicher
 		$CommandArray[5] = "cat /proc/meminfo | grep Mem";
 		// SD-Card
