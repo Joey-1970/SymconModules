@@ -43,6 +43,7 @@
 	    	}
 	    	//Status-Variablen anlegen
 		$this->RegisterVariableBoolean("P0", "P0", "~Switch", 10);
+		
           	IPS_SetHidden($this->GetIDForIdent("P0"), false);
 		
 		$this->RegisterVariableBoolean("P1", "P1", "~Switch", 20);
@@ -70,14 +71,7 @@
           	IPS_SetHidden($this->GetIDForIdent("Value"), false);
 		
 		for ($i = 0; $i <= 7; $i++) {
-			If ($this->ReadPropertyBoolean("P".$i) == true) {
-				// wenn true dann Eingang, dann disable
-				$this->DisableAction("P".$i);
-			}
-			else {
-				// Ausgang muss manipulierbar sein
-				$this->EnableAction("P".$i);	
-			}
+			$this->DisableAction("P".$i);
 		}
 		
 		If (IPS_GetKernelRunlevel() == 10103) {
