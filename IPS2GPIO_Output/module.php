@@ -5,25 +5,30 @@
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
-            // Diese Zeile nicht löschen.
-            parent::Create();
-            $this->RegisterPropertyInteger("Pin", -1);
- 	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+            	// Diese Zeile nicht löschen.
+            	parent::Create();
+            	$this->RegisterPropertyInteger("Pin", -1);
+		$this->RegisterPropertyBoolean("Logging", false);
+ 	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
 
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
         {
-                 // Diese Zeile nicht löschen
-                 parent::ApplyChanges();
-                 //Connect to available splitter or create a new one
-	         $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
-	   
-	         //Status-Variablen anlegen
-	         $this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
-                 $this->EnableAction("Status");
-            
-                //ReceiveData-Filter setzen
+		// Diese Zeile nicht löschen
+		parent::ApplyChanges();
+		//Connect to available splitter or create a new one
+		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+
+		//Status-Variablen anlegen
+		$this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
+		$this->EnableAction("Status");
+            	
+		// Logging setzen
+		AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Status"), $this->ReadPropertyBoolean("Logging"));
+		IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
+
+             	//ReceiveData-Filter setzen
                 $Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*)';
 		$this->SetReceiveDataFilter($Filter);
 
