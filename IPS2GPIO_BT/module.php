@@ -32,25 +32,25 @@
 	   
 	         //Status-Variablen anlegen
 	         $this->RegisterVariableBoolean("MAC0Connect", "MAC 1", "~Switch", 10);
-		 $this->EnableAction("MAC0Connect");
+		 $this->DisableAction("MAC0Connect");
 		 $this->RegisterVariableString("MAC0Name", "MAC 1 Name", "", 20);
-                 $this->EnableAction("MAC0Name");
+                 $this->DisableAction("MAC0Name");
                  $this->RegisterVariableBoolean("MAC1Connect", "MAC 2", "~Switch", 30);
-		 $this->EnableAction("MAC1Connect");
+		 $this->DisableAction("MAC1Connect");
 		 $this->RegisterVariableString("MAC1Name", "MAC 2 Name", "", 40);
-                 $this->EnableAction("MAC1Name");
+                 $this->DisableAction("MAC1Name");
 		 $this->RegisterVariableBoolean("MAC2Connect", "MAC 3", "~Switch", 50);
-		 $this->EnableAction("MAC2Connect");
+		 $this->DisableAction("MAC2Connect");
 		 $this->RegisterVariableString("MAC2Name", "MAC 3 Name", "", 60);
-                 $this->EnableAction("MAC2Name");
+                 $this->DisableAction("MAC2Name");
 		 $this->RegisterVariableBoolean("MAC3Connect", "MAC 4", "~Switch", 70);
-		 $this->EnableAction("MAC3Connect");
+		 $this->DisableAction("MAC3Connect");
 		 $this->RegisterVariableString("MAC3Name", "MAC 4 Name", "", 80);
-                 $this->EnableAction("MAC3Name");
+                 $this->DisableAction("MAC3Name");
 		 $this->RegisterVariableBoolean("MAC4Connect", "MAC 5", "~Switch", 90);
-		 $this->EnableAction("MAC4Connect");
+		 $this->DisableAction("MAC4Connect");
 		 $this->RegisterVariableString("MAC4Name", "MAC 5 Name", "", 100);
-                 $this->EnableAction("MAC4Name");
+                 $this->DisableAction("MAC4Name");
                 
 		If (IPS_GetKernelRunlevel() == 10103) {
 			// Logging setzen
