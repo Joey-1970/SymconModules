@@ -23,15 +23,15 @@
 	   
 	        //Status-Variablen anlegen
 	        $this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
-           	$this->EnableAction("Status");
+           	$this->DisableAction("Status");
            	$this->RegisterVariableInteger("Intensity_R", "Intensity Rot", "~Intensity.255",20);
-           	$this->EnableAction("Intensity_R");
+           	$this->DisableAction("Intensity_R");
            	$this->RegisterVariableInteger("Intensity_G", "Intensity Grün", "~Intensity.255", 30);
-           	$this->EnableAction("Intensity_G");
+           	$this->DisableAction("Intensity_G");
            	$this->RegisterVariableInteger("Intensity_B", "Intensity Blau", "~Intensity.255", 40);
-           	$this->EnableAction("Intensity_B");
+           	$this->DisableAction("Intensity_B");
            	$this->RegisterVariableInteger("Color", "Farbe", "~HexColor", 50);
-           	$this->EnableAction("Color");
+           	$this->DisableAction("Color");
            	
           	//ReceiveData-Filter setzen
           	$Filter = '((.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_R").'.*)|(.*"Pin":'.$this->ReadPropertyInteger("Pin_G").'.*|.*"Pin":'.$this->ReadPropertyInteger("Pin_B").'.*))';
