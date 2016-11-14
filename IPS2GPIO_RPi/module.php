@@ -199,7 +199,7 @@
 								IPS_LogMessage("IPS2GPIO RPi", serialize($LineOneArray));
 								$idle = (intval($LineOneArray[4]) * 100) / 
 									(intval($LineOneArray[1]) + intval($LineOneArray[2]) + intval($LineOneArray[3]) + intval($LineOneArray[4]) + intval($LineOneArray[5]) + intval($LineOneArray[6]) + intval($LineOneArray[7]));
-								SetValueFloat($this->GetIDForIdent("AverageLoad"), 100 - $idle);
+								SetValueFloat($this->GetIDForIdent("AverageLoad"), (100 - $idle) / 100);
 								break;
 							case "5":
 								// Speicher
