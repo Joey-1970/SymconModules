@@ -39,9 +39,9 @@
 		$this->DisableAction("Serial");
 		$this->RegisterVariableString("Software", "Software", "", 50);
 		$this->DisableAction("Software");
-		$this->RegisterVariableInteger("MemoryCPU", "Memory CPU", "megabyte.MB", 60);
+		$this->RegisterVariableFloat("MemoryCPU", "Memory CPU", "megabyte.MB", 60);
 		$this->DisableAction("MemoryCPU");
-		$this->RegisterVariableInteger("MemoryGPU", "Memory GPU", "megabyte.MB", 70);
+		$this->RegisterVariableFloat("MemoryGPU", "Memory GPU", "megabyte.MB", 70);
 		$this->DisableAction("MemoryGPU");
 		$this->RegisterVariableString("Hostname", "Hostname", "", 80);
 		$this->DisableAction("Hostname");
@@ -145,12 +145,12 @@
 							case "2":
 								// CPU Speicher
 								$Result = intval(substr($ResultArray[key($ResultArray)], 4, -1));
-								SetValueInteger($this->GetIDForIdent("MemoryCPU"), $Result);
+								SetValueFloat($this->GetIDForIdent("MemoryCPU"), $Result);
 								break;
 							case "3":
 								// GPU Speicher
 								$Result = intval(substr($ResultArray[key($ResultArray)], 4, -1));
-								SetValueInteger($this->GetIDForIdent("MemoryGPU"), $Result);
+								SetValueFloat($this->GetIDForIdent("MemoryGPU"), $Result);
 								break;
 							case "4":
 								// Hostname
