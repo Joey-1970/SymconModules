@@ -39,9 +39,9 @@
 		$this->DisableAction("Serial");
 		$this->RegisterVariableString("Software", "Software", "", 50);
 		$this->DisableAction("Software");
-		$this->RegisterVariableInteger("MemoryCPU", "Memory CPU", "megabyte", 60);
+		$this->RegisterVariableInteger("MemoryCPU", "Memory CPU", "megabyte.MB", 60);
 		$this->DisableAction("MemoryCPU");
-		$this->RegisterVariableInteger("MemoryGPU", "Memory GPU", "megabyte", 70);
+		$this->RegisterVariableInteger("MemoryGPU", "Memory GPU", "megabyte.MB", 70);
 		$this->DisableAction("MemoryGPU");
 		$this->RegisterVariableString("Hostname", "Hostname", "", 80);
 		$this->DisableAction("Hostname");
@@ -65,18 +65,18 @@
 		$this->RegisterVariableFloat("AverageLoad15Min", "CPU AverageLoad 15 Min", "~Intensity.1", 160);
 		$this->DisableAction("AverageLoad15Min");
 		// Arbeitsspeicher
-		$this->RegisterVariableFloat("MemoryTotal", "Memory Total", "megabyte", 200);
+		$this->RegisterVariableFloat("MemoryTotal", "Memory Total", "megabyte.MB", 200);
 		$this->DisableAction("MemoryTotal");
-		$this->RegisterVariableFloat("MemoryFree", "Memory Free", "megabyte", 210);
+		$this->RegisterVariableFloat("MemoryFree", "Memory Free", "megabyte.MB", 210);
 		$this->DisableAction("MemoryFree");
-		$this->RegisterVariableFloat("MemoryAvailable", "Memory Available", "megabyte", 220);
+		$this->RegisterVariableFloat("MemoryAvailable", "Memory Available", "megabyte.MB", 220);
 		$this->DisableAction("MemoryAvailable");
 		// SD-Card
-		$this->RegisterVariableFloat("SD_Card_Total", "SD-Card Total", "megabyte", 300);
+		$this->RegisterVariableFloat("SD_Card_Total", "SD-Card Total", "megabyte.MB", 300);
 		$this->DisableAction("SD_Card_Total");
-		$this->RegisterVariableFloat("SD_Card_Used", "SD-Card Used", "megabyte", 310);
+		$this->RegisterVariableFloat("SD_Card_Used", "SD-Card Used", "megabyte.MB", 310);
 		$this->DisableAction("SD_Card_Used");
-		$this->RegisterVariableFloat("SD_Card_Available", "SD-Card Available", "megabyte", 320);
+		$this->RegisterVariableFloat("SD_Card_Available", "SD-Card Available", "megabyte.MB", 320);
 		$this->DisableAction("SD_Card_Available");
 		$this->RegisterVariableFloat("SD_Card_Used_rel", "SD-Card Used (rel)", "~Intensity.1", 330);
 		$this->DisableAction("SD_Card_Used_rel");
