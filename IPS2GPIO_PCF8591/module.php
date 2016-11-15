@@ -52,7 +52,7 @@
 		IPS_SetHidden($this->GetIDForIdent("Channel_3"), false);
 		
 		$this->RegisterVariableInteger("Output", "Output", "~Intensity.255", 50);
-          	$this->DisableAction("Output");
+          	$this->EnableAction("Output");
 		IPS_SetHidden($this->GetIDForIdent("Output"), false);
 		
 		If (IPS_GetKernelRunlevel() == 10103) {
