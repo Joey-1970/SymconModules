@@ -231,9 +231,10 @@
 								$LoadAvgArray = explode("\n", $ResultArray[key($ResultArray)]);
 								$LineOneArray = explode(" ", $LoadAvgArray[0]);
 								// Array mit "cpu" löschen
-								unset($LineOneArray[array_search("cpu", $LineOneArray)]); 
+								unset($LineOneArray[array_search("cpu", $LineOneArray)]);
+								unset($LineOneArray[array_search("", $LineOneArray)]);
 								// Leere ArrayValues löschen
-								$LineOneArray = array_filter($LineOneArray);
+								//$LineOneArray = array_filter($LineOneArray);
 								// Array neu durchnummerieren
 								$LineOneArray = array_merge($LineOneArray);
 								IPS_LogMessage("IPS2GPIO RPi", serialize($LineOneArray));
