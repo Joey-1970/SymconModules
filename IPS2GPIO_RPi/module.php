@@ -188,19 +188,10 @@
 								break;
 							case "4":
 								// Auslastung
-								
 								$ResultPart = preg_Split("/[\s,]+/", $ResultArray[key($ResultArray)]);
 								SetValueFloat($this->GetIDForIdent("AverageLoad1Min"), $ResultPart[0]);
 								SetValueFloat($this->GetIDForIdent("AverageLoad5Min"), $ResultPart[1]);
 								SetValueFloat($this->GetIDForIdent("AverageLoad15Min"), $ResultPart[2]);
-								/*
-								$LoadAvgArray = explode("\n", $ResultArray[key($ResultArray)]);
-								$LineOneArray = explode(" ", $LoadAvgArray[0]);
-								IPS_LogMessage("IPS2GPIO RPi", serialize($LineOneArray));
-								$idle = (intval($LineOneArray[5]) * 100) / 
-									(intval($LineOneArray[2]) + intval($LineOneArray[3]) + intval($LineOneArray[4]) + intval($LineOneArray[5]) + intval($LineOneArray[6]) + intval($LineOneArray[7]) + intval($LineOneArray[8]));
-								SetValueFloat($this->GetIDForIdent("AverageLoad"), $idle / 100);
-								*/
 								break;
 							case "5":
 								// Speicher
@@ -234,6 +225,23 @@
 								    SetValueString($this->GetIDForIdent("Uptime"), trim(substr($UptimeArray[0], 12)));
 								}
 								//IPS_LogMessage("IPS2GPIO RPi", $ResultArray[key($ResultArray)]);
+								break;
+							case "8":
+								// CPU Auslastung über proc/stat
+								$LoadAvgArray = explode("\n", $ResultArray[key($ResultArray)]);
+								$LineOneArray = explode(" ", $LoadAvgArray[0]);
+								// Array mit "cpu" löschen
+								unset($LineOneArray[array_search("cpu", $LineOneArray)]); 
+								// Leere ArrayValues löschen
+								$LineOneArray = array_filter($LineOneArray);
+								// Array neu durchnummerieren
+								$LineOneArray = array_values($LineOneArray);
+								IPS_LogMessage("IPS2GPIO RPi", serialize($LineOneArray));
+								/*
+								$idle = (intval($LineOneArray[5]) * 100) / 
+									(intval($LineOneArray[2]) + intval($LineOneArray[3]) + intval($LineOneArray[4]) + intval($LineOneArray[5]) + intval($LineOneArray[6]) + intval($LineOneArray[7]) + intval($LineOneArray[8]));
+								SetValueFloat($this->GetIDForIdent("AverageLoad"), $idle / 100);
+								*/
 								break;
 						}
 						Next($ResultArray);
@@ -280,13 +288,14 @@
 		$CommandArray[3] = "vcgencmd measure_clock arm";
 		// CPU Auslastung
 		$CommandArray[4] = "cat /proc/loadavg";
-		//$CommandArray[4] = "cat /proc/stat";
 		// Speicher
 		$CommandArray[5] = "cat /proc/meminfo | grep Mem";
 		// SD-Card
 		$CommandArray[6] = "df -P | grep /dev/root";
 		// Uptime
 		$CommandArray[7] = "uptime";
+		// CPU Auslastung über /proc/stat
+		$CommandArray[8] = "cat /proc/stat";
 		
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 1, "IsArray" => true )));
 	}
