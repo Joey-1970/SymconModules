@@ -235,7 +235,7 @@
 								// Leere ArrayValues löschen
 								$LineOneArray = array_filter($LineOneArray);
 								// Array neu durchnummerieren
-								$LineOneArray = array_values($LineOneArray);
+								$LineOneArray = array_merge($LineOneArray);
 								IPS_LogMessage("IPS2GPIO RPi", serialize($LineOneArray));
 								/*
 								$idle = (intval($LineOneArray[5]) * 100) / 
