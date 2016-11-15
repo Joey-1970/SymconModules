@@ -29,7 +29,7 @@
 	   
 		//Status-Variablen anlegen
 		$this->RegisterVariableInteger("Brightness", "Brightness", "~Intensity.100", 10);
-           	$this->DisableAction("Brightness");
+           	$this->EnableAction("Brightness");
 
 		$this->RegisterVariableInteger("Baud", "Baud", "", 110);
 		$this->DisableAction("Baud");
@@ -124,11 +124,13 @@
 	            //Neuen Wert in die Statusvariable schreiben
 	            SetValueInteger($this->GetIDForIdent($Ident), $Value);
 	            break;
-	        case "BrightnessDefault":
+	        /*
+		case "BrightnessDefault":
 	            $this->SetBrightnessDefault($Value);
 	            //Neuen Wert in die Statusvariable schreiben
 	            SetValueInteger($this->GetIDForIdent($Ident), $Value);
 	            break;
+		*/
 	        default:
 	            throw new Exception("Invalid Ident");
 	    }
