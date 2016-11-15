@@ -24,7 +24,7 @@
 	         $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 	   	
 		// Profil anlegen
-		$this->RegisterProfileFloat("megabyte", "Information", "", " MB", 0, 1000000, 0.1, 1);
+		$this->RegisterProfileFloat("megabyte.MB", "Information", "", " MB", 0, 1000000, 0.1, 1);
 		//$this->RegisterProfileInteger("kilobyte", "Information", "", " kb", 0, 1000000, 1);
 		$this->RegisterProfileFloat("frequenzy.mhz", "Speedo", "", " MHz", 0, 10000, 0.1, 1);
 		
