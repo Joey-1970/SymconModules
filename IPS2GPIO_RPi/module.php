@@ -56,8 +56,12 @@
 		$this->DisableAction("VoltageCPU");
 		$this->RegisterVariableFloat("ARM_Frequenzy", "ARM Frequenzy", "frequenzy.mhz", 130);
 		$this->DisableAction("ARM_Frequenzy");
+		
 		//$this->RegisterVariableFloat("AverageLoad", "CPU AverageLoad", "~Intensity.1", 140);
 		//$this->DisableAction("AverageLoad");
+		$this->SetBuffer("PrevTotal", 0);
+		$this->SetBuffer("PrevIdle", 0);
+		
 		$this->RegisterVariableFloat("AverageLoad1Min", "CPU AverageLoad 1 Min", "~Intensity.1", 140);
 		$this->DisableAction("AverageLoad1Min");
 		$this->RegisterVariableFloat("AverageLoad5Min", "CPU AverageLoad 5 Min", "~Intensity.1", 150);
@@ -235,18 +239,23 @@
 								unset($LineOneArray[array_search("", $LineOneArray)]);
 								// Array neu durchnummerieren
 								$LineOneArray = array_merge($LineOneArray);
-								IPS_LogMessage("IPS2GPIO RPi", serialize($LineOneArray));
+								//IPS_LogMessage("IPS2GPIO RPi", serialize($LineOneArray));
 								// Idle = idle + iowait
 								$Idle = intval($LineOneArray[3]) + intval($LineOneArray[4]);
 								// NonIdle = user+nice+system+irq+softrig+steal
 								$NonIdle = intval($LineOneArray[0]) + intval($LineOneArray[1]) + intval($LineOneArray[2]) + intval($LineOneArray[5]) + intval($LineOneArray[6]) + intval($LineOneArray[7]);
 								// Total = Idle + NonIdle
 								$Total = $Idle + $NonIdle;
-
-
+								// Differenzen berechnen
+								$TotalDiff = $Total - intval($this->GetBuffer("PrevTotal"));
+								$IdleDiff = $Idle - intval($this->GetBuffer("PrevIdle"));
+								// Auslastung berechnen
+								$CPU_Usage = (($TotalDiff - $IdleDiff) / $TotalDiff) / intval($this->ReadPropertyInteger("Messzyklus"));
+								IPS_LogMessage("IPS2GPIO RPi", "CPU-Auslastung bei ".$CPU_Usage."%");
+								// Aktuelle Werte für die nächste Berechnung in den Buffer schreiben
+								$this->SetBuffer("PrevTotal", $Total);
+								$this->SetBuffer("PrevIdle", $Idle);
 								/*
-								$idle = (intval($LineOneArray[5]) * 100) / 
-									(intval($LineOneArray[2]) + intval($LineOneArray[3]) + intval($LineOneArray[4]) + intval($LineOneArray[5]) + intval($LineOneArray[6]) + intval($LineOneArray[7]) + intval($LineOneArray[8]));
 								SetValueFloat($this->GetIDForIdent("AverageLoad"), $idle / 100);
 								*/
 								break;
