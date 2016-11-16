@@ -57,8 +57,8 @@
 		$this->RegisterVariableFloat("ARM_Frequenzy", "ARM Frequenzy", "frequenzy.mhz", 130);
 		$this->DisableAction("ARM_Frequenzy");
 		
-		//$this->RegisterVariableFloat("AverageLoad", "CPU AverageLoad", "~Intensity.1", 140);
-		//$this->DisableAction("AverageLoad");
+		$this->RegisterVariableFloat("AverageLoad", "CPU AverageLoad", "~Intensity.1", 140);
+		$this->DisableAction("AverageLoad");
 		$this->SetBuffer("PrevTotal", 0);
 		$this->SetBuffer("PrevIdle", 0);
 		
@@ -250,11 +250,11 @@
 								$TotalDiff = $Total - intval($this->GetBuffer("PrevTotal"));
 								$IdleDiff = $Idle - intval($this->GetBuffer("PrevIdle"));
 								// Auslastung berechnen
-								$CPU_Usage = (($TotalDiff - $IdleDiff) / $TotalDiff) / intval($this->ReadPropertyInteger("Messzyklus"));
+								$CPU_Usage = (($TotalDiff - $IdleDiff) / $TotalDiff);
 								// Wert nur ausgeben, wenn der Buffer schon einmal mit den aktuellen Werten beschrieben wurde
 								If (intval($this->GetBuffer("PrevTotal")) + intval($this->GetBuffer("PrevIdle")) > 0) {
-									IPS_LogMessage("IPS2GPIO RPi", "CPU-Auslastung bei ".$CPU_Usage."%");
-									//SetValueFloat($this->GetIDForIdent("AverageLoad"), $CPU_Usage / 100);
+									//IPS_LogMessage("IPS2GPIO RPi", "CPU-Auslastung bei ".$CPU_Usage."%");
+									SetValueFloat($this->GetIDForIdent("AverageLoad"), $CPU_Usage);
 								}
 								// Aktuelle Werte für die nächste Berechnung in den Buffer schreiben
 								$this->SetBuffer("PrevTotal", $Total);
