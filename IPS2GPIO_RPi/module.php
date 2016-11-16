@@ -236,6 +236,14 @@
 								// Array neu durchnummerieren
 								$LineOneArray = array_merge($LineOneArray);
 								IPS_LogMessage("IPS2GPIO RPi", serialize($LineOneArray));
+								// Idle = idle + iowait
+								$Idle = intval($LineOneArray[3]) + intval($LineOneArray[4]);
+								// NonIdle = user+nice+system+irq+softrig+steal
+								$NonIdle = intval($LineOneArray[0]) + intval($LineOneArray[1]) + intval($LineOneArray[2]) + intval($LineOneArray[5]) + intval($LineOneArray[6]) + intval($LineOneArray[7]);
+								// Total = Idle + NonIdle
+								$Total = $Idle + $NonIdle;
+
+
 								/*
 								$idle = (intval($LineOneArray[5]) * 100) / 
 									(intval($LineOneArray[2]) + intval($LineOneArray[3]) + intval($LineOneArray[4]) + intval($LineOneArray[5]) + intval($LineOneArray[6]) + intval($LineOneArray[7]) + intval($LineOneArray[8]));
