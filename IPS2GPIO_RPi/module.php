@@ -251,13 +251,14 @@
 								$IdleDiff = $Idle - intval($this->GetBuffer("PrevIdle"));
 								// Auslastung berechnen
 								$CPU_Usage = (($TotalDiff - $IdleDiff) / $TotalDiff) / intval($this->ReadPropertyInteger("Messzyklus"));
-								IPS_LogMessage("IPS2GPIO RPi", "CPU-Auslastung bei ".$CPU_Usage."%");
+								// Wert nur ausgeben, wenn der Buffer schon einmal mit den aktuellen Werten beschrieben wurde
+								If (intval($this->GetBuffer("PrevTotal")) + intval($this->GetBuffer("PrevIdle")) > 0) {
+									IPS_LogMessage("IPS2GPIO RPi", "CPU-Auslastung bei ".$CPU_Usage."%");
+									//SetValueFloat($this->GetIDForIdent("AverageLoad"), $CPU_Usage / 100);
+								}
 								// Aktuelle Werte für die nächste Berechnung in den Buffer schreiben
 								$this->SetBuffer("PrevTotal", $Total);
 								$this->SetBuffer("PrevIdle", $Idle);
-								/*
-								SetValueFloat($this->GetIDForIdent("AverageLoad"), $idle / 100);
-								*/
 								break;
 						}
 						Next($ResultArray);
