@@ -888,7 +888,7 @@ class IPS2GPIO_IO extends IPSModule
 	
 	private function SSH_Connect(String $Command)
 	{
-	        If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+	        If (($this->ReadPropertyBoolean("Open") == true) ) {
 			set_include_path(__DIR__);
 			require_once (__DIR__ . '/Net/SSH2.php');
 
