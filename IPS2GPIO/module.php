@@ -133,10 +133,10 @@ class IPS2GPIO_IO extends IPSModule
 				}
 				break;
 			case 11101:
-				IPS_LogMessage("IPS2GPIO MessageSink", "Instanz wurde verbunden");
+				IPS_LogMessage("IPS2GPIO MessageSink", "Instanz ".$SenderID." wurde verbunden");
 				break;
 			case 11102:
-				IPS_LogMessage("IPS2GPIO MessageSink", "Instanz wurde getrennt");
+				IPS_LogMessage("IPS2GPIO MessageSink", "Instanz  ".$SenderID." wurde getrennt");
 				break;	
 			case 10505:
 				If ($Data[0] == 102) {
