@@ -61,13 +61,14 @@
 		$this->DisableAction("AverageLoad");
 		$this->SetBuffer("PrevTotal", 0);
 		$this->SetBuffer("PrevIdle", 0);
-		
+		/*
 		$this->RegisterVariableFloat("AverageLoad1Min", "CPU AverageLoad 1 Min", "~Intensity.1", 140);
 		$this->DisableAction("AverageLoad1Min");
 		$this->RegisterVariableFloat("AverageLoad5Min", "CPU AverageLoad 5 Min", "~Intensity.1", 150);
 		$this->DisableAction("AverageLoad5Min");
 		$this->RegisterVariableFloat("AverageLoad15Min", "CPU AverageLoad 15 Min", "~Intensity.1", 160);
 		$this->DisableAction("AverageLoad15Min");
+		*/
 		// Arbeitsspeicher
 		$this->RegisterVariableFloat("MemoryTotal", "Memory Total", "megabyte.MB", 200);
 		$this->DisableAction("MemoryTotal");
@@ -191,11 +192,40 @@
 								SetValueFloat($this->GetIDForIdent("ARM_Frequenzy"), $Result);
 								break;
 							case "4":
-								// Auslastung
+								// CPU Auslastung über proc/stat
+								$LoadAvgArray = explode("\n", $ResultArray[key($ResultArray)]);
+								$LineOneArray = explode(" ", $LoadAvgArray[0]);
+								// Array mit "cpu" und "" löschen
+								unset($LineOneArray[array_search("cpu", $LineOneArray)]);
+								unset($LineOneArray[array_search("", $LineOneArray)]);
+								// Array neu durchnummerieren
+								$LineOneArray = array_merge($LineOneArray);
+								//IPS_LogMessage("IPS2GPIO RPi", serialize($LineOneArray));
+								// Idle = idle + iowait
+								$Idle = intval($LineOneArray[3]) + intval($LineOneArray[4]);
+								// NonIdle = user+nice+system+irq+softrig+steal
+								$NonIdle = intval($LineOneArray[0]) + intval($LineOneArray[1]) + intval($LineOneArray[2]) + intval($LineOneArray[5]) + intval($LineOneArray[6]) + intval($LineOneArray[7]);
+								// Total = Idle + NonIdle
+								$Total = $Idle + $NonIdle;
+								// Differenzen berechnen
+								$TotalDiff = $Total - intval($this->GetBuffer("PrevTotal"));
+								$IdleDiff = $Idle - intval($this->GetBuffer("PrevIdle"));
+								// Auslastung berechnen
+								$CPU_Usage = (($TotalDiff - $IdleDiff) / $TotalDiff);
+								// Wert nur ausgeben, wenn der Buffer schon einmal mit den aktuellen Werten beschrieben wurde
+								If (intval($this->GetBuffer("PrevTotal")) + intval($this->GetBuffer("PrevIdle")) > 0) {
+									//IPS_LogMessage("IPS2GPIO RPi", "CPU-Auslastung bei ".$CPU_Usage."%");
+									SetValueFloat($this->GetIDForIdent("AverageLoad"), $CPU_Usage);
+								}
+								// Aktuelle Werte für die nächste Berechnung in den Buffer schreiben
+								$this->SetBuffer("PrevTotal", $Total);
+								$this->SetBuffer("PrevIdle", $Idle);
+								/*
 								$ResultPart = preg_Split("/[\s,]+/", $ResultArray[key($ResultArray)]);
 								SetValueFloat($this->GetIDForIdent("AverageLoad1Min"), $ResultPart[0]);
 								SetValueFloat($this->GetIDForIdent("AverageLoad5Min"), $ResultPart[1]);
 								SetValueFloat($this->GetIDForIdent("AverageLoad15Min"), $ResultPart[2]);
+								*/
 								break;
 							case "5":
 								// Speicher
@@ -231,6 +261,7 @@
 								//IPS_LogMessage("IPS2GPIO RPi", $ResultArray[key($ResultArray)]);
 								break;
 							case "8":
+								/*
 								// CPU Auslastung über proc/stat
 								$LoadAvgArray = explode("\n", $ResultArray[key($ResultArray)]);
 								$LineOneArray = explode(" ", $LoadAvgArray[0]);
@@ -259,6 +290,7 @@
 								// Aktuelle Werte für die nächste Berechnung in den Buffer schreiben
 								$this->SetBuffer("PrevTotal", $Total);
 								$this->SetBuffer("PrevIdle", $Idle);
+								*/
 								break;
 						}
 						Next($ResultArray);
@@ -303,16 +335,17 @@
 		$CommandArray[2] = "/opt/vc/bin/vcgencmd measure_volts";
 		// ARM Frequenz
 		$CommandArray[3] = "vcgencmd measure_clock arm";
-		// CPU Auslastung
-		$CommandArray[4] = "cat /proc/loadavg";
+		// CPU Auslastung über /proc/stat
+		$CommandArray[4] = "cat /proc/stat";
 		// Speicher
 		$CommandArray[5] = "cat /proc/meminfo | grep Mem";
 		// SD-Card
 		$CommandArray[6] = "df -P | grep /dev/root";
 		// Uptime
 		$CommandArray[7] = "uptime";
+		
 		// CPU Auslastung über /proc/stat
-		$CommandArray[8] = "cat /proc/stat";
+		//$CommandArray[8] = "cat /proc/stat";
 		
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 1, "IsArray" => true )));
 	}
