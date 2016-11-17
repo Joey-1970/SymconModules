@@ -959,7 +959,20 @@ class IPS2GPIO_IO extends IPSModule
 			$status = @fsockopen($this->ReadPropertyString("IPAddress"), 8888, $errno, $errstr, 10);
 				if (!$status) {
 					IPS_LogMessage("IPS2GPIO Netzanbindung: ","Port ist geschlossen!");
-					$this->SetStatus(104);
+					// Versuchen PIGPIO zu starten
+					IPS_LogMessage("IPS2GPIO Netzanbindung: ","Versuche PIGPIO per SSH zu starten...");
+					$this->SSH_Connect("sudo pigpiod");
+					$status = @fsockopen($this->ReadPropertyString("IPAddress"), 8888, $errno, $errstr, 10);
+					if (!$status) {
+						IPS_LogMessage("IPS2GPIO Netzanbindung: ","Port ist geschlossen!");
+						$this->SetStatus(104);
+					}
+					else {
+						fclose($status);
+						IPS_LogMessage("IPS2GPIO Netzanbindung: ","Port ist geöffnet");
+						$result = true;
+						$this->SetStatus(102);
+					}
 	   			}
 	   			else {
 	   				fclose($status);
