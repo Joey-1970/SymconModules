@@ -217,6 +217,9 @@
 									//IPS_LogMessage("IPS2GPIO RPi", "CPU-Auslastung bei ".$CPU_Usage."%");
 									SetValueFloat($this->GetIDForIdent("AverageLoad"), $CPU_Usage);
 								}
+								else {
+									SetValueFloat($this->GetIDForIdent("AverageLoad"), 0);
+								}
 								// Aktuelle Werte für die nächste Berechnung in den Buffer schreiben
 								$this->SetBuffer("PrevTotal", $Total);
 								$this->SetBuffer("PrevIdle", $Idle);
