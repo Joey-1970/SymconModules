@@ -513,6 +513,9 @@ class IPS2GPIO_IO extends IPSModule
 		If ($this->ReadPropertyBoolean("Serial_Used") == true)  {
 			$PinUsed[14] = 99999; 
 			$PinUsed[15] = 99999;
+			// Raspberry Pi 3 = Alt5(Rxd1/TxD1) => 2
+			// Alle anderen = Alt0(Rxd0/TxD0) => 4
+			// Auf Revisionsnummer prüfen
 			$this->CommandClientSocket(pack("LLLL", 0, 14, 4, 0).pack("LLLL", 0, 15, 4, 0), 32);
 			If (GetValueInteger($this->GetIDForIdent("Serial_Handle")) >= 0) {
 				$this->CommandClientSocket(pack("L*", 77, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
