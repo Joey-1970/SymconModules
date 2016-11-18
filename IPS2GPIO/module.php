@@ -1082,9 +1082,18 @@ class IPS2GPIO_IO extends IPSModule
 			$HardwareText = "Unbekannte Revisions Nummer!";
 		}
 		// Einige Besonderheiten setzen
-		
-		$this->SetBuffer("Default_I2C_Bus", 1);
-		$this->SetBuffer("Default_Serial_Bus", 0);
+		If ($RevNumber <= 3) {
+			$this->SetBuffer("Default_I2C_Bus", 0);
+		}
+		else {
+			$this->SetBuffer("Default_I2C_Bus", 1);
+		}
+		If (($RevNumber == 10494082) OR ($RevNumber == 10625154)) {
+			$this->SetBuffer("Default_Serial_Bus", 1);
+		}
+		else {
+			$this->SetBuffer("Default_Serial_Bus", 0);
+		}
 	return $HardwareText;
 	}
 }
