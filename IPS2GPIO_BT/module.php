@@ -51,7 +51,10 @@
 		 $this->DisableAction("MAC4Connect");
 		 $this->RegisterVariableString("MAC4Name", "MAC 5 Name", "", 100);
                  $this->DisableAction("MAC4Name");
-                
+                 $this->RegisterVariableBoolean("Summary", "Summary", "~Switch", 110);
+		 $this->DisableAction("Summary");
+		 $this->SetBuffer("Summary", false);
+		
 		If (IPS_GetKernelRunlevel() == 10103) {
 			// Logging setzen
 			for ($i = 0; $i <= 4; $i++) {
@@ -88,17 +91,22 @@
 			   case "set_RPi_connect":
 				//IPS_LogMessage("IPS2GPIO SSH-Connect","Ergebnis: ".utf8_decode($data->Result));
 				$ResultArray = unserialize(utf8_decode($data->Result));
+				$this->SetBuffer("Summary", false);
 				for ($i = 0; $i < Count($ResultArray); $i++) {
 					SetValueString($this->GetIDForIdent("MAC".key($ResultArray)."Name"), $ResultArray[key($ResultArray)]);
 					if (strlen($ResultArray[key($ResultArray)]) > 0) {
 						SetValueBoolean($this->GetIDForIdent("MAC".key($ResultArray)."Connect"), true);
+						$this->SetBuffer("Summary", true);
 					}
 					else {
 						SetValueBoolean($this->GetIDForIdent("MAC".key($ResultArray)."Connect"), false);
 					}
 					Next($ResultArray);
 				}
-				
+				If (GetValueBoolean($this->GetIDForIdent("Summary")) <> $this->GetBuffer("Summary")) {
+					SetValueBoolean($this->GetIDForIdent("Summary"), $this->GetBuffer("Summary"));
+				}
+					
 			   	break;
 			  case "get_start_trigger":
 			   	$this->ApplyChanges();
