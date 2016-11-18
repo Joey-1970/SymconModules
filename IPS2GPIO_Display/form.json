@@ -43,6 +43,8 @@
         { "type": "Label", "label": "Hinweise:" },
         { "type": "Label", "label": "- die UART-Nutzung muss in der Raspberry Pi-Konfiguration freigegeben werden (sudo raspi-config -> Advanced Options -> Serial Enable = false)" },
         { "type": "Label", "label": "- die korrekte Nutzung der GPIO ist zwingend erforderlich (GPIO-Nr. 14/15) " },
+        { "type": "Label", "label": "- bei allen Raspberry Pi-Modellen - außer dem Modell 3 - ist der Bus in der Regel 0 (z.B. /dev/ttyAMA0)" },
+        { "type": "Label", "label": "- beim Raspberry Pi Modell 3 ist der Bus 0 schon durch Bluetooth belegt daher ist in Regel der Bus 1 zu verwenden (z.B. /dev/ttyAMA1)" },
         { "type": "Label", "label": "- auf den korrekten Anschluss von RX/TX achten" }
     ]
 }
