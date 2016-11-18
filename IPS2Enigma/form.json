@@ -1,0 +1,15 @@
+{ 
+    "status":
+   [
+            { "code": 101, "icon": "inactive", "caption": "Instanz wird erstellt" },
+            { "code": 102, "icon": "active", "caption": "Instanz ist aktiv" },
+            { "code": 104, "icon": "inactive", "caption": "Instanz ist inaktiv" },
+            { "code": 200, "icon": "error", "caption": "Instanz ist fehlerhaft" }
+   ],
+   
+   "elements": 
+   [ 
+         { "name": "Open", "type": "CheckBox",  "caption": "Open" },
+         { "name": "IPAddress", "type": "ValidationTextBox", "caption": "IP" }
+    ]
+} 
