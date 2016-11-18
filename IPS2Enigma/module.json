@@ -5,7 +5,7 @@
   "vendor": "Enigma",
   "aliases":
   [
-    "IPS2GPIO_IO"
+    "IPS2Enigma"
   ],
   "parentRequirements": [],
   "childRequirements": [],
