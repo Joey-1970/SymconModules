@@ -83,6 +83,8 @@ class IPS2GPIO_IO extends IPSModule
 			IPS_SetHidden($this->GetIDForIdent("Serial_Handle"), true);
 			
 			$this->SetBuffer("SerialNotify", "false");
+			$this->SetBuffer("Default_I2C_Bus", 1);
+			$this->SetBuffer("Default_Serial_Bus", 0);
 			
 			$ParentID = $this->GetParentID();
 		        // Änderung an den untergeordneten Instanzen
@@ -1079,6 +1081,10 @@ class IPS2GPIO_IO extends IPSModule
 		else {
 			$HardwareText = "Unbekannte Revisions Nummer!";
 		}
+		// Einige Besonderheiten setzen
+		
+		$this->SetBuffer("Default_I2C_Bus", 1);
+		$this->SetBuffer("Default_Serial_Bus", 0);
 	return $HardwareText;
 	}
 }
