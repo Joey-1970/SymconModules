@@ -30,9 +30,12 @@
 		$this->DisableAction("e2model");
 		$this->RegisterVariableString("e2lanmac", "E2 Lan-MAC", "", 70);
 		$this->DisableAction("e2lanmac");
+		$this->RegisterVariableBoolean("powerstate", "powerstate", "~Switch", 100);
+		$this->EnableAction("powerstate");
 		
 		If ($this->ReadPropertyString("Open") == true) AND ($this->ConnenctionTest() == true) {
 			$this->GetBasicData();
+			$this->Powerstate();
 		}
 		
 
@@ -67,6 +70,22 @@
 	return;
 	}
 	
+	private function Powerstate()
+	{
+		$xml = simplexml_load_file("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate");
+		$wert = $xml->e2instandby;
+
+		If(strpos($wert,"false")!== false) {
+			// Bei "false" ist die Box eingeschaltet
+			SetValueBoolean($this->GetIDForIdent("powerstate"), true);
+		}
+		else {
+			SetValueBoolean($this->GetIDForIdent("powerstate"), false);
+		}
+	return $result;
+	}
+
+	    
 	// Toggelt den Status
 	public function Toggle_Status()
 	{
