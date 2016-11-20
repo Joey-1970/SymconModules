@@ -44,6 +44,9 @@
 		$this->DisableAction("e2eventstart");
 		$this->RegisterVariableString("e2eventtime", "Event Time", "", 150);
 		$this->DisableAction("e2eventtime");
+		$this->RegisterVariableString("e2eventend", "Event End", "", 160);
+		$this->DisableAction("e2eventend");
+		
 		
 		If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$this->GetBasicData();
@@ -91,31 +94,30 @@
 			 	SetValueString($this->GetIDForIdent("e2eventstart"), "N/A");
 			 	SetValueString($this->GetIDForIdent("e2eventtime"), "N/A");
 			}
-			if (((int)$duration > 0) and ((int)$startsec >= time() - 36000))
-			    $ende = date("H:i",(int)$startsec + (int)$duration) .' Uhr';
-			else
-			   $ende = "N/A
-			if ((int)$duration > 0)
-			    $dauer = round((int)$duration / 60).' Minuten';
-			else
-			   $dauer = "N/A";
-			if (((int)$currenttime > time() - 1800) and ((int)$currenttime < time() + 1800) and ((int)$startsec >= time() - 36000) and ((int)$duration > 0))
-			    $verbl = round(((int)$startsec + (int)$duration - (int)$currenttime) / 60 ).' Minuten';
-			else
-			   $verbl = "N/A";
-					If (round((int)$duration / 60) > 0)
-					   {
-						$Fortschritt = (int)(round(((int)$currenttime - (int)$startsec) / 60 ) / round((int)$duration / 60) * 100) ;
-						}
-					else
-					   {
-					   $Fortschritt = 0;
-					   }
-					$Filminformation = "Titel      : $title\nStart      : $start - Ende       : $ende\nDauer      : $dauer - Vergangen  : $vorbei - Verbleiben : $verbl\nDetails    : $description";
-					return array($Filminformation, $Fortschritt);
-			
-			
-			
+			if (((int)$duration > 0) and ((int)$startsec >= time() - 36000)) {
+			    	SetValueString($this->GetIDForIdent("e2eventstart"), date("H:i",(int)$startsec + (int)$duration) .' Uhr');
+			}
+			else {
+			   	SetValueString($this->GetIDForIdent("e2eventstart"), "N/A");
+			}
+			if ((int)$duration > 0) {
+			    	$dauer = round((int)$duration / 60).' Minuten';
+			}
+			else {
+			   	$dauer = "N/A";
+			}
+			if (((int)$currenttime > time() - 1800) and ((int)$currenttime < time() + 1800) and ((int)$startsec >= time() - 36000) and ((int)$duration > 0)) {
+			    	$verbl = round(((int)$startsec + (int)$duration - (int)$currenttime) / 60 ).' Minuten';
+			}
+			else {
+			   	$verbl = "N/A";
+			If (round((int)$duration / 60) > 0) {
+				$Fortschritt = (int)(round(((int)$currenttime - (int)$startsec) / 60 ) / round((int)$duration / 60) * 100) ;
+			}
+			else {
+			   	$Fortschritt = 0;
+			}
+					
 		}
 		else {
 			SetValueString($this->GetIDForIdent("e2servicename"), "");
