@@ -31,8 +31,9 @@
 		$this->RegisterVariableString("e2lanmac", "E2 Lan-MAC", "", 70);
 		$this->DisableAction("e2lanmac");
 		
-		
-		$this->GetBasicData();
+		If ($this->ReadPropertyString("Open") == true) {
+			$this->GetBasicData();
+		}
 		
 
         }
@@ -56,13 +57,13 @@
 	private function GetBasicData()
 	{
 		$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/about"));
-		SetValueString($this->GetIDForIdent("e2oeversion"), $xmlResult->e2about->e2oeversion);
-		SetValueString($this->GetIDForIdent("e2enigmaversion"), $xmlResult->e2about->e2enigmaversion);
-		SetValueString($this->GetIDForIdent("e2distroversion"), $xmlResult->e2about->e2distroversion);
-		SetValueString($this->GetIDForIdent("e2imageversion"), $xmlResult->e2about->e2imageversion);
-		SetValueString($this->GetIDForIdent("e2webifversion"), $xmlResult->e2about->e2webifversion);
-		SetValueString($this->GetIDForIdent("e2model"), $xmlResult->e2about->e2model);
-		SetValueString($this->GetIDForIdent("e2lanmac"), $xmlResult->e2about->e2lanmac);
+		SetValueString($this->GetIDForIdent("e2oeversion"), (string)$xmlResult->e2about->e2oeversion);
+		SetValueString($this->GetIDForIdent("e2enigmaversion"), (string)$xmlResult->e2about->e2enigmaversion);
+		SetValueString($this->GetIDForIdent("e2distroversion"), (string)$xmlResult->e2about->e2distroversion);
+		SetValueString($this->GetIDForIdent("e2imageversion"), (string)$xmlResult->e2about->e2imageversion);
+		SetValueString($this->GetIDForIdent("e2webifversion"), (string)$xmlResult->e2about->e2webifversion);
+		SetValueString($this->GetIDForIdent("e2model"), (string)$xmlResult->e2about->e2model);
+		SetValueString($this->GetIDForIdent("e2lanmac"), (string)$xmlResult->e2about->e2lanmac);
 	return;
 	}
 	
