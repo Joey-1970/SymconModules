@@ -31,7 +31,7 @@
 		$this->RegisterVariableString("e2lanmac", "E2 Lan-MAC", "", 70);
 		$this->DisableAction("e2lanmac");
 		
-		If ($this->ReadPropertyString("Open") == true) {
+		If ($this->ReadPropertyString("Open") == true) AND ($this->ConnenctionTest() == true) {
 			$this->GetBasicData();
 		}
 		
@@ -73,7 +73,32 @@
 	
 	return;
 	}
-/*	    
+
+	private function ConnectionTest()
+	{
+	      $result = false;
+	      If (Sys_Ping($this->ReadPropertyString("IPAddress"), 2000)) {
+			IPS_LogMessage("IPS2Enigma Netzanbindung","Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert");
+			$status = @fsockopen($this->ReadPropertyString("IPAddress"), 80, $errno, $errstr, 10);
+				if (!$status) {
+					IPS_LogMessage("IPS2Enigma Netzanbindung","Port ist geschlossen!");				
+	   			}
+	   			else {
+	   				fclose($status);
+					IPS_LogMessage("IPS2Enigma Netzanbindung","Port ist geöffnet");
+					$result = true;
+					$this->SetStatus(102);
+	   			}
+		}
+		else {
+			IPS_LogMessage("IPS2Enigma","IP ".$this->ReadPropertyString("IPAddress")." reagiert nicht!");
+			$this->SetStatus(104);
+		}
+	return $result;
+	}
+	    
+	    
+	    /*	    
 //*************************************************************************************************************
 // Prüft über Ping ob Gerät erreichbar
 function ENIGMA2_GetAvailable($ipadr)
