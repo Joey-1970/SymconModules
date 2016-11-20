@@ -133,7 +133,7 @@ function ENIGMA2_ToggleStandby($ipadr)
 
 return $result;
 }
-/**
+/*
 0 = Toogle Standby
 1 = Deepstandby
 2 = Reboot
