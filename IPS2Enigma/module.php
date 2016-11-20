@@ -46,7 +46,10 @@
 		$this->DisableAction("e2eventtime");
 		$this->RegisterVariableString("e2eventend", "Event End", "", 160);
 		$this->DisableAction("e2eventend");
-		
+		$this->RegisterVariableString("e2eventduration", "Event Duration", "", 170);
+		$this->DisableAction("e2eventduration");
+		$this->RegisterVariableString("e2eventleft", "Event Left", "", 180);
+		$this->DisableAction("e2eventleft");
 		
 		If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$this->GetBasicData();
@@ -101,16 +104,16 @@
 			   	SetValueString($this->GetIDForIdent("e2eventstart"), "N/A");
 			}
 			if ((int)$duration > 0) {
-			    	$dauer = round((int)$duration / 60).' Minuten';
+			    	SetValueString($this->GetIDForIdent("e2eventduration"), round((int)$duration / 60).' Minuten');
 			}
 			else {
-			   	$dauer = "N/A";
+			   	SetValueString($this->GetIDForIdent("e2eventduration"), "N/A");
 			}
 			if (((int)$currenttime > time() - 1800) and ((int)$currenttime < time() + 1800) and ((int)$startsec >= time() - 36000) and ((int)$duration > 0)) {
-			    	$verbl = round(((int)$startsec + (int)$duration - (int)$currenttime) / 60 ).' Minuten';
+			    	SetValueString($this->GetIDForIdent("e2eventleft"), round(((int)$startsec + (int)$duration - (int)$currenttime) / 60 ).' Minuten');
 			}
 			else {
-			   	$verbl = "N/A";
+			   	SetValueString($this->GetIDForIdent("e2eventleft"), "N/A");
 			If (round((int)$duration / 60) > 0) {
 				$Fortschritt = (int)(round(((int)$currenttime - (int)$startsec) / 60 ) / round((int)$duration / 60) * 100) ;
 			}
