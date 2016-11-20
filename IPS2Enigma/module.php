@@ -50,6 +50,8 @@
 		$this->DisableAction("e2eventduration");
 		$this->RegisterVariableString("e2eventleft", "Event Left", "", 180);
 		$this->DisableAction("e2eventleft");
+		$this->RegisterVariableInteger("e2eventprogres", "Event Left", ""~Intensity.1", 190);
+		$this->DisableAction("e2eventprogres");
 		
 		If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$this->GetBasicData();
@@ -115,15 +117,23 @@
 			else {
 			   	SetValueString($this->GetIDForIdent("e2eventleft"), "N/A");
 			If (round((int)$duration / 60) > 0) {
-				$Fortschritt = (int)(round(((int)$currenttime - (int)$startsec) / 60 ) / round((int)$duration / 60) * 100) ;
+				SetValueInteger($this->GetIDForIdent("e2eventprogres"), (int)(round(((int)$currenttime - (int)$startsec) / 60 ) / round((int)$duration / 60))) ;
 			}
 			else {
-			   	$Fortschritt = 0;
+			   	SetValueInteger($this->GetIDForIdent("e2eventprogres"), 0);
 			}
 					
 		}
 		else {
 			SetValueString($this->GetIDForIdent("e2servicename"), "");
+			SetValueString($this->GetIDForIdent("e2eventtitle"), "");
+			SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), "");
+			SetValueString($this->GetIDForIdent("e2eventstart"), "N/A");
+			SetValueString($this->GetIDForIdent("e2eventtime"), "N/A");
+			SetValueString($this->GetIDForIdent("e2eventstart"), "N/A");
+			SetValueString($this->GetIDForIdent("e2eventduration"), "N/A");
+			SetValueString($this->GetIDForIdent("e2eventleft"), "N/A");
+			SetValueInteger($this->GetIDForIdent("e2eventprogres"), 0);
 		}
 	}
 	// Ermittlung der Basisdaten
