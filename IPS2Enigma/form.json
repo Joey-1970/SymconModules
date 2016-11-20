@@ -9,7 +9,9 @@
    
    "elements": 
    [ 
-         { "name": "Open", "type": "CheckBox",  "caption": "Open" },
-         { "name": "IPAddress", "type": "ValidationTextBox", "caption": "IP" }
-    ]
+        { "name": "Open", "type": "CheckBox",  "caption": "Open" },
+        { "name": "IPAddress", "type": "ValidationTextBox", "caption": "IP" },
+        { "type": "Label", "label": "Zyklus Daten-Update in Sekunden (0 -> aus, 1 sek -> Minimum)" },
+        { "type": "IntervalBox", "name": "DatenUpdate", "caption": "Daten-Update (sek)" }
+   ]
 } 
