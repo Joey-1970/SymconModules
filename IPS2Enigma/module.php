@@ -50,7 +50,7 @@
 		$this->DisableAction("e2eventduration");
 		$this->RegisterVariableString("e2eventleft", "Event Left", "", 180);
 		$this->DisableAction("e2eventleft");
-		$this->RegisterVariableInteger("e2eventprogres", "Event Left", "~Intensity.1", 190);
+		$this->RegisterVariableInteger("e2eventprogres", "Event Progres", "~Intensity.1", 190);
 		$this->DisableAction("e2eventprogres");
 		
 		If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
