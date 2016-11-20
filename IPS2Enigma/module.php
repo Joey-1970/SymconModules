@@ -34,6 +34,8 @@
 		$this->DisableAction("e2lanmac");
 		$this->RegisterVariableBoolean("powerstate", "Powerstate", "~Switch", 100);
 		$this->EnableAction("powerstate");
+		$this->RegisterVariableString("e2servicename", "Service Name", "", 110);
+		$this->DisableAction("e2servicename");
 		
 		If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$this->GetBasicData();
@@ -62,6 +64,9 @@
 	{
 		If ($this->Powerstate() == true) {
 			IPS_LogMessage("IPS2Enigma","TV-Daten ermitteln");
+			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/subservices"));
+       			SetValueString($this->GetIDForIdent("e2servicename"), (string)$xmlResult->e2service[0]->e2servicename);
+			$e2servicereference = (string)$xmlResult->e2service[0]->e2servicereference;
 		}
 	}
 	// Ermittlung der Basisdaten
