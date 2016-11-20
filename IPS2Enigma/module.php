@@ -116,6 +116,7 @@
 			}
 			else {
 			   	SetValueString($this->GetIDForIdent("e2eventleft"), "N/A");
+			}
 			If (round((int)$duration / 60) > 0) {
 				SetValueInteger($this->GetIDForIdent("e2eventprogres"), (int)(round(((int)$currenttime - (int)$startsec) / 60 ) / round((int)$duration / 60))) ;
 			}
