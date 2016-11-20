@@ -100,10 +100,10 @@
 			 	SetValueString($this->GetIDForIdent("e2eventtime"), "N/A");
 			}
 			if (((int)$duration > 0) and ((int)$startsec >= time() - 36000)) {
-			    	SetValueString($this->GetIDForIdent("e2eventstart"), date("H:i",(int)$startsec + (int)$duration) .' Uhr');
+			    	SetValueString($this->GetIDForIdent("e2eventend"), date("H:i",(int)$startsec + (int)$duration) .' Uhr');
 			}
 			else {
-			   	SetValueString($this->GetIDForIdent("e2eventstart"), "N/A");
+			   	SetValueString($this->GetIDForIdent("e2eventend"), "N/A");
 			}
 			if ((int)$duration > 0) {
 			    	SetValueString($this->GetIDForIdent("e2eventduration"), round((int)$duration / 60).' Minuten');
