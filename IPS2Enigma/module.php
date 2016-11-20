@@ -33,7 +33,7 @@
 		$this->RegisterVariableBoolean("powerstate", "powerstate", "~Switch", 100);
 		$this->EnableAction("powerstate");
 		
-		If ($this->ReadPropertyString("Open") == true) AND ($this->ConnenctionTest() == true) {
+		If (($this->ReadPropertyString("Open") == true) AND ($this->ConnenctionTest() == true)) {
 			$this->GetBasicData();
 			$this->Powerstate();
 		}
