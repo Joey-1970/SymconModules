@@ -40,6 +40,10 @@
 		$this->DisableAction("e2eventtitle");
 		$this->RegisterVariableString("e2eventdescriptionextended", "Event Description", "", 130);
 		$this->DisableAction("e2eventdescriptionextended");
+		$this->RegisterVariableString("e2eventstart", "Event Start", "", 140);
+		$this->DisableAction("e2eventstart");
+		$this->RegisterVariableString("e2eventtime", "Event Time", "", 150);
+		$this->DisableAction("e2eventtime");
 		
 		If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$this->GetBasicData();
@@ -79,17 +83,14 @@
       			$startsec = $xmlResult->e2event->e2eventstart;
       			$duration = $xmlResult->e2event->e2eventduration;
 		      	$currenttime = time();
-			        if ((int)$startsec >= time() - 36000)
-        	{
-         $start = date("H:i",(int)$startsec) .' Uhr';
-         $vorbei = round(((int)$currenttime - (int)$startsec) / 60 ).' Minuten';
-        	}
-      else
-        	{    
-
-			 $start = "N/A";
-			 $vorbei = "N/A";
-				}
+			if ((int)$startsec >= time() - 36000) {
+				 SetValueString($this->GetIDForIdent("e2eventstart"), date("H:i",(int)$startsec) .' Uhr');
+				 SetValueString($this->GetIDForIdent("e2eventtime"), round(((int)$currenttime - (int)$startsec) / 60 ).' Minuten');
+			}
+		        else {    
+			 	SetValueString($this->GetIDForIdent("e2eventstart"), "N/A");
+			 	SetValueString($this->GetIDForIdent("e2eventtime"), "N/A");
+			}
 			if (((int)$duration > 0) and ((int)$startsec >= time() - 36000))
 			    $ende = date("H:i",(int)$startsec + (int)$duration) .' Uhr';
 			else
