@@ -67,6 +67,50 @@
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/subservices"));
        			SetValueString($this->GetIDForIdent("e2servicename"), (string)$xmlResult->e2service[0]->e2servicename);
 			$e2servicereference = (string)$xmlResult->e2service[0]->e2servicereference;
+			
+			
+			$xmlResult =  new SimpleXMLElement(file_get_contents("http://$ipadr/web/epgservice?sRef=".$e2servicereference));
+      			$title = utf8_decode($xmlResult->e2event->e2eventtitle);
+      			$description = utf8_decode($xmlResult->e2event->e2eventdescriptionextended);
+      			$startsec = $xmlResult->e2event->e2eventstart;
+      			$duration = $xmlResult->e2event->e2eventduration;
+		      	$currenttime = time();
+			        if ((int)$startsec >= time() - 36000)
+        	{
+         $start = date("H:i",(int)$startsec) .' Uhr';
+         $vorbei = round(((int)$currenttime - (int)$startsec) / 60 ).' Minuten';
+        	}
+      else
+        	{    
+
+			 $start = "N/A";
+			 $vorbei = "N/A";
+				}
+			if (((int)$duration > 0) and ((int)$startsec >= time() - 36000))
+			    $ende = date("H:i",(int)$startsec + (int)$duration) .' Uhr';
+			else
+			   $ende = "N/A
+			if ((int)$duration > 0)
+			    $dauer = round((int)$duration / 60).' Minuten';
+			else
+			   $dauer = "N/A";
+			if (((int)$currenttime > time() - 1800) and ((int)$currenttime < time() + 1800) and ((int)$startsec >= time() - 36000) and ((int)$duration > 0))
+			    $verbl = round(((int)$startsec + (int)$duration - (int)$currenttime) / 60 ).' Minuten';
+			else
+			   $verbl = "N/A";
+					If (round((int)$duration / 60) > 0)
+					   {
+						$Fortschritt = (int)(round(((int)$currenttime - (int)$startsec) / 60 ) / round((int)$duration / 60) * 100) ;
+						}
+					else
+					   {
+					   $Fortschritt = 0;
+					   }
+					$Filminformation = "Titel      : $title\nStart      : $start - Ende       : $ende\nDauer      : $dauer - Vergangen  : $vorbei - Verbleiben : $verbl\nDetails    : $description";
+					return array($Filminformation, $Fortschritt);
+			
+			
+			
 		}
 		else {
 			SetValueString($this->GetIDForIdent("e2servicename"), "");
@@ -496,8 +540,7 @@ function ENIGMA2_GetAnswerFromMessage($ipadr,$message = "",$time=5)
           {
              $result = 0;
           }
-        }
-    }
+        }    }
    else
     {
        $result = -1;
