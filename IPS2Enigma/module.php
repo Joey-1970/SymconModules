@@ -40,7 +40,7 @@
 		$this->DisableAction("e2eventtitle");
 		$this->RegisterVariableString("e2eventdescriptionextended", "Event Description", "", 130);
 		$this->DisableAction("e2eventdescriptionextended");
-		$this->RegisterVariableString("e2eventstart", "Event Start", "", 140);
+		$this->RegisterVariableInteger("e2eventstart", "Event Start", "~UnixTimestampTime", 140);
 		$this->DisableAction("e2eventstart");
 		$this->RegisterVariableString("e2eventend", "Event End", "", 150);
 		$this->DisableAction("e2eventend");
@@ -87,12 +87,15 @@
 			
 			$xmlResult =  new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/epgservice?sRef=".$e2servicereference));
       			SetValueString($this->GetIDForIdent("e2eventtitle"), (string)utf8_decode($xmlResult->e2event->e2eventtitle));
-      			SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), (string)utf8_decode($xmlResult->e2event->e2eventdescriptionextended));
-      			$startsec = $xmlResult->e2event->e2eventstart;
+      			
+			SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), (string)utf8_decode($xmlResult->e2event->e2eventdescriptionextended));
+      			SetValueInteger($this->GetIDForIdent("e2eventstart"), (int)$xmlResult->e2event[0]->e2eventstart);
+			
+			$startsec = $xmlResult->e2event->e2eventstart;
       			$duration = $xmlResult->e2event->e2eventduration;
 		      	$currenttime = time();
 			if ((int)$startsec >= time() - 36000) {
-				 SetValueString($this->GetIDForIdent("e2eventstart"), date("H:i",(int)$startsec) .' Uhr');
+				 //SetValueString($this->GetIDForIdent("e2eventstart"), date("H:i",(int)$startsec) .' Uhr');
 				 SetValueString($this->GetIDForIdent("e2eventtime"), round(((int)$currenttime - (int)$startsec) / 60 ).' Minuten');
 			}
 		        else {    
@@ -129,7 +132,7 @@
 			SetValueString($this->GetIDForIdent("e2servicename"), "N/A");
 			SetValueString($this->GetIDForIdent("e2eventtitle"), "N/A");
 			SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), "N/A");
-			SetValueString($this->GetIDForIdent("e2eventstart"), "N/A");
+			//SetValueString($this->GetIDForIdent("e2eventstart"), "N/A");
 			SetValueString($this->GetIDForIdent("e2eventtime"), "N/A");
 			SetValueString($this->GetIDForIdent("e2eventstart"), "N/A");
 			SetValueString($this->GetIDForIdent("e2eventduration"), "N/A");
