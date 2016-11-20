@@ -28,9 +28,9 @@
 		$this->DisableAction("e2imageversion");
 		$this->RegisterVariableString("e2webifversion", "E2 WebIf-Version", "", 50);
 		$this->DisableAction("e2webifversion");
-		$this->RegisterVariableString("e2model", "E2 Model", "", 60);
+		$this->RegisterVariableString("e2model", "Model", "", 60);
 		$this->DisableAction("e2model");
-		$this->RegisterVariableString("e2lanmac", "E2 Lan-MAC", "", 70);
+		$this->RegisterVariableString("e2lanmac", "LAN-MAC", "", 70);
 		$this->DisableAction("e2lanmac");
 		$this->RegisterVariableBoolean("powerstate", "Powerstate", "~Switch", 100);
 		$this->EnableAction("powerstate");
