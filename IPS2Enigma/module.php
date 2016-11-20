@@ -85,7 +85,7 @@
 			$e2servicereference = (string)$xmlResult->e2service[0]->e2servicereference;
 			
 			
-			$xmlResult =  new SimpleXMLElement(file_get_contents("http://$ipadr/web/epgservice?sRef=".$e2servicereference));
+			$xmlResult =  new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/epgservice?sRef=".$e2servicereference));
       			SetValueString($this->GetIDForIdent("e2eventtitle"), (string)utf8_decode($xmlResult->e2event->e2eventtitle));
       			SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), (string)utf8_decode($xmlResult->e2event->e2eventdescriptionextended));
       			$startsec = $xmlResult->e2event->e2eventstart;
@@ -126,9 +126,9 @@
 					
 		}
 		else {
-			SetValueString($this->GetIDForIdent("e2servicename"), "");
-			SetValueString($this->GetIDForIdent("e2eventtitle"), "");
-			SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), "");
+			SetValueString($this->GetIDForIdent("e2servicename"), "N/A");
+			SetValueString($this->GetIDForIdent("e2eventtitle"), "N/A");
+			SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), "N/A");
 			SetValueString($this->GetIDForIdent("e2eventstart"), "N/A");
 			SetValueString($this->GetIDForIdent("e2eventtime"), "N/A");
 			SetValueString($this->GetIDForIdent("e2eventstart"), "N/A");
