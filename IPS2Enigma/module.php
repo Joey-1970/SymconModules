@@ -9,7 +9,7 @@
             	parent::Create();
            	$this->RegisterPropertyBoolean("Open", 0);
 	    	$this->RegisterPropertyString("IPAddress", "127.0.0.1");
-		$this->RegisterTimer("Messzyklus", 0, 'I2GBH_DataUpdate($_IPS["TARGET"]);');
+		$this->RegisterTimer("Messzyklus", 0, 'Enigma_DataUpdate($_IPS["TARGET"]);');
         }
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
