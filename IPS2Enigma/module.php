@@ -22,6 +22,18 @@
 		$this->DisableAction("e2enigmaversion");
 		$this->RegisterVariableString("e2distroversion", "E2 Distro-Version", "", 30);
 		$this->DisableAction("e2distroversion");
+		$this->RegisterVariableString("e2imageversion", "E2 Image-Version", "", 40);
+		$this->DisableAction("e2imageversion");
+		$this->RegisterVariableString("e2webifversion", "E2 WebIf-Version", "", 50);
+		$this->DisableAction("e2webifversion");
+		$this->RegisterVariableString("e2model", "E2 Model", "", 60);
+		$this->DisableAction("e2model");
+		$this->RegisterVariableString("e2lanmac", "E2 Lan-MAC", "", 70);
+		$this->DisableAction("e2lanmac");
+		
+		
+		$this->GetBasicData();
+		
 
         }
 	public function RequestAction($Ident, $Value) 
@@ -40,17 +52,17 @@
 
 	// Beginn der Funktionen
 	
-	// Schaltet den gewaehlten Pin
+	// Ermittlung der Basisdaten
 	private function GetBasicData()
 	{
 		$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/about"));
 		SetValueString($this->GetIDForIdent("e2oeversion"), $xmlResult->e2about->e2oeversion);
 		SetValueString($this->GetIDForIdent("e2enigmaversion"), $xmlResult->e2about->e2enigmaversion);
 		SetValueString($this->GetIDForIdent("e2distroversion"), $xmlResult->e2about->e2distroversion);
-		echo (String)$xmlResult->e2about->e2imageversion;
-		echo (String)$xmlResult->e2about->e2webifversion;
-		echo (String)$xmlResult->e2about->e2model;
-		echo (String)$xmlResult->e2about->e2lanmac;
+		SetValueString($this->GetIDForIdent("e2imageversion"), $xmlResult->e2about->e2imageversion);
+		SetValueString($this->GetIDForIdent("e2webifversion"), $xmlResult->e2about->e2webifversion);
+		SetValueString($this->GetIDForIdent("e2model"), $xmlResult->e2about->e2model);
+		SetValueString($this->GetIDForIdent("e2lanmac"), $xmlResult->e2about->e2lanmac);
 	return;
 	}
 	
@@ -60,8 +72,8 @@
 	
 	return;
 	}
-	    
-	//*************************************************************************************************************
+/*	    
+//*************************************************************************************************************
 // Prüft über Ping ob Gerät erreichbar
 function ENIGMA2_GetAvailable($ipadr)
 {
@@ -76,7 +88,7 @@ function ENIGMA2_GetAvailable($ipadr)
 		}
 return $result;
 }
-/*
+
 //*************************************************************************************************************
 // Prüft über Ping ob Gerät erreichbar
 function ENIGMA2_Ping($ipadr)
