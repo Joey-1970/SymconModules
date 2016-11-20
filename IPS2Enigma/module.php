@@ -68,6 +68,9 @@
        			SetValueString($this->GetIDForIdent("e2servicename"), (string)$xmlResult->e2service[0]->e2servicename);
 			$e2servicereference = (string)$xmlResult->e2service[0]->e2servicereference;
 		}
+		else {
+			SetValueString($this->GetIDForIdent("e2servicename"), "");
+		}
 	}
 	// Ermittlung der Basisdaten
 	private function GetBasicData()
