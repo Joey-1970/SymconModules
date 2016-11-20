@@ -42,16 +42,16 @@
 		$this->DisableAction("e2eventdescriptionextended");
 		$this->RegisterVariableString("e2eventstart", "Event Start", "", 140);
 		$this->DisableAction("e2eventstart");
-		$this->RegisterVariableString("e2eventtime", "Event Time", "", 150);
-		$this->DisableAction("e2eventtime");
-		$this->RegisterVariableString("e2eventend", "Event End", "", 160);
+		$this->RegisterVariableString("e2eventend", "Event End", "", 150);
 		$this->DisableAction("e2eventend");
-		$this->RegisterVariableString("e2eventduration", "Event Duration", "", 170);
+		$this->RegisterVariableString("e2eventduration", "Event Duration", "", 160);
 		$this->DisableAction("e2eventduration");
+		$this->RegisterVariableString("e2eventtime", "Event Time", "", 170);
+		$this->DisableAction("e2eventtime");
 		$this->RegisterVariableString("e2eventleft", "Event Left", "", 180);
 		$this->DisableAction("e2eventleft");
-		$this->RegisterVariableInteger("e2eventprogres", "Event Progres", "~Intensity.1", 190);
-		$this->DisableAction("e2eventprogres");
+		$this->RegisterVariableInteger("e2eventprogress", "Event Progress", "~Intensity.1", 190);
+		$this->DisableAction("e2eventprogress");
 		
 		If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$this->GetBasicData();
@@ -118,10 +118,10 @@
 			   	SetValueString($this->GetIDForIdent("e2eventleft"), "N/A");
 			}
 			If (round((int)$duration / 60) > 0) {
-				SetValueInteger($this->GetIDForIdent("e2eventprogres"), (int)(round(((int)$currenttime - (int)$startsec) / 60 ) / round((int)$duration / 60))) ;
+				SetValueInteger($this->GetIDForIdent("e2eventprogress"), (int)(round(((int)$currenttime - (int)$startsec) / 60 ) / round((int)$duration / 60) * 100) / 100 );
 			}
 			else {
-			   	SetValueInteger($this->GetIDForIdent("e2eventprogres"), 0);
+			   	SetValueInteger($this->GetIDForIdent("e2eventprogress"), 0);
 			}
 					
 		}
@@ -134,7 +134,7 @@
 			SetValueString($this->GetIDForIdent("e2eventstart"), "N/A");
 			SetValueString($this->GetIDForIdent("e2eventduration"), "N/A");
 			SetValueString($this->GetIDForIdent("e2eventleft"), "N/A");
-			SetValueInteger($this->GetIDForIdent("e2eventprogres"), 0);
+			SetValueInteger($this->GetIDForIdent("e2eventprogress"), 0);
 		}
 	}
 	// Ermittlung der Basisdaten
