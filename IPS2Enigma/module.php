@@ -9,7 +9,7 @@
             	parent::Create();
            	$this->RegisterPropertyBoolean("Open", 0);
 	    	$this->RegisterPropertyString("IPAddress", "127.0.0.1");
-		$this->RegisterTimer("Messzyklus", 0, 'Enigma_DataUpdate($_IPS["TARGET"]);');
+		$this->RegisterTimer("DataUpdate", 0, 'Enigma_DataUpdate($_IPS["TARGET"]);');
         }
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
@@ -31,11 +31,12 @@
 		$this->DisableAction("e2model");
 		$this->RegisterVariableString("e2lanmac", "E2 Lan-MAC", "", 70);
 		$this->DisableAction("e2lanmac");
-		$this->RegisterVariableBoolean("powerstate", "powerstate", "~Switch", 100);
+		$this->RegisterVariableBoolean("powerstate", "Powerstate", "~Switch", 100);
 		$this->EnableAction("powerstate");
 		
 		If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$this->GetBasicData();
+			$this->SetTimerInterval("DataUpdate", ($this->ReadPropertyInteger("DataUpdate") * 1000));
 			$this->Powerstate();
 		}
 		
@@ -56,7 +57,12 @@
 	
 
 	// Beginn der Funktionen
-	
+	private function DataUpdate()
+	{
+		If ($this->Powerstate() == true) {
+			IPS_LogMessage("IPS2Enigma","TV-Daten ermitteln");
+		}
+	}
 	// Ermittlung der Basisdaten
 	private function GetBasicData()
 	{
@@ -73,15 +79,18 @@
 	
 	private function Powerstate()
 	{
+		$result = false;
 		$xml = simplexml_load_file("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate");
 		$wert = $xml->e2instandby;
 
 		If(strpos($wert,"false")!== false) {
 			// Bei "false" ist die Box eingeschaltet
 			SetValueBoolean($this->GetIDForIdent("powerstate"), true);
+			$result = true;
 		}
 		else {
 			SetValueBoolean($this->GetIDForIdent("powerstate"), false);
+			$result = false;
 		}
 	return $result;
 	}
