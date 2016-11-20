@@ -36,6 +36,10 @@
 		$this->EnableAction("powerstate");
 		$this->RegisterVariableString("e2servicename", "Service Name", "", 110);
 		$this->DisableAction("e2servicename");
+		$this->RegisterVariableString("e2eventtitle", "Event Title", "", 120);
+		$this->DisableAction("e2eventtitle");
+		$this->RegisterVariableString("e2eventdescriptionextended", "Event Description", "", 130);
+		$this->DisableAction("e2eventdescriptionextended");
 		
 		If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$this->GetBasicData();
@@ -70,8 +74,8 @@
 			
 			
 			$xmlResult =  new SimpleXMLElement(file_get_contents("http://$ipadr/web/epgservice?sRef=".$e2servicereference));
-      			$title = utf8_decode($xmlResult->e2event->e2eventtitle);
-      			$description = utf8_decode($xmlResult->e2event->e2eventdescriptionextended);
+      			SetValueString($this->GetIDForIdent("e2eventtitle"), (string)utf8_decode($xmlResult->e2event->e2eventtitle));
+      			SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), (string)utf8_decode($xmlResult->e2event->e2eventdescriptionextended));
       			$startsec = $xmlResult->e2event->e2eventstart;
       			$duration = $xmlResult->e2event->e2eventduration;
 		      	$currenttime = time();
