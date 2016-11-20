@@ -16,10 +16,12 @@
 		// Diese Zeile nicht löschen
 		parent::ApplyChanges();
 		//Status-Variablen anlegen
-		$this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
-		$this->EnableAction("Status");
-            	
-
+		$this->RegisterVariableString("e2oeversion", "E2 OE-Version", "", 10);
+		$this->DisableAction("e2oeversion");
+            	$this->RegisterVariableString("e2enigmaversion", "E2 Version", "", 20);
+		$this->DisableAction("e2enigmaversion");
+		$this->RegisterVariableString("e2distroversion", "E2 Distro-Version", "", 30);
+		$this->DisableAction("e2distroversion");
 
         }
 	public function RequestAction($Ident, $Value) 
@@ -39,9 +41,16 @@
 	// Beginn der Funktionen
 	
 	// Schaltet den gewaehlten Pin
-	public function Set_Status(Bool $Value)
+	private function GetBasicData()
 	{
-	
+		$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/about"));
+		SetValueString($this->GetIDForIdent("e2oeversion"), $xmlResult->e2about->e2oeversion);
+		SetValueString($this->GetIDForIdent("e2enigmaversion"), $xmlResult->e2about->e2enigmaversion);
+		SetValueString($this->GetIDForIdent("e2distroversion"), $xmlResult->e2about->e2distroversion);
+		echo (String)$xmlResult->e2about->e2imageversion;
+		echo (String)$xmlResult->e2about->e2webifversion;
+		echo (String)$xmlResult->e2about->e2model;
+		echo (String)$xmlResult->e2about->e2lanmac;
 	return;
 	}
 	
@@ -67,7 +76,7 @@ function ENIGMA2_GetAvailable($ipadr)
 		}
 return $result;
 }
-
+/*
 //*************************************************************************************************************
 // Prüft über Ping ob Gerät erreichbar
 function ENIGMA2_Ping($ipadr)
@@ -133,14 +142,14 @@ function ENIGMA2_ToggleStandby($ipadr)
 
 return $result;
 }
-/*
+
 0 = Toogle Standby
 1 = Deepstandby
 2 = Reboot
 3 = Restart Enigma2
 4 = Wakeup from Standby
 5 = Standby
-*/
+
 
 //*************************************************************************************************************
 // Setzt das Gerät in DeepStandby
@@ -545,5 +554,6 @@ function ENIGMA2_SignalStatus($ipadr)
 
 return array($snrdb, $snr, $ber, $acg);
 }
+	    */
 }
 ?>
