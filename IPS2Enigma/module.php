@@ -58,7 +58,7 @@
 	
 
 	// Beginn der Funktionen
-	private function DataUpdate()
+	public function DataUpdate()
 	{
 		If ($this->Powerstate() == true) {
 			IPS_LogMessage("IPS2Enigma","TV-Daten ermitteln");
