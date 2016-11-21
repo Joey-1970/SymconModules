@@ -94,7 +94,7 @@
 			$xmlResult =  new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/epgservice?sRef=".$e2servicereference));
       			
 			SetValueString($this->GetIDForIdent("e2eventtitle"), (string)utf8_decode($xmlResult->e2event[0]->e2eventtitle));
-      			SetValueString($this->GetIDForIdent("e2eventdescription"), (string)utf8_decode($xmlResult->e2event[0]->e2eventdescription);
+      			SetValueString($this->GetIDForIdent("e2eventdescription"), (string)utf8_decode($xmlResult->e2event[0]->e2eventdescription));
 			SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), (string)utf8_decode($xmlResult->e2event[0]->e2eventdescriptionextended));
       			SetValueInteger($this->GetIDForIdent("e2eventstart"), (int)$xmlResult->e2event[0]->e2eventstart);
 			SetValueInteger($this->GetIDForIdent("e2eventend"), (int)$xmlResult->e2event[0]->e2eventstart + (int)$xmlResult->e2event[0]->e2eventduration);
