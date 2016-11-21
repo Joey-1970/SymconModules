@@ -218,6 +218,18 @@
 	return;
 	}
 				       
+	public function Reboot()
+	{
+	   	 $xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=2"));
+	return;
+	}
+	
+	public function RestartEnigma()
+	{
+	      $xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=3"));
+	return;
+	}		       
+				       
 	private function ConnectionTest()
 	{
 	      $result = false;
@@ -320,36 +332,6 @@ return $result;
 }
 
 
-
-//*************************************************************************************************************
-// Rebootes das Gerät
-function ENIGMA2_Reboot($ipadr)
-{
-   $powerstate = 2;
-   $result = false;
-
-   if (ENIGMA2_GetAvailable( $ipadr ))
-    	{
-      $xmlResult = new SimpleXMLElement(file_get_contents("http://$ipadr/web/powerstate?newstate=$powerstate"));
-      $result = (Boolean)$xmlResult->e2instandby;
-   	}
-return $result;
-}
-
-//*************************************************************************************************************
-// Rebootet das Gerät
-function ENIGMA2_RestartEnigma($ipadr)
-{
-   $powerstate = 3;
-   $result = false;
-
-   if (ENIGMA2_GetAvailable( $ipadr ))
-    	{
-      $xmlResult = new SimpleXMLElement(file_get_contents("http://$ipadr/web/powerstate?newstate=$powerstate"));
-      $result = (Boolean)$xmlResult->e2instandby;
-   	}
-return $result;
-}
 
 //*************************************************************************************************************
 // Schaltet auf den angeforderten Sender um
