@@ -101,7 +101,7 @@
 			SetValueInteger($this->GetIDForIdent("e2eventduration"), round((int)$xmlResult->e2event[0]->e2eventduration / 60) );
 			SetValueInteger($this->GetIDForIdent("e2eventpast"), round( (int)time() - (int)$xmlResult->e2event[0]->e2eventstart) / 60 );
 			SetValueInteger($this->GetIDForIdent("e2eventleft"), round(((int)$xmlResult->e2event[0]->e2eventstart + (int)$xmlResult->e2event[0]->e2eventduration - (int)time()) / 60 ));
-			SetValueInteger($this->GetIDForIdent("e2eventprogress"), round( ( (int)time() - (int)$xmlResult->e2event[0]->e2eventstart) / 60) / (int)$xmlResult->e2event[0]->e2eventduration / 60)  );
+			SetValueInteger($this->GetIDForIdent("e2eventprogress"), round( ( (int)time() - (int)$xmlResult->e2event[0]->e2eventstart) / 60) / (int)$xmlResult->e2event[0]->e2eventduration / 60  );
 			
 			/*	       
 			$startsec = $xmlResult->e2event->e2eventstart;
