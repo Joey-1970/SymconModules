@@ -10,7 +10,7 @@
            	$this->RegisterPropertyBoolean("Open", 0);
 	    	$this->RegisterPropertyString("IPAddress", "127.0.0.1");
 		$this->RegisterPropertyInteger("DataUpdate", 15);
-		$this->RegisterTimer("DataUpdate", 0, 'Enigma_DataUpdate($_IPS["TARGET"]);');
+		$this->RegisterTimer("DataUpdate", 0, 'Enigma_Get_DataUpdate($_IPS["TARGET"]);');
         }
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
@@ -60,9 +60,9 @@
 		$this->DisableAction("e2eventprogress");
 		
 		If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
-			$this->GetBasicData();
+			$this->Get_BasicData();
 			$this->SetTimerInterval("DataUpdate", ($this->ReadPropertyInteger("DataUpdate") * 1000));
-			$this->Powerstate();
+			$this->Get_Powerstate();
 		}
 		
 
@@ -82,9 +82,9 @@
 	
 
 	// Beginn der Funktionen
-	public function DataUpdate()
+	public function Get_DataUpdate()
 	{
-		If ($this->Powerstate() == true) {
+		If ($this->Get_Powerstate() == true) {
 			IPS_LogMessage("IPS2Enigma","TV-Daten ermitteln");
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/subservices"));
        			SetValueString($this->GetIDForIdent("e2servicename"), (string)$xmlResult->e2service[0]->e2servicename);
@@ -155,7 +155,7 @@
 		}
 	}
 	// Ermittlung der Basisdaten
-	private function GetBasicData()
+	private function Get_BasicData()
 	{
 		$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/about"));
 		SetValueString($this->GetIDForIdent("e2oeversion"), (string)$xmlResult->e2about->e2oeversion);
@@ -168,7 +168,7 @@
 	return;
 	}
 	
-	private function Powerstate()
+	private function Get_Powerstate()
 	{
 		$result = false;
 		$xml = simplexml_load_file("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate");
