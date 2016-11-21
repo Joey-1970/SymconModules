@@ -123,7 +123,14 @@
       			SetValueInteger($this->GetIDForIdent("e2nexteventstart"), (int)$xmlResult->e2event->e2eventstart);
 			SetValueInteger($this->GetIDForIdent("e2nexteventend"), (int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration);
 			SetValueInteger($this->GetIDForIdent("e2nexteventduration"), round((int)$xmlResult->e2event->e2eventduration / 60) );
-
+			// Empfangsstärke ermitteln
+			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/signal?"));
+			/*
+			$snrdb = (int)$xml->e2snrdb;
+			$snr = (int)$xml->e2snr;
+			$ber = (int)$xml->e2ber;
+			$acg = (int)$xml->e2acg;
+			*/
 		}
 		else {
 			SetValueString($this->GetIDForIdent("e2servicename"), "N/A");
