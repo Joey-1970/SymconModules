@@ -38,13 +38,15 @@
 		$this->DisableAction("e2servicename");
 		$this->RegisterVariableString("e2eventtitle", "Event Title", "", 120);
 		$this->DisableAction("e2eventtitle");
-		$this->RegisterVariableString("e2eventdescriptionextended", "Event Description", "", 130);
+		this->RegisterVariableString("e2eventdescription", "Event Description", "", 125);
+		$this->DisableAction("e2eventdescription");
+		$this->RegisterVariableString("e2eventdescriptionextended", "Event Description Extended", "", 130);
 		$this->DisableAction("e2eventdescriptionextended");
 		$this->RegisterVariableInteger("e2eventstart", "Event Start", "~UnixTimestampTime", 140);
 		$this->DisableAction("e2eventstart");
-		$this->RegisterVariableString("e2eventend", "Event End", "", 150);
+		$this->RegisterVariableInteger("e2eventend", "Event End", "~UnixTimestampTime", 150);
 		$this->DisableAction("e2eventend");
-		$this->RegisterVariableString("e2eventduration", "Event Duration", "", 160);
+		$this->RegisterVariableInteger("e2eventduration", "Event Duration", "", 160);
 		$this->DisableAction("e2eventduration");
 		$this->RegisterVariableString("e2eventtime", "Event Time", "", 170);
 		$this->DisableAction("e2eventtime");
@@ -87,9 +89,11 @@
 			
 			$xmlResult =  new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/epgservice?sRef=".$e2servicereference));
       			SetValueString($this->GetIDForIdent("e2eventtitle"), (string)utf8_decode($xmlResult->e2event->e2eventtitle));
-      			
+      			SetValueString($this->GetIDForIdent("e2eventdescription"), (string)utf8_decode($xmlResult->e2event->e2eventdescription);
 			SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), (string)utf8_decode($xmlResult->e2event->e2eventdescriptionextended));
       			SetValueInteger($this->GetIDForIdent("e2eventstart"), (int)$xmlResult->e2event[0]->e2eventstart);
+			SetValueInteger($this->GetIDForIdent("e2eventend"), (int)$xmlResult->e2event[0]->e2eventstart + (int)$xmlResult->e2event->e2eventduration);
+			SetValueInteger($this->GetIDForIdent("e2eventduration"), round((int)$xmlResult->e2event->e2eventduration / 60) );
 			
 			$startsec = $xmlResult->e2event->e2eventstart;
       			$duration = $xmlResult->e2event->e2eventduration;
@@ -103,10 +107,10 @@
 			 	SetValueString($this->GetIDForIdent("e2eventtime"), "N/A");
 			}
 			if (((int)$duration > 0) and ((int)$startsec >= time() - 36000)) {
-			    	SetValueString($this->GetIDForIdent("e2eventend"), date("H:i",(int)$startsec + (int)$duration) .' Uhr');
+			    	//SetValueString($this->GetIDForIdent("e2eventend"), date("H:i",(int)$startsec + (int)$duration) .' Uhr');
 			}
 			else {
-			   	SetValueString($this->GetIDForIdent("e2eventend"), "N/A");
+			   	//SetValueString($this->GetIDForIdent("e2eventend"), "N/A");
 			}
 			if ((int)$duration > 0) {
 			    	SetValueString($this->GetIDForIdent("e2eventduration"), round((int)$duration / 60).' Minuten');
@@ -131,11 +135,12 @@
 		else {
 			SetValueString($this->GetIDForIdent("e2servicename"), "N/A");
 			SetValueString($this->GetIDForIdent("e2eventtitle"), "N/A");
+			SetValueString($this->GetIDForIdent("e2eventdescription"), "N/A");
 			SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), "N/A");
 			//SetValueString($this->GetIDForIdent("e2eventstart"), "N/A");
 			SetValueString($this->GetIDForIdent("e2eventtime"), "N/A");
-			SetValueString($this->GetIDForIdent("e2eventstart"), "N/A");
-			SetValueString($this->GetIDForIdent("e2eventduration"), "N/A");
+			//SetValueString($this->GetIDForIdent("e2eventstart"), "N/A");
+			//SetValueString($this->GetIDForIdent("e2eventduration"), "N/A");
 			SetValueString($this->GetIDForIdent("e2eventleft"), "N/A");
 			SetValueInteger($this->GetIDForIdent("e2eventprogress"), 0);
 		}
