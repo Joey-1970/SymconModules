@@ -52,7 +52,7 @@
 		$this->DisableAction("e2eventend");
 		$this->RegisterVariableInteger("e2eventduration", "Event Duration", "time.min", 160);
 		$this->DisableAction("e2eventduration");
-		$this->RegisterVariableInteger("e2eventpat", "Event Past", "time.min", 170);
+		$this->RegisterVariableInteger("e2eventpast", "Event Past", "time.min", 170);
 		$this->DisableAction("e2eventpast");
 		$this->RegisterVariableInteger("e2eventleft", "Event Left", "time.min", 180);
 		$this->DisableAction("e2eventleft");
@@ -91,17 +91,17 @@
 			$e2servicereference = (string)$xmlResult->e2service[0]->e2servicereference;
 			
 			
-			$xmlResult =  new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/epgservice?sRef=".$e2servicereference));
+			$xmlResult =  new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/epgservicenow?sRef=".$e2servicereference));
       			
-			SetValueString($this->GetIDForIdent("e2eventtitle"), (string)utf8_decode($xmlResult->e2event[0]->e2eventtitle));
-      			SetValueString($this->GetIDForIdent("e2eventdescription"), (string)utf8_decode($xmlResult->e2event[0]->e2eventdescription));
-			SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), (string)utf8_decode($xmlResult->e2event[0]->e2eventdescriptionextended));
-      			SetValueInteger($this->GetIDForIdent("e2eventstart"), (int)$xmlResult->e2event[0]->e2eventstart);
-			SetValueInteger($this->GetIDForIdent("e2eventend"), (int)$xmlResult->e2event[0]->e2eventstart + (int)$xmlResult->e2event[0]->e2eventduration);
-			SetValueInteger($this->GetIDForIdent("e2eventduration"), round((int)$xmlResult->e2event[0]->e2eventduration / 60) );
-			SetValueInteger($this->GetIDForIdent("e2eventpast"), round( (int)time() - (int)$xmlResult->e2event[0]->e2eventstart) / 60 );
-			SetValueInteger($this->GetIDForIdent("e2eventleft"), round(((int)$xmlResult->e2event[0]->e2eventstart + (int)$xmlResult->e2event[0]->e2eventduration - (int)time()) / 60 ));
-			SetValueInteger($this->GetIDForIdent("e2eventprogress"), round( ( (int)time() - (int)$xmlResult->e2event[0]->e2eventstart) / 60) / (int)$xmlResult->e2event[0]->e2eventduration / 60  );
+			SetValueString($this->GetIDForIdent("e2eventtitle"), (string)utf8_decode($xmlResult->e2event->e2eventtitle));
+      			SetValueString($this->GetIDForIdent("e2eventdescription"), (string)utf8_decode($xmlResult->e2event->e2eventdescription));
+			SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), (string)utf8_decode($xmlResult->e2event->e2eventdescriptionextended));
+      			SetValueInteger($this->GetIDForIdent("e2eventstart"), (int)$xmlResult->e2event->e2eventstart);
+			SetValueInteger($this->GetIDForIdent("e2eventend"), (int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration);
+			SetValueInteger($this->GetIDForIdent("e2eventduration"), round((int)$xmlResult->e2event->e2eventduration / 60) );
+			SetValueInteger($this->GetIDForIdent("e2eventpast"), round( (int)time() - (int)$xmlResult->e2event->e2eventstart) / 60 );
+			SetValueInteger($this->GetIDForIdent("e2eventleft"), round(((int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration - (int)time()) / 60 ));
+			SetValueInteger($this->GetIDForIdent("e2eventprogress"), round( ( (int)time() - (int)$xmlResult->e2event->e2eventstart) / 60) / (int)$xmlResult->e2event->e2eventduration / 60  );
 			
 			/*	       
 			$startsec = $xmlResult->e2event->e2eventstart;
