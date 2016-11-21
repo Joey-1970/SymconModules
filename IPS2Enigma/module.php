@@ -59,6 +59,19 @@
 		$this->RegisterVariableInteger("e2eventprogress", "Event Progress", "~Intensity.1", 190);
 		$this->DisableAction("e2eventprogress");
 		
+		$this->RegisterVariableString("e2nexteventtitle", "Next Event Title", "", 200);
+		$this->DisableAction("e2nexteventtitle");
+		$this->RegisterVariableString("e2nexteventdescription", "Next Event Description", "", 210);
+		$this->DisableAction("e2nexteventdescription");
+		$this->RegisterVariableString("e2nexteventdescriptionextended", "Next Event Description Extended", "", 220);
+		$this->DisableAction("e2nexteventdescriptionextended");
+		$this->RegisterVariableInteger("e2nexteventstart", "Next Event Start", "~UnixTimestampTime", 230);
+		$this->DisableAction("e2nexteventstart");
+		$this->RegisterVariableInteger("e2nexteventend", "Next Event End", "~UnixTimestampTime", 240);
+		$this->DisableAction("e2nexteventend");
+		$this->RegisterVariableInteger("e2nexteventduration", "Next Event Duration", "time.min", 250);
+		$this->DisableAction("e2nexteventduration");
+		
 		If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$this->Get_BasicData();
 			$this->SetTimerInterval("DataUpdate", ($this->ReadPropertyInteger("DataUpdate") * 1000));
@@ -85,15 +98,14 @@
 	public function Get_DataUpdate()
 	{
 		If ($this->Get_Powerstate() == true) {
-			IPS_LogMessage("IPS2Enigma","TV-Daten ermitteln");
+			//IPS_LogMessage("IPS2Enigma","TV-Daten ermitteln");
+			// das aktuelle Programm
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/subservices"));
        			SetValueString($this->GetIDForIdent("e2servicename"), (string)$xmlResult->e2service[0]->e2servicename);
 			$e2servicereference = (string)$xmlResult->e2service[0]->e2servicereference;
-			
-			
+			// das aktuelle Ereignis
 			$xmlResult =  new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/epgservicenow?sRef=".$e2servicereference));
-      			
-			SetValueString($this->GetIDForIdent("e2eventtitle"), (string)utf8_decode($xmlResult->e2event->e2eventtitle));
+ 			SetValueString($this->GetIDForIdent("e2eventtitle"), (string)utf8_decode($xmlResult->e2event->e2eventtitle));
       			SetValueString($this->GetIDForIdent("e2eventdescription"), (string)utf8_decode($xmlResult->e2event->e2eventdescription));
 			SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), (string)utf8_decode($xmlResult->e2event->e2eventdescriptionextended));
       			SetValueInteger($this->GetIDForIdent("e2eventstart"), (int)$xmlResult->e2event->e2eventstart);
@@ -102,44 +114,15 @@
 			SetValueInteger($this->GetIDForIdent("e2eventpast"), round( (int)time() - (int)$xmlResult->e2event->e2eventstart) / 60 );
 			SetValueInteger($this->GetIDForIdent("e2eventleft"), round(((int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration - (int)time()) / 60 ));
 			SetValueInteger($this->GetIDForIdent("e2eventprogress"), round( ( (int)time() - (int)$xmlResult->e2event->e2eventstart) / 60) / (int)$xmlResult->e2event->e2eventduration / 60  );
-			
-			/*	       
-			$startsec = $xmlResult->e2event->e2eventstart;
-      			$duration = $xmlResult->e2event->e2eventduration;
-		      	$currenttime = time();
-			if ((int)$startsec >= time() - 36000) {
-				 //SetValueString($this->GetIDForIdent("e2eventstart"), date("H:i",(int)$startsec) .' Uhr');
-				 //SetValueString($this->GetIDForIdent("e2eventtime"), round(((int)$currenttime - (int)$startsec) / 60 ).' Minuten');
-			}
-		        else {    
-			 	//SetValueString($this->GetIDForIdent("e2eventstart"), "N/A");
-			 	//SetValueString($this->GetIDForIdent("e2eventtime"), "N/A");
-			}
-			if (((int)$duration > 0) and ((int)$startsec >= time() - 36000)) {
-			    	//SetValueString($this->GetIDForIdent("e2eventend"), date("H:i",(int)$startsec + (int)$duration) .' Uhr');
-			}
-			else {
-			   	//SetValueString($this->GetIDForIdent("e2eventend"), "N/A");
-			}
-			if ((int)$duration > 0) {
-			    	//SetValueString($this->GetIDForIdent("e2eventduration"), round((int)$duration / 60).' Minuten');
-			}
-			else {
-			   	//SetValueString($this->GetIDForIdent("e2eventduration"), "N/A");
-			}
-			if (((int)$currenttime > time() - 1800) and ((int)$currenttime < time() + 1800) and ((int)$startsec >= time() - 36000) and ((int)$duration > 0)) {
-			    	//SetValueString($this->GetIDForIdent("e2eventleft"), round(((int)$startsec + (int)$duration - (int)$currenttime) / 60 ).' Minuten');
-			}
-			else {
-			   	//SetValueString($this->GetIDForIdent("e2eventleft"), "N/A");
-			}
-			If (round((int)$duration / 60) > 0) {
-				//SetValueInteger($this->GetIDForIdent("e2eventprogress"), (int)(round(((int)$currenttime - (int)$startsec) / 60 ) / round((int)$duration / 60) * 100) / 100 );
-			}
-			else {
-			   	//SetValueInteger($this->GetIDForIdent("e2eventprogress"), 0);
-			}
-			*/		
+			// das folgende Ereignis
+			$xmlResult =  new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/epgservicenext?sRef=".$e2servicereference));
+			SetValueString($this->GetIDForIdent("e2nexteventtitle"), (string)utf8_decode($xmlResult->e2event->e2eventtitle));
+      			SetValueString($this->GetIDForIdent("e2nexteventdescription"), (string)utf8_decode($xmlResult->e2event->e2eventdescription));
+			SetValueString($this->GetIDForIdent("e2nexteventdescriptionextended"), (string)utf8_decode($xmlResult->e2event->e2eventdescriptionextended));
+      			SetValueInteger($this->GetIDForIdent("e2nexteventstart"), (int)$xmlResult->e2event->e2eventstart);
+			SetValueInteger($this->GetIDForIdent("e2nexteventend"), (int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration);
+			SetValueInteger($this->GetIDForIdent("e2nexteventduration"), round((int)$xmlResult->e2event->e2eventduration / 60) );
+
 		}
 		else {
 			SetValueString($this->GetIDForIdent("e2servicename"), "N/A");
