@@ -42,7 +42,7 @@
 		$this->DisableAction("e2servicename");
 		$this->RegisterVariableString("e2eventtitle", "Event Title", "", 120);
 		$this->DisableAction("e2eventtitle");
-		this->RegisterVariableString("e2eventdescription", "Event Description", "", 125);
+		$this->RegisterVariableString("e2eventdescription", "Event Description", "", 125);
 		$this->DisableAction("e2eventdescription");
 		$this->RegisterVariableString("e2eventdescriptionextended", "Event Description Extended", "", 130);
 		$this->DisableAction("e2eventdescriptionextended");
