@@ -186,14 +186,38 @@
 	return $result;
 	}
 
-	    
-	// Toggelt den Status
-	public function Toggle_Status()
+	public function ToggleStandby()
 	{
-	
+		$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=0"));
 	return;
 	}
+	/*
+	0 = Toogle Standby
+	1 = Deepstandby
+	2 = Reboot
+	3 = Restart Enigma2
+	4 = Wakeup from Standby
+	5 = Standby
+    	*/
 
+	public function DeepStandby()
+	{
+	      $xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=1"));
+	return;
+	}
+	
+	public function Standby()
+	{
+	       $xmlResult = new SimpleXMLElement(file_get_contents("http:///".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=5"));
+	return;
+	}			       
+	
+	public function WakeUpStandby()
+	{
+		$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=4"));
+	return;
+	}
+				       
 	private function ConnectionTest()
 	{
 	      $result = false;
@@ -295,92 +319,7 @@ If(strpos($wert,"false")!== false)
 return $result;
 }
 
-//*************************************************************************************************************
-// Toggelt den Standby-Modus
-function ENIGMA2_ToggleStandby($ipadr)
-{
-    $powerstate = 0;
-    $result = -1;
 
-   if (ENIGMA2_Ping($ipadr))
-    {
-       $xmlResult = new SimpleXMLElement(file_get_contents("http://$ipadr/web/powerstate?newstate=$powerstate"));
-        //print_r ($xmlResult);
-        if ($xmlResult->e2instandby == 'true')
-        {
-           $result = 1;
-        }
-        else
-        {
-            $result = 0;
-        }
-   }
-
-return $result;
-}
-
-0 = Toogle Standby
-1 = Deepstandby
-2 = Reboot
-3 = Restart Enigma2
-4 = Wakeup from Standby
-5 = Standby
-
-
-//*************************************************************************************************************
-// Setzt das Gerät in DeepStandby
-function ENIGMA2_DeepStandby($ipadr)
-{
-   $powerstate = 1;
-   $result = false;
-
-   if (ENIGMA2_GetAvailable( $ipadr ))
-   	{
-      $xmlResult = new SimpleXMLElement(file_get_contents("http://$ipadr/web/powerstate?newstate=$powerstate"));
-      //print_r($xmlResult);
-      $result = (Boolean)$xmlResult->e2instandby;
-   	}
-return $result;
-}
-
-//*************************************************************************************************************
-// Setzt das Gerät in den Standby-Modus
-function ENIGMA2_Standby($ipadr)
-{
-    $powerstate = 5;
-    $result = -1;
-
-   if (ENIGMA2_GetAvailable( $ipadr ))
-    {
-       $xmlResult = new SimpleXMLElement(file_get_contents("http://$ipadr/web/powerstate?newstate=$powerstate"));
-        print_r ($xmlResult);
-        if ($xmlResult->e2instandby == 'true')
-        {
-           $result = 1;
-        }
-        else
-        {
-            $result = 0;
-        }
-   }
-
-return $result;
-}
-//*************************************************************************************************************
-// Weckt das Gerät aus dem Standby-Modus
-function ENIGMA2_WakeUpStandby($ipadr)
-{
-   $powerstate = 4;
-   $result = false;
-
-   if (ENIGMA2_Ping($ipadr))
-    	{
-		$xmlResult = new SimpleXMLElement(file_get_contents("http://$ipadr/web/powerstate?newstate=$powerstate"));
-      //print_r($xmlResult);
-      $result = (Boolean)$xmlResult->e2instandby;
-   	}
-return $result;
-}
 
 //*************************************************************************************************************
 // Rebootes das Gerät
