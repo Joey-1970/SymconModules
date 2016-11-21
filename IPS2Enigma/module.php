@@ -17,6 +17,10 @@
         {
 		// Diese Zeile nicht löschen
 		parent::ApplyChanges();
+		
+		// Profil anlegen
+		$this->RegisterProfileInteger("time.min", "Clock", "", " min", 0, 1000000, 1);
+		
 		//Status-Variablen anlegen
 		$this->RegisterVariableString("e2oeversion", "E2 OE-Version", "", 10);
 		$this->DisableAction("e2oeversion");
@@ -46,9 +50,9 @@
 		$this->DisableAction("e2eventstart");
 		$this->RegisterVariableInteger("e2eventend", "Event End", "~UnixTimestampTime", 150);
 		$this->DisableAction("e2eventend");
-		$this->RegisterVariableInteger("e2eventduration", "Event Duration", "", 160);
+		$this->RegisterVariableInteger("e2eventduration", "Event Duration", "time.min", 160);
 		$this->DisableAction("e2eventduration");
-		$this->RegisterVariableString("e2eventtime", "Event Time", "", 170);
+		$this->RegisterVariableInteger("e2eventtime", "Event Time", "time.min", 170);
 		$this->DisableAction("e2eventtime");
 		$this->RegisterVariableString("e2eventleft", "Event Left", "", 180);
 		$this->DisableAction("e2eventleft");
@@ -88,23 +92,25 @@
 			
 			
 			$xmlResult =  new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/epgservice?sRef=".$e2servicereference));
-      			SetValueString($this->GetIDForIdent("e2eventtitle"), (string)utf8_decode($xmlResult->e2event->e2eventtitle));
-      			SetValueString($this->GetIDForIdent("e2eventdescription"), (string)utf8_decode($xmlResult->e2event->e2eventdescription);
-			SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), (string)utf8_decode($xmlResult->e2event->e2eventdescriptionextended));
+      			
+			SetValueString($this->GetIDForIdent("e2eventtitle"), (string)utf8_decode($xmlResult->e2event[0]->e2eventtitle));
+      			SetValueString($this->GetIDForIdent("e2eventdescription"), (string)utf8_decode($xmlResult->e2event[0]->e2eventdescription);
+			SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), (string)utf8_decode($xmlResult->e2event[0]->e2eventdescriptionextended));
       			SetValueInteger($this->GetIDForIdent("e2eventstart"), (int)$xmlResult->e2event[0]->e2eventstart);
-			SetValueInteger($this->GetIDForIdent("e2eventend"), (int)$xmlResult->e2event[0]->e2eventstart + (int)$xmlResult->e2event->e2eventduration);
-			SetValueInteger($this->GetIDForIdent("e2eventduration"), round((int)$xmlResult->e2event->e2eventduration / 60) );
+			SetValueInteger($this->GetIDForIdent("e2eventend"), (int)$xmlResult->e2event[0]->e2eventstart + (int)$xmlResult->e2event[0]->e2eventduration);
+			SetValueInteger($this->GetIDForIdent("e2eventduration"), round((int)$xmlResult->e2event[0]->e2eventduration / 60) );
+			SetValueInteger($this->GetIDForIdent("e2eventtime"), round(((int)time() - (int)$xmlResult->e2event[0]->e2eventstart) / 60 ));
 			
 			$startsec = $xmlResult->e2event->e2eventstart;
       			$duration = $xmlResult->e2event->e2eventduration;
 		      	$currenttime = time();
 			if ((int)$startsec >= time() - 36000) {
 				 //SetValueString($this->GetIDForIdent("e2eventstart"), date("H:i",(int)$startsec) .' Uhr');
-				 SetValueString($this->GetIDForIdent("e2eventtime"), round(((int)$currenttime - (int)$startsec) / 60 ).' Minuten');
+				 //SetValueString($this->GetIDForIdent("e2eventtime"), round(((int)$currenttime - (int)$startsec) / 60 ).' Minuten');
 			}
 		        else {    
-			 	SetValueString($this->GetIDForIdent("e2eventstart"), "N/A");
-			 	SetValueString($this->GetIDForIdent("e2eventtime"), "N/A");
+			 	//SetValueString($this->GetIDForIdent("e2eventstart"), "N/A");
+			 	//SetValueString($this->GetIDForIdent("e2eventtime"), "N/A");
 			}
 			if (((int)$duration > 0) and ((int)$startsec >= time() - 36000)) {
 			    	//SetValueString($this->GetIDForIdent("e2eventend"), date("H:i",(int)$startsec + (int)$duration) .' Uhr');
@@ -138,7 +144,7 @@
 			SetValueString($this->GetIDForIdent("e2eventdescription"), "N/A");
 			SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), "N/A");
 			//SetValueString($this->GetIDForIdent("e2eventstart"), "N/A");
-			SetValueString($this->GetIDForIdent("e2eventtime"), "N/A");
+			//SetValueString($this->GetIDForIdent("e2eventtime"), "N/A");
 			//SetValueString($this->GetIDForIdent("e2eventstart"), "N/A");
 			//SetValueString($this->GetIDForIdent("e2eventduration"), "N/A");
 			SetValueString($this->GetIDForIdent("e2eventleft"), "N/A");
@@ -208,7 +214,25 @@
 	return $result;
 	}
 	    
-	    
+	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
+	{
+	        if (!IPS_VariableProfileExists($Name))
+	        {
+	            IPS_CreateVariableProfile($Name, 1);
+	        }
+	        else
+	        {
+	            $profile = IPS_GetVariableProfile($Name);
+	            if ($profile['ProfileType'] != 1)
+	                throw new Exception("Variable profile type does not match for profile " . $Name);
+	        }
+	        IPS_SetVariableProfileIcon($Name, $Icon);
+	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
+	        
+	}
+				       
+				       
 	    /*	    
 //*************************************************************************************************************
 // Prüft über Ping ob Gerät erreichbar
