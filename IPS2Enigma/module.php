@@ -52,9 +52,9 @@
 		$this->DisableAction("e2eventend");
 		$this->RegisterVariableInteger("e2eventduration", "Event Duration", "time.min", 160);
 		$this->DisableAction("e2eventduration");
-		$this->RegisterVariableInteger("e2eventtime", "Event Time", "time.min", 170);
-		$this->DisableAction("e2eventtime");
-		$this->RegisterVariableString("e2eventleft", "Event Left", "", 180);
+		$this->RegisterVariableInteger("e2eventpat", "Event Past", "time.min", 170);
+		$this->DisableAction("e2eventpast");
+		$this->RegisterVariableInteger("e2eventleft", "Event Left", "time.min", 180);
 		$this->DisableAction("e2eventleft");
 		$this->RegisterVariableInteger("e2eventprogress", "Event Progress", "~Intensity.1", 190);
 		$this->DisableAction("e2eventprogress");
@@ -99,8 +99,11 @@
       			SetValueInteger($this->GetIDForIdent("e2eventstart"), (int)$xmlResult->e2event[0]->e2eventstart);
 			SetValueInteger($this->GetIDForIdent("e2eventend"), (int)$xmlResult->e2event[0]->e2eventstart + (int)$xmlResult->e2event[0]->e2eventduration);
 			SetValueInteger($this->GetIDForIdent("e2eventduration"), round((int)$xmlResult->e2event[0]->e2eventduration / 60) );
-			SetValueInteger($this->GetIDForIdent("e2eventtime"), round(((int)time() - (int)$xmlResult->e2event[0]->e2eventstart) / 60 ));
+			SetValueInteger($this->GetIDForIdent("e2eventpast"), round( ((int)time() - (int)$xmlResult->e2event[0]->e2eventstart) / 60 );
+			SetValueInteger($this->GetIDForIdent("e2eventleft"), round(((int)$xmlResult->e2event[0]->e2eventstart + (int)$xmlResult->e2event[0]->e2eventduration - (int)time()) / 60 ));
+			SetValueInteger($this->GetIDForIdent("e2eventprogress"), round( (((int)time() - (int)$xmlResult->e2event[0]->e2eventstart) / 60) / (int)$xmlResult->e2event[0]->e2eventduration / 60) ) );
 			
+			/*	       
 			$startsec = $xmlResult->e2event->e2eventstart;
       			$duration = $xmlResult->e2event->e2eventduration;
 		      	$currenttime = time();
@@ -119,24 +122,24 @@
 			   	//SetValueString($this->GetIDForIdent("e2eventend"), "N/A");
 			}
 			if ((int)$duration > 0) {
-			    	SetValueString($this->GetIDForIdent("e2eventduration"), round((int)$duration / 60).' Minuten');
+			    	//SetValueString($this->GetIDForIdent("e2eventduration"), round((int)$duration / 60).' Minuten');
 			}
 			else {
-			   	SetValueString($this->GetIDForIdent("e2eventduration"), "N/A");
+			   	//SetValueString($this->GetIDForIdent("e2eventduration"), "N/A");
 			}
 			if (((int)$currenttime > time() - 1800) and ((int)$currenttime < time() + 1800) and ((int)$startsec >= time() - 36000) and ((int)$duration > 0)) {
-			    	SetValueString($this->GetIDForIdent("e2eventleft"), round(((int)$startsec + (int)$duration - (int)$currenttime) / 60 ).' Minuten');
+			    	//SetValueString($this->GetIDForIdent("e2eventleft"), round(((int)$startsec + (int)$duration - (int)$currenttime) / 60 ).' Minuten');
 			}
 			else {
-			   	SetValueString($this->GetIDForIdent("e2eventleft"), "N/A");
+			   	//SetValueString($this->GetIDForIdent("e2eventleft"), "N/A");
 			}
 			If (round((int)$duration / 60) > 0) {
-				SetValueInteger($this->GetIDForIdent("e2eventprogress"), (int)(round(((int)$currenttime - (int)$startsec) / 60 ) / round((int)$duration / 60) * 100) / 100 );
+				//SetValueInteger($this->GetIDForIdent("e2eventprogress"), (int)(round(((int)$currenttime - (int)$startsec) / 60 ) / round((int)$duration / 60) * 100) / 100 );
 			}
 			else {
-			   	SetValueInteger($this->GetIDForIdent("e2eventprogress"), 0);
+			   	//SetValueInteger($this->GetIDForIdent("e2eventprogress"), 0);
 			}
-					
+			*/		
 		}
 		else {
 			SetValueString($this->GetIDForIdent("e2servicename"), "N/A");
@@ -147,7 +150,7 @@
 			//SetValueString($this->GetIDForIdent("e2eventtime"), "N/A");
 			//SetValueString($this->GetIDForIdent("e2eventstart"), "N/A");
 			//SetValueString($this->GetIDForIdent("e2eventduration"), "N/A");
-			SetValueString($this->GetIDForIdent("e2eventleft"), "N/A");
+			//SetValueString($this->GetIDForIdent("e2eventleft"), "N/A");
 			SetValueInteger($this->GetIDForIdent("e2eventprogress"), 0);
 		}
 	}
