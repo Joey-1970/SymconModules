@@ -74,7 +74,7 @@
 		
 		$this->RegisterVariableInteger("e2snrdb", "Signal-to-Noise Ratio (dB)", "", 300);
 		$this->DisableAction("e2snrdb");
-		$this->RegisterVariableInteger("e2snr", "Signal-to-Noise Ratio", "", 310);
+		$this->RegisterVariableInteger("e2snr", "Signal-to-Noise Ratio", "~Intensity.100", 310);
 		$this->DisableAction("e2snr");
 		$this->RegisterVariableInteger("e2ber", "Bit error rate", "", 320);
 		$this->DisableAction("e2ber");
@@ -134,16 +134,14 @@
 			SetValueInteger($this->GetIDForIdent("e2nexteventduration"), round((int)$xmlResult->e2event->e2eventduration / 60) );
 			// Empfangsstärke ermitteln
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/signal?"));
-			/*
-			$snrdb = (int)$xmlResult->e2snrdb;
-			$snr = (int)$xmlResult->e2snr;
-			$ber = (int)$xmlResult->e2ber;
-			$acg = (int)$xmlResult->e2acg;
+			SetValueInteger($this->GetIDForIdent("e2snrdb"), (int)$xmlResult->e2snrdb);
+			SetValueInteger($this->GetIDForIdent("e2snr"),  (int)$xmlResult->e2snr);
+			SetValueInteger($this->GetIDForIdent("e2ber"),  (int)$xmlResult->e2ber);
+			SetValueInteger($this->GetIDForIdent("e2agc"),  (int)$xmlResult->e2agc);
 			
-			SNR: Signal/Rausch Verhältnis (Signal-to-noise ratio)
-			AGC: Automatic Gain Control
-			BER: Fehler-Bitrate (Bit error rate)
-			*/
+			//SNR: Signal/Rausch Verhältnis (Signal-to-noise ratio)
+			//AGC: Automatic Gain Control
+			//BER: Fehler-Bitrate (Bit error rate)
 		}
 		else {
 			SetValueString($this->GetIDForIdent("e2servicename"), "N/A");
