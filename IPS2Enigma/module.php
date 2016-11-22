@@ -78,7 +78,7 @@
 		$this->DisableAction("e2snr");
 		$this->RegisterVariableInteger("e2ber", "Bit error rate", "", 320);
 		$this->DisableAction("e2ber");
-		$this->RegisterVariableInteger("e2agc", "Automatic Gain Control", "", 330);
+		$this->RegisterVariableInteger("e2agc", "Automatic Gain Control", "~Intensity.100", 330);
 		$this->DisableAction("e2agc");
 		
 		If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
@@ -137,7 +137,7 @@
 			SetValueInteger($this->GetIDForIdent("e2snrdb"), (int)$xmlResult->e2snrdb);
 			SetValueInteger($this->GetIDForIdent("e2snr"),  (int)$xmlResult->e2snr);
 			SetValueInteger($this->GetIDForIdent("e2ber"),  (int)$xmlResult->e2ber);
-			SetValueInteger($this->GetIDForIdent("e2agc"),  (int)$xmlResult->e2agc);
+			SetValueInteger($this->GetIDForIdent("e2agc"),  (int)$xmlResult->e2acg);
 			
 			//SNR: Signal/Rausch Verhältnis (Signal-to-noise ratio)
 			//AGC: Automatic Gain Control
