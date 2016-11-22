@@ -140,10 +140,10 @@
 			SetValueInteger($this->GetIDForIdent("e2ber"),  (int)$xmlResult->e2ber);
 			SetValueInteger($this->GetIDForIdent("e2agc"),  (int)$xmlResult->e2acg);
 			// Festplattendaten
-			$xmlResult = new SimpleXMLElement(file_get_contents("http://192.168.178.20/web/about"));
-			//echo $xmlResult->e2about->e2hddinfo->model;
-			//echo $xmlResult->e2about->e2hddinfo->capacity;
-			//echo $xmlResult->e2about->e2hddinfo->free;
+			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/about"));
+			
+			//echo (int)$xmlResult->e2about->e2hddinfo->capacity;
+			//echo (int)$xmlResult->e2about->e2hddinfo->free;
 		}
 		else {
 			SetValueString($this->GetIDForIdent("e2servicename"), "N/A");
@@ -169,7 +169,7 @@
 		SetValueString($this->GetIDForIdent("e2webifversion"), (string)$xmlResult->e2about->e2webifversion);
 		SetValueString($this->GetIDForIdent("e2model"), (string)$xmlResult->e2about->e2model);
 		SetValueString($this->GetIDForIdent("e2lanmac"), (string)$xmlResult->e2about->e2lanmac);
-		//echo $xmlResult->e2about->e2hddinfo->model;
+		//echo (string)$xmlResult->e2about->e2hddinfo->model;
 	return;
 	}
 	
