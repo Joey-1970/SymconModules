@@ -20,6 +20,7 @@
 		
 		// Profil anlegen
 		$this->RegisterProfileInteger("time.min", "Clock", "", " min", 0, 1000000, 1);
+		$this->RegisterProfileInteger("snr.db", "Intensity", "", " db", 0, 1000000, 1);
 		
 		//Status-Variablen anlegen
 		$this->RegisterVariableString("e2oeversion", "E2 OE-Version", "", 10);
@@ -72,7 +73,7 @@
 		$this->RegisterVariableInteger("e2nexteventduration", "Next Event Duration", "time.min", 250);
 		$this->DisableAction("e2nexteventduration");
 		
-		$this->RegisterVariableInteger("e2snrdb", "Signal-to-Noise Ratio (dB)", "", 300);
+		$this->RegisterVariableInteger("e2snrdb", "Signal-to-Noise Ratio (dB)", "snr.db", 300);
 		$this->DisableAction("e2snrdb");
 		$this->RegisterVariableInteger("e2snr", "Signal-to-Noise Ratio", "~Intensity.100", 310);
 		$this->DisableAction("e2snr");
