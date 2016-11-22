@@ -72,6 +72,15 @@
 		$this->RegisterVariableInteger("e2nexteventduration", "Next Event Duration", "time.min", 250);
 		$this->DisableAction("e2nexteventduration");
 		
+		$this->RegisterVariableInteger("e2snrdb", "Signal-to-Noise Ratio (dB)", "", 300);
+		$this->DisableAction("e2snrdb");
+		$this->RegisterVariableInteger("e2snr", "Signal-to-Noise Ratio", "", 310);
+		$this->DisableAction("e2snr");
+		$this->RegisterVariableInteger("e2ber", "Bit error rate", "", 320);
+		$this->DisableAction("e2ber");
+		$this->RegisterVariableInteger("e2agc", "Automatic Gain Control", "", 330);
+		$this->DisableAction("e2agc");
+		
 		If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$this->Get_BasicData();
 			$this->SetTimerInterval("DataUpdate", ($this->ReadPropertyInteger("DataUpdate") * 1000));
@@ -97,7 +106,7 @@
 	// Beginn der Funktionen
 	public function Get_DataUpdate()
 	{
-		If ($this->Get_Powerstate() == true) {
+		If (($this->ReadPropertyString("Open") == true) AND ($this->Get_Powerstate() == true)) {
 			//IPS_LogMessage("IPS2Enigma","TV-Daten ermitteln");
 			// das aktuelle Programm
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/subservices"));
@@ -126,10 +135,14 @@
 			// Empfangsstärke ermitteln
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/signal?"));
 			/*
-			$snrdb = (int)$xml->e2snrdb;
-			$snr = (int)$xml->e2snr;
-			$ber = (int)$xml->e2ber;
-			$acg = (int)$xml->e2acg;
+			$snrdb = (int)$xmlResult->e2snrdb;
+			$snr = (int)$xmlResult->e2snr;
+			$ber = (int)$xmlResult->e2ber;
+			$acg = (int)$xmlResult->e2acg;
+			
+			SNR: Signal/Rausch Verhältnis (Signal-to-noise ratio)
+			AGC: Automatic Gain Control
+			BER: Fehler-Bitrate (Bit error rate)
 			*/
 		}
 		else {
