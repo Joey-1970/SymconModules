@@ -105,6 +105,9 @@
 			$this->Get_Powerstate();
 		}
 		
+		$this->RegisterVariableString("e2stream", "Stream-Video", "~HTMLBox", 500);
+		$this->DisableAction("e2stream");
+		
 
         }
 	public function RequestAction($Ident, $Value) 
@@ -164,6 +167,8 @@
 				SetValueInteger($this->GetIDForIdent("e2hddinfo_capacity"), (int)$xmlResult->e2about->e2hddinfo->capacity);
 				SetValueInteger($this->GetIDForIdent("e2hddinfo_free"), (int)$xmlResult->e2about->e2hddinfo->free);
 			}
+			//SetValueString($this->GetIDForIdent("e2stream"), "<video width="320" height="240" controls> <source src="http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".$e2servicereference." type="video/mp4"> </video>");
+			//"http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".$e2servicereference
 		}
 		else {
 			SetValueString($this->GetIDForIdent("e2servicename"), "N/A");
