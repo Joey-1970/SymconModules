@@ -21,6 +21,7 @@
 		// Profil anlegen
 		$this->RegisterProfileInteger("time.min", "Clock", "", " min", 0, 1000000, 1);
 		$this->RegisterProfileInteger("snr.db", "Intensity", "", " db", 0, 1000000, 1);
+		$this->RegisterProfileInteger("gigabyte.GB", "Gauge", "", " GB", 0, 1000000, 1);
 		
 		//Status-Variablen anlegen
 		$this->RegisterVariableString("e2oeversion", "E2 OE-Version", "", 10);
@@ -37,8 +38,16 @@
 		$this->DisableAction("e2model");
 		$this->RegisterVariableString("e2lanmac", "LAN-MAC", "", 70);
 		$this->DisableAction("e2lanmac");
+		$this->RegisterVariableString("e2hddinfo_model", "HDD Model", "", 80);
+		$this->DisableAction("e2hddinfo_model");
+		$this->RegisterVariableInteger("e2hddinfo_capacity", "HDD Capacity", "gigabyte.GB", 90);
+		$this->DisableAction("e2hddinfo_capacity");
+		$this->RegisterVariableInteger("e2hddinfo_free", "HDD Free", "gigabyte.GB", 95);
+		$this->DisableAction("e2hddinfo_free");
+		
 		$this->RegisterVariableBoolean("powerstate", "Powerstate", "~Switch", 100);
 		$this->EnableAction("powerstate");
+		
 		$this->RegisterVariableString("e2servicename", "Service Name", "", 110);
 		$this->DisableAction("e2servicename");
 		$this->RegisterVariableString("e2eventtitle", "Event Title", "", 120);
@@ -169,7 +178,7 @@
 		SetValueString($this->GetIDForIdent("e2webifversion"), (string)$xmlResult->e2about->e2webifversion);
 		SetValueString($this->GetIDForIdent("e2model"), (string)$xmlResult->e2about->e2model);
 		SetValueString($this->GetIDForIdent("e2lanmac"), (string)$xmlResult->e2about->e2lanmac);
-		//echo (string)$xmlResult->e2about->e2hddinfo->model;
+		SetValueString($this->GetIDForIdent("e2hddinfo_model"), (string)$xmlResult->e2about->e2hddinfo->model);
 	return;
 	}
 	
