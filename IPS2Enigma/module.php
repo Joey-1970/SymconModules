@@ -145,14 +145,13 @@
 			// Empfangsstärke ermitteln
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/signal?"));
 			SetValueInteger($this->GetIDForIdent("e2snrdb"), (int)$xmlResult->e2snrdb);
-			SetValueInteger($this->GetIDForIdent("e2snr"),  (int)$xmlResult->e2snr);
-			SetValueInteger($this->GetIDForIdent("e2ber"),  (int)$xmlResult->e2ber);
-			SetValueInteger($this->GetIDForIdent("e2agc"),  (int)$xmlResult->e2acg);
+			SetValueInteger($this->GetIDForIdent("e2snr"), (int)$xmlResult->e2snr);
+			SetValueInteger($this->GetIDForIdent("e2ber"), (int)$xmlResult->e2ber);
+			SetValueInteger($this->GetIDForIdent("e2agc"), (int)$xmlResult->e2acg);
 			// Festplattendaten
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/about"));
-			
-			//echo (int)$xmlResult->e2about->e2hddinfo->capacity;
-			//echo (int)$xmlResult->e2about->e2hddinfo->free;
+			SetValueInteger($this->GetIDForIdent("e2hddinfo_capacity"), (int)$xmlResult->e2about->e2hddinfo->capacity);
+			SetValueInteger($this->GetIDForIdent("e2hddinfo_free"), (int)$xmlResult->e2about->e2hddinfo->free);
 		}
 		else {
 			SetValueString($this->GetIDForIdent("e2servicename"), "N/A");
