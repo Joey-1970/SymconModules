@@ -641,28 +641,7 @@ echo $xml;
 return $result;
 }
 
-//*************************************************************************************************************
-// Prüft die Signalstärke des Senders
-function ENIGMA2_SignalStatus($ipadr)
-{
-	if (ENIGMA2_GetAvailable( $ipadr ))
-    	{
-		$xml = simplexml_load_file("http://$ipadr/web/signal?.xml");
-		$snrdb = (int)$xml->e2snrdb;
-		$snr = (int)$xml->e2snr;
-		$ber = (int)$xml->e2ber;
-		$acg = (int)$xml->e2acg;
-		}
-	else
-		{
-		$snrdb = 0;
-		$snr = 0;
-		$ber = 0;
-		$acg = 0;
-		}
 
-return array($snrdb, $snr, $ber, $acg);
-}
-	    */
+*/
 }
 ?>
