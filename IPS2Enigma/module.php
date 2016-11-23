@@ -253,7 +253,28 @@
 		}
 	return;
 	}		       
-				       
+
+
+	public function GetCurrentServiceName()
+	{
+		$result = "";
+		If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
+		       $xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/subservices"));
+		       $result = (string)$xmlResult->e2service[0]->e2servicename;
+		}
+	return $result;
+	}
+
+	public function GetCurrentServiceReference()
+	{
+		$result = "";
+		If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
+	      		$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/subservices"));
+	      		$result =  (string)$xmlResult->e2service[0]->e2servicereference;
+		}
+	return $result;
+	}
+    
 	private function ConnectionTest()
 	{
 	      $result = false;
@@ -344,33 +365,6 @@ function ENIGMA2_Zap($ipadr,$sender = "")
    	}
 return;
 }
-//*************************************************************************************************************
-// Liefert den Namen des aktuellen Senders
-function ENIGMA2_GetCurrentServiceName($ipadr)
-{
-	$result = "";
-
-   if (ENIGMA2_GetAvailable( $ipadr ))
-    {
-       $xmlResult = new SimpleXMLElement(file_get_contents("http://$ipadr/web/subservices"));
-       $result = $xmlResult->e2service[0]->e2servicename;
-   }
-
-return $result;
-}
-//*************************************************************************************************************
-// Liefert den Namen der aktuellen Servicereferenz
-function ENIGMA2_GetCurrentServiceReference($ipadr)
-{
-	$result = "";
-	if (ENIGMA2_GetAvailable( $ipadr ))
-   	{
-      $xmlResult = new SimpleXMLElement(file_get_contents("http://$ipadr/web/subservices"));
-      $result = $xmlResult->e2service[0]->e2servicereference;
-   	}
-return $result;
-}
-
 
 //*************************************************************************************************************
 // Liefert ein Array mit den Namen der Bouquets wenn $bouquet = ""
@@ -526,57 +520,6 @@ function ENIGMA2_GetAnswerFromMessage($ipadr,$message = "",$time=5)
 return $result;
 }
 
-//*************************************************************************************************************
-// Ermittelt den aktuellen Film
-function ENIGMA2_GetCurrentFilm($ipadr)
-{
-   if (ENIGMA2_GetAvailable($ipadr))
-   	{
-      $xmlResult =  new SimpleXMLElement(file_get_contents("http://$ipadr/web/subservices"));
-      $reference = $xmlResult->e2service->e2servicereference;
-      $name = utf8_decode($xmlResult->e2service->e2servicename);
-      $xmlResult =  new SimpleXMLElement(file_get_contents("http://$ipadr/web/epgservice?sRef=$reference"));
-      $title = utf8_decode($xmlResult->e2event->e2eventtitle);
-      $description = utf8_decode($xmlResult->e2event->e2eventdescriptionextended);
-      $startsec = $xmlResult->e2event->e2eventstart;
-      $duration = $xmlResult->e2event->e2eventduration;
-      $currenttime = time();
-      if ((int)$startsec >= time() - 36000)
-        	{
-         $start = date("H:i",(int)$startsec) .' Uhr';
-         $vorbei = round(((int)$currenttime - (int)$startsec) / 60 ).' Minuten';
-        	}
-      else
-        	{
-         $start = "N/A";
-         $vorbei = "N/A";
-        	}
-        if (((int)$duration > 0) and ((int)$startsec >= time() - 36000))
-            $ende = date("H:i",(int)$startsec + (int)$duration) .' Uhr';
-        else
-           $ende = "N/A";
-        if ((int)$duration > 0)
-            $dauer = round((int)$duration / 60).' Minuten';
-        else
-           $dauer = "N/A";
-        if (((int)$currenttime > time() - 1800) and ((int)$currenttime < time() + 1800) and ((int)$startsec >= time() - 36000) and ((int)$duration > 0))
-            $verbl = round(((int)$startsec + (int)$duration - (int)$currenttime) / 60 ).' Minuten';
-        else
-           $verbl = "N/A";
-			If (round((int)$duration / 60) > 0)
-			   {
-				$Fortschritt = (int)(round(((int)$currenttime - (int)$startsec) / 60 ) / round((int)$duration / 60) * 100) ;
-				}
-			else
-			   {
-			   $Fortschritt = 0;
-			   }
-			$Filminformation = "Titel      : $title\nStart      : $start - Ende       : $ende\nDauer      : $dauer - Vergangen  : $vorbei - Verbleiben : $verbl\nDetails    : $description";
-			return array($Filminformation, $Fortschritt);
-	}
-   else
-   return 'Box nicht erreichbar!';
-}
 
 //*************************************************************************************************************
 // Sendet Remote-Control-Befehle
