@@ -175,11 +175,11 @@
 			SetValueString($this->GetIDForIdent("e2eventtitle"), "N/A");
 			SetValueString($this->GetIDForIdent("e2eventdescription"), "N/A");
 			SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), "N/A");
-			//SetValueString($this->GetIDForIdent("e2eventstart"), "N/A");
-			//SetValueString($this->GetIDForIdent("e2eventtime"), "N/A");
-			//SetValueString($this->GetIDForIdent("e2eventstart"), "N/A");
-			//SetValueString($this->GetIDForIdent("e2eventduration"), "N/A");
-			//SetValueString($this->GetIDForIdent("e2eventleft"), "N/A");
+			SetValueString($this->GetIDForIdent("e2nexteventtitle"), "N/A");
+			SetValueString($this->GetIDForIdent("e2nexteventdescription"), "N/A");
+			SetValueString($this->GetIDForIdent("e2nexteventdescriptionextended"), "N/A");
+			SetValueInteger($this->GetIDForIdent("e2eventpast"), 0);
+			SetValueInteger($this->GetIDForIdent("e2eventleft"), 0);
 			SetValueInteger($this->GetIDForIdent("e2eventprogress"), 0);
 		}
 	}
