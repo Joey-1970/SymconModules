@@ -215,31 +215,41 @@
 
 	public function DeepStandby()
 	{
-	      $xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=1"));
+	      If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
+			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=1"));
+	      }
 	return;
 	}
 	
 	public function Standby()
 	{
-	       $xmlResult = new SimpleXMLElement(file_get_contents("http:///".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=5"));
+	       If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
+			$xmlResult = new SimpleXMLElement(file_get_contents("http:///".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=5"));
+	       }
 	return;
 	}			       
 	
 	public function WakeUpStandby()
 	{
-		$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=4"));
+		If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
+			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=4"));
+		}
 	return;
 	}
 				       
 	public function Reboot()
 	{
-	   	 $xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=2"));
+	   	If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) { 
+			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=2"));
+		}
 	return;
 	}
 	
 	public function RestartEnigma()
 	{
-	      $xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=3"));
+	      	If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
+			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=3"));
+		}
 	return;
 	}		       
 				       
