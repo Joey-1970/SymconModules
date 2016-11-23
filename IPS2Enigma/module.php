@@ -10,6 +10,9 @@
            	$this->RegisterPropertyBoolean("Open", 0);
 	    	$this->RegisterPropertyString("IPAddress", "127.0.0.1");
 		$this->RegisterPropertyInteger("DataUpdate", 15);
+		$this->RegisterPropertyBoolean("HDD_Data", false);
+		$this->RegisterPropertyBoolean("Signal_Data", false);
+		$this->RegisterPropertyBoolean("RC_Data", false);
 		$this->RegisterTimer("DataUpdate", 0, 'Enigma_Get_DataUpdate($_IPS["TARGET"]);');
         }
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -40,10 +43,13 @@
 		$this->DisableAction("e2lanmac");
 		$this->RegisterVariableString("e2hddinfo_model", "HDD Model", "", 80);
 		$this->DisableAction("e2hddinfo_model");
-		$this->RegisterVariableInteger("e2hddinfo_capacity", "HDD Capacity", "gigabyte.GB", 90);
-		$this->DisableAction("e2hddinfo_capacity");
-		$this->RegisterVariableInteger("e2hddinfo_free", "HDD Free", "gigabyte.GB", 95);
-		$this->DisableAction("e2hddinfo_free");
+		
+		If ($this->ReadPropertyBoolean("HDD_Data") == true) {
+			$this->RegisterVariableInteger("e2hddinfo_capacity", "HDD Capacity", "gigabyte.GB", 90);
+			$this->DisableAction("e2hddinfo_capacity");
+			$this->RegisterVariableInteger("e2hddinfo_free", "HDD Free", "gigabyte.GB", 95);
+			$this->DisableAction("e2hddinfo_free");
+		}
 		
 		$this->RegisterVariableBoolean("powerstate", "Powerstate", "~Switch", 100);
 		$this->EnableAction("powerstate");
@@ -82,16 +88,18 @@
 		$this->RegisterVariableInteger("e2nexteventduration", "Next Event Duration", "time.min", 250);
 		$this->DisableAction("e2nexteventduration");
 		
-		$this->RegisterVariableInteger("e2snrdb", "Signal-to-Noise Ratio (dB)", "snr.db", 300);
-		$this->DisableAction("e2snrdb");
-		$this->RegisterVariableInteger("e2snr", "Signal-to-Noise Ratio", "~Intensity.100", 310);
-		$this->DisableAction("e2snr");
-		$this->RegisterVariableInteger("e2ber", "Bit error rate", "", 320);
-		$this->DisableAction("e2ber");
-		$this->RegisterVariableInteger("e2agc", "Automatic Gain Control", "~Intensity.100", 330);
-		$this->DisableAction("e2agc");
+		If ($this->ReadPropertyBoolean("Signal_Data") == true) {
+			$this->RegisterVariableInteger("e2snrdb", "Signal-to-Noise Ratio (dB)", "snr.db", 300);
+			$this->DisableAction("e2snrdb");
+			$this->RegisterVariableInteger("e2snr", "Signal-to-Noise Ratio", "~Intensity.100", 310);
+			$this->DisableAction("e2snr");
+			$this->RegisterVariableInteger("e2ber", "Bit error rate", "", 320);
+			$this->DisableAction("e2ber");
+			$this->RegisterVariableInteger("e2agc", "Automatic Gain Control", "~Intensity.100", 330);
+			$this->DisableAction("e2agc");
+		}
 		
-		If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$this->Get_BasicData();
 			$this->SetTimerInterval("DataUpdate", ($this->ReadPropertyInteger("DataUpdate") * 1000));
 			$this->Get_Powerstate();
@@ -116,7 +124,7 @@
 	// Beginn der Funktionen
 	public function Get_DataUpdate()
 	{
-		If (($this->ReadPropertyString("Open") == true) AND ($this->Get_Powerstate() == true)) {
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
 			//IPS_LogMessage("IPS2Enigma","TV-Daten ermitteln");
 			// das aktuelle Programm
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/subservices"));
@@ -142,16 +150,20 @@
       			SetValueInteger($this->GetIDForIdent("e2nexteventstart"), (int)$xmlResult->e2event->e2eventstart);
 			SetValueInteger($this->GetIDForIdent("e2nexteventend"), (int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration);
 			SetValueInteger($this->GetIDForIdent("e2nexteventduration"), round((int)$xmlResult->e2event->e2eventduration / 60) );
-			// Empfangsstärke ermitteln
-			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/signal?"));
-			SetValueInteger($this->GetIDForIdent("e2snrdb"), (int)$xmlResult->e2snrdb);
-			SetValueInteger($this->GetIDForIdent("e2snr"), (int)$xmlResult->e2snr);
-			SetValueInteger($this->GetIDForIdent("e2ber"), (int)$xmlResult->e2ber);
-			SetValueInteger($this->GetIDForIdent("e2agc"), (int)$xmlResult->e2acg);
-			// Festplattendaten
-			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/about"));
-			SetValueInteger($this->GetIDForIdent("e2hddinfo_capacity"), (int)$xmlResult->e2about->e2hddinfo->capacity);
-			SetValueInteger($this->GetIDForIdent("e2hddinfo_free"), (int)$xmlResult->e2about->e2hddinfo->free);
+			If ($this->ReadPropertyBoolean("Signal_Data") == true) {
+				// Empfangsstärke ermitteln
+				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/signal?"));
+				SetValueInteger($this->GetIDForIdent("e2snrdb"), (int)$xmlResult->e2snrdb);
+				SetValueInteger($this->GetIDForIdent("e2snr"), (int)$xmlResult->e2snr);
+				SetValueInteger($this->GetIDForIdent("e2ber"), (int)$xmlResult->e2ber);
+				SetValueInteger($this->GetIDForIdent("e2agc"), (int)$xmlResult->e2acg);
+			}
+			If ($this->ReadPropertyBoolean("HDD_Data") == true) {
+				// Festplattendaten
+				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/about"));
+				SetValueInteger($this->GetIDForIdent("e2hddinfo_capacity"), (int)$xmlResult->e2about->e2hddinfo->capacity);
+				SetValueInteger($this->GetIDForIdent("e2hddinfo_free"), (int)$xmlResult->e2about->e2hddinfo->free);
+			}
 		}
 		else {
 			SetValueString($this->GetIDForIdent("e2servicename"), "N/A");
@@ -216,7 +228,7 @@
 
 	public function DeepStandby()
 	{
-	      If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
+	      If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=1"));
 	      }
 	return;
@@ -224,7 +236,7 @@
 	
 	public function Standby()
 	{
-	       If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
+	       If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$xmlResult = new SimpleXMLElement(file_get_contents("http:///".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=5"));
 	       }
 	return;
@@ -232,7 +244,7 @@
 	
 	public function WakeUpStandby()
 	{
-		If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=4"));
 		}
 	return;
@@ -240,7 +252,7 @@
 				       
 	public function Reboot()
 	{
-	   	If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) { 
+	   	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) { 
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=2"));
 		}
 	return;
@@ -248,7 +260,7 @@
 	
 	public function RestartEnigma()
 	{
-	      	If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
+	      	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=3"));
 		}
 	return;
@@ -258,7 +270,7 @@
 	public function GetCurrentServiceName()
 	{
 		$result = "";
-		If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 		       $xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/subservices"));
 		       $result = (string)$xmlResult->e2service[0]->e2servicename;
 		}
@@ -268,7 +280,7 @@
 	public function GetCurrentServiceReference()
 	{
 		$result = "";
-		If (($this->ReadPropertyString("Open") == true) AND ($this->ConnectionTest() == true)) {
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 	      		$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/subservices"));
 	      		$result =  (string)$xmlResult->e2service[0]->e2servicereference;
 		}
