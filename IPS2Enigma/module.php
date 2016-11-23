@@ -184,10 +184,11 @@
 	private function Get_Powerstate()
 	{
 		$result = false;
-		$xml = simplexml_load_file("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate");
-		$wert = $xml->e2instandby;
+		//$xmlResult = simplexml_load_file("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate");
+		$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate"));
+		//$wert = $xml->e2instandby;
 
-		If(strpos($wert,"false")!== false) {
+		If(strpos((string)$xmlResult->e2instandby, "false")!== false) {
 			// Bei "false" ist die Box eingeschaltet
 			SetValueBoolean($this->GetIDForIdent("powerstate"), true);
 			$result = true;
@@ -331,29 +332,6 @@ function ENIGMA2_Ping($ipadr)
 		}
 return $result;
 }
-
-
-//*************************************************************************************************************
-// Prüft ob die Box eingeschaltet ist
-function ENIGMA2_PowerstateStatus($ipadr)
-{
-   $result = true;
-
-	$xml = simplexml_load_file("http://$ipadr/web/powerstate?.xml");
-	$wert = $xml->e2instandby;
-	
-If(strpos($wert,"false")!== false)
-		{
-		$result = true; // Bei "false" ist die Box eingeschaltet
-		}
-	else
-		{
-		$result = false;
-		}
-
-return $result;
-}
-
 
 
 //*************************************************************************************************************
