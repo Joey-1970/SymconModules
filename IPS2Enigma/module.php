@@ -103,8 +103,12 @@
 		$this->DisableAction("e2stream");
 		
 		If ($this->ReadPropertyBoolean("RC_Data") == true) {
-			$this->RegisterVariableBoolean("mute", "Mute", "~Switch", 500);
-			$this->EnableAction("mute");
+			$this->RegisterVariableBoolean("rc_mute", "Mute", "~Switch", 500);
+			$this->EnableAction("rc_mute");
+			$this->RegisterVariableBoolean("rc_vol_plus", "Volume +", "~Switch", 510);
+			$this->EnableAction("rc_vol_plus");
+			$this->RegisterVariableBoolean("rc_vol_minus", "Volume -", "~Switch", 520);
+			$this->EnableAction("rc_vol_minus");
 		}
 		
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
@@ -125,10 +129,22 @@
 			    //Neuen Wert in die Statusvariable schreiben
 			    SetValue($this->GetIDForIdent($Ident), $Value);
 			    break;
-			case "mute":
-			    	$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/vol?set=mute"));
-				SetValueBoolean($this->GetIDForIdent($Ident), (bool)$xmlResult->e2ismuted);
-				IPS_LogMessage("IPS2Enigma","Mute");
+			case "rc_mute":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/vol?set=mute"));
+				}
+				//SetValueBoolean($this->GetIDForIdent($Ident), (bool)$xmlResult->e2ismuted);
+				//IPS_LogMessage("IPS2Enigma","Mute");
+				break;
+			case "rc_volume_plus":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/vol?set=up"));
+				}
+				break;
+			case "rc_volume_minus":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/vol?set=down"));
+				}
 				break;
 			default:
 			    throw new Exception("Invalid Ident");
