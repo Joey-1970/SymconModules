@@ -127,6 +127,7 @@
 			    break;
 			case "mute":
 			    	$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/vol?set=mute"));
+				IPS_LogMessage("IPS2Enigma","Mute");
 				break;
 			default:
 			    throw new Exception("Invalid Ident");
