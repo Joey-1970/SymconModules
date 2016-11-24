@@ -193,7 +193,7 @@
 				}
 				break;
 			case "rc_power":
-			    	If ($this->ReadPropertyBoolean("Open") == true) {
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 					// 116 Key "Power""
 					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=116"));
 				}
@@ -434,14 +434,14 @@
 	{
 	      $result = false;
 	      If (Sys_Ping($this->ReadPropertyString("IPAddress"), 2000)) {
-			IPS_LogMessage("IPS2Enigma Netzanbindung","Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert");
+			//IPS_LogMessage("IPS2Enigma Netzanbindung","Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert");
 			$status = @fsockopen($this->ReadPropertyString("IPAddress"), 80, $errno, $errstr, 10);
 				if (!$status) {
 					IPS_LogMessage("IPS2Enigma Netzanbindung","Port ist geschlossen!");				
 	   			}
 	   			else {
 	   				fclose($status);
-					IPS_LogMessage("IPS2Enigma Netzanbindung","Port ist geöffnet");
+					//IPS_LogMessage("IPS2Enigma Netzanbindung","Port ist geöffnet");
 					$result = true;
 					$this->SetStatus(102);
 	   			}
