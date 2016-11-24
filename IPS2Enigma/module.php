@@ -99,14 +99,20 @@
 			$this->DisableAction("e2agc");
 		}
 		
+		$this->RegisterVariableString("e2stream", "Stream-Video", "~HTMLBox", 500);
+		$this->DisableAction("e2stream");
+		
+		If ($this->ReadPropertyBoolean("Signal_Data") == true) {
+			
+		}
+		
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$this->Get_BasicData();
 			$this->SetTimerInterval("DataUpdate", ($this->ReadPropertyInteger("DataUpdate") * 1000));
 			$this->Get_Powerstate();
 		}
 		
-		$this->RegisterVariableString("e2stream", "Stream-Video", "~HTMLBox", 500);
-		$this->DisableAction("e2stream");
+		
 		
 
         }
