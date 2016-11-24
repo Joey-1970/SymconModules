@@ -126,7 +126,7 @@
 			    SetValue($this->GetIDForIdent($Ident), $Value);
 			    break;
 			case "mute":
-			    	$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/vol?set=mute"));
+			    	$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/vol?set=mute"));
 				IPS_LogMessage("IPS2Enigma","Mute");
 				break;
 			default:
@@ -198,6 +198,10 @@
 			SetValueInteger($this->GetIDForIdent("e2eventpast"), 0);
 			SetValueInteger($this->GetIDForIdent("e2eventleft"), 0);
 			SetValueInteger($this->GetIDForIdent("e2eventprogress"), 0);
+			SetValueInteger($this->GetIDForIdent("e2snrdb"), 0);
+			SetValueInteger($this->GetIDForIdent("e2snr"), 0);
+			SetValueInteger($this->GetIDForIdent("e2ber"), 0);
+			SetValueInteger($this->GetIDForIdent("e2agc"), 0);
 		}
 	}
 	// Ermittlung der Basisdaten
