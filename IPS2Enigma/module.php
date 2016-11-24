@@ -103,15 +103,17 @@
 		$this->DisableAction("e2stream");
 		
 		If ($this->ReadPropertyBoolean("RC_Data") == true) {
-			$this->RegisterVariableBoolean("rc_mute", "Mute", "~Switch", 500);
+			$this->RegisterVariableBoolean("rc_power", "Power", "~Switch", 500);
+			$this->EnableAction("rc_power");
+			$this->RegisterVariableBoolean("rc_mute", "Mute", "~Switch", 505);
 			$this->EnableAction("rc_mute");
-			$this->RegisterVariableBoolean("rc_vol_plus", "Volume +", "~Switch", 510);
+			$this->RegisterVariableBoolean("rc_vol_up", "Volume up", "~Switch", 510);
 			$this->EnableAction("rc_vol_plus");
-			$this->RegisterVariableBoolean("rc_vol_minus", "Volume -", "~Switch", 520);
+			$this->RegisterVariableBoolean("rc_vol_down", "Volume down", "~Switch", 520);
 			$this->EnableAction("rc_vol_minus");
 		}
 /*
-	116 Key "Power"	
+		
 	2   Key "1"	 
 	3   Key "2"	
 	4   Key "3"	
@@ -124,10 +126,10 @@
 	11  Key "0"	
 	412 Key "previous"	
 	407 Key "next	
-	115 Key "volume up"	
-	113 Key "mute"	
+		
+		
 	402 Key "bouquet up"	
-	114 Key "volume down"	
+		
 	174 Key "lame"	
 	403 Key "bouquet down"	
 	358 Key "info"	
@@ -168,19 +170,28 @@
 			    break;
 			case "rc_mute":
 			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
-					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/vol?set=mute"));
+					// 113 Key "mute"
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=113"));
 				}
 				//SetValueBoolean($this->GetIDForIdent($Ident), (bool)$xmlResult->e2ismuted);
 				//IPS_LogMessage("IPS2Enigma","Mute");
 				break;
-			case "rc_volume_plus":
+			case "rc_vol_up":
 			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
-					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/vol?set=up"));
+					// 115 Key "volume up"
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=115"));
 				}
 				break;
-			case "rc_volume_minus":
+			case "rc_vol_down":
 			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
-					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/vol?set=down"));
+					// 114 Key "volume down"
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=114"));
+				}
+				break;
+			case "rc_power":
+			    	If ($this->ReadPropertyBoolean("Open") == true) {
+					// 116 Key "Power""
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=116"));
 				}
 				break;
 			default:
