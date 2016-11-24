@@ -127,6 +127,7 @@
 			    break;
 			case "mute":
 			    	$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/vol?set=mute"));
+				SetValueBoolean($this->GetIDForIdent($Ident), (bool)$xmlResult->e2ismuted);
 				IPS_LogMessage("IPS2Enigma","Mute");
 				break;
 			default:
