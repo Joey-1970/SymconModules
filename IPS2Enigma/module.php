@@ -110,7 +110,44 @@
 			$this->RegisterVariableBoolean("rc_vol_minus", "Volume -", "~Switch", 520);
 			$this->EnableAction("rc_vol_minus");
 		}
-		
+/*
+	116 Key "Power"	
+	2   Key "1"	 
+	3   Key "2"	
+	4   Key "3"	
+	5   Key "4"	
+	6   Key "5"	
+	7   Key "6"	
+	8   Key "7"	
+	9   Key "8"	
+	10  Key "1"	
+	11  Key "0"	
+	412 Key "previous"	
+	407 Key "next	
+	115 Key "volume up"	
+	113 Key "mute"	
+	402 Key "bouquet up"	
+	114 Key "volume down"	
+	174 Key "lame"	
+	403 Key "bouquet down"	
+	358 Key "info"	
+	103 Key "up"	
+	139 Key "menu"	
+	105 Key "left"	
+	352 Key "OK"	
+	106 Key "right"	
+	392 Key "audio"	
+	108 Key "down"	
+	393 Key "video"	
+	398 Key "red"	
+	399 Key "green"	
+	400 Key "yellow"	
+	401 Key "blue"	
+	377 Key "tv"	
+	385 Key "radio"	
+	388 Key "text"	
+	138 Key "help"	 	
+*/		
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$this->Get_BasicData();
 			$this->SetTimerInterval("DataUpdate", ($this->ReadPropertyInteger("DataUpdate") * 1000));
