@@ -99,11 +99,12 @@
 			$this->DisableAction("e2agc");
 		}
 		
-		$this->RegisterVariableString("e2stream", "Stream-Video", "~HTMLBox", 500);
+		$this->RegisterVariableString("e2stream", "Stream-Video", "~HTMLBox", 900);
 		$this->DisableAction("e2stream");
 		
-		If ($this->ReadPropertyBoolean("Signal_Data") == true) {
-			
+		If ($this->ReadPropertyBoolean("RC_Data") == true) {
+			$this->RegisterVariableBoolean("mute", "Mute", "~Switch", 500);
+			$this->EnableAction("mute");
 		}
 		
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
@@ -119,14 +120,17 @@
 	public function RequestAction($Ident, $Value) 
 	{
   		switch($Ident) {
-	        case "Status":
-	            $this->Set_Status($Value);
-	            //Neuen Wert in die Statusvariable schreiben
-	            SetValue($this->GetIDForIdent($Ident), $Value);
-	            break;
-	        default:
-	            throw new Exception("Invalid Ident");
-	    }
+			case "powerstate":
+			    //$this->Set_Status($Value);
+			    //Neuen Wert in die Statusvariable schreiben
+			    SetValue($this->GetIDForIdent($Ident), $Value);
+			    break;
+			case "mute":
+			    	$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/vol?set=mute"));
+				break;
+			default:
+			    throw new Exception("Invalid Ident");
+	    	}
 	}
 	
 
