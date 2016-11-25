@@ -29,16 +29,18 @@
 		$this->SetBuffer("FirstUpdate", false);
 		
 		//Status-Variablen anlegen
-		$this->RegisterVariableString("e2oeversion", "E2 OE-Version", "", 10);
-		$this->DisableAction("e2oeversion");
-            	$this->RegisterVariableString("e2enigmaversion", "E2 Version", "", 20);
-		$this->DisableAction("e2enigmaversion");
-		$this->RegisterVariableString("e2distroversion", "E2 Distro-Version", "", 30);
-		$this->DisableAction("e2distroversion");
-		$this->RegisterVariableString("e2imageversion", "E2 Image-Version", "", 40);
-		$this->DisableAction("e2imageversion");
-		$this->RegisterVariableString("e2webifversion", "E2 WebIf-Version", "", 50);
-		$this->DisableAction("e2webifversion");
+		If ($this->ReadPropertyBoolean("Enigma2_Data") == true) {
+			$this->RegisterVariableString("e2oeversion", "E2 OE-Version", "", 10);
+			$this->DisableAction("e2oeversion");
+			$this->RegisterVariableString("e2enigmaversion", "E2 Version", "", 20);
+			$this->DisableAction("e2enigmaversion");
+			$this->RegisterVariableString("e2distroversion", "E2 Distro-Version", "", 30);
+			$this->DisableAction("e2distroversion");
+			$this->RegisterVariableString("e2imageversion", "E2 Image-Version", "", 40);
+			$this->DisableAction("e2imageversion");
+			$this->RegisterVariableString("e2webifversion", "E2 WebIf-Version", "", 50);
+			$this->DisableAction("e2webifversion");
+		}
 		$this->RegisterVariableString("e2model", "Model", "", 60);
 		$this->DisableAction("e2model");
 		$this->RegisterVariableString("e2lanmac", "LAN-MAC", "", 70);
