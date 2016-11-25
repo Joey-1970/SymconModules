@@ -71,7 +71,7 @@
 		$this->DisableAction("e2eventstart");
 		$this->RegisterVariableInteger("e2eventend", "Event End", "~UnixTimestampTime", 150);
 		$this->DisableAction("e2eventend");
-		$this->RegisterVariableInteger("e2eventduration", "Event Duration", "time.min", 160);
+		$this->RegisterVariableInteger("e2eventduration", "Event Duration", "time.min", 160);		
 		$this->DisableAction("e2eventduration");
 		$this->RegisterVariableInteger("e2eventpast", "Event Past", "time.min", 170);
 		$this->DisableAction("e2eventpast");
@@ -113,9 +113,9 @@
 			$this->RegisterVariableBoolean("rc_mute", "Mute", "~Switch", 505);
 			$this->EnableAction("rc_mute");
 			$this->RegisterVariableBoolean("rc_vol_up", "Volume up", "~Switch", 510);
-			$this->EnableAction("rc_vol_plus");
+			$this->EnableAction("rc_vol_up");
 			$this->RegisterVariableBoolean("rc_vol_down", "Volume down", "~Switch", 520);
-			$this->EnableAction("rc_vol_minus");
+			$this->EnableAction("rc_vol_down");
 			$this->RegisterVariableBoolean("rc_1", "1", "~Switch", 530);
 			$this->EnableAction("rc_1");
 			$this->RegisterVariableBoolean("rc_2", "2", "~Switch", 540);
