@@ -11,6 +11,8 @@
 	    	$this->RegisterPropertyString("IPAddress", "127.0.0.1");
 		$this->RegisterPropertyInteger("DataUpdate", 15);
 		$this->RegisterPropertyBoolean("HDD_Data", false);
+		$this->RegisterPropertyBoolean("EPGnow_Data", false);
+		$this->RegisterPropertyBoolean("EPGnext_Data", false);
 		$this->RegisterPropertyBoolean("Enigma2_Data", false);
 		$this->RegisterPropertyBoolean("Signal_Data", false);
 		$this->RegisterPropertyBoolean("RC_Data", false);
