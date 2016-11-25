@@ -127,15 +127,25 @@
 			$this->EnableAction("rc_7");
 			$this->RegisterVariableBoolean("rc_8", "8", "~Switch", 600);
 			$this->EnableAction("rc_8");
+			$this->RegisterVariableBoolean("rc_9", "9", "~Switch", 610);
+			$this->EnableAction("rc_9");
+			$this->RegisterVariableBoolean("rc_0", "0", "~Switch", 620);
+			$this->EnableAction("rc_0");
+			$this->RegisterVariableBoolean("rc_previous", "Previous", "~Switch", 640);
+			$this->EnableAction("rc_previous");
+			$this->RegisterVariableBoolean("rc_next", "Next", "~Switch", 650);
+			$this->EnableAction("rc_next");
+			$this->RegisterVariableBoolean("rc_bouquet_up", "Bouquet up", "~Switch", 660);
+			$this->EnableAction("rc_bouquet_up");
+			$this->RegisterVariableBoolean("rc_bouquet_down", "Bouquet down", "~Switch", 670);
+			$this->EnableAction("rc_bouquet_down");
 		}
 /*
-	10  Key "9"	
-	11  Key "0"	
-	412 Key "previous"	
-	407 Key "next	
-	402 Key "bouquet up"	
+		
+	
+		
 	174 Key "lame"	
-	403 Key "bouquet down"	
+		
 	358 Key "info"	
 	103 Key "up"	
 	139 Key "menu"	
@@ -244,6 +254,42 @@
 			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
 					// 9   Key "8"
 					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=9"));
+				}
+				break;
+			case "rc_9":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					// 10  Key "9"
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=10"));
+				}
+				break;
+			case "rc_0":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					// 11  Key "0"
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=11"));
+				}
+				break;
+			case "rc_previous":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					// 412 Key "previous"
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=412"));
+				}
+				break;
+			case "rc_next":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					// 407 Key "next"
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=407"));
+				}
+				break;
+			case "rc_bouquet_up":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					// 402 Key "bouquet up"
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=402"));
+				}
+				break;
+			case "rc_bouquet_down":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					// 403 Key "bouquet down"
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=403"));
 				}
 				break;
 			default:
