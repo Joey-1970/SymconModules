@@ -509,11 +509,12 @@
 				SetValueInteger($this->GetIDForIdent("e2nexteventduration"), 0);
 			}
 			
-			
-			SetValueInteger($this->GetIDForIdent("e2snrdb"), 0);
-			SetValueInteger($this->GetIDForIdent("e2snr"), 0);
-			SetValueInteger($this->GetIDForIdent("e2ber"), 0);
-			SetValueInteger($this->GetIDForIdent("e2agc"), 0);
+			If ($this->ReadPropertyBoolean("Signal_Data") == true) {
+				SetValueInteger($this->GetIDForIdent("e2snrdb"), 0);
+				SetValueInteger($this->GetIDForIdent("e2snr"), 0);
+				SetValueInteger($this->GetIDForIdent("e2ber"), 0);
+				SetValueInteger($this->GetIDForIdent("e2agc"), 0);
+			}
 			$this->SetBuffer("FirstUpdate", true);
 		}
 	}
@@ -530,7 +531,9 @@
 		}
 		SetValueString($this->GetIDForIdent("e2model"), (string)$xmlResult->e2about->e2model);
 		SetValueString($this->GetIDForIdent("e2lanmac"), (string)$xmlResult->e2about->e2lanmac);
-		SetValueString($this->GetIDForIdent("e2hddinfo_model"), (string)$xmlResult->e2about->e2hddinfo->model);
+		If ($this->ReadPropertyBoolean("HDD_Data") == true) {
+			SetValueString($this->GetIDForIdent("e2hddinfo_model"), (string)$xmlResult->e2about->e2hddinfo->model);
+		}
 	return;
 	}
 	
