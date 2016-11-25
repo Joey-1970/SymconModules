@@ -218,8 +218,6 @@
 					// 113 Key "mute"
 					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=113"));
 				}
-				//SetValueBoolean($this->GetIDForIdent($Ident), (bool)$xmlResult->e2ismuted);
-				//IPS_LogMessage("IPS2Enigma","Mute");
 				break;
 			case "rc_vol_up":
 			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
