@@ -26,6 +26,8 @@
 		$this->RegisterProfileInteger("snr.db", "Intensity", "", " db", 0, 1000000, 1);
 		$this->RegisterProfileInteger("gigabyte.GB", "Gauge", "", " GB", 0, 1000000, 1);
 		
+		$this->SetBuffer("FirstUpdate", false);
+		
 		//Status-Variablen anlegen
 		$this->RegisterVariableString("e2oeversion", "E2 OE-Version", "", 10);
 		$this->DisableAction("e2oeversion");
@@ -139,13 +141,17 @@
 			$this->EnableAction("rc_bouquet_up");
 			$this->RegisterVariableBoolean("rc_bouquet_down", "Bouquet down", "~Switch", 670);
 			$this->EnableAction("rc_bouquet_down");
+			$this->RegisterVariableBoolean("rc_red", "Red", "~Switch", 680);
+			$this->EnableAction("rc_red");
+			$this->RegisterVariableBoolean("rc_green", "Green", "~Switch", 690);
+			$this->EnableAction("rc_green");
+			$this->RegisterVariableBoolean("rc_yellow", "Yellow", "~Switch", 700);
+			$this->EnableAction("rc_yellow");
+			$this->RegisterVariableBoolean("rc_blue", "Blue", "~Switch", 710);
+			$this->EnableAction("rc_blue");
 		}
 /*
-		
-	
-		
 	174 Key "lame"	
-		
 	358 Key "info"	
 	103 Key "up"	
 	139 Key "menu"	
@@ -155,10 +161,6 @@
 	392 Key "audio"	
 	108 Key "down"	
 	393 Key "video"	
-	398 Key "red"	
-	399 Key "green"	
-	400 Key "yellow"	
-	401 Key "blue"	
 	377 Key "tv"	
 	385 Key "radio"	
 	388 Key "text"	
@@ -292,6 +294,30 @@
 					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=403"));
 				}
 				break;
+			case "rc_red":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					// 398 Key "red"
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=398"));
+				}
+				break;
+			case "rc_green":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					// 399 Key "green"	
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=399"));
+				}
+				break;
+			case "rc_yellow":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					// 400 Key "yellow"
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=400"));
+				}
+				break;
+			case "rc_blue":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					// 401 Key "blue"	
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=401"));
+				}
+				break;
 			default:
 			    throw new Exception("Invalid Ident");
 	    	}
@@ -302,6 +328,7 @@
 	public function Get_DataUpdate()
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+			$this->SetBuffer("FirstUpdate", false);
 			//IPS_LogMessage("IPS2Enigma","TV-Daten ermitteln");
 			// das aktuelle Programm
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/subservices"));
@@ -344,7 +371,7 @@
 			//SetValueString($this->GetIDForIdent("e2stream"), "<video width="320" height="240" controls> <source src="http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".$e2servicereference." type="video/mp4"> </video>");
 			//"http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".$e2servicereference
 		}
-		else {
+		elseif ($this->GetBuffer("FirstUpdate") == false) {
 			SetValueString($this->GetIDForIdent("e2servicename"), "N/A");
 			SetValueString($this->GetIDForIdent("e2eventtitle"), "N/A");
 			SetValueString($this->GetIDForIdent("e2eventdescription"), "N/A");
@@ -365,6 +392,7 @@
 			SetValueInteger($this->GetIDForIdent("e2snr"), 0);
 			SetValueInteger($this->GetIDForIdent("e2ber"), 0);
 			SetValueInteger($this->GetIDForIdent("e2agc"), 0);
+			$this->SetBuffer("FirstUpdate", true);
 		}
 	}
 	// Ermittlung der Basisdaten
