@@ -194,7 +194,14 @@
 			$this->EnableAction("rc_text");
 			$this->RegisterVariableBoolean("rc_exit", "Exit", "~Switch", 860);
 			$this->EnableAction("rc_exit");
-			
+/*
+168: rewind
+207: play
+119: pause
+208: forward
+128: stop
+167: record
+*/
 		}
 	
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
