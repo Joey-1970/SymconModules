@@ -192,6 +192,8 @@
 			$this->EnableAction("rc_help");
 			$this->RegisterVariableBoolean("rc_text", "Text", "~Switch", 850);
 			$this->EnableAction("rc_text");
+			$this->RegisterVariableBoolean("rc_exit", "Exit", "~Switch", 860);
+			$this->EnableAction("rc_exit");
 			
 		}
 	
@@ -208,11 +210,6 @@
 	public function RequestAction($Ident, $Value) 
 	{
   		switch($Ident) {
-			case "powerstate":
-			    //$this->Set_Status($Value);
-			    //Neuen Wert in die Statusvariable schreiben
-			    SetValue($this->GetIDForIdent($Ident), $Value);
-			    break;
 			case "rc_mute":
 			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
 					// 113 Key "mute"
@@ -427,6 +424,12 @@
 			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
 					// 138 Key "help"			
 					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=138"));
+				}
+				break;
+			case "rc_exit":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					// 1 Key "exit"			
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=1"));
 				}
 				break;
 			default:
