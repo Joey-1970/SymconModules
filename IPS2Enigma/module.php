@@ -48,10 +48,11 @@
 		$this->DisableAction("e2model");
 		$this->RegisterVariableString("e2lanmac", "LAN-MAC", "", 70);
 		$this->DisableAction("e2lanmac");
-		$this->RegisterVariableString("e2hddinfo_model", "HDD Model", "", 80);
-		$this->DisableAction("e2hddinfo_model");
+		
 		
 		If ($this->ReadPropertyBoolean("HDD_Data") == true) {
+			$this->RegisterVariableString("e2hddinfo_model", "HDD Model", "", 80);
+			$this->DisableAction("e2hddinfo_model");
 			$this->RegisterVariableInteger("e2hddinfo_capacity", "HDD Capacity", "gigabyte.GB", 90);
 			$this->DisableAction("e2hddinfo_capacity");
 			$this->RegisterVariableInteger("e2hddinfo_free", "HDD Free", "gigabyte.GB", 95);
@@ -63,37 +64,42 @@
 		
 		$this->RegisterVariableString("e2servicename", "Service Name", "", 110);
 		$this->DisableAction("e2servicename");
-		$this->RegisterVariableString("e2eventtitle", "Event Title", "", 120);
-		$this->DisableAction("e2eventtitle");
-		$this->RegisterVariableString("e2eventdescription", "Event Description", "", 125);
-		$this->DisableAction("e2eventdescription");
-		$this->RegisterVariableString("e2eventdescriptionextended", "Event Description Extended", "", 130);
-		$this->DisableAction("e2eventdescriptionextended");
-		$this->RegisterVariableInteger("e2eventstart", "Event Start", "~UnixTimestampTime", 140);
-		$this->DisableAction("e2eventstart");
-		$this->RegisterVariableInteger("e2eventend", "Event End", "~UnixTimestampTime", 150);
-		$this->DisableAction("e2eventend");
-		$this->RegisterVariableInteger("e2eventduration", "Event Duration", "time.min", 160);		
-		$this->DisableAction("e2eventduration");
-		$this->RegisterVariableInteger("e2eventpast", "Event Past", "time.min", 170);
-		$this->DisableAction("e2eventpast");
-		$this->RegisterVariableInteger("e2eventleft", "Event Left", "time.min", 180);
-		$this->DisableAction("e2eventleft");
-		$this->RegisterVariableInteger("e2eventprogress", "Event Progress", "~Intensity.100", 190);
-		$this->DisableAction("e2eventprogress");
 		
-		$this->RegisterVariableString("e2nexteventtitle", "Next Event Title", "", 200);
-		$this->DisableAction("e2nexteventtitle");
-		$this->RegisterVariableString("e2nexteventdescription", "Next Event Description", "", 210);
-		$this->DisableAction("e2nexteventdescription");
-		$this->RegisterVariableString("e2nexteventdescriptionextended", "Next Event Description Extended", "", 220);
-		$this->DisableAction("e2nexteventdescriptionextended");
-		$this->RegisterVariableInteger("e2nexteventstart", "Next Event Start", "~UnixTimestampTime", 230);
-		$this->DisableAction("e2nexteventstart");
-		$this->RegisterVariableInteger("e2nexteventend", "Next Event End", "~UnixTimestampTime", 240);
-		$this->DisableAction("e2nexteventend");
-		$this->RegisterVariableInteger("e2nexteventduration", "Next Event Duration", "time.min", 250);
-		$this->DisableAction("e2nexteventduration");
+		If ($this->ReadPropertyBoolean("EPGnow_Data") == true) {
+			$this->RegisterVariableString("e2eventtitle", "Event Title", "", 120);
+			$this->DisableAction("e2eventtitle");
+			$this->RegisterVariableString("e2eventdescription", "Event Description", "", 125);
+			$this->DisableAction("e2eventdescription");
+			$this->RegisterVariableString("e2eventdescriptionextended", "Event Description Extended", "", 130);
+			$this->DisableAction("e2eventdescriptionextended");
+			$this->RegisterVariableInteger("e2eventstart", "Event Start", "~UnixTimestampTime", 140);
+			$this->DisableAction("e2eventstart");
+			$this->RegisterVariableInteger("e2eventend", "Event End", "~UnixTimestampTime", 150);
+			$this->DisableAction("e2eventend");
+			$this->RegisterVariableInteger("e2eventduration", "Event Duration", "time.min", 160);		
+			$this->DisableAction("e2eventduration");
+			$this->RegisterVariableInteger("e2eventpast", "Event Past", "time.min", 170);
+			$this->DisableAction("e2eventpast");
+			$this->RegisterVariableInteger("e2eventleft", "Event Left", "time.min", 180);
+			$this->DisableAction("e2eventleft");
+			$this->RegisterVariableInteger("e2eventprogress", "Event Progress", "~Intensity.100", 190);
+			$this->DisableAction("e2eventprogress");
+		}
+		
+		If ($this->ReadPropertyBoolean("EPGnext_Data") == true) {
+			$this->RegisterVariableString("e2nexteventtitle", "Next Event Title", "", 200);
+			$this->DisableAction("e2nexteventtitle");
+			$this->RegisterVariableString("e2nexteventdescription", "Next Event Description", "", 210);
+			$this->DisableAction("e2nexteventdescription");
+			$this->RegisterVariableString("e2nexteventdescriptionextended", "Next Event Description Extended", "", 220);
+			$this->DisableAction("e2nexteventdescriptionextended");
+			$this->RegisterVariableInteger("e2nexteventstart", "Next Event Start", "~UnixTimestampTime", 230);
+			$this->DisableAction("e2nexteventstart");
+			$this->RegisterVariableInteger("e2nexteventend", "Next Event End", "~UnixTimestampTime", 240);
+			$this->DisableAction("e2nexteventend");
+			$this->RegisterVariableInteger("e2nexteventduration", "Next Event Duration", "time.min", 250);
+			$this->DisableAction("e2nexteventduration");
+		}
 		
 		If ($this->ReadPropertyBoolean("Signal_Data") == true) {
 			$this->RegisterVariableInteger("e2snrdb", "Signal-to-Noise Ratio (dB)", "snr.db", 300);
@@ -106,8 +112,8 @@
 			$this->DisableAction("e2agc");
 		}
 		
-		$this->RegisterVariableString("e2stream", "Stream-Video", "~HTMLBox", 900);
-		$this->DisableAction("e2stream");
+		//$this->RegisterVariableString("e2stream", "Stream-Video", "~HTMLBox", 900);
+		//$this->DisableAction("e2stream");
 		
 		If ($this->ReadPropertyBoolean("RC_Data") == true) {
 			$this->RegisterVariableBoolean("rc_power", "Power", "~Switch", 500);
@@ -441,26 +447,29 @@
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/subservices"));
        			SetValueString($this->GetIDForIdent("e2servicename"), (string)$xmlResult->e2service[0]->e2servicename);
 			$e2servicereference = (string)$xmlResult->e2service[0]->e2servicereference;
-			// das aktuelle Ereignis
-			$xmlResult =  new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/epgservicenow?sRef=".$e2servicereference));
- 			SetValueString($this->GetIDForIdent("e2eventtitle"), (string)utf8_decode($xmlResult->e2event->e2eventtitle));
-      			SetValueString($this->GetIDForIdent("e2eventdescription"), (string)utf8_decode($xmlResult->e2event->e2eventdescription));
-			SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), (string)utf8_decode($xmlResult->e2event->e2eventdescriptionextended));
-      			SetValueInteger($this->GetIDForIdent("e2eventstart"), (int)$xmlResult->e2event->e2eventstart);
-			SetValueInteger($this->GetIDForIdent("e2eventend"), (int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration);
-			SetValueInteger($this->GetIDForIdent("e2eventduration"), round((int)$xmlResult->e2event->e2eventduration / 60) );
-			SetValueInteger($this->GetIDForIdent("e2eventpast"), round( (int)time() - (int)$xmlResult->e2event->e2eventstart) / 60 );
-			SetValueInteger($this->GetIDForIdent("e2eventleft"), round(((int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration - (int)time()) / 60 ));
-			//SetValueInteger($this->GetIDForIdent("e2eventprogress"), round( ( (int)time() - (int)$xmlResult->e2event->e2eventstart) / 60) / (int)$xmlResult->e2event->e2eventduration / 60  );
-			SetValueInteger($this->GetIDForIdent("e2eventprogress"), GetValueInteger($this->GetIDForIdent("e2eventpast")) / GetValueInteger($this->GetIDForIdent("e2eventduration")) * 100);
-			// das folgende Ereignis
-			$xmlResult =  new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/epgservicenext?sRef=".$e2servicereference));
-			SetValueString($this->GetIDForIdent("e2nexteventtitle"), (string)utf8_decode($xmlResult->e2event->e2eventtitle));
-      			SetValueString($this->GetIDForIdent("e2nexteventdescription"), (string)utf8_decode($xmlResult->e2event->e2eventdescription));
-			SetValueString($this->GetIDForIdent("e2nexteventdescriptionextended"), (string)utf8_decode($xmlResult->e2event->e2eventdescriptionextended));
-      			SetValueInteger($this->GetIDForIdent("e2nexteventstart"), (int)$xmlResult->e2event->e2eventstart);
-			SetValueInteger($this->GetIDForIdent("e2nexteventend"), (int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration);
-			SetValueInteger($this->GetIDForIdent("e2nexteventduration"), round((int)$xmlResult->e2event->e2eventduration / 60) );
+			If ($this->ReadPropertyBoolean("EPGnow_Data") == true) {
+				// das aktuelle Ereignis
+				$xmlResult =  new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/epgservicenow?sRef=".$e2servicereference));
+				SetValueString($this->GetIDForIdent("e2eventtitle"), (string)utf8_decode($xmlResult->e2event->e2eventtitle));
+				SetValueString($this->GetIDForIdent("e2eventdescription"), (string)utf8_decode($xmlResult->e2event->e2eventdescription));
+				SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), (string)utf8_decode($xmlResult->e2event->e2eventdescriptionextended));
+				SetValueInteger($this->GetIDForIdent("e2eventstart"), (int)$xmlResult->e2event->e2eventstart);
+				SetValueInteger($this->GetIDForIdent("e2eventend"), (int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration);
+				SetValueInteger($this->GetIDForIdent("e2eventduration"), round((int)$xmlResult->e2event->e2eventduration / 60) );
+				SetValueInteger($this->GetIDForIdent("e2eventpast"), round( (int)time() - (int)$xmlResult->e2event->e2eventstart) / 60 );
+				SetValueInteger($this->GetIDForIdent("e2eventleft"), round(((int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration - (int)time()) / 60 ));
+				SetValueInteger($this->GetIDForIdent("e2eventprogress"), GetValueInteger($this->GetIDForIdent("e2eventpast")) / GetValueInteger($this->GetIDForIdent("e2eventduration")) * 100);
+			}
+			If ($this->ReadPropertyBoolean("EPGnext_Data") == true) {
+				// das folgende Ereignis
+				$xmlResult =  new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/epgservicenext?sRef=".$e2servicereference));
+				SetValueString($this->GetIDForIdent("e2nexteventtitle"), (string)utf8_decode($xmlResult->e2event->e2eventtitle));
+				SetValueString($this->GetIDForIdent("e2nexteventdescription"), (string)utf8_decode($xmlResult->e2event->e2eventdescription));
+				SetValueString($this->GetIDForIdent("e2nexteventdescriptionextended"), (string)utf8_decode($xmlResult->e2event->e2eventdescriptionextended));
+				SetValueInteger($this->GetIDForIdent("e2nexteventstart"), (int)$xmlResult->e2event->e2eventstart);
+				SetValueInteger($this->GetIDForIdent("e2nexteventend"), (int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration);
+				SetValueInteger($this->GetIDForIdent("e2nexteventduration"), round((int)$xmlResult->e2event->e2eventduration / 60) );
+			}
 			If ($this->ReadPropertyBoolean("Signal_Data") == true) {
 				// Empfangsstärke ermitteln
 				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/signal?"));
@@ -480,21 +489,27 @@
 		}
 		elseif ($this->GetBuffer("FirstUpdate") == false) {
 			SetValueString($this->GetIDForIdent("e2servicename"), "N/A");
-			SetValueString($this->GetIDForIdent("e2eventtitle"), "N/A");
-			SetValueString($this->GetIDForIdent("e2eventdescription"), "N/A");
-			SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), "N/A");
-			SetValueString($this->GetIDForIdent("e2nexteventtitle"), "N/A");
-			SetValueString($this->GetIDForIdent("e2nexteventdescription"), "N/A");
-			SetValueString($this->GetIDForIdent("e2nexteventdescriptionextended"), "N/A");
-			SetValueInteger($this->GetIDForIdent("e2eventstart"), 0);
-			SetValueInteger($this->GetIDForIdent("e2eventend"), 0);
-			SetValueInteger($this->GetIDForIdent("e2eventduration"), 0);
-			SetValueInteger($this->GetIDForIdent("e2nexteventstart"), 0);
-			SetValueInteger($this->GetIDForIdent("e2nexteventend"), 0);
-			SetValueInteger($this->GetIDForIdent("e2nexteventduration"), 0);
-			SetValueInteger($this->GetIDForIdent("e2eventpast"), 0);
-			SetValueInteger($this->GetIDForIdent("e2eventleft"), 0);
-			SetValueInteger($this->GetIDForIdent("e2eventprogress"), 0);
+			If ($this->ReadPropertyBoolean("EPGnow_Data") == true) {
+				SetValueString($this->GetIDForIdent("e2eventtitle"), "N/A");
+				SetValueString($this->GetIDForIdent("e2eventdescription"), "N/A");
+				SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), "N/A");
+				SetValueInteger($this->GetIDForIdent("e2eventstart"), 0);
+				SetValueInteger($this->GetIDForIdent("e2eventend"), 0);
+				SetValueInteger($this->GetIDForIdent("e2eventduration"), 0);
+				SetValueInteger($this->GetIDForIdent("e2eventpast"), 0);
+				SetValueInteger($this->GetIDForIdent("e2eventleft"), 0);
+				SetValueInteger($this->GetIDForIdent("e2eventprogress"), 0);
+			}
+			If ($this->ReadPropertyBoolean("EPGnext_Data") == true) {
+				SetValueString($this->GetIDForIdent("e2nexteventtitle"), "N/A");
+				SetValueString($this->GetIDForIdent("e2nexteventdescription"), "N/A");
+				SetValueString($this->GetIDForIdent("e2nexteventdescriptionextended"), "N/A");
+				SetValueInteger($this->GetIDForIdent("e2nexteventstart"), 0);
+				SetValueInteger($this->GetIDForIdent("e2nexteventend"), 0);
+				SetValueInteger($this->GetIDForIdent("e2nexteventduration"), 0);
+			}
+			
+			
 			SetValueInteger($this->GetIDForIdent("e2snrdb"), 0);
 			SetValueInteger($this->GetIDForIdent("e2snr"), 0);
 			SetValueInteger($this->GetIDForIdent("e2ber"), 0);
