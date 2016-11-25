@@ -159,19 +159,31 @@
 			$this->EnableAction("rc_right");
 			$this->RegisterVariableBoolean("rc_audio", "Audio", "~Switch", 760);
 			$this->EnableAction("rc_audio");
-			$this->RegisterVariableBoolean("rc_video", "Video", "~Switch", 750);
+			$this->RegisterVariableBoolean("rc_video", "Video", "~Switch", 770);
 			$this->EnableAction("rc_video");
+			$this->RegisterVariableBoolean("rc_lame", "Lame", "~Switch", 780);
+			$this->EnableAction("rc_lame");
+			$this->RegisterVariableBoolean("rc_info", "Info", "~Switch", 790);
+			$this->EnableAction("rc_info");
+			$this->RegisterVariableBoolean("rc_menu", "Menu", "~Switch", 800);
+			$this->EnableAction("rc_menu");
+			$this->RegisterVariableBoolean("rc_ok", "OK", "~Switch", 810);
+			$this->EnableAction("rc_ok");
+			$this->RegisterVariableBoolean("rc_menu", "Menu", "~Switch", 800);
+			$this->EnableAction("rc_menu");
+			$this->RegisterVariableBoolean("rc_ok", "OK", "~Switch", 810);
+			$this->EnableAction("rc_ok");
+			$this->RegisterVariableBoolean("rc_tv", "TV", "~Switch", 820);
+			$this->EnableAction("rc_tv");
+			$this->RegisterVariableBoolean("rc_radio", "Radio", "~Switch", 830);
+			$this->EnableAction("rc_radio");
+			$this->RegisterVariableBoolean("rc_help", "Help", "~Switch", 840);
+			$this->EnableAction("rc_help");
+			$this->RegisterVariableBoolean("rc_text", "Text", "~Switch", 850);
+			$this->EnableAction("rc_text");
+			
 		}
-/*
-	174 Key "lame"	
-	358 Key "info"	
-	139 Key "menu"	
-	352 Key "OK"	
-	377 Key "tv"	
-	385 Key "radio"	
-	388 Key "text"	
-	138 Key "help"	 	
-*/		
+	
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$this->Get_BasicData();
 			$this->SetTimerInterval("DataUpdate", ($this->ReadPropertyInteger("DataUpdate") * 1000));
@@ -358,6 +370,54 @@
 			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
 					// 393 Key "video"		
 					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=393"));
+				}
+				break;
+			case "rc_lame":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					// 174 Key "lame"		
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=174"));
+				}
+				break;
+			case "rc_info":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					// 358 Key "info"		
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=358"));
+				}
+				break;
+			case "rc_menu":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					// 139 Key "menu"			
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=139"));
+				}
+				break;
+			case "rc_ok":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					// 352 Key "OK"			
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=352"));
+				}
+				break;
+			case "rc_tv":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					// 377 Key "tv"			
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=377"));
+				}
+				break;
+			case "rc_radio":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					// 385 Key "radio"			
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=385"));
+				}
+				break;
+			case "rc_text":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					// 388 Key "text"			
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=388"));
+				}
+				break;
+			case "rc_help":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					// 138 Key "help"			
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=138"));
 				}
 				break;
 			default:
