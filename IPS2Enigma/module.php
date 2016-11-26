@@ -548,35 +548,37 @@
 			//SetValueString($this->GetIDForIdent("e2stream"), "<video width="320" height="240" controls> <source src="http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".$e2servicereference." type="video/mp4"> </video>");
 			//"http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".$e2servicereference
 		}
-		elseif ($this->GetBuffer("FirstUpdate") == false) {
-			SetValueString($this->GetIDForIdent("e2servicename"), "N/A");
-			If ($this->ReadPropertyBoolean("EPGnow_Data") == true) {
-				SetValueString($this->GetIDForIdent("e2eventtitle"), "N/A");
-				SetValueString($this->GetIDForIdent("e2eventdescription"), "N/A");
-				SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), "N/A");
-				SetValueInteger($this->GetIDForIdent("e2eventstart"), 0);
-				SetValueInteger($this->GetIDForIdent("e2eventend"), 0);
-				SetValueInteger($this->GetIDForIdent("e2eventduration"), 0);
-				SetValueInteger($this->GetIDForIdent("e2eventpast"), 0);
-				SetValueInteger($this->GetIDForIdent("e2eventleft"), 0);
-				SetValueInteger($this->GetIDForIdent("e2eventprogress"), 0);
+		else {
+			if ($this->GetBuffer("FirstUpdate") == false) {
+				SetValueString($this->GetIDForIdent("e2servicename"), "N/A");
+				If ($this->ReadPropertyBoolean("EPGnow_Data") == true) {
+					SetValueString($this->GetIDForIdent("e2eventtitle"), "N/A");
+					SetValueString($this->GetIDForIdent("e2eventdescription"), "N/A");
+					SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), "N/A");
+					SetValueInteger($this->GetIDForIdent("e2eventstart"), 0);
+					SetValueInteger($this->GetIDForIdent("e2eventend"), 0);
+					SetValueInteger($this->GetIDForIdent("e2eventduration"), 0);
+					SetValueInteger($this->GetIDForIdent("e2eventpast"), 0);
+					SetValueInteger($this->GetIDForIdent("e2eventleft"), 0);
+					SetValueInteger($this->GetIDForIdent("e2eventprogress"), 0);
+				}
+				If ($this->ReadPropertyBoolean("EPGnext_Data") == true) {
+					SetValueString($this->GetIDForIdent("e2nexteventtitle"), "N/A");
+					SetValueString($this->GetIDForIdent("e2nexteventdescription"), "N/A");
+					SetValueString($this->GetIDForIdent("e2nexteventdescriptionextended"), "N/A");
+					SetValueInteger($this->GetIDForIdent("e2nexteventstart"), 0);
+					SetValueInteger($this->GetIDForIdent("e2nexteventend"), 0);
+					SetValueInteger($this->GetIDForIdent("e2nexteventduration"), 0);
+				}
+
+				If ($this->ReadPropertyBoolean("Signal_Data") == true) {
+					SetValueInteger($this->GetIDForIdent("e2snrdb"), 0);
+					SetValueInteger($this->GetIDForIdent("e2snr"), 0);
+					SetValueInteger($this->GetIDForIdent("e2ber"), 0);
+					SetValueInteger($this->GetIDForIdent("e2agc"), 0);
+				}
+				$this->SetBuffer("FirstUpdate", true);
 			}
-			If ($this->ReadPropertyBoolean("EPGnext_Data") == true) {
-				SetValueString($this->GetIDForIdent("e2nexteventtitle"), "N/A");
-				SetValueString($this->GetIDForIdent("e2nexteventdescription"), "N/A");
-				SetValueString($this->GetIDForIdent("e2nexteventdescriptionextended"), "N/A");
-				SetValueInteger($this->GetIDForIdent("e2nexteventstart"), 0);
-				SetValueInteger($this->GetIDForIdent("e2nexteventend"), 0);
-				SetValueInteger($this->GetIDForIdent("e2nexteventduration"), 0);
-			}
-			
-			If ($this->ReadPropertyBoolean("Signal_Data") == true) {
-				SetValueInteger($this->GetIDForIdent("e2snrdb"), 0);
-				SetValueInteger($this->GetIDForIdent("e2snr"), 0);
-				SetValueInteger($this->GetIDForIdent("e2ber"), 0);
-				SetValueInteger($this->GetIDForIdent("e2agc"), 0);
-			}
-			$this->SetBuffer("FirstUpdate", true);
 		}
 	}
 	// Ermittlung der Basisdaten
