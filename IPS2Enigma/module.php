@@ -539,6 +539,12 @@
 		}
 		SetValueString($this->GetIDForIdent("e2model"), (string)$xmlResult->e2about->e2model);
 		SetValueString($this->GetIDForIdent("e2lanmac"), (string)$xmlResult->e2about->e2lanmac);
+		/*
+		<e2landhcp>True</e2landhcp>
+	        <e2lanip>10.101.98.94</e2lanip>
+	        <e2lanmask>255.255.255.0</e2lanmask>
+	        <e2langw>10.101.98.1</e2langw>
+		*/
 		If ($this->ReadPropertyBoolean("HDD_Data") == true) {
 			SetValueString($this->GetIDForIdent("e2hddinfo_model"), (string)$xmlResult->e2about->e2hddinfo->model);
 		}
