@@ -15,6 +15,7 @@
 		$this->RegisterPropertyBoolean("EPGnext_Data", false);
 		$this->RegisterPropertyBoolean("Enigma2_Data", false);
 		$this->RegisterPropertyBoolean("Signal_Data", false);
+		$this->RegisterPropertyBoolean("Network_Data", false);
 		$this->RegisterPropertyBoolean("RC_Data", false);
 		$this->RegisterTimer("DataUpdate", 0, 'Enigma_Get_DataUpdate($_IPS["TARGET"]);');
         }
@@ -46,10 +47,21 @@
 		}
 		$this->RegisterVariableString("e2model", "Model", "", 60);
 		$this->DisableAction("e2model");
-		$this->RegisterVariableString("e2lanmac", "LAN-MAC", "", 70);
-		$this->DisableAction("e2lanmac");
 		
+		If ($this->ReadPropertyBoolean("Network_Data") == true) {
+			$this->RegisterVariableString("e2lanmac", "MAC", "", 70);
+			$this->DisableAction("e2lanmac");
+			$this->RegisterVariableBoolean("e2landhcp", "DHCP", "", 71);
+			$this->DisableAction("e2landhcp");
+			$this->RegisterVariableString("e2lanip", "IP", "", 72);
+			$this->DisableAction("e2lanip");
+			$this->RegisterVariableString("e2lanmask", "Mask", "", 73);
+			$this->DisableAction("e2lanmask");
+			$this->RegisterVariableString("e2langw", "GW", "", 74);
+			$this->DisableAction("e2langw");
+		}
 		
+
 		If ($this->ReadPropertyBoolean("HDD_Data") == true) {
 			$this->RegisterVariableString("e2hddinfo_model", "HDD Model", "", 80);
 			$this->DisableAction("e2hddinfo_model");
@@ -579,13 +591,13 @@
 			SetValueString($this->GetIDForIdent("e2webifversion"), (string)$xmlResult->e2about->e2webifversion);
 		}
 		SetValueString($this->GetIDForIdent("e2model"), (string)$xmlResult->e2about->e2model);
-		SetValueString($this->GetIDForIdent("e2lanmac"), (string)$xmlResult->e2about->e2lanmac);
-		/*
-		<e2landhcp>True</e2landhcp>
-	        <e2lanip>10.101.98.94</e2lanip>
-	        <e2lanmask>255.255.255.0</e2lanmask>
-	        <e2langw>10.101.98.1</e2langw>
-		*/
+		If ($this->ReadPropertyBoolean("Network_Data") == true) {
+			SetValueString($this->GetIDForIdent("e2lanmac"), (string)$xmlResult->e2about->e2lanmac);
+			SetValueBoolean($this->GetIDForIdent("e2landhcp"), (bool)$xmlResult->e2about->e2landhcp);
+			SetValueString($this->GetIDForIdent("e2lanip"), (string)$xmlResult->e2about->e2lanip);
+			SetValueString($this->GetIDForIdent("e2lanmask"), (string)$xmlResult->e2about->e2lanmask);
+			SetValueString($this->GetIDForIdent("e2langw"), (string)$xmlResult->e2about->e2langw);
+		}
 		If ($this->ReadPropertyBoolean("HDD_Data") == true) {
 			SetValueString($this->GetIDForIdent("e2hddinfo_model"), (string)$xmlResult->e2about->e2hddinfo->model);
 		}
