@@ -206,14 +206,7 @@
 			$this->EnableAction("rc_stop");
 			$this->RegisterVariableBoolean("rc_record", "Record", "~Switch", 920);
 			$this->EnableAction("rc_record");
-/*
 
-
-
-
-128: stop
-167: record
-*/
 		}
 	
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
@@ -473,6 +466,18 @@
 			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
 					// 208 Key "forward"		
 					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=208"));
+				}
+				break;
+			case "rc_stop":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					// 128 Key "stop" 		
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=128"));
+				}
+				break;
+			case "rc_record":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					// 167 Key "record"		
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=167"));
 				}
 				break;
 			default:
