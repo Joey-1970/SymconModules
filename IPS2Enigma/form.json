@@ -18,6 +18,7 @@
         { "type": "CheckBox", "name": "EPGnow_Data", "caption": "EPG des aktuellen Programms anzeigen" },
         { "type": "CheckBox", "name": "EPGnext_Data", "caption": "EPG des folgenden Programms anzeigen" },
         { "type": "CheckBox", "name": "Signal_Data", "caption": "Empfangssignal Daten anzeigen" },
+        { "type": "CheckBox", "name": "Network_Data", "caption": "Netzwerk Daten anzeigen" },
         { "type": "CheckBox", "name": "RC_Data", "caption": "Virtuelle Fernbedienung erstellen" }
    ]
 } 
