@@ -30,7 +30,7 @@
 		$this->RegisterProfileInteger("snr.db", "Intensity", "", " db", 0, 1000000, 1);
 		$this->RegisterProfileInteger("gigabyte.GB", "Gauge", "", " GB", 0, 1000000, 1);
 		
-		$this->SetBuffer("FirstUpdate", false);
+		$this->SetBuffer("FirstUpdate", "false");
 		
 		//Status-Variablen anlegen
 		If ($this->ReadPropertyBoolean("Enigma2_Data") == true) {
@@ -502,7 +502,7 @@
 	public function Get_DataUpdate()
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
-			$this->SetBuffer("FirstUpdate", false);
+			$this->SetBuffer("FirstUpdate", "false");
 			//IPS_LogMessage("IPS2Enigma","TV-Daten ermitteln");
 			// das aktuelle Programm
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/subservices"));
@@ -549,7 +549,7 @@
 			//"http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".$e2servicereference
 		}
 		else {
-			if ($this->GetBuffer("FirstUpdate") == false) {
+			if ($this->GetBuffer("FirstUpdate") == "false") {
 				SetValueString($this->GetIDForIdent("e2servicename"), "N/A");
 				If ($this->ReadPropertyBoolean("EPGnow_Data") == true) {
 					SetValueString($this->GetIDForIdent("e2eventtitle"), "N/A");
@@ -577,7 +577,7 @@
 					SetValueInteger($this->GetIDForIdent("e2ber"), 0);
 					SetValueInteger($this->GetIDForIdent("e2agc"), 0);
 				}
-				$this->SetBuffer("FirstUpdate", true);
+				$this->SetBuffer("FirstUpdate", "true");
 			}
 		}
 	}
