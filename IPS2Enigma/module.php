@@ -13,6 +13,7 @@
 		$this->RegisterPropertyBoolean("HDD_Data", false);
 		$this->RegisterPropertyBoolean("EPGnow_Data", false);
 		$this->RegisterPropertyBoolean("EPGnext_Data", false);
+		$this->RegisterPropertyBoolean("Movielist_Data", false);
 		$this->RegisterPropertyBoolean("Enigma2_Data", false);
 		$this->RegisterPropertyBoolean("Signal_Data", false);
 		$this->RegisterPropertyBoolean("Network_Data", false);
@@ -111,6 +112,11 @@
 			$this->DisableAction("e2nexteventend");
 			$this->RegisterVariableInteger("e2nexteventduration", "Next Event Duration", "time.min", 250);
 			$this->DisableAction("e2nexteventduration");
+		}
+		
+		If ($this->ReadPropertyBoolean("Movielist_Data") == true) {
+			$this->RegisterVariableString("e2movielist", "Aufzeichnungen", "~HTMLBox", 260);
+			$this->DisableAction("e2movielist");
 		}
 		
 		If ($this->ReadPropertyBoolean("Signal_Data") == true) {
@@ -530,6 +536,31 @@
 				SetValueInteger($this->GetIDForIdent("e2nexteventstart"), (int)$xmlResult->e2event->e2eventstart);
 				SetValueInteger($this->GetIDForIdent("e2nexteventend"), (int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration);
 				SetValueInteger($this->GetIDForIdent("e2nexteventduration"), round((int)$xmlResult->e2event->e2eventduration / 60) );
+			}
+			If ($this->ReadPropertyBoolean("Movielist_Data") == true) {
+				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/movielist"));
+				$table = '<style type="text/css">';
+				$table .= '<link rel="stylesheet" href="./.../webfront.css">';
+				$table .= "</style>";
+				$table .= '<table class="tg">';
+				$table .= "<tr>";
+				$table .= '<th class="tg-kv4b">Titel</th>';
+				$table .= '<th class="tg-kv4b">Kurzbeschreibung<br></th>';
+				$table .= '<th class="tg-kv4b">Langbeschreibung<br></th>';
+				$table .= '<th class="tg-kv4b">Quelle</th>';
+				$table .= '<th class="tg-kv4b">Länge</th>';
+				$table .= '</tr>';
+				for ($i = 0; $i <= count($xmlResult) - 1; $i++) {
+					$table .= '<tr>';
+					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2title.'</td>';
+					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2description.'</td>';
+					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2descriptionextended.'</td>';
+					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2servicename.'</td>';
+					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2length.'</td>';
+					$table .= '</tr>';
+				}
+				$table .= '</table>';
+				SetValueString($this->GetIDForIdent("e2movielist") , $table);	
 			}
 			If ($this->ReadPropertyBoolean("Signal_Data") == true) {
 				// Empfangsstärke ermitteln
