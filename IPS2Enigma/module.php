@@ -48,6 +48,8 @@
 		}
 		$this->RegisterVariableString("e2model", "Model", "", 60);
 		$this->DisableAction("e2model");
+		$this->RegisterVariableString("e2tunerinfo", "Tuner Information", "~HTMLBox", 65);
+		$this->DisableAction("e2tunerinfo");
 		
 		If ($this->ReadPropertyBoolean("Network_Data") == true) {
 			$this->RegisterVariableString("e2lanmac", "MAC", "", 70);
@@ -624,6 +626,22 @@
 			SetValueString($this->GetIDForIdent("e2webifversion"), (string)$xmlResult->e2about->e2webifversion);
 		}
 		SetValueString($this->GetIDForIdent("e2model"), (string)$xmlResult->e2about->e2model);
+		$table = '<style type="text/css">';
+		$table .= '<link rel="stylesheet" href="./.../webfront.css">';
+		$table .= "</style>";
+		$table .= '<table class="tg">';
+		$table .= "<tr>";
+		$table .= '<th class="tg-kv4b">Name</th>';
+		$table .= '<th class="tg-kv4b">Typ<br></th>';
+		$table .= '</tr>';
+		for ($i = 0; $i <= count($xmlResult->e2about->e2tunerinfo->e2nim) - 1; $i++) {
+			$table .= '<tr>';
+			$table .= '<td class="tg-611x">'.$xmlResult->e2about->e2tunerinfo->e2nim[0]->name.'</td>';
+			$table .= '<td class="tg-611x">'.$xmlResult->e2about->e2tunerinfo->e2nim[0]->type.'</td>';
+			$table .= '</tr>';
+		}
+		$table .= '</table>';
+		SetValueString($this->GetIDForIdent("e2tunerinfo"), $table);
 		If ($this->ReadPropertyBoolean("Network_Data") == true) {
 			SetValueString($this->GetIDForIdent("e2lanmac"), (string)$xmlResult->e2about->e2lanmac);
 			SetValueBoolean($this->GetIDForIdent("e2landhcp"), (bool)$xmlResult->e2about->e2landhcp);
