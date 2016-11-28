@@ -758,6 +758,7 @@
 		       if ($xmlResult->e2state == "True") {
 		       		$result = true;
 			}
+		}
 	return $result;
 	}   
 	
@@ -770,6 +771,7 @@
 		       if ($xmlResult->e2state == "True") {
 		       		$result = true;
 			}
+		}
 	return $result;
 	}  
 	
@@ -782,6 +784,7 @@
 		       if ($xmlResult->e2state == "True") {
 		       		$result = true;
 			}
+		}
 	return $result;
 	}
 	
