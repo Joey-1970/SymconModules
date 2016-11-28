@@ -749,7 +749,7 @@
 	return $result;
 	}
     	
-	public function WriteMessage(string $message = "", int $time=5)
+	public function WriteMessage(string $message, int $time)
 	{
 	   	$result = false;
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
@@ -761,7 +761,7 @@
 	return $result;
 	}   
 	
-	public function WriteInfoMessage(string $message = "",int $time=5)
+	public function WriteInfoMessage(string $message,int $time)
 	{
 	   	$result = false;
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
@@ -773,7 +773,7 @@
 	return $result;
 	}  
 	
-	public function WriteAttentionMessage(string $message = "",(int)$time=5)
+	public function WriteAttentionMessage(string $message,int $time)
 	{
 	   	$result = false;
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
