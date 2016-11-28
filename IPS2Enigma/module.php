@@ -749,7 +749,7 @@
 	return $result;
 	}
     	
-	public function WriteMessage((string)$message = "",(int)$time=5)
+	public function WriteMessage(string $message = "", int $time=5)
 	{
 	   	$result = false;
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
@@ -761,7 +761,7 @@
 	return $result;
 	}   
 	
-	public function WriteInfoMessage((string)$message = "",(int)$time=5)
+	public function WriteInfoMessage(string $message = "",int $time=5)
 	{
 	   	$result = false;
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
@@ -773,7 +773,7 @@
 	return $result;
 	}  
 	
-	public function WriteAttentionMessage((string)$message = "",(int)$time=5)
+	public function WriteAttentionMessage(string $message = "",(int)$time=5)
 	{
 	   	$result = false;
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
@@ -824,6 +824,16 @@
 	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
 	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
 	        
+	}
+	
+	private function Get_Picons(String $Servicereference)
+	{
+		if (file_exists(IPS_GetKernelDir()."/modules/SymconModules/IPS2Enigma/Picons/Picons.zip")) {
+		    	IPS_LogMessage("IPS2Enigma","Die angegebene Datei ".$Servicereference." wurde gefunden.");
+		} else {
+		    	IPS_LogMessage("IPS2Enigma","Fehler: Die angegebene Datei ".$Servicereference." wurde nicht gefunden!");
+		}		
+	return;
 	}
 				       
 				       
