@@ -748,7 +748,19 @@
 		}
 	return $result;
 	}
-    
+    	
+	public function WriteMessage((string) $message = "",(int) $time=5)
+	{
+	   	$result = false;
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
+		       $message = urlencode($message);
+		       $xmlResult = new SimpleXMLElement(file_get_contents("http:/".$this->ReadPropertyString("IPAddress")."/web/message?text=$message&type=2&timeout=$time"));
+		       if ($xmlResult->e2state == "True") {
+		       		$result = true;
+			}
+	return $result;
+	}   
+	   
 	private function ConnectionTest()
 	{
 	      $result = false;
@@ -994,29 +1006,6 @@ function ENIGMA2_GetAnswerFromMessage($ipadr,$message = "",$time=5)
 return $result;
 }
 
-
-//*************************************************************************************************************
-// Sendet Remote-Control-Befehle
-function ENIGMA2_RemoteControl($ipadr, $command=0)
-{
-    $result = "nicht Erfolgreich";
-
-   if (ENIGMA2_GetAvailable( $ipadr ))
-    {
-       $xmlResult = new SimpleXMLElement(file_get_contents("http://$ipadr/web/remotecontrol?command=$command"));
-        //print_r ($xmlResult);
-        if ($xmlResult->e2result == True)
-        {
-           $result = "Erfolgreich";
-        }
-        else
-        {
-            $result = "nicht Erfolgreich";
-        }
-   }
-
-return $result;
-}
 
 //*************************************************************************************************************
 // Prüft ob die Box gerade aufnimmt
