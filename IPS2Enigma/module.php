@@ -33,6 +33,10 @@
 		
 		$this->SetBuffer("FirstUpdate", "false");
 		
+		$this->RegisterVariableInteger("PiconUpdate", "Picon Update", "~UnixTimestamp", 1500);
+		$this->DisableAction("PiconUpdate");
+		IPS_SetHidden($this->GetIDForIdent("PiconUpdate"), true);
+		
 		//Status-Variablen anlegen
 		If ($this->ReadPropertyBoolean("Enigma2_Data") == true) {
 			$this->RegisterVariableString("e2oeversion", "E2 OE-Version", "", 10);
@@ -229,6 +233,8 @@
 
 		}
 	
+		$this->Get_Picons();
+		
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$this->Get_BasicData();
 			$this->SetTimerInterval("DataUpdate", ($this->ReadPropertyInteger("DataUpdate") * 1000));
@@ -829,12 +835,25 @@
 	        
 	}
 	
-	private function Get_Picons(String $Servicereference)
+	private function Get_Picons()
 	{
-		if (file_exists(IPS_GetKernelDir()."/modules/SymconModules/IPS2Enigma/Picons/Picons.zip")) {
-		    	IPS_LogMessage("IPS2Enigma","Die angegebene Datei ".$Servicereference." wurde gefunden.");
-		} else {
-		    	IPS_LogMessage("IPS2Enigma","Fehler: Die angegebene Datei ".$Servicereference." wurde nicht gefunden!");
+		$FileName = IPS_GetKernelDir()."modules".DIRECTORY_SEPARATOR."SymconModules".DIRECTORY_SEPARATOR."IPS2Enigma".DIRECTORY_SEPARATOR."Picons".DIRECTORY_SEPARATOR."Picons.zip";
+		$webfrontpath = IPS_GetKernelDir()."webfront".DIRECTORY_SEPARATOR."user".DIRECTORY_SEPARATOR;  
+
+
+		if (file_exists($FileName)) {
+			If (filemtime($FileName) > GetValueInteger($this->GetIDForIdent("PiconUpdate"))) {
+				$zip = new ZipArchive;
+				if ($zip->open($FileName) === TRUE) {
+				$zip->extractTo($webfrontpath);
+				$zip->close();
+					SetValueInteger($this->GetIDForIdent("PiconUpdate"), filemtime($FileName));
+					IPS_LogMessage("IPS2Enigma","Picon Update erfolgreich");
+				} 
+				else {
+					IPS_LogMessage("IPS2Enigma","Picon Update nicht erfolgreich!");
+				}
+			}
 		}		
 	return;
 	}
