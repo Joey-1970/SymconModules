@@ -60,7 +60,7 @@
 			$this->DisableAction("e2lanip");
 			$this->RegisterVariableString("e2lanmask", "Mask", "", 73);
 			$this->DisableAction("e2lanmask");
-			$this->RegisterVariableString("e2langw", "GW", "", 74);
+			$this->RegisterVariableString("e2langw", "Gateway", "", 74);
 			$this->DisableAction("e2langw");
 		}
 		
