@@ -749,7 +749,7 @@
 	return $result;
 	}
     	
-	public function WriteMessage((string) $message = "",(int) $time=5)
+	public function WriteMessage((string)$message = "",(int)$time=5)
 	{
 	   	$result = false;
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
@@ -760,7 +760,31 @@
 			}
 	return $result;
 	}   
-	   
+	
+	public function WriteInfoMessage((string)$message = "",(int)$time=5)
+	{
+	   	$result = false;
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
+		       $message = urlencode($message);
+		       $xmlResult = new SimpleXMLElement(file_get_contents("http:/".$this->ReadPropertyString("IPAddress")."/web/message?text=$message&type=1&timeout=$time"));
+		       if ($xmlResult->e2state == "True") {
+		       		$result = true;
+			}
+	return $result;
+	}  
+	
+	public function WriteAttentionMessage((string)$message = "",(int)$time=5)
+	{
+	   	$result = false;
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
+		       $message = urlencode($message);
+		       $xmlResult = new SimpleXMLElement(file_get_contents("http:/".$this->ReadPropertyString("IPAddress")."/web/message?text=$message&type=3&timeout=$time"));
+		       if ($xmlResult->e2state == "True") {
+		       		$result = true;
+			}
+	return $result;
+	}
+	
 	private function ConnectionTest()
 	{
 	      $result = false;
@@ -804,42 +828,6 @@
 				       
 				       
 	    /*	    
-//*************************************************************************************************************
-// Prüft über Ping ob Gerät erreichbar
-function ENIGMA2_GetAvailable($ipadr)
-{
-   $result = false;
-
-	if ($ipadr > "" )
-    	{
-		If ((Boolean) ENIGMA2_Ping($ipadr))
-		   {
-		   $result = ENIGMA2_PowerstateStatus($ipadr);
-		   }
-		}
-return $result;
-}
-
-//*************************************************************************************************************
-// Prüft über Ping ob Gerät erreichbar
-function ENIGMA2_Ping($ipadr)
-{
-   $result = false;
-
-   // Sys-Ping funktioniert nur ohne Port-Angabe, daher muss sie falls vorhanden herausgetrennt werden
-		$ippart = explode(":", $ipadr);
-		$tmpipadr = $ippart[0];
-
-	if ($tmpipadr > "" )
-    	{
-		If ((Boolean) Sys_Ping($tmpipadr, 1000))
-		   {
-		   $result = true;
-		   }
-		}
-return $result;
-}
-
 
 //*************************************************************************************************************
 // Schaltet auf den angeforderten Sender um
@@ -901,72 +889,6 @@ If (ENIGMA2_GetAvailable( $ipadr ))
 	$xmlResult = new SimpleXMLElement(file_get_contents("http://$ipadr/web/epgnow?bRef=$bouquet"));
 	}
 return $xmlResult;
-}
-
-//*************************************************************************************************************
-// Schreibt eine Infomessage auf den Bildschirm
-function ENIGMA2_WriteInfoMessage($ipadr,$message = "",$time=5)
-{
-    $type = 1;
-    $result = false;
-   if (ENIGMA2_GetAvailable( $ipadr ))
-    {
-       $message = urlencode($message);
-       $xmlResult = new SimpleXMLElement(file_get_contents("http://$ipadr/web/message?text=$message&type=$type&timeout=$time"));
-      if ($xmlResult->e2state == "True")
-      {
-         $result = true;
-        }
-    }
-   else
-    {
-       $result = false;
-    }
-return $result;
-}
-
-//*************************************************************************************************************
-// Schreibt eine Errormessage auf den Bildschirm
-function ENIGMA2_WriteErrorMessage($ipadr,$message = "",$time=5)
-{
-    $type = 3;
-    $result = false;
-   if (ENIGMA2_GetAvailable( $ipadr ))
-    {
-       $message = urlencode($message);
-       $xmlResult = new SimpleXMLElement(file_get_contents("http://$ipadr/web/message?text=$message&type=$type&timeout=$time"));
-      if ($xmlResult->e2state == "True")
-      {
-         $result = true;
-        }
-    }
-   else
-    {
-       $result = false;
-    }
-return $result;
-}
-
-//*************************************************************************************************************
-// Schreibt eine Message auf den Bildschirm
-function ENIGMA2_WriteMessage($ipadr,$message = "",$time=5)
-{
-    $type = 2;
-    $result = false;
-   if (ENIGMA2_GetAvailable( $ipadr ))
-    {
-       $message = urlencode($message);
-       $xmlResult = new SimpleXMLElement(file_get_contents("http://$ipadr/web/message?text=$message&type=$type&timeout=$time"));
-      if ($xmlResult->e2state == "True")
-      {
-         $result = true;
-        }
-    }
-   else
-    {
-       $result = false;
-    }
-return $result;
 }
 
 //*************************************************************************************************************
