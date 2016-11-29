@@ -838,22 +838,30 @@
 	private function Get_Filename(string $sRef)
 	{
 		// aus der Service Referenz den Dateinamen des Picons generieren
-		
-	return;
+		// Doppelpunkte durch Unterstriche ersetzen
+		$Filename = str_replace(":", "_", $sRef);
+		// das letzte Zeichen entfernen
+		$Filename = substr($Filename, 0, -1);
+		// .png anhängen
+ 		$Filename = $Filename.".png";
+	return $Filename;
 	}
 	    
 	private function Get_Picons()
 	{
+		// Quelldatei
 		$FileName = IPS_GetKernelDir()."modules".DIRECTORY_SEPARATOR."SymconModules".DIRECTORY_SEPARATOR."IPS2Enigma".DIRECTORY_SEPARATOR."Picons".DIRECTORY_SEPARATOR."Picons.zip";
-		$webfrontpath = IPS_GetKernelDir()."webfront".DIRECTORY_SEPARATOR."user".DIRECTORY_SEPARATOR;  
-
+		// Zielpfad
+		$WebfrontPath = IPS_GetKernelDir()."webfront".DIRECTORY_SEPARATOR."user".DIRECTORY_SEPARATOR;  
 
 		if (file_exists($FileName)) {
+			// Prüfen, ob die Datei neuer ist, als die bisher installierte
 			If (filemtime($FileName) > GetValueInteger($this->GetIDForIdent("PiconUpdate"))) {
 				$zip = new ZipArchive;
 				if ($zip->open($FileName) === TRUE) {
-				$zip->extractTo($webfrontpath);
+				$zip->extractTo($WebfrontPath);
 				$zip->close();
+					// Neues Erstellungsdatum der Datei sichern
 					SetValueInteger($this->GetIDForIdent("PiconUpdate"), filemtime($FileName));
 					IPS_LogMessage("IPS2Enigma","Picon Update erfolgreich");
 				} 
