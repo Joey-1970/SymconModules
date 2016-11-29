@@ -555,6 +555,7 @@
 				$table .= '<th class="tg-kv4b">Titel</th>';
 				$table .= '<th class="tg-kv4b">Kurzbeschreibung<br></th>';
 				$table .= '<th class="tg-kv4b">Langbeschreibung<br></th>';
+				//    'CALLFAIL'  => '/user/fritz/Callinfailed.png', 
 				$table .= '<th class="tg-kv4b">Quelle</th>';
 				$table .= '<th class="tg-kv4b">Länge</th>';
 				$table .= '</tr>';
@@ -794,6 +795,15 @@
 	return $result;
 	}
 	
+	public function MediaPlayerPlay(string $root,string $file)
+	{
+	   	$result = false;
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
+		       $xmlResult = new SimpleXMLElement(file_get_contents("http:/".$this->ReadPropertyString("IPAddress")."/web/mediaplayerplay?file=".$file));
+		}
+	return;
+	}    
+	    
 	private function ConnectionTest()
 	{
 	      $result = false;
