@@ -835,6 +835,13 @@
 	        
 	}
 	
+	private function Get_Filename(string $sRef)
+	{
+		// aus der Service Referenz den Dateinamen des Picons generieren
+		
+	return;
+	}
+	    
 	private function Get_Picons()
 	{
 		$FileName = IPS_GetKernelDir()."modules".DIRECTORY_SEPARATOR."SymconModules".DIRECTORY_SEPARATOR."IPS2Enigma".DIRECTORY_SEPARATOR."Picons".DIRECTORY_SEPARATOR."Picons.zip";
