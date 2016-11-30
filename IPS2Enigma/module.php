@@ -105,6 +105,8 @@
 			$this->DisableAction("e2eventleft");
 			$this->RegisterVariableInteger("e2eventprogress", "Event Progress", "~Intensity.100", 190);
 			$this->DisableAction("e2eventprogress");
+			$this->RegisterVariableString("e2eventHTML", "Event", "~HTMLBox", 195);
+			$this->DisableAction("e2eventHTML");
 		}
 		
 		If ($this->ReadPropertyBoolean("EPGnext_Data") == true) {
@@ -540,6 +542,30 @@
 				SetValueInteger($this->GetIDForIdent("e2eventpast"), round( (int)time() - (int)$xmlResult->e2event->e2eventstart) / 60 );
 				SetValueInteger($this->GetIDForIdent("e2eventleft"), round(((int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration - (int)time()) / 60 ));
 				SetValueInteger($this->GetIDForIdent("e2eventprogress"), GetValueInteger($this->GetIDForIdent("e2eventpast")) / GetValueInteger($this->GetIDForIdent("e2eventduration")) * 100);
+				$table = '<style type="text/css">';
+				$table .= '<link rel="stylesheet" href="./.../webfront.css">';
+				$table .= "</style>";
+				$table .= '<table class="tg">';
+				$table .= "<tr>";
+				$table .= '<th class="tg-kv4b">Sender</th>';
+				$table .= '<th class="tg-kv4b">Titel</th>';
+				$table .= '<th class="tg-kv4b">Kurzbeschreibung<br></th>';
+				$table .= '<th class="tg-kv4b">Langbeschreibung<br></th>';
+				$table .= '<th class="tg-kv4b">Beginn<br></th>';
+				$table .= '<th class="tg-kv4b">Ende<br></th>';
+				$table .= '<th class="tg-kv4b">Dauer<br></th>';
+				$table .= '</tr>';
+				$table .= '<tr>';
+				$table .= '<td class="tg-611x"><img src='.$this->Get_Filename($e2servicereference).' alt='.$e2servicename.'></td>';
+				$table .= '<td class="tg-611x">'utf8_decode($xmlResult->e2event->e2eventtitle).'</td>';
+				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event->e2eventdescription).'</td>';
+				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event->e2eventdescriptionextended).'</td>';
+				$table .= '<td class="tg-611x">'.(int)$xmlResult->e2event->e2eventstart.'</td>';
+				$table .= '<td class="tg-611x">'.(int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration.'</td>';
+				$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event->e2eventduration / 60).'</td>';
+				$table .= '</tr>';
+				$table .= '</table>';
+				SetValueString($this->GetIDForIdent("e2eventHTML"), $table);
 			}
 			If ($this->ReadPropertyBoolean("EPGnext_Data") == true) {
 				// das folgende Ereignis
