@@ -20,6 +20,8 @@
         { "type": "CheckBox", "name": "Movielist_Data", "caption": "Liste der Aufzeichnungen anzeigen" },
         { "type": "CheckBox", "name": "Signal_Data", "caption": "Empfangssignal Daten anzeigen" },
         { "type": "CheckBox", "name": "Network_Data", "caption": "Netzwerk Daten anzeigen" },
-        { "type": "CheckBox", "name": "RC_Data", "caption": "Virtuelle Fernbedienung erstellen" }
+        { "type": "CheckBox", "name": "RC_Data", "caption": "Virtuelle Fernbedienung erstellen" },
+        { "type": "Label", "label": "Zyklus EPG-Update in Sekunden (0 -> aus, 15 sek -> Minimum)" },
+        { "type": "IntervalBox", "name": "EPGUpdate", "caption": "EPG-Update (sek)" }
    ]
 } 
