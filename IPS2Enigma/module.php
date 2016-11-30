@@ -557,7 +557,7 @@
 				$table .= '</tr>';
 				$table .= '<tr>';
 				$table .= '<td class="tg-611x"><img src='.$this->Get_Filename($e2servicereference).' alt='.$e2servicename.'></td>';
-				$table .= '<td class="tg-611x">'utf8_decode($xmlResult->e2event->e2eventtitle).'</td>';
+				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event->e2eventtitle).'</td>';
 				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event->e2eventdescription).'</td>';
 				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event->e2eventdescriptionextended).'</td>';
 				$table .= '<td class="tg-611x">'.(int)$xmlResult->e2event->e2eventstart.'</td>';
@@ -591,7 +591,7 @@
 				$table .= '</tr>';
 				$table .= '<tr>';
 				$table .= '<td class="tg-611x"><img src='.$this->Get_Filename($e2servicereference).' alt='.$e2servicename.'></td>';
-				$table .= '<td class="tg-611x">'utf8_decode($xmlResult->e2event->e2eventtitle).'</td>';
+				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event->e2eventtitle).'</td>';
 				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event->e2eventdescription).'</td>';
 				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event->e2eventdescriptionextended).'</td>';
 				$table .= '<td class="tg-611x">'.(int)$xmlResult->e2event->e2eventstart.'</td>';
