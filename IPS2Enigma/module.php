@@ -560,9 +560,9 @@
 				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event->e2eventtitle).'</td>';
 				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event->e2eventdescription).'</td>';
 				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event->e2eventdescriptionextended).'</td>';
-				$table .= '<td class="tg-611x">'.(int)$xmlResult->e2event->e2eventstart.'</td>';
-				$table .= '<td class="tg-611x">'.(int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration.'</td>';
-				$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event->e2eventduration / 60).'</td>';
+				$table .= '<td class="tg-611x">'.date("H:i:s", (int)$xmlResult->e2event->e2eventstart).' Uhr'.'</td>';
+				$table .= '<td class="tg-611x">'.date("H:i:s", (int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration).' Uhr'.'</td>';
+				$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event->e2eventduration / 60).' min'.'</td>';
 				$table .= '</tr>';
 				$table .= '</table>';
 				SetValueString($this->GetIDForIdent("e2eventHTML"), $table);
@@ -594,9 +594,10 @@
 				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event->e2eventtitle).'</td>';
 				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event->e2eventdescription).'</td>';
 				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event->e2eventdescriptionextended).'</td>';
-				$table .= '<td class="tg-611x">'.(int)$xmlResult->e2event->e2eventstart.'</td>';
-				$table .= '<td class="tg-611x">'.(int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration.'</td>';
-				$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event->e2eventduration / 60).'</td>';
+				date("H:i:s", GetValueInteger(32370 /*[Dreambox\IPS2Enigma\Event Start]*/))
+				$table .= '<td class="tg-611x">'.date("H:i:s", (int)$xmlResult->e2event->e2eventstart).' Uhr'.'</td>';
+				$table .= '<td class="tg-611x">'.date("H:i:s", (int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration).' Uhr'.'</td>';
+				$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event->e2eventduration / 60).' min.'</td>';
 				$table .= '</tr>';
 				$table .= '</table>';
 				SetValueString($this->GetIDForIdent("e2nexteventHTML"), $table);
@@ -688,6 +689,7 @@
 					SetValueInteger($this->GetIDForIdent("e2eventpast"), 0);
 					SetValueInteger($this->GetIDForIdent("e2eventleft"), 0);
 					SetValueInteger($this->GetIDForIdent("e2eventprogress"), 0);
+					SetValueString($this->GetIDForIdent("e2eventHTML"), "");
 				}
 				If ($this->ReadPropertyBoolean("EPGnext_Data") == true) {
 					SetValueString($this->GetIDForIdent("e2nexteventtitle"), "N/A");
@@ -696,6 +698,7 @@
 					SetValueInteger($this->GetIDForIdent("e2nexteventstart"), 0);
 					SetValueInteger($this->GetIDForIdent("e2nexteventend"), 0);
 					SetValueInteger($this->GetIDForIdent("e2nexteventduration"), 0);
+					SetValueString($this->GetIDForIdent("e2nexteventHTML"), "");
 				}
 
 				If ($this->ReadPropertyBoolean("Signal_Data") == true) {
