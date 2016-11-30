@@ -120,6 +120,8 @@
 			$this->DisableAction("e2nexteventend");
 			$this->RegisterVariableInteger("e2nexteventduration", "Next Event Duration", "time.min", 250);
 			$this->DisableAction("e2nexteventduration");
+			$this->RegisterVariableString("e2nexteventHTML", "Next Event", "~HTMLBox", 255);
+			$this->DisableAction("e2nexteventHTML");
 		}
 		
 		If ($this->ReadPropertyBoolean("Movielist_Data") == true) {
@@ -523,8 +525,9 @@
 			//IPS_LogMessage("IPS2Enigma","TV-Daten ermitteln");
 			// das aktuelle Programm
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/subservices"));
-       			SetValueString($this->GetIDForIdent("e2servicename"), (string)$xmlResult->e2service[0]->e2servicename);
-			$e2servicereference = (string)$xmlResult->e2service[0]->e2servicereference;
+       			SetValueString($this->GetIDForIdent("e2servicename"), (string)$xmlResult->e2service->e2servicename);
+			$e2servicereference = (string)$xmlResult->e2service->e2servicereference;
+			$e2servicename = (string)$xmlResult->e2service->e2servicename;
 			If ($this->ReadPropertyBoolean("EPGnow_Data") == true) {
 				// das aktuelle Ereignis
 				$xmlResult =  new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/epgservicenow?sRef=".$e2servicereference));
@@ -552,6 +555,7 @@
 				$table .= "</style>";
 				$table .= '<table class="tg">';
 				$table .= "<tr>";
+				$table .= '<th class="tg-kv4b">Sender</th>';
 				$table .= '<th class="tg-kv4b">Titel</th>';
 				$table .= '<th class="tg-kv4b">Kurzbeschreibung<br></th>';
 				$table .= '<th class="tg-kv4b">Langbeschreibung<br></th>';
@@ -560,14 +564,16 @@
 				$table .= '<th class="tg-kv4b">Dauer<br></th>';
 				$table .= '</tr>';
 				$table .= '<tr>';
+				$table .= '<td class="tg-611x"><img src='.$this->Get_Filename($e2servicereference).' alt='.$e2servicename.'></td>';
 				$table .= '<td class="tg-611x">'utf8_decode($xmlResult->e2event->e2eventtitle).'</td>';
 				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event->e2eventdescription).'</td>';
 				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event->e2eventdescriptionextended).'</td>';
-				$table .= '<td class="tg-611x">'.$xmlResult->e2event->e2eventstart.'</td>';
+				$table .= '<td class="tg-611x">'.(int)$xmlResult->e2event->e2eventstart.'</td>';
 				$table .= '<td class="tg-611x">'.(int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration.'</td>';
 				$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event->e2eventduration / 60).'</td>';
 				$table .= '</tr>';
 				$table .= '</table>';
+				SetValueString($this->GetIDForIdent("e2nexteventHTML"), $table);
 			}
 			If ($this->ReadPropertyBoolean("Movielist_Data") == true) {
 				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/movielist"));
@@ -915,7 +921,7 @@
 		// das letzte Zeichen entfernen
 		$Filename = substr($Filename, 0, -1);
 		// .png anhängen
- 		$Filename = $Filename.".png";
+ 		$Filename = "user".DIRECTORY_SEPARATOR."Picons".DIRECTORY_SEPARATOR.$Filename.".png";
 	return $Filename;
 	}
 	    
