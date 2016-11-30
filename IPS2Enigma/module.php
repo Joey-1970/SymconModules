@@ -18,7 +18,9 @@
 		$this->RegisterPropertyBoolean("Signal_Data", false);
 		$this->RegisterPropertyBoolean("Network_Data", false);
 		$this->RegisterPropertyBoolean("RC_Data", false);
+		$this->RegisterPropertyInteger("EPGUpdate", 60);
 		$this->RegisterTimer("DataUpdate", 0, 'Enigma_Get_DataUpdate($_IPS["TARGET"]);');
+		$this->RegisterTimer("EPGUpdate", 0, 'Enigma_Get_EPGUpdate($_IPS["TARGET"]);');
         }
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
@@ -238,6 +240,7 @@
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$this->Get_BasicData();
 			$this->SetTimerInterval("DataUpdate", ($this->ReadPropertyInteger("DataUpdate") * 1000));
+			$this->SetTimerInterval("EPGUpdate", ($this->ReadPropertyInteger("EPGUpdate") * 1000));
 			$this->Get_Powerstate();
 		}
 		
@@ -652,6 +655,13 @@
 				$this->SetBuffer("FirstUpdate", "true");
 			}
 		}
+	return;
+	}
+	
+	public function Get_DataUpdate()
+	{
+	
+	return;
 	}
 	// Ermittlung der Basisdaten
 	private function Get_BasicData()
