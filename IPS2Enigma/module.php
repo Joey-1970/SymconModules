@@ -596,7 +596,7 @@
 				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event->e2eventdescriptionextended).'</td>';
 				$table .= '<td class="tg-611x">'.date("H:i:s", (int)$xmlResult->e2event->e2eventstart).' Uhr'.'</td>';
 				$table .= '<td class="tg-611x">'.date("H:i:s", (int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration).' Uhr'.'</td>';
-				$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event->e2eventduration / 60).' min.'</td>';
+				$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event->e2eventduration / 60).' min'.'</td>';
 				$table .= '</tr>';
 				$table .= '</table>';
 				SetValueString($this->GetIDForIdent("e2nexteventHTML"), $table);
