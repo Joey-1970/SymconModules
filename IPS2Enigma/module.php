@@ -530,6 +530,7 @@
        			SetValueString($this->GetIDForIdent("e2servicename"), (string)$xmlResult->e2service->e2servicename);
 			$e2servicereference = (string)$xmlResult->e2service->e2servicereference;
 			$e2servicename = (string)$xmlResult->e2service->e2servicename;
+			// 1:0:0:0:0:0:0:0:0:0:
 			If ($this->ReadPropertyBoolean("EPGnow_Data") == true) {
 				// das aktuelle Ereignis
 				$xmlResult =  new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/epgservicenow?sRef=".$e2servicereference));
