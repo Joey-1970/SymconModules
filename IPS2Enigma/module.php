@@ -530,8 +530,8 @@
        			SetValueString($this->GetIDForIdent("e2servicename"), (string)$xmlResult->e2service->e2servicename);
 			$e2servicereference = (string)$xmlResult->e2service->e2servicereference;
 			$e2servicename = (string)$xmlResult->e2service->e2servicename;
-			// 1:0:0:0:0:0:0:0:0:0:
-			If ($this->ReadPropertyBoolean("EPGnow_Data") == true) {
+			
+			If (($this->ReadPropertyBoolean("EPGnow_Data") == true) AND (substr($e2servicereference, 0, 20) <> "1:0:0:0:0:0:0:0:0:0:")) {
 				// das aktuelle Ereignis
 				$xmlResult =  new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/epgservicenow?sRef=".$e2servicereference));
 				SetValueString($this->GetIDForIdent("e2eventtitle"), (string)utf8_decode($xmlResult->e2event->e2eventtitle));
@@ -568,7 +568,7 @@
 				$table .= '</table>';
 				SetValueString($this->GetIDForIdent("e2eventHTML"), $table);
 			}
-			If ($this->ReadPropertyBoolean("EPGnext_Data") == true) {
+			If (($this->ReadPropertyBoolean("EPGnext_Data") == true) AND (substr($e2servicereference, 0, 20) <> "1:0:0:0:0:0:0:0:0:0:")){
 				// das folgende Ereignis
 				$xmlResult =  new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/epgservicenext?sRef=".$e2servicereference));
 				SetValueString($this->GetIDForIdent("e2nexteventtitle"), (string)utf8_decode($xmlResult->e2event->e2eventtitle));
