@@ -710,7 +710,7 @@
 	return;
 	}
 	
-	public function Get_DataUpdate()
+	public function Get_EPGUpdate()
 	{
 	
 	return;
