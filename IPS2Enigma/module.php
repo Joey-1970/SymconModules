@@ -585,6 +585,13 @@
 				SetValueInteger($this->GetIDForIdent("e2hddinfo_capacity"), (int)$xmlResult->e2about->e2hddinfo->capacity);
 				SetValueInteger($this->GetIDForIdent("e2hddinfo_free"), (int)$xmlResult->e2about->e2hddinfo->free);
 			}
+			/*
+			$xmlResult = new SimpleXMLElement(file_get_contents("http://192.168.178.20/web/getservices"));
+			$bouquet = (string)$xmlResult->e2service->e2servicereference;
+			//echo $bouquet ;
+			$xmlResult = new SimpleXMLElement(file_get_contents('http://192.168.178.20/web/epgnownext?bRef='.urlencode($bouquet)));
+			print_r($xmlResult);
+			*/
 			//SetValueString($this->GetIDForIdent("e2stream"), "<video width="320" height="240" controls> <source src="http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".$e2servicereference." type="video/mp4"> </video>");
 			//"http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".$e2servicereference
 		}
