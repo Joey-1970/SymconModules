@@ -547,6 +547,27 @@
 				SetValueInteger($this->GetIDForIdent("e2nexteventstart"), (int)$xmlResult->e2event->e2eventstart);
 				SetValueInteger($this->GetIDForIdent("e2nexteventend"), (int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration);
 				SetValueInteger($this->GetIDForIdent("e2nexteventduration"), round((int)$xmlResult->e2event->e2eventduration / 60) );
+				$table = '<style type="text/css">';
+				$table .= '<link rel="stylesheet" href="./.../webfront.css">';
+				$table .= "</style>";
+				$table .= '<table class="tg">';
+				$table .= "<tr>";
+				$table .= '<th class="tg-kv4b">Titel</th>';
+				$table .= '<th class="tg-kv4b">Kurzbeschreibung<br></th>';
+				$table .= '<th class="tg-kv4b">Langbeschreibung<br></th>';
+				$table .= '<th class="tg-kv4b">Beginn<br></th>';
+				$table .= '<th class="tg-kv4b">Ende<br></th>';
+				$table .= '<th class="tg-kv4b">Dauer<br></th>';
+				$table .= '</tr>';
+				$table .= '<tr>';
+				$table .= '<td class="tg-611x">'utf8_decode($xmlResult->e2event->e2eventtitle).'</td>';
+				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event->e2eventdescription).'</td>';
+				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event->e2eventdescriptionextended).'</td>';
+				$table .= '<td class="tg-611x">'.$xmlResult->e2event->e2eventstart.'</td>';
+				$table .= '<td class="tg-611x">'.(int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration.'</td>';
+				$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event->e2eventduration / 60).'</td>';
+				$table .= '</tr>';
+				$table .= '</table>';
 			}
 			If ($this->ReadPropertyBoolean("Movielist_Data") == true) {
 				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/movielist"));
@@ -558,7 +579,6 @@
 				$table .= '<th class="tg-kv4b">Titel</th>';
 				$table .= '<th class="tg-kv4b">Kurzbeschreibung<br></th>';
 				$table .= '<th class="tg-kv4b">Langbeschreibung<br></th>';
-				//    'CALLFAIL'  => '/user/fritz/Callinfailed.png', 
 				$table .= '<th class="tg-kv4b">Quelle</th>';
 				$table .= '<th class="tg-kv4b">Länge</th>';
 				$table .= '</tr>';
