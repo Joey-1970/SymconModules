@@ -591,6 +591,31 @@
 			//echo $bouquet ;
 			$xmlResult = new SimpleXMLElement(file_get_contents('http://192.168.178.20/web/epgnownext?bRef='.urlencode($bouquet)));
 			print_r($xmlResult);
+			
+			$serID = "1:0:19:2B66:3F3:1:C00000:0:0:0:";
+			$serID = str_replace(":", "_", $serID);
+			$serID = substr($serID, 0, -1); 
+
+			$piconpath = "user".DIRECTORY_SEPARATOR."Picons".DIRECTORY_SEPARATOR.$serID.".png"; 
+
+			$table = '<style type="text/css">';
+			$table .= '<link rel="stylesheet" href="./.../webfront.css">';
+			$table .= "</style>";
+			$table .= '<table class="tg">';
+			$table .= "<tr>";
+			$table .= '<th class="tg-kv4b">Name</th>';
+			$table .= '<th class="tg-kv4b">Typ<br></th>';
+			$table .= '<th class="tg-kv4b">Picon<br></th>';
+			$table .= '</tr>';
+			for ($i = 0; $i <= count($xmlResult->e2about->e2tunerinfo->e2nim) - 1; $i++) {
+				$table .= '<tr>';
+				$table .= '<td class="tg-611x">'.$xmlResult->e2about->e2tunerinfo->e2nim[0]->name.'</td>';
+				$table .= '<td class="tg-611x">'.$xmlResult->e2about->e2tunerinfo->e2nim[0]->type.'</td>';
+				$table .= '<td class="tg-611x"><img src='.$piconpath.' alt="logo"></td>'  ;
+				$table .= '</tr>';
+			}
+			$table .= '</table>';
+			
 			*/
 			//SetValueString($this->GetIDForIdent("e2stream"), "<video width="320" height="240" controls> <source src="http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".$e2servicereference." type="video/mp4"> </video>");
 			//"http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".$e2servicereference
