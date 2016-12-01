@@ -892,17 +892,16 @@
 	return $result;
 	}
 	
-	public function MediaPlayerPlay(string $root,string $file)
+	public function MoviePlay(string $servicereference)
 	{
 	   	$result = false;
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
-		       $xmlResult = new SimpleXMLElement(file_get_contents("http:/".$this->ReadPropertyString("IPAddress")."/web/mediaplayerplay?file=".$file));
+			$servicereference = urlencode($servicereference);
+			$xmlResult = new SimpleXMLElement(file_get_contents("http://192.168.178.20/web/zap?sRef=".$servicereference));
 		}
 	return;
 	}    
 	  /*
-	  SimpleXMLElement Object
-(
     [e2movie] => Array
         (
             [0] => SimpleXMLElement Object
@@ -915,11 +914,6 @@
                     [e2time] => 1480273800
                     [e2length] => 99:57
                     [e2tags] => SimpleXMLElement Object
-                        (
-                        )
-		$test = urlencode("1:0:0:0:0:0:0:0:0:0:/media/hdd/movie/20151103 0855 - Sky 007 HD - Casino Royale.ts");
-		$xmlResult = new SimpleXMLElement(file_get_contents("http://192.168.178.20/web/zap?sRef=".$test)); 
-		print_r($xmlResult);
 	  */
 	private function ConnectionTest()
 	{
