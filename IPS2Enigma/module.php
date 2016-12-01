@@ -632,6 +632,12 @@
 				$table .= '</table>';
 				SetValueString($this->GetIDForIdent("e2movielist") , $table);	
 			}
+			
+			If (($this->ReadPropertyBoolean("EPGnow_Data") == true) AND ($this->ReadPropertyBoolean("EPGnext_Data") == true)) {
+			
+				//$this->DisableAction("e2nownexteventHTML");
+			}
+			
 			If ($this->ReadPropertyBoolean("Signal_Data") == true) {
 				// Empfangsstärke ermitteln
 				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/signal?"));
