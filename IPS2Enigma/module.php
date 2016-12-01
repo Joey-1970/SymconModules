@@ -764,6 +764,10 @@
 			$table .= '<th class="tg-kv4b">Titel</th>';
 			$table .= '<th class="tg-kv4b">Kurzbeschreibung<br></th>';
 			$table .= '<th class="tg-kv4b">Dauer<br></th>';
+			$table .= '<colgroup>'; 
+			$table .= '<col width="120">'; 
+			$table .= '<col width="100">'; 
+			$table .= '</colgroup>';
 			$table .= '</tr>';
 			for ($i = 0; $i <= count($xmlResult) - 1; $i=$i+2) {
 				$table .= '<tr>';
