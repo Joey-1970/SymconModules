@@ -126,6 +126,11 @@
 			$this->DisableAction("e2nexteventHTML");
 		}
 		
+		If (($this->ReadPropertyBoolean("EPGnow_Data") == true) AND ($this->ReadPropertyBoolean("EPGnext_Data") == true)) {
+			$this->RegisterVariableString("e2nownexteventHTML", "Now Next Event", "~HTMLBox", 257);
+			$this->DisableAction("e2nownexteventHTML");
+		}
+		
 		If ($this->ReadPropertyBoolean("Movielist_Data") == true) {
 			$this->RegisterVariableString("e2movielist", "Aufzeichnungen", "~HTMLBox", 260);
 			$this->DisableAction("e2movielist");
