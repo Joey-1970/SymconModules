@@ -243,7 +243,10 @@
 			$this->EnableAction("rc_record");
 
 		}
-	
+		
+		$this->RegisterVariableString("e2epglistHTML", "EPG", "~HTMLBox", 950);
+		$this->DisableAction("e2epglistHTML");
+		
 		$this->Get_Picons();
 		
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
@@ -758,32 +761,26 @@
 		$table .= '<th class="tg-kv4b">Sender</th>';
 		$table .= '<th class="tg-kv4b">Titel</th>';
 		$table .= '<th class="tg-kv4b">Kurzbeschreibung<br></th>';
-		//$table .= '<th class="tg-kv4b">Langbeschreibung<br></th>';
 		$table .= '<th class="tg-kv4b">Beginn<br></th>';
-		$table .= '<th class="tg-kv4b">Ende<br></th>';
 		$table .= '<th class="tg-kv4b">Dauer<br></th>';
 		$table .= '</tr>';
-		for ($i = 0; $i <= count($xmlResult) - 1; $i++) {
+		for ($i = 0; $i <= count($xmlResult) - 1; $i=$i+2) {
 			$table .= '<tr>';
-			$table .= '<td rowspan="2" class="tg-611x"><img src='.$this->Get_Filename($e2servicereference).' alt='.$e2servicename.'></td>';
-			$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event->e2eventtitle).'</td>';
-			$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event->e2eventdescription).'</td>';
-			//$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event->e2eventdescriptionextended).'</td>';
-			$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event->e2eventstart).' Uhr'.'</td>';
-			$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration).' Uhr'.'</td>';
-			$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event->e2eventduration / 60).' min'.'</td>';
+			$table .= '<td rowspan="2" class="tg-611x"><img src='.$this->Get_Filename((string)$xmlResult->e2event[$i]->e2eventservicereference).' alt='.(string)$xmlResult->e2event[$i]->e2eventservicename.'></td>';
+			$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i]->e2eventtitle).'</td>';
+			$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i]->e2eventdescription).'</td>';
+			$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event[$i]->e2eventstart).' Uhr'.'</td>';
+			$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event[$i]->e2eventduration / 60).' min'.'</td>';
 			$table .= '</tr>';
 			$table .= '<tr>';
-			$table .= '<td class="tg-611x">'.utf8_decode($xmlResult_2->e2event->e2eventtitle).'</td>';
-			$table .= '<td class="tg-611x">'.utf8_decode($xmlResult_2->e2event->e2eventdescription).'</td>';
-			//$table .= '<td class="tg-611x">'.utf8_decode($xmlResult_2->e2event->e2eventdescriptionextended).'</td>';
-			$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult_2->e2event->e2eventstart).' Uhr'.'</td>';
-			$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult_2->e2event->e2eventstart + (int)$xmlResult_2->e2event->e2eventduration).' Uhr'.'</td>';
-			$table .= '<td class="tg-611x">'.round((int)$xmlResult_2->e2event->e2eventduration / 60).' min'.'</td>';
+			$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i+1]->e2eventtitle).'</td>';
+			$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i+1]->e2eventdescription).'</td>';
+			$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event[$i+1]->e2eventstart).' Uhr'.'</td>';
+			$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event[$i+1]->e2eventduration / 60).' min'.'</td>';
 			$table .= '</tr>';
 		}
 		$table .= '</table>';
-		//SetValueString($this->GetIDForIdent("e2nownexteventHTML"), $table);
+		SetValueString($this->GetIDForIdent("e2epglistHTML"), $table);
 		
 	
 	return;
