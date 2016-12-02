@@ -105,8 +105,6 @@
 			$this->DisableAction("e2eventleft");
 			$this->RegisterVariableInteger("e2eventprogress", "Event Progress", "~Intensity.100", 190);
 			$this->DisableAction("e2eventprogress");
-			$this->RegisterVariableString("e2eventHTML", "Event", "~HTMLBox", 195);
-			$this->DisableAction("e2eventHTML");
 		}
 		
 		If ($this->ReadPropertyBoolean("EPGnext_Data") == true) {
@@ -121,14 +119,12 @@
 			$this->RegisterVariableInteger("e2nexteventend", "Next Event End", "~UnixTimestampTime", 240);
 			$this->DisableAction("e2nexteventend");
 			$this->RegisterVariableInteger("e2nexteventduration", "Next Event Duration", "time.min", 250);
-			$this->DisableAction("e2nexteventduration");
-			$this->RegisterVariableString("e2nexteventHTML", "Next Event", "~HTMLBox", 255);
-			$this->DisableAction("e2nexteventHTML");
+			$this->DisableAction("e2nexteventduration");		
 		}
 		
-		If (($this->ReadPropertyBoolean("EPGnow_Data") == true) AND ($this->ReadPropertyBoolean("EPGnext_Data") == true)) {
-			$this->RegisterVariableString("e2nownexteventHTML", "Now Next Event", "~HTMLBox", 257);
-			$this->DisableAction("e2nownexteventHTML");
+		If (($this->ReadPropertyBoolean("EPGnow_Data") == true) OR ($this->ReadPropertyBoolean("EPGnext_Data") == true)) {
+			$this->RegisterVariableString("e2epgHTML", "EPG", "~HTMLBox", 257);
+			$this->DisableAction("e2epgHTML");
 		}
 		
 		If ($this->ReadPropertyBoolean("Movielist_Data") == true) {
@@ -244,7 +240,7 @@
 
 		}
 		
-		$this->RegisterVariableString("e2epglistHTML", "EPG", "~HTMLBox", 950);
+		$this->RegisterVariableString("e2epglistHTML", "EPG Liste", "~HTMLBox", 950);
 		$this->DisableAction("e2epglistHTML");
 		
 		$this->Get_Picons();
@@ -574,7 +570,7 @@
 				$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event->e2eventduration / 60).' min'.'</td>';
 				$table .= '</tr>';
 				$table .= '</table>';
-				SetValueString($this->GetIDForIdent("e2eventHTML"), $table);
+				SetValueString($this->GetIDForIdent("e2epgHTML"), $table);
 			}
 			
 			If (($this->ReadPropertyBoolean("EPGnow_Data") == false) AND ($this->ReadPropertyBoolean("EPGnext_Data") == true) AND (substr($e2servicereference, 0, 20) <> "1:0:0:0:0:0:0:0:0:0:")) {
@@ -609,7 +605,7 @@
 				$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event->e2eventduration / 60).' min'.'</td>';
 				$table .= '</tr>';
 				$table .= '</table>';
-				SetValueString($this->GetIDForIdent("e2nexteventHTML"), $table);
+				SetValueString($this->GetIDForIdent("e2epgHTML"), $table);
 			}
 			
 			If (($this->ReadPropertyBoolean("EPGnow_Data") == true) AND ($this->ReadPropertyBoolean("EPGnext_Data") == true) AND (substr($e2servicereference, 0, 20) <> "1:0:0:0:0:0:0:0:0:0:")) {
@@ -639,32 +635,36 @@
 				$table .= '<table class="tg">';
 				$table .= "<tr>";
 				$table .= '<th class="tg-kv4b">Sender</th>';
+				$table .= '<th class="tg-kv4b">Beginn<br></th>';
 				$table .= '<th class="tg-kv4b">Titel</th>';
 				$table .= '<th class="tg-kv4b">Kurzbeschreibung<br></th>';
 				$table .= '<th class="tg-kv4b">Langbeschreibung<br></th>';
-				$table .= '<th class="tg-kv4b">Beginn<br></th>';
-				$table .= '<th class="tg-kv4b">Ende<br></th>';
+				//$table .= '<th class="tg-kv4b">Ende<br></th>';
 				$table .= '<th class="tg-kv4b">Dauer<br></th>';
+				$table .= '<colgroup>'; 
+				$table .= '<col width="120">'; 
+				$table .= '<col width="100">'; 
+				$table .= '</colgroup>';
 				$table .= '</tr>';
 				$table .= '<tr>';
 				$table .= '<td rowspan="2" class="tg-611x"><img src='.$this->Get_Filename($e2servicereference).' alt='.$e2servicename.'></td>';
+				$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event->e2eventstart).' Uhr'.'</td>';
 				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event->e2eventtitle).'</td>';
 				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event->e2eventdescription).'</td>';
 				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event->e2eventdescriptionextended).'</td>';
-				$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event->e2eventstart).' Uhr'.'</td>';
-				$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration).' Uhr'.'</td>';
+				//$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event->e2eventstart + (int)$xmlResult->e2event->e2eventduration).' Uhr'.'</td>';
 				$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event->e2eventduration / 60).' min'.'</td>';
 				$table .= '</tr>';
 				$table .= '<tr>';
+				$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult_2->e2event->e2eventstart).' Uhr'.'</td>';
 				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult_2->e2event->e2eventtitle).'</td>';
 				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult_2->e2event->e2eventdescription).'</td>';
 				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult_2->e2event->e2eventdescriptionextended).'</td>';
-				$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult_2->e2event->e2eventstart).' Uhr'.'</td>';
-				$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult_2->e2event->e2eventstart + (int)$xmlResult_2->e2event->e2eventduration).' Uhr'.'</td>';
+				//$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult_2->e2event->e2eventstart + (int)$xmlResult_2->e2event->e2eventduration).' Uhr'.'</td>';
 				$table .= '<td class="tg-611x">'.round((int)$xmlResult_2->e2event->e2eventduration / 60).' min'.'</td>';
 				$table .= '</tr>';
 				$table .= '</table>';
-				SetValueString($this->GetIDForIdent("e2nownexteventHTML"), $table);
+				SetValueString($this->GetIDForIdent("e2epgHTML"), $table);
 			}
 			
 			If ($this->ReadPropertyBoolean("Movielist_Data") == true) {
