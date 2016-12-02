@@ -1033,20 +1033,7 @@
 		}
 	return;
 	}    
-	  /*
-    [e2movie] => Array
-        (
-            [0] => SimpleXMLElement Object
-                (
-                    [e2servicereference] => 1:0:0:0:0:0:0:0:0:0:/media/hdd/movie/20161127 2010 - Das Erste HD - Polizeiruf 110_ Sumpfgebiete.ts
-                    [e2title] => Polizeiruf 110: Sumpfgebiete
-                    [e2description] => Fernsehfilm Deutschland 2016
-                    [e2descriptionextended] => Kriminalhauptkommissar Hanns von Meuffels sieht sich mit einem Fall aus seiner Vergangenheit konfrontiert: Nach fünf Jahren in der geschlossenen Psychiatrie wird Julia Wendt entlassen. In vier Wochen soll das Wiederaufnahmeverfahren ihres Falles beginnen. Julia Wendt fühlt sich beschattet, bedroht und sucht Hilfe bei Hanns von Meuffels, dem Mann, der sie damals wegen eines Brandanschlags auf ihren Ehemann verhaftet hatte und vor Gericht gegen sie aussagte.Produziert in HD
-                    [e2servicename] => Das Erste HD
-                    [e2time] => 1480273800
-                    [e2length] => 99:57
-                    [e2tags] => SimpleXMLElement Object
-	  */
+
 	private function ConnectionTest()
 	{
 	      $result = false;
