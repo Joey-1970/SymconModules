@@ -800,7 +800,7 @@
 				SetValueString($this->GetIDForIdent("e2epglistHTML"), $table);
 			}
 			
-			If ($this->ReadPropertyBoolean("EPGlistSRef_Data") == true) {
+			If (($this->ReadPropertyBoolean("EPGlistSRef_Data") == true) AND (GetValueBoolean($this->GetIDForIdent("powerstate") == true)) ) {
 				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/subservices"));
 				$e2servicereference = (string)$xmlResult->e2service->e2servicereference;
 				$e2servicename = (string)$xmlResult->e2service->e2servicename;
@@ -841,6 +841,9 @@
 				}
 				$table .= '</table>';
 				SetValueString($this->GetIDForIdent("e2epglistSRefHTML"), $table);
+			}
+			else {
+				SetValueString($this->GetIDForIdent("e2epglistSRefHTML"), "nicht verfügbar");
 			}
 			
 		}
