@@ -830,10 +830,6 @@
 					$table .= '</tr>';				
 				}
 				$table .= '</table>';
-				
-				
-				$table = "";
-				
 				SetValueString($this->GetIDForIdent("e2epglistSRefHTML"), $table);
 			}
 			
@@ -870,6 +866,7 @@
 		}
 		$table .= '</table>';
 		SetValueString($this->GetIDForIdent("e2tunerinfo"), $table);
+		
 		If ($this->ReadPropertyBoolean("Network_Data") == true) {
 			SetValueString($this->GetIDForIdent("e2lanmac"), (string)$xmlResult->e2about->e2lanmac);
 			SetValueBoolean($this->GetIDForIdent("e2landhcp"), (bool)$xmlResult->e2about->e2landhcp);
