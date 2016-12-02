@@ -34,7 +34,8 @@
 		$this->RegisterProfileInteger("time.min", "Clock", "", " min", 0, 1000000, 1);
 		$this->RegisterProfileInteger("snr.db", "Intensity", "", " db", 0, 1000000, 1);
 		$this->RegisterProfileInteger("gigabyte.GB", "Gauge", "", " GB", 0, 1000000, 1);
-		
+		$this->RegisterHook("/hook/IPS2Enigma", $ID);
+
 		$this->SetBuffer("FirstUpdate", "false");
 		
 		$this->RegisterVariableInteger("PiconUpdate", "Picon Update", "~UnixTimestamp", 1500);
@@ -1087,6 +1088,35 @@
 	        
 	}
 	
+	private function RegisterHook($WebHook, $TargetID)
+    	{
+		$ids = IPS_GetInstanceListByModuleID("{015A6EB8-D6E5-4B93-B496-0D3F77AE9FE1}");
+		if (sizeof($ids) > 0)
+		{
+		    $hooks = json_decode(IPS_GetProperty($ids[0], "Hooks"), true);
+		    $found = false;
+		    foreach ($hooks as $index => $hook)
+		    {
+		    	if ($hook['Hook'] == $WebHook)
+			{
+				if ($hook['TargetID'] == $TargetID) {
+					return;
+				}
+				else {
+					$hooks[$index]['TargetID'] = $TargetID;
+					$found = true;
+				}
+			}
+		    }
+		    if (!$found)
+		    {
+			$hooks[] = Array("Hook" => $WebHook, "TargetID" => $TargetID);
+		    }
+		    IPS_SetProperty($ids[0], "Hooks", json_encode($hooks));
+		    IPS_ApplyChanges($ids[0]);
+		}
+    	}    
+	    
 	private function Get_Filename(string $sRef)
 	{
 		// aus der Service Referenz den Dateinamen des Picons generieren
