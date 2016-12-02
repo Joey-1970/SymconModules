@@ -993,7 +993,7 @@
 	   	$result = false;
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 		       $message = urlencode($message);
-		       $xmlResult = new SimpleXMLElement(file_get_contents("http:/".$this->ReadPropertyString("IPAddress")."/web/message?text=$message&type=1&timeout=$time"));
+		       $xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/message?text=$message&type=1&timeout=$time"));
 		       if ($xmlResult->e2state == "True") {
 		       		$result = true;
 			}
@@ -1006,7 +1006,7 @@
 	   	$result = false;
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 		       $message = urlencode($message);
-		       $xmlResult = new SimpleXMLElement(file_get_contents("http:/".$this->ReadPropertyString("IPAddress")."/web/message?text=$message&type=3&timeout=$time"));
+		       $xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/message?text=$message&type=3&timeout=$time"));
 		       if ($xmlResult->e2state == "True") {
 		       		$result = true;
 			}
@@ -1019,7 +1019,7 @@
 	   	$result = false;
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$servicereference = urlencode($servicereference);
-			$xmlResult = new SimpleXMLElement(file_get_contents("http://192.168.178.20/web/zap?sRef=".$servicereference));
+			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/zap?sRef=".$servicereference));
 		}
 	return;
 	}    
@@ -1029,7 +1029,7 @@
 	   	$result = false;
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$servicereference = urlencode($servicereference);
-			$xmlResult = new SimpleXMLElement(file_get_contents("http://192.168.178.20/web/zap?sRef=".$servicereference));
+			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/zap?sRef=".$servicereference));
 		}
 	return;
 	}    
