@@ -19,6 +19,8 @@
 		$this->RegisterPropertyBoolean("Network_Data", false);
 		$this->RegisterPropertyBoolean("RC_Data", false);
 		$this->RegisterPropertyInteger("EPGUpdate", 60);
+		$this->RegisterPropertyBoolean("EPGlist_Data", false);
+		$this->RegisterPropertyBoolean("EPGlistSRef_Data", false);
 		$this->RegisterTimer("DataUpdate", 0, 'Enigma_Get_DataUpdate($_IPS["TARGET"]);');
 		$this->RegisterTimer("EPGUpdate", 0, 'Enigma_Get_EPGUpdate($_IPS["TARGET"]);');
         }
@@ -240,8 +242,15 @@
 
 		}
 		
-		$this->RegisterVariableString("e2epglistHTML", "EPG Liste", "~HTMLBox", 950);
-		$this->DisableAction("e2epglistHTML");
+		If ($this->ReadPropertyBoolean("EPGlist_Data") == true) {
+			$this->RegisterVariableString("e2epglistHTML", "EPG Liste", "~HTMLBox", 950);
+			$this->DisableAction("e2epglistHTML");
+		}
+		
+		If ($this->ReadPropertyBoolean("EPGlistSRef_Data") == true) {
+			$this->RegisterVariableString("e2epglistSRefHTML", "EPG Liste Sender", "~HTMLBox", 950);
+			$this->DisableAction("e2epglistSRefHTML");
+		}
 		
 		$this->Get_Picons();
 		
@@ -751,41 +760,51 @@
 	public function Get_EPGUpdate()
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
-			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/getservices"));
-			$bouquet = (string)$xmlResult->e2service->e2servicereference;
-			$xmlResult = new SimpleXMLElement(file_get_contents('http://192.168.178.20/web/epgnownext?bRef='.urlencode($bouquet)));
-			$table = '<style type="text/css">';
-			$table .= '<link rel="stylesheet" href="./.../webfront.css">';
-			$table .= "</style>";
-			$table .= '<table class="tg">';
-			$table .= "<tr>";
-			$table .= '<th class="tg-kv4b">Sender</th>';
-			$table .= '<th class="tg-kv4b">Beginn<br></th>';
-			$table .= '<th class="tg-kv4b">Titel</th>';
-			$table .= '<th class="tg-kv4b">Kurzbeschreibung<br></th>';
-			$table .= '<th class="tg-kv4b">Dauer<br></th>';
-			$table .= '<colgroup>'; 
-			$table .= '<col width="120">'; 
-			$table .= '<col width="100">'; 
-			$table .= '</colgroup>';
-			$table .= '</tr>';
-			for ($i = 0; $i <= count($xmlResult) - 1; $i=$i+2) {
-				$table .= '<tr>';
-				$table .= '<td rowspan="2" class="tg-611x"><img src='.$this->Get_Filename((string)$xmlResult->e2event[$i]->e2eventservicereference).' alt='.(string)$xmlResult->e2event[$i]->e2eventservicename.'></td>';
-				$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event[$i]->e2eventstart).' Uhr'.'</td>';
-				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i]->e2eventtitle).'</td>';
-				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i]->e2eventdescription).'</td>';			
-				$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event[$i]->e2eventduration / 60).' min'.'</td>';
+			If ($this->ReadPropertyBoolean("EPGlist_Data") == true) {
+				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/getservices"));
+				$bouquet = (string)$xmlResult->e2service->e2servicereference;
+				$xmlResult = new SimpleXMLElement(file_get_contents('http://192.168.178.20/web/epgnownext?bRef='.urlencode($bouquet)));
+				$table = '<style type="text/css">';
+				$table .= '<link rel="stylesheet" href="./.../webfront.css">';
+				$table .= "</style>";
+				$table .= '<table class="tg">';
+				$table .= "<tr>";
+				$table .= '<th class="tg-kv4b">Sender</th>';
+				$table .= '<th class="tg-kv4b">Beginn<br></th>';
+				$table .= '<th class="tg-kv4b">Titel</th>';
+				$table .= '<th class="tg-kv4b">Kurzbeschreibung<br></th>';
+				$table .= '<th class="tg-kv4b">Dauer<br></th>';
+				$table .= '<colgroup>'; 
+				$table .= '<col width="120">'; 
+				$table .= '<col width="100">'; 
+				$table .= '</colgroup>';
 				$table .= '</tr>';
-				$table .= '<tr>';
-				$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event[$i+1]->e2eventstart).' Uhr'.'</td>';
-				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i+1]->e2eventtitle).'</td>';
-				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i+1]->e2eventdescription).'</td>';
-				$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event[$i+1]->e2eventduration / 60).' min'.'</td>';
-				$table .= '</tr>';
+				for ($i = 0; $i <= count($xmlResult) - 1; $i=$i+2) {
+					$table .= '<tr>';
+					$table .= '<td rowspan="2" class="tg-611x"><img src='.$this->Get_Filename((string)$xmlResult->e2event[$i]->e2eventservicereference).' alt='.(string)$xmlResult->e2event[$i]->e2eventservicename.'></td>';
+					$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event[$i]->e2eventstart).' Uhr'.'</td>';
+					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i]->e2eventtitle).'</td>';
+					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i]->e2eventdescription).'</td>';			
+					$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event[$i]->e2eventduration / 60).' min'.'</td>';
+					$table .= '</tr>';
+					$table .= '<tr>';
+					$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event[$i+1]->e2eventstart).' Uhr'.'</td>';
+					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i+1]->e2eventtitle).'</td>';
+					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i+1]->e2eventdescription).'</td>';
+					$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event[$i+1]->e2eventduration / 60).' min'.'</td>';
+					$table .= '</tr>';
+				}
+				$table .= '</table>';
+				SetValueString($this->GetIDForIdent("e2epglistHTML"), $table);
 			}
-			$table .= '</table>';
-			SetValueString($this->GetIDForIdent("e2epglistHTML"), $table);
+			
+			If ($this->ReadPropertyBoolean("EPGlistSRef_Data") == true) {
+				
+ 				$table = "";
+				
+				SetValueString($this->GetIDForIdent("e2epglistSRefHTML"), $table);
+			}
+			
 		}
 		
 	
