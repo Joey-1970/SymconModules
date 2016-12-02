@@ -905,7 +905,6 @@
 	return;
 	}		       
 
-
 	public function GetCurrentServiceName()
 	{
 		$result = "";
@@ -965,6 +964,16 @@
 	return $result;
 	}
 	
+	public function Zap(string $servicereference)
+	{
+	   	$result = false;
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
+			$servicereference = urlencode($servicereference);
+			$xmlResult = new SimpleXMLElement(file_get_contents("http://192.168.178.20/web/zap?sRef=".$servicereference));
+		}
+	return;
+	}    
+	    
 	public function MoviePlay(string $servicereference)
 	{
 	   	$result = false;
@@ -1070,16 +1079,6 @@
 				       
 	    /*	    
 
-//*************************************************************************************************************
-// Schaltet auf den angeforderten Sender um
-function ENIGMA2_Zap($ipadr,$sender = "")
-{
-   if (ENIGMA2_GetAvailable( $ipadr ))
-    	{
-      $xmlResult = new SimpleXMLElement(file_get_contents("http://$ipadr/web/zap?sRef=$sender"));
-   	}
-return;
-}
 
 //*************************************************************************************************************
 // Liefert ein Array mit den Namen der Bouquets wenn $bouquet = ""
