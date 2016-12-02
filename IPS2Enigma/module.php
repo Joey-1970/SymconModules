@@ -820,9 +820,17 @@
 				$table .= '<col width="100">'; 
 				$table .= '</colgroup>';
 				$table .= '</tr>';
-				for ($i = 0; $i <= count($xmlResult) - 1; $i++) {
+				$table .= '<tr>';
+				$table .= '<td class="tg-611x"><img src='.$this->Get_Filename((string)$xmlResult->e2event[0]->e2eventservicereference).' alt='.(string)$xmlResult->e2event[0]->e2eventservicename.'></td>';
+				$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event[0]->e2eventstart).' Uhr'.'</td>';
+				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[0]->e2eventtitle).'</td>';
+				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[0]->e2eventdescription).'</td>';			
+				$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event[0]->e2eventduration / 60).' min'.'</td>';
+				$table .= '</tr>';
+				for ($i = 1; $i <= Min(count($xmlResult) - 1, 15); $i++) {
 					$table .= '<tr>';
-					$table .= '<td rowspan='.$ValueCount.' class="tg-611x"><img src='.$this->Get_Filename((string)$xmlResult->e2event[$i]->e2eventservicereference).' alt='.(string)$xmlResult->e2event[$i]->e2eventservicename.'></td>';
+					$table .= '<td class="tg-611x"></td>';
+					//$table .= '<td rowspan='.$ValueCount.' class="tg-611x"><img src='.$this->Get_Filename((string)$xmlResult->e2event[$i]->e2eventservicereference).' alt='.(string)$xmlResult->e2event[$i]->e2eventservicename.'></td>';
 					$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event[$i]->e2eventstart).' Uhr'.'</td>';
 					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i]->e2eventtitle).'</td>';
 					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i]->e2eventdescription).'</td>';			
