@@ -1126,61 +1126,7 @@
 	return;
 	}
 				       
-				       
-	    /*	    
-
-
-//*************************************************************************************************************
-// Liefert ein Array mit den Namen der Bouquets wenn $bouquet = ""
-// liefert ein Array mit den Namen der Sender eines Bouquet  wenn $bouquet ungleich ""
-// keys e2servicereference
-// keys e2servicename
-function ENIGMA2_GetServiceBouquetsOrServices($ipadr,$bouquet = "")
-{
-   if (ENIGMA2_GetAvailable( $ipadr ))
-    	{
-      if ($bouquet == "" )
-      	{
-         $xmlResult = new SimpleXMLElement(file_get_contents("http://$ipadr/web/getservices"));
-       	}
-      else
-		 	{
-         $bouquet = urlencode($bouquet);
-         $xmlResult = new SimpleXMLElement(file_get_contents("http://$ipadr/web/getservices?sRef=$bouquet"));
-       	}
-   	}
-   else
-    	{
-      $xmlResult[] = "";
-    	}
-return $xmlResult;
-}
-
-//*************************************************************************************************************
-// Ermittelt die EPG-Daten eines definierten Senders
-function ENIGMA2_EPG($ipadr, $sender = "")
-{
-   $xmlResult[] = "";
-   $sender = urlencode($sender);
-   $xmlResult = new SimpleXMLElement(file_get_contents("http://$ipadr/web/epgservice?sRef=$sender"));
-return $xmlResult;
-}
-
-//*************************************************************************************************************
-// Ermittelt alle EPG-Daten des aktuellen Zeitpunktes
-function ENIGMA2_EPGnow($ipadr, $bouquet = "")
-{
-$xmlResult[] = "";
-If (ENIGMA2_GetAvailable( $ipadr ))
-   {
-   $xmlResult[] = "";
-   $bouquet = urlencode($bouquet);
-   //http://192.168.178.39/web/epgnow?bRef=1:7:1:0:0:0:0:0:0:0:FROM BOUQUET "userbouquet.mein_tv.tv" ORDER BY bouquet
-	$xmlResult = new SimpleXMLElement(file_get_contents("http://$ipadr/web/epgnow?bRef=$bouquet"));
-	}
-return $xmlResult;
-}
-
+/*	    
 //*************************************************************************************************************
 // Schreibt eine Message auf den Bildschirm die man mit ja oder nein beantworten muss
 // man sollte die Frage immer so stellen, das nein als aktive Antwort ausgewertet wird,
@@ -1217,7 +1163,6 @@ function ENIGMA2_GetAnswerFromMessage($ipadr,$message = "",$time=5)
     }
 return $result;
 }
-
 
 //*************************************************************************************************************
 // Prüft ob die Box gerade aufnimmt
