@@ -821,7 +821,7 @@
 				$table .= '</tr>';
 				for ($i = 0; $i <= count($xmlResult) - 1; $i++) {
 					$table .= '<tr>';
-					$table .= '<td rowspan=".'count($xmlResult) - 1'." class="tg-611x"><img src='.$this->Get_Filename((string)$xmlResult->e2event[$i]->e2eventservicereference).' alt='.(string)$xmlResult->e2event[$i]->e2eventservicename.'></td>';
+					$table .= '<td rowspan="'.count($xmlResult) - 1.'" class="tg-611x"><img src='.$this->Get_Filename((string)$xmlResult->e2event[$i]->e2eventservicereference).' alt='.(string)$xmlResult->e2event[$i]->e2eventservicename.'></td>';
 					$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event[$i]->e2eventstart).' Uhr'.'</td>';
 					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i]->e2eventtitle).'</td>';
 					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i]->e2eventdescription).'</td>';			
