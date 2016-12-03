@@ -9,6 +9,7 @@
     ],
     "elements":
     [
+        { "name": "Open", "type": "CheckBox", "caption": "Aktiv" },
         { "type": "Label", "label": "Angabe der GPIO-Nummer (Broadcom-Number)" },
         { "type": "Select", "name": "Pin", "caption": "GPIO-Nr.",
             "options": [
@@ -43,5 +44,11 @@
                 { "label": "27", "value": 27 }
                 ]
         }
-    ]
+    ],
+    
+    "actions":
+    [
+        { "type": "Label", "label": "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!" },
+        { "type": "Button", "label": "Toggle Output", "onClick": "I2GDMR_Toggle_Status($id);"}
+    ],
 }
