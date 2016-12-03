@@ -15,6 +15,7 @@
         { "type": "IntervalBox", "name": "DataUpdate", "caption": "Daten-Update (sek)" },
         { "type": "CheckBox", "name": "Enigma2_Data", "caption": "Enigma 2 Daten anzeigen" },
         { "type": "CheckBox", "name": "HDD_Data", "caption": "HDD Daten anzeigen" },
+        { "type": "CheckBox", "name": "Network_Data", "caption": "Netzwerk Daten anzeigen" },
         { "type": "CheckBox", "name": "Movielist_Data", "caption": "Liste der Aufzeichnungen anzeigen" },
         { "type": "CheckBox", "name": "Signal_Data", "caption": "Empfangssignal Daten anzeigen" },
         { "type": "CheckBox", "name": "RC_Data", "caption": "Virtuelle Fernbedienung erstellen" },
