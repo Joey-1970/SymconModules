@@ -26,4 +26,8 @@
         { "type": "CheckBox", "name": "EPGlist_Data", "caption": "EPG des aktuellen und der folgenden Programms aller Sender anzeigen (HTML)" },
         { "type": "CheckBox", "name": "EPGlistSRef_Data", "caption": "EPG des aktuellen und der folgenden Programms des aktuellen Senders anzeigen (HTML)" }
    ]
+    "actions":
+    [
+        {"type": "Button", "label": "Rescan", "onClick": "LMS_Rescan($id);"},
+    ],
 } 
