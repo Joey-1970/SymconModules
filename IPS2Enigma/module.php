@@ -544,7 +544,176 @@
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/subservices"));
        			SetValueString($this->GetIDForIdent("e2servicename"), (string)$xmlResult->e2service->e2servicename);
 			$e2servicereference = (string)$xmlResult->e2service->e2servicereference;
-			$e2servicename = (string)$xmlResult->e2service->e2servicename;
+			$e2servicename = (string)$xmlResult->e2service->e2servicename;	
+			
+			If ($this->ReadPropertyBoolean("Movielist_Data") == true) {
+				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/movielist"));
+				$table = '<style type="text/css">';
+				$table .= '<link rel="stylesheet" href="./.../webfront.css">';
+				$table .= "</style>";
+				$table .= '<table class="tg">';
+				$table .= "<tr>";
+				$table .= '<th class="tg-kv4b">Titel</th>';
+				$table .= '<th class="tg-kv4b">Kurzbeschreibung<br></th>';
+				$table .= '<th class="tg-kv4b">Langbeschreibung<br></th>';
+				$table .= '<th class="tg-kv4b">Quelle</th>';
+				$table .= '<th class="tg-kv4b">Länge</th>';
+				$table .= '</tr>';
+				for ($i = 0; $i <= count($xmlResult) - 1; $i++) {
+					$table .= '<tr>';
+					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2title.'</td>';
+					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2description.'</td>';
+					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2descriptionextended.'</td>';
+					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2servicename.'</td>';
+					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2length.'</td>';
+					$table .= '</tr>';
+				}
+				$table .= '</table>';
+				SetValueString($this->GetIDForIdent("e2movielist") , $table);	
+			}
+			
+			If ($this->ReadPropertyBoolean("Signal_Data") == true) {
+				// Empfangsstärke ermitteln
+				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/signal?"));
+				SetValueInteger($this->GetIDForIdent("e2snrdb"), (int)$xmlResult->e2snrdb);
+				SetValueInteger($this->GetIDForIdent("e2snr"), (int)$xmlResult->e2snr);
+				SetValueInteger($this->GetIDForIdent("e2ber"), (int)$xmlResult->e2ber);
+				SetValueInteger($this->GetIDForIdent("e2agc"), (int)$xmlResult->e2acg);
+			}
+			If ($this->ReadPropertyBoolean("HDD_Data") == true) {
+				// Festplattendaten
+				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/about"));
+				SetValueInteger($this->GetIDForIdent("e2hddinfo_capacity"), (int)$xmlResult->e2about->e2hddinfo->capacity);
+				SetValueInteger($this->GetIDForIdent("e2hddinfo_free"), (int)$xmlResult->e2about->e2hddinfo->free);
+			}
+			
+			//SetValueString($this->GetIDForIdent("e2stream"), "<video width="320" height="240" controls> <source src="http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".$e2servicereference." type="video/mp4"> </video>");
+			//"http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".$e2servicereference
+		}
+		else {
+			if ($this->GetBuffer("FirstUpdate") == "false") {
+				SetValueString($this->GetIDForIdent("e2servicename"), "N/A");
+				If ($this->ReadPropertyBoolean("EPGnow_Data") == true) {
+					SetValueString($this->GetIDForIdent("e2eventtitle"), "N/A");
+					SetValueString($this->GetIDForIdent("e2eventdescription"), "N/A");
+					SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), "N/A");
+					SetValueInteger($this->GetIDForIdent("e2eventstart"), 0);
+					SetValueInteger($this->GetIDForIdent("e2eventend"), 0);
+					SetValueInteger($this->GetIDForIdent("e2eventduration"), 0);
+					SetValueInteger($this->GetIDForIdent("e2eventpast"), 0);
+					SetValueInteger($this->GetIDForIdent("e2eventleft"), 0);
+					SetValueInteger($this->GetIDForIdent("e2eventprogress"), 0);
+					SetValueString($this->GetIDForIdent("e2eventHTML"), "");
+				}
+				If ($this->ReadPropertyBoolean("EPGnext_Data") == true) {
+					SetValueString($this->GetIDForIdent("e2nexteventtitle"), "N/A");
+					SetValueString($this->GetIDForIdent("e2nexteventdescription"), "N/A");
+					SetValueString($this->GetIDForIdent("e2nexteventdescriptionextended"), "N/A");
+					SetValueInteger($this->GetIDForIdent("e2nexteventstart"), 0);
+					SetValueInteger($this->GetIDForIdent("e2nexteventend"), 0);
+					SetValueInteger($this->GetIDForIdent("e2nexteventduration"), 0);
+					SetValueString($this->GetIDForIdent("e2nexteventHTML"), "");
+				}
+
+				If ($this->ReadPropertyBoolean("Signal_Data") == true) {
+					SetValueInteger($this->GetIDForIdent("e2snrdb"), 0);
+					SetValueInteger($this->GetIDForIdent("e2snr"), 0);
+					SetValueInteger($this->GetIDForIdent("e2ber"), 0);
+					SetValueInteger($this->GetIDForIdent("e2agc"), 0);
+				}
+				$this->SetBuffer("FirstUpdate", "true");
+			}
+		}
+	return;
+	}
+	
+	public function Get_EPGUpdate()
+	{
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
+			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/getservices"));
+			$bouquet = (string)$xmlResult->e2service->e2servicereference;
+			
+			If ($this->ReadPropertyBoolean("EPGlist_Data") == true) {
+				$xmlResult = new SimpleXMLElement(file_get_contents('http://192.168.178.20/web/epgnownext?bRef='.urlencode($bouquet)));
+				$table = '<style type="text/css">';
+				$table .= '<link rel="stylesheet" href="./.../webfront.css">';
+				$table .= "</style>";
+				$table .= '<table class="tg">';
+				$table .= "<tr>";
+				$table .= '<th class="tg-kv4b">Sender</th>';
+				$table .= '<th class="tg-kv4b">Beginn<br></th>';
+				$table .= '<th class="tg-kv4b">Titel</th>';
+				$table .= '<th class="tg-kv4b">Kurzbeschreibung<br></th>';
+				$table .= '<th class="tg-kv4b">Dauer<br></th>';
+				$table .= '<colgroup>'; 
+				$table .= '<col width="120">'; 
+				$table .= '<col width="100">'; 
+				$table .= '</colgroup>';
+				$table .= '</tr>';
+				for ($i = 0; $i <= count($xmlResult) - 1; $i=$i+2) {
+					$table .= '<tr>';
+					$table .= '<td rowspan="2" class="tg-611x"><img src='.$this->Get_Filename((string)$xmlResult->e2event[$i]->e2eventservicereference).' alt='.(string)$xmlResult->e2event[$i]->e2eventservicename.'></td>';
+					$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event[$i]->e2eventstart).' Uhr'.'</td>';
+					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i]->e2eventtitle).'</td>';
+					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i]->e2eventdescription).'</td>';			
+					$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event[$i]->e2eventduration / 60).' min'.'</td>';
+					$table .= '</tr>';
+					$table .= '<tr>';
+					$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event[$i+1]->e2eventstart).' Uhr'.'</td>';
+					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i+1]->e2eventtitle).'</td>';
+					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i+1]->e2eventdescription).'</td>';
+					$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event[$i+1]->e2eventduration / 60).' min'.'</td>';
+					$table .= '</tr>';
+				}
+				$table .= '</table>';
+				SetValueString($this->GetIDForIdent("e2epglistHTML"), $table);
+			}
+			
+			If (($this->ReadPropertyBoolean("EPGlistSRef_Data") == true) AND (GetValueBoolean($this->GetIDForIdent("powerstate")) == true) ) {
+				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/subservices"));
+				$e2servicereference = (string)$xmlResult->e2service->e2servicereference;
+				$e2servicename = (string)$xmlResult->e2service->e2servicename;
+ 				//$sender = urlencode($sender);
+   				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/epgservice?sRef=".$e2servicereference));
+				$ValueCount = count($xmlResult) - 2;
+				$table = '<style type="text/css">';
+				$table .= '<link rel="stylesheet" href="./.../webfront.css">';
+				$table .= "</style>";
+				$table .= '<table class="tg">';
+				$table .= "<tr>";
+				$table .= '<th class="tg-kv4b">Sender</th>';
+				$table .= '<th class="tg-kv4b">Beginn<br></th>';
+				$table .= '<th class="tg-kv4b">Titel</th>';
+				$table .= '<th class="tg-kv4b">Kurzbeschreibung<br></th>';
+				$table .= '<th class="tg-kv4b">Dauer<br></th>';
+				$table .= '<colgroup>'; 
+				$table .= '<col width="120">'; 
+				$table .= '<col width="100">'; 
+				$table .= '</colgroup>';
+				$table .= '</tr>';
+				$table .= '<tr>';
+				$table .= '<td class="tg-611x"><img src='.$this->Get_Filename((string)$xmlResult->e2event[0]->e2eventservicereference).' alt='.(string)$xmlResult->e2event[0]->e2eventservicename.'></td>';
+				$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event[0]->e2eventstart).' Uhr'.'</td>';
+				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[0]->e2eventtitle).'</td>';
+				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[0]->e2eventdescription).'</td>';			
+				$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event[0]->e2eventduration / 60).' min'.'</td>';
+				$table .= '</tr>';
+				for ($i = 1; $i <= Min(count($xmlResult) - 1, 15); $i++) {
+					$table .= '<tr>';
+					$table .= '<td class="tg-611x"></td>';
+					//$table .= '<td rowspan='.$ValueCount.' class="tg-611x"><img src='.$this->Get_Filename((string)$xmlResult->e2event[$i]->e2eventservicereference).' alt='.(string)$xmlResult->e2event[$i]->e2eventservicename.'></td>';
+					$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event[$i]->e2eventstart).' Uhr'.'</td>';
+					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i]->e2eventtitle).'</td>';
+					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i]->e2eventdescription).'</td>';			
+					$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event[$i]->e2eventduration / 60).' min'.'</td>';
+					$table .= '</tr>';				
+				}
+				$table .= '</table>';
+				SetValueString($this->GetIDForIdent("e2epglistSRefHTML"), $table);
+			}
+			else {
+				SetValueString($this->GetIDForIdent("e2epglistSRefHTML"), "nicht verfügbar");
+			}
 			
 			If (($this->ReadPropertyBoolean("EPGnow_Data") == true) AND ($this->ReadPropertyBoolean("EPGnext_Data") == false) AND (substr($e2servicereference, 0, 20) <> "1:0:0:0:0:0:0:0:0:0:")) {
 				// das aktuelle Ereignis
@@ -677,174 +846,6 @@
 				$table .= '</tr>';
 				$table .= '</table>';
 				SetValueString($this->GetIDForIdent("e2epgHTML"), $table);
-			}
-			
-			If ($this->ReadPropertyBoolean("Movielist_Data") == true) {
-				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/movielist"));
-				$table = '<style type="text/css">';
-				$table .= '<link rel="stylesheet" href="./.../webfront.css">';
-				$table .= "</style>";
-				$table .= '<table class="tg">';
-				$table .= "<tr>";
-				$table .= '<th class="tg-kv4b">Titel</th>';
-				$table .= '<th class="tg-kv4b">Kurzbeschreibung<br></th>';
-				$table .= '<th class="tg-kv4b">Langbeschreibung<br></th>';
-				$table .= '<th class="tg-kv4b">Quelle</th>';
-				$table .= '<th class="tg-kv4b">Länge</th>';
-				$table .= '</tr>';
-				for ($i = 0; $i <= count($xmlResult) - 1; $i++) {
-					$table .= '<tr>';
-					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2title.'</td>';
-					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2description.'</td>';
-					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2descriptionextended.'</td>';
-					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2servicename.'</td>';
-					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2length.'</td>';
-					$table .= '</tr>';
-				}
-				$table .= '</table>';
-				SetValueString($this->GetIDForIdent("e2movielist") , $table);	
-			}
-			
-			If ($this->ReadPropertyBoolean("Signal_Data") == true) {
-				// Empfangsstärke ermitteln
-				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/signal?"));
-				SetValueInteger($this->GetIDForIdent("e2snrdb"), (int)$xmlResult->e2snrdb);
-				SetValueInteger($this->GetIDForIdent("e2snr"), (int)$xmlResult->e2snr);
-				SetValueInteger($this->GetIDForIdent("e2ber"), (int)$xmlResult->e2ber);
-				SetValueInteger($this->GetIDForIdent("e2agc"), (int)$xmlResult->e2acg);
-			}
-			If ($this->ReadPropertyBoolean("HDD_Data") == true) {
-				// Festplattendaten
-				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/about"));
-				SetValueInteger($this->GetIDForIdent("e2hddinfo_capacity"), (int)$xmlResult->e2about->e2hddinfo->capacity);
-				SetValueInteger($this->GetIDForIdent("e2hddinfo_free"), (int)$xmlResult->e2about->e2hddinfo->free);
-			}
-			
-			//SetValueString($this->GetIDForIdent("e2stream"), "<video width="320" height="240" controls> <source src="http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".$e2servicereference." type="video/mp4"> </video>");
-			//"http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".$e2servicereference
-		}
-		else {
-			if ($this->GetBuffer("FirstUpdate") == "false") {
-				SetValueString($this->GetIDForIdent("e2servicename"), "N/A");
-				If ($this->ReadPropertyBoolean("EPGnow_Data") == true) {
-					SetValueString($this->GetIDForIdent("e2eventtitle"), "N/A");
-					SetValueString($this->GetIDForIdent("e2eventdescription"), "N/A");
-					SetValueString($this->GetIDForIdent("e2eventdescriptionextended"), "N/A");
-					SetValueInteger($this->GetIDForIdent("e2eventstart"), 0);
-					SetValueInteger($this->GetIDForIdent("e2eventend"), 0);
-					SetValueInteger($this->GetIDForIdent("e2eventduration"), 0);
-					SetValueInteger($this->GetIDForIdent("e2eventpast"), 0);
-					SetValueInteger($this->GetIDForIdent("e2eventleft"), 0);
-					SetValueInteger($this->GetIDForIdent("e2eventprogress"), 0);
-					SetValueString($this->GetIDForIdent("e2eventHTML"), "");
-				}
-				If ($this->ReadPropertyBoolean("EPGnext_Data") == true) {
-					SetValueString($this->GetIDForIdent("e2nexteventtitle"), "N/A");
-					SetValueString($this->GetIDForIdent("e2nexteventdescription"), "N/A");
-					SetValueString($this->GetIDForIdent("e2nexteventdescriptionextended"), "N/A");
-					SetValueInteger($this->GetIDForIdent("e2nexteventstart"), 0);
-					SetValueInteger($this->GetIDForIdent("e2nexteventend"), 0);
-					SetValueInteger($this->GetIDForIdent("e2nexteventduration"), 0);
-					SetValueString($this->GetIDForIdent("e2nexteventHTML"), "");
-				}
-
-				If ($this->ReadPropertyBoolean("Signal_Data") == true) {
-					SetValueInteger($this->GetIDForIdent("e2snrdb"), 0);
-					SetValueInteger($this->GetIDForIdent("e2snr"), 0);
-					SetValueInteger($this->GetIDForIdent("e2ber"), 0);
-					SetValueInteger($this->GetIDForIdent("e2agc"), 0);
-				}
-				$this->SetBuffer("FirstUpdate", "true");
-			}
-		}
-	return;
-	}
-	
-	public function Get_EPGUpdate()
-	{
-		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
-			If ($this->ReadPropertyBoolean("EPGlist_Data") == true) {
-				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/getservices"));
-				$bouquet = (string)$xmlResult->e2service->e2servicereference;
-				$xmlResult = new SimpleXMLElement(file_get_contents('http://192.168.178.20/web/epgnownext?bRef='.urlencode($bouquet)));
-				$table = '<style type="text/css">';
-				$table .= '<link rel="stylesheet" href="./.../webfront.css">';
-				$table .= "</style>";
-				$table .= '<table class="tg">';
-				$table .= "<tr>";
-				$table .= '<th class="tg-kv4b">Sender</th>';
-				$table .= '<th class="tg-kv4b">Beginn<br></th>';
-				$table .= '<th class="tg-kv4b">Titel</th>';
-				$table .= '<th class="tg-kv4b">Kurzbeschreibung<br></th>';
-				$table .= '<th class="tg-kv4b">Dauer<br></th>';
-				$table .= '<colgroup>'; 
-				$table .= '<col width="120">'; 
-				$table .= '<col width="100">'; 
-				$table .= '</colgroup>';
-				$table .= '</tr>';
-				for ($i = 0; $i <= count($xmlResult) - 1; $i=$i+2) {
-					$table .= '<tr>';
-					$table .= '<td rowspan="2" class="tg-611x"><img src='.$this->Get_Filename((string)$xmlResult->e2event[$i]->e2eventservicereference).' alt='.(string)$xmlResult->e2event[$i]->e2eventservicename.'></td>';
-					$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event[$i]->e2eventstart).' Uhr'.'</td>';
-					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i]->e2eventtitle).'</td>';
-					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i]->e2eventdescription).'</td>';			
-					$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event[$i]->e2eventduration / 60).' min'.'</td>';
-					$table .= '</tr>';
-					$table .= '<tr>';
-					$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event[$i+1]->e2eventstart).' Uhr'.'</td>';
-					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i+1]->e2eventtitle).'</td>';
-					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i+1]->e2eventdescription).'</td>';
-					$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event[$i+1]->e2eventduration / 60).' min'.'</td>';
-					$table .= '</tr>';
-				}
-				$table .= '</table>';
-				SetValueString($this->GetIDForIdent("e2epglistHTML"), $table);
-			}
-			
-			If (($this->ReadPropertyBoolean("EPGlistSRef_Data") == true) AND (GetValueBoolean($this->GetIDForIdent("powerstate")) == true) ) {
-				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/subservices"));
-				$e2servicereference = (string)$xmlResult->e2service->e2servicereference;
-				$e2servicename = (string)$xmlResult->e2service->e2servicename;
- 				//$sender = urlencode($sender);
-   				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/epgservice?sRef=".$e2servicereference));
-				$ValueCount = count($xmlResult) - 2;
-				$table = '<style type="text/css">';
-				$table .= '<link rel="stylesheet" href="./.../webfront.css">';
-				$table .= "</style>";
-				$table .= '<table class="tg">';
-				$table .= "<tr>";
-				$table .= '<th class="tg-kv4b">Sender</th>';
-				$table .= '<th class="tg-kv4b">Beginn<br></th>';
-				$table .= '<th class="tg-kv4b">Titel</th>';
-				$table .= '<th class="tg-kv4b">Kurzbeschreibung<br></th>';
-				$table .= '<th class="tg-kv4b">Dauer<br></th>';
-				$table .= '<colgroup>'; 
-				$table .= '<col width="120">'; 
-				$table .= '<col width="100">'; 
-				$table .= '</colgroup>';
-				$table .= '</tr>';
-				$table .= '<tr>';
-				$table .= '<td class="tg-611x"><img src='.$this->Get_Filename((string)$xmlResult->e2event[0]->e2eventservicereference).' alt='.(string)$xmlResult->e2event[0]->e2eventservicename.'></td>';
-				$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event[0]->e2eventstart).' Uhr'.'</td>';
-				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[0]->e2eventtitle).'</td>';
-				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[0]->e2eventdescription).'</td>';			
-				$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event[0]->e2eventduration / 60).' min'.'</td>';
-				$table .= '</tr>';
-				for ($i = 1; $i <= Min(count($xmlResult) - 1, 15); $i++) {
-					$table .= '<tr>';
-					$table .= '<td class="tg-611x"></td>';
-					//$table .= '<td rowspan='.$ValueCount.' class="tg-611x"><img src='.$this->Get_Filename((string)$xmlResult->e2event[$i]->e2eventservicereference).' alt='.(string)$xmlResult->e2event[$i]->e2eventservicename.'></td>';
-					$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event[$i]->e2eventstart).' Uhr'.'</td>';
-					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i]->e2eventtitle).'</td>';
-					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i]->e2eventdescription).'</td>';			
-					$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event[$i]->e2eventduration / 60).' min'.'</td>';
-					$table .= '</tr>';				
-				}
-				$table .= '</table>';
-				SetValueString($this->GetIDForIdent("e2epglistSRefHTML"), $table);
-			}
-			else {
-				SetValueString($this->GetIDForIdent("e2epglistSRefHTML"), "nicht verfügbar");
 			}
 			
 		}
