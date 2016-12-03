@@ -15,13 +15,13 @@
         { "type": "IntervalBox", "name": "DataUpdate", "caption": "Daten-Update (sek)" },
         { "type": "CheckBox", "name": "Enigma2_Data", "caption": "Enigma 2 Daten anzeigen" },
         { "type": "CheckBox", "name": "HDD_Data", "caption": "HDD Daten anzeigen" },
-        { "type": "CheckBox", "name": "EPGnow_Data", "caption": "EPG des aktuellen Programms des aktuellen Senders anzeigen (einzelne Variablen/HTML)" },
-        { "type": "CheckBox", "name": "EPGnext_Data", "caption": "EPG des folgenden Programms des aktuellen Senders anzeigen (einzelne Variablen/HTML)" },
         { "type": "CheckBox", "name": "Movielist_Data", "caption": "Liste der Aufzeichnungen anzeigen" },
         { "type": "CheckBox", "name": "Signal_Data", "caption": "Empfangssignal Daten anzeigen" },
         { "type": "CheckBox", "name": "RC_Data", "caption": "Virtuelle Fernbedienung erstellen" },
         { "type": "Label", "label": "Zyklus EPG-Update in Sekunden (0 -> aus, 15 sek -> Minimum) (HTML)" },
         { "type": "IntervalBox", "name": "EPGUpdate", "caption": "EPG-Update (sek)" },
+        { "type": "CheckBox", "name": "EPGnow_Data", "caption": "EPG des aktuellen Programms des aktuellen Senders anzeigen (einzelne Variablen/HTML)" },
+        { "type": "CheckBox", "name": "EPGnext_Data", "caption": "EPG des folgenden Programms des aktuellen Senders anzeigen (einzelne Variablen/HTML)" }, 
         { "type": "CheckBox", "name": "EPGlist_Data", "caption": "EPG des aktuellen und der folgenden Programms aller Sender anzeigen (HTML)" },
         { "type": "CheckBox", "name": "EPGlistSRef_Data", "caption": "EPG des aktuellen und der folgenden Programms des aktuellen Senders anzeigen (HTML)" }
    ]
