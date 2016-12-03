@@ -55,8 +55,8 @@
 			$this->RegisterVariableString("e2webifversion", "E2 WebIf-Version", "", 50);
 			$this->DisableAction("e2webifversion");
 		}
-		$this->RegisterVariableString("e2model", "Model", "", 60);
-		$this->DisableAction("e2model");
+		$this->RegisterVariableString("e2devicename", "Model", "", 60);
+		$this->DisableAction("e2devicename");
 		$this->RegisterVariableString("e2tunerinfo", "Tuner Information", "~HTMLBox", 65);
 		$this->DisableAction("e2tunerinfo");
 		
@@ -864,15 +864,15 @@
 	// Ermittlung der Basisdaten
 	private function Get_BasicData()
 	{
-		$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/about"));
+		$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/deviceinfo"));
 		If ($this->ReadPropertyBoolean("Enigma2_Data") == true) {
-			SetValueString($this->GetIDForIdent("e2oeversion"), (string)$xmlResult->e2about->e2oeversion);
-			SetValueString($this->GetIDForIdent("e2enigmaversion"), (string)$xmlResult->e2about->e2enigmaversion);
-			SetValueString($this->GetIDForIdent("e2distroversion"), (string)$xmlResult->e2about->e2distroversion);
-			SetValueString($this->GetIDForIdent("e2imageversion"), (string)$xmlResult->e2about->e2imageversion);
-			SetValueString($this->GetIDForIdent("e2webifversion"), (string)$xmlResult->e2about->e2webifversion);
+			SetValueString($this->GetIDForIdent("e2oeversion"), (string)$xmlResult->e2oeversion);
+			SetValueString($this->GetIDForIdent("e2enigmaversion"), (string)$xmlResult->e2enigmaversion);
+			SetValueString($this->GetIDForIdent("e2distroversion"), (string)$xmlResult->e2distroversion);
+			SetValueString($this->GetIDForIdent("e2imageversion"), (string)$xmlResult->e2imageversion);
+			SetValueString($this->GetIDForIdent("e2webifversion"), (string)$xmlResult->e2webifversion);
 		}
-		SetValueString($this->GetIDForIdent("e2model"), (string)$xmlResult->e2about->e2model);
+		SetValueString($this->GetIDForIdent("e2devicename"), (string)$xmlResult->e2devicename);
 		$table = '<style type="text/css">';
 		$table .= '<link rel="stylesheet" href="./.../webfront.css">';
 		$table .= "</style>";
@@ -881,10 +881,10 @@
 		$table .= '<th class="tg-kv4b">Name</th>';
 		$table .= '<th class="tg-kv4b">Typ<br></th>';
 		$table .= '</tr>';
-		for ($i = 0; $i <= count($xmlResult->e2about->e2tunerinfo->e2nim) - 1; $i++) {
+		for ($i = 0; $i <= count($xmlResult->e2frontends->e2frontend) - 1; $i++) {
 			$table .= '<tr>';
-			$table .= '<td class="tg-611x">'.$xmlResult->e2about->e2tunerinfo->e2nim[0]->name.'</td>';
-			$table .= '<td class="tg-611x">'.$xmlResult->e2about->e2tunerinfo->e2nim[0]->type.'</td>';
+			$table .= '<td class="tg-611x">'.$xmlResult->e2frontends->e2frontend[$i]->e2name.'</td>';
+			$table .= '<td class="tg-611x">'.$xmlResult->e2frontends->e2frontend[$i]->e2model.'</td>';
 			$table .= '</tr>';
 		}
 		$table .= '</table>';
@@ -899,7 +899,7 @@
 		}
 		*/
 		If ($this->ReadPropertyBoolean("HDD_Data") == true) {
-			SetValueString($this->GetIDForIdent("e2hddinfo_model"), (string)$xmlResult->e2about->e2hddinfo->model);
+			SetValueString($this->GetIDForIdent("e2hddinfo_model"), (string)$xmlResult->e2hdds->e2hdd->e2model);
 		}
 	return;
 	}
