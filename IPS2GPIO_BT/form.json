@@ -7,6 +7,7 @@
       ],
     "elements":
     [
+        { "name": "Open", "type": "CheckBox", "caption": "Aktiv" },
         { "type": "Label", "label": "Angabe der MAC-Adresse(n) (Format 00:00:00:00:00:00):" },
         { "type": "ValidationTextBox", "name": "MAC0", "caption": "MAC-Adresse 1:" },
         { "type": "CheckBox", "name": "LoggingMAC0", "caption": "Logging aktivieren" },
