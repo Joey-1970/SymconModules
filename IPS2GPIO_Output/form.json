@@ -51,5 +51,5 @@
     [
         { "type": "Label", "label": "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!" },
         { "type": "Button", "label": "Toggle Output", "onClick": "I2GOUT_Toggle_Status($id);"}
-],
+    ],
 }
