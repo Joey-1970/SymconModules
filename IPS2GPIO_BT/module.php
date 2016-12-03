@@ -7,6 +7,7 @@
         {
             // Diese Zeile nicht löschen.
             parent::Create();
+	    $this->RegisterPropertyBoolean("Open", false);
 	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 	    $this->RegisterPropertyInteger("Messzyklus", 60);
 	    $this->RegisterPropertyString("MAC0", " ");
@@ -70,8 +71,13 @@
 			$this->SetReceiveDataFilter($Filter);
 			
 			$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
-			$this->Measurement();
-			$this->SetStatus(102);
+			If ($this->ReadPropertyBoolean("Open") == true) {
+				$this->Measurement();
+				$this->SetStatus(102);
+			}
+			else {
+				$this->SetStatus(104);
+			}
 		}
         }
 	public function RequestAction($Ident, $Value) 
@@ -119,14 +125,16 @@
 	// Führt eine Messung aus
 	public function Measurement()
 	{	
-	$CommandArray = Array();
-		for ($i = 0; $i <= 4; $i++) {
-			If (filter_var(trim($this->ReadPropertyString("MAC".$i)), FILTER_VALIDATE_MAC)) {
-				//IPS_LogMessage("IPS2GPIO SSH-Connect", "Sende MAC ".$i+1 );
-				$CommandArray[$i] = "hcitool name ".$this->ReadPropertyString("MAC".$i);
-			}
-		}	
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 0, "IsArray" => true )));
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$CommandArray = Array();
+			for ($i = 0; $i <= 4; $i++) {
+				If (filter_var(trim($this->ReadPropertyString("MAC".$i)), FILTER_VALIDATE_MAC)) {
+					//IPS_LogMessage("IPS2GPIO SSH-Connect", "Sende MAC ".$i+1 );
+					$CommandArray[$i] = "hcitool name ".$this->ReadPropertyString("MAC".$i);
+				}
+			}	
+			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 0, "IsArray" => true )));
+		}
 	}
 	
 }
