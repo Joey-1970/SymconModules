@@ -923,7 +923,9 @@
 
 	public function ToggleStandby()
 	{
-		$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=0"));
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
+			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=0"));
+		}
 	return;
 	}
 	/*
