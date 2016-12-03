@@ -7,7 +7,8 @@
         {
             	// Diese Zeile nicht löschen.
             	parent::Create();
-            	$this->RegisterPropertyInteger("Pin", -1);
+            	$this->RegisterPropertyBoolean("Open", false);
+		$this->RegisterPropertyInteger("Pin", -1);
 		$this->RegisterPropertyBoolean("Logging", false);
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
@@ -43,9 +44,11 @@
 	{
   		switch($Ident) {
 	        case "Status":
-	            $this->Set_Status($Value);
-	            //Neuen Wert in die Statusvariable schreiben
-	            SetValue($this->GetIDForIdent($Ident), $Value);
+	            If ($this->ReadPropertyBoolean("Open") == true) {
+		    	$this->Set_Status($Value);
+	            	//Neuen Wert in die Statusvariable schreiben
+	            	SetValue($this->GetIDForIdent($Ident), $Value);
+		    }
 	            break;
 	        default:
 	            throw new Exception("Invalid Ident");
@@ -82,13 +85,17 @@
 	// Schaltet den gewaehlten Pin
 	public function Set_Status(Bool $Value)
 	{
-		$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value)));
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value)));
+		}
 	}
 	
 	// Toggelt den Status
 	public function Toggle_Status()
 	{
-		$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")));
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")));
+		}
 	return;
 	}
 }
