@@ -9,7 +9,7 @@
    
    "elements": 
    [ 
-            { "name": "Open", "type": "CheckBox",  "caption": "Open" },
+            { "name": "Open", "type": "CheckBox",  "caption": "Aktiv" },
             { "name": "IPAddress", "type": "ValidationTextBox", "caption": "IP" },
             { "type": "Label", "label": "Zyklus Daten-Update in Sekunden (0 -> aus, 1 sek -> Minimum)" },
             { "type": "IntervalBox", "name": "DataUpdate", "caption": "Daten-Update (sek)" },
@@ -29,6 +29,7 @@
     
     "actions":
     [
-        {"type": "Button", "label": "Toggle Standby", "onClick": "Enigma_ToggleStandby($id);"},
+        { "type": "Label", "label": "Diese Funktionen stehen erst nach Eingabe und Übernahme der IP zur Verfügung!" },
+        { "type": "Button", "label": "Toggle Standby", "onClick": "Enigma_ToggleStandby($id);"}
     ],
 } 
