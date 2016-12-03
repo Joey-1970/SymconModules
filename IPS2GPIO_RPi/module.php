@@ -8,6 +8,7 @@
 		// Diese Zeile nicht löschen.
 		parent::Create();
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+		$this->RegisterPropertyBoolean("Open", false);
 		$this->RegisterPropertyInteger("Messzyklus", 60);
 		$this->RegisterTimer("Messzyklus", 0, 'I2GRPi_Measurement_1($_IPS["TARGET"]);');
 		$this->RegisterPropertyBoolean("LoggingTempCPU", false);
@@ -265,46 +266,50 @@
 	// Beginn der Funktionen
 	public function Measurement()
 	{
-		// Daten werden nur einmalig nach Start oder bei Änderung eingelesen
-		$CommandArray = Array();
-		// Betriebsystem
-		$CommandArray[0] = "cat /proc/version";
-		// Hardware-Daten
-		$CommandArray[1] = "cat /proc/cpuinfo";
-		// CPU Speicher
-		$CommandArray[2] = "vcgencmd get_mem arm";
-		// GPU Speicher
-		$CommandArray[3] = "vcgencmd get_mem gpu";
-		// Hostname
-		$CommandArray[4] = "hostname";
-		
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 0, "IsArray" => true )));
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			// Daten werden nur einmalig nach Start oder bei Änderung eingelesen
+			$CommandArray = Array();
+			// Betriebsystem
+			$CommandArray[0] = "cat /proc/version";
+			// Hardware-Daten
+			$CommandArray[1] = "cat /proc/cpuinfo";
+			// CPU Speicher
+			$CommandArray[2] = "vcgencmd get_mem arm";
+			// GPU Speicher
+			$CommandArray[3] = "vcgencmd get_mem gpu";
+			// Hostname
+			$CommandArray[4] = "hostname";
+
+			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 0, "IsArray" => true )));
+		}
 	}
 	    
 	    
 	 // Führt eine Messung aus
 	public function Measurement_1()
 	{
-		$CommandArray = Array();
-		// GPU Temperatur
-		$CommandArray[0] = "/opt/vc/bin/vcgencmd measure_temp";
-		// CPU Temperatur
-		$CommandArray[1] = "cat /sys/class/thermal/thermal_zone0/temp";
-		// Spannung
-		$CommandArray[2] = "/opt/vc/bin/vcgencmd measure_volts";
-		// ARM Frequenz
-		$CommandArray[3] = "vcgencmd measure_clock arm";
-		// CPU Auslastung über /proc/stat
-		$CommandArray[4] = "cat /proc/stat";
-		// Speicher
-		$CommandArray[5] = "cat /proc/meminfo | grep Mem";
-		// SD-Card
-		$CommandArray[6] = "df -P | grep /dev/root";
-		// Uptime
-		$CommandArray[7] = "uptime";
-		
-		
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 1, "IsArray" => true )));
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$CommandArray = Array();
+			// GPU Temperatur
+			$CommandArray[0] = "/opt/vc/bin/vcgencmd measure_temp";
+			// CPU Temperatur
+			$CommandArray[1] = "cat /sys/class/thermal/thermal_zone0/temp";
+			// Spannung
+			$CommandArray[2] = "/opt/vc/bin/vcgencmd measure_volts";
+			// ARM Frequenz
+			$CommandArray[3] = "vcgencmd measure_clock arm";
+			// CPU Auslastung über /proc/stat
+			$CommandArray[4] = "cat /proc/stat";
+			// Speicher
+			$CommandArray[5] = "cat /proc/meminfo | grep Mem";
+			// SD-Card
+			$CommandArray[6] = "df -P | grep /dev/root";
+			// Uptime
+			$CommandArray[7] = "uptime";
+
+
+			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 1, "IsArray" => true )));
+		}
 	}
  	
 	public function PiReboot()
