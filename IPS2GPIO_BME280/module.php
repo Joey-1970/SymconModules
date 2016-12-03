@@ -8,7 +8,8 @@
             	// Diese Zeile nicht löschen.
             	parent::Create();
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
- 	    	$this->RegisterPropertyInteger("DeviceAddress", 118);
+ 	    	$this->RegisterPropertyBoolean("Open", false);
+		$this->RegisterPropertyInteger("DeviceAddress", 118);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
  	    	$this->RegisterPropertyBoolean("LoggingTemp", false);
@@ -94,13 +95,19 @@
 		
 			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 			$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
-			// Parameterdaten zum Baustein senden
-			$this->Setup();
-			// Kalibrierungsdaten einlesen
-			$this->ReadCalibrateData();
-			// Erste Messdaten einlesen
-			$this->Measurement();
-			$this->SetStatus(102);
+			
+			If ($this->ReadPropertyBoolean("Open") == true) {
+				// Parameterdaten zum Baustein senden
+				$this->Setup();
+				// Kalibrierungsdaten einlesen
+				$this->ReadCalibrateData();
+				// Erste Messdaten einlesen
+				$this->Measurement();
+				$this->SetStatus(102);
+			}
+			else {
+				$this->SetStatus(104);
+			}
 		}
         }
 	
@@ -148,138 +155,140 @@
 	// Führt eine Messung aus
 	public function Measurement()
 	{
-		// Messwerte aktualisieren
-		$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
-		If (count($CalibrateData) == 32)  {
-			$this->ReadData();
-			// Kalibrierungsdatan aufbereiten
-			$Dig_T[0] = (($CalibrateData[137] << 8) | $CalibrateData[136]);
-			$Dig_T[1] = (($CalibrateData[139] << 8) | $CalibrateData[138]);
-			$Dig_T[2] = (($CalibrateData[141] << 8) | $CalibrateData[140]);
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			// Messwerte aktualisieren
+			$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
+			If (count($CalibrateData) == 32)  {
+				$this->ReadData();
+				// Kalibrierungsdatan aufbereiten
+				$Dig_T[0] = (($CalibrateData[137] << 8) | $CalibrateData[136]);
+				$Dig_T[1] = (($CalibrateData[139] << 8) | $CalibrateData[138]);
+				$Dig_T[2] = (($CalibrateData[141] << 8) | $CalibrateData[140]);
+
+				$Dig_P[0] = (($CalibrateData[143] << 8) | $CalibrateData[142]);
+				$Dig_P[1] = (($CalibrateData[145] << 8) | $CalibrateData[144]);
+				$Dig_P[2] = (($CalibrateData[147] << 8) | $CalibrateData[146]);
+				$Dig_P[3] = (($CalibrateData[149] << 8) | $CalibrateData[148]);
+				$Dig_P[4] = (($CalibrateData[151] << 8) | $CalibrateData[150]);
+				$Dig_P[5] = (($CalibrateData[153] << 8) | $CalibrateData[152]);
+				$Dig_P[6] = (($CalibrateData[155] << 8) | $CalibrateData[154]);
+				$Dig_P[7] = (($CalibrateData[157] << 8) | $CalibrateData[156]);
+				$Dig_P[8] = (($CalibrateData[159] << 8) | $CalibrateData[158]);
+
+				$Dig_H[0] = $CalibrateData[161];
+				$Dig_H[1] = (($CalibrateData[226] << 8) | $CalibrateData[225]);
+				$Dig_H[2] = $CalibrateData[227];
+				$Dig_H[3] = (($CalibrateData[228] << 4) | (hexdec("0F") & $CalibrateData[229]));
+				$Dig_H[4] = (($CalibrateData[230] << 4) | (($CalibrateData[229] >> 4) & hexdec("0F")));
+				$Dig_H[5] = $CalibrateData[231];
+
+				for ($i = 1; $i <= 2; $i++) {
+					If ($Dig_T[$i] & hexdec("8000")) {
+						$Dig_T[$i] = (-$Dig_T[$i] ^ hexdec("FFFF")) + 1;
+					}
+				}
 			
-			$Dig_P[0] = (($CalibrateData[143] << 8) | $CalibrateData[142]);
-			$Dig_P[1] = (($CalibrateData[145] << 8) | $CalibrateData[144]);
-			$Dig_P[2] = (($CalibrateData[147] << 8) | $CalibrateData[146]);
-			$Dig_P[3] = (($CalibrateData[149] << 8) | $CalibrateData[148]);
-			$Dig_P[4] = (($CalibrateData[151] << 8) | $CalibrateData[150]);
-			$Dig_P[5] = (($CalibrateData[153] << 8) | $CalibrateData[152]);
-			$Dig_P[6] = (($CalibrateData[155] << 8) | $CalibrateData[154]);
-			$Dig_P[7] = (($CalibrateData[157] << 8) | $CalibrateData[156]);
-			$Dig_P[8] = (($CalibrateData[159] << 8) | $CalibrateData[158]);
-			
-			$Dig_H[0] = $CalibrateData[161];
-			$Dig_H[1] = (($CalibrateData[226] << 8) | $CalibrateData[225]);
-			$Dig_H[2] = $CalibrateData[227];
-			$Dig_H[3] = (($CalibrateData[228] << 4) | (hexdec("0F") & $CalibrateData[229]));
-			$Dig_H[4] = (($CalibrateData[230] << 4) | (($CalibrateData[229] >> 4) & hexdec("0F")));
-			$Dig_H[5] = $CalibrateData[231];
-	
-			for ($i = 1; $i <= 2; $i++) {
-				If ($Dig_T[$i] & hexdec("8000")) {
-					$Dig_T[$i] = (-$Dig_T[$i] ^ hexdec("FFFF")) + 1;
-				}
-			}
-			
-			for ($i = 1; $i <= 8; $i++) {
-				If ($Dig_P[$i] & hexdec("8000")) {
-					$Dig_P[$i] = (-$Dig_P[$i] ^ hexdec("FFFF")) + 1;
-				}
-			}
-			
-			for ($i = 0; $i <= 5; $i++) {
-				If ($Dig_H[$i] & hexdec("8000")) {
-					$Dig_H[$i] = (-$Dig_H[$i] ^ hexdec("FFFF")) + 1;
-				}
-			}
-			
-			// Messwerte aufbereiten
-			$MeasurementData = unserialize($this->GetBuffer("MeasurementData"));
-			If (count($MeasurementData) == 8) {
-				$Pres_raw = (($MeasurementData[1] << 12) | ($MeasurementData[2] << 4) | ($MeasurementData[3] >> 4));
-				$Temp_raw = (($MeasurementData[4] << 12) | ($MeasurementData[5] << 4) | ($MeasurementData[6] >> 4));
-				$Hum_raw =  (($MeasurementData[7] << 8) | $MeasurementData[8]);
-				
-				$FineCalibrate = 0;
-				
-				// Temperatur
-				$V1 = ($Temp_raw / 16384 - $Dig_T[0] / 1024) * $Dig_T[1];
-				$V2 = ($Temp_raw / 131072 - $Dig_T[0] / 8192) * ($Temp_raw / 131072 - $Dig_T[0] / 8192) * $Dig_T[2];
-				$FineCalibrate = $V1 + $V2;
-				$Temp = $FineCalibrate / 5120;
-				SetValueFloat($this->GetIDForIdent("Temperature"), $Temp);
-				
-				// Luftdruck
-				$Pressure = 0;
-				$V1 = ($FineCalibrate / 2) - 64000;
-				$V2 = ((($V1 / 4) * ($V1 / 4)) / 2048) * $Dig_P[5];
-				$V2 = $V2 + (($V1 * $Dig_P[4]) * 2);
-				$V2 = ($V2 / 4) + ($Dig_P[3] * 65536);
-				$V1 = ((($Dig_P[2] * ((($V1 / 4) * ($V1 / 4)) / 8192)) / 8) + (($Dig_P[1] * $V1) / 2)) / 262144;
-				$V1 = ((32768 + $V1) * $Dig_P[0]) / 32768;
-				
-				If ($V1 == 0) {
-					SetValueFloat($this->GetIDForIdent("Pressure"), "0");
-				}
-				$Pressure = ((1048576 - $Pres_raw) - ($V2 / 4096)) * 3125;
-				
-				If ($Pressure < hexdec("80000000")) {
-					$Pressure = ($Pressure * 2) / $V1;
-				}
-				else {
-					$Pressure = ($Pressure / $V1) * 2;
-				}
-				$V1 = ($Dig_P[8] * ((($Pressure / 8) * ($Pressure / 8)) / 8192)) / 4096;
-				$V2 = (($Pressure / 4) * $Dig_P[7]) / 8192;
-				$Pressure = $Pressure + (($V1 + $V2 + $Dig_P[6]) / 16);
-				
-				SetValueFloat($this->GetIDForIdent("Pressure"), $Pressure / 100);
-				
-				// Luftfeuchtigkeit
-				$Hum = $FineCalibrate - 76800;
-				If ($Hum <> 0) {
-					$Hum = ($Hum_raw - ($Dig_H[3] * 64 + $Dig_H[4] / 16384 * $Hum)) * ($Dig_H[1]  / 65536 * (1 + $Dig_H[5] / 67108864 * $Hum * (1 + $Dig_H[2] / 67108864 * $Hum)));
-				}
-				else {
-					SetValueFloat($this->GetIDForIdent("Humidity"), 0);
-				}
-				$Hum = $Hum * (1 - $Dig_H[0] * $Hum / 524288);
-				If ($Hum > 100) {
-					$Hum = 100;
-				}
-				elseif ($Hum < 0) {
-					$Hum = 0;
-				}
-				
-				SetValueFloat($this->GetIDForIdent("Humidity"), $Hum);
-				
-				// Berechnung von Taupunkt und absoluter Luftfeuchtigkeit
-				if ($Temp < 0) {
-					$a = 7.6; 
-					$b = 240.7;
-				}  
-				elseif ($Temp >= 0) {
-					$a = 7.5;
-					$b = 237.3;
+				for ($i = 1; $i <= 8; $i++) {
+					If ($Dig_P[$i] & hexdec("8000")) {
+						$Dig_P[$i] = (-$Dig_P[$i] ^ hexdec("FFFF")) + 1;
+					}
 				}
 
-				$sdd = 6.1078 * pow(10.0, (($a * $Temp) / ($b + $Temp)));
-				$dd = $Hum/100.0 * $sdd;
-				$v = log10($dd/6.1078);
-				$td = $b * $v / ($a - $v);
-				$af = pow(10,5) * 18.016 / 8314.3 * $dd / ($Temp + 273.15);
+				for ($i = 0; $i <= 5; $i++) {
+					If ($Dig_H[$i] & hexdec("8000")) {
+						$Dig_H[$i] = (-$Dig_H[$i] ^ hexdec("FFFF")) + 1;
+					}
+				}
+
+				// Messwerte aufbereiten
+				$MeasurementData = unserialize($this->GetBuffer("MeasurementData"));
+				If (count($MeasurementData) == 8) {
+					$Pres_raw = (($MeasurementData[1] << 12) | ($MeasurementData[2] << 4) | ($MeasurementData[3] >> 4));
+					$Temp_raw = (($MeasurementData[4] << 12) | ($MeasurementData[5] << 4) | ($MeasurementData[6] >> 4));
+					$Hum_raw =  (($MeasurementData[7] << 8) | $MeasurementData[8]);
+
+					$FineCalibrate = 0;
+
+					// Temperatur
+					$V1 = ($Temp_raw / 16384 - $Dig_T[0] / 1024) * $Dig_T[1];
+					$V2 = ($Temp_raw / 131072 - $Dig_T[0] / 8192) * ($Temp_raw / 131072 - $Dig_T[0] / 8192) * $Dig_T[2];
+					$FineCalibrate = $V1 + $V2;
+					$Temp = $FineCalibrate / 5120;
+					SetValueFloat($this->GetIDForIdent("Temperature"), $Temp);
 				
-				// Taupunkttemperatur
-				SetValueFloat($this->GetIDForIdent("DewPointTemperature"), $td);
+					// Luftdruck
+					$Pressure = 0;
+					$V1 = ($FineCalibrate / 2) - 64000;
+					$V2 = ((($V1 / 4) * ($V1 / 4)) / 2048) * $Dig_P[5];
+					$V2 = $V2 + (($V1 * $Dig_P[4]) * 2);
+					$V2 = ($V2 / 4) + ($Dig_P[3] * 65536);
+					$V1 = ((($Dig_P[2] * ((($V1 / 4) * ($V1 / 4)) / 8192)) / 8) + (($Dig_P[1] * $V1) / 2)) / 262144;
+					$V1 = ((32768 + $V1) * $Dig_P[0]) / 32768;
+
+					If ($V1 == 0) {
+						SetValueFloat($this->GetIDForIdent("Pressure"), "0");
+					}
+					$Pressure = ((1048576 - $Pres_raw) - ($V2 / 4096)) * 3125;
+
+					If ($Pressure < hexdec("80000000")) {
+						$Pressure = ($Pressure * 2) / $V1;
+					}
+					else {
+						$Pressure = ($Pressure / $V1) * 2;
+					}
+					$V1 = ($Dig_P[8] * ((($Pressure / 8) * ($Pressure / 8)) / 8192)) / 4096;
+					$V2 = (($Pressure / 4) * $Dig_P[7]) / 8192;
+					$Pressure = $Pressure + (($V1 + $V2 + $Dig_P[6]) / 16);
+
+					SetValueFloat($this->GetIDForIdent("Pressure"), $Pressure / 100);
 				
-				// Absolute Feuchtigkeit
-				SetValueFloat($this->GetIDForIdent("HumidityAbs"), $af);
+					// Luftfeuchtigkeit
+					$Hum = $FineCalibrate - 76800;
+					If ($Hum <> 0) {
+						$Hum = ($Hum_raw - ($Dig_H[3] * 64 + $Dig_H[4] / 16384 * $Hum)) * ($Dig_H[1]  / 65536 * (1 + $Dig_H[5] / 67108864 * $Hum * (1 + $Dig_H[2] / 67108864 * $Hum)));
+					}
+					else {
+						SetValueFloat($this->GetIDForIdent("Humidity"), 0);
+					}
+					$Hum = $Hum * (1 - $Dig_H[0] * $Hum / 524288);
+					If ($Hum > 100) {
+						$Hum = 100;
+					}
+					elseif ($Hum < 0) {
+						$Hum = 0;
+					}
+
+					SetValueFloat($this->GetIDForIdent("Humidity"), $Hum);
+
+					// Berechnung von Taupunkt und absoluter Luftfeuchtigkeit
+					if ($Temp < 0) {
+						$a = 7.6; 
+						$b = 240.7;
+					}  
+					elseif ($Temp >= 0) {
+						$a = 7.5;
+						$b = 237.3;
+					}
+
+					$sdd = 6.1078 * pow(10.0, (($a * $Temp) / ($b + $Temp)));
+					$dd = $Hum/100.0 * $sdd;
+					$v = log10($dd/6.1078);
+					$td = $b * $v / ($a - $v);
+					$af = pow(10,5) * 18.016 / 8314.3 * $dd / ($Temp + 273.15);
 				
-				// Luftdruck Trends
-				If ($this->ReadPropertyBoolean("LoggingPres") == true) {
-					SetValueFloat($this->GetIDForIdent("PressureTrend1h"), $this->PressureTrend(1));
-					SetValueFloat($this->GetIDForIdent("PressureTrend3h"), $this->PressureTrend(3));
-					SetValueFloat($this->GetIDForIdent("PressureTrend12h"), $this->PressureTrend(12));
-					SetValueFloat($this->GetIDForIdent("PressureTrend24h"), $this->PressureTrend(24));
+					// Taupunkttemperatur
+					SetValueFloat($this->GetIDForIdent("DewPointTemperature"), $td);
+
+					// Absolute Feuchtigkeit
+					SetValueFloat($this->GetIDForIdent("HumidityAbs"), $af);
+
+					// Luftdruck Trends
+					If ($this->ReadPropertyBoolean("LoggingPres") == true) {
+						SetValueFloat($this->GetIDForIdent("PressureTrend1h"), $this->PressureTrend(1));
+						SetValueFloat($this->GetIDForIdent("PressureTrend3h"), $this->PressureTrend(3));
+						SetValueFloat($this->GetIDForIdent("PressureTrend12h"), $this->PressureTrend(12));
+						SetValueFloat($this->GetIDForIdent("PressureTrend24h"), $this->PressureTrend(24));
+					}
 				}
 			}
 		}
