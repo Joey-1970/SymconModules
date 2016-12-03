@@ -28,6 +28,6 @@
    ]
     "actions":
     [
-        {"type": "Button", "label": "Rescan", "onClick": "LMS_Rescan($id);"},
+        {"type": "Button", "label": "Toggle Standby", "onClick": "Enigma_ToggleStandby($id);"},
     ],
 } 
