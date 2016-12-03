@@ -7,7 +7,7 @@
         {
             	// Diese Zeile nicht löschen.
             	parent::Create();
-           	$this->RegisterPropertyBoolean("Open", 0);
+           	$this->RegisterPropertyBoolean("Open", false);
 	    	$this->RegisterPropertyString("IPAddress", "127.0.0.1");
 		$this->RegisterPropertyInteger("DataUpdate", 15);
 		$this->RegisterPropertyBoolean("HDD_Data", false);
