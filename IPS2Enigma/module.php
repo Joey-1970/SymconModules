@@ -292,6 +292,7 @@
 			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 					// 116 Key "Power""
 					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=116"));
+					$this->Get_EPGUpdate();
 				}
 				break;
 			case "rc_1":
