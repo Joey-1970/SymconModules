@@ -7,7 +7,8 @@
         {
             	// Diese Zeile nicht löschen.
             	parent::Create();
- 	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+ 	    	$this->RegisterPropertyBoolean("Open", false);
+		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
  	    	$this->RegisterPropertyInteger("DeviceAddress", 35);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
@@ -52,11 +53,17 @@
 		
 			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 			$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
-			// Setup
-			$this->Setup();
-			// Erste Messdaten einlesen
-			$this->Measurement();
-			$this->SetStatus(102);
+			
+			If ($this->ReadPropertyBoolean("Open") == true) {
+				// Setup
+				$this->Setup();
+				// Erste Messdaten einlesen
+				$this->Measurement();
+				$this->SetStatus(102);
+			}
+			else {
+				$this->SetStatus(104);
+			}	
 		}
         }
 	
@@ -107,7 +114,9 @@
 	// Führt eine Messung aus
 	public function Measurement()
 	{
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_word", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $this->ReadPropertyInteger("DeviceAddress"))));
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_word", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $this->ReadPropertyInteger("DeviceAddress"))));
+		}
 	return;
 	}	
 
