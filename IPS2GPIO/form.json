@@ -9,7 +9,7 @@
    
    "elements": 
    [ 
-         { "name": "Open", "type": "CheckBox",  "caption": "Open" },
+         { "name": "Open", "type": "CheckBox",  "caption": "Aktiv" },
          { "name": "IPAddress", "type": "ValidationTextBox", "caption": "IP" },
          { "type": "Label", "label": "Daten zum Raspberry-Pi SSH-Zugang:" },
          { "name": "User", "type": "ValidationTextBox", "caption": "User" },
