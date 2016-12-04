@@ -23,7 +23,8 @@
 		$this->RegisterPropertyBoolean("EPGlistSRef_Data", false);
 		$this->RegisterTimer("DataUpdate", 0, 'Enigma_Get_DataUpdate($_IPS["TARGET"]);');
 		$this->RegisterTimer("EPGUpdate", 0, 'Enigma_Get_EPGUpdate($_IPS["TARGET"]);');
-        }
+        return;
+	}
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
         {
@@ -259,12 +260,14 @@
 			$this->SetTimerInterval("DataUpdate", ($this->ReadPropertyInteger("DataUpdate") * 1000));
 			$this->SetTimerInterval("EPGUpdate", ($this->ReadPropertyInteger("EPGUpdate") * 1000));
 			$this->Get_Powerstate();
+			$this->SetStatus(102);
 		}
-		
-		
-		
-
+		else {
+			$this->SetStatus(104);
+		}
+	return;
         }
+	
 	public function RequestAction($Ident, $Value) 
 	{
   		switch($Ident) {
@@ -530,9 +533,9 @@
 			default:
 			    throw new Exception("Invalid Ident");
 	    	}
+	return;
 	}
 	
-
 	// Beginn der Funktionen
 	public function Get_DataUpdate()
 	{
