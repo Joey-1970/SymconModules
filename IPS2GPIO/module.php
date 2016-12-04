@@ -8,19 +8,20 @@ class IPS2GPIO_IO extends IPSModule
 
 	  public function Create() 
 	  {
-	    // Diese Zeile nicht entfernen
-	    parent::Create();
+	    	// Diese Zeile nicht entfernen
+	    	parent::Create();
 	    
-	    // Modul-Eigenschaftserstellung
-	    $this->RegisterPropertyBoolean("Open", 0);
-	    $this->RegisterPropertyString("IPAddress", "127.0.0.1");
-	    $this->RegisterPropertyString("User", "User");
-	    $this->RegisterPropertyString("Password", "Passwort");
-	    $this->RegisterPropertyBoolean("I2C_Used", false);
-	    $this->RegisterPropertyBoolean("Serial_Used", false);
-	    $this->RegisterPropertyBoolean("SPI_Used", false);
-	    $this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
-	  }
+	    	// Modul-Eigenschaftserstellung
+	    	$this->RegisterPropertyBoolean("Open", false);
+	    	$this->RegisterPropertyString("IPAddress", "127.0.0.1");
+	    	$this->RegisterPropertyString("User", "User");
+	    	$this->RegisterPropertyString("Password", "Passwort");
+	    	$this->RegisterPropertyBoolean("I2C_Used", false);
+	    	$this->RegisterPropertyBoolean("Serial_Used", false);
+	    	$this->RegisterPropertyBoolean("SPI_Used", false);
+	    	$this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
+	return;
+	}
   
 	  public function ApplyChanges()
 	  {
@@ -123,6 +124,7 @@ class IPS2GPIO_IO extends IPSModule
 		else {
 			return;
 		}
+	return;
 	}
 
 	public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
@@ -146,7 +148,7 @@ class IPS2GPIO_IO extends IPSModule
 				}
 				break;
 		}
-
+	return;
     	}
 	  
 	 public function ForwardData($JSONString) 
@@ -391,7 +393,7 @@ class IPS2GPIO_IO extends IPSModule
 			break;
 		}
 	    
-	    return;
+	  return;
 	  }
 	
 	 public function ReceiveData($JSONString) {
@@ -456,6 +458,7 @@ class IPS2GPIO_IO extends IPSModule
 				IPS_LogMessage("IPS2GPIO ReceiveData", "Überlänge: Datensätze nicht differenzierbar!");
 			}
 	 	}
+	 return;
 	 }
  
 	  public function RequestAction($Ident, $Value) 
@@ -475,7 +478,8 @@ class IPS2GPIO_IO extends IPSModule
 		        default:
 		            throw new Exception("Invalid Ident");
 		    }
-	   }
+	 return;
+	 }
   
 	// Aktualisierung der genutzten Pins und der Notifikation
 	private function Get_PinUpdate()
