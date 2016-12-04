@@ -5,18 +5,20 @@
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
-            // Diese Zeile nicht löschen.
-            parent::Create();
-            // Pin Echo
-            $this->RegisterPropertyInteger("Pin_I", -1);
-            // Pin Trigger
-            $this->RegisterPropertyInteger("Pin_O", -1);
-	    $this->RegisterPropertyString("PUL", "o");
-            $this->RegisterPropertyInteger("Messzyklus", 5);
-            $this->RegisterPropertyBoolean("Logging", false);
-            $this->RegisterTimer("Messzyklus", 0, 'I2GSR4_Measurement($_IPS["TARGET"]);');
- 	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
-        }
+            	// Diese Zeile nicht löschen.
+            	parent::Create();
+            	$this->RegisterPropertyBoolean("Open", false);
+		// Pin Echo
+		$this->RegisterPropertyInteger("Pin_I", -1);
+		// Pin Trigger
+		$this->RegisterPropertyInteger("Pin_O", -1);
+		$this->RegisterPropertyString("PUL", "o");
+		$this->RegisterPropertyInteger("Messzyklus", 5);
+		$this->RegisterPropertyBoolean("Logging", false);
+		$this->RegisterTimer("Messzyklus", 0, 'I2GSR4_Measurement($_IPS["TARGET"]);');
+		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+        return;
+	}
 
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
@@ -52,7 +54,8 @@
 			    // Erste Messung durchführen
 			    $this->Measurement();
 		    }
-        }
+        return;
+	}
 	
 	public function ReceiveData($JSONString) 
 	{
@@ -112,6 +115,7 @@
 	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
 	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
 	        IPS_SetVariableProfileDigits($Name, $Digits);
+	return;
 	}
 	
 }
