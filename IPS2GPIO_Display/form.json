@@ -9,6 +9,7 @@
     ],
     "elements":
     [
+        { "name": "Open", "type": "CheckBox", "caption": "Aktiv" },
         { "type": "Select", "name": "Baud", "caption": "Baudrate (Default)",
             "options": [
                 { "label": "2400", "value": 1 },
