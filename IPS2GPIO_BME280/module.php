@@ -23,6 +23,7 @@
  	    	$this->RegisterPropertyInteger("SB_T", 5);
  	    	$this->RegisterPropertyInteger("IIR_Filter", 0);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GBME_Measurement($_IPS["TARGET"]);');
+	return;
         }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -109,7 +110,8 @@
 				$this->SetStatus(104);
 			}
 		}
-        }
+	return;
+	}
 	
 	public function ReceiveData($JSONString) 
 	{
@@ -370,6 +372,7 @@
 	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
 	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
 	        IPS_SetVariableProfileDigits($Name, $Digits);
+	return;
 	}
 
 }
