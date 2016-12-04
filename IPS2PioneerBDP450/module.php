@@ -13,7 +13,25 @@ class IPS2PioneerBDP450 extends IPSModule
         return;
 	}
 
-	
+	public function ApplyChanges()
+	{
+		//Never delete this line!
+		parent::ApplyChanges();
+		
+		If (IPS_GetKernelRunlevel() == 10103) {
+			   /*
+			   SetValueBoolean(IPS_GetObjectIDByName ( "Power", IPS_GetParent($_IPS['SELF'])), false);
+			   SetValueString(IPS_GetObjectIDByName ( "Modus", IPS_GetParent($_IPS['SELF'])), "");
+			   SetValueInteger(IPS_GetObjectIDByName ("Chapter", IPS_GetParent($_IPS['SELF'])), 0);
+			   SetValueString(IPS_GetObjectIDByName ("Time", IPS_GetParent($_IPS['SELF'])), "--:--:--");
+			   SetValueString(IPS_GetObjectIDByName ("StatusRequest", IPS_GetParent($_IPS['SELF'])), "");
+			   SetValueInteger(IPS_GetObjectIDByName ("Track", IPS_GetParent($_IPS['SELF'])), 0);
+			   SetValueString(IPS_GetObjectIDByName ("DiscLoaded", IPS_GetParent($_IPS['SELF'])), "");
+			   SetValueString(IPS_GetObjectIDByName ("Application", IPS_GetParent($_IPS['SELF'])), "");
+			   SetValueString(IPS_GetObjectIDByName ("Information", IPS_GetParent($_IPS['SELF'])), "");
+			   */
+		}
+	}
 	
 }
 
