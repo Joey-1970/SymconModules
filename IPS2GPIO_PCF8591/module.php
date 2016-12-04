@@ -95,6 +95,7 @@
 	        default:
 	            throw new Exception("Invalid Ident");
 	    }
+	return;
 	}
 	
 	public function ReceiveData($JSONString) 
@@ -147,29 +148,32 @@
 	// Führt eine Messung aus
 	public function Measurement()
 	{
-		//IPS_LogMessage("IPS2GPIO PCF8591","Messung durchführen"); 
-		for ($i = 0; $i <= 3; $i++) {
-		    	If ($this->ReadPropertyBoolean("Ain".$i) == true) {
-			    	//IPS_LogMessage("IPS2GPIO PCF8591","Messung durchführen für Ain ".$i); 
-				$this->SetBuffer("WriteProtection", "true");
-			    	// Aktualisierung der Messerte anfordern
-			    	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("40")|($i & 3) )));
-				$this->SetBuffer("WriteProtection", "false");
-				// Messwerte einlesen
-				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("40")|($i & 3) )));
-		    	}
-		    	else {
-		    		SetValueInteger($this->GetIDForIdent("Channel_".$i), 0);
-		    	}
-		    
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			//IPS_LogMessage("IPS2GPIO PCF8591","Messung durchführen"); 
+			for ($i = 0; $i <= 3; $i++) {
+				If ($this->ReadPropertyBoolean("Ain".$i) == true) {
+					//IPS_LogMessage("IPS2GPIO PCF8591","Messung durchführen für Ain ".$i); 
+					$this->SetBuffer("WriteProtection", "true");
+					// Aktualisierung der Messerte anfordern
+					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("40")|($i & 3) )));
+					$this->SetBuffer("WriteProtection", "false");
+					// Messwerte einlesen
+					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("40")|($i & 3) )));
+				}
+				else {
+					SetValueInteger($this->GetIDForIdent("Channel_".$i), 0);
+				}
+			}
 		}
 	return;
 	}
 	
 	public function Set_Output(Int $Value)
 	{
-		$Value = min(255, max(0, $Value));
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("40"), "Value" => $Value)));
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$Value = min(255, max(0, $Value));
+			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("40"), "Value" => $Value)));
+		}
 	return;
 	}
 }
