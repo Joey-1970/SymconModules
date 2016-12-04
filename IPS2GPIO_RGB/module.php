@@ -5,13 +5,15 @@
         // Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
-            // Diese Zeile nicht löschen.
-            parent::Create();
-            $this->RegisterPropertyInteger("Pin_R", -1);
-            $this->RegisterPropertyInteger("Pin_G", -1);
-            $this->RegisterPropertyInteger("Pin_B", -1);
- 	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
-        }
+            	// Diese Zeile nicht löschen.
+            	parent::Create();
+            	$this->RegisterPropertyBoolean("Open", false);
+		$this->RegisterPropertyInteger("Pin_R", -1);
+            	$this->RegisterPropertyInteger("Pin_G", -1);
+            	$this->RegisterPropertyInteger("Pin_B", -1);
+ 	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+        return;
+	}
 
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
@@ -38,13 +40,18 @@
 		$this->SetReceiveDataFilter($Filter);
 		
 		If (IPS_GetKernelRunlevel() == 10103) {
-			If (($this->ReadPropertyInteger("Pin_R") >= 0) AND ($this->ReadPropertyInteger("Pin_G") >= 0) AND ($this->ReadPropertyInteger("Pin_B") >= 0)) {
+			If (($this->ReadPropertyInteger("Pin_R") >= 0) AND ($this->ReadPropertyInteger("Pin_G") >= 0) AND ($this->ReadPropertyInteger("Pin_B") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_R"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_G"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_B"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+				$this->SetStatus(102);
+			}
+			else {
+				$this->SetStatus(104);
 			}
 		}
-        }
+        return;
+	}
 	
 	public function RequestAction($Ident, $Value) 
 	{
@@ -84,7 +91,8 @@
 	        default:
 	            throw new Exception("Invalid Ident");
 	    }
-	 }
+	return;
+	}
 	
 	public function ReceiveData($JSONString) 
 	{
@@ -124,29 +132,33 @@
 	// Dimmt den gewaehlten Pin
 	public function Set_RGB(Int $R, Int $G, Int $B)
 	{
- 		$R = min(255, max(0, $R));
- 		$G = min(255, max(0, $G));
- 		$B = min(255, max(0, $B));
- 		If (GetValueBoolean($this->GetIDForIdent("Status")) == true) { 
- 			$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => $R, "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => $G, "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => $B))); 
-		}
-		else {
-			SetValueInteger($this->GetIDForIdent("Intensity_R"), $R);
-			SetValueInteger($this->GetIDForIdent("Intensity_G"), $G);
-			SetValueInteger($this->GetIDForIdent("Intensity_B"), $B);	
+ 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$R = min(255, max(0, $R));
+			$G = min(255, max(0, $G));
+			$B = min(255, max(0, $B));
+			If (GetValueBoolean($this->GetIDForIdent("Status")) == true) { 
+				$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => $R, "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => $G, "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => $B))); 
+			}
+			else {
+				SetValueInteger($this->GetIDForIdent("Intensity_R"), $R);
+				SetValueInteger($this->GetIDForIdent("Intensity_G"), $G);
+				SetValueInteger($this->GetIDForIdent("Intensity_B"), $B);	
+			}
 		}
 	return;
 	}
 	
 	public function Set_Status(Bool $value)
 	{
-		SetValue($this->GetIDForIdent("Status"), $value);
-		
-		If ($value == true) {
-			$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => GetValueInteger($this->GetIDForIdent("Intensity_R")), "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => GetValueInteger($this->GetIDForIdent("Intensity_G")), "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => GetValueInteger($this->GetIDForIdent("Intensity_B"))))); 
-		}
-		else {
-			$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => 0, "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => 0, "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => 0))); 
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			SetValue($this->GetIDForIdent("Status"), $value);
+
+			If ($value == true) {
+				$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => GetValueInteger($this->GetIDForIdent("Intensity_R")), "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => GetValueInteger($this->GetIDForIdent("Intensity_G")), "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => GetValueInteger($this->GetIDForIdent("Intensity_B"))))); 
+			}
+			else {
+				$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => 0, "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => 0, "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => 0))); 
+			}
 		}
 	return;
 	}
@@ -154,7 +166,9 @@
 	// Toggelt den Status
 	public function Toggle_Status()
 	{
-		$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")));	
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")));
+		}
 	return;
 	}
 	
