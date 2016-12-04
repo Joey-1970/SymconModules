@@ -1,0 +1,14 @@
+{
+  "id": "{208ADE11-2BE9-4A61-9783-7C6C20C6FB5D}",
+  "name": "IPS2PioneerBDP450",
+  "type": 3,
+  "vendor": "GPIO",
+  "aliases":
+  [
+    "IPS2PioneerBDP450"
+  ],
+  "parentRequirements": ["{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}"],
+  "childRequirements": [],
+  "implemented": [],
+  "prefix": "I2BDP"
+}
