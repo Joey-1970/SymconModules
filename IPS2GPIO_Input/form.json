@@ -9,6 +9,7 @@
     ],
     "elements":
     [
+        { "name": "Open", "type": "CheckBox", "caption": "Aktiv" },
         { "type": "Label", "label": "Angabe der GPIO-Nummer (Broadcom-Number)" },
         { "type": "Select", "name": "Pin", "caption": "GPIO-Nr.",
             "options": [
