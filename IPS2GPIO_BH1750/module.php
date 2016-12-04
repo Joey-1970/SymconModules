@@ -16,6 +16,7 @@
 		$this->RegisterPropertyInteger("HysteresisOn", 100);
 		$this->RegisterPropertyInteger("HysteresisOff", 0);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GBH_Measurement($_IPS["TARGET"]);');
+	return;
         }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -65,7 +66,8 @@
 				$this->SetStatus(104);
 			}	
 		}
-        }
+        return;
+	}
 	
 	public function ReceiveData($JSONString) 
 	{
