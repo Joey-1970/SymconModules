@@ -1,4 +1,29 @@
- // Daten aus dem Cutter der Registervariable
+<?
+class IPS2PioneerBDP450 extends IPSModule
+{
+	// Überschreibt die interne IPS_Create($id) Funktion
+        public function Create() 
+        {
+            	// Diese Zeile nicht löschen.
+            	parent::Create();
+           	$this->RegisterPropertyBoolean("Open", false);
+	    	$this->RegisterPropertyString("IPAddress", "127.0.0.1");
+		
+        return;
+	}
+
+	
+	
+}
+
+
+/*
+
+
+Port 8102
+IP 192.168.178.36
+
+// Daten aus dem Cutter der Registervariable
  	$data=$_IPS['VALUE'];
 
    // Sehen was ankommt
@@ -163,5 +188,5 @@
 		   SetValueString(IPS_GetObjectIDByName ("Application", IPS_GetParent($_IPS['SELF'])), "Unknown");
 			}
 		}
-
+*/
 ?>
