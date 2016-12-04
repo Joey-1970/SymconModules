@@ -8,13 +8,15 @@
             	// Diese Zeile nicht löschen.
             	parent::Create();
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
- 	    	$this->RegisterPropertyInteger("DeviceAddress", 90);
+ 	    	$this->RegisterPropertyBoolean("Open", false);
+		$this->RegisterPropertyInteger("DeviceAddress", 90);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
  	    	$this->RegisterPropertyBoolean("LoggingCO2", false);
 		$this->RegisterPropertyBoolean("LoggingTVOC", false);
           	$this->RegisterTimer("Messzyklus", 0, 'I2GiAQ_Measurement($_IPS["TARGET"]);');
-        }
+        return;
+	}
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
@@ -62,11 +64,17 @@
 		
 			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 			$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
-			// Erste Messdaten einlesen
-			$this->Measurement();
-			$this->SetStatus(102);
-		}
-        }
+			If ($this->ReadPropertyBoolean("Open") == true) {
+				// Erste Messdaten einlesen
+				$this->Measurement();
+				$this->SetStatus(102);
+			}
+			else {
+				$this->SetStatus(104);
+			}
+		}       
+	return;
+	}
 	
 	public function ReceiveData($JSONString) 
 	{
@@ -108,16 +116,20 @@
 	 	}
 	return;
  	}
-	// Beginn der Funktionen
+	
+	    // Beginn der Funktionen
 	// Führt eine Messung aus
 	public function Measurement()
 	{
-		// Daten anfordern
-		//IPS_LogMessage("IPS2GPIO GPIO iAQ", "Daten sind angefordert");
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_bytes", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("5A"), "Count" => 9)));
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			// Daten anfordern
+			//IPS_LogMessage("IPS2GPIO GPIO iAQ", "Daten sind angefordert");
+			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_bytes", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("5A"), "Count" => 9)));
+		}
 	return;
 	}	
-	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
+	
+	    private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
 	{
 	        if (!IPS_VariableProfileExists($Name))
 	        {
@@ -132,7 +144,7 @@
 	        IPS_SetVariableProfileIcon($Name, $Icon);
 	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
 	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
-	        
+	return;        
 	}
 
 }
