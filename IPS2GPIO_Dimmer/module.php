@@ -5,11 +5,12 @@
         // Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
-            // Diese Zeile nicht löschen.
-            parent::Create();
-            $this->RegisterPropertyBoolean("Open", false);
-	    $this->RegisterPropertyInteger("Pin", -1);
- 	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+		 // Diese Zeile nicht löschen.
+		 parent::Create();
+		 $this->RegisterPropertyBoolean("Open", false);
+		 $this->RegisterPropertyInteger("Pin", -1);
+		 $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+	return;
         }
 
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -31,11 +32,17 @@
 		$this->SetReceiveDataFilter($Filter);
 		
 		If (IPS_GetKernelRunlevel() == 10103) {
-			If ($this->ReadPropertyInteger("Pin") >= 0) {
-				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+			If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+									  "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+				$this->SetStatus(102);
+			}
+			else {
+				$this->SetStatus(104);
 			}
 		}
-        }
+        return;
+	}
 	
 	public function RequestAction($Ident, $Value) 
 	{
@@ -53,6 +60,7 @@
 	        default:
 	            throw new Exception("Invalid Ident");
 	    }
+	return;
 	}
 	
 	public function ReceiveData($JSONString) 
@@ -109,6 +117,7 @@
 				$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => 0)));
 			}
 		}
+	return;
 	}
 	
 	// Toggelt den Status
