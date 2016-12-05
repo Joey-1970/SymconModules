@@ -85,6 +85,18 @@ class IPS2PioneerBDP450 extends IPSModule
 		}
 	return $result;
 	}
+	
+	private function GetApplication(Int $ApplicationNumber)
+	{
+		$Application = array(0 => "BDMV", 1 => "BDAV", 2 => "DVD-Video", 3 => "DVD VR", 4 => "CD-DA", 5 => "DTS-CD");
+		If (array_key_exists($ApplicationNumber, $Application)) {
+			$ApplicationText = $Application[$ApplicationNumber];
+		}
+		else {
+			$ApplicationText = "unbekannt";
+		}
+	return $ApplicationText;
+	}
 
 }
 
