@@ -93,7 +93,7 @@ class IPS2PioneerBDP450 extends IPSModule
 			if(!($sock = socket_create(AF_INET, SOCK_STREAM, 0))) {
 				$errorcode = socket_last_error();
 			    	$errormsg = socket_strerror($errorcode);
-			    	IPS_LogMessage("IPS2PioneerBDP450", "Fehler beim Erstellen ".[$errorcode]." ".$errormsg);
+			    	IPS_LogMessage("IPS2PioneerBDP450", "Fehler beim Erstellen ".$errorcode." ".$errormsg);
 			    	return;
 			}
 			// Timeout setzen
@@ -102,7 +102,7 @@ class IPS2PioneerBDP450 extends IPSModule
 			if(!(socket_connect($sock, $this->ReadPropertyString("IPAddress"), 8102))) {
 				$errorcode = socket_last_error();
 			    	$errormsg = socket_strerror($errorcode);
-				IPS_LogMessage("IPS2PioneerBDP450", "Fehler beim Verbindungsaufbaus ".[$errorcode]." ".$errormsg);
+				IPS_LogMessage("IPS2PioneerBDP450", "Fehler beim Verbindungsaufbaus ".$errorcode." ".$errormsg);
 				return;
 			}
 			// Message senden
@@ -110,14 +110,14 @@ class IPS2PioneerBDP450 extends IPSModule
 			{
 				$errorcode = socket_last_error();
 			    	$errormsg = socket_strerror($errorcode);
-				IPS_LogMessage("IPS2PioneerBDP450", "Fehler beim beim Senden ".[$errorcode]." ".$errormsg);
+				IPS_LogMessage("IPS2PioneerBDP450", "Fehler beim beim Senden ".$errorcode." ".$errormsg);
 				return;
 			}
 			//Now receive reply from server
 			if(socket_recv ($sock, $buf, $ResponseLen, MSG_WAITALL ) === FALSE) {
 			    	$errorcode = socket_last_error();
 			    	$errormsg = socket_strerror($errorcode);
-				IPS_LogMessage("IPS2PioneerBDP450", "Fehler beim beim Empfangen ".[$errorcode]." ".$errormsg);
+				IPS_LogMessage("IPS2PioneerBDP450", "Fehler beim beim Empfangen ".$errorcode." ".$errormsg);
 				return;
 			}
 			$this->ClientResponse($buf);
