@@ -63,11 +63,27 @@ class IPS2PioneerBDP450 extends IPSModule
 	return;
 	}
 	
+	public function ReceiveData($JSONString) {
+ 	    	// Empfangene Daten vom I/O
+	    	$Data = json_decode($JSONString);
+		IPS_LogMessage("IPS2PioneerBDP450","Client Response 2: ".$Data);
+	return;
+	}
+	
 	public function Get_DataUpdate()
 	{
 		// Power-Status abfragen
-		$this->CommandClientSocket("?P", 32);
+		$this->CommandClientSocket("?P", 3);
+		$this->ClientSocket("?P");
 	return;
+	}
+	
+	private function ClientSocket(String $message)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$res = $this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode($message))));  
+		}
+	return;	
 	}
 	
 	private function CommandClientSocket(String $message, $ResponseLen = 3)
