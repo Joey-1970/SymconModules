@@ -73,7 +73,7 @@ class IPS2PioneerBDP450 extends IPSModule
 	public function Get_DataUpdate()
 	{
 		// Power-Status abfragen
-		$this->CommandClientSocket("?P", 3);
+		//$this->CommandClientSocket("?P", 3);
 		$this->ClientSocket("?P");
 	return;
 	}
