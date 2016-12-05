@@ -9,6 +9,8 @@ class IPS2PioneerBDP450 extends IPSModule
            	$this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
 		$this->RegisterPropertyBoolean("Open", false);
 	    	$this->RegisterPropertyString("IPAddress", "127.0.0.1");
+		$this->RegisterPropertyInteger("DataUpdate", 15);
+		$this->RegisterTimer("DataUpdate", 0, 'Enigma_Get_DataUpdate($_IPS["TARGET"]);');
 		
         return;
 	}
@@ -51,12 +53,19 @@ class IPS2PioneerBDP450 extends IPSModule
 			
 			
 			If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
+				$this->SetTimerInterval("DataUpdate", ($this->ReadPropertyInteger("DataUpdate") * 1000));
 				$this->SetStatus(102);
 			}
 			else {
 				$this->SetStatus(104);
 			}	   
 		}
+	return;
+	}
+	
+	public function Get_DataUpdate()
+	{
+	
 	return;
 	}
 	
