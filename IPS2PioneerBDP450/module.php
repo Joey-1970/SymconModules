@@ -65,11 +65,12 @@ class IPS2PioneerBDP450 extends IPSModule
 	
 	public function Get_DataUpdate()
 	{
-	
+		// Power-Status abfragen
+		$this->CommandClientSocket("?P", 32);
 	return;
 	}
 	
-	private function CommandClientSocket(String $message, $ResponseLen = 16)
+	private function CommandClientSocket(String $message, $ResponseLen = 3)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Socket erstellen
@@ -108,7 +109,12 @@ class IPS2PioneerBDP450 extends IPSModule
 	return;	
 	}
 
-
+	private function ClientResponse(String $Message)
+	{
+		IPS_LogMessage("IPS2PioneerBDP450","Client Response: ".$Message);
+	return;
+	}
+	
 	private function ConnectionTest()
 	{
 	      $result = false;
@@ -156,6 +162,12 @@ class IPS2PioneerBDP450 extends IPSModule
 			$InformationText = "keine Disc";
 		}
 	return $InformationText;
+	}
+	
+	private function GetParentID()
+	{
+		$ParentID = (IPS_GetInstance($this->InstanceID)['ConnectionID']);  
+	return $ParentID;
 	}
 
 }
