@@ -88,6 +88,7 @@ class IPS2PioneerBDP450 extends IPSModule
 	
 	private function GetApplication(Int $ApplicationNumber)
 	{
+		// substr($data, 2, 1)
 		$Application = array(0 => "BDMV", 1 => "BDAV", 2 => "DVD-Video", 3 => "DVD VR", 4 => "CD-DA", 5 => "DTS-CD");
 		If (array_key_exists($ApplicationNumber, $Application)) {
 			$ApplicationText = $Application[$ApplicationNumber];
@@ -96,6 +97,19 @@ class IPS2PioneerBDP450 extends IPSModule
 			$ApplicationText = "unbekannt";
 		}
 	return $ApplicationText;
+	}
+	
+	private function GetInformation(Int $InformationNumber)
+	{
+		// substr($data, 1, 1)
+		$Information = array(0 => "Bluray", 1 => "DVD", 2 => "CD");
+		If (array_key_exists($InformationNumber, $Information)) {
+			$ApplicationText = $Information[$InformationNumber];
+		}
+		else {
+			$InformationText = "keine Disc";
+		}
+	return $InformationText;
 	}
 
 }
