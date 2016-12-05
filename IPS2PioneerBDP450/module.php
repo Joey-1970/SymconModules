@@ -42,6 +42,58 @@ class IPS2PioneerBDP450 extends IPSModule
 Port 8102
 IP 192.168.178.36
 
+$socket = 11052 /*[Pioneer BDP450]*/ ;
+PIONEER_RemoteControl($socket, "?P");
+IPS_Sleep(150);
+If (GetValueBoolean(47316 /*[Pioneer BDP450\AV_REGISTER\Power]*/ ))
+	{
+	PIONEER_RemoteControl($socket, "?D");
+	   ResponseWait();
+		If (GetValueString(43514 /*[Pioneer BDP450\AV_REGISTER\Information]*/ ) <> "Keine Disk")
+		   {
+			PIONEER_RemoteControl($socket, "?C");
+			ResponseWait();
+			PIONEER_RemoteControl($socket, "?T");
+			ResponseWait();
+			PIONEER_RemoteControl($socket, "?R");
+			ResponseWait();
+			If (GetValueString(43514 /*[Pioneer BDP450\AV_REGISTER\Information]*/ ) == "Bluray")
+		   	{
+		   	PIONEER_RemoteControl($socket, "?J");
+		   	ResponseWait();
+		   	}
+         elseIf (GetValueString(43514 /*[Pioneer BDP450\AV_REGISTER\Information]*/ ) == "DVD")
+		   	{
+		   	PIONEER_RemoteControl($socket, "?V");
+		   	ResponseWait();
+		   	}
+         elseIf (GetValueString(43514 /*[Pioneer BDP450\AV_REGISTER\Information]*/ ) == "CD")
+		   	{
+		   	PIONEER_RemoteControl($socket, "?K");
+		   	ResponseWait();
+		   	}
+			}
+	}
+return;
+
+//*************************************************************************************************************
+// Fügt eine Wartezeit ein, bis die Antwort auf die Anfrage eingetroffen ist
+function ResponseWait()
+	{
+		 $i = 0;
+		 do {
+	    IPS_Sleep(50);
+		 if ( $i > 10 )
+		    {
+		        break;
+		    }
+		 $i++;
+		} while (GetValueInteger(22981 /*[Pioneer BDP450\AV_REGISTER\ResponseTimestamp]*/ ) <= GetValueInteger(12300 /*[Pioneer BDP450\AV_REGISTER\LastCommandTimestamp]*/ ));
+      IPS_Sleep(50);
+    return;
+}
+
+
 // Daten aus dem Cutter der Registervariable
  	$data=$_IPS['VALUE'];
 
