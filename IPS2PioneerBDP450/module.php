@@ -18,24 +18,64 @@ class IPS2PioneerBDP450 extends IPSModule
 		//Never delete this line!
 		parent::ApplyChanges();
 		
+		$this->RegisterVariableBoolean("Power", "Power", "~Switch", 10);
+		$this->EnableAction("Power");
+		$this->RegisterVariableString("Modus", "Modus", "", 20);
+		$this->DisableAction("Modus");
+		$this->RegisterVariableInteger("Chapter", "Chapter", "", 30);
+		$this->DisableAction("Chapter");
+		//$this->RegisterVariableInteger("Time", "Time", "~UnixTimestampTime", 40);
+		$this->RegisterVariableString("Time", "Time", "", 40);
+		$this->DisableAction("Time");
+		$this->RegisterVariableString("StatusRequest", "StatusRequest", "", 50);
+		$this->DisableAction("StatusRequest");
+		$this->RegisterVariableInteger("Track", "Track", "", 60);
+		$this->DisableAction("Track");
+		$this->RegisterVariableString("DiscLoaded", "DiscLoaded", "", 70);
+		$this->DisableAction("DiscLoaded");
+		$this->RegisterVariableString("Application", "Application", "", 80);
+		$this->DisableAction("Application");
+		$this->RegisterVariableString("Information", "Information", "", 90);
+		$this->DisableAction("Information");
+		
 		If (IPS_GetKernelRunlevel() == 10103) {
-			   /*
-			   SetValueBoolean(IPS_GetObjectIDByName ( "Power", IPS_GetParent($_IPS['SELF'])), false);
-			   SetValueString(IPS_GetObjectIDByName ( "Modus", IPS_GetParent($_IPS['SELF'])), "");
-			   SetValueInteger(IPS_GetObjectIDByName ("Chapter", IPS_GetParent($_IPS['SELF'])), 0);
-			   SetValueString(IPS_GetObjectIDByName ("Time", IPS_GetParent($_IPS['SELF'])), "--:--:--");
-			   SetValueString(IPS_GetObjectIDByName ("StatusRequest", IPS_GetParent($_IPS['SELF'])), "");
-			   SetValueInteger(IPS_GetObjectIDByName ("Track", IPS_GetParent($_IPS['SELF'])), 0);
-			   SetValueString(IPS_GetObjectIDByName ("DiscLoaded", IPS_GetParent($_IPS['SELF'])), "");
-			   SetValueString(IPS_GetObjectIDByName ("Application", IPS_GetParent($_IPS['SELF'])), "");
-			   SetValueString(IPS_GetObjectIDByName ("Information", IPS_GetParent($_IPS['SELF'])), "");
-			   */
+			If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
+				$this->SetStatus(102);
+			}
+			else {
+				$this->SetStatus(104);
+			}	   
 		}
+	return;
 	}
 	
+
+
+
+	private function ConnectionTest()
+	{
+	      $result = false;
+	      If (Sys_Ping($this->ReadPropertyString("IPAddress"), 2000)) {
+			//IPS_LogMessage("IPS2PioneerBDP450","Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert");
+			$status = @fsockopen($this->ReadPropertyString("IPAddress"), 8102, $errno, $errstr, 10);
+				if (!$status) {
+					IPS_LogMessage("IPS2PioneerBDP450","Port ist geschlossen!");				
+	   			}
+	   			else {
+	   				fclose($status);
+					//IPS_LogMessage("IPS2PioneerBDP450","Port ist geöffnet");
+					$result = true;
+					$this->SetStatus(102);
+	   			}
+		}
+		else {
+			IPS_LogMessage("IPS2PioneerBDP450","IP ".$this->ReadPropertyString("IPAddress")." reagiert nicht!");
+			$this->SetStatus(104);
+		}
+	return $result;
+	}
+
 }
-
-
 /*
 
 
