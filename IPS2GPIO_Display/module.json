@@ -2,7 +2,7 @@
   "id": "{17B9A5B8-A080-43D7-84A7-2FC72D917D64}",
   "name": "IPS2GPIO_Display",
   "type": 3,
-  "vendor": "GPIO",
+  "vendor": "JP-IPS-Modules",
   "aliases":
   [
     "IPS2GPIO_Display"
