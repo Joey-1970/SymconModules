@@ -181,7 +181,7 @@ class IPS2PioneerBDP450 extends IPSModule
 		$Message = trim($Message, "\x00..\x1F");
 		IPS_LogMessage("IPS2PioneerBDP450","Client Response 2: ".$Message);
 		switch($this->GetBuffer("LastCommand")) {
-			case "P?":
+			case "?P":
 				If ($Message == "E04") {
 					// Gerät ist ausgeschaltet
 					SetValueBoolean($this->GetIDForIdent("Power"), false);
@@ -202,7 +202,7 @@ class IPS2PioneerBDP450 extends IPSModule
 					$this->ClientSocket("?D".chr(13));
 				}
 				break;
-			case "D?":
+			case "?D":
 				If (substr($Message, 0, 1) == "x") {
 					SetValueString($this->GetIDForIdent("DiscLoaded"), "Unknown");
 				}
@@ -237,7 +237,7 @@ class IPS2PioneerBDP450 extends IPSModule
 					}
 					If ($this->GetBuffer("Information") == 0) {
 						// Bei Bluray
-						$this->ClientSocket("?J".chr(13));
+						$this->ClientSocket("?I".chr(13));
 					}
 					elseif ($this->GetBuffer("Information") == 1) {
 						// Bei DVD
@@ -249,9 +249,24 @@ class IPS2PioneerBDP450 extends IPSModule
 					}
 				}
 				break;
-				
-				
-				
+			case "?C":
+				SetValueInteger($this->GetIDForIdent("Chapter"), (int)$Message);	
+				break;
+			case "?T":
+				SetValueString($this->GetIDForIdent("Time"), (string)$Message);	
+				break;
+			case "?R":
+				SetValueInteger($this->GetIDForIdent("Track"), (int)$Message);	
+				break;	
+			case "?V":
+				SetValueString($this->GetIDForIdent("StatusRequest"), (string)$Message);	
+				break;
+			case "?I":
+				SetValueString($this->GetIDForIdent("StatusRequest"), (string)$Message);	
+				break;
+			case "?K":
+				SetValueString($this->GetIDForIdent("StatusRequest"), (string)$Message);	
+				break;
 		}
 	return;
 	}
