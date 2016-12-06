@@ -194,9 +194,36 @@ class IPS2PioneerBDP450 extends IPSModule
 					$this->ClientSocket("A181AFAA".chr(13));				
 				}
 				break;
-			
-			
-			
+			case "rc_OPEN_CLOSE":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFB6".chr(13));				
+				}
+				break;
+			case "rc_AUDIO":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFBE".chr(13));				
+				}
+				break;
+			case "rc_SUBTITLE":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AF36".chr(13));				
+				}
+				break;
+			case "rc_ANGLE":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFB5".chr(13));				
+				}
+				break;
+			case "rc_FL_DIMMER":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFF9".chr(13));				
+				}
+				break;
+			case "rc_CD_SACD":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AF2A".chr(13));				
+				}
+				break;
 			
 			default:
 			    throw new Exception("Invalid Ident");
