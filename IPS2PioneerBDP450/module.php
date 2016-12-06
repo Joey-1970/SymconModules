@@ -234,13 +234,13 @@ class IPS2PioneerBDP450 extends IPSModule
 					If ( (int)$this->GetBuffer("Information") <> 3) {
 						// Abfrage des Chapters
 						$this->ClientSocket("?C".chr(13));
-						IPS_Sleep(100);
+						//IPS_Sleep(100);
 						// Abfrage der Zeit
 						$this->ClientSocket("?T".chr(13));
-						IPS_Sleep(100);
+						//IPS_Sleep(100);
 						// Titel/Track Nummer
 						$this->ClientSocket("?R".chr(13));
-						IPS_Sleep(100);
+						//IPS_Sleep(100);
 					}
 					
 					If ((int)$this->GetBuffer("Information") == 0) {
