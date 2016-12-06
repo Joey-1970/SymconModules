@@ -239,14 +239,27 @@ class IPS2PioneerBDP450 extends IPSModule
 						// Abfrage des Chapters
 						$this->ClientSocket("?C".chr(13));
 						$this->ResponseWait();
-						// Abfrage der Zeit
-						$this->ClientSocket("?T".chr(13));
-						$this->ResponseWait();
-						// Titel/Track Nummer
-						$this->ClientSocket("?R".chr(13));
-						$this->ResponseWait();
+						
+						
 					}
 					
+					
+				}
+				break;
+			case "?C":
+				SetValueInteger($this->GetIDForIdent("Chapter"), (int)$Message);
+				// Abfrage der Zeit
+						$this->ClientSocket("?T".chr(13));
+						$this->ResponseWait();
+				break;
+			case "?T":
+				SetValueString($this->GetIDForIdent("Time"), (string)$Message);
+				// Titel/Track Nummer
+						$this->ClientSocket("?R".chr(13));
+						$this->ResponseWait();
+				break;
+			case "?R":
+				SetValueInteger($this->GetIDForIdent("Track"), (int)$Message);
 					If ((int)$this->GetBuffer("Information") == 0) {
 						// Bei Bluray
 						$this->ClientSocket("?I".chr(13));
@@ -262,16 +275,6 @@ class IPS2PioneerBDP450 extends IPSModule
 						$this->ClientSocket("?K".chr(13));
 						$this->ResponseWait();
 					}
-				}
-				break;
-			case "?C":
-				SetValueInteger($this->GetIDForIdent("Chapter"), (int)$Message);	
-				break;
-			case "?T":
-				SetValueString($this->GetIDForIdent("Time"), (string)$Message);	
-				break;
-			case "?R":
-				SetValueInteger($this->GetIDForIdent("Track"), (int)$Message);	
 				break;	
 			case "?V":
 				SetValueString($this->GetIDForIdent("StatusRequest"), (string)$Message);	
