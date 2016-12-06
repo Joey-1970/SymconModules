@@ -10,6 +10,7 @@
         { "name": "Open", "type": "CheckBox", "caption": "Aktiv" },
         { "name": "IPAddress", "type": "ValidationTextBox", "caption": "IP" },
         { "type": "Label", "label": "Zyklus Daten-Update in Sekunden (0 -> aus, 1 sek -> Minimum)" },
-        { "type": "IntervalBox", "name": "DataUpdate", "caption": "Daten-Update (sek)" }
+        { "type": "IntervalBox", "name": "DataUpdate", "caption": "Daten-Update (sek)" },
+        { "type": "CheckBox", "name": "RC_Data", "caption": "Virtuelle Fernbedienung erstellen" }
     ]
 }
