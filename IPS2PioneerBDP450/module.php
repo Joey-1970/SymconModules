@@ -179,8 +179,10 @@ class IPS2PioneerBDP450 extends IPSModule
 		$Message = utf8_decode($Data->Buffer);
 		// Entfernen der Steuerzeichen
 		$Message = trim($Message, "\x00..\x1F");
-		IPS_LogMessage("IPS2PioneerBDP450","Client Response 2: ".$Message);
-		switch($this->GetBuffer("LastCommand")) {
+		$LastCommand = trim($this->GetBuffer("LastCommand"), "\x00..\x1F");
+		IPS_LogMessage("IPS2PioneerBDP450","LastCommand: ".$this->GetBuffer("LastCommand")."Client Response: ".$Message);
+		
+		switch($LastCommand) {
 			case "?P":
 				If ($Message == "E04") {
 					// Gerät ist ausgeschaltet
