@@ -132,6 +132,20 @@ class IPS2PioneerBDP450 extends IPSModule
 			$this->EnableAction("rc_2nd_AUDIO");
 			$this->RegisterVariableBoolean("rc_A_B", "A-B", "~Switch", 920);
 			$this->EnableAction("rc_A_B");
+			$this->RegisterVariableBoolean("rc_CLEAR", "CLEAR", "~Switch", 925);
+			$this->EnableAction("rc_CLEAR");
+			$this->RegisterVariableBoolean("rc_REPEAT", "REPEAT", "~Switch", 930);
+			$this->EnableAction("rc_REPEAT");
+			$this->RegisterVariableBoolean("rc_DISPLAY", "DISPLAY", "~Switch", 935);
+			$this->EnableAction("rc_DISPLAY");
+			$this->RegisterVariableBoolean("rc_KEYLOCK", "KEYLOCK", "~Switch", 940);
+			$this->EnableAction("rc_KEYLOCK");
+			$this->RegisterVariableBoolean("rc_REPLAY", "REPLAY", "~Switch", 945);
+			$this->EnableAction("rc_REPLAY");
+			$this->RegisterVariableBoolean("rc_SKIP_SEACH", "SKIP SEACH", "~Switch", 950);
+			$this->EnableAction("rc_SKIP_SEACH");
+			$this->RegisterVariableBoolean("rc_NET_FLIX", "NET FLIX", "~Switch", 955);
+			$this->EnableAction("rc_NET_FLIX");
 		}
 		
 		If (IPS_GetKernelRunlevel() == 10103) {
