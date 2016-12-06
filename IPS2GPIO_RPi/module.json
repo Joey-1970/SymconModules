@@ -2,7 +2,7 @@
   "id": "{2586FE50-71F9-4471-8245-955B5839A0F6}",
   "name": "IPS2GPIO_RPi",
   "type": 3,
-  "vendor": "GPIO",
+  "vendor": "JP-IPS-Modules",
   "aliases":
   [
     "IPS2GPIO_RPi"
