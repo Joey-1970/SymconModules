@@ -194,7 +194,7 @@ class IPS2PioneerBDP450 extends IPSModule
 					SetValueString($this->GetIDForIdent("Application"), "");
 					SetValueString($this->GetIDForIdent("Information"), "");
 				}
-				elseif {
+				else {
 					// Gerät ist eingeschaltet
 					SetValueBoolean($this->GetIDForIdent("Power"), true);
 					SetValueString($this->GetIDForIdent("Modus"), $this->GetModus((int)substr($Message, 1, 2)));
