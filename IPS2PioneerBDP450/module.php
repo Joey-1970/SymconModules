@@ -180,8 +180,10 @@ class IPS2PioneerBDP450 extends IPSModule
 		// Entfernen der Steuerzeichen
 		$Message = trim($Message, "\x00..\x1F");
 		IPS_LogMessage("IPS2PioneerBDP450","Client Response 2: ".$Message);
-		switch($this->GetBuffer("LastCommand") {
+		switch($this->GetBuffer("LastCommand")) {
 			case "P?":
+				
+				break;
 				
 				
 		}
