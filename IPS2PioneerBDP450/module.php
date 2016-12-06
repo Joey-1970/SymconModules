@@ -507,7 +507,7 @@ class IPS2PioneerBDP450 extends IPSModule
 			$ApplicationText = $Application[$ApplicationNumber];
 		}
 		else {
-			$ApplicationText = "unbekannt";
+			$ApplicationText = "unknown";
 		}
 	return $ApplicationText;
 	}
@@ -517,12 +517,26 @@ class IPS2PioneerBDP450 extends IPSModule
 		// substr($data, 1, 1)
 		$Information = array(0 => "Bluray", 1 => "DVD", 2 => "CD");
 		If (array_key_exists($InformationNumber, $Information)) {
-			$ApplicationText = $Information[$InformationNumber];
+			$InformationText = $Information[$InformationNumber];
 		}
 		else {
-			$InformationText = "keine Disc";
+			$InformationText = "no Disc";
 		}
 	return $InformationText;
+	}
+	
+	private function GetModus(Int $ModusNumber)
+	{
+		// substr($data, 1, 1)
+		$Modus = array(0 => "Tray opening completed", 1 => "Tray closing completed", 2 => "Disc Information loading", 3 => "Tray opening", 4 => "Play", 5 => "Still",
+			      6 => "Pause", 7 => "Searching", 8 => "Forward/reverse scanning", 9 => "Forward/reverse slow play");
+		If (array_key_exists($ModusNumber, $Modus)) {
+			$ModusText = $Modus[$ModusNumber];
+		}
+		else {
+			$ModusText = "unknown";
+		}
+	return $ModusText;
 	}
 	
 	private function GetParentID()
