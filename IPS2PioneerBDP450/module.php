@@ -181,6 +181,29 @@ class IPS2PioneerBDP450 extends IPSModule
 	return;
 	}
 	
+	public function RequestAction($Ident, $Value) 
+	{
+  		switch($Ident) {
+			case "rc_POWER":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFBC".chr(13));				
+				}
+				break;
+			case "rc_CONTINUED":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFAA".chr(13));				
+				}
+				break;
+			
+			
+			
+			
+			default:
+			    throw new Exception("Invalid Ident");
+	    	}
+	return;
+	}
+	
 	public function Get_DataUpdate()
 	{
 		// Power-Status abfragen
@@ -250,6 +273,12 @@ class IPS2PioneerBDP450 extends IPSModule
 	{
 		$ParentID = (IPS_GetInstance($this->InstanceID)['ConnectionID']);  
 	return $ParentID;
+	}
+	
+	private function GetParentStatus()
+	{
+		$Status = (IPS_GetInstance($this->GetParentID())['InstanceStatus']);  
+	return $Status;
 	}
 
 }
