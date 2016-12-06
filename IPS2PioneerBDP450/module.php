@@ -182,7 +182,22 @@ class IPS2PioneerBDP450 extends IPSModule
 		IPS_LogMessage("IPS2PioneerBDP450","Client Response 2: ".$Message);
 		switch($this->GetBuffer("LastCommand")) {
 			case "P?":
-				
+				If ($Message == "E04") {
+					// Gerät ist ausgeschaltet
+					SetValueBoolean($this->GetIDForIdent("Power"), false);
+					SetValueString($this->GetIDForIdent("Modus"), "");
+					SetValueInteger($this->GetIDForIdent("Chapter"), 0);
+					SetValueString($this->GetIDForIdent("Time"), "--:--:--");
+					SetValueString($this->GetIDForIdent("StatusRequest"), "");
+					SetValueInteger($this->GetIDForIdent("Track"), 0);
+					SetValueString($this->GetIDForIdent("DiscLoaded"), "");
+					SetValueString($this->GetIDForIdent("Application"), "");
+					SetValueString($this->GetIDForIdent("Information"), "");
+				}
+				elseif {
+					SetValueBoolean($this->GetIDForIdent("Power"), true);
+					SetValueString($this->GetIDForIdent("Modus"), $this->GetModus(Int $ModusNumber));
+				}
 				break;
 				
 				
