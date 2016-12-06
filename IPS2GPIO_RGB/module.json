@@ -2,7 +2,7 @@
   "id": "{98EDCDCC-79D2-4182-9F0B-6E79D475B358}",
   "name": "IPS2GPIO_RGB",
   "type": 3,
-  "vendor": "GPIO",
+  "vendor": "JP-IPS-Modules",
   "aliases":
   [
     "IPS2GPIO_RGB"
