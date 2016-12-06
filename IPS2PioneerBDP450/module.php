@@ -66,7 +66,10 @@ class IPS2PioneerBDP450 extends IPSModule
 	public function ReceiveData($JSONString) {
  	    	// Empfangene Daten vom I/O
 	    	$Data = json_decode($JSONString);
-		IPS_LogMessage("IPS2PioneerBDP450","Client Response 2: ".$Data);
+		$Message = utf8_decode($Data->Buffer);
+		// Entfernen der Steuerzeichen
+		$Message = trim($Message, "\x00..\x1F");
+		IPS_LogMessage("IPS2PioneerBDP450","Client Response 2: ".$Message);
 	return;
 	}
 	
@@ -84,51 +87,6 @@ class IPS2PioneerBDP450 extends IPSModule
 			$res = $this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode($message))));  
 		}
 	return;	
-	}
-	
-	private function CommandClientSocket(String $message, $ResponseLen = 3)
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			// Socket erstellen
-			if(!($sock = socket_create(AF_INET, SOCK_STREAM, 0))) {
-				$errorcode = socket_last_error();
-			    	$errormsg = socket_strerror($errorcode);
-			    	IPS_LogMessage("IPS2PioneerBDP450", "Fehler beim Erstellen ".$errorcode." ".$errormsg);
-			    	return;
-			}
-			// Timeout setzen
-			socket_set_option($sock,SOL_SOCKET, SO_RCVTIMEO, array("sec"=>2, "usec"=>0));
-			// Verbindung aufbauen
-			if(!(socket_connect($sock, $this->ReadPropertyString("IPAddress"), 8102))) {
-				$errorcode = socket_last_error();
-			    	$errormsg = socket_strerror($errorcode);
-				IPS_LogMessage("IPS2PioneerBDP450", "Fehler beim Verbindungsaufbaus ".$errorcode." ".$errormsg);
-				return;
-			}
-			// Message senden
-			if( ! socket_send ($sock, $message, strlen($message), 0))
-			{
-				$errorcode = socket_last_error();
-			    	$errormsg = socket_strerror($errorcode);
-				IPS_LogMessage("IPS2PioneerBDP450", "Fehler beim beim Senden ".$errorcode." ".$errormsg);
-				return;
-			}
-			//Now receive reply from server
-			if(socket_recv ($sock, $buf, $ResponseLen, MSG_WAITALL ) === FALSE) {
-			    	$errorcode = socket_last_error();
-			    	$errormsg = socket_strerror($errorcode);
-				IPS_LogMessage("IPS2PioneerBDP450", "Fehler beim beim Empfangen ".$errorcode." ".$errormsg);
-				return;
-			}
-			$this->ClientResponse($buf);
-		}
-	return;	
-	}
-
-	private function ClientResponse(String $Message)
-	{
-		IPS_LogMessage("IPS2PioneerBDP450","Client Response: ".$Message);
-	return;
 	}
 	
 	private function ConnectionTest()
