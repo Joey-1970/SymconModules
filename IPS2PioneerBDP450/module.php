@@ -230,7 +230,7 @@ class IPS2PioneerBDP450 extends IPSModule
 						SetValueString($this->GetIDForIdent("Application"), $this->GetInformation((int)substr($Message, 2, 1)));
 					}
 					IPS_LogMessage("IPS2PioneerBDP450","Information: ".$this->GetBuffer("Information"));
-					If ($this->GetBuffer("Information") < 99) {
+					If ((int)$this->GetBuffer("Information") < 99) {
 						// Abfrage des Chapters
 						$this->ClientSocket("?C".chr(13));
 						// Abfrage der Zeit
@@ -238,15 +238,15 @@ class IPS2PioneerBDP450 extends IPSModule
 						// Titel/Track Nummer
 						$this->ClientSocket("?R".chr(13));
 					}
-					If ($this->GetBuffer("Information") == 0) {
+					If ((int)$this->GetBuffer("Information") == 0) {
 						// Bei Bluray
 						$this->ClientSocket("?I".chr(13));
 					}
-					elseif ($this->GetBuffer("Information") == 1) {
+					elseif ((int)$this->GetBuffer("Information") == 1) {
 						// Bei DVD
 						$this->ClientSocket("?V".chr(13));
 					}
-					elseif ($this->GetBuffer("Information") == 2) {
+					elseif ((int)$this->GetBuffer("Information") == 2) {
 						// Bei CD
 						$this->ClientSocket("?K".chr(13));
 					}
