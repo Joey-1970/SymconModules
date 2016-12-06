@@ -21,6 +21,8 @@ class IPS2PioneerBDP450 extends IPSModule
 		//Never delete this line!
 		parent::ApplyChanges();
 		
+		$this->SetBuffer("LastCommand", "");
+		
 		$this->RegisterVariableBoolean("Power", "Power", "~Switch", 10);
 		$this->EnableAction("Power");
 		$this->RegisterVariableString("Modus", "Modus", "", 20);
@@ -178,6 +180,11 @@ class IPS2PioneerBDP450 extends IPSModule
 		// Entfernen der Steuerzeichen
 		$Message = trim($Message, "\x00..\x1F");
 		IPS_LogMessage("IPS2PioneerBDP450","Client Response 2: ".$Message);
+		switch($this->GetBuffer("LastCommand") {
+			case "P?":
+				
+				
+		}
 	return;
 	}
 	
@@ -461,6 +468,7 @@ class IPS2PioneerBDP450 extends IPSModule
 	private function ClientSocket(String $message)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SetBuffer("LastCommand", $message);
 			$res = $this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode($message))));  
 		}
 	return;	
