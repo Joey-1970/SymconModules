@@ -224,7 +224,49 @@ class IPS2PioneerBDP450 extends IPSModule
 					$this->ClientSocket("A181AF2A".chr(13));				
 				}
 				break;
-			
+			case "rc_HDMI":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFF8".chr(13));				
+				}
+				break;
+			case "rc_TOP_MENU":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFB4".chr(13));				
+				}
+				break;
+			case "rc_FUNCTION":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFB3".chr(13));				
+				}
+				break;
+			case "rc_EXIT":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AF20".chr(13));				
+				}
+				break;
+			case "rc_HOME_MEDIA_GALLERY":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFF7".chr(13));				
+				}
+				break;
+			case "rc_POPUP_MENU":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFB9".chr(13));				
+				}
+				break;
+			case "rc_UP":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A184FFFF".chr(13));				
+				}
+				break;
+			case "rc_LEFT":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A187FFFF".chr(13));				
+				}
+				break;	
+				
+				
+				
 			default:
 			    throw new Exception("Invalid Ident");
 	    	}
