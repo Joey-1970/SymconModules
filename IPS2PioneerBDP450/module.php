@@ -22,6 +22,8 @@ class IPS2PioneerBDP450 extends IPSModule
 		parent::ApplyChanges();
 		
 		$this->SetBuffer("LastCommand", "");
+		$this->SetBuffer("LastCommandTimestamp", 0);
+		$this->SetBuffer("LastResponseTimestamp", 0);
 		
 		$this->RegisterVariableBoolean("Power", "Power", "~Switch", 10);
 		$this->EnableAction("Power");
@@ -175,7 +177,8 @@ class IPS2PioneerBDP450 extends IPSModule
 	
 	public function ReceiveData($JSONString) {
  	    	// Empfangene Daten vom I/O
-	    	$Data = json_decode($JSONString);
+	    	$this->SetBuffer("LastResponseTimestamp", time());
+		$Data = json_decode($JSONString);
 		$Message = utf8_decode($Data->Buffer);
 		// Entfernen der Steuerzeichen
 		$Message = trim($Message, "\x00..\x1F");
@@ -202,6 +205,7 @@ class IPS2PioneerBDP450 extends IPSModule
 					SetValueString($this->GetIDForIdent("Modus"), $this->GetModus((int)substr($Message, 1, 2)));
 					// Prüfen ob eine Disk im Laufwerk ist
 					$this->ClientSocket("?D".chr(13));
+					$this->ResponseWait();
 				}
 				break;
 			case "?D":
@@ -234,26 +238,29 @@ class IPS2PioneerBDP450 extends IPSModule
 					If ( (int)$this->GetBuffer("Information") <> 3) {
 						// Abfrage des Chapters
 						$this->ClientSocket("?C".chr(13));
-						//IPS_Sleep(100);
+						$this->ResponseWait();
 						// Abfrage der Zeit
 						$this->ClientSocket("?T".chr(13));
-						//IPS_Sleep(100);
+						$this->ResponseWait();
 						// Titel/Track Nummer
 						$this->ClientSocket("?R".chr(13));
-						//IPS_Sleep(100);
+						$this->ResponseWait();
 					}
 					
 					If ((int)$this->GetBuffer("Information") == 0) {
 						// Bei Bluray
 						$this->ClientSocket("?I".chr(13));
+						$this->ResponseWait();
 					}
 					elseif ((int)$this->GetBuffer("Information") == 1) {
 						// Bei DVD
 						$this->ClientSocket("?V".chr(13));
+						$this->ResponseWait();
 					}
 					elseif ((int)$this->GetBuffer("Information") == 2) {
 						// Bei CD
 						$this->ClientSocket("?K".chr(13));
+						$this->ResponseWait();
 					}
 				}
 				break;
@@ -552,6 +559,7 @@ class IPS2PioneerBDP450 extends IPSModule
 	{
 		// Power-Status abfragen
 		$this->ClientSocket("?P".chr(13));
+		$this->ResponseWait();
 	return;
 	}
 	
@@ -559,6 +567,7 @@ class IPS2PioneerBDP450 extends IPSModule
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SetBuffer("LastCommand", $message);
+			$this->SetBuffer("LastCommandTimestamp", time());
 			$res = $this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode($message))));  
 		}
 	return;	
@@ -637,6 +646,22 @@ class IPS2PioneerBDP450 extends IPSModule
 	{
 		$Status = (IPS_GetInstance($this->GetParentID())['InstanceStatus']);  
 	return $Status;
+	}
+	
+
+	private function ResponseWait()
+		{
+			 $i = 0;
+			 do {
+		    		IPS_Sleep(50);
+				if ( $i > 10 )
+				    {
+					break;
+				    }
+				 $i++;
+			} while ($this->GetBuffer("LastResponseTimestamp") <= $this->GetBuffer("LastCommandTimestamp"));
+	      IPS_Sleep(50);
+	return;
 	}
 
 }
