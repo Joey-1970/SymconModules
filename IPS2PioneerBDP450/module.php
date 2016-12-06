@@ -216,7 +216,7 @@ class IPS2PioneerBDP450 extends IPSModule
 					// Abfrage des Mediums
 					If (substr($Message, 1, 1) == "x") {
 						SetValueString($this->GetIDForIdent("Information"),"No Disc");
-						$this->SetBuffer("Information", 99);
+						$this->SetBuffer("Information", 3);
 					}
 					else {
 						SetValueString($this->GetIDForIdent("Information"), $this->GetInformation((int)substr($Message, 1, 1)));
@@ -227,10 +227,11 @@ class IPS2PioneerBDP450 extends IPSModule
 						SetValueString($this->GetIDForIdent("Application"),"Unknown");
 					}
 					else {
-						SetValueString($this->GetIDForIdent("Application"), $this->GetInformation((int)substr($Message, 2, 1)));
+						SetValueString($this->GetIDForIdent("Application"), $this->GetApplication((int)substr($Message, 2, 1)));
 					}
 					IPS_LogMessage("IPS2PioneerBDP450","Information: ".$this->GetBuffer("Information"));
-					If ((int)$this->GetBuffer("Information") < 99) {
+					
+					If ( (int)$this->GetBuffer("Information") <> 3) {
 						// Abfrage des Chapters
 						$this->ClientSocket("?C".chr(13));
 						// Abfrage der Zeit
