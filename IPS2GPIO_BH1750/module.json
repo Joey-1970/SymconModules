@@ -2,7 +2,7 @@
   "id": "{C3884BB9-1D68-4AF7-B73E-357D810042A7}",
   "name": "IPS2GPIO_BH1750",
   "type": 3,
-  "vendor": "GPIO",
+  "vendor": "JP-IPS-Modules",
   "aliases":
   [
     "IPS2GPIO_BH1750"
