@@ -414,7 +414,36 @@ class IPS2PioneerBDP450 extends IPSModule
 					$this->ClientSocket("A181AFE5".chr(13));				
 				}
 				break;	
-				
+			case "rc_REPEAT":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFE8".chr(13));				
+				}
+				break;
+			case "rc_DISPLAY":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFE3".chr(13));				
+				}
+				break;
+			case "rc_KEYLOCK":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AF22".chr(13));				
+				}
+				break;
+			case "rc_REPLAY":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AF24".chr(13));				
+				}
+				break;	
+			case "rc_SKIP_SEACH":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AF25".chr(13));				
+				}
+				break;
+			case "rc_NET_FLIX":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AF6A".chr(13));				
+				}
+				break;	
 			default:
 			    throw new Exception("Invalid Ident");
 	    	}
