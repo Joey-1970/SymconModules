@@ -314,7 +314,106 @@ class IPS2PioneerBDP450 extends IPSModule
 					$this->ClientSocket("A181AFEA".chr(13));				
 				}
 				break;	
-				
+			case "rc_PLAY":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AF39".chr(13));				
+				}
+				break;
+			case "rc_FWD_SCAN":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFE9".chr(13));				
+				}
+				break;	
+			case "rc_PREV_STEP_SLOW":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AF3E".chr(13));				
+				}
+				break;
+			case "rc_PAUSE":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AF3A".chr(13));				
+				}
+				break;
+			case "rc_STOP":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AF38".chr(13));				
+				}
+				break;
+			case "rc_NEXT_STEP_SLOW":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AF3D".chr(13));				
+				}
+				break;	
+			case "rc_1":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFA1".chr(13));				
+				}
+				break;
+			case "rc_2":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFA2".chr(13));				
+				}
+				break;
+			case "rc_3":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFA3".chr(13));				
+				}
+				break;
+			case "rc_4":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFA4".chr(13));				
+				}
+				break;
+			case "rc_5":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFA5".chr(13));				
+				}
+				break;
+			case "rc_6":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFA6".chr(13));				
+				}
+				break;
+			case "rc_7":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFA7".chr(13));				
+				}
+				break;
+			case "rc_8":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFA8".chr(13));				
+				}
+				break;
+			case "rc_9":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFA9".chr(13));				
+				}
+				break;
+			case "rc_0":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFA0".chr(13));				
+				}
+				break;
+			case "rc_2nd_VIDEO":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFBF".chr(13));				
+				}
+				break;
+			case "rc_2nd_AUDIO":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFBD".chr(13));				
+				}
+				break;
+			case "rc_A_B":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFE4".chr(13));				
+				}
+				break;
+			case "rc_CLEAR":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFE5".chr(13));				
+				}
+				break;	
 				
 			default:
 			    throw new Exception("Invalid Ident");
