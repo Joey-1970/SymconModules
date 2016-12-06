@@ -2,7 +2,7 @@
   "id": "{EDF0B4B1-B534-477E-8BB5-E2C2B56613B8}",
   "name": "IPS2GPIO_Input",
   "type": 3,
-  "vendor": "GPIO",
+  "vendor": "JP-IPS-Modules",
   "aliases":
   [
     "IPS2GPIO_Input"
