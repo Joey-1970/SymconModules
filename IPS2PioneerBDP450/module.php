@@ -229,6 +229,7 @@ class IPS2PioneerBDP450 extends IPSModule
 					else {
 						SetValueString($this->GetIDForIdent("Application"), $this->GetInformation((int)substr($Message, 2, 1)));
 					}
+					IPS_LogMessage("IPS2PioneerBDP450","Information: ".$this->GetBuffer("Information"));
 					If ($this->GetBuffer("Information") < 99) {
 						// Abfrage des Chapters
 						$this->ClientSocket("?C".chr(13));
