@@ -195,10 +195,40 @@ class IPS2PioneerBDP450 extends IPSModule
 					SetValueString($this->GetIDForIdent("Information"), "");
 				}
 				elseif {
+					// Gerät ist eingeschaltet
 					SetValueBoolean($this->GetIDForIdent("Power"), true);
-					SetValueString($this->GetIDForIdent("Modus"), $this->GetModus(Int $ModusNumber));
+					SetValueString($this->GetIDForIdent("Modus"), $this->GetModus((int)substr($Message, 1, 2)));
+					// Prüfen ob eine Disk im Laufwerk ist
+					$this->ClientSocket("?D".chr(13));
 				}
 				break;
+			case "D?":
+				If (substr($Message, 0,1) == "x") {
+					SetValueString($this->GetIDForIdent("DiscLoaded"), "Unknown");
+				}
+				elseif (substr($Message, 0,1) == "0") {
+					SetValueString($this->GetIDForIdent("DiscLoaded"), "None");
+				}
+				elseif (substr($Message, 0,1) == "1") {
+					SetValueString($this->GetIDForIdent("DiscLoaded"), "Yes");
+					// Abfrage des Mediums
+					If (substr($Message, 1, 1) == "x") {
+						SetValueString($this->GetIDForIdent("Information"),"No Disc");
+					}
+					else {
+						SetValueString($this->GetIDForIdent("Information"), $this->GetInformation((int)substr($Message, 1, 1)));
+					}
+					// Abfrage der Anwendung
+					If (substr($Message, 2, 1) == "x") {
+						SetValueString($this->GetIDForIdent("Application"),"Unknown");
+					}
+					else {
+						SetValueString($this->GetIDForIdent("Application"), $this->GetInformation((int)substr($Message, 2, 1)));
+					}
+					
+				}
+				break;
+				
 				
 				
 		}
@@ -477,7 +507,6 @@ class IPS2PioneerBDP450 extends IPSModule
 	public function Get_DataUpdate()
 	{
 		// Power-Status abfragen
-		//$this->CommandClientSocket("?P", 3);
 		$this->ClientSocket("?P".chr(13));
 	return;
 	}
