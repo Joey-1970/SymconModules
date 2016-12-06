@@ -2,7 +2,7 @@
   "id": "{1ABC9D19-31BF-4482-8FE0-6D3843D1D77A}",
   "name": "IPS2GPIO_iAQ",
   "type": 3,
-  "vendor": "GPIO",
+  "vendor": "JP-IPS-Modules",
   "aliases":
   [
     "IPS2GPIO_iAQ"
