@@ -203,20 +203,22 @@ class IPS2PioneerBDP450 extends IPSModule
 				}
 				break;
 			case "D?":
-				If (substr($Message, 0,1) == "x") {
+				If (substr($Message, 0, 1) == "x") {
 					SetValueString($this->GetIDForIdent("DiscLoaded"), "Unknown");
 				}
-				elseif (substr($Message, 0,1) == "0") {
+				elseif (substr($Message, 0, 1) == "0") {
 					SetValueString($this->GetIDForIdent("DiscLoaded"), "None");
 				}
-				elseif (substr($Message, 0,1) == "1") {
+				elseif (substr($Message, 0, 1) == "1") {
 					SetValueString($this->GetIDForIdent("DiscLoaded"), "Yes");
 					// Abfrage des Mediums
 					If (substr($Message, 1, 1) == "x") {
 						SetValueString($this->GetIDForIdent("Information"),"No Disc");
+						$this->SetBuffer("Information", 99);
 					}
 					else {
 						SetValueString($this->GetIDForIdent("Information"), $this->GetInformation((int)substr($Message, 1, 1)));
+						$this->SetBuffer("Information", (int)substr($Message, 1, 1));
 					}
 					// Abfrage der Anwendung
 					If (substr($Message, 2, 1) == "x") {
@@ -225,7 +227,26 @@ class IPS2PioneerBDP450 extends IPSModule
 					else {
 						SetValueString($this->GetIDForIdent("Application"), $this->GetInformation((int)substr($Message, 2, 1)));
 					}
-					
+					If ($this->GetBuffer("Information") < 99) {
+						// Abfrage des Chapters
+						$this->ClientSocket("?C".chr(13));
+						// Abfrage der Zeit
+						$this->ClientSocket("?T".chr(13));
+						// Titel/Track Nummer
+						$this->ClientSocket("?R".chr(13));
+					}
+					If ($this->GetBuffer("Information") == 0) {
+						// Bei Bluray
+						$this->ClientSocket("?J".chr(13));
+					}
+					elseif ($this->GetBuffer("Information") == 1) {
+						// Bei DVD
+						$this->ClientSocket("?V".chr(13));
+					}
+					elseif ($this->GetBuffer("Information") == 2) {
+						// Bei CD
+						$this->ClientSocket("?K".chr(13));
+					}
 				}
 				break;
 				
