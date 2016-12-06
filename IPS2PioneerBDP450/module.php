@@ -264,7 +264,56 @@ class IPS2PioneerBDP450 extends IPSModule
 					$this->ClientSocket("A187FFFF".chr(13));				
 				}
 				break;	
-				
+			case "rc_ENTER":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFEF".chr(13));				
+				}
+				break;
+			case "rc_RIGHT":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A186FFFF".chr(13));				
+				}
+				break;		
+			case "rc_DOWN":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A185FFFF".chr(13));				
+				}
+				break;
+			case "rc_HOME_MENU":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFB0".chr(13));				
+				}
+				break;	
+			case "rc_RETURN":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFF4".chr(13));				
+				}
+				break;
+			case "rc_COLOR_1":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AF60".chr(13));				
+				}
+				break;	
+			case "rc_COLOR_2":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AF61".chr(13));				
+				}
+				break;
+			case "rc_COLOR_3":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AF62".chr(13));				
+				}
+				break;		
+			case "rc_COLOR_4":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AF63".chr(13));				
+				}
+				break;
+			case "rc_REV_SCAN":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+					$this->ClientSocket("A181AFEA".chr(13));				
+				}
+				break;	
 				
 				
 			default:
