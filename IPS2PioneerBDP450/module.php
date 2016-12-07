@@ -171,9 +171,7 @@ class IPS2PioneerBDP450 extends IPSModule
 			
 			
 			If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
-				$this->Get_BasicData();
 				$this->SetTimerInterval("DataUpdate", ($this->ReadPropertyInteger("DataUpdate") * 1000));
-				
 				$this->SetStatus(102);
 			}
 			else {
@@ -210,10 +208,15 @@ class IPS2PioneerBDP450 extends IPSModule
 				else {
 					// Gerät ist eingeschaltet
 					SetValueBoolean($this->GetIDForIdent("Power"), true);
-					SetValueString($this->GetIDForIdent("Modus"), $this->GetModus((int)substr($Message, 1, 2)));
-					// Prüfen ob eine Disk im Laufwerk ist
-					$this->ClientSocket("?D".chr(13));
-					$this->ResponseWait();
+					If (GetValueString($this->GetIDForIdent("PlayerModel")) == "") {
+						$this->Get_BasicData();
+					}
+					else {
+						SetValueString($this->GetIDForIdent("Modus"), $this->GetModus((int)substr($Message, 1, 2)));
+						// Prüfen ob eine Disk im Laufwerk ist
+						$this->ClientSocket("?D".chr(13));
+						$this->ResponseWait();
+					}
 				}
 				break;
 			case "?D":
