@@ -194,7 +194,7 @@ class IPS2PioneerBDP450 extends IPSModule
 		switch($LastCommand) {
 			case "?P":
 				If ($Message == "E04") { 
-					If(GetValueBoolean($this->GetIDForIdent("Power")) == true)) {
+					If(GetValueBoolean($this->GetIDForIdent("Power")) == true) {
 						// Gerät ist ausgeschaltet
 						SetValueBoolean($this->GetIDForIdent("Power"), false);
 						SetValueString($this->GetIDForIdent("Modus"), "");
