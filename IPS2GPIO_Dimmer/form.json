@@ -49,6 +49,9 @@
     "actions":
     [
         { "type": "Label", "label": "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!" },
-        { "type": "Button", "label": "Toggle Output", "onClick": "I2GDMR_Toggle_Status($id);"}
+        { "type": "Button", "label": "On", "onClick": "I2GDMR_Set_Status($id, true);"},
+        { "type": "Button", "label": "Off", "onClick": "I2GDMR_Set_Status($id, false);"},
+        { "type": "Button", "label": "Toggle", "onClick": "I2GDMR_Toggle_Status($id);"},
+        { "type": "HorizontalSlider", "name": "Slider", "minimum": 0,  "maximum": 255, "onChange": "I2GDMR_Set_Intensity($id, $Slider);" }
     ],
 }
