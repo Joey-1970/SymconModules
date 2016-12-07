@@ -245,14 +245,14 @@ class IPS2PioneerBDP450 extends IPSModule
 			case "?C":
 				SetValueInteger($this->GetIDForIdent("Chapter"), (int)$Message);
 				// Abfrage der Zeit
-						$this->ClientSocket("?T".chr(13));
-						$this->ResponseWait();
+				$this->ClientSocket("?T".chr(13));
+				$this->ResponseWait();
 				break;
 			case "?T":
 				SetValueString($this->GetIDForIdent("Time"), (string)$Message);
 				// Titel/Track Nummer
-						$this->ClientSocket("?R".chr(13));
-						$this->ResponseWait();
+				$this->ClientSocket("?R".chr(13));
+				$this->ResponseWait();
 				break;
 			case "?R":
 				SetValueInteger($this->GetIDForIdent("Track"), (int)$Message);
