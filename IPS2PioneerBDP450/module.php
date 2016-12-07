@@ -296,7 +296,10 @@ class IPS2PioneerBDP450 extends IPSModule
 				$this->ResponseWait();
 				break;
 			case "?Z":
-				SetValueString($this->GetIDForIdent("PlayerFirmware"), (string)$Message);	
+				SetValueString($this->GetIDForIdent("PlayerFirmware"), (string)$Message);
+				// Erste Abfrage der Daten
+				$this->ClientSocket("?P".chr(13));
+				$this->ResponseWait();
 				break;
 		}
 	return;
