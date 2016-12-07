@@ -284,7 +284,8 @@ class IPS2PioneerBDP450 extends IPSModule
 					*/
 				break;
 			case "?T":
-				SetValueString($this->GetIDForIdent("Time"), (string)$Message);
+				$Message = str_pad((string)$Message, 6 ,'0', STR_PAD_LEFT);
+				SetValueString($this->GetIDForIdent("Time"), substr($Message, 0, 2).":".substr($Message, 2, 2).":".substr($Message, 4, 2));
 				break;
 			case "?V":
 				//SetValueString($this->GetIDForIdent("StatusRequest"), (string)$Message);	
