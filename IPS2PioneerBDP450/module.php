@@ -34,8 +34,8 @@ class IPS2PioneerBDP450 extends IPSModule
 		//$this->RegisterVariableInteger("Time", "Time", "~UnixTimestampTime", 40);
 		$this->RegisterVariableString("Time", "Time", "", 40);
 		$this->DisableAction("Time");
-		$this->RegisterVariableString("StatusRequest", "StatusRequest", "", 50);
-		$this->DisableAction("StatusRequest");
+		//$this->RegisterVariableString("StatusRequest", "StatusRequest", "", 50);
+		//$this->DisableAction("StatusRequest");
 		$this->RegisterVariableInteger("Track", "Track", "", 60);
 		$this->DisableAction("Track");
 		$this->RegisterVariableString("DiscLoaded", "DiscLoaded", "", 70);
@@ -183,7 +183,7 @@ class IPS2PioneerBDP450 extends IPSModule
 		// Entfernen der Steuerzeichen
 		$Message = trim($Message, "\x00..\x1F");
 		$LastCommand = trim($this->GetBuffer("LastCommand"), "\x00..\x1F");
-		IPS_LogMessage("IPS2PioneerBDP450","LastCommand: ".$this->GetBuffer("LastCommand")."Client Response: ".$Message);
+		//IPS_LogMessage("IPS2PioneerBDP450","LastCommand: ".$this->GetBuffer("LastCommand")."Client Response: ".$Message);
 		
 		switch($LastCommand) {
 			case "?P":
@@ -193,7 +193,7 @@ class IPS2PioneerBDP450 extends IPSModule
 					SetValueString($this->GetIDForIdent("Modus"), "");
 					SetValueInteger($this->GetIDForIdent("Chapter"), 0);
 					SetValueString($this->GetIDForIdent("Time"), "--:--:--");
-					SetValueString($this->GetIDForIdent("StatusRequest"), "");
+					//SetValueString($this->GetIDForIdent("StatusRequest"), "");
 					SetValueInteger($this->GetIDForIdent("Track"), 0);
 					SetValueString($this->GetIDForIdent("DiscLoaded"), "");
 					SetValueString($this->GetIDForIdent("Application"), "");
@@ -233,17 +233,13 @@ class IPS2PioneerBDP450 extends IPSModule
 					else {
 						SetValueString($this->GetIDForIdent("Application"), $this->GetApplication((int)substr($Message, 2, 1)));
 					}
-					IPS_LogMessage("IPS2PioneerBDP450","Information: ".$this->GetBuffer("Information"));
+					//IPS_LogMessage("IPS2PioneerBDP450","Information: ".$this->GetBuffer("Information"));
 					
 					If ( (int)$this->GetBuffer("Information") <> 3) {
 						// Abfrage des Chapters
 						$this->ClientSocket("?C".chr(13));
 						$this->ResponseWait();
-						
-						
 					}
-					
-					
 				}
 				break;
 			case "?C":
@@ -260,6 +256,7 @@ class IPS2PioneerBDP450 extends IPSModule
 				break;
 			case "?R":
 				SetValueInteger($this->GetIDForIdent("Track"), (int)$Message);
+					/*
 					If ((int)$this->GetBuffer("Information") == 0) {
 						// Bei Bluray
 						$this->ClientSocket("?I".chr(13));
@@ -275,15 +272,16 @@ class IPS2PioneerBDP450 extends IPSModule
 						$this->ClientSocket("?K".chr(13));
 						$this->ResponseWait();
 					}
+					*/
 				break;	
 			case "?V":
-				SetValueString($this->GetIDForIdent("StatusRequest"), (string)$Message);	
+				//SetValueString($this->GetIDForIdent("StatusRequest"), (string)$Message);	
 				break;
 			case "?I":
-				SetValueString($this->GetIDForIdent("StatusRequest"), (string)$Message);	
+				//SetValueString($this->GetIDForIdent("StatusRequest"), (string)$Message);	
 				break;
 			case "?K":
-				SetValueString($this->GetIDForIdent("StatusRequest"), (string)$Message);	
+				//SetValueString($this->GetIDForIdent("StatusRequest"), (string)$Message);	
 				break;
 		}
 	return;
