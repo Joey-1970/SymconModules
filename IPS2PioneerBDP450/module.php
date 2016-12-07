@@ -574,6 +574,102 @@ class IPS2PioneerBDP450 extends IPSModule
 	return;	
 	}
 	
+	public function PowerOn()
+	{
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+			$this->ClientSocket("PN".chr(13));
+		}
+	return;	
+	}
+	
+	public function PowerOff()
+	{
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+			$this->ClientSocket("PF".chr(13));
+		}
+	return;	
+	}
+	
+	public function Open()
+	{
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+			$this->ClientSocket("OP".chr(13));
+		}
+	return;	
+	}
+	
+	public function Close()
+	{
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+			$this->ClientSocket("CO".chr(13));
+		}
+	return;	
+	}
+	
+	public function Stop()
+	{
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+			$this->ClientSocket("99RJ".chr(13));
+		}
+	return;	
+	}
+	
+	public function Play()
+	{
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+			$this->ClientSocket("PL".chr(13));
+		}
+	return;	
+	}
+	
+	public function Still()
+	{
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+			$this->ClientSocket("ST".chr(13));
+		}
+	return;	
+	}
+	
+	public function StepForward()
+	{
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+			$this->ClientSocket("SF".chr(13));
+		}
+	return;	
+	}
+	
+	public function StepReverse()
+	{
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+			$this->ClientSocket("SR".chr(13));
+		}
+	return;	
+	}
+	
+	public function StopScan()
+	{
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+			$this->ClientSocket("NS".chr(13));
+		}
+	return;	
+	}
+	
+	public function ScanForward()
+	{
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+			$this->ClientSocket("NF".chr(13));
+		}
+	return;	
+	}
+	
+	public function ScanReverse()
+	{
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+			$this->ClientSocket("NR".chr(13));
+		}
+	return;	
+	}
+	
 	private function ConnectionTest()
 	{
 	      $result = false;
