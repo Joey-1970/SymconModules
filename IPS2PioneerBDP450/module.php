@@ -36,6 +36,7 @@ class IPS2PioneerBDP450 extends IPSModule
 		$this->DisableAction("Modus");
 		$this->RegisterVariableInteger("Chapter", "Chapter", "", 30);
 		$this->DisableAction("Chapter");
+		
 		//$this->RegisterVariableInteger("Time", "Time", "~UnixTimestampTime", 40);
 		$this->RegisterVariableString("Time", "Time", "", 40);
 		$this->DisableAction("Time");
