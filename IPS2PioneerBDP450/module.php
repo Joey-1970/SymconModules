@@ -171,6 +171,7 @@ class IPS2PioneerBDP450 extends IPSModule
 			
 			If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 				$this->SetTimerInterval("DataUpdate", ($this->ReadPropertyInteger("DataUpdate") * 1000));
+				$this->Get_BasicData()
 				$this->SetStatus(102);
 			}
 			else {
