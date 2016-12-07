@@ -193,17 +193,19 @@ class IPS2PioneerBDP450 extends IPSModule
 		
 		switch($LastCommand) {
 			case "?P":
-				If (($Message == "E04") AND (GetValueBoolean($this->GetIDForIdent("Power")) == true)) {
-					// Gerät ist ausgeschaltet
-					SetValueBoolean($this->GetIDForIdent("Power"), false);
-					SetValueString($this->GetIDForIdent("Modus"), "");
-					SetValueInteger($this->GetIDForIdent("Chapter"), 0);
-					SetValueString($this->GetIDForIdent("Time"), "--:--:--");
-					//SetValueString($this->GetIDForIdent("StatusRequest"), "");
-					SetValueInteger($this->GetIDForIdent("Track"), 0);
-					SetValueString($this->GetIDForIdent("DiscLoaded"), "");
-					SetValueString($this->GetIDForIdent("Application"), "");
-					SetValueString($this->GetIDForIdent("Information"), "");
+				If (($Message == "E04") { 
+					If(GetValueBoolean($this->GetIDForIdent("Power")) == true)) {
+						// Gerät ist ausgeschaltet
+						SetValueBoolean($this->GetIDForIdent("Power"), false);
+						SetValueString($this->GetIDForIdent("Modus"), "");
+						SetValueInteger($this->GetIDForIdent("Chapter"), 0);
+						SetValueString($this->GetIDForIdent("Time"), "--:--:--");
+						//SetValueString($this->GetIDForIdent("StatusRequest"), "");
+						SetValueInteger($this->GetIDForIdent("Track"), 0);
+						SetValueString($this->GetIDForIdent("DiscLoaded"), "");
+						SetValueString($this->GetIDForIdent("Application"), "");
+						SetValueString($this->GetIDForIdent("Information"), "");
+					}
 				}
 				else {
 					// Gerät ist eingeschaltet
