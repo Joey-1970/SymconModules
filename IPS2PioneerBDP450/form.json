@@ -12,5 +12,13 @@
         { "type": "Label", "label": "Zyklus Daten-Update in Sekunden (0 -> aus, 1 sek -> Minimum)" },
         { "type": "IntervalBox", "name": "DataUpdate", "caption": "Daten-Update (sek)" },
         { "type": "CheckBox", "name": "RC_Data", "caption": "Virtuelle Fernbedienung erstellen" }
-    ]
+    ],
+    "actions":
+    [
+        { "type": "Label", "label": "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!" },
+        { "type": "Button", "label": "On", "onClick": "I2BDP_PowerOn($id);"},
+        { "type": "Button", "label": "Off", "onClick": "I2BDP_PowerOff($id);"},
+        { "type": "Button", "label": "Open", "onClick": "I2BDP_Open($id);"},
+        { "type": "Button", "label": "Close", "onClick": "I2BDP_Close($id);"} 
+    ],
 }
