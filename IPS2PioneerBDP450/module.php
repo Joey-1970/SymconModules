@@ -25,6 +25,11 @@ class IPS2PioneerBDP450 extends IPSModule
 		$this->SetBuffer("LastCommandTimestamp", 0);
 		$this->SetBuffer("LastResponseTimestamp", 0);
 		
+		$this->RegisterVariableString("PlayerModel", "PlayerModel", "", 5);
+		$this->DisableAction("PlayerModel");
+		$this->RegisterVariableString("PlayerFirmware", "PlayerFirmware", "", 7);
+		$this->DisableAction("PlayerFirmware");
+		
 		$this->RegisterVariableBoolean("Power", "Power", "~Switch", 10);
 		$this->EnableAction("Power");
 		$this->RegisterVariableString("Modus", "Modus", "", 20);
@@ -244,18 +249,16 @@ class IPS2PioneerBDP450 extends IPSModule
 				break;
 			case "?C":
 				SetValueInteger($this->GetIDForIdent("Chapter"), (int)$Message);
-				// Abfrage der Zeit
-				$this->ClientSocket("?T".chr(13));
-				$this->ResponseWait();
-				break;
-			case "?T":
-				SetValueString($this->GetIDForIdent("Time"), (string)$Message);
 				// Titel/Track Nummer
 				$this->ClientSocket("?R".chr(13));
 				$this->ResponseWait();
 				break;
+			
 			case "?R":
 				SetValueInteger($this->GetIDForIdent("Track"), (int)$Message);
+					// Abfrage der Zeit
+					$this->ClientSocket("?T".chr(13));
+					$this->ResponseWait();
 					/*
 					If ((int)$this->GetBuffer("Information") == 0) {
 						// Bei Bluray
@@ -273,7 +276,10 @@ class IPS2PioneerBDP450 extends IPSModule
 						$this->ResponseWait();
 					}
 					*/
-				break;	
+				break;
+			case "?T":
+				SetValueString($this->GetIDForIdent("Time"), (string)$Message);
+				break;
 			case "?V":
 				//SetValueString($this->GetIDForIdent("StatusRequest"), (string)$Message);	
 				break;
@@ -282,6 +288,15 @@ class IPS2PioneerBDP450 extends IPSModule
 				break;
 			case "?K":
 				//SetValueString($this->GetIDForIdent("StatusRequest"), (string)$Message);	
+				break;
+			case "?L":
+				SetValueString($this->GetIDForIdent("PlayerModel"), (string)$Message);
+				// Firmware abfragen
+				$this->ClientSocket("?Z".chr(13));
+				$this->ResponseWait();
+				break;
+			case "?Z":
+				SetValueString($this->GetIDForIdent("PlayerFirmware"), (string)$Message);	
 				break;
 		}
 	return;
@@ -558,10 +573,21 @@ class IPS2PioneerBDP450 extends IPSModule
 	
 	public function Get_DataUpdate()
 	{
-		// Power-Status abfragen
-		$this->ClientSocket("?P".chr(13));
-		$this->ResponseWait();
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+			// Power-Status abfragen
+			$this->ClientSocket("?P".chr(13));
+			$this->ResponseWait();
+		}
 	return;
+	}
+	
+	private function Get_BasicData()
+	{
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+			$this->ClientSocket("?L".chr(13));
+			$this->ResponseWait();
+		}
+	return;	
 	}
 	
 	private function ClientSocket(String $message)
