@@ -1058,7 +1058,34 @@
 		}
 	return;
 	}    
-
+	
+	public function ToggleMute()
+	{
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
+			// 113 Key "mute"
+			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=113"));
+		}
+	return;
+	}    
+	
+	public function VolUp()
+	{
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
+			// 115 Key "volume up"
+			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=115"));
+		}
+	return;
+	}        
+	
+	public function VolDown()
+	{
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
+			// 114 Key "volume down"
+			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=114"));
+		}
+	return;
+	}          
+	    
 	private function ConnectionTest()
 	{
 	      $result = false;
