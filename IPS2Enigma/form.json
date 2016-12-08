@@ -30,6 +30,9 @@
     "actions":
     [
         { "type": "Label", "label": "Diese Funktionen stehen erst nach Eingabe und Übernahme der IP zur Verfügung!" },
-        { "type": "Button", "label": "Toggle Standby", "onClick": "Enigma_ToggleStandby($id);"}
+        { "type": "Button", "label": "Toggle Standby", "onClick": "Enigma_ToggleStandby($id);"},
+        { "type": "Button", "label": "Toggle Mute", "onClick": "Enigma_ToggleMute($id);"},
+        { "type": "Button", "label": "Volume Up", "onClick": "Enigma_VolUp($id);"},
+        { "type": "Button", "label": "Volume Down", "onClick": "Enigma_VolDown($id);"}
     ],
 } 
