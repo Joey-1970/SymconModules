@@ -8,7 +8,9 @@
             	// Diese Zeile nicht löschen.
             	parent::Create();
            	$this->RegisterPropertyBoolean("Open", false);
-	    	$this->RegisterPropertyString("IPAddress", "127.0.0.1");
+	    	$this->RegisterPropertyString("User", "User");
+	    	$this->RegisterPropertyString("Password", "Passwort");
+		$this->RegisterPropertyString("IPAddress", "127.0.0.1");
 		$this->RegisterPropertyInteger("DataUpdate", 15);
 		$this->RegisterPropertyBoolean("HDD_Data", false);
 		$this->RegisterPropertyBoolean("Movielist_Data", false);
@@ -1166,6 +1168,28 @@
 		// .png anhängen
  		$Filename = "user".DIRECTORY_SEPARATOR."Picons".DIRECTORY_SEPARATOR.$Filename.".png";
 	return $Filename;
+	}
+	    
+	private function SSH_Connect(String $Command)
+	{
+	        If (($this->ReadPropertyBoolean("Open") == true) ) {
+			set_include_path(__DIR__);
+			require_once (__DIR__ . '/Net/SSH2.php');
+			$ssh = new Net_SSH2($this->ReadPropertyString("IPAddress"));
+			$login = @$ssh->login($this->ReadPropertyString("User"), $this->ReadPropertyString("Password"));
+			if ($login == false)
+			{
+			    IPS_LogMessage("IPS2Enigma","SSH-Connect: Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert nicht!");
+			    return false;
+			}
+			$Result = ""; //$ssh->exec($Command);
+			$ssh->disconnect();
+		}
+		else {
+			$result = "";
+		}
+	
+        return $Result;
 	}
 	    
 	private function Get_Picons()
