@@ -167,6 +167,9 @@ class IPS2PioneerBDP450 extends IPSModule
 				If (IPS_GetProperty($ParentID, 'Port') <> 8102) {
 		                	IPS_SetProperty($ParentID, 'Port', 8102);
 				}
+				If (IPS_GetName($ParentID) == "Client Socket") {
+		                	IPS_SetName($ParentID, "IPS2PioneerBDP450");
+				}
 			}
 			
 			If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
