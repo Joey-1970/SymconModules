@@ -101,6 +101,9 @@ class IPS2GPIO_IO extends IPSModule
 				If (IPS_GetProperty($ParentID, 'Port') <> 8888) {
 		                	IPS_SetProperty($ParentID, 'Port', 8888);
 				}
+				If (IPS_GetName($ParentID) == "Client Socket") {
+		                	IPS_SetName($ParentID, "IPS2GPIO");
+				}
 			}
 	
 			If($this->ConnectionTest()) {
