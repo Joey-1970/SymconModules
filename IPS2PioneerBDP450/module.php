@@ -169,10 +169,12 @@ class IPS2PioneerBDP450 extends IPSModule
 				}
 			}
 			
-			
 			If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 				$this->SetTimerInterval("DataUpdate", ($this->ReadPropertyInteger("DataUpdate") * 1000));
 				$this->SetStatus(102);
+				// Erste Abfrage der Daten
+				$this->ClientSocket("?P".chr(13));
+				$this->ResponseWait();
 			}
 			else {
 				$this->SetStatus(104);
@@ -211,7 +213,9 @@ class IPS2PioneerBDP450 extends IPSModule
 					// Gerät ist eingeschaltet
 					SetValueBoolean($this->GetIDForIdent("Power"), true);
 					If (GetValueString($this->GetIDForIdent("PlayerModel")) == "") {
-						$this->Get_BasicData();
+						// PlayerModel ermitteln
+						$this->ClientSocket("?L".chr(13));
+						$this->ResponseWait();
 					}
 					else {
 						SetValueString($this->GetIDForIdent("Modus"), $this->GetModus((int)substr($Message, 1, 2)));
@@ -306,9 +310,6 @@ class IPS2PioneerBDP450 extends IPSModule
 				break;
 			case "?Z":
 				SetValueString($this->GetIDForIdent("PlayerFirmware"), (string)$Message);
-				// Erste Abfrage der Daten
-				$this->ClientSocket("?P".chr(13));
-				$this->ResponseWait();
 				break;
 		}
 	return;
