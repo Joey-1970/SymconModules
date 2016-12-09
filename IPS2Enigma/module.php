@@ -639,7 +639,7 @@
 			$bouquet = (string)$xmlResult->e2service->e2servicereference;
 			
 			If ($this->ReadPropertyBoolean("EPGlist_Data") == true) {
-				$xmlResult = new SimpleXMLElement(file_get_contents('http://192.168.178.20/web/epgnownext?bRef='.urlencode($bouquet)));
+				$xmlResult = new SimpleXMLElement(file_get_contents('http://".$this->ReadPropertyString("IPAddress")."/web/epgnownext?bRef='.urlencode($bouquet)));
 				$table = '<style type="text/css">';
 				$table .= '<link rel="stylesheet" href="./.../webfront.css">';
 				$table .= "</style>";
