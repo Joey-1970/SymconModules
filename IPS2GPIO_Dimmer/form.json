@@ -52,6 +52,7 @@
         { "type": "Button", "label": "On", "onClick": "I2GDMR_Set_Status($id, true);"},
         { "type": "Button", "label": "Off", "onClick": "I2GDMR_Set_Status($id, false);"},
         { "type": "Button", "label": "Toggle", "onClick": "I2GDMR_Toggle_Status($id);"},
+        { "type": "Label", "label": "Dimmen" },
         { "type": "HorizontalSlider", "name": "Slider", "minimum": 0,  "maximum": 255, "onChange": "I2GDMR_Set_Intensity($id, $Slider);" }
     ],
 }
