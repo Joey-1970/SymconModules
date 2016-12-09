@@ -24,6 +24,8 @@ class IPS2PioneerBDP450 extends IPSModule
 		$this->SetBuffer("LastCommand", "");
 		$this->SetBuffer("LastCommandTimestamp", 0);
 		$this->SetBuffer("LastResponseTimestamp", 0);
+		$this->SetBuffer("TimeTrigger", "false");
+		$this->SetBuffer("TriggerCounter", 0);
 		
 		$this->RegisterVariableString("PlayerModel", "PlayerModel", "", 5);
 		$this->DisableAction("PlayerModel");
@@ -173,7 +175,8 @@ class IPS2PioneerBDP450 extends IPSModule
 			}
 			
 			If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
-				$this->SetTimerInterval("DataUpdate", ($this->ReadPropertyInteger("DataUpdate") * 1000));
+				//$this->SetTimerInterval("DataUpdate", ($this->ReadPropertyInteger("DataUpdate") * 1000));
+				$this->SetTimerInterval("DataUpdate", 1000));
 				$this->SetStatus(102);
 				// Erste Abfrage der Daten
 				$this->ClientSocket("?P".chr(13));
@@ -201,6 +204,7 @@ class IPS2PioneerBDP450 extends IPSModule
 				If ($Message == "E04") { 
 					If(GetValueBoolean($this->GetIDForIdent("Power")) == true) {
 						// Gerät ist ausgeschaltet
+						$this->SetBuffer("TimeTrigger", "false");
 						SetValueBoolean($this->GetIDForIdent("Power"), false);
 						SetValueString($this->GetIDForIdent("Modus"), "");
 						SetValueInteger($this->GetIDForIdent("Chapter"), 0);
@@ -231,9 +235,11 @@ class IPS2PioneerBDP450 extends IPSModule
 			case "?D":
 				If (substr($Message, 0, 1) == "x") {
 					SetValueString($this->GetIDForIdent("DiscLoaded"), "Unknown");
+					$this->SetBuffer("TimeTrigger", "false");
 				}
 				elseif (substr($Message, 0, 1) == "0") {
 					SetValueString($this->GetIDForIdent("DiscLoaded"), "None");
+					$this->SetBuffer("TimeTrigger", "false");
 				}
 				elseif (substr($Message, 0, 1) == "1") {
 					SetValueString($this->GetIDForIdent("DiscLoaded"), "Yes");
@@ -241,6 +247,7 @@ class IPS2PioneerBDP450 extends IPSModule
 					If (substr($Message, 1, 1) == "x") {
 						SetValueString($this->GetIDForIdent("Information"),"No Disc");
 						$this->SetBuffer("Information", 3);
+						$this->SetBuffer("TimeTrigger", "false");
 					}
 					else {
 						SetValueString($this->GetIDForIdent("Information"), $this->GetInformation((int)substr($Message, 1, 1)));
@@ -294,6 +301,7 @@ class IPS2PioneerBDP450 extends IPSModule
 				break;
 			case "?T":
 				$Message = str_pad((string)$Message, 6 ,'0', STR_PAD_LEFT);
+				$this->SetBuffer("TimeTrigger", "true");
 				SetValueString($this->GetIDForIdent("Time"), substr($Message, 0, 2).":".substr($Message, 2, 2).":".substr($Message, 4, 2));
 				break;
 			case "?V":
@@ -590,20 +598,20 @@ class IPS2PioneerBDP450 extends IPSModule
 	public function Get_DataUpdate()
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
-			// Power-Status abfragen
-			$this->ClientSocket("?P".chr(13));
-			$this->ResponseWait();
+			$this->SetBuffer("TriggerCounter", $this->GetBuffer("TriggerCounter") + 1); 
+			If (($this->GetBuffer("TimeTrigger") == "true") AND (this->GetBuffer("TriggerCounter") <> $this->ReadPropertyInteger("DataUpdate"))) {
+				// Spielt das Gerät ein Medium wird jede Sekunde die aktuelle Spielzeit abgefragt
+				$this->ClientSocket("?T".chr(13));
+				$this->ResponseWait();
+			}
+			elseif (this->GetBuffer("TriggerCounter") == $this->ReadPropertyInteger("DataUpdate")) {	
+				// Power-Status abfragen
+				$this->ClientSocket("?P".chr(13));
+				$this->ResponseWait();
+				$this->SetBuffer("TriggerCounter", 0); 
+			}
 		}
 	return;
-	}
-	
-	private function Get_BasicData()
-	{
-		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
-			$this->ClientSocket("?L".chr(13));
-			$this->ResponseWait();
-		}
-	return;	
 	}
 	
 	private function ClientSocket(String $message)
