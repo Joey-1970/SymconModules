@@ -37,7 +37,7 @@
 		$this->RegisterProfileInteger("time.min", "Clock", "", " min", 0, 1000000, 1);
 		$this->RegisterProfileInteger("snr.db", "Intensity", "", " db", 0, 1000000, 1);
 		$this->RegisterProfileInteger("gigabyte.GB", "Gauge", "", " GB", 0, 1000000, 1);
-		$this->RegisterMediaObject("Screenshot", 1, $this->InstanceID, 1000, true);
+		$this->RegisterMediaObject("Screenshot", 1, $this->InstanceID, 1000, true, "Screenshot.jpg");
 		$this->RegisterHook("/hook/IPS2Enigma", $this->InstanceID);
 
 		$this->SetBuffer("FirstUpdate", "false");
@@ -1092,13 +1092,12 @@
 	public function GetScreenshot()
 	{
 		$Content = file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/grab?format=jpg&r=860");
-                $ImageFile = IPS_GetKernelDir()."media".DIRECTORY_SEPARATOR."Screenshot.jpg";  // Image-Datei
-                IPS_SetMediaFile($this->GetIDForIdent("Screenshot"), $ImageFile, true);    // Image im MedienPool mit Image-Datei verbinden
                 IPS_SetMediaContent($this->GetIDForIdent("Screenshot"), base64_encode($Content));  //Bild Base64 codieren und ablegen
+		IPS_SendMediaEvent($this->GetIDForIdent("Screenshot")); //aktualisieren  
 	return;
 	} 
 	
-	private function RegisterMediaObject($Name, $Typ, $Parent, $Position, $Cached)
+	private function RegisterMediaObject($Name, $Typ, $Parent, $Position, $Cached, $Filename)
 	{
 		if (!IPS_MediaExists($this->GetIDForIdent($Name))) {
 			 // Image im MedienPool anlegen
@@ -1109,6 +1108,8 @@
 			IPS_SetName($MediaID, $Name);
 			IPS_SetPosition($MediaID, $Position);
                     	IPS_SetMediaCached($MediaID, $Cached);
+			$ImageFile = IPS_GetKernelDir()."media".DIRECTORY_SEPARATOR.$Filename;  // Image-Datei
+			IPS_SetMediaFile($MediaID, $ImageFile, false);    // Image im MedienPool mit Image-Datei verbinden
 		}  
 	return;
 	}     
