@@ -604,7 +604,7 @@ class IPS2PioneerBDP450 extends IPSModule
 				$this->ClientSocket("?T".chr(13));
 				$this->ResponseWait();
 			}
-			elseif (this->GetBuffer("TriggerCounter") == $this->ReadPropertyInteger("DataUpdate")) {	
+			elseif ($this->GetBuffer("TriggerCounter") == $this->ReadPropertyInteger("DataUpdate")) {	
 				$this->SetBuffer("TriggerCounter", 0); 
 				// Power-Status abfragen
 				$this->ClientSocket("?P".chr(13));
