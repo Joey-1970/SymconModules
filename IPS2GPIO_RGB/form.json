@@ -116,6 +116,14 @@
     "actions":
     [
         { "type": "Label", "label": "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!" },
-        { "type": "Button", "label": "Toggle Output", "onClick": "I2GRGB_Toggle_Status($id);"}
+        { "type": "Button", "label": "Off", "onClick": "I2GRGB_Set_Status($id, false);"},
+        { "type": "Button", "label": "Off", "onClick": "I2GRGB_Set_Status($id, false);"},
+        { "type": "Button", "label": "Toggle Output", "onClick": "I2GRGB_Toggle_Status($id);"},
+        { "type": "Label", "label": "Rot" },
+        { "type": "HorizontalSlider", "name": "SliderR", "minimum": 0,  "maximum": 255, "onChange": "I2GDMR_Set_Intensity($id, $SliderR, $SliderG, $SliderB);" },
+        { "type": "Label", "label": "Grün" },
+        { "type": "HorizontalSlider", "name": "SliderG", "minimum": 0,  "maximum": 255, "onChange": "I2GDMR_Set_Intensity($id, $SliderR, $SliderG, $SliderB);" },
+        { "type": "Label", "label": "Blau" },
+        { "type": "HorizontalSlider", "name": "SliderB", "minimum": 0,  "maximum": 255, "onChange": "I2GDMR_Set_Intensity($id, $SliderR, $SliderG, $SliderB);" }
     ],
 }
