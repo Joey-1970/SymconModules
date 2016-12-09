@@ -263,6 +263,7 @@
 			$this->SetTimerInterval("DataUpdate", ($this->ReadPropertyInteger("DataUpdate") * 1000));
 			$this->SetTimerInterval("EPGUpdate", ($this->ReadPropertyInteger("EPGUpdate") * 1000));
 			$this->Get_Powerstate();
+			$this->GetScreenshot();
 			$this->SetStatus(102);
 		}
 		else {
