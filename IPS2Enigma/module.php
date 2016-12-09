@@ -1092,10 +1092,9 @@
 	public function GetScreenshot()
 	{
 		$Content = file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/grab?format=jpg&r=860");
-                $ImageFile = IPS_GetKernelDir()."media".DIRECTORY_SEPARATOR."Screenshoot.jpg";  // Image-Datei
-                IPS_SetMediaFile($this->GetIDForIdent("Screenshoot"), $ImageFile, true);    // Image im MedienPool mit Image-Datei verbinden
-                IPS_SetName($this->GetIDForIdent("Screenshoot"), "Screenshot"); // Medienobjekt benennen
-                IPS_SetMediaContent($this->GetIDForIdent("Screenshoot"), base64_encode($Content));  //Bild Base64 codieren und ablegen
+                $ImageFile = IPS_GetKernelDir()."media".DIRECTORY_SEPARATOR."Screenshot.jpg";  // Image-Datei
+                IPS_SetMediaFile($this->GetIDForIdent("Screenshot"), $ImageFile, true);    // Image im MedienPool mit Image-Datei verbinden
+                IPS_SetMediaContent($this->GetIDForIdent("Screenshot"), base64_encode($Content));  //Bild Base64 codieren und ablegen
 	return;
 	} 
 	
@@ -1107,6 +1106,7 @@
 			// Medienobjekt einsortieren unter Kategorie $catid
 			IPS_SetParent($MediaID, $Parent);
 			IPS_SetIdent ($MediaID, $Name);
+			IPS_SetName($MediaID, $Name);
 			IPS_SetPosition($MediaID, $Position);
                     	IPS_SetMediaCached($MediaID, $Cached);
 		}  
