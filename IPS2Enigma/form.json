@@ -36,6 +36,8 @@
         { "type": "Button", "label": "Toggle Standby", "onClick": "Enigma_ToggleStandby($id);"},
         { "type": "Button", "label": "Toggle Mute", "onClick": "Enigma_ToggleMute($id);"},
         { "type": "Button", "label": "Volume Up", "onClick": "Enigma_VolUp($id);"},
-        { "type": "Button", "label": "Volume Down", "onClick": "Enigma_VolDown($id);"}
+        { "type": "Button", "label": "Volume Down", "onClick": "Enigma_VolDown($id);"},
+        { "type": "ValidationTextBox", "name": "Messagetext", "caption": "Messagetext" },
+        { "type": "Button", "label": "Sende Message", "onClick": "Enigma_WriteMessage($id, $Messagetext, 5);"}
     ],
 } 
