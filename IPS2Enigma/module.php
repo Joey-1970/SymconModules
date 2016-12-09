@@ -37,6 +37,7 @@
 		$this->RegisterProfileInteger("time.min", "Clock", "", " min", 0, 1000000, 1);
 		$this->RegisterProfileInteger("snr.db", "Intensity", "", " db", 0, 1000000, 1);
 		$this->RegisterProfileInteger("gigabyte.GB", "Gauge", "", " GB", 0, 1000000, 1);
+		$this->RegisterMediaObject("Screenshot", 1, $this->InstanceID, 1000, true);
 		$this->RegisterHook("/hook/IPS2Enigma", $this->InstanceID);
 
 		$this->SetBuffer("FirstUpdate", "false");
@@ -1088,6 +1089,30 @@
 	return;
 	}          
 	    
+	public function GetScreenshot()
+	{
+		$Content = file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/grab?format=jpg&r=860");
+                $ImageFile = IPS_GetKernelDir()."media".DIRECTORY_SEPARATOR."Screenshoot.jpg";  // Image-Datei
+                IPS_SetMediaFile($this->GetIDForIdent("Screenshoot"), $ImageFile, true);    // Image im MedienPool mit Image-Datei verbinden
+                IPS_SetName($this->GetIDForIdent("Screenshoot"), "Screenshot"); // Medienobjekt benennen
+                IPS_SetMediaContent($this->GetIDForIdent("Screenshoot"), base64_encode($Content));  //Bild Base64 codieren und ablegen
+	return;
+	} 
+	
+	private function RegisterMediaObject($Name, $Typ, $Parent, $Position, $Cached)
+	{
+		if (!IPS_MediaExists($this->GetIDForIdent($Name))) {
+			 // Image im MedienPool anlegen
+			$MediaID = IPS_CreateMedia($Typ); 
+			// Medienobjekt einsortieren unter Kategorie $catid
+			IPS_SetParent($MediaID, $Parent);
+			IPS_SetIdent ($MediaID, $Name);
+			IPS_SetPosition($MediaID, $Position);
+                    	IPS_SetMediaCached($MediaID, $Cached);
+		}  
+	return;
+	}     
+	    
 	private function ConnectionTest()
 	{
 	      $result = false;
@@ -1126,7 +1151,7 @@
 	        IPS_SetVariableProfileIcon($Name, $Icon);
 	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
 	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
-	        
+	return;
 	}
 	
 	private function RegisterHook($WebHook, $TargetID)
@@ -1156,7 +1181,8 @@
 		    IPS_SetProperty($ids[0], "Hooks", json_encode($hooks));
 		    IPS_ApplyChanges($ids[0]);
 		}
-    	}    
+    	return;
+	}    
 	    
 	private function Get_Filename(string $sRef)
 	{
