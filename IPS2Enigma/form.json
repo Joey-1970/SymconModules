@@ -32,7 +32,7 @@
             { "type": "IntervalBox", "name": "ScreenshotUpdate", "caption": "Screenshot-Update (sek)" },
             { "type": "Select", "name": "Screenshot", "caption": "Screenshot Grösse",
             "options": [
-                { "label": "640 px", "value": 640,
+                { "label": "640 px", "value": 640},
                 { "label": "860 px", "value": 860},
                 { "label": "1920", "value": 1920 }
                 ]
