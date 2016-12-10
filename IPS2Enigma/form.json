@@ -27,7 +27,17 @@
             { "type": "CheckBox", "name": "EPGnow_Data", "caption": "EPG des aktuellen Programms des aktuellen Senders anzeigen (einzelne Variablen/HTML)" },
             { "type": "CheckBox", "name": "EPGnext_Data", "caption": "EPG des folgenden Programms des aktuellen Senders anzeigen (einzelne Variablen/HTML)" }, 
             { "type": "CheckBox", "name": "EPGlist_Data", "caption": "EPG des aktuellen und der folgenden Programms aller Sender anzeigen (HTML)" },
-            { "type": "CheckBox", "name": "EPGlistSRef_Data", "caption": "EPG des aktuellen und der folgenden Programms des aktuellen Senders anzeigen (HTML)" }
+            { "type": "CheckBox", "name": "EPGlistSRef_Data", "caption": "EPG des aktuellen und der folgenden Programms des aktuellen Senders anzeigen (HTML)" },
+            { "type": "Label", "label": "Screenshot-Update in Sekunden (0 -> aus, 5 sek -> Minimum)" },
+            { "type": "IntervalBox", "name": "ScreenshotUpdate", "caption": "Screenshot-Update (sek)" },
+            { "type": "Select", "name": "Screenshot", "caption": "Screenshot Grösse",
+            "options": [
+                { "label": "640 px", "value": 640,
+                { "label": "860 px", "value": 860},
+                { "label": "1920", "value": 1920 }
+                ]
+},
+            
    ],
     
     "actions":
@@ -38,6 +48,7 @@
         { "type": "Button", "label": "Volume Up", "onClick": "Enigma_VolUp($id);"},
         { "type": "Button", "label": "Volume Down", "onClick": "Enigma_VolDown($id);"},
         { "type": "ValidationTextBox", "name": "Messagetext", "caption": "Messagetext" },
-        { "type": "Button", "label": "Sende Message", "onClick": "Enigma_WriteMessage($id, $Messagetext, 5);"}
+        { "type": "Button", "label": "Sende Message", "onClick": "Enigma_WriteMessage($id, $Messagetext, 5);"},
+        { "type": "Button", "label": "Screenshot", "onClick": "Enigma_GetScreenshot($id);"},
     ],
 } 
