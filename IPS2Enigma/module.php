@@ -23,8 +23,11 @@
 		$this->RegisterPropertyInteger("EPGUpdate", 60);
 		$this->RegisterPropertyBoolean("EPGlist_Data", false);
 		$this->RegisterPropertyBoolean("EPGlistSRef_Data", false);
+		$this->RegisterPropertyInteger("ScreenshotUpdate", 30);
+		$this->RegisterPropertyInteger("Screenshot", 640);
 		$this->RegisterTimer("DataUpdate", 0, 'Enigma_Get_DataUpdate($_IPS["TARGET"]);');
 		$this->RegisterTimer("EPGUpdate", 0, 'Enigma_Get_EPGUpdate($_IPS["TARGET"]);');
+		$this->RegisterTimer("ScreenshotUpdate", 0, 'Enigma_GetScreenshot($_IPS["TARGET"]);');
         return;
 	}
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -262,6 +265,7 @@
 			$this->Get_BasicData();
 			$this->SetTimerInterval("DataUpdate", ($this->ReadPropertyInteger("DataUpdate") * 1000));
 			$this->SetTimerInterval("EPGUpdate", ($this->ReadPropertyInteger("EPGUpdate") * 1000));
+			$this->SetTimerInterval("ScreenshotUpdate", ($this->ReadPropertyInteger("ScreenshotUpdate") * 1000));
 			$this->Get_Powerstate();
 			$this->GetScreenshot();
 			$this->SetStatus(102);
@@ -1092,9 +1096,11 @@
 	    
 	public function GetScreenshot()
 	{
-		$Content = file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/grab?format=jpg&r=860");
-                IPS_SetMediaContent($this->GetIDForIdent("Screenshot"), base64_encode($Content));  //Bild Base64 codieren und ablegen
-		IPS_SendMediaEvent($this->GetIDForIdent("Screenshot")); //aktualisieren  
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
+			$Content = file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/grab?format=jpg&r=".$this->ReadPropertyInteger("Screenshot"));
+			IPS_SetMediaContent($this->GetIDForIdent("Screenshot"), base64_encode($Content));  //Bild Base64 codieren und ablegen
+			IPS_SendMediaEvent($this->GetIDForIdent("Screenshot")); //aktualisieren
+		}
 	return;
 	} 
 	
