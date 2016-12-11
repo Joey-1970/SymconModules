@@ -593,8 +593,18 @@
 			If ($this->ReadPropertyBoolean("HDD_Data") == true) {
 				// Festplattendaten
 				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/about"));
-				SetValueInteger($this->GetIDForIdent("e2hddinfo_capacity"), (int)$xmlResult->e2about->e2hddinfo->capacity);
-				SetValueInteger($this->GetIDForIdent("e2hddinfo_free"), (int)$xmlResult->e2about->e2hddinfo->free);
+				If (substr($xmlResult->e2about->e2hddinfo->capacity, -2) == "GB") {
+					SetValueInteger($this->GetIDForIdent("e2hddinfo_capacity"), (int)$xmlResult->e2about->e2hddinfo->capacity);
+				}
+				else {
+					SetValueInteger($this->GetIDForIdent("e2hddinfo_capacity"), (int)$xmlResult->e2about->e2hddinfo->capacity * 1000);
+				}
+				If (substr($xmlResult->e2about->e2hddinfo->free, -2) == "GB") {	
+					SetValueInteger($this->GetIDForIdent("e2hddinfo_free"), (int)$xmlResult->e2about->e2hddinfo->free);
+				}
+				else {
+					SetValueInteger($this->GetIDForIdent("e2hddinfo_free"), (int)$xmlResult->e2about->e2hddinfo->free * 1000);
+				}
 			}
 			
 			//SetValueString($this->GetIDForIdent("e2stream"), "<video width="320" height="240" controls> <source src="http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".$e2servicereference." type="video/mp4"> </video>");
