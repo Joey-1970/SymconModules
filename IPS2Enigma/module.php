@@ -1013,7 +1013,7 @@
 	   	$result = false;
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 		       $message = urlencode($message);
-		       $xmlResult = new SimpleXMLElement(file_get_contents("http:/".$this->ReadPropertyString("IPAddress")."/web/message?text=$message&type=2&timeout=$time"));
+		       $xmlResult = new SimpleXMLElement(file_get_contents("http:/".$this->ReadPropertyString("IPAddress")."/web/message?text=".$message."&type=2&timeout=".$time));
 		       if ($xmlResult->e2state == "True") {
 		       		$result = true;
 			}
