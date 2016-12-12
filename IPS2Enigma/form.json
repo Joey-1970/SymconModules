@@ -53,5 +53,6 @@
         { "type": "ValidationTextBox", "name": "Messagetext", "caption": "Messagetext" },
         { "type": "Button", "label": "Sende Message", "onClick": "Enigma_WriteMessage($id, $Messagetext, 5);"},
         { "type": "Button", "label": "Screenshot", "onClick": "Enigma_GetScreenshot($id);"},
+        { "type": "Button", "label": "Bouquet Information", "onClick": "echo Enigma_GetServiceInformation($id);" }
     ],
 } 
