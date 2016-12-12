@@ -18,6 +18,7 @@
 		$this->RegisterPropertyBoolean("Signal_Data", false);
 		$this->RegisterPropertyBoolean("Network_Data", false);
 		$this->RegisterPropertyBoolean("RC_Data", false);
+		$this->RegisterPropertyInteger("BouquetsNumber", 0);
 		$this->RegisterPropertyBoolean("EPGnow_Data", false);
 		$this->RegisterPropertyBoolean("EPGnext_Data", false);
 		$this->RegisterPropertyInteger("EPGUpdate", 60);
@@ -651,7 +652,7 @@
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/getservices"));
-			$bouquet = (string)$xmlResult->e2service->e2servicereference;
+			$bouquet = (string)$xmlResult->e2service[$this->ReadPropertyInteger("BouquetsNumber")]->e2servicereference;
 			
 			If ($this->ReadPropertyBoolean("EPGlist_Data") == true) {
 				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/epgnownext?bRef=".urlencode($bouquet)));
@@ -1172,13 +1173,25 @@
 	return;
 	}
 	
-	private function GetService()
+	public function GetServices()
 	{
-		//$xmlResult = new SimpleXMLElement(file_get_contents("http://192.168.178.20/web/getservices"));
-		//echo count($xmlResult->e2service);
-		//[e2servicereference] => 1:7:1:0:0:0:0:0:0:0:FROM BOUQUET "userbouquet.favourites.tv" ORDER BY bouquet
-            	//[e2servicename] => Favourites (TV)
-	return;
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
+			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/getservices"));
+			If (count($xmlResult->e2service)) == 0 {
+				$Result = "Es wurde nur kein Bouquet gefunden, bitte auf dem Receiver mindestens eines einrichten";
+			}
+			elseif (count($xmlResult->e2service)) == 1 {
+				$Result = "Es wurde nur ein Bouquet gefunden, die Einstellung muss daher 0 sein. (Aktuell: ".$this->ReadPropertyInteger("BouquetsNumber").")"; 
+			}
+			elseif (count($xmlResult->e2service)) > 1 {
+				$Result = "Es wurde folgende Bouquets gefunden:";
+				for ($i = 1; $i <= count($xmlResult->e2service) - 1; $i++) {
+					Result .= "Auswahl: ".$i." Bouquet: ".$xmlResult->e2service->e2servicename;
+				}
+				$Result .= "Bitte die  Auswahl in das Feld Bouquet-Nummer eintragen. (Aktuell: ".$this->ReadPropertyInteger("BouquetsNumber").")";
+			}
+		}
+	return $Result;
 	}
 	    
 	private function RegisterHook($WebHook, $TargetID)
