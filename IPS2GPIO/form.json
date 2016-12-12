@@ -23,5 +23,11 @@
          { "type": "Label", "label": "Link: http://abyz.co.uk/rpi/pigpio/index.html" },
          { "type": "Label", "label": "- es sollte in der raspi-config der GPIO-Server aktiviert sein" },
          { "type": "Label", "label": "- die genutzten Schnittstellen sollten in der raspi-config aktiviert sein" } 
-   ]
+   ],
+    
+    "actions":
+    [
+        { "type": "Label", "label": "Diese Funktionen stehen erst nach Eingabe und Übernahme der IP zur Verfügung!" },
+        { "type": "Button", "label": "PIGPIO Restart", "onClick": "I2G_PIGPIOD_Restart($id);"}        
+    ],
 } 
