@@ -1177,13 +1177,13 @@
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/getservices"));
-			If (count($xmlResult->e2service)) == 0 {
+			If (count($xmlResult->e2service) == 0) {
 				$Result = "Es wurde nur kein Bouquet gefunden, bitte auf dem Receiver mindestens eines einrichten";
 			}
-			elseif (count($xmlResult->e2service)) == 1 {
+			elseif (count($xmlResult->e2service) == 1) {
 				$Result = "Es wurde nur ein Bouquet gefunden, die Einstellung muss daher 0 sein. (Aktuell: ".$this->ReadPropertyInteger("BouquetsNumber").")"; 
 			}
-			elseif (count($xmlResult->e2service)) > 1 {
+			elseif (count($xmlResult->e2service) > 1) {
 				$Result = "Es wurde folgende Bouquets gefunden:";
 				for ($i = 1; $i <= count($xmlResult->e2service) - 1; $i++) {
 					Result .= "Auswahl: ".$i." Bouquet: ".$xmlResult->e2service[$i]->e2servicename;
