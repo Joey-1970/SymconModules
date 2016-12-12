@@ -1184,9 +1184,9 @@
 				$Result = "Es wurde nur ein Bouquet gefunden, die Einstellung muss daher 0 sein. (Aktuell: ".$this->ReadPropertyInteger("BouquetsNumber").")"; 
 			}
 			elseif (count($xmlResult->e2service) > 1) {
-				$Result = "Es wurde folgende Bouquets gefunden:";
+				$Result = "Es wurde folgende Bouquets gefunden:".chr(13);
 				for ($i = 1; $i <= count($xmlResult->e2service) - 1; $i++) {
-					Result .= "Auswahl: ".$i." Bouquet: ".$xmlResult->e2service[$i]->e2servicename;
+					$Result .= "Auswahl: ".$i." Bouquet: ".$xmlResult->e2service[$i]->e2servicename.chr(13);
 				}
 				$Result .= "Bitte die  Auswahl in das Feld Bouquet-Nummer eintragen. (Aktuell: ".$this->ReadPropertyInteger("BouquetsNumber").")";
 			}
