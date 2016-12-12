@@ -1173,7 +1173,7 @@
 	return;
 	}
 	
-	public function GetServices()
+	public function GetServiceInformation()
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/getservices"));
@@ -1186,7 +1186,7 @@
 			elseif (count($xmlResult->e2service)) > 1 {
 				$Result = "Es wurde folgende Bouquets gefunden:";
 				for ($i = 1; $i <= count($xmlResult->e2service) - 1; $i++) {
-					Result .= "Auswahl: ".$i." Bouquet: ".$xmlResult->e2service->e2servicename;
+					Result .= "Auswahl: ".$i." Bouquet: ".$xmlResult->e2service[$i]->e2servicename;
 				}
 				$Result .= "Bitte die  Auswahl in das Feld Bouquet-Nummer eintragen. (Aktuell: ".$this->ReadPropertyInteger("BouquetsNumber").")";
 			}
