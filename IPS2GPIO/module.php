@@ -903,6 +903,19 @@ class IPS2GPIO_IO extends IPSModule
 	return;
 	}
 	
+	public function PIGPIOD_Restart()
+	{
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+			// PIGPIO beenden
+			$this->SSH_Connect("sudo killall pigpiod");
+			// PIPIO starten
+			$this->SSH_Connect("sudo pigpiod");
+			// Pin-Update durchführen
+			$this->Get_PinUpdate();
+		}
+	return;
+	}
+	
 	private function SSH_Connect(String $Command)
 	{
 	        If (($this->ReadPropertyBoolean("Open") == true) ) {
