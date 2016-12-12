@@ -1172,6 +1172,15 @@
 	return;
 	}
 	
+	private function GetService()
+	{
+		//$xmlResult = new SimpleXMLElement(file_get_contents("http://192.168.178.20/web/getservices"));
+		//echo count($xmlResult->e2service);
+		//[e2servicereference] => 1:7:1:0:0:0:0:0:0:0:FROM BOUQUET "userbouquet.favourites.tv" ORDER BY bouquet
+            	//[e2servicename] => Favourites (TV)
+	return;
+	}
+	    
 	private function RegisterHook($WebHook, $TargetID)
     	{
 		$ids = IPS_GetInstanceListByModuleID("{015A6EB8-D6E5-4B93-B496-0D3F77AE9FE1}");
