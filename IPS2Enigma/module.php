@@ -1257,6 +1257,38 @@
 	
         return $Result;
 	}
+	
+	private function FTP_Connect()
+	{
+	        If (($this->ReadPropertyBoolean("Open") == true) ) {
+			$ftp_server="192.168.178.20";
+			$ftp_user_name="root";
+			$ftp_user_pass="enigma";
+
+			// set up basic connection
+			$conn_id = ftp_connect($ftp_server);
+
+			// login with username and password
+			$login_result = ftp_login($conn_id, $ftp_user_name, $ftp_user_pass);
+
+			If ($login_result == true) {
+				ftp_chdir($conn_id, '/usr/share/enigma2/picon');
+				$contents = ftp_nlist($conn_id, ".");
+				print_r($contents);
+				
+			}
+			else {
+				echo "Fehler bei der Verbindung";
+			}
+			// close the connection
+			ftp_close($conn_id); 
+		}
+		else {
+			$result = "";
+		}
+	
+        return $Result;
+	}   
 	    
 	private function Get_Picons()
 	{
