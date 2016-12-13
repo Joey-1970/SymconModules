@@ -31,6 +31,13 @@
             { "type": "CheckBox", "name": "EPGnext_Data", "caption": "EPG des folgenden Programms des aktuellen Senders anzeigen (einzelne Variablen/HTML)" }, 
             { "type": "CheckBox", "name": "EPGlist_Data", "caption": "EPG des aktuellen und der folgenden Programms aller Sender anzeigen (HTML)" },
             { "type": "CheckBox", "name": "EPGlistSRef_Data", "caption": "EPG des aktuellen und der folgenden Programms des aktuellen Senders anzeigen (HTML)" },
+            { "type": "Label", "label": "Quelle der für die HTML-Aufbereitung genutzten Picons:" },
+            { "type": "Label", "label": "(Voraussetzungen: FTP-Zugang zum Receiver und dort installierte Picons)" },
+            { "type": "Select", "name": "PiconSource", "caption": "Picon Quelle",
+            "options": [
+                { "label": "aus PHP-Modul", "value": 0},
+                { "label": "aus Enigma-Receiver", "value": 1}
+                ],
             { "type": "Label", "label": "Screenshot-Update in Sekunden (0 -> aus, 5 sek -> Minimum)" },
             { "type": "IntervalBox", "name": "ScreenshotUpdate", "caption": "Screenshot-Update (sek)" },
             { "type": "Select", "name": "Screenshot", "caption": "Screenshot Grösse",
