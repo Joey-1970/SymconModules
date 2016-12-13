@@ -36,7 +36,7 @@
             { "type": "Select", "name": "PiconSource", "caption": "Picon Quelle",
             "options": [
                 { "label": "PHP-Modul", "value": 0},
-                { "label": "Enigma-Receiver", "value": 1},
+                { "label": "Enigma-Receiver", "value": 1}
                 ],
             { "type": "Label", "label": "Screenshot-Update in Sekunden (0 -> aus, 5 sek -> Minimum)" },
             { "type": "IntervalBox", "name": "ScreenshotUpdate", "caption": "Screenshot-Update (sek)" },
@@ -45,9 +45,7 @@
                 { "label": "640 px", "value": 640},
                 { "label": "860 px", "value": 860},
                 { "label": "1920", "value": 1920 }
-                ]
-},
-            
+                ]         
    ],
     
     "actions":
