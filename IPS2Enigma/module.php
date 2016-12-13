@@ -24,6 +24,7 @@
 		$this->RegisterPropertyInteger("EPGUpdate", 60);
 		$this->RegisterPropertyBoolean("EPGlist_Data", false);
 		$this->RegisterPropertyBoolean("EPGlistSRef_Data", false);
+		$this->RegisterPropertyInteger("PiconSource", 0);
 		$this->RegisterPropertyInteger("ScreenshotUpdate", 30);
 		$this->RegisterPropertyInteger("Screenshot", 640);
 		$this->RegisterTimer("DataUpdate", 0, 'Enigma_Get_DataUpdate($_IPS["TARGET"]);');
