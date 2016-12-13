@@ -11,7 +11,7 @@
    [ 
             { "name": "Open", "type": "CheckBox",  "caption": "Aktiv" },
             { "name": "IPAddress", "type": "ValidationTextBox", "caption": "IP" },
-            { "type": "Label", "label": "Daten zum Enigma2 SSH-Zugang (optional):" },
+            { "type": "Label", "label": "Daten zum Enigma2 FTP-Zugang (optional):" },
             { "name": "User", "type": "ValidationTextBox", "caption": "User" },
             { "type": "PasswordTextBox", "name": "Password", "caption": "Passwort" },
             { "type": "Label", "label": "Zyklus Daten-Update in Sekunden (0 -> aus, 1 sek -> Minimum)" },
