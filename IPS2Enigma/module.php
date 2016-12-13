@@ -1258,12 +1258,21 @@
         return $Result;
 	}
 	
-	private function FTP_Connect()
+	public function FTP_Connect()
 	{
 	        If (($this->ReadPropertyBoolean("Open") == true) ) {
-			$ftp_server="192.168.178.20";
-			$ftp_user_name="root";
-			$ftp_user_pass="enigma";
+			// Prüfen, ob das Verzeichnis schon existiert
+			$WebfrontPath = IPS_GetKernelDir()."webfront".DIRECTORY_SEPARATOR."user".DIRECTORY_SEPARATOR."Picons_Copy";
+			if (file_exists($filename)) {
+			    	// Das Verzeichnis existiert bereits
+			} else {
+			    	//Das Verzeichnis existiert nicht
+				mkdir($WebfrontPath);
+			}
+			
+			$ftp_server = $this->ReadPropertyString("IPAddress");
+			$ftp_user_name = $this->ReadPropertyString("User");
+			$ftp_user_pass = $this->ReadPropertyString("Password");
 
 			// set up basic connection
 			$conn_id = ftp_connect($ftp_server);
@@ -1273,12 +1282,15 @@
 
 			If ($login_result == true) {
 				ftp_chdir($conn_id, '/usr/share/enigma2/picon');
+				// die Dateien in diesem Verzeichnis ermitteln
 				$contents = ftp_nlist($conn_id, ".");
-				print_r($contents);
+				for ($i = 0; $i <= count($contents) - 1; $i++) {
+					ftp_get ($conn_id, $WebfrontPath, $contents[$i], FTP_BINARY);
+				}
 				
 			}
 			else {
-				echo "Fehler bei der Verbindung";
+				IPS_LogMessage("IPS2Enigma","Fehler bei der Verbindung!");
 			}
 			// close the connection
 			ftp_close($conn_id); 
