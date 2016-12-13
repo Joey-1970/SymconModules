@@ -1264,7 +1264,7 @@
 	        If (($this->ReadPropertyBoolean("Open") == true) ) {
 			// Prüfen, ob das Verzeichnis schon existiert
 			$WebfrontPath = IPS_GetKernelDir()."webfront".DIRECTORY_SEPARATOR."user".DIRECTORY_SEPARATOR."Picons_Copy";
-			if (file_exists($filename)) {
+			if (file_exists($WebfrontPath)) {
 			    	// Das Verzeichnis existiert bereits
 			} else {
 			    	//Das Verzeichnis existiert nicht
@@ -1288,16 +1288,17 @@
 				for ($i = 0; $i <= count($contents) - 1; $i++) {
 					ftp_get ($conn_id, $WebfrontPath, $contents[$i], FTP_BINARY);
 				}
-				
+				$result = true;
 			}
 			else {
 				IPS_LogMessage("IPS2Enigma","Fehler bei der Verbindung!");
+				$result = false;
 			}
 			// close the connection
 			ftp_close($conn_id); 
 		}
 		else {
-			$result = "";
+			$result = false;
 		}
 	
         return $Result;
