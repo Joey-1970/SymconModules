@@ -37,8 +37,8 @@
             "options": [
                 { "label": "PHP-Modul", "value": 0},
                 { "label": "Enigma-Receiver", "value": 1}
-                ],
-            }
+                ]
+            },
             { "type": "Label", "label": "Screenshot-Update in Sekunden (0 -> aus, 5 sek -> Minimum)" },
             { "type": "IntervalBox", "name": "ScreenshotUpdate", "caption": "Screenshot-Update (sek)" },
             { "type": "Select", "name": "Screenshot", "caption": "Screenshot Grösse",
