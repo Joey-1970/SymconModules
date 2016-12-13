@@ -35,8 +35,8 @@
             { "type": "Label", "label": "(Voraussetzungen: FTP-Zugang zum Receiver und dort installierte Picons)" },
             { "type": "Select", "name": "PiconSource", "caption": "Picon Quelle",
             "options": [
-                { "label": "aus PHP-Modul", "value": 0},
-                { "label": "aus Enigma-Receiver", "value": 1}
+                { "label": "PHP-Modul", "value": 0},
+                { "label": "Enigma-Receiver", "value": 1},
                 ],
             { "type": "Label", "label": "Screenshot-Update in Sekunden (0 -> aus, 5 sek -> Minimum)" },
             { "type": "IntervalBox", "name": "ScreenshotUpdate", "caption": "Screenshot-Update (sek)" },
