@@ -265,7 +265,7 @@
 			$this->Get_Picons();
 		{
 		elseif ($this->ReadPropertyInteger("PiconSource") == 1) {
-			$this->Get_Picons_Enigma()
+			$this->Get_Picons_Enigma();
 		}
 		
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
