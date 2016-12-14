@@ -1233,7 +1233,12 @@
 		// das letzte Zeichen entfernen
 		$Filename = substr($Filename, 0, -1);
 		// .png anhängen
- 		$Filename = "user".DIRECTORY_SEPARATOR."Picons".DIRECTORY_SEPARATOR.$Filename.".png";
+ 		If ($this->ReadPropertyInteger("PiconSource") == 0) {
+			$Filename = "user".DIRECTORY_SEPARATOR."Picons".DIRECTORY_SEPARATOR.$Filename.".png";
+		}
+		elseif ($this->ReadPropertyInteger("PiconSource") == 1) {
+			$Filename = "user".DIRECTORY_SEPARATOR."Picons_Enigma".DIRECTORY_SEPARATOR.$Filename.".png";
+		}
 	return $Filename;
 	}
 	    
