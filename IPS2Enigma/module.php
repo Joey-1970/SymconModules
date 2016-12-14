@@ -1275,7 +1275,7 @@
 			    	//Das Verzeichnis existiert nicht
 				$result = mkdir($WebfrontPath);
 				If (!$result) {
-					IPS_LogMessage("IPS2Enigma","Fehler Verzeichniserstellung!");
+					IPS_LogMessage("IPS2Enigma","Fehler bei der Verzeichniserstellung!");
 				}
 			}
 			
