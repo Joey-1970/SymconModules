@@ -1264,7 +1264,7 @@
         return $Result;
 	}
 	
-	public function FTP_Connect()
+	public function Get_Picons_Enigma()
 	{
 	        If (($this->ReadPropertyBoolean("Open") == true) ) {
 			// Prüfen, ob das Verzeichnis schon existiert
