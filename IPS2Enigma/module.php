@@ -1319,7 +1319,7 @@
 			$result = false;
 		}
 	
-        return $Result;
+        return $result;
 	}   
 	    
 	private function Get_Picons()
