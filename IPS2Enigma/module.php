@@ -1263,12 +1263,15 @@
 	{
 	        If (($this->ReadPropertyBoolean("Open") == true) ) {
 			// Prüfen, ob das Verzeichnis schon existiert
-			$WebfrontPath = IPS_GetKernelDir()."webfront".DIRECTORY_SEPARATOR."user".DIRECTORY_SEPARATOR."Picons_Copy";
+			$WebfrontPath = IPS_GetKernelDir()."webfront".DIRECTORY_SEPARATOR."user".DIRECTORY_SEPARATOR."Picons_Enigma";
 			if (file_exists($WebfrontPath)) {
 			    	// Das Verzeichnis existiert bereits
 			} else {
 			    	//Das Verzeichnis existiert nicht
-				mkdir($WebfrontPath);
+				$result = mkdir($WebfrontPath);
+				If (!$result) {
+					IPS_LogMessage("IPS2Enigma","Fehler Verzeichniserstellung!");
+				}
 			}
 			
 			$ftp_server = $this->ReadPropertyString("IPAddress");
