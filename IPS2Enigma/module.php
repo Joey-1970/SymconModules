@@ -1296,7 +1296,7 @@
 			$login_result = ftp_login($conn_id, $ftp_user_name, $ftp_user_pass);
 
 			If ($login_result == true) {
-				//ftp_chdir($conn_id, '/usr/share/enigma2/picon');
+				ftp_chdir($conn_id, $SourcePath);
 				// die Dateien in diesem Verzeichnis ermitteln
 				$contents = ftp_nlist($conn_id, ".");
 				for ($i = 0; $i <= count($contents) - 1; $i++) {
