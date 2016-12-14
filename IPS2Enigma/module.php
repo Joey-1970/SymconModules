@@ -261,7 +261,12 @@
 			$this->DisableAction("e2epglistSRefHTML");
 		}
 		
-		$this->Get_Picons();
+		If ($this->ReadPropertyInteger("PiconSource") == 0) {
+			$this->Get_Picons();
+		{
+		elseif ($this->ReadPropertyInteger("PiconSource") == 1) {
+			$this->Get_Picons_Enigma()
+		}
 		
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$this->Get_BasicData();
@@ -1269,6 +1274,7 @@
 	        If (($this->ReadPropertyBoolean("Open") == true) ) {
 			// Prüfen, ob das Verzeichnis schon existiert
 			$WebfrontPath = IPS_GetKernelDir()."webfront".DIRECTORY_SEPARATOR."user".DIRECTORY_SEPARATOR."Picons_Enigma";
+			$SourcePath = "/usr/share/enigma2/picon";
 			if (file_exists($WebfrontPath)) {
 			    	// Das Verzeichnis existiert bereits
 			} else {
@@ -1290,11 +1296,15 @@
 			$login_result = ftp_login($conn_id, $ftp_user_name, $ftp_user_pass);
 
 			If ($login_result == true) {
-				ftp_chdir($conn_id, '/usr/share/enigma2/picon');
+				//ftp_chdir($conn_id, '/usr/share/enigma2/picon');
 				// die Dateien in diesem Verzeichnis ermitteln
 				$contents = ftp_nlist($conn_id, ".");
 				for ($i = 0; $i <= count($contents) - 1; $i++) {
-					ftp_get ($conn_id, $WebfrontPath, $contents[$i], FTP_BINARY);
+					$result = ftp_get ($conn_id, $WebfrontPath.DIRECTORY_SEPARATOR.$contents[$i], $SourcePath.DIRECTORY_SEPARATOR.$contents[$i], FTP_BINARY);
+					If (!$result) {
+						IPS_LogMessage("IPS2Enigma","Fehler beim Kopieren der Datei ".$contents[$i]."!");
+					}
+						
 				}
 				$result = true;
 			}
