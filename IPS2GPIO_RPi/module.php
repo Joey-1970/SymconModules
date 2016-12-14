@@ -202,7 +202,7 @@
 								unset($LineOneArray[array_search("", $LineOneArray)]);
 								// Array neu durchnummerieren
 								$LineOneArray = array_merge($LineOneArray);
-								If (count($LineOneArray) == 8) {
+								If (count($LineOneArray) >= 8) {
 									//IPS_LogMessage("IPS2GPIO RPi", serialize($LineOneArray));
 									// Idle = idle + iowait
 									$Idle = intval($LineOneArray[3]) + intval($LineOneArray[4]);
