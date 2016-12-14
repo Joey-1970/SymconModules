@@ -263,7 +263,7 @@
 		
 		If ($this->ReadPropertyInteger("PiconSource") == 0) {
 			$this->Get_Picons();
-		{
+		}
 		elseif ($this->ReadPropertyInteger("PiconSource") == 1) {
 			$this->Get_Picons_Enigma();
 		}
