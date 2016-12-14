@@ -202,29 +202,35 @@
 								unset($LineOneArray[array_search("", $LineOneArray)]);
 								// Array neu durchnummerieren
 								$LineOneArray = array_merge($LineOneArray);
-								//IPS_LogMessage("IPS2GPIO RPi", serialize($LineOneArray));
-								// Idle = idle + iowait
-								$Idle = intval($LineOneArray[3]) + intval($LineOneArray[4]);
-								// NonIdle = user+nice+system+irq+softrig+steal
-								$NonIdle = intval($LineOneArray[0]) + intval($LineOneArray[1]) + intval($LineOneArray[2]) + intval($LineOneArray[5]) + intval($LineOneArray[6]) + intval($LineOneArray[7]);
-								// Total = Idle + NonIdle
-								$Total = $Idle + $NonIdle;
-								// Differenzen berechnen
-								$TotalDiff = $Total - intval($this->GetBuffer("PrevTotal"));
-								$IdleDiff = $Idle - intval($this->GetBuffer("PrevIdle"));
-								// Auslastung berechnen
-								$CPU_Usage = (($TotalDiff - $IdleDiff) / $TotalDiff);
-								// Wert nur ausgeben, wenn der Buffer schon einmal mit den aktuellen Werten beschrieben wurde
-								If (intval($this->GetBuffer("PrevTotal")) + intval($this->GetBuffer("PrevIdle")) > 0) {
-									//IPS_LogMessage("IPS2GPIO RPi", "CPU-Auslastung bei ".$CPU_Usage."%");
-									SetValueFloat($this->GetIDForIdent("AverageLoad"), $CPU_Usage);
+								If (count($LineOneArray) == 8) {
+									//IPS_LogMessage("IPS2GPIO RPi", serialize($LineOneArray));
+									// Idle = idle + iowait
+									$Idle = intval($LineOneArray[3]) + intval($LineOneArray[4]);
+									// NonIdle = user+nice+system+irq+softrig+steal
+									$NonIdle = intval($LineOneArray[0]) + intval($LineOneArray[1]) + intval($LineOneArray[2]) + intval($LineOneArray[5]) + intval($LineOneArray[6]) + intval($LineOneArray[7]);
+									// Total = Idle + NonIdle
+									$Total = $Idle + $NonIdle;
+									// Differenzen berechnen
+									$TotalDiff = $Total - intval($this->GetBuffer("PrevTotal"));
+									$IdleDiff = $Idle - intval($this->GetBuffer("PrevIdle"));
+									// Auslastung berechnen
+									$CPU_Usage = (($TotalDiff - $IdleDiff) / $TotalDiff);
+									// Wert nur ausgeben, wenn der Buffer schon einmal mit den aktuellen Werten beschrieben wurde
+									If (intval($this->GetBuffer("PrevTotal")) + intval($this->GetBuffer("PrevIdle")) > 0) {
+										//IPS_LogMessage("IPS2GPIO RPi", "CPU-Auslastung bei ".$CPU_Usage."%");
+										SetValueFloat($this->GetIDForIdent("AverageLoad"), $CPU_Usage);
+									}
+									else {
+										SetValueFloat($this->GetIDForIdent("AverageLoad"), 0);
+									}
+									// Aktuelle Werte für die nächste Berechnung in den Buffer schreiben
+									$this->SetBuffer("PrevTotal", $Total);
+									$this->SetBuffer("PrevIdle", $Idle);
 								}
 								else {
 									SetValueFloat($this->GetIDForIdent("AverageLoad"), 0);
+									IPS_LogMessage("IPS2GPIO RPi", "Es ist ein unbekannter Fehler bei der CPU-Usage-Berechnung aufgetreten!");
 								}
-								// Aktuelle Werte für die nächste Berechnung in den Buffer schreiben
-								$this->SetBuffer("PrevTotal", $Total);
-								$this->SetBuffer("PrevIdle", $Idle);
 								break;
 							case "5":
 								// Speicher
