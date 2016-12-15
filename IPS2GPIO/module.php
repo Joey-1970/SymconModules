@@ -908,8 +908,10 @@ class IPS2GPIO_IO extends IPSModule
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
 			// PIGPIO beenden
 			$this->SSH_Connect("sudo killall pigpiod");
+			IPS_Sleep(800); 
 			// PIPIO starten
 			$this->SSH_Connect("sudo pigpiod");
+			IPS_Sleep(800);
 			// Pin-Update durchführen
 			$this->Get_PinUpdate();
 		}
