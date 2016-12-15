@@ -43,7 +43,7 @@
 		$this->RegisterProfileInteger("snr.db", "Intensity", "", " db", 0, 1000000, 1);
 		$this->RegisterProfileInteger("gigabyte.GB", "Gauge", "", " GB", 0, 1000000, 1);
 		$this->RegisterMediaObject("Screenshot", 1, $this->InstanceID, 1000, true, "Screenshot.jpg");
-		$this->RegisterHook("/hook/IPS2Enigma", $this->InstanceID);
+		$this->RegisterHook("/hook/IPS2Enigma");
 
 		$this->SetBuffer("FirstUpdate", "false");
 		
@@ -1200,35 +1200,34 @@
 	return $Result;
 	}
 	    
-	private function RegisterHook($WebHook, $TargetID)
-    	{
-		$ids = IPS_GetInstanceListByModuleID("{015A6EB8-D6E5-4B93-B496-0D3F77AE9FE1}");
-		if (sizeof($ids) > 0)
-		{
-		    $hooks = json_decode(IPS_GetProperty($ids[0], "Hooks"), true);
-		    $found = false;
-		    foreach ($hooks as $index => $hook)
-		    {
-		    	if ($hook['Hook'] == $WebHook)
-			{
-				if ($hook['TargetID'] == $TargetID) {
-					return;
-				}
-				else {
-					$hooks[$index]['TargetID'] = $TargetID;
-					$found = true;
-				}
-			}
-		    }
-		    if (!$found)
-		    {
-			$hooks[] = Array("Hook" => $WebHook, "TargetID" => $TargetID);
-		    }
-		    IPS_SetProperty($ids[0], "Hooks", json_encode($hooks));
-		    IPS_ApplyChanges($ids[0]);
-		}
-    	return;
-	}    
+	private function RegisterHook($WebHook) 
+	{ 
+		$ids = IPS_GetInstanceListByModuleID("{015A6EB8-D6E5-4B93-B496-0D3F77AE9FE1}"); 
+		if(sizeof($ids) > 0) { 
+			$hooks = json_decode(IPS_GetProperty($ids[0], "Hooks"), true); 
+			$found = false; 
+			foreach($hooks as $index => $hook) { 
+				if($hook['Hook'] == $WebHook) { 
+					if($hook['TargetID'] == $this->InstanceID) 
+						return; 
+					$hooks[$index]['TargetID'] = $this->InstanceID; 
+					$found = true; 
+				} 
+			} 
+			if(!$found) { 
+				$hooks[] = Array("Hook" => $WebHook, "TargetID" => $this->InstanceID); 
+			} 
+			IPS_SetProperty($ids[0], "Hooks", json_encode($hooks)); 
+			IPS_ApplyChanges($ids[0]); 
+		} 
+ 	return;
+	} 
+	
+	protected function ProcessHookData() 
+	{
+		IPS_LogMessage("IPS2Enigma","WebHookData - Angekommen!");
+	return;
+	}
 	    
 	private function Get_Filename(string $sRef)
 	{
