@@ -12,6 +12,8 @@ class IPS2SingleRommControl extends IPSModule
 		$this->RegisterPropertyInteger("KP", 0);
 		$this->RegisterPropertyInteger("KD", 0);
 		$this->RegisterPropertyInteger("KI", 0);
+		$this->RegisterPropertyInteger("Messzyklus", 120);
+		$this->RegisterTimer("Messzyklus", 0, 'IPS2SRC_Measurement($_IPS["TARGET"]);');
 		
         return;
 	}
@@ -37,6 +39,23 @@ class IPS2SingleRommControl extends IPSModule
 		$this->RegisterVariableFloat("ActualDeviation", "Aktuelle Regelabweichung", "~Temperature", 60);
 		$this->DisableAction("ActualDeviation");
 		IPS_SetHidden($this->GetIDForIdent("ActualDeviation"), true);
+		
+		$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
+		
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->Measurement();
+			$this->SetStatus(102);
+		}
+		else {
+			$this->SetStatus(104);
+		}
+		
+	return;
+	}
+	
+	public function Measurement()
+	{
+		
 	return;
 	}
 
