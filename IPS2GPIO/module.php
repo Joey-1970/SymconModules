@@ -906,12 +906,17 @@ class IPS2GPIO_IO extends IPSModule
 	public function PIGPIOD_Restart()
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
-			// PIGPIO beenden
+			// Verbindung trennen
+			IPS_SetProperty($this->GetParentID(), "Open", false);
+			IPS_ApplyChanges($this->GetParentID());
+			// PIGPIO beenden und neu starten
 			$this->SSH_Connect("sudo killall pigpiod && sudo pigpiod");
-			//IPS_Sleep(800); 
-			// PIPIO starten
-			//$this->SSH_Connect("sudo pigpiod");
+			// Wartezeit
 			IPS_Sleep(2000);
+			IPS_SetProperty($this->GetParentID(), "Open", true);
+			IPS_ApplyChanges($this->GetParentID());
+			// Wartezeit
+			IPS_Sleep(500);
 			// Pin-Update durchführen
 			$this->Get_PinUpdate();
 		}
