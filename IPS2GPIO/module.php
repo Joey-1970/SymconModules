@@ -910,7 +910,10 @@ class IPS2GPIO_IO extends IPSModule
 			IPS_SetProperty($this->GetParentID(), "Open", false);
 			IPS_ApplyChanges($this->GetParentID());
 			// PIGPIO beenden und neu starten
-			$this->SSH_Connect("sudo killall pigpiod && sudo pigpiod");
+			$this->SSH_Connect("sudo killall pigpiod");
+			// Wartezeit
+			IPS_Sleep(2000);
+			$this->SSH_Connect("sudo pigpiod");
 			// Wartezeit
 			IPS_Sleep(2000);
 			IPS_SetProperty($this->GetParentID(), "Open", true);
