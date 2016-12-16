@@ -18,6 +18,8 @@
             { "type": "NumberSpinner", "name": "KI", "caption": "Ki", "digits": 1},
             { "type": "Label", "label": "Verstärkungsfaktor Differenzialregler:" },
             { "type": "NumberSpinner", "name": "KD", "caption": "Kd", "digits": 1},
+            { "type": "Label", "label": "Wiederholungszyklus in Sekunden (0 -> aus, 3 sek -> Minimum)" },
+            { "type": "IntervalBox", "name": "Messzyklus", "caption": "Messzyklus (sek)" }
    ],
     
     "actions":
