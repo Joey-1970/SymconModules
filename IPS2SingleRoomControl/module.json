@@ -1,0 +1,14 @@
+{
+  "id": "{0BD8889C-76CF-46A3-9B19-1FD9181E9225}",
+  "name": "IPS2SingleRommControl",
+  "type": 3,
+  "vendor": "JP-IPS-Modules",
+  "aliases":
+  [
+    "IPS2SingleRommControl"
+  ],
+  "parentRequirements": [],
+  "childRequirements": [],
+  "implemented": [],
+  "prefix": "IPS2SRC"
+}
