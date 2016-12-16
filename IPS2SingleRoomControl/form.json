@@ -9,7 +9,15 @@
    
    "elements": 
    [ 
-            { "name": "Open", "type": "CheckBox",  "caption": "Aktiv" }
+            { "name": "Open", "type": "CheckBox",  "caption": "Aktiv" },
+            { "type": "Label", "label": "Variable die den aktuellen Temperaturwert enthält:" },
+            { "type": "SelectVariable", "name": "ActualTemperatureID", "caption": "Target" },
+            { "type": "Label", "label": "Verstärkungsfaktor Proportionalregler:" },
+            { "type": "NumberSpinner", "name": "KP", "caption": "Kp", "digits": 1},
+            { "type": "Label", "label": "Verstärkungsfaktor Integralregler:" },
+            { "type": "NumberSpinner", "name": "KI", "caption": "Ki", "digits": 1},
+            { "type": "Label", "label": "Verstärkungsfaktor Differenzialregler:" },
+            { "type": "NumberSpinner", "name": "KD", "caption": "Kd", "digits": 1},
    ],
     
     "actions":
