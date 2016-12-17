@@ -26,7 +26,7 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->RegisterVariableFloat("ActualTemperature", "Ist-Temperatur", "~Temperature", 10);
 		$this->DisableAction("ActualTemperature");
 		$this->RegisterVariableFloat("SetpointTemperature", "Soll-Temperatur", "~Temperature", 20);
-		$this->DisableAction("SetpointTemperature");
+		$this->EnableAction("SetpointTemperature");
 		$this->RegisterVariableBoolean("OperatingMode", "Betriebsart Automatik", "~Switch", 30);
 		$this->EnableAction("OperatingMode");
 		$this->RegisterVariableInteger("PositionElement", "Stellelement", "~Intensity.100", 40);
@@ -39,6 +39,8 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->RegisterVariableFloat("ActualDeviation", "Aktuelle Regelabweichung", "~Temperature", 60);
 		$this->DisableAction("ActualDeviation");
 		IPS_SetHidden($this->GetIDForIdent("ActualDeviation"), true);
+		
+		$this->SetBuffer("LastTrigger", time() - 60);
 		
 		$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
 		
@@ -56,6 +58,19 @@ class IPS2SingleRoomControl extends IPSModule
 	public function Measurement()
 	{
 		
+		//Ta = Rechenschrittweite (Abtastzeit)
+		$Ta = Round((time() - $this->GetBuffer("LastTrigger") / 60, 0);
+		//Schutzmechanismus falls Skript innerhalb einer Minute zweimal ausgeführt wird
+		$Ta = Max($Ta, 1);
+		
+		//Aktuelle Regelabweichung bestimmen
+		//$e = $this->ReadPropertyFloat("SetpointTemperature") - GetValueFloat($this->ReadPropertyInteger("ActualTemperatureID"));
+		
+		//Die Summe aller vorherigen Regelabweichungen bestimmen
+		
+			    
+			    
+		$this->SetBuffer("LastTrigger", time());
 	return;
 	}
 	
