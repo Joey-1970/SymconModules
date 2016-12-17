@@ -58,6 +58,31 @@ class IPS2SingleRommControl extends IPSModule
 		
 	return;
 	}
+	
+		// Berechnet nächsten Stellwert der Aktoren
+	private function PID($Kp, $Ki, $Kd, $e, $esum, $ealt, $Ta)
+	{
+		//e = aktuelle Reglerabweichung -> Soll-Ist
+		//ealt = vorherige Reglerabweichung
+		//esum = die Summe aller bisherigen Abweichungen e
+		//y = Antwort -> muss im Bereich zwischen 0-100 sein
+		//esum = esum + e
+		//y = Kp * e + Ki * Ta * esum + Kd * (e – ealt)/Ta
+		//ealt = e
+		//Kp = Verstärkungsfaktor Proportionalregler
+		//Ki = Verstärkungsfaktor Integralregler
+		//Kd = Verstärkungsfaktor Differenzialregler
+
+		// Die Berechnung des neuen Regelwertes
+		$y = ($Kp * $e + $Ki * $Ta * $esum + $Kd * ($e - $ealt) / $Ta);
+
+	   	// Dieses ist eine Begrenzung des Stellventils auf 50%, da die Heizkörper sonst sehr heiß werden
+		$y = min(max($y, 0), 50);
+		$Stellwert = $y;
+
+	return $Stellwert;
+	}
+
 
 }
 ?>   
