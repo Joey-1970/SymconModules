@@ -917,11 +917,7 @@ class IPS2GPIO_IO extends IPSModule
 			// Wartezeit
 			IPS_Sleep(2000);
 			IPS_SetProperty($this->GetParentID(), "Open", true);
-			IPS_ApplyChanges($this->GetParentID());
-			// Wartezeit
-			IPS_Sleep(500);
-			// Pin-Update durchführen
-			$this->Get_PinUpdate();
+			IPS_ApplyChanges($this->GetParentID());			
 		}
 	return;
 	}
