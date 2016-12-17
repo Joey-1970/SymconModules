@@ -1,6 +1,6 @@
 <?
 // Klassendefinition
-class IPS2SingleRommControl extends IPSModule 
+class IPS2SingleRoomControl extends IPSModule 
 {
     	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
