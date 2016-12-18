@@ -1,6 +1,5 @@
 <?
-// Klassendefinition
-class IPS2SingleRoomControl extends IPSModule 
+class IPS2SingleRoomControl extends IPSModule
 {
     	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
@@ -10,9 +9,9 @@ class IPS2SingleRoomControl extends IPSModule
 		
 		$this->RegisterPropertyBoolean("Open", false);
 	    	$this->RegisterPropertyInteger("ActualTemperatureID", 0);
-		$this->RegisterPropertyFloat("KP", 0);
-		$this->RegisterPropertyFloat("KD", 0);
-		$this->RegisterPropertyFloat("KI", 0);
+		$this->RegisterPropertyFloat("KP", 0.0);
+		$this->RegisterPropertyFloat("KD", 0.0);
+		$this->RegisterPropertyFloat("KI", 0.0);
 		$this->RegisterPropertyInteger("Messzyklus", 120);
 		$this->RegisterTimer("Messzyklus", 0, 'IPS2SRC_Measurement($_IPS["TARGET"]);');
 		
