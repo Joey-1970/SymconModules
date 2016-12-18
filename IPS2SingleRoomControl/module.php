@@ -59,7 +59,7 @@ class IPS2SingleRoomControl extends IPSModule
 	{
 		
 		//Ta = Rechenschrittweite (Abtastzeit)
-		$Ta = Round((time() - $this->GetBuffer("LastTrigger") / 60, 0);
+		$Ta = Round( (time() - (int)$this->GetBuffer("LastTrigger")) / 60, 0);
 		//Schutzmechanismus falls Skript innerhalb einer Minute zweimal ausgeführt wird
 		$Ta = Max($Ta, 1);
 		
