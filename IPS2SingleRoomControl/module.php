@@ -7,6 +7,7 @@ class IPS2SingleRoomControl extends IPSModule
         {
             	// Diese Zeile nicht löschen.
             	parent::Create();
+		
 		$this->RegisterPropertyBoolean("Open", false);
 	    	$this->RegisterPropertyInteger("ActualTemperatureID", 0);
 		$this->RegisterPropertyFloat("KP", 0);
@@ -74,7 +75,7 @@ class IPS2SingleRoomControl extends IPSModule
 	return;
 	}
 	
-		// Berechnet nächsten Stellwert der Aktoren
+	// Berechnet nächsten Stellwert der Aktoren
 	private function PID($Kp, $Ki, $Kd, $e, $esum, $ealt, $Ta)
 	{
 		//e = aktuelle Reglerabweichung -> Soll-Ist
