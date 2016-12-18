@@ -933,7 +933,7 @@ class IPS2GPIO_IO extends IPSModule
 			if ($login == false)
 			{
 			    	IPS_LogMessage("IPS2GPIO SSH-Connect","Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert nicht!");
-			    	$result = "";
+			    	$Result = "";
 				return false;
 			}
 			$Result = $ssh->exec($Command);
@@ -941,7 +941,7 @@ class IPS2GPIO_IO extends IPSModule
 			$ssh->disconnect();
 		}
 		else {
-			$result = "";
+			$Result = "";
 		}
 	
         return $Result;
@@ -958,7 +958,7 @@ class IPS2GPIO_IO extends IPSModule
 			if ($login == false)
 			{
 			    	IPS_LogMessage("IPS2GPIO SSH-Connect","Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert nicht!");
-			    	$result = "";
+			    	$Result = "";
 				return false;
 			}
 			$ResultArray = Array();
