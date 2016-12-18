@@ -9,9 +9,9 @@ class IPS2SingleRoomControl extends IPSModule
             	parent::Create();
 		$this->RegisterPropertyBoolean("Open", false);
 	    	$this->RegisterPropertyInteger("ActualTemperatureID", 0);
-		$this->RegisterPropertyInteger("KP", 0);
-		$this->RegisterPropertyInteger("KD", 0);
-		$this->RegisterPropertyInteger("KI", 0);
+		$this->RegisterPropertyFloat("KP", 0);
+		$this->RegisterPropertyFloat("KD", 0);
+		$this->RegisterPropertyFloat("KI", 0);
 		$this->RegisterPropertyInteger("Messzyklus", 120);
 		$this->RegisterTimer("Messzyklus", 0, 'IPS2SRC_Measurement($_IPS["TARGET"]);');
 		
