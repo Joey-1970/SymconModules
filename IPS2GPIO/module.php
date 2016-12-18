@@ -957,8 +957,9 @@ class IPS2GPIO_IO extends IPSModule
 			$login = @$ssh->login($this->ReadPropertyString("User"), $this->ReadPropertyString("Password"));
 			if ($login == false)
 			{
-			    IPS_LogMessage("IPS2GPIO SSH-Connect","Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert nicht!");
-			    return false;
+			    	IPS_LogMessage("IPS2GPIO SSH-Connect","Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert nicht!");
+			    	$result = "";
+				return false;
 			}
 			$ResultArray = Array();
 			$CommandArray = unserialize($Command);
