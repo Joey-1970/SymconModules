@@ -98,7 +98,6 @@ class IPS2SingleRoomControl extends IPSModule
 
 	return $Stellwert;
 	}
-
-
 }
+
 ?>   
