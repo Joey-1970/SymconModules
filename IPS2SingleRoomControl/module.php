@@ -22,7 +22,7 @@ class IPS2SingleRoomControl extends IPSModule
 	{
 		//Never delete this line!
 		parent::ApplyChanges();
-		/*
+		
 		$this->RegisterVariableFloat("ActualTemperature", "Ist-Temperatur", "~Temperature", 10);
 		$this->DisableAction("ActualTemperature");
 		$this->RegisterVariableFloat("SetpointTemperature", "Soll-Temperatur", "~Temperature", 20);
@@ -51,7 +51,7 @@ class IPS2SingleRoomControl extends IPSModule
 		else {
 			$this->SetStatus(104);
 		}
-		*/
+		
 	return;
 	}
 	
@@ -99,4 +99,4 @@ class IPS2SingleRoomControl extends IPSModule
 	}
 }
 
-?>   
+?>
