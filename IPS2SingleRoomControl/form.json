@@ -11,7 +11,7 @@
    [ 
             { "name": "Open", "type": "CheckBox",  "caption": "Aktiv" },
             { "type": "Label", "label": "Variable die den aktuellen Temperaturwert enthält:" },
-            { "type": "SelectVariable", "name": "ActualTemperatureID", "caption": "Target" },
+            { "type": "SelectVariable", "name": "ActualTemperatureID", "caption": "Variable Ist-Temperatur" },
             { "type": "Label", "label": "Verstärkungsfaktor Proportionalregler:" },
             { "type": "NumberSpinner", "name": "KP", "caption": "Kp", "digits": 1},
             { "type": "Label", "label": "Verstärkungsfaktor Integralregler:" },
