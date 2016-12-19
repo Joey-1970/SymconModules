@@ -15,6 +15,7 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->RegisterPropertyInteger("Messzyklus", 120);
 		$this->RegisterTimer("Messzyklus", 0, 'IPS2SRC_Measurement($_IPS["TARGET"]);');
 		$this->RegisterPropertyInteger("PositionElementMax", 100);
+		$this->RegisterTimer("PWM", 0, 'IPS2SRC_PWM($_IPS["TARGET"]);');
 		
 	}
 
@@ -40,7 +41,7 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->DisableAction("ActualDeviation");
 		IPS_SetHidden($this->GetIDForIdent("ActualDeviation"), true);
 		
-		$this->RegisterTimer("PWM", 0, 'IPS2SRC_PWM($_IPS["TARGET"]);');
+		
 		
 		$this->SetBuffer("LastTrigger", time() - 60);
 		
