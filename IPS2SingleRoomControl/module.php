@@ -67,16 +67,14 @@ class IPS2SingleRoomControl extends IPSModule
 		$e = GetValueFloat($this->GetIDForIdent("SetpointTemperature")) - GetValueFloat($this->ReadPropertyInteger("ActualTemperatureID"));
 		
 		//Die Summe aller vorherigen Regelabweichungen bestimmen
-		If (((GetValueInteger($HeizungsStellelementID) == 0) and ($e < 0)) OR ((GetValueInteger($HeizungsStellelementID) == 100) and ($e > 0)))
+		If (((GetValueInteger($this->GetIDForIdent("PositionElement")) == 0) and ($e < 0)) OR ((GetValueInteger($this->GetIDForIdent("PositionElement")) == 100) and ($e > 0))) {
 			// Die Negativ-Werte sollen nicht weiter aufsummiert werden, wenn der Stellmotor schon auf 0 ist bzw. Die Positiv-Werte sollen nicht weiter aufsummiert werden, wenn der Stellmotor schon auf 100 ist
-			{
-			$esum = GetValueFloat($SummeRegelabweichungenID);
-		   }
-		else
-			{
-			$esum = GetValueFloat($SummeRegelabweichungenID) + $e;
-		   SetValueFloat($SummeRegelabweichungenID, $esum);
-			}
+			$esum = GetValueFloat($this->GetIDForIdent("SumDeviation"));
+		}
+		else {
+			$esum = GetValueFloat($this->GetIDForIdent("SumDeviation")) + $e;
+		   	SetValueFloat($this->GetIDForIdent("SumDeviation"), $esum);
+		}
 			    
 			    
 		$this->SetBuffer("LastTrigger", time());
