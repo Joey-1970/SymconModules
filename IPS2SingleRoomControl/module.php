@@ -16,7 +16,6 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->RegisterTimer("Messzyklus", 0, 'IPS2SRC_Measurement($_IPS["TARGET"]);');
 		$this->RegisterPropertyInteger("PositionElementMax", 100);
 		
-        return;
 	}
 
 	public function ApplyChanges()
@@ -41,6 +40,8 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->DisableAction("ActualDeviation");
 		IPS_SetHidden($this->GetIDForIdent("ActualDeviation"), true);
 		
+		$this->RegisterTimer("PWM", 0, 'IPS2SRC_PWM($_IPS["TARGET"]);');
+		
 		$this->SetBuffer("LastTrigger", time() - 60);
 		
 		$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
@@ -53,7 +54,6 @@ class IPS2SingleRoomControl extends IPSModule
 			$this->SetStatus(104);
 		}
 		
-	return;
 	}
 	
 	public function Measurement()
@@ -84,12 +84,43 @@ class IPS2SingleRoomControl extends IPSModule
 		   	SetValueFloat($this->GetIDForIdent("SumDeviation"), $esum);
 		}
 			    
-		$Result = $this->PID($this->ReadPropertyFloat("KP"), $this->ReadPropertyFloat("KI"), $this->ReadPropertyFloat("KD"), $e, $esum, $ealt, $Ta);
-		SetValueInteger($this->GetIDForIdent("PositionElement"), $Result);
+		$PositionElement = $this->PID($this->ReadPropertyFloat("KP"), $this->ReadPropertyFloat("KI"), $this->ReadPropertyFloat("KD"), $e, $esum, $ealt, $Ta);
+		SetValueInteger($this->GetIDForIdent("PositionElement"), $PositionElement);
+		
+		// Minimale Schaltänderungszeit in Sekunden
+		//$PWMzyklus = time() - (int)$this->GetBuffer("LastTrigger");
+		$PWMzyklus = $Ta * 60;
+		$PWMmin = 5; 
+		
+		// Errechnen der On-Zeit
+		$PWMontime = $PWMzyklus / 100 * $PositionElement;
+		// Schutzmechnismus damit die Minimum-Einschaltzeit eingehalten wird
+		If (($PWMontime > 0) and ($PWMontime < $PWMmin)) {
+		   $PWMontime = $PWMmin;
+		   }
+	   	// Schutzmechnismus damit die Minimum-Ausschaltzeit eingehalten wird
+		If (($PWMzyklus - $PWMontime) < $PWMmin) {
+		   $PWMontime = $PWMzyklus;
+		   }
+		// Schreiben und setzen
+		If ($PWMontime> 0) {
+			SetValueBoolean($this->GetIDForIdent("PWM_Mode"), true);
+			$this->SetTimerInterval("PWM", (int)$PWMontime * 1000));
+		   }
+		else {
+			SetValueBoolean($this->GetIDForIdent("PWM_Mode"), false);
+			}
+		
+		
 		
 		
 		$this->SetBuffer("LastTrigger", time());
-	return;
+	}
+	
+	public function PWM()
+	{
+		SetValueBoolean($this->GetIDForIdent("PWM_Mode"), false);
+		$this->SetTimerInterval("PWM", 0));
 	}
 	
 	// Berechnet nächsten Stellwert der Aktoren
