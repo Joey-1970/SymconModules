@@ -106,7 +106,7 @@ class IPS2SingleRoomControl extends IPSModule
 		// Schreiben und setzen
 		If ($PWMontime> 0) {
 			SetValueBoolean($this->GetIDForIdent("PWM_Mode"), true);
-			$this->SetTimerInterval("PWM", (int)$PWMontime * 1000));
+			$this->SetTimerInterval("PWM", (int)$PWMontime * 1000);
 		   }
 		else {
 			SetValueBoolean($this->GetIDForIdent("PWM_Mode"), false);
@@ -121,7 +121,7 @@ class IPS2SingleRoomControl extends IPSModule
 	public function PWM()
 	{
 		SetValueBoolean($this->GetIDForIdent("PWM_Mode"), false);
-		$this->SetTimerInterval("PWM", 0));
+		$this->SetTimerInterval("PWM", 0);
 	}
 	
 	// Berechnet nächsten Stellwert der Aktoren
