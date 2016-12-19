@@ -58,14 +58,21 @@ class IPS2SingleRoomControl extends IPSModule
 	
 	public function Measurement()
 	{
+		SetValueFloat($this->GetIDForIdent("ActualTemperature"), GetValueFloat($this->ReadPropertyInteger("ActualTemperatureID")));
 		
 		//Ta = Rechenschrittweite (Abtastzeit)
 		$Ta = Round( (time() - (int)$this->GetBuffer("LastTrigger")) / 60, 0);
 		//Schutzmechanismus falls Skript innerhalb einer Minute zweimal ausgeführt wird
 		$Ta = Max($Ta, 1);
 		
+		// Die vorherige Regelabweichung ermitteln
+		$ealt = GetValueFloat($this->GetIDForIdent("ActualDeviation")); 
+		
 		//Aktuelle Regelabweichung bestimmen
-		$e = GetValueFloat($this->GetIDForIdent("SetpointTemperature")) - GetValueFloat($this->ReadPropertyInteger("ActualTemperatureID"));
+		$e = GetValueFloat($this->GetIDForIdent("SetpointTemperature")) - GetValueFloat($this->GetIDForIdent("ActualTemperature"));
+		
+		// Vorherige Regelabweichung durch jetzige ersetzen 
+		SetValueFloat($this->GetIDForIdent("ActualDeviation"), $e);
 		
 		//Die Summe aller vorherigen Regelabweichungen bestimmen
 		If (((GetValueInteger($this->GetIDForIdent("PositionElement")) == 0) and ($e < 0)) OR ((GetValueInteger($this->GetIDForIdent("PositionElement")) == 100) and ($e > 0))) {
@@ -77,7 +84,10 @@ class IPS2SingleRoomControl extends IPSModule
 		   	SetValueFloat($this->GetIDForIdent("SumDeviation"), $esum);
 		}
 			    
-			    
+		$Result = $this->PID($this->ReadPropertyFloat("KP"), $this->ReadPropertyFloat("KI"), $this->ReadPropertyFloat("KD"), $e, $esum, $ealt, $Ta);
+		SetValueInteger($this->GetIDForIdent("PositionElement"), $Result);
+		
+		
 		$this->SetBuffer("LastTrigger", time());
 	return;
 	}
