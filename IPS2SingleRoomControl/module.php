@@ -16,6 +16,7 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->RegisterTimer("Messzyklus", 0, 'IPS2SRC_Measurement($_IPS["TARGET"]);');
 		$this->RegisterPropertyInteger("PositionElementMax", 100);
 		$this->RegisterTimer("PWM", 0, 'IPS2SRC_PWM($_IPS["TARGET"]);');
+		$this->RegisterPropertyInteger("MinSwitchTime", 5);
 		
 	}
 
@@ -91,7 +92,7 @@ class IPS2SingleRoomControl extends IPSModule
 		// Minimale Schaltänderungszeit in Sekunden
 		//$PWMzyklus = time() - (int)$this->GetBuffer("LastTrigger");
 		$PWMzyklus = $Ta * 60;
-		$PWMmin = 5; 
+		$PWMmin = $this->ReadPropertyInteger("MinSwitchTime"); 
 		
 		// Errechnen der On-Zeit
 		$PWMontime = $PWMzyklus / 100 * $PositionElement;
