@@ -17,7 +17,6 @@
 		$this->RegisterPropertyBoolean("Logging", false);
 		$this->RegisterTimer("Messzyklus", 0, 'I2GSR4_Measurement($_IPS["TARGET"]);');
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
-        return;
 	}
 
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -59,7 +58,6 @@
 					  $this->SetStatus(104);
 				}
 		    }
-        return;
 	}
 	
 	public function ReceiveData($JSONString) 
@@ -93,7 +91,6 @@
 			   	// Funktion zum erstellen dynamischer Pulldown-Menüs
 			   	break;
 	 	}
-	return;
  	}
 	// Beginn der Funktionen
 	
@@ -103,7 +100,6 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_trigger", "Pin" => $this->ReadPropertyInteger("Pin_O"), "Time" => 10)));
 		}
-	return;
 	}
 	
 	private function RegisterProfileFloat($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits)
@@ -122,7 +118,6 @@
 	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
 	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
 	        IPS_SetVariableProfileDigits($Name, $Digits);
-	return;
 	}
 	
 }
