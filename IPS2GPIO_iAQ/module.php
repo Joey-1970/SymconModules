@@ -114,7 +114,7 @@
 	 	}
  	}
 	
-	    // Beginn der Funktionen
+	// Beginn der Funktionen
 	// Führt eine Messung aus
 	public function Measurement()
 	{
@@ -125,7 +125,7 @@
 		}
 	}	
 	
-	    private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
+	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
 	{
 	        if (!IPS_VariableProfileExists($Name))
 	        {
