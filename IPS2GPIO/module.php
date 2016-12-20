@@ -20,7 +20,6 @@ class IPS2GPIO_IO extends IPSModule
 	    	$this->RegisterPropertyBoolean("Serial_Used", false);
 	    	$this->RegisterPropertyBoolean("SPI_Used", false);
 	    	$this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
-	return;
 	}
   
 	  public function ApplyChanges()
@@ -127,7 +126,6 @@ class IPS2GPIO_IO extends IPSModule
 		else {
 			return;
 		}
-	return;
 	}
 
 	public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
@@ -151,7 +149,6 @@ class IPS2GPIO_IO extends IPSModule
 				}
 				break;
 		}
-	return;
     	}
 	  
 	 public function ForwardData($JSONString) 
@@ -395,8 +392,6 @@ class IPS2GPIO_IO extends IPSModule
 			}
 			break;
 		}
-	    
-	  return;
 	  }
 	
 	 public function ReceiveData($JSONString) {
@@ -461,7 +456,6 @@ class IPS2GPIO_IO extends IPSModule
 				IPS_LogMessage("IPS2GPIO ReceiveData", "Überlänge: Datensätze nicht differenzierbar!");
 			}
 	 	}
-	 return;
 	 }
  
 	  public function RequestAction($Ident, $Value) 
@@ -481,7 +475,6 @@ class IPS2GPIO_IO extends IPSModule
 		        default:
 		            throw new Exception("Invalid Ident");
 		    }
-	 return;
 	 }
   
 	// Aktualisierung der genutzten Pins und der Notifikation
@@ -565,8 +558,6 @@ class IPS2GPIO_IO extends IPSModule
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_serial")));
 		// Start-trigger für andere Instanzen (BT, RPi)
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_start_trigger")));
-
-	return;
 	}
 
 	private function ClientSocket(String $message)
@@ -574,7 +565,6 @@ class IPS2GPIO_IO extends IPSModule
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
 			$res = $this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode($message))));  
 		}
-	return;	
 	}
 	
 	private function CommandClientSocket(String $message, $ResponseLen = 16)
@@ -630,8 +620,7 @@ class IPS2GPIO_IO extends IPSModule
 			else {
 				IPS_LogMessage("IPS2GPIO ReceiveData", strlen($buf)." Zeichen - nicht differenzierbar!");
 			}
-		}
-	return;	
+		}	
 	}
 	
 	private function ClientResponse(String $Message)
@@ -900,7 +889,6 @@ class IPS2GPIO_IO extends IPSModule
          
 		            	break;
 		    }
-	return;
 	}
 	
 	public function PIGPIOD_Restart()
@@ -919,7 +907,6 @@ class IPS2GPIO_IO extends IPSModule
 			IPS_SetProperty($this->GetParentID(), "Open", true);
 			IPS_ApplyChanges($this->GetParentID());			
 		}
-	return;
 	}
 	
 	private function SSH_Connect(String $Command)
