@@ -12,8 +12,6 @@ class IPS2PioneerBDP450 extends IPSModule
 		$this->RegisterPropertyInteger("DataUpdate", 15);
 		$this->RegisterTimer("DataUpdate", 0, 'I2BDP_Get_DataUpdate($_IPS["TARGET"]);');
 		$this->RegisterPropertyBoolean("RC_Data", false);
-		
-        return;
 	}
 
 	public function ApplyChanges()
@@ -186,7 +184,6 @@ class IPS2PioneerBDP450 extends IPSModule
 				$this->SetStatus(104);
 			}	   
 		}
-	return;
 	}
 	
 	public function ReceiveData($JSONString) {
@@ -324,7 +321,6 @@ class IPS2PioneerBDP450 extends IPSModule
 				SetValueString($this->GetIDForIdent("PlayerFirmware"), (string)$Message);
 				break;
 		}
-	return;
 	}
 	
 	public function RequestAction($Ident, $Value) 
@@ -593,7 +589,6 @@ class IPS2PioneerBDP450 extends IPSModule
 			default:
 			    throw new Exception("Invalid Ident");
 	    	}
-	return;
 	}
 	
 	public function Get_DataUpdate()
@@ -612,7 +607,6 @@ class IPS2PioneerBDP450 extends IPSModule
 				$this->ResponseWait();
 			}
 		}
-	return;
 	}
 	
 	private function ClientSocket(String $message)
@@ -622,23 +616,20 @@ class IPS2PioneerBDP450 extends IPSModule
 			$this->SetBuffer("LastCommandTimestamp", time());
 			$res = $this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode($message))));  
 		}
-	return;	
 	}
 	
 	public function PowerOn()
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
 			$this->ClientSocket("PN".chr(13));
-		}
-	return;	
+		}	
 	}
 	
 	public function PowerOff()
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
 			$this->ClientSocket("PF".chr(13));
-		}
-	return;	
+		}	
 	}
 	
 	public function Open()
@@ -646,23 +637,20 @@ class IPS2PioneerBDP450 extends IPSModule
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
 			$this->ClientSocket("OP".chr(13));
 		}
-	return;	
 	}
 	
 	public function Close()
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
 			$this->ClientSocket("CO".chr(13));
-		}
-	return;	
+		}	
 	}
 	
 	public function Stop()
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
 			$this->ClientSocket("99RJ".chr(13));
-		}
-	return;	
+		}	
 	}
 	
 	public function Play()
@@ -670,55 +658,48 @@ class IPS2PioneerBDP450 extends IPSModule
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
 			$this->ClientSocket("PL".chr(13));
 		}
-	return;	
 	}
 	
 	public function Still()
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
 			$this->ClientSocket("ST".chr(13));
-		}
-	return;	
+		}	
 	}
 	
 	public function StepForward()
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
 			$this->ClientSocket("SF".chr(13));
-		}
-	return;	
+		}	
 	}
 	
 	public function StepReverse()
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
 			$this->ClientSocket("SR".chr(13));
-		}
-	return;	
+		}	
 	}
 	
 	public function StopScan()
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
 			$this->ClientSocket("NS".chr(13));
-		}
-	return;	
+		}	
 	}
 	
 	public function ScanForward()
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
 			$this->ClientSocket("NF".chr(13));
-		}
-	return;	
+		}	
 	}
 	
 	public function ScanReverse()
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
 			$this->ClientSocket("NR".chr(13));
-		}
-	return;	
+		}	
 	}
 	
 	private function ConnectionTest()
@@ -808,7 +789,6 @@ class IPS2PioneerBDP450 extends IPSModule
 				 $i++;
 			} while ($this->GetBuffer("LastResponseTimestamp") <= $this->GetBuffer("LastCommandTimestamp"));
 	      IPS_Sleep(25);
-	return;
 	}
 
 }
