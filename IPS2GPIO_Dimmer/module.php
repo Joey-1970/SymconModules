@@ -10,7 +10,6 @@
 		 $this->RegisterPropertyBoolean("Open", false);
 		 $this->RegisterPropertyInteger("Pin", -1);
 		 $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
-	return;
         }
 
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -41,8 +40,7 @@
 				$this->SetStatus(104);
 			}
 		}
-        return;
-	}
+ 	}
 	
 	public function RequestAction($Ident, $Value) 
 	{
@@ -60,34 +58,31 @@
 	        default:
 	            throw new Exception("Invalid Ident");
 	    }
-	return;
 	}
 	
 	public function ReceiveData($JSONString) 
 	{
-    	// Empfangene Daten vom Gateway/Splitter
-    	$data = json_decode($JSONString);
-    	//IPS_LogMessage("ReceiveData_Dimmer", utf8_decode($data->Buffer));
- 	switch ($data->Function) {
-		case "get_usedpin":
-		   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
-		   	break;
-		case "status":
-			If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
-			   	$this->SetStatus($data->Status);
-			}
-			break;
-		case "freepin":
-			   // Funktion zum erstellen dynamischer Pulldown-Menüs
-			   break;
-		case "result":
-			If (($data->Pin == $this->ReadPropertyInteger("Pin")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
-			   	SetValueInteger($this->GetIDForIdent("Intensity"), $data->Value);
-			}
-			break;
- 	}
-
- 	return;
+		// Empfangene Daten vom Gateway/Splitter
+		$data = json_decode($JSONString);
+		//IPS_LogMessage("ReceiveData_Dimmer", utf8_decode($data->Buffer));
+		switch ($data->Function) {
+			case "get_usedpin":
+				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+				break;
+			case "status":
+				If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
+					$this->SetStatus($data->Status);
+				}
+				break;
+			case "freepin":
+				   // Funktion zum erstellen dynamischer Pulldown-Menüs
+				   break;
+			case "result":
+				If (($data->Pin == $this->ReadPropertyInteger("Pin")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
+					SetValueInteger($this->GetIDForIdent("Intensity"), $data->Value);
+				}
+				break;
+		}
  	}
 	// Beginn der Funktionen
 
@@ -103,7 +98,6 @@
 				SetValueInteger($this->GetIDForIdent("Intensity"), $value);
 			}
 		}
-	return;
 	}
 	
 	// Schaltet den gewaehlten Pin
@@ -119,7 +113,6 @@
 				$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => 0)));
 			}
 		}
-	return;
 	}
 	
 	// Toggelt den Status
@@ -128,7 +121,6 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")));
 		}
-	return;
 	}
 
     }
