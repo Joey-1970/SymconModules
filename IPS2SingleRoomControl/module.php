@@ -79,7 +79,7 @@ class IPS2SingleRoomControl extends IPSModule
 	            	break;
 	        default:
 	            throw new Exception("Invalid Ident");
-	    }
+	    	}
 	}
 	
 	public function Measurement()
