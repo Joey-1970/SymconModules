@@ -30,9 +30,9 @@
 		$this->RegisterTimer("DataUpdate", 0, 'Enigma_Get_DataUpdate($_IPS["TARGET"]);');
 		$this->RegisterTimer("EPGUpdate", 0, 'Enigma_Get_EPGUpdate($_IPS["TARGET"]);');
 		$this->RegisterTimer("ScreenshotUpdate", 0, 'Enigma_GetScreenshot($_IPS["TARGET"]);');
-        return;
 	}
-        // Überschreibt die intere IPS_ApplyChanges($id) Funktion
+        
+	// Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
         {
 		// Diese Zeile nicht löschen
@@ -280,7 +280,6 @@
 		else {
 			$this->SetStatus(104);
 		}
-	return;
         }
 	
 	public function RequestAction($Ident, $Value) 
@@ -548,7 +547,6 @@
 			default:
 			    throw new Exception("Invalid Ident");
 	    	}
-	return;
 	}
 	
 	// Beginn der Funktionen
@@ -651,7 +649,6 @@
 				$this->SetBuffer("FirstUpdate", "true");
 			}
 		}
-	return;
 	}
 	
 	public function Get_EPGUpdate()
@@ -883,10 +880,8 @@
 				}
 			}
 		}
-		
-	
-	return;
 	}
+	
 	// Ermittlung der Basisdaten
 	private function Get_BasicData()
 	{
@@ -927,7 +922,6 @@
 		If ($this->ReadPropertyBoolean("HDD_Data") == true) {
 			SetValueString($this->GetIDForIdent("e2hddinfo_model"), (string)$xmlResult->e2hdds->e2hdd->e2model);
 		}
-	return;
 	}
 	
 	private function Get_Powerstate()
@@ -954,7 +948,6 @@
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=0"));
 		}
-	return;
 	}
 	/*
 	0 = Toogle Standby
@@ -970,7 +963,6 @@
 	      If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=1"));
 	      }
-	return;
 	}
 	
 	public function Standby()
@@ -978,7 +970,6 @@
 	       If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$xmlResult = new SimpleXMLElement(file_get_contents("http:///".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=5"));
 	       }
-	return;
 	}			       
 	
 	public function WakeUpStandby()
@@ -986,7 +977,6 @@
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=4"));
 		}
-	return;
 	}
 				       
 	public function Reboot()
@@ -994,7 +984,6 @@
 	   	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) { 
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=2"));
 		}
-	return;
 	}
 	
 	public function RestartEnigma()
@@ -1002,7 +991,6 @@
 	      	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate?newstate=3"));
 		}
-	return;
 	}		       
 
 	public function GetCurrentServiceName()
@@ -1071,7 +1059,6 @@
 			$servicereference = urlencode($servicereference);
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/zap?sRef=".$servicereference));
 		}
-	return;
 	}    
 	    
 	public function MoviePlay(string $servicereference)
@@ -1081,7 +1068,6 @@
 			$servicereference = urlencode($servicereference);
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/zap?sRef=".$servicereference));
 		}
-	return;
 	}    
 	
 	public function ToggleMute()
@@ -1090,7 +1076,6 @@
 			// 113 Key "mute"
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=113"));
 		}
-	return;
 	}    
 	
 	public function VolUp()
@@ -1099,7 +1084,6 @@
 			// 115 Key "volume up"
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=115"));
 		}
-	return;
 	}        
 	
 	public function VolDown()
@@ -1108,7 +1092,6 @@
 			// 114 Key "volume down"
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=114"));
 		}
-	return;
 	}          
 	    
 	public function GetScreenshot()
@@ -1118,7 +1101,6 @@
 			IPS_SetMediaContent($this->GetIDForIdent("Screenshot"), base64_encode($Content));  //Bild Base64 codieren und ablegen
 			IPS_SendMediaEvent($this->GetIDForIdent("Screenshot")); //aktualisieren
 		}
-	return;
 	} 
 	
 	private function RegisterMediaObject($Name, $Typ, $Parent, $Position, $Cached, $Filename)
@@ -1135,7 +1117,6 @@
 			$ImageFile = IPS_GetKernelDir()."media".DIRECTORY_SEPARATOR.$Filename;  // Image-Datei
 			IPS_SetMediaFile($MediaID, $ImageFile, false);    // Image im MedienPool mit Image-Datei verbinden
 		}  
-	return;
 	}     
 	    
 	private function ConnectionTest()
@@ -1176,7 +1157,6 @@
 	        IPS_SetVariableProfileIcon($Name, $Icon);
 	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
 	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
-	return;
 	}
 	
 	public function GetServiceInformation()
@@ -1220,13 +1200,11 @@
 			IPS_SetProperty($ids[0], "Hooks", json_encode($hooks)); 
 			IPS_ApplyChanges($ids[0]); 
 		} 
- 	return;
 	} 
 	
 	protected function ProcessHookData() 
 	{
 		IPS_LogMessage("IPS2Enigma","WebHookData - Angekommen!");
-	return;
 	}
 	    
 	private function Get_Filename(string $sRef)
@@ -1344,7 +1322,6 @@
 				}
 			}
 		}		
-	return;
 	}
 				       
 /*	    
