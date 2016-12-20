@@ -16,7 +16,6 @@
 		$this->RegisterPropertyInteger("HysteresisOn", 100);
 		$this->RegisterPropertyInteger("HysteresisOff", 0);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GBH_Measurement($_IPS["TARGET"]);');
-	return;
         }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -66,7 +65,6 @@
 				$this->SetStatus(104);
 			}	
 		}
-        return;
 	}
 	
 	public function ReceiveData($JSONString) 
@@ -109,7 +107,6 @@
 			  	}
 			  	break;
 	 	}
-	return;
  	}
 	// Beginn der Funktionen
 
@@ -119,7 +116,6 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_word", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $this->ReadPropertyInteger("DeviceAddress"))));
 		}
-	return;
 	}	
 
 	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
@@ -136,8 +132,7 @@
 	        }
 	        IPS_SetVariableProfileIcon($Name, $Icon);
 	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
-	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
-	        
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);    
 	}
 
 	private function Setup()
@@ -147,7 +142,6 @@
 		IPS_Sleep(100);
 		// Messwerterfassung setzen
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte_onhandle", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => hexdec("10"))));
-	return;
 	}
 
 }
