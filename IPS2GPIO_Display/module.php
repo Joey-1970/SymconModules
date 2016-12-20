@@ -213,7 +213,6 @@
 			   	// Funktion zum erstellen dynamischer Pulldown-Menüs
 			   	break;
 	 	}
-	return;
  	}
 	// Beginn der Funktionen
 	
@@ -311,7 +310,6 @@
 				IPS_LogMessage("IPS2GPIO Display", $Message);
 			break;
 		}
-    	return;
 	}
 	
 	private function hex2str(String $hex)
@@ -325,8 +323,6 @@
 	{
 		$Message = utf8_encode($Message."\xFF\xFF\xFF");
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bytes_serial", "Command" => $Message)));
-
-	return;
 	}
 	
 	private function Setup()
@@ -349,20 +345,18 @@
 		$this->SetSendTouchCoordinate($this->ReadPropertyBoolean("SendTouchCoordinate"));
 		// Display-Daten anfordern
 		$this->Send("connect");
-	return;
 	}
+	
 	public function SetBrightness(Int $Value)
 	{
 		$Value = min(100, max(0, $Value));
 		$this->Send("dim=".$Value); 
-	return;
 	}
 	
 	private function SetBrightnessDefault(Int $Value)
 	{
 		$Value = min(100, max(0, $Value));
 		$this->Send("dims=".$Value);
-	return;
 	}
 	
 	private function SetDateTime()
@@ -374,42 +368,36 @@
 		$this->Send("rtc3=".date("H",$timestamp));
 		$this->Send("rtc4=".date("i",$timestamp));
 		$this->Send("rtc5=".date("s",$timestamp));
-	return;	
 	}
 	
 	private function SetSleepNoSerial(Int $Value)
 	{
 		$Value = min(65535, max(0, $Value));
 		$this->Send("ussp=".$Value);
-	return;
 	}
 	
 	private function SetSleepNoTouch(Int $Value)
 	{
 		$Value = min(65535, max(0, $Value));
 		$this->Send("thsp=".$Value);
-	return;
 	}
 	
 	private function SetTouchAwake(Bool $Value)
 	{
 		$Value = min(1, max(0, $Value));
 		$this->Send("thup=".$Value);
-	return;
 	}
 	
 	private function SetCommandReturn(Int $Value)
 	{
 		$Value = min(3, max(0, $Value));
 		$this->Send("bkcmd=".$Value);
-	return;
 	}
 	
 	private function SetSendTouchCoordinate(Bool $Value)
 	{
 		$Value = min(1, max(0, $Value));
 		$this->Send("sendxy=".$Value);
-	return;
 	}
 	
 	public function SetSleep(Bool $Value)
@@ -417,13 +405,11 @@
 		$Value = min(1, max(0, $Value));
 		SetValueBoolean($this->GetIDForIdent("SleepMode"), $Value);
 		$this->Send("sleep=".$Value);
-	return;
 	}
 	
 	public function Reset()
 	{
 		$this->Send("rest");
-	return;
 	}
 	
 	public function Update(String $Filename)
@@ -443,7 +429,6 @@
 		} else {
 		    IPS_LogMessage("IPS2GPIO Display","Fehler: Die angegebene Datei ".$Filename." wurde nicht gefunden!");
 		}		
-	return;
 	}
 }
 ?>
