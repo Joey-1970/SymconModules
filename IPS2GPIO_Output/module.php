@@ -11,7 +11,6 @@
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->RegisterPropertyBoolean("Logging", false);
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
-	return;
         }
 
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -39,7 +38,6 @@
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 			}
 		}
-        return;
 	}
 
 	public function RequestAction($Ident, $Value) 
@@ -55,7 +53,6 @@
 	        default:
 	            throw new Exception("Invalid Ident");
 	    	}
-	return;
 	}
 
 	
@@ -81,7 +78,6 @@
 			   	// Funktion zum erstellen dynamischer Pulldown-Menüs
 			   	break;
 	 	}
-	return;
  	}
 	// Beginn der Funktionen
 	
@@ -91,7 +87,6 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value)));
 		}
-	return;
 	}
 	
 	// Toggelt den Status
@@ -100,7 +95,6 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")));
 		}
-	return;
 	}
 }
 ?>
