@@ -173,40 +173,7 @@ class IPS2SingleRoomControl extends IPSModule
 	return $Stellwert;
 	}
 	
-	//*************************************************************************************************************
-	// Liest die aktuellen Sollwertdaten aus der csv-Datei ein
-	private function TemperaturSollwert($filename)
-		{
-		$fp = fopen(IPS_GetKernelDir()."parameter/".$filename.".csv", "r");
 
-		$zeilen = array();
-
-		while(!feof($fp))
-			{
-		   $zeilen[] = fgetcsv  ( $fp  , 4096 , ";" , "\"" );
-			}
-		fclose($fp);
-
-		// Zeile festlegen durch Auswahl Werktag, Wochenende bzw. Feiertag und Abwesenheit
-		If (GetValueBoolean(43287 /*[Startseite\Anwesenheit]*/ ) == true)
-			{
-			If (GetValueBoolean(50254 /*[Sonstige Daten\Variablen\Sonstige Variablen\Werktag]*/ ) == true)
-				$raw = 1;
-			elseif ((GetValueBoolean(36415 /*[Sonstige Daten\Variablen\Sonstige Variablen\Wochenende]*/ ) == true) OR (GetValueBoolean(28915 /*[Sonstige Daten\Variablen\Sonstige Variablen\Feiertag]*/ ) == true))
-			$raw = 2;
-			}
-		else
-			{
-		   $raw = 1; // muss normalerweise 3 sein!!
-		   }
-
-		// Spalte festlegen durch die aktuelle Uhrzeit (Durchlauf jeweils zu jeder Viertelstunde erforderlich)
-		$column = (((GetValueInteger(26431 /*[Sonstige Daten\Variablen\Sonstige Variablen\Aktuelle Stunde]*/ ) * 4) + 2) + (GetValueInteger(50008 /*[Sonstige Daten\Variablen\Sonstige Variablen\Aktuelle Minute]*/ ) / 15) - 1);
-
-		$result = $zeilen[$raw][$column];
-
-	Return $result;
-	}
 	
 }
 
