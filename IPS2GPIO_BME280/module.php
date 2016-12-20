@@ -23,7 +23,6 @@
  	    	$this->RegisterPropertyInteger("SB_T", 5);
  	    	$this->RegisterPropertyInteger("IIR_Filter", 0);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GBME_Measurement($_IPS["TARGET"]);');
-	return;
         }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -110,7 +109,6 @@
 				$this->SetStatus(104);
 			}
 		}
-	return;
 	}
 	
 	public function ReceiveData($JSONString) 
@@ -150,7 +148,6 @@
 			   	}
 			   	break;
 	 	}
-	return;
  	}
 	// Beginn der Funktionen
 
@@ -294,7 +291,6 @@
 				}
 			}
 		}
-	return;
 	}	
 	
 	private function Setup()
@@ -313,7 +309,6 @@
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F2"), "Value" => $ctrl_hum_reg)));
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F4"), "Value" => $ctrl_meas_reg)));
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F5"), "Value" => $config_reg)));
-	return;
 	}
 	
 	private function ReadCalibrateData()
@@ -337,7 +332,6 @@
 	    			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $i, "Value" => $i)));
 			}
 		}
-	return;	
 	}
 	
 	private function ReadData()
@@ -346,7 +340,6 @@
 		$MeasurementData = array();
 		$this->SetBuffer("MeasurementData", serialize($MeasurementData));
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_block_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F7"), "Count" => 8)));
-	return;
 	}
 	
 	private function PressureTrend(int $interval)
@@ -372,7 +365,6 @@
 	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
 	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
 	        IPS_SetVariableProfileDigits($Name, $Digits);
-	return;
 	}
 
 }
