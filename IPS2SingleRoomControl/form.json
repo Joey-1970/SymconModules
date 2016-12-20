@@ -23,7 +23,9 @@
             { "type": "Label", "label": "Maximale Öffnung des Stellantriebs:" },
             { "type": "NumberSpinner", "name": "PositionElementMax", "caption": "Maximum (%)" },
             { "type": "Label", "label": "Minmale Schaltzeit des Stellantriebs:" },
-            { "type": "NumberSpinner", "name": "MinSwitchTime", "caption": "Minumum (sek)" }
+            { "type": "NumberSpinner", "name": "MinSwitchTime", "caption": "Minumum (sek)" },
+            { "type": "Label", "label": "Variable die vom PWM-Ausgang geschaltet werden soll:" },
+            { "type": "SelectVariable", "name": "PWM_Actuator", "caption": "Aktor" }
    ]
     
 } 
