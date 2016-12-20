@@ -58,6 +58,30 @@ class IPS2SingleRoomControl extends IPSModule
 		
 	}
 	
+	public function RequestAction($Ident, $Value) 
+	{
+  		switch($Ident) {
+	        case "SetpointTemperature":
+	            	$this->Measurement();
+	            	//Neuen Wert in die Statusvariable schreiben
+	            	SetValueFloat($this->GetIDForIdent($Ident), $Value);
+	            	break;
+	        case "OperatingMode":
+	            	$this->Measurement();
+	            	//Neuen Wert in die Statusvariable schreiben
+	            	SetValueBoolean($this->GetIDForIdent($Ident), $Value);
+			If ($Value == true) {
+				$this->DisableAction("SetpointTemperature");
+			}
+			else {
+				$this->EnableAction("SetpointTemperature");
+			}
+	            	break;
+	        default:
+	            throw new Exception("Invalid Ident");
+	    }
+	}
+	
 	public function Measurement()
 	{
 		SetValueFloat($this->GetIDForIdent("ActualTemperature"), GetValueFloat($this->ReadPropertyInteger("ActualTemperatureID")) );
