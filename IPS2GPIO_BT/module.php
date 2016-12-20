@@ -118,7 +118,6 @@
 			   	$this->ApplyChanges();
 				break;
 	 	}
-	return;
  	}
 	// Beginn der Funktionen
 
