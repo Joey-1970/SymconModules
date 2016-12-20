@@ -17,6 +17,7 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->RegisterPropertyInteger("PositionElementMax", 100);
 		$this->RegisterTimer("PWM", 0, 'IPS2SRC_PWM($_IPS["TARGET"]);');
 		$this->RegisterPropertyInteger("MinSwitchTime", 5);
+		$this->RegisterPropertyInteger("PWM_ActuatorID", 0);
 		
 	}
 
@@ -131,11 +132,17 @@ class IPS2SingleRoomControl extends IPSModule
 		// Schreiben und setzen
 		If ($PWMontime> 0) {
 			SetValueBoolean($this->GetIDForIdent("PWM_Mode"), true);
+			If ($this->ReadPropertyInteger("PWM_ActuatorID") > 0) {
+				SetValueBoolean($this->ReadPropertyInteger("PWM_ActuatorID"), true);
+			}
 			$this->SetTimerInterval("PWM", (int)$PWMontime * 1000);
-		   }
+		}
 		else {
 			SetValueBoolean($this->GetIDForIdent("PWM_Mode"), false);
+			If ($this->ReadPropertyInteger("PWM_ActuatorID") > 0) {
+				SetValueBoolean($this->ReadPropertyInteger("PWM_ActuatorID"), false);
 			}
+		}
 		
 		
 		
@@ -146,6 +153,9 @@ class IPS2SingleRoomControl extends IPSModule
 	public function PWM()
 	{
 		SetValueBoolean($this->GetIDForIdent("PWM_Mode"), false);
+		If ($this->ReadPropertyInteger("PWM_ActuatorID") > 0) {
+			SetValueBoolean($this->ReadPropertyInteger("PWM_ActuatorID"), false);
+		}
 		$this->SetTimerInterval("PWM", 0);
 	}
 	
