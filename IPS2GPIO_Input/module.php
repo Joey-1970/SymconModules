@@ -15,7 +15,6 @@
             	$this->RegisterPropertyInteger("TriggerScript", 0);
             	$this->RegisterPropertyInteger("ToggleScript", 0);
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
-	return;
         }
 
        // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -48,7 +47,6 @@
 				$this->SetStatus(104);
 			}
 		}
-        return;
 	}
 	
 	public function ReceiveData($JSONString) 
@@ -90,7 +88,6 @@
 			   	// Funktion zum erstellen dynamischer Pulldown-Menüs
 			   	break;
 	 	}
-	return;
  	}
 	// Beginn der Funktionen
 	
