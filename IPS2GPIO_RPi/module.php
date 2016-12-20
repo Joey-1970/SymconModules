@@ -101,17 +101,15 @@
 				$this->SetStatus(104);
 			}
 		}
-        return;
 	}
 	
-	    public function RequestAction($Ident, $Value) 
+	public function RequestAction($Ident, $Value) 
 	{
   		switch($Ident) {
 	       
 	        default:
 	            throw new Exception("Invalid Ident");
 	    	}
-	return;
 	}
 	
 	public function ReceiveData($JSONString) 
@@ -275,8 +273,8 @@
 			   	$this->ApplyChanges();
 				break;
 	 	}
-	return;
  	}
+	
 	// Beginn der Funktionen
 	public function Measurement()
 	{
@@ -296,7 +294,6 @@
 
 			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 0, "IsArray" => true )));
 		}
-	return;
 	}
 	    
 	    
@@ -325,21 +322,18 @@
 
 			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 1, "IsArray" => true )));
 		}
-	return;
 	}
  	
 	public function PiReboot()
 	{
 		$Command = "sudo reboot";
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => 3, "IsArray" => false )));
-	return;
 	}    
 	
 	public function PiShutdown()
 	{
 		$Command = "sudo shutdown –h";
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => 3, "IsArray" => false )));
-	return;
 	}       
 	    
 	public function SetDisplayPower(bool $Value)
@@ -352,7 +346,6 @@
 		}
 		$Command = "vcgencmd display_power ".$Status;
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => $Command, "CommandNumber" => 3, "IsArray" => false )));
-	return;
 	}       
 	    
 	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
@@ -369,8 +362,7 @@
 	        }
 	        IPS_SetVariableProfileIcon($Name, $Icon);
 	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
-	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
-	return;        
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);        
 	}
 	
 	private function RegisterProfileFloat($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits)
@@ -389,7 +381,6 @@
 	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
 	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
 	        IPS_SetVariableProfileDigits($Name, $Digits);
-	return;
 	}
 	
 	private function GetHardware(Int $RevNumber)
