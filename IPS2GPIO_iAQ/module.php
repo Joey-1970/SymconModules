@@ -15,7 +15,6 @@
  	    	$this->RegisterPropertyBoolean("LoggingCO2", false);
 		$this->RegisterPropertyBoolean("LoggingTVOC", false);
           	$this->RegisterTimer("Messzyklus", 0, 'I2GiAQ_Measurement($_IPS["TARGET"]);');
-        return;
 	}
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -73,7 +72,6 @@
 				$this->SetStatus(104);
 			}
 		}       
-	return;
 	}
 	
 	public function ReceiveData($JSONString) 
@@ -114,7 +112,6 @@
 			   	}
 			   	break;
 	 	}
-	return;
  	}
 	
 	    // Beginn der Funktionen
@@ -126,7 +123,6 @@
 			//IPS_LogMessage("IPS2GPIO GPIO iAQ", "Daten sind angefordert");
 			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_bytes", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("5A"), "Count" => 9)));
 		}
-	return;
 	}	
 	
 	    private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
@@ -143,8 +139,7 @@
 	        }
 	        IPS_SetVariableProfileIcon($Name, $Icon);
 	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
-	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
-	return;        
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);        
 	}
 
 }
