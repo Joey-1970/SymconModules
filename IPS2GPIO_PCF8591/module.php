@@ -22,7 +22,6 @@
  	    	$this->RegisterPropertyBoolean("LoggingOut", false);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GAD1_Measurement($_IPS["TARGET"]);');
-        return;
 	}
 
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -81,7 +80,6 @@
 				$this->SetStatus(104);
 			}
 		}
-        return;
 	}
 	
 	public function RequestAction($Ident, $Value) 
@@ -94,8 +92,7 @@
 	            break;
 	        default:
 	            throw new Exception("Invalid Ident");
-	    }
-	return;
+	    	}
 	}
 	
 	public function ReceiveData($JSONString) 
@@ -142,8 +139,8 @@
 			  	}
 			  	break;
 	 	}
-	return;
  	}
+	
 	// Beginn der Funktionen
 	// Führt eine Messung aus
 	public function Measurement()
@@ -165,7 +162,6 @@
 				}
 			}
 		}
-	return;
 	}
 	
 	public function Set_Output(Int $Value)
@@ -174,7 +170,6 @@
 			$Value = min(255, max(0, $Value));
 			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("40"), "Value" => $Value)));
 		}
-	return;
 	}
 }
 ?>
