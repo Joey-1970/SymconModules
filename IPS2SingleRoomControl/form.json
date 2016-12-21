@@ -25,7 +25,24 @@
             { "type": "Label", "label": "Minmale Schaltzeit des Stellantriebs:" },
             { "type": "NumberSpinner", "name": "MinSwitchTime", "caption": "Minumum (sek)" },
             { "type": "Label", "label": "Variable die vom PWM-Ausgang geschaltet werden soll:" },
-            { "type": "SelectVariable", "name": "PWM_Actuator", "caption": "Aktor" }
+            { "type": "SelectVariable", "name": "PWM_Actuator", "caption": "Aktor" },
+            { "type": "Label", "label": "Vorgaben für den Wochenplan (Minumum zwei):" },
+            { "type": "Label", "label": "Temperatur 1:" },
+            { "type": "NumberSpinner", "name": "Temperatur_1", "caption": "Grad C°", "digits": 1},
+            { "type": "Label", "label": "Temperatur 2:" },
+            { "type": "NumberSpinner", "name": "Temperatur_2", "caption": "Grad C°", "digits": 1},
+            { "type": "Label", "label": "Temperatur 3:" },
+            { "type": "NumberSpinner", "name": "Temperatur_3", "caption": "Grad C°", "digits": 1},
+            { "type": "Label", "label": "Temperatur 4:" },
+            { "type": "NumberSpinner", "name": "Temperatur_4", "caption": "Grad C°", "digits": 1},
+            { "type": "Label", "label": "Temperatur 5:" },
+            { "type": "NumberSpinner", "name": "Temperatur_5", "caption": "Grad C°", "digits": 1},
+            { "type": "Label", "label": "Temperatur 6:" },
+            { "type": "NumberSpinner", "name": "Temperatur_6", "caption": "Grad C°", "digits": 1},
+            { "type": "Label", "label": "Temperatur 7:" },
+            { "type": "NumberSpinner", "name": "Temperatur_7", "caption": "Grad C°", "digits": 1},
+            { "type": "Label", "label": "Temperatur 8:" },
+            { "type": "NumberSpinner", "name": "Temperatur_8", "caption": "Grad C°", "digits": 1}
    ]
     
 } 
