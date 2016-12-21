@@ -50,7 +50,7 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->DisableAction("ActualDeviation");
 		IPS_SetHidden($this->GetIDForIdent("ActualDeviation"), true);
 		
-		
+		// Anlegen der Daten für den Wochenplan
 		$this->RegisterEvent("Wochenplan", "IPS2SRC_Event_".$this->InstanceID, 2, $this->InstanceID, 150);
 		for ($i = 1; $i < 8; $i++) {
 			$Value = $this->ReadPropertyFloat("Temperatur_".$i);
