@@ -44,7 +44,7 @@ class IPS2SingleRoomControl extends IPSModule
 		IPS_SetHidden($this->GetIDForIdent("ActualDeviation"), true);
 		
 		
-		
+		$this->RegisterEvent("IPS2SRC_Event_".$this->InstanceID, 2, $this->InstanceID, 150);
 		$this->SetBuffer("LastTrigger", time() - 60);
 		
 		$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
