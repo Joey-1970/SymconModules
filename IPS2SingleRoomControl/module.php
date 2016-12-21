@@ -57,6 +57,7 @@ class IPS2SingleRoomControl extends IPSModule
 			$this->RegisterScheduleAction($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), $i - 1, $Value."C°", 0xFF0000 + (2 + $i), "IPS2SRC_SetTemperature(\$_IPS['TARGET'], ".$Value.");");
 		}
 		
+		// Zeitstempel für die Differenz der Messungen
 		$this->SetBuffer("LastTrigger", time() - 60);
 		
 		$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
