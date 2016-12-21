@@ -192,8 +192,14 @@ class IPS2SingleRoomControl extends IPSModule
 			IPS_SetIdent($EventID, $Name);
 			IPS_SetName($EventID, $Name);
 			IPS_SetPosition($EventID, $Position);
+			IPS_SetEventActive($EventID, true);  
 			// Initiale Befüllung
 	        }
+	}
+	
+	private function RegisterScheduleAction($EventID, $ActionID, $Name, $Color, $Script)
+	{
+		IPS_SetEventScheduleAction($EventID, $ActionID, $Name, $Color, $Script);
 	}
 }
 
