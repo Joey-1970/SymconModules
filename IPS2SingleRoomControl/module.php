@@ -18,7 +18,14 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->RegisterTimer("PWM", 0, 'IPS2SRC_PWM($_IPS["TARGET"]);');
 		$this->RegisterPropertyInteger("MinSwitchTime", 5);
 		$this->RegisterPropertyInteger("PWM_ActuatorID", 0);
-		
+		$this->RegisterPropertyFloat("Temperatur_1", 16.0);
+		$this->RegisterPropertyFloat("Temperatur_2", 17.0);
+		$this->RegisterPropertyFloat("Temperatur_3", 18.0);
+		$this->RegisterPropertyFloat("Temperatur_4", 19.0);
+		$this->RegisterPropertyFloat("Temperatur_5", 19.5);
+		$this->RegisterPropertyFloat("Temperatur_6", 20.0);
+		$this->RegisterPropertyFloat("Temperatur_7", 20.5);
+		$this->RegisterPropertyFloat("Temperatur_8", 21.0);
 	}
 
 	public function ApplyChanges()
@@ -45,6 +52,10 @@ class IPS2SingleRoomControl extends IPSModule
 		
 		
 		$this->RegisterEvent("IPS2SRC_Event_".$this->InstanceID, 2, $this->InstanceID, 150);
+		for ($i = 1; $i <= 8; $i++) {
+			$this->RegisterScheduleAction($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), $i - 1, $Name, $Color, $Script);
+		}
+		
 		$this->SetBuffer("LastTrigger", time() - 60);
 		
 		$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
