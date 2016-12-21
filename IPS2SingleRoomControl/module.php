@@ -53,7 +53,7 @@ class IPS2SingleRoomControl extends IPSModule
 		
 		$this->RegisterEvent("IPS2SRC_Event_".$this->InstanceID, 2, $this->InstanceID, 150);
 		for ($i = 1; $i < 8; $i++) {
-			$this->RegisterScheduleAction($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), $i - 1, $this->ReadPropertyFloat("Temperatur_".$i), 0xFF0000 + (2 + Si), "IPS2SRC_SetTemperature(\$_IPS['TARGET'], $this->ReadPropertyFloat("Temperatur_".$i));");
+			$this->RegisterScheduleAction($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), $i - 1, $this->ReadPropertyFloat("Temperatur_".$i), 0xFF0000 + (2 + Si), "IPS2SRC_SetTemperature(\$_IPS['TARGET'], ".$this->ReadPropertyFloat("Temperatur_".$i).");");
 		}
 		
 		$this->SetBuffer("LastTrigger", time() - 60);
