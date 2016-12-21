@@ -54,7 +54,7 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->RegisterEvent("Wochenplan", "IPS2SRC_Event_".$this->InstanceID, 2, $this->InstanceID, 150);
 		for ($i = 1; $i < 8; $i++) {
 			$Value = $this->ReadPropertyFloat("Temperatur_".$i);
-			$this->RegisterScheduleAction($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), $i - 1, $Value."C°", 0xFF0000 + (2 + Si), "IPS2SRC_SetTemperature(\$_IPS['TARGET'], ".$Value.");");
+			$this->RegisterScheduleAction($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), $i - 1, $Value."C°", 0xFF0000 + (2 + $i), "IPS2SRC_SetTemperature(\$_IPS['TARGET'], ".$Value.");");
 		}
 		
 		$this->SetBuffer("LastTrigger", time() - 60);
@@ -202,7 +202,7 @@ class IPS2SingleRoomControl extends IPSModule
 	
 	private function RegisterEvent($Name, $Ident, $Typ, $Parent, $Position)
 	{
-		if (!IPS_EventExists($this->GetIDForIdent($Name)))
+		if (!IPS_EventExists($this->GetIDForIdent($Ident)))
 	        {
 	            	$EventID = IPS_CreateEvent($Typ);
 			IPS_SetParent($EventID, $Parent);
