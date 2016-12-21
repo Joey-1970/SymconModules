@@ -52,7 +52,9 @@ class IPS2SingleRoomControl extends IPSModule
 		
 		// Anlegen der Daten für den Wochenplan
 		$this->RegisterEvent("Wochenplan", "IPS2SRC_Event_".$this->InstanceID, 2, $this->InstanceID, 150);
-		IPS_SetEventScheduleGroup($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 0, 127); 
+		for ($i = 0; $i < 6; $i++) {
+			IPS_SetEventScheduleGroup($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), $i, pow(2, $i));
+		}
 		for ($i = 1; $i < 8; $i++) {
 			$Value = $this->ReadPropertyFloat("Temperatur_".$i);
 			$this->RegisterScheduleAction($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), $i - 1, $Value."C°", 0xFF0000 + (2 + $i), "IPS2SRC_SetTemperature(\$_IPS['TARGET'], ".$Value.");");
