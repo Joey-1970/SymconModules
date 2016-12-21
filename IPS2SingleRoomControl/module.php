@@ -183,8 +183,18 @@ class IPS2SingleRoomControl extends IPSModule
 	return $Stellwert;
 	}
 	
-
-	
+	private function RegisterEvent($Name, $Typ, $Parent, $Position)
+	{
+		if (!IPS_EventExists($this->GetIDForIdent($Name)))
+	        {
+	            	$EventID = IPS_CreateEvent($Typ);
+			IPS_SetParent($EventID, $Parent);
+			IPS_SetIdent($EventID, $Name);
+			IPS_SetName($EventID, $Name);
+			IPS_SetPosition($EventID, $Position);
+			// Initiale Befüllung
+	        }
+	}
 }
 
 ?>
