@@ -37,6 +37,14 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->RegisterPropertyFloat("Temperatur_6", 20.0);
 		$this->RegisterPropertyFloat("Temperatur_7", 20.5);
 		$this->RegisterPropertyFloat("Temperatur_8", 21.0);
+		$this->RegisterPropertyString("ColorTemperatur_1", "0xA9F5F2");
+		$this->RegisterPropertyString("ColorTemperatur_2", "0xF78181");
+		$this->RegisterPropertyString("ColorTemperatur_3", "0xFE2E2E");
+		$this->RegisterPropertyString("ColorTemperatur_4", "0xDF0101");
+		$this->RegisterPropertyString("ColorTemperatur_5", "0x610B0B");
+		$this->RegisterPropertyString("ColorTemperatur_6", "0x2A0A0A");
+		$this->RegisterPropertyString("ColorTemperatur_7", "0x80FF00");
+		$this->RegisterPropertyString("ColorTemperatur_8", "0x298A08");
 	}
 
 	public function ApplyChanges()
@@ -68,7 +76,7 @@ class IPS2SingleRoomControl extends IPSModule
 		}
 		for ($i = 1; $i <= 8; $i++) {
 			$Value = $this->ReadPropertyFloat("Temperatur_".$i);
-			$this->RegisterScheduleAction($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), $i - 1, $Value."C°", 0xFF0000 + (2 + $i), "IPS2SRC_SetTemperature(\$_IPS['TARGET'], ".$Value.");");
+			$this->RegisterScheduleAction($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), $i - 1, $Value."C°", $this->ReadPropertyString("ColorTemperatur_".$i), "IPS2SRC_SetTemperature(\$_IPS['TARGET'], ".$Value.");");
 		}
 		
 		// Zeitstempel für die Differenz der Messungen
