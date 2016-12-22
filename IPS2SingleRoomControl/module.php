@@ -1,7 +1,18 @@
 <?
 class IPS2SingleRoomControl extends IPSModule
 {
-    	// Überschreibt die interne IPS_Create($id) Funktion
+    	// ToDo:
+	// - Preheat
+	// - Variable Tagesgruppen
+	// - Farbauswahl
+	// - Boost-Funktion
+	// - Abwesenheit
+	// - Feiertage/Urlaub
+	// - Selbstkonfiguration K-Faktoren
+	// - Zeitgesteuerter Rückfall von Manuell auf Automatik
+	// - Fehler: Soll-Tempertur über Webfront in 5°-Schritten
+	
+	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
             	// Diese Zeile nicht löschen.
