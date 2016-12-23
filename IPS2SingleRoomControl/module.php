@@ -217,9 +217,21 @@ class IPS2SingleRoomControl extends IPSModule
 	return $Stellwert;
 	}
 	
-	public function SetTemperature($Value)
+	public function SetTemperature(float $Value)
 	{
+		If ($this->GetIDForIdent("OperatingMode") == true) {
+			SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $Value);
+			$this->Measurement();
+		}
+	}
 	
+	public function SetOperatingMode(bool $Value)
+	{
+		SetValueBoolean($this->GetIDForIdent("OperatingMode"),  $Value);
+		If ($Value == true) {
+			// Aktuellen Wert des Wochenplans auslesen
+			
+		}
 	}
 	
 	private function RegisterEvent($Name, $Ident, $Typ, $Parent, $Position)
