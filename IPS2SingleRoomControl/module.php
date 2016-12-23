@@ -8,7 +8,7 @@ class IPS2SingleRoomControl extends IPSModule
 	// - Abwesenheit
 	// - Feiertage/Urlaub
 	// - Selbstkonfiguration K-Faktoren
-	// - Zeitgesteuerter Rückfall von Manuell auf Automatik
+	
 	
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
@@ -28,6 +28,8 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->RegisterTimer("PWM", 0, 'IPS2SRC_PWM($_IPS["TARGET"]);');
 		$this->RegisterPropertyInteger("MinSwitchTime", 5);
 		$this->RegisterPropertyInteger("PWM_ActuatorID", 0);
+		$this->RegisterPropertyInteger("AutomaticFallback", 120);
+		$this->RegisterTimer("AutomaticFallback", 0, 'IPS2SRC_AutomaticFallback($_IPS["TARGET"]);');
 		$this->RegisterPropertyFloat("Temperatur_1", 16.0);
 		$this->RegisterPropertyFloat("Temperatur_2", 17.0);
 		$this->RegisterPropertyFloat("Temperatur_3", 18.0);
@@ -229,9 +231,22 @@ class IPS2SingleRoomControl extends IPSModule
 	{
 		SetValueBoolean($this->GetIDForIdent("OperatingMode"),  $Value);
 		If ($Value == true) {
+			$this->SetTimerInterval("AutomaticFallback", 0);
 			// Aktuellen Wert des Wochenplans auslesen
 			
 		}
+		else {
+			// Timer für automatischen Fallback starten
+			$this->SetTimerInterval("AutomaticFallback", ($this->ReadPropertyInteger("AutomaticFallback") * 1000 * 60));
+		}
+	}
+	
+	public function AutomaticFallback()
+	{
+		SetValueBoolean($this->GetIDForIdent("OperatingMode"),  true);
+		$this->SetTimerInterval("AutomaticFallback", 0);
+		// Aktuellen Wert des Wochenplans auslesen
+		
 	}
 	
 	private function RegisterEvent($Name, $Ident, $Typ, $Parent, $Position)
