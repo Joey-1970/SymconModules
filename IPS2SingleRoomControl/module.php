@@ -54,7 +54,7 @@ class IPS2SingleRoomControl extends IPSModule
 		
 		$this->RegisterVariableFloat("ActualTemperature", "Ist-Temperatur", "~Temperature", 10);
 		$this->DisableAction("ActualTemperature");
-		$this->RegisterVariableFloat("SetpointTemperature", "Soll-Temperatur", "~Temperature", 20);
+		$this->RegisterVariableFloat("SetpointTemperature", "Soll-Temperatur", "~Temperature.Room", 20);
 		$this->EnableAction("SetpointTemperature");
 		$this->RegisterVariableBoolean("OperatingMode", "Betriebsart Automatik", "~Switch", 30);
 		$this->EnableAction("OperatingMode");
