@@ -2,7 +2,6 @@
 class IPS2SingleRoomControl extends IPSModule
 {
     	// ToDo:
-	// - Preheat
 	// - Variable Tagesgruppen
 	// - Farbauswahl
 	// - Boost-Funktion
@@ -10,7 +9,6 @@ class IPS2SingleRoomControl extends IPSModule
 	// - Feiertage/Urlaub
 	// - Selbstkonfiguration K-Faktoren
 	// - Zeitgesteuerter Rückfall von Manuell auf Automatik
-	// - Fehler: Soll-Tempertur über Webfront in 5°-Schritten
 	
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
@@ -25,6 +23,7 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->RegisterPropertyFloat("KI", 0.0);
 		$this->RegisterPropertyInteger("Messzyklus", 120);
 		$this->RegisterTimer("Messzyklus", 0, 'IPS2SRC_Measurement($_IPS["TARGET"]);');
+		$this->RegisterPropertyInteger("PositionElementMin", 0);
 		$this->RegisterPropertyInteger("PositionElementMax", 100);
 		$this->RegisterTimer("PWM", 0, 'IPS2SRC_PWM($_IPS["TARGET"]);');
 		$this->RegisterPropertyInteger("MinSwitchTime", 5);
@@ -212,7 +211,7 @@ class IPS2SingleRoomControl extends IPSModule
 		$y = ($Kp * $e + $Ki * $Ta * $esum + $Kd * ($e - $ealt) / $Ta);
 
 	   	// Dieses ist eine Begrenzung des Stellventils, da die Heizkörper sonst sehr heiß werden
-		$y = min(max($y, 0), $this->ReadPropertyInteger("PositionElementMax"));
+		$y = min(max($y, $this->ReadPropertyInteger("PositionElementMin")), $this->ReadPropertyInteger("PositionElementMax"));
 		$Stellwert = $y;
 
 	return $Stellwert;
