@@ -28,7 +28,7 @@ IPS2GPIO - Splittermodul für die folgenden Instanzen
   
   IPS2GPIO_Display - Unterstützung des Nextion Displays inkl. Fernupdate
   
-  IPS2GPIO_RPi  Überwachung des Raspberry Pi (Temperatur, Auslastung etc.)
+  IPS2GPIO_RPi - Überwachung des Raspberry Pi (Temperatur, Auslastung etc.)
   
   IPS2GPIO_BT - Nutzung der Bluetoothfunktionalität der Raspberry Pi 3 zur Anwesenheitserkennung
 
