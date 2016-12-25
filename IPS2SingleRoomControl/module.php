@@ -129,8 +129,8 @@ class IPS2SingleRoomControl extends IPSModule
 				IPS_LogMessage("IPS2SingleRoomControl", "Fehler bei der Ermittlung der Wochenplan-Solltemperatur!"); 	
 			}
 			else {
-				$$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".($ActionID + 1));
-				SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $$ActionIDTemperature);
+				$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".($ActionID + 1));
+				SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $ActionIDTemperature);
 			}
 		}
 		
