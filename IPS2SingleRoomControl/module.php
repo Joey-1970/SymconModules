@@ -251,49 +251,48 @@ class IPS2SingleRoomControl extends IPSModule
 	
 	private function GetEventActionID($EventID, $EventType, $Days, $Hour, $Minute)
 	{
-		  $EventValue = IPS_GetEvent($EventID);
-		  $Result = false;
-		  // Prüfen um welche Art von Event es sich handelt
-		  If ($EventValue['EventType'] == $EventType) {
-				$ScheduleGroups = $EventValue['ScheduleGroups'];
-				// Anzahl der ScheduleGroups ermitteln	
-				$ScheduleGroupsCount = count($ScheduleGroups);
+		$EventValue = IPS_GetEvent($EventID);
+		$Result = false;
+		// Prüfen um welche Art von Event es sich handelt
+		If ($EventValue['EventType'] == $EventType) {
+			$ScheduleGroups = $EventValue['ScheduleGroups'];
+			// Anzahl der ScheduleGroups ermitteln	
+			$ScheduleGroupsCount = count($ScheduleGroups);
 
-				If ($ScheduleGroupsCount > 0) {
-					for ($i = 0; $i <= $ScheduleGroupsCount - 1; $i++) {	
-						If ($ScheduleGroups[$i]['Days'] == $Days) {
-							   $ScheduleGroupDay = $ScheduleGroups[$i];
-							   $ScheduleGroupsDayCount = count($ScheduleGroupDay['Points']);
+			If ($ScheduleGroupsCount > 0) {
+				for ($i = 0; $i <= $ScheduleGroupsCount - 1; $i++) {	
+					If ($ScheduleGroups[$i]['Days'] == $Days) {
+						$ScheduleGroupDay = $ScheduleGroups[$i];
+						$ScheduleGroupsDayCount = count($ScheduleGroupDay['Points']);
 
-							   If ($ScheduleGroupsDayCount == 0) {
-									Echo "Keine Schaltpunkte definiert!";
-							   }
-							   elseif ($ScheduleGroupsDayCount == 1) {
-									$Result = $ScheduleGroupDay['Points'][0]['ActionID'];
-							   }
-							   elseif ($ScheduleGroupsDayCount > 1) {
-								   for ($j = 0; $j <= $ScheduleGroupsDayCount - 1; $j++) {
-										$TimestampScheduleStart = mktime($ScheduleGroupDay['Points'][$j]['Start']['Hour'], $ScheduleGroupDay['Points'][$j]['Start']['Minute'], 0, 0, 0, 0);
-										If ($j < $ScheduleGroupsDayCount - 1) {
-												$TimestampScheduleEnd = mktime($ScheduleGroupDay['Points'][$j + 1]['Start']['Hour'], $ScheduleGroupDay['Points'][$j + 1]['Start']['Minute'], 0, 0, 0, 0);
-										}
-										else {
-												$TimestampScheduleEnd = mktime(24, 0, 0, 0, 0, 0);
-										}
-										$Timestamp = mktime($Hour, $Minute, 0, 0, 0, 0);
+						If ($ScheduleGroupsDayCount == 0) {
+							IPS_LogMessage("IPS2SingleRoomControl", "Keine Schaltpunkte definiert!"); 	
+						}
+						elseif ($ScheduleGroupsDayCount == 1) {
+							$Result = $ScheduleGroupDay['Points'][0]['ActionID'];
+						}
+						elseif ($ScheduleGroupsDayCount > 1) {
+							for ($j = 0; $j <= $ScheduleGroupsDayCount - 1; $j++) {
+								$TimestampScheduleStart = mktime($ScheduleGroupDay['Points'][$j]['Start']['Hour'], $ScheduleGroupDay['Points'][$j]['Start']['Minute'], 0, 0, 0, 0);
+								If ($j < $ScheduleGroupsDayCount - 1) {
+									$TimestampScheduleEnd = mktime($ScheduleGroupDay['Points'][$j + 1]['Start']['Hour'], $ScheduleGroupDay['Points'][$j + 1]['Start']['Minute'], 0, 0, 0, 0);
+								}
+								else {
+									$TimestampScheduleEnd = mktime(24, 0, 0, 0, 0, 0);
+								}
+								$Timestamp = mktime($Hour, $Minute, 0, 0, 0, 0);
 
-										If (($Timestamp >= $TimestampScheduleStart) AND ($Timestamp < $TimestampScheduleEnd)) {
-												$Result = $ScheduleGroupDay['Points'][$j]['ActionID'];
-										} 
-
-								   }
-							   }
+								If (($Timestamp >= $TimestampScheduleStart) AND ($Timestamp < $TimestampScheduleEnd)) {
+									$Result = $ScheduleGroupDay['Points'][$j]['ActionID'];
+								} 
+							}
 						}
 					}
 				}
-				else {
-					Echo "Es sind keine Aktionen eingerichtet";
-				}
+			}
+			else {
+				IPS_LogMessage("IPS2SingleRoomControl", "Es sind keine Aktionen eingerichtet!");
+			}
 		  }
 	return $Result;
 	}
