@@ -123,6 +123,13 @@ class IPS2SingleRoomControl extends IPSModule
 	{
 		SetValueFloat($this->GetIDForIdent("ActualTemperature"), GetValueFloat($this->ReadPropertyInteger("ActualTemperatureID")) );
 		
+		If ($this->GetIDForIdent("OperatingMode") == true) {
+			$EventID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, $Days, date("H"), date("i"));
+			If (!$EventID) {
+				$EventIDTemperature = $this->ReadPropertyFloat("Temperatur_".($EventID + 1));
+				SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $EventIDTemperature);
+			}
+		}
 		
 		
 		//Ta = Rechenschrittweite (Abtastzeit)
