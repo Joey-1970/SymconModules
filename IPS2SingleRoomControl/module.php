@@ -123,8 +123,10 @@ class IPS2SingleRoomControl extends IPSModule
 	
 	public function Measurement()
 	{
+		// die Temperatur aus dem angegebenen Sensor in das Modul kopieren
 		SetValueFloat($this->GetIDForIdent("ActualTemperature"), GetValueFloat($this->ReadPropertyInteger("ActualTemperatureID")) );
 		
+		// wenn der Mode auf Automatik ist, den aktuellen Soll-Wert aus dem Wochenplan lesen
 		If ($this->GetIDForIdent("OperatingMode") == true) {
 			$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, pow(2, date("N") - 1), date("H"), date("i"));
 			If (!$ActionID) {
@@ -136,6 +138,15 @@ class IPS2SingleRoomControl extends IPSModule
 			}
 		}
 		
+		// die Daten aus den Angaben zum Fensterstatus aufbereiten
+		If ($this->ReadPropertyInteger("WindowStatusID") = 0) {
+			// Es ist keine Variablen angegeben
+			$WindowStatus = true;
+		}
+		elseif ($this->ReadPropertyInteger("WindowStatusID") > 0) {
+			// wenn eine Variable angegeben wird der Zustand des Fensters in die Hilfsvariable geschrieben
+			$WindowStatus = GetValueBoolean($this->ReadPropertyInteger("WindowStatusID"));
+		}
 		
 		//Ta = Rechenschrittweite (Abtastzeit)
 		$Ta = Round( (time() - (int)$this->GetBuffer("LastTrigger")) / 60, 0);
@@ -181,13 +192,13 @@ class IPS2SingleRoomControl extends IPSModule
 		   }
 		// Schreiben und setzen
 		If ($PWMontime> 0) {
-			//If (($this->ReadPropertyInteger("WindowStatusID") > 0) AND (GetValueBoolean($this->ReadPropertyInteger("WindowStatusID")) == true)) {
+			If ($WindowStatus == true) {
 				SetValueBoolean($this->GetIDForIdent("PWM_Mode"), true);
 				If ($this->ReadPropertyInteger("PWM_ActuatorID") > 0) {
 					SetValueBoolean($this->ReadPropertyInteger("PWM_ActuatorID"), true);
 				}
 				$this->SetTimerInterval("PWM", (int)$PWMontime * 1000);
-			//}
+			}
 		}
 		else {
 			SetValueBoolean($this->GetIDForIdent("PWM_Mode"), false);
