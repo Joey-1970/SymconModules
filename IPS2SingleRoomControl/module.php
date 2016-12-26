@@ -55,12 +55,17 @@ class IPS2SingleRoomControl extends IPSModule
 		//Never delete this line!
 		parent::ApplyChanges();
 		
+		$this->RegisterVariableBoolean("OperatingMode", "Betriebsart Automatik", "~Switch", 30);
+		$this->EnableAction("OperatingMode");
 		$this->RegisterVariableFloat("ActualTemperature", "Ist-Temperatur", "~Temperature", 10);
 		$this->DisableAction("ActualTemperature");
 		$this->RegisterVariableFloat("SetpointTemperature", "Soll-Temperatur", "~Temperature.Room", 20);
-		$this->EnableAction("SetpointTemperature");
-		$this->RegisterVariableBoolean("OperatingMode", "Betriebsart Automatik", "~Switch", 30);
-		$this->EnableAction("OperatingMode");
+		If ($this->GetIDForIdent("OperatingMode") == true) {
+			$this->DisableAction("SetpointTemperature");
+		}
+		else {
+			$this->EnableAction("SetpointTemperature");
+		}
 		$this->RegisterVariableInteger("PositionElement", "Stellelement", "~Intensity.100", 40);
 		$this->DisableAction("PositionElement");
 		$this->RegisterVariableBoolean("PWM_Mode", "PWM-Status", "~Switch", 40);
