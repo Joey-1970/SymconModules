@@ -154,9 +154,11 @@ class IPS2SingleRoomControl extends IPSModule
 				break;	
 			case 10603:
 				IPS_LogMessage("IPS2SingleRoomControl", "Temperatur- oder Fensterstatusänderung");
+				// Änderung der Ist-Temperatur, die Temperatur aus dem angegebenen Sensor in das Modul kopieren
 				If ($SenderID == $this->ReadPropertyInteger("ActualTemperatureID")) {
 					SetValueFloat($this->GetIDForIdent("ActualTemperature"), GetValueFloat($this->ReadPropertyInteger("ActualTemperatureID")) );
 				}
+				// Änderung des Fensterstatus
 				elseif ($SenderID == $this->ReadPropertyInteger("WindowStatusID")) {
 					$this->Measurement();
 				}
@@ -166,9 +168,6 @@ class IPS2SingleRoomControl extends IPSModule
 		
 	public function Measurement()
 	{
-		// die Temperatur aus dem angegebenen Sensor in das Modul kopieren
-		SetValueFloat($this->GetIDForIdent("ActualTemperature"), GetValueFloat($this->ReadPropertyInteger("ActualTemperatureID")) );
-		
 		// wenn der Mode auf Automatik ist, den aktuellen Soll-Wert aus dem Wochenplan lesen
 		If ($this->GetIDForIdent("OperatingMode") == true) {
 			$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, pow(2, date("N") - 1), date("H"), date("i"));
