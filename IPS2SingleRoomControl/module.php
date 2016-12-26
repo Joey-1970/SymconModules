@@ -87,6 +87,8 @@ class IPS2SingleRoomControl extends IPSModule
 			$this->RegisterScheduleAction($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), $i - 1, $Value."C°", $this->ReadPropertyInteger("ColorTemperatur_".$i), "IPS2SRC_SetTemperature(\$_IPS['TARGET'], ".$Value.");");
 		}
 		
+		$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10817);
+		
 		// Zeitstempel für die Differenz der Messungen
 		$this->SetBuffer("LastTrigger", time() - 60);
 		
@@ -126,6 +128,25 @@ class IPS2SingleRoomControl extends IPSModule
 	    	}
 	}
 	
+	public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
+    	{
+        IPS_LogMessage("IPS2SingleRoomControl", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
+		switch ($Message) {
+			case 10817:
+				IPS_LogMessage("IPS2SingleRoomControl", "Wochenplanänderung!");
+				break;
+			case 11101:
+				
+				break;
+			case 11102:
+				
+				break;	
+			case 10505:
+				
+				break;
+		}
+    	}
+		
 	public function Measurement()
 	{
 		// die Temperatur aus dem angegebenen Sensor in das Modul kopieren
