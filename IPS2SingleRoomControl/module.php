@@ -181,11 +181,13 @@ class IPS2SingleRoomControl extends IPSModule
 		   }
 		// Schreiben und setzen
 		If ($PWMontime> 0) {
-			SetValueBoolean($this->GetIDForIdent("PWM_Mode"), true);
-			If ($this->ReadPropertyInteger("PWM_ActuatorID") > 0) {
-				SetValueBoolean($this->ReadPropertyInteger("PWM_ActuatorID"), true);
-			}
-			$this->SetTimerInterval("PWM", (int)$PWMontime * 1000);
+			//If (($this->ReadPropertyInteger("WindowStatusID") > 0) AND (GetValueBoolean($this->ReadPropertyInteger("WindowStatusID")) == true)) {
+				SetValueBoolean($this->GetIDForIdent("PWM_Mode"), true);
+				If ($this->ReadPropertyInteger("PWM_ActuatorID") > 0) {
+					SetValueBoolean($this->ReadPropertyInteger("PWM_ActuatorID"), true);
+				}
+				$this->SetTimerInterval("PWM", (int)$PWMontime * 1000);
+			//}
 		}
 		else {
 			SetValueBoolean($this->GetIDForIdent("PWM_Mode"), false);
