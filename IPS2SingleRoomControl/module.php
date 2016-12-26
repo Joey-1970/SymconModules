@@ -177,7 +177,13 @@ class IPS2SingleRoomControl extends IPSModule
 		   	SetValueFloat($this->GetIDForIdent("SumDeviation"), $esum);
 		}
 			    
-		$PositionElement = $this->PID($this->ReadPropertyFloat("KP"), $this->ReadPropertyFloat("KI"), $this->ReadPropertyFloat("KD"), $e, $esum, $ealt, $Ta);
+		// nur wenn das Fenster offen ist, wird eine Berechnung durchgeführt
+		If ($WindowStatus == true) {
+			$PositionElement = $this->PID($this->ReadPropertyFloat("KP"), $this->ReadPropertyFloat("KI"), $this->ReadPropertyFloat("KD"), $e, $esum, $ealt, $Ta);
+		}
+		else {
+			$PositionElement = 0;
+		}
 		SetValueInteger($this->GetIDForIdent("PositionElement"), $PositionElement);
 		
 		// Minimale Schaltänderungszeit in Sekunden
@@ -196,14 +202,12 @@ class IPS2SingleRoomControl extends IPSModule
 		   $PWMontime = $PWMzyklus;
 		   }
 		// Schreiben und setzen
-		If ($PWMontime> 0) {
-			If ($WindowStatus == true) {
-				SetValueBoolean($this->GetIDForIdent("PWM_Mode"), true);
-				If ($this->ReadPropertyInteger("PWM_ActuatorID") > 0) {
-					SetValueBoolean($this->ReadPropertyInteger("PWM_ActuatorID"), true);
-				}
-				$this->SetTimerInterval("PWM", (int)$PWMontime * 1000);
+		If ($PWMontime > 0) {
+			SetValueBoolean($this->GetIDForIdent("PWM_Mode"), true);
+			If ($this->ReadPropertyInteger("PWM_ActuatorID") > 0) {
+				SetValueBoolean($this->ReadPropertyInteger("PWM_ActuatorID"), true);
 			}
+			$this->SetTimerInterval("PWM", (int)$PWMontime * 1000);			
 		}
 		else {
 			SetValueBoolean($this->GetIDForIdent("PWM_Mode"), false);
