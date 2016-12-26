@@ -87,9 +87,9 @@ class IPS2SingleRoomControl extends IPSModule
 			$this->RegisterScheduleAction($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), $i - 1, $Value."C°", $this->ReadPropertyInteger("ColorTemperatur_".$i), "IPS2SRC_SetTemperature(\$_IPS['TARGET'], ".$Value.");");
 		}
 		
-		$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10817);
+		$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10821);
+		$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10822);
 		$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10823);
-		$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10803);
 		
 		// Zeitstempel für die Differenz der Messungen
 		$this->SetBuffer("LastTrigger", time() - 60);
@@ -134,13 +134,13 @@ class IPS2SingleRoomControl extends IPSModule
     	{
         IPS_LogMessage("IPS2SingleRoomControl", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
 		switch ($Message) {
-			case 10817:
+			case 10821:
 				IPS_LogMessage("IPS2SingleRoomControl", "Wochenplanänderung 1!");
 				break;
-			case 10823:
+			case 10822:
 				IPS_LogMessage("IPS2SingleRoomControl", "Wochenplanänderung 2!");
 				break;
-			case 10803:
+			case 10823:
 				IPS_LogMessage("IPS2SingleRoomControl", "Wochenplanänderung 3!");
 				break;	
 			case 10505:
