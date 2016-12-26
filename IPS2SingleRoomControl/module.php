@@ -162,7 +162,7 @@ class IPS2SingleRoomControl extends IPSModule
 				IPS_LogMessage("IPS2SingleRoomControl", "Fehler bei der Ermittlung der Wochenplan-Solltemperatur!"); 	
 			}
 			else {
-				$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".($ActionID + 1));
+				$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".$ActionID);
 				SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $ActionIDTemperature);
 			}
 		}
@@ -359,7 +359,7 @@ class IPS2SingleRoomControl extends IPSModule
 								$Timestamp = mktime($Hour, $Minute, 0, 0, 0, 0);
 
 								If (($Timestamp >= $TimestampScheduleStart) AND ($Timestamp < $TimestampScheduleEnd)) {
-									$Result = $ScheduleGroupDay['Points'][$j]['ActionID'];
+									$Result = ($ScheduleGroupDay['Points'][$j]['ActionID']) + 1;
 								} 
 							}
 						}
