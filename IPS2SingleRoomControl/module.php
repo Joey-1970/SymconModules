@@ -124,15 +124,7 @@ class IPS2SingleRoomControl extends IPSModule
 	            	SetValueFloat($this->GetIDForIdent($Ident), $Value);
 	            	break;
 	        case "OperatingMode":
-	            	$this->Measurement();
-	            	//Neuen Wert in die Statusvariable schreiben
-	            	SetValueBoolean($this->GetIDForIdent($Ident), $Value);
-			If ($Value == true) {
-				$this->DisableAction("SetpointTemperature");
-			}
-			else {
-				$this->EnableAction("SetpointTemperature");
-			}
+	            	$this->SetOperatingMode($Value);
 	            	break;
 	        default:
 	            throw new Exception("Invalid Ident");
@@ -305,20 +297,22 @@ class IPS2SingleRoomControl extends IPSModule
 	{
 		SetValueBoolean($this->GetIDForIdent("OperatingMode"),  $Value);
 		If ($Value == true) {
+			$this->DisableAction("SetpointTemperature");
 			$this->SetTimerInterval("AutomaticFallback", 0);
 			// Aktuellen Wert des Wochenplans auslesen
 			$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, pow(2, date("N") - 1), date("H"), date("i"));
 			If (!$ActionID) {
 				IPS_LogMessage("IPS2SingleRoomControl", "Fehler bei der Ermittlung der Wochenplan-Solltemperatur!"); 	
 			}
-			else {
-				$$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".($ActionID + 1));
+			else {	
+				$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".$ActionID);
 				SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $$ActionIDTemperature);
 			}
 			
 		}
 		else {
 			// Timer für automatischen Fallback starten
+			$this->EnableAction("SetpointTemperature");
 			$this->SetTimerInterval("AutomaticFallback", ($this->ReadPropertyInteger("AutomaticFallback") * 1000 * 60));
 		}
 	}
