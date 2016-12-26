@@ -160,6 +160,7 @@ class IPS2SingleRoomControl extends IPSModule
 				}
 				// Änderung des Fensterstatus
 				elseif ($SenderID == $this->ReadPropertyInteger("WindowStatusID")) {
+					$WindowStatus = GetValueBoolean($this->ReadPropertyInteger("WindowStatusID"));
 					$this->Measurement();
 				}
 				break;
