@@ -154,7 +154,12 @@ class IPS2SingleRoomControl extends IPSModule
 				break;	
 			case 10603:
 				IPS_LogMessage("IPS2SingleRoomControl", "Temperatur- oder Fensterstatusänderung");
-				SetValueFloat($this->GetIDForIdent("ActualTemperature"), GetValueFloat($this->ReadPropertyInteger("ActualTemperatureID")) );
+				If ($SenderID == $this->ReadPropertyInteger("ActualTemperatureID")) {
+					SetValueFloat($this->GetIDForIdent("ActualTemperature"), GetValueFloat($this->ReadPropertyInteger("ActualTemperatureID")) );
+				}
+				elseif ($SenderID == $this->ReadPropertyInteger("WindowStatusID")) {
+					$this->Measurement();
+				}
 				break;
 		}
     	}
