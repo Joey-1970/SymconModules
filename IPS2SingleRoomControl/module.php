@@ -87,10 +87,18 @@ class IPS2SingleRoomControl extends IPSModule
 			$this->RegisterScheduleAction($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), $i - 1, $Value."C°", $this->ReadPropertyInteger("ColorTemperatur_".$i), "IPS2SRC_SetTemperature(\$_IPS['TARGET'], ".$Value.");");
 		}
 		
-		// Registrierung für Nachrichten
+		// Registrierung für Nachrichten des Wochenplans
 		$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10821);
 		$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10822);
 		$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10823);
+		// Registrierung für die Änderung der Ist-Temperatur
+		If ($this->ReadPropertyInteger("ActualTemperatureID") > 0) {
+			$this->RegisterMessage($this->ReadPropertyInteger("ActualTemperatureID"), 10603);
+		}
+		// Registrierung für die Änderung des Fensterstatus
+		If ($this->ReadPropertyInteger("WindowStatusID") > 0) {
+			$this->RegisterMessage($this->ReadPropertyInteger("WindowStatusID"), 10603);
+		}
 		
 		// Zeitstempel für die Differenz der Messungen
 		$this->SetBuffer("LastTrigger", time() - 60);
@@ -144,8 +152,9 @@ class IPS2SingleRoomControl extends IPSModule
 			case 10823:
 				IPS_LogMessage("IPS2SingleRoomControl", "Wochenplanänderung 3!");
 				break;	
-			case 10505:
-				
+			case 10603:
+				IPS_LogMessage("IPS2SingleRoomControl", "Temperatur- oder Fensterstatusänderung");
+				SetValueFloat($this->GetIDForIdent("ActualTemperature"), GetValueFloat($this->ReadPropertyInteger("ActualTemperatureID")) );
 				break;
 		}
     	}
