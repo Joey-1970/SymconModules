@@ -8,6 +8,7 @@ class IPS2SingleRoomControl extends IPSModule
 	// - Abwesenheit
 	// - Feiertage/Urlaub
 	// - Selbstkonfiguration K-Faktoren
+	// - Fensterkontakte
 	
 	
 	// Überschreibt die interne IPS_Create($id) Funktion
