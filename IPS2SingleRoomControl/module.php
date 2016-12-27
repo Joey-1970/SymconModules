@@ -306,7 +306,7 @@ class IPS2SingleRoomControl extends IPSModule
 			}
 			else {	
 				$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".$ActionID);
-				SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $$ActionIDTemperature);
+				SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $ActionIDTemperature);
 			}
 			
 		}
