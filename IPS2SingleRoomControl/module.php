@@ -145,7 +145,7 @@ class IPS2SingleRoomControl extends IPSModule
 				IPS_LogMessage("IPS2SingleRoomControl", "Wochenplanänderung 3!");
 				break;	
 			case 10603:
-				IPS_LogMessage("IPS2SingleRoomControl", "Temperatur- oder Fensterstatusänderung");
+				//IPS_LogMessage("IPS2SingleRoomControl", "Temperatur- oder Fensterstatusänderung");
 				// Änderung der Ist-Temperatur, die Temperatur aus dem angegebenen Sensor in das Modul kopieren
 				If ($SenderID == $this->ReadPropertyInteger("ActualTemperatureID")) {
 					SetValueFloat($this->GetIDForIdent("ActualTemperature"), GetValueFloat($this->ReadPropertyInteger("ActualTemperatureID")) );
