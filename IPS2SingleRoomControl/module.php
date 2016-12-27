@@ -119,9 +119,9 @@ class IPS2SingleRoomControl extends IPSModule
 	{
   		switch($Ident) {
 	        case "SetpointTemperature":
-	            	$this->Measurement();
 	            	//Neuen Wert in die Statusvariable schreiben
 	            	SetValueFloat($this->GetIDForIdent($Ident), $Value);
+			$this->Measurement();
 	            	break;
 	        case "OperatingMode":
 	            	$this->SetOperatingMode($Value);
@@ -152,7 +152,6 @@ class IPS2SingleRoomControl extends IPSModule
 				}
 				// Änderung des Fensterstatus
 				elseif ($SenderID == $this->ReadPropertyInteger("WindowStatusID")) {
-					$WindowStatus = GetValueBoolean($this->ReadPropertyInteger("WindowStatusID"));
 					$this->Measurement();
 				}
 				break;
@@ -162,7 +161,7 @@ class IPS2SingleRoomControl extends IPSModule
 	public function Measurement()
 	{
 		// wenn der Mode auf Automatik ist, den aktuellen Soll-Wert aus dem Wochenplan lesen
-		If ($this->GetIDForIdent("OperatingMode") == true) {
+		If (GetValueBoolean($this->GetIDForIdent("OperatingMode")) == true) { 	
 			$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, pow(2, date("N") - 1), date("H"), date("i"));
 			If (!$ActionID) {
 				IPS_LogMessage("IPS2SingleRoomControl", "Fehler bei der Ermittlung der Wochenplan-Solltemperatur!"); 	
@@ -179,7 +178,7 @@ class IPS2SingleRoomControl extends IPSModule
 			$WindowStatus = true;
 		}
 		elseif ($this->ReadPropertyInteger("WindowStatusID") > 0) {
-			// wenn eine Variable angegeben wird der Zustand des Fensters in die Hilfsvariable geschrieben
+			// wenn eine Variable angegeben ist, wird der Zustand des Fensters in die Hilfsvariable geschrieben
 			$WindowStatus = GetValueBoolean($this->ReadPropertyInteger("WindowStatusID"));
 		}
 		
@@ -207,7 +206,7 @@ class IPS2SingleRoomControl extends IPSModule
 		   	SetValueFloat($this->GetIDForIdent("SumDeviation"), $esum);
 		}
 			    
-		// nur wenn das Fenster offen ist, wird eine Berechnung durchgeführt
+		// nur wenn das Fenster geschlossen ist, wird eine Berechnung durchgeführt
 		If ($WindowStatus == true) {
 			$PositionElement = $this->PID($this->ReadPropertyFloat("KP"), $this->ReadPropertyFloat("KI"), $this->ReadPropertyFloat("KD"), $e, $esum, $ealt, $Ta);
 		}
