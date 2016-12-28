@@ -161,18 +161,6 @@ class IPS2SingleRoomControl extends IPSModule
 		
 	public function Measurement()
 	{
-		// wenn der Mode auf Automatik ist, den aktuellen Soll-Wert aus dem Wochenplan lesen
-		If (GetValueBoolean($this->GetIDForIdent("OperatingMode")) == true) { 	
-			$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, pow(2, date("N") - 1), date("H"), date("i"));
-			If (!$ActionID) {
-				IPS_LogMessage("IPS2SingleRoomControl", "Fehler bei der Ermittlung der Wochenplan-Solltemperatur!"); 	
-			}
-			else {
-				$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".$ActionID);
-				SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $ActionIDTemperature);
-			}
-		}
-		
 		// die Daten aus den Angaben zum Fensterstatus aufbereiten
 		If ($this->ReadPropertyInteger("WindowStatusID") == 0) {
 			// Es ist keine Variablen angegeben
@@ -182,6 +170,36 @@ class IPS2SingleRoomControl extends IPSModule
 			// wenn eine Variable angegeben ist, wird der Zustand des Fensters in die Hilfsvariable geschrieben
 			$WindowStatus = GetValueBoolean($this->ReadPropertyInteger("WindowStatusID"));
 		}
+		
+		// die Daten aus den Angaben zum Feiertag/Urlaub aufbereiten
+		If ($this->ReadPropertyInteger("DayStatusID") == 0) {
+			// Es ist keine Variablen angegeben
+			$DayStatus = false;
+		}
+		elseif ($this->ReadPropertyInteger("DayStatusID") > 0) {
+			// wenn eine Variable angegeben ist, wird der Zustand des Fensters in die Hilfsvariable geschrieben
+			$DayStatus = GetValueBoolean($this->ReadPropertyInteger("DayStatusID"));
+		}
+		
+		// wenn der Mode auf Automatik ist, den aktuellen Soll-Wert aus dem Wochenplan lesen
+		If (GetValueBoolean($this->GetIDForIdent("OperatingMode")) == true) { 	
+			If ($DayStatus == false) {
+				$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, pow(2, date("N") - 1), date("H"), date("i"));
+			}
+			else {
+				$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, 64, date("H"), date("i"));
+			}	
+			
+			If (!$ActionID) {
+				IPS_LogMessage("IPS2SingleRoomControl", "Fehler bei der Ermittlung der Wochenplan-Solltemperatur!"); 	
+			}
+			else {
+				$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".$ActionID);
+				SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $ActionIDTemperature);
+			}
+		}
+		
+		
 		
 		//Ta = Rechenschrittweite (Abtastzeit)
 		$Ta = Round( (time() - (int)$this->GetBuffer("LastTrigger")) / 60, 0);
