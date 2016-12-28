@@ -86,9 +86,10 @@ class IPS2SingleRoomControl extends IPSModule
 		}
 		
 		// Registrierung für Nachrichten des Wochenplans
-		$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10821);
-		$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10822);
-		$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10823);
+		//$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10821);
+		//$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10822);
+		//$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10823);
+		
 		// Registrierung für die Änderung der Ist-Temperatur
 		If ($this->ReadPropertyInteger("ActualTemperatureID") > 0) {
 			$this->RegisterMessage($this->ReadPropertyInteger("ActualTemperatureID"), 10603);
@@ -139,7 +140,7 @@ class IPS2SingleRoomControl extends IPSModule
 	
 	public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     	{
-        IPS_LogMessage("IPS2SingleRoomControl", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
+        //IPS_LogMessage("IPS2SingleRoomControl", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
 		switch ($Message) {
 			case 10821:
 				IPS_LogMessage("IPS2SingleRoomControl", "Wochenplanänderung 1!");
