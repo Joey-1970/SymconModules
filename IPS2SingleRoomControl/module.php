@@ -97,6 +97,14 @@ class IPS2SingleRoomControl extends IPSModule
 		If ($this->ReadPropertyInteger("WindowStatusID") > 0) {
 			$this->RegisterMessage($this->ReadPropertyInteger("WindowStatusID"), 10603);
 		}
+		// Registrierung für die Änderung des Anwesenheitsstatus
+		If ($this->ReadPropertyInteger("PresenceStatusID") > 0) {
+			$this->RegisterMessage($this->ReadPropertyInteger("PresenceStatusID"), 10603);
+		}
+		// Registrierung für die Änderung des Feiertags-/Urlaubsstatus
+		If ($this->ReadPropertyInteger("DayStatusID") > 0) {
+			$this->RegisterMessage($this->ReadPropertyInteger("DayStatusID"), 10603);
+		}
 		
 		// Zeitstempel für die Differenz der Messungen
 		$this->SetBuffer("LastTrigger", time() - 60);
@@ -150,6 +158,14 @@ class IPS2SingleRoomControl extends IPSModule
 				}
 				// Änderung des Fensterstatus
 				elseif ($SenderID == $this->ReadPropertyInteger("WindowStatusID")) {
+					$this->Measurement();
+				}
+				// Änderung des Anwesenheitsstatus
+				elseif ($SenderID == $this->ReadPropertyInteger("PresenceStatusID")) {
+					$this->Measurement();
+				}
+				// Änderung des Urlaubs-/Feiertagsstatus
+				elseif ($SenderID == $this->ReadPropertyInteger("DayStatusID")) {
 					$this->Measurement();
 				}
 				break;
