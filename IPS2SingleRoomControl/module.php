@@ -4,8 +4,6 @@ class IPS2SingleRoomControl extends IPSModule
     	// ToDo:
 	// - Variable Tagesgruppen
 	// - Farbauswahl
-	// - Boost-Funktion
-	// - Abwesenheit
 	// - Selbstkonfiguration K-Faktoren	
 	
 	// Überschreibt die interne IPS_Create($id) Funktion
