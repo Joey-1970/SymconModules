@@ -30,6 +30,7 @@
                 { "label": "I²C-Bus 1", "value": 1 }
                 ]
         },
+        { "type": "Label", "label": "_____________________________________________________________________________________________________" },
         { "type": "Label", "label": "Genutzte Eingänge: " },
         { "type": "CheckBox", "name": "Ain0", "caption": "Ain0" },
         { "type": "CheckBox", "name": "LoggingAin0", "caption": "Logging Ain0 aktivieren" },
