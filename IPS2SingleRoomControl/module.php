@@ -187,6 +187,7 @@ class IPS2SingleRoomControl extends IPSModule
 				$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, pow(2, date("N") - 1), date("H"), date("i"));
 			}
 			else {
+				// Feiertage/Urlaub wird wie ein Sonntag behandelt
 				$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, 64, date("H"), date("i"));
 			}	
 			
@@ -195,6 +196,7 @@ class IPS2SingleRoomControl extends IPSModule
 			}
 			else {
 				$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".$ActionID);
+			
 				SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $ActionIDTemperature);
 			}
 		}
