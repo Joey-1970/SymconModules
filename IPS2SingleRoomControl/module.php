@@ -183,7 +183,7 @@ class IPS2SingleRoomControl extends IPSModule
 		// die Daten aus den Angaben zur Abwesenheit aufbereiten
 		If ($this->ReadPropertyInteger("PresenceStatusID") == 0) {
 			// Es ist keine Variablen angegeben
-			$DayStatus = true;
+			$PresenceStatus = true;
 		}
 		elseif ($this->ReadPropertyInteger("PresenceStatusID") > 0) {
 			// wenn eine Variable angegeben ist, wird der Zustand des Fensters in die Hilfsvariable geschrieben
@@ -205,9 +205,12 @@ class IPS2SingleRoomControl extends IPSModule
 			}
 			else {
 				$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".$ActionID);
-				 
-					
-				SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $ActionIDTemperature);
+				If ($PresenceStatus == true) {
+					SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $ActionIDTemperature);
+				}
+				else {
+					SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $ActionIDTemperature - abs($this->ReadPropertyInteger("TemperatureReduction")));
+				}
 			}
 		}
 		
