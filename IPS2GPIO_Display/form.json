@@ -23,6 +23,7 @@
         },
         { "type": "Label", "label": "Connection String der Seriellen Schnittstelle (z.B. /dev/tty...)" },
         { "type": "ValidationTextBox", "name": "ConnectionString", "caption": "Connection String" },
+        { "type": "Label", "label": "_____________________________________________________________________________________________________" },
         { "type": "CheckBox", "name": "DateTime", "caption": "Datum/Uhrzeit aktualisieren" },
         { "type": "Label", "label": "Setzen der Default Display Helligkeit (0-100)" },
         { "type": "NumberSpinner", "name": "Brightness", "caption": "Display-Helligkeit" },
@@ -40,6 +41,7 @@
                 { "label": "Alle Daten", "value": 3 }
                 ]
         },
+        { "type": "Label", "label": "_____________________________________________________________________________________________________" },
         { "type": "Label", "label": "Steuerung eines Nextion Enhanced Displays" },
         { "type": "Label", "label": "Hinweise:" },
         { "type": "Label", "label": "- die UART-Nutzung muss in der Raspberry Pi-Konfiguration freigegeben werden (sudo raspi-config -> Advanced Options -> Serial Enable = false)" },
