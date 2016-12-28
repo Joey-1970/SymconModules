@@ -42,6 +42,7 @@
         { "type": "CheckBox", "name": "LoggingOut", "caption": "Logging Output aktivieren" },
         { "type": "Label", "label": "Wiederholungszyklus in Sekunden (0 -> aus, 1 sek -> Minimum)" },
         { "type": "IntervalBox", "name": "Messzyklus", "caption": "Messzyklus (sek)" },
+        { "type": "Label", "label": "_____________________________________________________________________________________________________" },
         { "type": "Label", "label": "Hinweise:" },
         { "type": "Label", "label": "- die Device Adresse lautet 72 dez (0x48h) bei A0 an GND" },
         { "type": "Label", "label": "- die Device Adresse lautet 73 dez (0x49h) bei A0 an 5V" },
