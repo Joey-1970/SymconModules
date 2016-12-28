@@ -6,7 +6,6 @@ class IPS2SingleRoomControl extends IPSModule
 	// - Farbauswahl
 	// - Boost-Funktion
 	// - Abwesenheit
-	// - Feiertage/Urlaub
 	// - Selbstkonfiguration K-Faktoren	
 	
 	// Überschreibt die interne IPS_Create($id) Funktion
@@ -181,6 +180,16 @@ class IPS2SingleRoomControl extends IPSModule
 			$DayStatus = GetValueBoolean($this->ReadPropertyInteger("DayStatusID"));
 		}
 		
+		// die Daten aus den Angaben zur Abwesenheit aufbereiten
+		If ($this->ReadPropertyInteger("PresenceStatusID") == 0) {
+			// Es ist keine Variablen angegeben
+			$DayStatus = true;
+		}
+		elseif ($this->ReadPropertyInteger("PresenceStatusID") > 0) {
+			// wenn eine Variable angegeben ist, wird der Zustand des Fensters in die Hilfsvariable geschrieben
+			$PresenceStatus = GetValueBoolean($this->ReadPropertyInteger("PresenceStatusID"));
+		}
+		
 		// wenn der Mode auf Automatik ist, den aktuellen Soll-Wert aus dem Wochenplan lesen
 		If (GetValueBoolean($this->GetIDForIdent("OperatingMode")) == true) { 	
 			If ($DayStatus == false) {
@@ -196,7 +205,8 @@ class IPS2SingleRoomControl extends IPSModule
 			}
 			else {
 				$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".$ActionID);
-			
+				 
+					
 				SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $ActionIDTemperature);
 			}
 		}
