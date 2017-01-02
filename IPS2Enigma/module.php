@@ -1203,8 +1203,14 @@
 	} 
 	
 	protected function ProcessHookData() 
-	{
-		IPS_LogMessage("IPS2Enigma","WebHookData - Angekommen!");
+	{		
+		if (isset($_GET["Index"])) {
+    			IPS_LogMessage("IPS2Enigma","WebHookData - Index: ".$_GET["Index"]);
+		}
+		else {
+			IPS_LogMessage("IPS2Enigma","WebHookData - Angekommen!");
+		}
+
 	}
 	    
 	private function Get_Filename(string $sRef)
