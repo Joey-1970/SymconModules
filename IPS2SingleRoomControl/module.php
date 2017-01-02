@@ -90,7 +90,7 @@ class IPS2SingleRoomControl extends IPSModule
 		*/
 		
 		// Registrierung für Nachrichten des Wochenplans
-		$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10803);
+		//$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10803);
 		
 		// Registrierung für die Änderung der Ist-Temperatur
 		If ($this->ReadPropertyInteger("ActualTemperatureID") > 0) {
@@ -445,6 +445,7 @@ class IPS2SingleRoomControl extends IPSModule
 				$this->RegisterScheduleAction($EventID, $i - 1, $Value."C°", $this->ReadPropertyInteger("ColorTemperatur_".$i), "IPS2SRC_SetTemperature(\$_IPS['TARGET'], ".$Value.");");
 			}
 	        }
+		
 	}
 	
 	private function RegisterScheduleAction($EventID, $ActionID, $Name, $Color, $Script)
