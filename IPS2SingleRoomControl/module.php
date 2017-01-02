@@ -86,9 +86,7 @@ class IPS2SingleRoomControl extends IPSModule
 		}
 		
 		// Registrierung für Nachrichten des Wochenplans
-		//$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10821);
-		//$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10822);
-		//$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10823);
+		$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10803);
 		
 		// Registrierung für die Änderung der Ist-Temperatur
 		If ($this->ReadPropertyInteger("ActualTemperatureID") > 0) {
@@ -142,15 +140,9 @@ class IPS2SingleRoomControl extends IPSModule
     	{
         //IPS_LogMessage("IPS2SingleRoomControl", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
 		switch ($Message) {
-			case 10821:
+			case 10803:
 				IPS_LogMessage("IPS2SingleRoomControl", "Wochenplanänderung 1!");
 				break;
-			case 10822:
-				IPS_LogMessage("IPS2SingleRoomControl", "Wochenplanänderung 2!");
-				break;
-			case 10823:
-				IPS_LogMessage("IPS2SingleRoomControl", "Wochenplanänderung 3!");
-				break;	
 			case 10603:
 				//IPS_LogMessage("IPS2SingleRoomControl", "Temperatur- oder Fensterstatusänderung");
 				// Änderung der Ist-Temperatur, die Temperatur aus dem angegebenen Sensor in das Modul kopieren
