@@ -56,6 +56,8 @@ class IPS2SingleRoomControl extends IPSModule
 		// Anlegen des Wochenplans
 		$this->RegisterEvent("Wochenplan", "IPS2SRC_Event_".$this->InstanceID, 2, $this->InstanceID, 150);
 		
+		IPS_Sleep(100);
+		
 		$this->RegisterVariableBoolean("OperatingMode", "Betriebsart Automatik", "~Switch", 30);
 		$this->EnableAction("OperatingMode");
 		$this->RegisterVariableFloat("ActualTemperature", "Ist-Temperatur", "~Temperature", 10);
@@ -79,7 +81,7 @@ class IPS2SingleRoomControl extends IPSModule
 		IPS_SetHidden($this->GetIDForIdent("ActualDeviation"), true);
 		
 		// Anlegen der Daten für den Wochenplan
-		/*
+		
 		for ($i = 0; $i <= 6; $i++) {
 			IPS_SetEventScheduleGroup($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), $i, pow(2, $i));
 		}
@@ -87,10 +89,10 @@ class IPS2SingleRoomControl extends IPSModule
 			$Value = $this->ReadPropertyFloat("Temperatur_".$i);
 			$this->RegisterScheduleAction($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), $i - 1, $Value."C°", $this->ReadPropertyInteger("ColorTemperatur_".$i), "IPS2SRC_SetTemperature(\$_IPS['TARGET'], ".$Value.");");
 		}
-		*/
+		
 		
 		// Registrierung für Nachrichten des Wochenplans
-		//$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10803);
+		$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10803);
 		
 		// Registrierung für die Änderung der Ist-Temperatur
 		If ($this->ReadPropertyInteger("ActualTemperatureID") > 0) {
@@ -436,14 +438,7 @@ class IPS2SingleRoomControl extends IPSModule
 			IPS_SetPosition($EventID, $Position);
 			IPS_SetEventActive($EventID, true);  
 			// Initiale Befüllung
-			// Anlegen der Daten für den Wochenplan
-			for ($i = 0; $i <= 6; $i++) {
-				IPS_SetEventScheduleGroup($EventID, $i, pow(2, $i));
-			}
-			for ($i = 1; $i <= 8; $i++) {
-				$Value = $this->ReadPropertyFloat("Temperatur_".$i);
-				$this->RegisterScheduleAction($EventID, $i - 1, $Value."C°", $this->ReadPropertyInteger("ColorTemperatur_".$i), "IPS2SRC_SetTemperature(\$_IPS['TARGET'], ".$Value.");");
-			}
+			
 	        }
 		
 	}
