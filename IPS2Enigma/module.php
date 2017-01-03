@@ -682,7 +682,8 @@
 						onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.($i/2).'&Source=EPGlist_Data_A\' })"></td>';
 					$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event[$i]->e2eventstart).' Uhr'.'</td>';
 					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i]->e2eventtitle).'</td>';
-					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i]->e2eventdescription).'</td>';			
+					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i]->e2eventdescription).' 
+						onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.($i/2).'&Source=EPGlist_Data_D\' })"</td>';			
 					$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event[$i]->e2eventduration / 60).' min'.'</td>';
 					$table .= '</tr>';
 					$table .= '<tr>';
@@ -1220,6 +1221,9 @@
 					$Servicereference = unserialize($this->GetBuffer("Servicereference"));
 					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/web/zap?sRef".$Servicereference[$Index]));
 				}
+				break;
+			case "EPGlist_Data_D":
+			    	IPS_LogMessage("IPS2Enigma","WebHookData - Source: ".$Source." Index: ".$Index);
 				break;
 			}
 			
