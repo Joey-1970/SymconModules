@@ -430,7 +430,7 @@ class IPS2SingleRoomControl extends IPSModule
 	
 	private function RegisterEvent($Name, $Ident, $Typ, $Parent, $Position)
 	{
-		$eid = @$this->GetIDForIdent($Ident)
+		$eid = @$this->GetIDForIdent($Ident);
 		if($eid === false) {
 		    	$eid = 0;
 		} elseif(IPS_GetEvent($eid)['EventType'] <> $Typ) {
