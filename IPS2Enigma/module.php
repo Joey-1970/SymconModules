@@ -658,7 +658,7 @@
 			$bouquet = (string)$xmlResult->e2service[$this->ReadPropertyInteger("BouquetsNumber")]->e2servicereference;
 			
 			If ($this->ReadPropertyBoolean("EPGlist_Data") == true) {
-				
+				$Servicereference = Array();
 				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/epgnownext?bRef=".urlencode($bouquet)));
 				$table = '<style type="text/css">';
 				$table .= '<link rel="stylesheet" href="./.../webfront.css">';
@@ -676,7 +676,7 @@
 				$table .= '</colgroup>';
 				$table .= '</tr>';
 				for ($i = 0; $i <= count($xmlResult) - 1; $i=$i+2) {
-					$e2eventservicereference[$i/2] = $xmlResult->e2event[$i]->e2eventservicereference
+					$Servicereference[$i/2] = $xmlResult->e2event[$i]->e2eventservicereference
 					$table .= '<tr>';
 					$table .= '<td rowspan="2" class="tg-611x"><img src='.$this->Get_Filename((string)$xmlResult->e2event[$i]->e2eventservicereference).' alt='.(string)$xmlResult->e2event[$i]->e2eventservicename.' 
 						onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.($i/2).'&Source=EPGlist_Data_A\' })"></td>';
@@ -694,7 +694,7 @@
 				}
 				$table .= '</table>';
 				SetValueString($this->GetIDForIdent("e2epglistHTML"), $table);
-				$this->SetBuffer("Servicereference", serialize($e2eventservicereference));
+				$this->SetBuffer("Servicereference", serialize($Servicereference));
 			}
 			
 			If (GetValueBoolean($this->GetIDForIdent("powerstate")) == true) {
@@ -1208,22 +1208,21 @@
 	
 	protected function ProcessHookData() 
 	{		
-		if (isset($_GET["Source"])) {
+		if ((isset($_GET["Source"]) ) AND (isset($_GET["Index"])) ){
 			IPS_LogMessage("IPS2Enigma","WebHookData - Source: ".$_GET["Source"]);
 			$Source = $_GET["Source"];
+			$Index = $_GET["Index"];
 			switch($Source) {
 			case "EPGlist_Data_A":
 			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
 					// Spalte A
-					$ServicereferenceArray = unserialze($this->GetBuffer("Servicereference"));
-					$Servicereference = $ServicereferenceArray[$_GET["Index"]];
-					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/web/zap?sRef".$Servicereference));
+					$Servicereference = Array();
+					$Servicereference = unserialize($this->GetBuffer("Servicereference"));
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/web/zap?sRef".$Servicereference[$Index]));
 				}
 				break;
 			}
-			//if (isset($_GET["Index"])) {
-			//	IPS_LogMessage("IPS2Enigma","WebHookData - Index: ".$_GET["Index"]);
-			//}
+			
 		}
 
 	}
