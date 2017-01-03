@@ -676,7 +676,7 @@
 				$table .= '</colgroup>';
 				$table .= '</tr>';
 				for ($i = 0; $i <= count($xmlResult) - 1; $i=$i+2) {
-					$Servicereference[$i/2] = $xmlResult->e2event[$i]->e2eventservicereference
+					$Servicereference[$i/2] = $xmlResult->e2event[$i]->e2eventservicereference;
 					$table .= '<tr>';
 					$table .= '<td rowspan="2" class="tg-611x"><img src='.$this->Get_Filename((string)$xmlResult->e2event[$i]->e2eventservicereference).' alt='.(string)$xmlResult->e2event[$i]->e2eventservicename.' 
 						onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.($i/2).'&Source=EPGlist_Data_A\' })"></td>';
