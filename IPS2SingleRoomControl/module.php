@@ -81,16 +81,16 @@ class IPS2SingleRoomControl extends IPSModule
 		// Anlegen der Daten für den Wochenplan
 
 		for ($i = 0; $i <= 6; $i++) {
-			@IPS_SetEventScheduleGroup($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), $i, pow(2, $i));
+			IPS_SetEventScheduleGroup($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), $i, pow(2, $i));
 		}
 		for ($i = 1; $i <= 8; $i++) {
 			$Value = $this->ReadPropertyFloat("Temperatur_".$i);
-			@$this->RegisterScheduleAction($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), $i - 1, $Value."C°", $this->ReadPropertyInteger("ColorTemperatur_".$i), "IPS2SRC_SetTemperature(\$_IPS['TARGET'], ".$Value.");");
+			$this->RegisterScheduleAction($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), $i - 1, $Value."C°", $this->ReadPropertyInteger("ColorTemperatur_".$i), "IPS2SRC_SetTemperature(\$_IPS['TARGET'], ".$Value.");");
 		}
 		
 		
 		// Registrierung für Nachrichten des Wochenplans
-		@$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10803);
+		$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10803);
 		
 		// Registrierung für die Änderung der Ist-Temperatur
 		If ($this->ReadPropertyInteger("ActualTemperatureID") > 0) {
@@ -208,16 +208,12 @@ class IPS2SingleRoomControl extends IPSModule
 		
 		// wenn der Mode auf Automatik ist, den aktuellen Soll-Wert aus dem Wochenplan lesen
 		If (GetValueBoolean($this->GetIDForIdent("OperatingMode")) == true) { 	
-			If ($DayStatus == false) {
-				if (IPS_EventExists($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID))) {
-					@$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, pow(2, date("N") - 1), date("H"), date("i"));
-				}
+			If ($DayStatus == false) {			
+				$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, pow(2, date("N") - 1), date("H"), date("i"));
 			}
 			else {
 				// Feiertage/Urlaub wird wie ein Sonntag behandelt
-				if (IPS_EventExists($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID))) {
-					@$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, 64, date("H"), date("i"));
-				}
+				$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, 64, date("H"), date("i"));
 			}	
 			
 			If (!$ActionID) {
@@ -353,17 +349,14 @@ class IPS2SingleRoomControl extends IPSModule
 			$this->DisableAction("SetpointTemperature");
 			$this->SetTimerInterval("AutomaticFallback", 0);
 			// Aktuellen Wert des Wochenplans auslesen
-			if (IPS_EventExists($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID))) {
-				@$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, pow(2, date("N") - 1), date("H"), date("i"));
-				If (!$ActionID) {
-					IPS_LogMessage("IPS2SingleRoomControl", "Fehler bei der Ermittlung der Wochenplan-Solltemperatur!"); 	
-				}
-				else {	
-					$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".$ActionID);
-					SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $ActionIDTemperature);
-				}
+			$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, pow(2, date("N") - 1), date("H"), date("i"));
+			If (!$ActionID) {
+				IPS_LogMessage("IPS2SingleRoomControl", "Fehler bei der Ermittlung der Wochenplan-Solltemperatur!"); 	
 			}
-			
+			else {	
+				$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".$ActionID);
+				SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $ActionIDTemperature);
+			}			
 		}
 		else {
 			// Timer für automatischen Fallback starten
@@ -377,17 +370,14 @@ class IPS2SingleRoomControl extends IPSModule
 		SetValueBoolean($this->GetIDForIdent("OperatingMode"),  true);
 		$this->SetTimerInterval("AutomaticFallback", 0);
 		// Aktuellen Wert des Wochenplans auslesen
-		if (IPS_EventExists($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID))) {
-			@$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, pow(2, date("N") - 1), date("H"), date("i"));
-			If (!$ActionID) {
-				IPS_LogMessage("IPS2SingleRoomControl", "Fehler bei der Ermittlung der Wochenplan-Solltemperatur!"); 	
-			}
-			else {
-				$$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".($ActionID + 1));
-				SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $$ActionIDTemperature);
-			}
+		$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, pow(2, date("N") - 1), date("H"), date("i"));
+		If (!$ActionID) {
+			IPS_LogMessage("IPS2SingleRoomControl", "Fehler bei der Ermittlung der Wochenplan-Solltemperatur!"); 	
 		}
-		
+		else {
+			$$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".($ActionID + 1));
+			SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $$ActionIDTemperature);
+		}		
 	}
 	
 	private function GetEventActionID($EventID, $EventType, $Days, $Hour, $Minute)
@@ -440,19 +430,24 @@ class IPS2SingleRoomControl extends IPSModule
 	
 	private function RegisterEvent($Name, $Ident, $Typ, $Parent, $Position)
 	{
-		if (!IPS_EventExists($this->GetIDForIdent($Ident)))
-	        {
-	            	$EventID = IPS_CreateEvent($Typ);
-			IPS_SetParent($EventID, $Parent);
-			IPS_SetIdent($EventID, $Ident);
-			IPS_SetName($EventID, $Name);
-			IPS_SetPosition($EventID, $Position);
-			IPS_SetEventActive($EventID, true);  
-			// Initiale Befüllung
-			
-	        }
-		
-	}
+		$eid = @$this->GetIDForIdent($Ident)
+		if($eid === false) {
+		    	$eid = 0;
+		} elseif(IPS_GetEvent($eid)['EventType'] <> $Typ) {
+		    	IPS_DeleteEvent($eid);
+		    	$eid = 0;
+		}
+		//we need to create one
+		if ($eid == 0) {
+			$EventID = IPS_CreateEvent($Typ);
+		    	IPS_SetParent($EventID, $Parent);
+		    	IPS_SetIdent($EventID, $Ident);
+		    	IPS_SetName($EventID, $Name);
+		    	IPS_SetPosition($EventID, $Position);
+		    	IPS_SetEventActive($EventID, true);  
+		}
+
+	}  
 	
 	private function RegisterScheduleAction($EventID, $ActionID, $Name, $Color, $Script)
 	{
