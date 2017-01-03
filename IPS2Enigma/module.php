@@ -1207,6 +1207,16 @@
 	{		
 		if (isset($_GET["Source"])) {
 			IPS_LogMessage("IPS2Enigma","WebHookData - Source: ".$_GET["Source"]);
+			$Source = $_GET["Source"];
+			switch($Source) {
+			case "EPGlist_Data_A":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					// Spalte A
+					$servicereference = 0;
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/web/zap?sRef".$servicereference));
+				}
+				break;
+			}
 			if (isset($_GET["Index"])) {
 				IPS_LogMessage("IPS2Enigma","WebHookData - Index: ".$_GET["Index"]);
 			}
