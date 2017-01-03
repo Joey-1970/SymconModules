@@ -1214,12 +1214,12 @@
 			$Index = $_GET["Index"];
 			switch($Source) {
 			case "EPGlist_Data_A":
-			    	IPS_LogMessage("IPS2Enigma","WebHookData - Source: ".$Source." Index: ".$Index);
+			    	//IPS_LogMessage("IPS2Enigma","WebHookData - Source: ".$Source." Index: ".$Index);
 				If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
 					// Spalte A					
 					$Servicereference = Array();
 					$Servicereference = unserialize($this->GetBuffer("Servicereference"));
-					IPS_LogMessage("IPS2Enigma","WebHookData - Servicereference: ".$Servicereference[$Index]);
+					//IPS_LogMessage("IPS2Enigma","WebHookData - Servicereference: ".$Servicereference[$Index]);
 					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/zap?sRef=".$Servicereference[$Index]));
 				}
 				break;
