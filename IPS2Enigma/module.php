@@ -275,6 +275,7 @@
 			$this->SetTimerInterval("ScreenshotUpdate", ($this->ReadPropertyInteger("ScreenshotUpdate") * 1000));
 			$this->Get_Powerstate();
 			$this->GetScreenshot();
+			$this->Get_EPGUpdate();
 			$this->SetStatus(102);
 		}
 		else {
