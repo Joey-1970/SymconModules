@@ -1209,15 +1209,17 @@
 	protected function ProcessHookData() 
 	{		
 		if ((isset($_GET["Source"]) ) AND (isset($_GET["Index"])) ){
-			IPS_LogMessage("IPS2Enigma","WebHookData - Source: ".$_GET["Source"]);
+			
 			$Source = $_GET["Source"];
 			$Index = $_GET["Index"];
 			switch($Source) {
 			case "EPGlist_Data_A":
-			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
-					// Spalte A
+			    	IPS_LogMessage("IPS2Enigma","WebHookData - Source: ".$Source." Index: ".$Index);
+				If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					// Spalte A					
 					$Servicereference = Array();
 					$Servicereference = unserialize($this->GetBuffer("Servicereference"));
+					IPS_LogMessage("IPS2Enigma","WebHookData - Servicereference: ".urlencode($Servicereference[$Index]));
 					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/web/zap?sRef".urlencode($Servicereference[$Index])));
 				}
 				break;
