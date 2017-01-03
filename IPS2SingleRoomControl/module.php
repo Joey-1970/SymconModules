@@ -454,5 +454,4 @@ class IPS2SingleRoomControl extends IPSModule
 		IPS_SetEventScheduleAction($EventID, $ActionID, $Name, $Color, $Script);
 	}
 }
-
 ?>
