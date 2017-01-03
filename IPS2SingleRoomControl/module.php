@@ -81,8 +81,7 @@ class IPS2SingleRoomControl extends IPSModule
 		IPS_SetHidden($this->GetIDForIdent("ActualDeviation"), true);
 		
 		// Anlegen der Daten für den Wochenplan
-		
-		/*
+
 		for ($i = 0; $i <= 6; $i++) {
 			IPS_SetEventScheduleGroup($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), $i, pow(2, $i));
 		}
@@ -208,11 +207,15 @@ class IPS2SingleRoomControl extends IPSModule
 		// wenn der Mode auf Automatik ist, den aktuellen Soll-Wert aus dem Wochenplan lesen
 		If (GetValueBoolean($this->GetIDForIdent("OperatingMode")) == true) { 	
 			If ($DayStatus == false) {
-				$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, pow(2, date("N") - 1), date("H"), date("i"));
+				if (IPS_EventExists($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID))) {
+					$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, pow(2, date("N") - 1), date("H"), date("i"));
+				}
 			}
 			else {
 				// Feiertage/Urlaub wird wie ein Sonntag behandelt
-				$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, 64, date("H"), date("i"));
+				if (IPS_EventExists($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID))) {
+					$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, 64, date("H"), date("i"));
+				}
 			}	
 			
 			If (!$ActionID) {
@@ -348,13 +351,15 @@ class IPS2SingleRoomControl extends IPSModule
 			$this->DisableAction("SetpointTemperature");
 			$this->SetTimerInterval("AutomaticFallback", 0);
 			// Aktuellen Wert des Wochenplans auslesen
-			$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, pow(2, date("N") - 1), date("H"), date("i"));
-			If (!$ActionID) {
-				IPS_LogMessage("IPS2SingleRoomControl", "Fehler bei der Ermittlung der Wochenplan-Solltemperatur!"); 	
-			}
-			else {	
-				$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".$ActionID);
-				SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $ActionIDTemperature);
+			if (IPS_EventExists($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID))) {
+				$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, pow(2, date("N") - 1), date("H"), date("i"));
+				If (!$ActionID) {
+					IPS_LogMessage("IPS2SingleRoomControl", "Fehler bei der Ermittlung der Wochenplan-Solltemperatur!"); 	
+				}
+				else {	
+					$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".$ActionID);
+					SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $ActionIDTemperature);
+				}
 			}
 			
 		}
@@ -370,13 +375,15 @@ class IPS2SingleRoomControl extends IPSModule
 		SetValueBoolean($this->GetIDForIdent("OperatingMode"),  true);
 		$this->SetTimerInterval("AutomaticFallback", 0);
 		// Aktuellen Wert des Wochenplans auslesen
-		$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, pow(2, date("N") - 1), date("H"), date("i"));
-		If (!$ActionID) {
-			IPS_LogMessage("IPS2SingleRoomControl", "Fehler bei der Ermittlung der Wochenplan-Solltemperatur!"); 	
-		}
-		else {
-			$$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".($ActionID + 1));
-			SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $$ActionIDTemperature);
+		if (IPS_EventExists($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID))) {
+			$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, pow(2, date("N") - 1), date("H"), date("i"));
+			If (!$ActionID) {
+				IPS_LogMessage("IPS2SingleRoomControl", "Fehler bei der Ermittlung der Wochenplan-Solltemperatur!"); 	
+			}
+			else {
+				$$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".($ActionID + 1));
+				SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $$ActionIDTemperature);
+			}
 		}
 		
 	}
