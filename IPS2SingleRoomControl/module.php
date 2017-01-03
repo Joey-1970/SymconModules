@@ -171,6 +171,11 @@ class IPS2SingleRoomControl extends IPSModule
 		
 	public function Measurement()
 	{
+		If ($this->ReadPropertyBoolean("Open") == false) {
+			// Es ist keine Variablen angegeben
+			return;
+		}
+		
 		// die Daten aus den Angaben zum Fensterstatus aufbereiten
 		If ($this->ReadPropertyInteger("WindowStatusID") == 0) {
 			// Es ist keine Variablen angegeben
