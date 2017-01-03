@@ -1219,8 +1219,8 @@
 					// Spalte A					
 					$Servicereference = Array();
 					$Servicereference = unserialize($this->GetBuffer("Servicereference"));
-					IPS_LogMessage("IPS2Enigma","WebHookData - Servicereference: ".urlencode($Servicereference[$Index]));
-					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/web/zap?sRef".urlencode($Servicereference[$Index])));
+					IPS_LogMessage("IPS2Enigma","WebHookData - Servicereference: ".$Servicereference[$Index]);
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/web/zap?sRef".$Servicereference[$Index]));
 				}
 				break;
 			case "EPGlist_Data_D":
