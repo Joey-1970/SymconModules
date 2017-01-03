@@ -1219,7 +1219,7 @@
 					// Spalte A
 					$Servicereference = Array();
 					$Servicereference = unserialize($this->GetBuffer("Servicereference"));
-					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/web/zap?sRef".$Servicereference[$Index]));
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/web/zap?sRef".urlencode($Servicereference[$Index])));
 				}
 				break;
 			case "EPGlist_Data_D":
