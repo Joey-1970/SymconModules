@@ -57,6 +57,10 @@ class IPS2SingleRoomControl extends IPSModule
 		// Anlegen des Wochenplans
 		$this->RegisterEvent("Wochenplan", "IPS2SRC_Event_".$this->InstanceID, 2, $this->InstanceID, 150);
 		$this->RegisterProfileInteger("window.status", "Window", "", "", 0, 3, 1);
+		IPS_SetVariableProfileAssociation("window.status", 0, "geschlossen", "Window", -1);
+		IPS_SetVariableProfileAssociation("window.status", 1, "gekippt", "Window", -1);
+		IPS_SetVariableProfileAssociation("window.status", 2, "geöffnet", "Window", -1);
+		IPS_SetVariableProfileAssociation("window.status", 3, "undefiniert", "Warning", -1);
 		
 		$this->RegisterVariableBoolean("OperatingMode", "Betriebsart Automatik", "~Switch", 30);
 		$this->EnableAction("OperatingMode");
