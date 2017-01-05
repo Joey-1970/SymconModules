@@ -37,7 +37,7 @@
             { "type": "Label", "label": "Variable die den Zustand des Fensters oben enthält (Boolean, True -> Fenster oben geschlossen):" },
             { "type": "SelectVariable", "name": "WindowStatusID", "caption": "Fenster Status" },
             { "type": "Label", "label": "Variable die den Zustand des Fensters unten enthält (Boolean, True -> Fenster unten geschlossen):" },
-            { "type": "SelectVariable", "name": "WindowStatusBottemID", "caption": "Fenster Status" },
+            { "type": "SelectVariable", "name": "WindowStatusBelowID", "caption": "Fenster Status" },
             { "type": "Label", "label": "Variable die Feiertage und ganztägige Anwesenheit (z.B. Urlaub) enthält (Boolean, True -> Feiertag, Urlaub):" },
             { "type": "SelectVariable", "name": "DayStatusID", "caption": "Feiertags/Urlaub" },
             { "type": "Label", "label": "Variable die Abwesenheit enthält (Boolean, True -> Anwesend):" },
