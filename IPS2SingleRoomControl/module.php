@@ -56,6 +56,7 @@ class IPS2SingleRoomControl extends IPSModule
 		
 		// Anlegen des Wochenplans
 		$this->RegisterEvent("Wochenplan", "IPS2SRC_Event_".$this->InstanceID, 2, $this->InstanceID, 150);
+		$this->RegisterProfileInteger("window.status", "Window", "", "", 0, 3, 1);
 		
 		$this->RegisterVariableBoolean("OperatingMode", "Betriebsart Automatik", "~Switch", 30);
 		$this->EnableAction("OperatingMode");
@@ -72,6 +73,8 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->DisableAction("PositionElement");
 		$this->RegisterVariableBoolean("PWM_Mode", "PWM-Status", "~Switch", 40);
 		$this->EnableAction("OperatingMode");
+		$this->RegisterVariableInteger("WindowStatus", "Fenster-Status", "window.status", 45);
+		$this->DisableAction("WindowStatus");
 		$this->RegisterVariableFloat("SumDeviation", "Summe Regelabweichungen", "~Temperature", 50);
 		$this->DisableAction("SumDeviation");
 		IPS_SetHidden($this->GetIDForIdent("SumDeviation"), true);
@@ -97,9 +100,13 @@ class IPS2SingleRoomControl extends IPSModule
 		If ($this->ReadPropertyInteger("ActualTemperatureID") > 0) {
 			$this->RegisterMessage($this->ReadPropertyInteger("ActualTemperatureID"), 10603);
 		}
-		// Registrierung für die Änderung des Fensterstatus
+		// Registrierung für die Änderung des Fensterstatus oben
 		If ($this->ReadPropertyInteger("WindowStatusID") > 0) {
 			$this->RegisterMessage($this->ReadPropertyInteger("WindowStatusID"), 10603);
+		}
+		// Registrierung für die Änderung des Fensterstatus unten
+		If ($this->ReadPropertyInteger("WindowStatusBelowID") > 0) {
+			$this->RegisterMessage($this->ReadPropertyInteger("WindowStatusBelowID"), 10603);
 		}
 		// Registrierung für die Änderung des Anwesenheitsstatus
 		If ($this->ReadPropertyInteger("PresenceStatusID") > 0) {
@@ -157,6 +164,9 @@ class IPS2SingleRoomControl extends IPSModule
 				// Änderung des Fensterstatus
 				elseif ($SenderID == $this->ReadPropertyInteger("WindowStatusID")) {
 					$this->Measurement();
+				}
+				elseif ($SenderID == $this->ReadPropertyInteger("WindowStatusBelowID")) {
+					//$this->Measurement();
 				}
 				// Änderung des Anwesenheitsstatus
 				elseif ($SenderID == $this->ReadPropertyInteger("PresenceStatusID")) {
@@ -453,6 +463,23 @@ class IPS2SingleRoomControl extends IPSModule
 	private function RegisterScheduleAction($EventID, $ActionID, $Name, $Color, $Script)
 	{
 		IPS_SetEventScheduleAction($EventID, $ActionID, $Name, $Color, $Script);
+	}
+	
+	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
+	{
+	        if (!IPS_VariableProfileExists($Name))
+	        {
+	            IPS_CreateVariableProfile($Name, 1);
+	        }
+	        else
+	        {
+	            $profile = IPS_GetVariableProfile($Name);
+	            if ($profile['ProfileType'] != 1)
+	                throw new Exception("Variable profile type does not match for profile " . $Name);
+	        }
+	        IPS_SetVariableProfileIcon($Name, $Icon);
+	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);    
 	}
 }
 ?>
