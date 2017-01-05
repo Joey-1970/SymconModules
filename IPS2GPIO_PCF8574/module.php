@@ -71,7 +71,8 @@
           	$this->RegisterVariableInteger("Value", "Value", "", 90);
           	IPS_SetHidden($this->GetIDForIdent("Value"), false);
 		
-		If ($this->ReadPropertyBoolean("P".$i) == true) {
+		for ($i = 0; $i <= 7; $i++) {
+			If ($this->ReadPropertyBoolean("P".$i) == true) {
 				// wenn true dann Eingang, dann disable		
  				$this->DisableAction("P".$i);		
  			}		
@@ -79,6 +80,7 @@
  				// Ausgang muss manipulierbar sein		
  				$this->EnableAction("P".$i);			
  			}
+		}
 		
 		If (IPS_GetKernelRunlevel() == 10103) {
 			// Logging setzen
