@@ -27,6 +27,7 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->RegisterPropertyInteger("AutomaticFallback", 120);
 		$this->RegisterTimer("AutomaticFallback", 0, 'IPS2SRC_AutomaticFallback($_IPS["TARGET"]);');
 		$this->RegisterPropertyInteger("WindowStatusID", 0);
+		$this->RegisterPropertyInteger("WindowStatusBelowID", 0);
 		$this->RegisterPropertyInteger("DayStatusID", 0);
 		$this->RegisterPropertyInteger("PresenceStatusID", 0);
 		$this->RegisterPropertyInteger("TemperatureReduction", 3);
