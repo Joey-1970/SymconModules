@@ -127,6 +127,7 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
 		
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->WindowStatus();
 			$this->Measurement();
 			$this->SetStatus(102);
 		}
@@ -167,10 +168,11 @@ class IPS2SingleRoomControl extends IPSModule
 				}
 				// Änderung des Fensterstatus
 				elseif ($SenderID == $this->ReadPropertyInteger("WindowStatusID")) {
+					$this->WindowStatus();
 					$this->Measurement();
 				}
 				elseif ($SenderID == $this->ReadPropertyInteger("WindowStatusBelowID")) {
-					//$this->Measurement();
+					$this->WindowStatus();
 				}
 				// Änderung des Anwesenheitsstatus
 				elseif ($SenderID == $this->ReadPropertyInteger("PresenceStatusID")) {
@@ -192,13 +194,13 @@ class IPS2SingleRoomControl extends IPSModule
 		}
 		
 		// die Daten aus den Angaben zum Fensterstatus aufbereiten
-		If ($this->ReadPropertyInteger("WindowStatusID") == 0) {
+		If ($this->ReadPropertyInteger("WindowStatusBelowID") == 0) {
 			// Es ist keine Variablen angegeben
 			$WindowStatus = true;
 		}
-		elseif ($this->ReadPropertyInteger("WindowStatusID") > 0) {
+		elseif ($this->ReadPropertyInteger("WindowStatusBelowID") > 0) {
 			// wenn eine Variable angegeben ist, wird der Zustand des Fensters in die Hilfsvariable geschrieben
-			$WindowStatus = GetValueBoolean($this->ReadPropertyInteger("WindowStatusID"));
+			$WindowStatus = GetValueBoolean($this->ReadPropertyInteger("WindowStatusBelowID"));
 		}
 		
 		// die Daten aus den Angaben zum Feiertag/Urlaub aufbereiten
@@ -393,6 +395,39 @@ class IPS2SingleRoomControl extends IPSModule
 			$$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".($ActionID + 1));
 			SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $$ActionIDTemperature);
 		}		
+	}
+	
+	private function WindowStatus()
+	{
+		If ($this->ReadPropertyInteger("WindowStatusID") > 0) {
+			$StatusOben = GetValueBoolean($this->ReadPropertyInteger("WindowStatusID"));
+		}
+		else {
+			$StatusOben = true;
+		}
+		If ($this->ReadPropertyInteger("WindowStatusBelowID") > 0) {
+			$StatusUnten = GetValueBoolean($this->ReadPropertyInteger("WindowStatusBelowID"));
+		}
+		else {
+			$StatusUnten = true;
+		}
+
+		If (($StatusOben == true) AND ($StatusUnten == true))
+			{
+			SetValueInteger($this->GetIDForIdent("WindowStatus"), 0);
+			}
+		elseif (($StatusOben == false) AND ($StatusUnten == true))
+			{
+			SetValueInteger($this->GetIDForIdent("WindowStatus"), 1);
+			}
+		elseif (($StatusOben == false) AND ($StatusUnten == false))
+			{
+			SetValueInteger($this->GetIDForIdent("WindowStatus"), 2);
+			}
+		elseif (($StatusOben == true) AND ($StatusUnten == false))
+			{
+			SetValueInteger($this->GetIDForIdent("WindowStatus"), 3);
+			}
 	}
 	
 	private function GetEventActionID($EventID, $EventType, $Days, $Hour, $Minute)
