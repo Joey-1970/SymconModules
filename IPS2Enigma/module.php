@@ -270,6 +270,7 @@
 		
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$this->Get_BasicData();
+			$this->Get_HTML()
 			$this->SetTimerInterval("DataUpdate", ($this->ReadPropertyInteger("DataUpdate") * 1000));
 			$this->SetTimerInterval("EPGUpdate", ($this->ReadPropertyInteger("EPGUpdate") * 1000));
 			$this->SetTimerInterval("ScreenshotUpdate", ($this->ReadPropertyInteger("ScreenshotUpdate") * 1000));
@@ -561,9 +562,9 @@
        			SetValueString($this->GetIDForIdent("e2servicename"), (string)$xmlResult->e2service->e2servicename);
 			$e2servicereference = (string)$xmlResult->e2service->e2servicereference;
 			$e2servicename = (string)$xmlResult->e2service->e2servicename;	
-			$FilePathPlay = IPS_GetKernelDir()."modules".DIRECTORY_SEPARATOR."SymconModules".DIRECTORY_SEPARATOR."IPS2Enigma".DIRECTORY_SEPARATOR."HTML".DIRECTORY_SEPARATOR."Button-Play.png";
-			$FilePathStream = IPS_GetKernelDir()."modules".DIRECTORY_SEPARATOR."SymconModules".DIRECTORY_SEPARATOR."IPS2Enigma".DIRECTORY_SEPARATOR."HTML".DIRECTORY_SEPARATOR."Button-Media-Player.png";
-			$FilePathDelete = IPS_GetKernelDir()."modules".DIRECTORY_SEPARATOR."SymconModules".DIRECTORY_SEPARATOR."IPS2Enigma".DIRECTORY_SEPARATOR."HTML".DIRECTORY_SEPARATOR."Button-Delete.png";
+			$FilePathPlay = IPS_GetKernelDir()."webfront".DIRECTORY_SEPARATOR."user".DIRECTORY_SEPARATOR."Enigma_HTML".DIRECTORY_SEPARATOR."Button-Play.png";
+			$FilePathStream = IPS_GetKernelDir()."webfront".DIRECTORY_SEPARATOR."user".DIRECTORY_SEPARATOR."Enigma_HTML".DIRECTORY_SEPARATOR."Button-Media-Player.png";
+			$FilePathDelete = IPS_GetKernelDir()."webfront".DIRECTORY_SEPARATOR."user".DIRECTORY_SEPARATOR."Enigma_HTML".DIRECTORY_SEPARATOR."Button-Delete.png";
 			
 			If ($this->ReadPropertyBoolean("Movielist_Data") == true) {
 				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/movielist"));
@@ -1297,7 +1298,7 @@
 	
 	private function Get_HTML()
 	{
-		$WebfrontPath = IPS_GetKernelDir()."webfront".DIRECTORY_SEPARATOR."user".DIRECTORY_SEPARATOR."HTML";
+		$WebfrontPath = IPS_GetKernelDir()."webfront".DIRECTORY_SEPARATOR."user".DIRECTORY_SEPARATOR."Enigma_HTML";
 		$SourcePath = IPS_GetKernelDir()."modules".DIRECTORY_SEPARATOR."SymconModules".DIRECTORY_SEPARATOR."IPS2Enigma".DIRECTORY_SEPARATOR."HTML";
 		if (file_exists($WebfrontPath)) {
 			// Das Verzeichnis existiert bereits
@@ -1309,6 +1310,12 @@
 				IPS_LogMessage("IPS2Enigma","Fehler bei der Verzeichniserstellung!");
 			}
 		}
+		$Path = opendir ($SourcePath);
+		while ($file = readdir ($Path))  // Verzeichnis öffnen und auslesen
+		{
+			copy($SourcePath.DIRECTORY_SEPARATOR.$file",$WebfrontPath.DIRECTORY_SEPARATOR.$file"); // Datei kopieren
+		}
+		closedir($Path);
 		
 	}
 	    
