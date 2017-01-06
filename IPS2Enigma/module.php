@@ -1295,6 +1295,23 @@
         return $Result;
 	}
 	
+	private function Get_HTML()
+	{
+		$WebfrontPath = IPS_GetKernelDir()."webfront".DIRECTORY_SEPARATOR."user".DIRECTORY_SEPARATOR."HTML";
+		$SourcePath = IPS_GetKernelDir()."modules".DIRECTORY_SEPARATOR."SymconModules".DIRECTORY_SEPARATOR."IPS2Enigma".DIRECTORY_SEPARATOR."HTML";
+		if (file_exists($WebfrontPath)) {
+			// Das Verzeichnis existiert bereits
+		} 
+		else {
+			//Das Verzeichnis existiert nicht
+			$result = mkdir($WebfrontPath);
+			If (!$result) {
+				IPS_LogMessage("IPS2Enigma","Fehler bei der Verzeichniserstellung!");
+			}
+		}
+		
+	}
+	    
 	public function Get_Picons_Enigma()
 	{
 	        If (($this->ReadPropertyBoolean("Open") == true) ) {
