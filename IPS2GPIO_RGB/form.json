@@ -116,7 +116,7 @@
     "actions":
     [
         { "type": "Label", "label": "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!" },
-        { "type": "Button", "label": "Off", "onClick": "I2GRGB_Set_Status($id, false);"},
+        { "type": "Button", "label": "On", "onClick": "I2GRGB_Set_Status($id, true);"},
         { "type": "Button", "label": "Off", "onClick": "I2GRGB_Set_Status($id, false);"},
         { "type": "Button", "label": "Toggle Output", "onClick": "I2GRGB_Toggle_Status($id);"},
         { "type": "Label", "label": "Rot" },
