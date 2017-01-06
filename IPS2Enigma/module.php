@@ -1313,7 +1313,7 @@
 		$Path = opendir ($SourcePath);
 		while ($file = readdir ($Path))  // Verzeichnis öffnen und auslesen
 		{
-			copy($SourcePath.DIRECTORY_SEPARATOR.$file",$WebfrontPath.DIRECTORY_SEPARATOR.$file"); // Datei kopieren
+			copy($SourcePath.DIRECTORY_SEPARATOR.$file, $WebfrontPath.DIRECTORY_SEPARATOR.$file); // Datei kopieren
 		}
 		closedir($Path);
 		
