@@ -561,6 +561,9 @@
        			SetValueString($this->GetIDForIdent("e2servicename"), (string)$xmlResult->e2service->e2servicename);
 			$e2servicereference = (string)$xmlResult->e2service->e2servicereference;
 			$e2servicename = (string)$xmlResult->e2service->e2servicename;	
+			$FilePathPlay = IPS_GetKernelDir()."modules".DIRECTORY_SEPARATOR."SymconModules".DIRECTORY_SEPARATOR."IPS2Enigma".DIRECTORY_SEPARATOR."HTML".DIRECTORY_SEPARATOR."Button-Play.png";
+			$FilePathStream = IPS_GetKernelDir()."modules".DIRECTORY_SEPARATOR."SymconModules".DIRECTORY_SEPARATOR."IPS2Enigma".DIRECTORY_SEPARATOR."HTML".DIRECTORY_SEPARATOR."Button-Media-Player.png";
+			$FilePathDelete = IPS_GetKernelDir()."modules".DIRECTORY_SEPARATOR."SymconModules".DIRECTORY_SEPARATOR."IPS2Enigma".DIRECTORY_SEPARATOR."HTML".DIRECTORY_SEPARATOR."Button-Delete.png";
 			
 			If ($this->ReadPropertyBoolean("Movielist_Data") == true) {
 				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/movielist"));
@@ -574,6 +577,9 @@
 				$table .= '<th class="tg-kv4b">Langbeschreibung<br></th>';
 				$table .= '<th class="tg-kv4b">Quelle</th>';
 				$table .= '<th class="tg-kv4b">Länge</th>';
+				$table .= '<th class="tg-kv4b"></th>';
+				$table .= '<th class="tg-kv4b"></th>';
+				$table .= '<th class="tg-kv4b"></th>';
 				$table .= '</tr>';
 				for ($i = 0; $i <= count($xmlResult) - 1; $i++) {
 					$table .= '<tr>';
@@ -582,6 +588,14 @@
 					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2descriptionextended.'</td>';
 					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2servicename.'</td>';
 					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2length.'</td>';
+					
+					$table .= '<td class="tg-611x"><img src='.$FilePathPlay.' alt="Abspielen" 
+						onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.$i.'&Source=Movielist_Play\' })"></td>';
+					$table .= '<td class="tg-611x"><img src='.$FilePathStream.' alt="Stream starten" 
+						onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.$i.'&Source=Movielist_Stream\' })"></td>';
+					$table .= '<td class="tg-611x"><img src='.$FilePathDelete.' alt="Löschen" 
+						onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.$i.'&Source=Movielist_Delete\' })"></td>';
+
 					$table .= '</tr>';
 				}
 				$table .= '</table>';
@@ -1225,6 +1239,15 @@
 				}
 				break;
 			case "EPGlist_Data_D":
+			    	IPS_LogMessage("IPS2Enigma","WebHookData - Source: ".$Source." Index: ".$Index);
+				break;
+			case "Movielist_Play":
+			    	IPS_LogMessage("IPS2Enigma","WebHookData - Source: ".$Source." Index: ".$Index);
+				break;
+			case "Movielist_Stream":
+			    	IPS_LogMessage("IPS2Enigma","WebHookData - Source: ".$Source." Index: ".$Index);
+				break;
+			case "Movielist_Delete":
 			    	IPS_LogMessage("IPS2Enigma","WebHookData - Source: ".$Source." Index: ".$Index);
 				break;
 			}
