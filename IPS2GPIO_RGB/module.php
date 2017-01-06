@@ -60,22 +60,22 @@
 	            SetValueBoolean($this->GetIDForIdent($Ident), $Value);
 	            break;
 	        case "Intensity_R":
-	            $this->Set_RGB($Value);
+	            $this->Set_RGB($Value, GetValueInteger($this->GetIDForIdent(Intensity_G)), GetValueInteger($this->GetIDForIdent(Intensity_B)));
 	            //Neuen Wert in die Statusvariable schreiben
 	            SetValueInteger($this->GetIDForIdent($Ident), $Value);
-	            SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex(GetValue($this->GetIDForIdent(Intensity_R)), GetValue($this->GetIDForIdent(Intensity_G)), GetValue($this->GetIDForIdent(Intensity_B))));
+	            SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex(GetValueInteger($this->GetIDForIdent(Intensity_R)), GetValueInteger($this->GetIDForIdent(Intensity_G)), GetValueInteger($this->GetIDForIdent(Intensity_B))));
 	            break;
 	        case "Intensity_G":
-	            $this->Set_RGB($Value);
+	            $this->Set_RGB(GetValueInteger($this->GetIDForIdent(Intensity_R)), $Value, GetValueInteger($this->GetIDForIdent(Intensity_B)));
 	            //Neuen Wert in die Statusvariable schreiben
 	            SetValueInteger($this->GetIDForIdent($Ident), $Value);
-	            SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex(GetValue($this->GetIDForIdent(Intensity_R)), GetValue($this->GetIDForIdent(Intensity_G)), GetValue($this->GetIDForIdent(Intensity_B))));
+	            SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex(GetValueInteger($this->GetIDForIdent(Intensity_R)), GetValueInteger($this->GetIDForIdent(Intensity_G)), GetValueInteger($this->GetIDForIdent(Intensity_B))));
 	            break;
 	        case "Intensity_B":
-	            $this->Set_RGB($Value);
+	            $this->Set_RGB(GetValueInteger($this->GetIDForIdent(Intensity_R)), GetValueInteger($this->GetIDForIdent(Intensity_G)), $Value);
 	            //Neuen Wert in die Statusvariable schreiben
 	            SetValueInteger($this->GetIDForIdent($Ident), $Value);
-	            SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex(GetValue($this->GetIDForIdent(Intensity_R)), GetValue($this->GetIDForIdent(Intensity_G)), GetValue($this->GetIDForIdent(Intensity_B))));
+	            SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex(GetValueInteger($this->GetIDForIdent(Intensity_R)), GetValueInteger($this->GetIDForIdent(Intensity_G)), GetValueInteger($this->GetIDForIdent(Intensity_B))));
 	            break;
 	        case "Color":
 	            list($r, $g, $b) = $this->Hex2RGB($Value);
