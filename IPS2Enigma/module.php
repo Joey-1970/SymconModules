@@ -1248,7 +1248,6 @@
 			    	IPS_LogMessage("IPS2Enigma","WebHookData - Source: ".$Source." Index: ".$Index);
 				break;
 			case "Movielist_Play":
-			    	//IPS_LogMessage("IPS2Enigma","WebHookData - Source: ".$Source." Index: ".$Index);
 				If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
 					$Servicereference = unserialize($this->GetBuffer("MovieServicereference"));
 					$this->MoviePlay($Servicereference[$Index]);
