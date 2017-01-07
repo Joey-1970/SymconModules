@@ -9,9 +9,8 @@
     ],
     "elements":
     [
-        { "name": "Open", "type": "CheckBox", "caption": "Aktiv" },
-        { "type": "Label", "label": "Die GPIO-Nummer (Broadcom-Number) ist je nach Raspberry Pi Modell fest definiert (GPIO 0/1 oder GPIO 2/3)" },
-        { "type": "Select", "name": "DeviceAddress", "caption": "Device Adresse",
+       { "name": "Open", "type": "CheckBox", "caption": "Aktiv" },
+       { "type": "Select", "name": "DeviceAddress", "caption": "Device Adresse",
             "options": [
                 { "label": "118 dez. / 0x76h", "value": 118 },
                 { "label": "119 dez. / 0x77h", "value": 119 }
