@@ -1257,7 +1257,7 @@
 			    	//IPS_LogMessage("IPS2Enigma","WebHookData - Source: ".$Source." Index: ".$Index);
 				If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
 					$Servicereference = unserialize($this->GetBuffer("MovieServicereference"));
-					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".urlencode($Servicereference[$Index]));
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".urlencode($Servicereference[$Index])));
 				}
 				break;
 			case "Movielist_Delete":
