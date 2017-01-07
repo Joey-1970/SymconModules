@@ -581,7 +581,7 @@
 				$table .= '<th class="tg-kv4b">Länge</th>';
 				$table .= '<th class="tg-kv4b"></th>';
 				$table .= '<th class="tg-kv4b"></th>';
-				$table .= '<th class="tg-kv4b"></th>';
+				//$table .= '<th class="tg-kv4b"></th>';
 				$table .= '</tr>';
 				for ($i = 0; $i <= count($xmlResult) - 1; $i++) {
 					$Servicereference[$i] = (string)$xmlResult->e2movie[$i]->e2servicereference;
@@ -597,8 +597,8 @@
 						onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.$i.'&Source=Movielist_Play\' })"></td>';
 					$table .= '<td class="tg-611x"><img src='.$FilePathStream.' alt="Stream starten" 
 						onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.$i.'&Source=Movielist_Stream\' })"></td>';
-					$table .= '<td class="tg-611x"><img src='.$FilePathDelete.' alt="Löschen" 
-						onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.$i.'&Source=Movielist_Delete\' })"></td>';
+					//$table .= '<td class="tg-611x"><img src='.$FilePathDelete.' alt="Löschen" 
+						//onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.$i.'&Source=Movielist_Delete\' })"></td>';
 
 					$table .= '</tr>';
 				}
@@ -1254,7 +1254,11 @@
 				}
 				break;
 			case "Movielist_Stream":
-			    	IPS_LogMessage("IPS2Enigma","WebHookData - Source: ".$Source." Index: ".$Index);
+			    	//IPS_LogMessage("IPS2Enigma","WebHookData - Source: ".$Source." Index: ".$Index);
+				If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					$Servicereference = unserialize($this->GetBuffer("MovieServicereference"));
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".urlencode($Servicereference[$Index]));
+				}
 				break;
 			case "Movielist_Delete":
 			    	IPS_LogMessage("IPS2Enigma","WebHookData - Source: ".$Source." Index: ".$Index);
