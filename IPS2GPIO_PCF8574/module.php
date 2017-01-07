@@ -201,8 +201,11 @@
 		for ($i = 0; $i <= 7; $i++) {
 			If ($this->ReadPropertyBoolean("P".$i) == true) {
 				// wenn true dann Eingang, dann disable		
- 				
+ 				$Bitmask = $Bitmask + pow(2, $i);
  			}		
+		}
+		If ($Bitmask > 0) {
+			$this->SetOutput($Bitmask);
 		}
 	}
 	
