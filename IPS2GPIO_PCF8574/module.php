@@ -101,6 +101,9 @@
 			If ($SetTimer == true) {
 				$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
 			}
+			else {
+				$this->SetTimerInterval("Messzyklus", 0);
+			}
 			
 			If ($this->ReadPropertyBoolean("Open") == true) {
 				$this->Setup();
