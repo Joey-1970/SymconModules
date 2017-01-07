@@ -1254,9 +1254,10 @@
 				}
 				break;
 			case "Movielist_Stream":
-			    	//IPS_LogMessage("IPS2Enigma","WebHookData - Source: ".$Source." Index: ".$Index);
+			    	//IPS_LogMessage("IPS2Enigma","WebHookData - Source: ".$Source." Index: ".$Index." SRef: ".);
 				If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
 					$Servicereference = unserialize($this->GetBuffer("MovieServicereference"));
+					IPS_LogMessage("IPS2Enigma","WebHookData - Source: ".$Source." Index: ".$Index." SRef: ".$Servicereference[$Index]);
 					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".urlencode($Servicereference[$Index])));
 				}
 				break;
