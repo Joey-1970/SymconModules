@@ -20,6 +20,7 @@
         { "type": "CheckBox", "name": "I2C_Used", "caption": "I²C" },
         { "type": "CheckBox", "name": "Serial_Used", "caption": "Seriell" },
         { "type": "CheckBox", "name": "SPI_Used", "caption": "SPI" },
+        { "type": "CheckBox", "name": "1Wire_Used", "caption": "1-Wire" },
         { "type": "Label", "label": "_____________________________________________________________________________________________________" },
         { "type": "Label", "label": "Hinweise:" },
         { "type": "Label", "label": "- es sollte PIGPIO in der aktuellsten Version installiert sein" },
