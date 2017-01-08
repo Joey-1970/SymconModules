@@ -187,7 +187,8 @@ class IPS2PioneerBDP450 extends IPSModule
 	}
 	
 	public function ReceiveData($JSONString) {
- 	    	// Empfangene Daten vom I/O
+ 	    	IPS_SemaphoreLeave("Communication");
+		// Empfangene Daten vom I/O
 	    	$this->SetBuffer("LastResponseTimestamp", time());
 		$Data = json_decode($JSONString);
 		$Message = utf8_decode($Data->Buffer);
@@ -612,6 +613,7 @@ class IPS2PioneerBDP450 extends IPSModule
 	private function ClientSocket(String $message)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			IPS_SemaphoreEnter("Communication", 250)
 			$this->SetBuffer("LastCommand", $message);
 			$this->SetBuffer("LastCommandTimestamp", time());
 			$res = $this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode($message))));  
