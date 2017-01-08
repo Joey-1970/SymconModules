@@ -22,13 +22,13 @@
 	        
             
                 //ReceiveData-Filter setzen
-		$Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*)';
+		$Filter = '(.*"Function":"get_usedpin".*|.*"Pin":"4".*)';
 		$this->SetReceiveDataFilter($Filter);
 		
 		If (IPS_GetKernelRunlevel() == 10103) {
-			If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+			If ($this->ReadPropertyBoolean("Open") == true) {
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
-									  "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => $this->ReadPropertyInteger("GlitchFilter"), "Resistance" => $this->ReadPropertyString("PUL"))));
+									  "Pin" => 4, "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 0, "Resistance" => $this->ReadPropertyString("PUL"))));
 				$this->SetStatus(102);
 			}
 			else {
