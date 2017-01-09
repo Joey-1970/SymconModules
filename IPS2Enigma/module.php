@@ -562,9 +562,9 @@
        			SetValueString($this->GetIDForIdent("e2servicename"), (string)$xmlResult->e2service->e2servicename);
 			$e2servicereference = (string)$xmlResult->e2service->e2servicereference;
 			$e2servicename = (string)$xmlResult->e2service->e2servicename;	
-			$FilePathPlay = "user".DIRECTORY_SEPARATOR."Enigma_HTML".DIRECTORY_SEPARATOR."Button-Play.png";
-			$FilePathStream = "user".DIRECTORY_SEPARATOR."Enigma_HTML".DIRECTORY_SEPARATOR."Button-Media-Player.png";
-			$FilePathDelete = "user".DIRECTORY_SEPARATOR."Enigma_HTML".DIRECTORY_SEPARATOR."Button-Delete.png";
+			$FilePathPlay = "user".DIRECTORY_SEPARATOR."Enigma_HTML".DIRECTORY_SEPARATOR."Button-Play_32.png";
+			$FilePathStream = "user".DIRECTORY_SEPARATOR."Enigma_HTML".DIRECTORY_SEPARATOR."Button-Media-Player_32.png";
+			$FilePathDelete = "user".DIRECTORY_SEPARATOR."Enigma_HTML".DIRECTORY_SEPARATOR."Button-Delete_32.png";
 			
 			If ($this->ReadPropertyBoolean("Movielist_Data") == true) {
 				$Servicereference = Array();
