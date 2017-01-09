@@ -101,8 +101,10 @@
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
 			   case "get_used_i2c":
-			   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
-			   	$this->ApplyChanges();
+			   	If ($this->ReadPropertyBoolean("Open") == true) {
+					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
+					$this->ApplyChanges();
+				}
 				break;
 			   case "status":
 			   	If ($data->HardwareRev <= 3) {
