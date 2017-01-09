@@ -67,7 +67,9 @@
 		//IPS_LogMessage("ReceiveData_Dimmer", utf8_decode($data->Buffer));
 		switch ($data->Function) {
 			case "get_usedpin":
-				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+				If ($this->ReadPropertyBoolean("Open") == true) {
+					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+				}
 				break;
 			case "status":
 				If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
