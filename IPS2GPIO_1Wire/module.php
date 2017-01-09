@@ -19,7 +19,7 @@
 	        $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 	   
 	        //Status-Variablen anlegen
-	        
+	        // da kommt einiges
             
                 //ReceiveData-Filter setzen
 		$Filter = '(.*"Function":"get_usedpin".*|.*"Pin":"4".*)';
