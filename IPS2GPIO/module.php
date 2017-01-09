@@ -552,10 +552,11 @@ class IPS2GPIO_IO extends IPSModule
 		// Reseervierung des 1-Wire-Pins
 		If ($this->ReadPropertyBoolean("1Wire_Used") == true)  {
 			$PinUsed[4] = 99999;
-			//$this->CommandClientSocket(pack("LLLL", 0, 2, 4, 0).pack("LLLL", 0, 3, 4, 0), 32);
+			$this->CommandClientSocket(pack("LLLL", 0, 4, 1, 0), 16);
 		}
 		else {
 			// wird 1-Wire nicht benötigt die Pin auf Input setzen
+			$this->CommandClientSocket(pack("LLLL", 0, 4, 0, 0), 16);
 		}
 		// Sichern der Voreinstellungen
 		SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
