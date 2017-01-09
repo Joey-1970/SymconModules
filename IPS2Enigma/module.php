@@ -1323,13 +1323,14 @@
 				IPS_LogMessage("IPS2Enigma","Fehler bei der Verzeichniserstellung!");
 			}
 		}
-		$Path = opendir ($SourcePath);
-		while ($file = readdir ($Path))  // Verzeichnis öffnen und auslesen
+		$Path = opendir($SourcePath);
+		while (false !== ($file = readdir($Path)))
 		{
-			copy($SourcePath.DIRECTORY_SEPARATOR.$file, $WebfrontPath.DIRECTORY_SEPARATOR.$file); // Datei kopieren
+			if ($file != "." && $file != "..") {
+				copy($SourcePath.DIRECTORY_SEPARATOR.$file, $WebfrontPath.DIRECTORY_SEPARATOR.$file); // Datei kopieren
+			}
 		}
-		closedir($Path);
-		
+		closedir($Path);	
 	}
 	    
 	public function Get_Picons_Enigma()
