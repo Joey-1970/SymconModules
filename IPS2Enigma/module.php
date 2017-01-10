@@ -595,8 +595,10 @@
 					
 					$table .= '<td class="tg-611x"><img src='.$FilePathPlay.' alt="Abspielen" 
 						onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.$i.'&Source=Movielist_Play\' })"></td>';
-					$table .= '<td class="tg-611x"><img src='.$FilePathStream.' alt="Stream starten" 
-						onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.$i.'&Source=Movielist_Stream\' })"></td>';
+					//$table .= '<td class="tg-611x"><img src='.$FilePathStream.' alt="Stream starten" 
+						//onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.$i.'&Source=Movielist_Stream\' })"></td>';
+					$Targetlink = $this->ReadPropertyString("IPAddress");
+					$table .= '<td class="tg-611x"><a href='.$Targetlink.' target="_blank"><img src='.$FilePathStream.' alt="Stream starten"></td>';
 					//$table .= '<td class="tg-611x"><img src='.$FilePathDelete.' alt="Löschen" 
 						//onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.$i.'&Source=Movielist_Delete\' })"></td>';
 
