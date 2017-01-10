@@ -267,7 +267,7 @@ class IPS2SingleRoomControl extends IPSModule
 			else {
 				$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".$ActionID);
 				If ($PresenceStatus == true) {
-					If ($this->GetIDForIdent("BoostMode") == true) {
+					If (GetValueBoolean($this->GetIDForIdent("BoostMode")) == true) {
 						SetValueInteger($this->GetIDForIdent("Modus"), 3);
 						SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $ActionIDTemperature + abs($this->ReadPropertyInteger("TemperatureIncrease")));
 					}
