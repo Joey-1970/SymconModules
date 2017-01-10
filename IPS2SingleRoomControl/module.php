@@ -78,6 +78,8 @@ class IPS2SingleRoomControl extends IPSModule
 		else {
 			$this->EnableAction("SetpointTemperature");
 		}
+		$this->RegisterVariableBoolean("BoostMode", "Boost-Mode", "~Switch", 35);
+		$this->EnableAction("BoostMode");
 		$this->RegisterVariableInteger("PositionElement", "Stellelement", "~Intensity.100", 40);
 		$this->DisableAction("PositionElement");
 		$this->RegisterVariableBoolean("PWM_Mode", "PWM-Status", "~Switch", 40);
@@ -101,6 +103,11 @@ class IPS2SingleRoomControl extends IPSModule
 			$this->RegisterScheduleAction($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), $i - 1, $Value."C°", $this->ReadPropertyInteger("ColorTemperatur_".$i), "IPS2SRC_SetTemperature(\$_IPS['TARGET'], ".$Value.");");
 		}
 		
+		// Logging setzen
+		AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("ActualTemperature"), $this->ReadPropertyBoolean("LoggingActualTemperature"));
+		AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("SetpointTemperature"), $this->ReadPropertyBoolean("LoggingSetpointTemperature"));
+		IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
+
 		
 		// Registrierung für Nachrichten des Wochenplans
 		$this->RegisterMessage($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 10803);
@@ -391,6 +398,21 @@ class IPS2SingleRoomControl extends IPSModule
 	{
 		SetValueBoolean($this->GetIDForIdent("OperatingMode"),  true);
 		$this->SetTimerInterval("AutomaticFallback", 0);
+		// Aktuellen Wert des Wochenplans auslesen
+		$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, pow(2, date("N") - 1), date("H"), date("i"));
+		If (!$ActionID) {
+			IPS_LogMessage("IPS2SingleRoomControl", "Fehler bei der Ermittlung der Wochenplan-Solltemperatur!"); 	
+		}
+		else {
+			$$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".($ActionID + 1));
+			SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $$ActionIDTemperature);
+		}		
+	}
+	
+	public function AutomaticFallbackBoost()
+	{
+		SetValueBoolean($this->GetIDForIdent("BoostMode"),  false);
+		$this->SetTimerInterval("AutomaticFallbackBoost", 0);
 		// Aktuellen Wert des Wochenplans auslesen
 		$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, pow(2, date("N") - 1), date("H"), date("i"));
 		If (!$ActionID) {
