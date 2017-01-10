@@ -24,6 +24,7 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->RegisterTimer("PWM", 0, 'IPS2SRC_PWM($_IPS["TARGET"]);');
 		$this->RegisterPropertyInteger("MinSwitchTime", 5);
 		$this->RegisterPropertyInteger("PWM_ActuatorID", 0);
+		$this->RegisterPropertyInteger("HM_ActuatorID", 0);
 		$this->RegisterPropertyInteger("AutomaticFallback", 120);
 		$this->RegisterTimer("AutomaticFallback", 0, 'IPS2SRC_AutomaticFallback($_IPS["TARGET"]);');
 		$this->RegisterPropertyInteger("WindowStatusID", 0);
@@ -341,7 +342,8 @@ class IPS2SingleRoomControl extends IPSModule
 			If ($this->ReadPropertyInteger("PWM_ActuatorID") > 0) {
 				SetValueBoolean($this->ReadPropertyInteger("PWM_ActuatorID"), true);
 			}
-			$this->SetTimerInterval("PWM", (int)$PWMontime * 1000);			
+			$this->SetTimerInterval("PWM", (int)$PWMontime * 1000);
+			
 		}
 		else {
 			SetValueBoolean($this->GetIDForIdent("PWM_Mode"), false);
@@ -350,8 +352,9 @@ class IPS2SingleRoomControl extends IPSModule
 			}
 		}
 		
-		
-		
+		If ($this->ReadPropertyInteger("HM_ActuatorID") > 0) {
+			HM_WriteValueFloat($this->ReadPropertyInteger("PWM_ActuatorID"), "SET_TEMPERATURE", GetValueFloat($this->GetIDForIdent("SetpointTemperature")) );
+		}
 		
 		$this->SetBuffer("LastTrigger", time());
 	}
