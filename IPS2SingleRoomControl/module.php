@@ -250,10 +250,12 @@ class IPS2SingleRoomControl extends IPSModule
 		
 		// wenn der Mode auf Automatik ist, den aktuellen Soll-Wert aus dem Wochenplan lesen
 		If (GetValueBoolean($this->GetIDForIdent("OperatingMode")) == true) { 	
+			SetValueInteger($this->GetIDForIdent("Modus"), 1);
 			If ($DayStatus == false) {			
 				$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, pow(2, date("N") - 1), date("H"), date("i"));
 			}
 			else {
+				SetValueInteger($this->GetIDForIdent("Modus"), 4);
 				// Feiertage/Urlaub wird wie ein Sonntag behandelt
 				$ActionID = $this->GetEventActionID($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 2, 64, date("H"), date("i"));
 			}	
@@ -264,12 +266,22 @@ class IPS2SingleRoomControl extends IPSModule
 			else {
 				$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".$ActionID);
 				If ($PresenceStatus == true) {
-					SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $ActionIDTemperature);
+					If ($BoostMode == true) {
+						SetValueInteger($this->GetIDForIdent("Modus"), 3);
+						SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $ActionIDTemperature + abs($this->ReadPropertyInteger("TemperatureIncrease")));
+					}
+					else {
+						SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $ActionIDTemperature);
+					}
 				}
 				else {
+					SetValueInteger($this->GetIDForIdent("Modus"), 2);
 					SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $ActionIDTemperature - abs($this->ReadPropertyInteger("TemperatureReduction")));
 				}
 			}
+		}
+		else {
+			SetValueInteger($this->GetIDForIdent("Modus"), 0);
 		}
 		
 		
@@ -303,6 +315,7 @@ class IPS2SingleRoomControl extends IPSModule
 			$PositionElement = $this->PID($this->ReadPropertyFloat("KP"), $this->ReadPropertyFloat("KI"), $this->ReadPropertyFloat("KD"), $e, $esum, $ealt, $Ta);
 		}
 		else {
+			SetValueInteger($this->GetIDForIdent("Modus"), 5);
 			$PositionElement = 0;
 		}
 		SetValueInteger($this->GetIDForIdent("PositionElement"), $PositionElement);
@@ -389,6 +402,7 @@ class IPS2SingleRoomControl extends IPSModule
 		SetValueBoolean($this->GetIDForIdent("BoostMode"),  $Value);
 		If ($Value == true) {
 			$this->SetTimerInterval("AutomaticFallbackBoost", ($this->ReadPropertyInteger("AutomaticFallbackBoost") * 1000 * 60));
+			SetValueInteger($this->GetIDForIdent("Modus"), 3);
 		}
 		else {
 			$this->SetTimerInterval("AutomaticFallbackBoost", 0);
@@ -399,6 +413,7 @@ class IPS2SingleRoomControl extends IPSModule
 	{
 		SetValueBoolean($this->GetIDForIdent("OperatingMode"),  $Value);
 		If ($Value == true) {
+			SetValueInteger($this->GetIDForIdent("Modus"), 1);
 			$this->DisableAction("SetpointTemperature");
 			$this->SetTimerInterval("AutomaticFallback", 0);
 			// Aktuellen Wert des Wochenplans auslesen
@@ -413,6 +428,7 @@ class IPS2SingleRoomControl extends IPSModule
 		}
 		else {
 			// Timer für automatischen Fallback starten
+			SetValueInteger($this->GetIDForIdent("Modus"), 0);
 			$this->EnableAction("SetpointTemperature");
 			$this->SetTimerInterval("AutomaticFallback", ($this->ReadPropertyInteger("AutomaticFallback") * 1000 * 60));
 		}
