@@ -31,6 +31,11 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->RegisterPropertyInteger("DayStatusID", 0);
 		$this->RegisterPropertyInteger("PresenceStatusID", 0);
 		$this->RegisterPropertyInteger("TemperatureReduction", 3);
+		$this->RegisterPropertyInteger("TemperatureIncrease", 3);
+		$this->RegisterPropertyInteger("AutomaticFallbackBoost", 60);
+		$this->RegisterTimer("AutomaticFallbackBoost", 0, 'IPS2SRC_AutomaticFallbackBoost($_IPS["TARGET"]);');
+		$this->RegisterPropertyBoolean("LoggingSetpointTemperature", false);
+		$this->RegisterPropertyBoolean("LoggingActualTemperature", false);
 		$this->RegisterPropertyFloat("Temperatur_1", 16.0);
 		$this->RegisterPropertyFloat("Temperatur_2", 17.0);
 		$this->RegisterPropertyFloat("Temperatur_3", 18.0);
