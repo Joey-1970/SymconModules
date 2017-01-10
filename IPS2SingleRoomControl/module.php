@@ -73,7 +73,7 @@ class IPS2SingleRoomControl extends IPSModule
 		IPS_SetVariableProfileAssociation("heating.modus", 2, "Abwesenheit", "Radiator", -1);
 		IPS_SetVariableProfileAssociation("heating.modus", 3, "Boost", "Radiator", -1);
 		IPS_SetVariableProfileAssociation("heating.modus", 4, "Feiertag", "Radiator", -1);
-		IPS_SetVariableProfileAssociation("heating.modus", 5, "Fenster geöffnet", "Radiator", -1);
+		IPS_SetVariableProfileAssociation("heating.modus", 5, "Lüftung", "Radiator", -1);
 		
 		$this->RegisterVariableBoolean("OperatingMode", "Betriebsart Automatik", "~Switch", 30);
 		$this->EnableAction("OperatingMode");
