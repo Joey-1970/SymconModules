@@ -160,6 +160,9 @@ class IPS2SingleRoomControl extends IPSModule
 	        case "OperatingMode":
 	            	$this->SetOperatingMode($Value);
 	            	break;
+		case "BoostMode":
+	            	$this->SetBoostMode($Value);
+	            	break;
 	        default:
 	            throw new Exception("Invalid Ident");
 	    	}
@@ -368,6 +371,17 @@ class IPS2SingleRoomControl extends IPSModule
 		If ($this->GetIDForIdent("OperatingMode") == true) {
 			SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $Value);
 			$this->Measurement();
+		}
+	}
+	
+	public function SetBoostMode(bool $Value)
+	{
+		SetValueBoolean($this->GetIDForIdent("BoostMode"),  $Value);
+		If ($Value == true) {
+			$this->SetTimerInterval("AutomaticFallbackBoost", ($this->ReadPropertyInteger("AutomaticFallbackBoost") * 1000 * 60));
+		}
+		else {
+			$this->SetTimerInterval("AutomaticFallbackBoost", 0);
 		}
 	}
 	
