@@ -67,6 +67,14 @@ class IPS2SingleRoomControl extends IPSModule
 		IPS_SetVariableProfileAssociation("window.status", 2, "geöffnet", "Window", -1);
 		IPS_SetVariableProfileAssociation("window.status", 3, "undefiniert", "Warning", -1);
 		
+		$this->RegisterProfileInteger("heating.modus", "Radiator", "", "", 0, 5, 1);
+		IPS_SetVariableProfileAssociation("heating.modus", 0, "Manuell", "Radiator", -1);
+		IPS_SetVariableProfileAssociation("heating.modus", 1, "Automatik", "Radiator", -1);
+		IPS_SetVariableProfileAssociation("heating.modus", 2, "Abwesenheit", "Radiator", -1);
+		IPS_SetVariableProfileAssociation("heating.modus", 3, "Boost", "Radiator", -1);
+		IPS_SetVariableProfileAssociation("heating.modus", 4, "Feiertag", "Radiator", -1);
+		IPS_SetVariableProfileAssociation("heating.modus", 5, "Fenster geöffnet", "Radiator", -1);
+		
 		$this->RegisterVariableBoolean("OperatingMode", "Betriebsart Automatik", "~Switch", 30);
 		$this->EnableAction("OperatingMode");
 		$this->RegisterVariableFloat("ActualTemperature", "Ist-Temperatur", "~Temperature", 10);
@@ -80,6 +88,8 @@ class IPS2SingleRoomControl extends IPSModule
 		}
 		$this->RegisterVariableBoolean("BoostMode", "Boost-Mode", "~Switch", 35);
 		$this->EnableAction("BoostMode");
+		$this->RegisterVariableInteger("Modus", "Modus", "heating.modus", 37);
+		$this->DisableAction("Modus");
 		$this->RegisterVariableInteger("PositionElement", "Stellelement", "~Intensity.100", 40);
 		$this->DisableAction("PositionElement");
 		$this->RegisterVariableBoolean("PWM_Mode", "PWM-Status", "~Switch", 40);
