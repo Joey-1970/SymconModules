@@ -353,7 +353,7 @@ class IPS2SingleRoomControl extends IPSModule
 		}
 		
 		If ($this->ReadPropertyInteger("HM_ActuatorID") > 0) {
-			HM_WriteValueFloat($this->ReadPropertyInteger("PWM_ActuatorID"), "SET_TEMPERATURE", GetValueFloat($this->GetIDForIdent("SetpointTemperature")) );
+			HM_WriteValueFloat($this->ReadPropertyInteger("HM_ActuatorID"), "SET_TEMPERATURE", GetValueFloat($this->GetIDForIdent("SetpointTemperature")) );
 		}
 		
 		$this->SetBuffer("LastTrigger", time());
