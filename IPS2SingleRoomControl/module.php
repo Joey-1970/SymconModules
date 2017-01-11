@@ -29,6 +29,7 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->RegisterTimer("AutomaticFallback", 0, 'IPS2SRC_AutomaticFallback($_IPS["TARGET"]);');
 		$this->RegisterPropertyInteger("WindowStatusID", 0);
 		$this->RegisterPropertyInteger("WindowStatusBelowID", 0);
+		$this->RegisterPropertyBoolean("WindowStatusMode", false);
 		$this->RegisterPropertyInteger("DayStatusID", 0);
 		$this->RegisterPropertyInteger("PresenceStatusID", 0);
 		$this->RegisterPropertyInteger("TemperatureReduction", 3);
@@ -226,7 +227,12 @@ class IPS2SingleRoomControl extends IPSModule
 		}
 		elseif ($this->ReadPropertyInteger("WindowStatusID") > 0) {
 			// wenn eine Variable angegeben ist, wird der Zustand des Fensters in die Hilfsvariable geschrieben
-			$WindowStatus = GetValueBoolean($this->ReadPropertyInteger("WindowStatusID"));
+			If ($this->ReadPropertyBoolean("WindowStatusMode") == false) {
+				$WindowStatus = GetValueBoolean($this->ReadPropertyInteger("WindowStatusID"));
+			}
+			else {
+				$WindowStatus = !GetValueBoolean($this->ReadPropertyInteger("WindowStatusID"));
+			}
 		}
 		
 		// die Daten aus den Angaben zum Feiertag/Urlaub aufbereiten
@@ -470,16 +476,36 @@ class IPS2SingleRoomControl extends IPSModule
 	private function WindowStatus()
 	{
 		If ($this->ReadPropertyInteger("WindowStatusID") > 0) {
-			$StatusOben = GetValueBoolean($this->ReadPropertyInteger("WindowStatusID"));
+			If ($this->ReadPropertyBoolean("WindowStatusMode") == false) {
+				$StatusOben = GetValueBoolean($this->ReadPropertyInteger("WindowStatusID"));
+			}
+			else {
+				$StatusOben = !GetValueBoolean($this->ReadPropertyInteger("WindowStatusID"));
+			}
 		}
 		else {
-			$StatusOben = true;
+			If ($this->ReadPropertyBoolean("WindowStatusMode") == false) {
+				$StatusOben = true;
+			}
+			else {
+				$StatusOben = false;
+			}
 		}
 		If ($this->ReadPropertyInteger("WindowStatusBelowID") > 0) {
-			$StatusUnten = GetValueBoolean($this->ReadPropertyInteger("WindowStatusBelowID"));
+			If ($this->ReadPropertyBoolean("WindowStatusMode") == false) {
+				$StatusUnten = GetValueBoolean($this->ReadPropertyInteger("WindowStatusBelowID"));
+			}
+			else {
+				$StatusUnten = !GetValueBoolean($this->ReadPropertyInteger("WindowStatusBelowID"));
+			}
 		}
 		else {
-			$StatusUnten = true;
+			If ($this->ReadPropertyBoolean("WindowStatusMode") == false) {
+				$StatusUnten = true;
+			}
+			else {
+				$StatusUnten = false;
+			}
 		}
 
 		If (($StatusOben == true) AND ($StatusUnten == true))
@@ -498,6 +524,8 @@ class IPS2SingleRoomControl extends IPSModule
 			{
 			SetValueInteger($this->GetIDForIdent("WindowStatus"), 3);
 			}
+	
+	
 	}
 	
 	private function GetEventActionID($EventID, $EventType, $Days, $Hour, $Minute)
