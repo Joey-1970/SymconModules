@@ -716,7 +716,7 @@
 					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i+1]->e2eventdescription).'</td>';
 					$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event[$i+1]->e2eventduration / 60).' min'.'</td>';
 					//echo "http://192.168.178.20/web/stream.m3u?ref=".$servicereference."&name=".$channelname;
-					$Targetlink = "http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".urlencode((string)$xmlResult->e2movie[$i]->e2servicereference."&name=".urlencode((string)$xmlResult->e2event[$i]->e2eventservicename));
+					$Targetlink = "http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".urlencode((string)$xmlResult->e2movie[$i]->e2servicereference)."&name=".urlencode((string)$xmlResult->e2event[$i]->e2eventservicename);
 					$table .= '<td class="tg-611x"><a href='.$Targetlink.' target="_blank"><img src='.$FilePathStream.' alt="Stream starten"></td>';
 					$table .= '</tr>';
 				}
