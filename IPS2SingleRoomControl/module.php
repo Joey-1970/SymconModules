@@ -27,6 +27,7 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->RegisterPropertyInteger("HM_ActuatorID", 0);
 		$this->RegisterPropertyInteger("FS_ActuatorID", 0);
 		$this->RegisterPropertyInteger("1W_ActuatorID", 0);
+		$this->RegisterPropertyInteger("1W_Pin", 0);
 		$this->RegisterPropertyInteger("AutomaticFallback", 120);
 		$this->RegisterTimer("AutomaticFallback", 0, 'IPS2SRC_AutomaticFallback($_IPS["TARGET"]);');
 		$this->RegisterPropertyInteger("WindowStatusID", 0);
@@ -353,7 +354,7 @@ class IPS2SingleRoomControl extends IPSModule
 			}
 			// 1W-Aktor
 			If ($this->ReadPropertyInteger("1W_ActuatorID") > 0) {
-				OW_SetPin($this->ReadPropertyInteger("1W_ActuatorID"), 1, true);
+				OW_SetPin($this->ReadPropertyInteger("1W_ActuatorID"), $this->ReadPropertyInteger("1W_Pin"), true);
 			}
 			$this->SetTimerInterval("PWM", (int)$PWMontime * 1000);
 			
@@ -366,7 +367,7 @@ class IPS2SingleRoomControl extends IPSModule
 			}
 			// 1W-Aktor
 			If ($this->ReadPropertyInteger("1W_ActuatorID") > 0) {
-				OW_SetPin($this->ReadPropertyInteger("1W_ActuatorID"), 1, false);
+				OW_SetPin($this->ReadPropertyInteger("1W_ActuatorID"), $this->ReadPropertyInteger("1W_Pin"), false);
 			}
 		}
 		
