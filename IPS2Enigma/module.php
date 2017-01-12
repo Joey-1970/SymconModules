@@ -678,6 +678,7 @@
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$FilePathStream = "user".DIRECTORY_SEPARATOR."Enigma_HTML".DIRECTORY_SEPARATOR."Button-Media-Player_32.png";
+			$FilePathPlay = "user".DIRECTORY_SEPARATOR."Enigma_HTML".DIRECTORY_SEPARATOR."Button-Play_32.png";
 			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/getservices"));
 			$bouquet = (string)$xmlResult->e2service[$this->ReadPropertyInteger("BouquetsNumber")]->e2servicereference;
 			
@@ -694,6 +695,7 @@
 				$table .= '<th class="tg-kv4b">Titel</th>';
 				$table .= '<th class="tg-kv4b">Kurzbeschreibung<br></th>';
 				$table .= '<th class="tg-kv4b">Dauer<br></th>';
+				$table .= '<th class="tg-kv4b"></th>';
 				$table .= '<th class="tg-kv4b"></th>';
 				$table .= '<colgroup>'; 
 				$table .= '<col width="120">'; 
@@ -715,7 +717,10 @@
 					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i+1]->e2eventtitle).'</td>';
 					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i+1]->e2eventdescription).'</td>';
 					$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event[$i+1]->e2eventduration / 60).' min'.'</td>';
-					//echo "http://192.168.178.20/web/stream.m3u?ref=".$servicereference."&name=".$channelname;
+					
+					$table .= '<td class="tg-611x"><img src='.$FilePathPlay.' alt="Abspielen" 
+						onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.($i/2).'&Source=EPGlist_Data_A\' })"></td>';
+					
 					$Targetlink = "http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".urlencode((string)$xmlResult->e2event[$i]->e2eventservicereference)."&name=".urlencode((string)$xmlResult->e2event[$i]->e2eventservicename);
 					$table .= '<td class="tg-611x"><a href='.$Targetlink.' target="_blank"><img src='.$FilePathStream.' alt="Stream starten"></td>';
 					$table .= '</tr>';
