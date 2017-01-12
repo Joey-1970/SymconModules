@@ -706,7 +706,7 @@
 					$Servicereference[$i/2] = (string)$xmlResult->e2event[$i]->e2eventservicereference;
 					$table .= '<tr>';
 					$table .= '<td rowspan="2" class="tg-611x"><img src='.$this->Get_Filename((string)$xmlResult->e2event[$i]->e2eventservicereference).' alt='.(string)$xmlResult->e2event[$i]->e2eventservicename.' 
-						onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.($i/2).'&Source=EPGlist_Data_A\' })"></td>';
+						onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.($i/2).'&Source=EPGlist_Data_A&SRef='.$Servicereference[$i/2].'\' })"></td>';
 					$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event[$i]->e2eventstart).' Uhr'.'</td>';
 					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i]->e2eventtitle).'</td>';
 					$table .= '<td class="tg-611x" onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.($i/2).'&Source=EPGlist_Data_D\' })">'.utf8_decode($xmlResult->e2event[$i]->e2eventdescription).'</td>';			
@@ -718,8 +718,8 @@
 					$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i+1]->e2eventdescription).'</td>';
 					$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event[$i+1]->e2eventduration / 60).' min'.'</td>';
 					
-					$table .= '<td class="tg-611x"><img src='.$FilePathPlay.' alt="Abspielen" 
-						onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.($i/2).'&Source=EPGlist_Data_A\' })"></td>';
+					$table .= '<td class="tg-611x"><img src='.$FilePathPlay.' alt="Umschalten" 
+						onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.($i/2).'&Source=EPGlist_Data_A&SRef='.$Servicereference[$i/2].'\' })"></td>';
 					
 					$Targetlink = "http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".urlencode((string)$xmlResult->e2event[$i]->e2eventservicereference)."&name=".urlencode((string)$xmlResult->e2event[$i]->e2eventservicename);
 					$table .= '<td class="tg-611x"><a href='.$Targetlink.' target="_blank"><img src='.$FilePathStream.' alt="Stream starten"></td>';
@@ -1245,6 +1245,7 @@
 			
 			$Source = $_GET["Source"];
 			$Index = $_GET["Index"];
+			$SRef = $_GET["SRef"];
 			$Servicereference = Array();
 			switch($Source) {
 			case "EPGlist_Data_A":
@@ -1254,6 +1255,7 @@
 					$Servicereference = unserialize($this->GetBuffer("Servicereference"));
 					//IPS_LogMessage("IPS2Enigma","WebHookData - Servicereference: ".$Servicereference[$Index]);
 					//$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/zap?sRef=".$Servicereference[$Index]));
+					IPS_LogMessage("IPS2Enigma","WebHookData - Servicereference: ".$SRef);
 					$this->Zap($Servicereference[$Index]);
 					$this->Get_EPGUpdate();
 				}
