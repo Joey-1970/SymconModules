@@ -591,18 +591,16 @@
 					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2descriptionextended.'</td>';
 					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2servicename.'</td>';
 					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2length.'</td>';
-					
-					
+					// Aufzeichnung im TV abspielen
 					$table .= '<td class="tg-611x"><img src='.$FilePathPlay.' alt="Abspielen" 
 						onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.$i.'&Source=Movielist_Play\' })"></td>';
-					//$table .= '<td class="tg-611x"><img src='.$FilePathStream.' alt="Stream starten" 
-						//onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.$i.'&Source=Movielist_Stream\' })"></td>';
-					//http://dreambox/web/stream.m3u?ref={servicereference}
-					$Targetlink = "http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".urlencode((string)$xmlResult->e2movie[$i]->e2servicereference);
+					// Aufzeichnung aus dem Webfront streamen
+					$MovieFilename = str_replace(" ", "%20", (string)$xmlResult->e2movie[$i]->e2filename);
+					$Targetlink = "http://".$this->ReadPropertyString("IPAddress")."/web/ts.m3u?file=".$MovieFilename; 
 					$table .= '<td class="tg-611x"><a href='.$Targetlink.' target="_blank"><img src='.$FilePathStream.' alt="Stream starten"></td>';
+					// Aufzeichnung löschen
 					//$table .= '<td class="tg-611x"><img src='.$FilePathDelete.' alt="Löschen" 
 						//onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.$i.'&Source=Movielist_Delete\' })"></td>';
-
 					$table .= '</tr>';
 				}
 				$table .= '</table>';
