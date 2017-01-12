@@ -1253,8 +1253,8 @@
 					$Servicereference = unserialize($this->GetBuffer("Servicereference"));
 					//IPS_LogMessage("IPS2Enigma","WebHookData - Servicereference: ".$Servicereference[$Index]);
 					//$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/zap?sRef=".$Servicereference[$Index]));
-					IPS_LogMessage("IPS2Enigma","WebHookData - Servicereference: ".$SRef);
-					$this->Zap($Servicereference[$Index]);
+					//IPS_LogMessage("IPS2Enigma","WebHookData - Servicereference: ".$SRef);
+					$this->Zap($SRef);
 					$this->Get_EPGUpdate();
 				}
 				break;
