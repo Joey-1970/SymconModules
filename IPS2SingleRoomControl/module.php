@@ -347,9 +347,11 @@ class IPS2SingleRoomControl extends IPSModule
 		// Schreiben und setzen
 		If ($PWMontime > 0) {
 			SetValueBoolean($this->GetIDForIdent("PWM_Mode"), true);
+			// allgemeiner Aktor true-false
 			If ($this->ReadPropertyInteger("PWM_ActuatorID") > 0) {
 				SetValueBoolean($this->ReadPropertyInteger("PWM_ActuatorID"), true);
 			}
+			// 1W-Aktor
 			If ($this->ReadPropertyInteger("1W_ActuatorID") > 0) {
 				OW_SetPin($this->ReadPropertyInteger("1W_ActuatorID"), 1, true);
 			}
@@ -358,16 +360,23 @@ class IPS2SingleRoomControl extends IPSModule
 		}
 		else {
 			SetValueBoolean($this->GetIDForIdent("PWM_Mode"), false);
+			// allgemeiner Aktor true-false
 			If ($this->ReadPropertyInteger("PWM_ActuatorID") > 0) {
 				SetValueBoolean($this->ReadPropertyInteger("PWM_ActuatorID"), false);
 			}
+			// 1W-Aktor
 			If ($this->ReadPropertyInteger("1W_ActuatorID") > 0) {
 				OW_SetPin($this->ReadPropertyInteger("1W_ActuatorID"), 1, false);
 			}
 		}
 		
+		// HM-Aktor
 		If ($this->ReadPropertyInteger("HM_ActuatorID") > 0) {
 			HM_WriteValueFloat($this->ReadPropertyInteger("HM_ActuatorID"), "SET_TEMPERATURE", GetValueFloat($this->GetIDForIdent("SetpointTemperature")) );
+		}
+		// FS20-Aktor
+		If ($this->ReadPropertyInteger("FS_ActuatorID") > 0) {
+			FHT_SetTemperature($this->ReadPropertyInteger("FS_ActuatorID") , GetValueFloat($this->GetIDForIdent("SetpointTemperature")) );
 		}
 		
 		$this->SetBuffer("LastTrigger", time());
