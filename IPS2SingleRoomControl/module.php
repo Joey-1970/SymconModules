@@ -283,7 +283,7 @@ class IPS2SingleRoomControl extends IPSModule
 						SetValueFloat($this->GetIDForIdent("SetpointTemperature"), max(5, Min($ActionIDTemperature + abs($this->ReadPropertyInteger("TemperatureIncrease")), 35)));
 					}
 					else {
-						SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $ActionIDTemperature);
+						SetValueFloat($this->GetIDForIdent("SetpointTemperature"), max(5, Min($ActionIDTemperature, 35)));
 					}
 				}
 				else {
@@ -421,7 +421,7 @@ class IPS2SingleRoomControl extends IPSModule
 	public function SetTemperature(float $Value)
 	{
 		If ($this->GetIDForIdent("OperatingMode") == true) {
-			SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $Value);
+			SetValueFloat($this->GetIDForIdent("SetpointTemperature"), max(5, Min($Value, 35)));
 			$this->Measurement();
 		}
 	}
@@ -450,7 +450,7 @@ class IPS2SingleRoomControl extends IPSModule
 			}
 			else {	
 				$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".$ActionID);
-				SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $ActionIDTemperature);
+				SetValueFloat($this->GetIDForIdent("SetpointTemperature"), max(5, Min($ActionIDTemperature, 35)));
 			}			
 		}
 		else {
@@ -471,7 +471,7 @@ class IPS2SingleRoomControl extends IPSModule
 		}
 		else {
 			$$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".($ActionID + 1));
-			SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $$ActionIDTemperature);
+			SetValueFloat($this->GetIDForIdent("SetpointTemperature"), max(5, Min($ActionIDTemperature, 35)));
 		}		
 	}
 	
@@ -486,7 +486,7 @@ class IPS2SingleRoomControl extends IPSModule
 		}
 		else {
 			$$ActionIDTemperature = $this->ReadPropertyFloat("Temperatur_".($ActionID + 1));
-			SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $$ActionIDTemperature);
+			SetValueFloat($this->GetIDForIdent("SetpointTemperature"), max(5, Min($ActionIDTemperature, 35)));
 		}		
 	}
 	
