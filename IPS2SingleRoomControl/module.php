@@ -169,7 +169,7 @@ class IPS2SingleRoomControl extends IPSModule
   		switch($Ident) {
 	        case "SetpointTemperature":
 	            	//Neuen Wert in die Statusvariable schreiben
-	            	SetValueFloat($this->GetIDForIdent($Ident), $Value);
+	            	SetValueFloat($this->GetIDForIdent($Ident), max(5, Min($Value, 35)));
 			$this->Measurement();
 	            	break;
 	        case "OperatingMode":
@@ -280,7 +280,7 @@ class IPS2SingleRoomControl extends IPSModule
 				If ($PresenceStatus == true) {
 					If (GetValueBoolean($this->GetIDForIdent("BoostMode")) == true) {
 						SetValueInteger($this->GetIDForIdent("Modus"), 3);
-						SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $ActionIDTemperature + abs($this->ReadPropertyInteger("TemperatureIncrease")));
+						SetValueFloat($this->GetIDForIdent("SetpointTemperature"), max(5, Min($ActionIDTemperature + abs($this->ReadPropertyInteger("TemperatureIncrease")), 35)));
 					}
 					else {
 						SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $ActionIDTemperature);
@@ -288,7 +288,7 @@ class IPS2SingleRoomControl extends IPSModule
 				}
 				else {
 					SetValueInteger($this->GetIDForIdent("Modus"), 2);
-					SetValueFloat($this->GetIDForIdent("SetpointTemperature"), $ActionIDTemperature - abs($this->ReadPropertyInteger("TemperatureReduction")));
+					SetValueFloat($this->GetIDForIdent("SetpointTemperature"), max(5, Min($ActionIDTemperature - abs($this->ReadPropertyInteger("TemperatureReduction")), 35)));
 				}
 			}
 		}
