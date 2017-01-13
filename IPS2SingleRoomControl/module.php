@@ -28,6 +28,7 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->RegisterPropertyInteger("FS_ActuatorID", 0);
 		$this->RegisterPropertyInteger("1W_ActuatorID", 0);
 		$this->RegisterPropertyInteger("1W_Pin", 0);
+		$this->RegisterPropertyInteger("ESP_ActuatorID", 0);
 		$this->RegisterPropertyInteger("AutomaticFallback", 120);
 		$this->RegisterTimer("AutomaticFallback", 0, 'IPS2SRC_AutomaticFallback($_IPS["TARGET"]);');
 		$this->RegisterPropertyInteger("WindowStatusID", 0);
@@ -358,8 +359,11 @@ class IPS2SingleRoomControl extends IPSModule
 			If ($this->ReadPropertyInteger("1W_ActuatorID") > 0) {
 				OW_SetPin($this->ReadPropertyInteger("1W_ActuatorID"), $this->ReadPropertyInteger("1W_Pin"), true);
 			}
+			// ESP-Aktor
+			If ($this->ReadPropertyInteger("ESP_ActuatorID") > 0) {
+				USCK_SendText($this->ReadPropertyInteger("ESP_ActuatorID"),"3,0");
+			}
 			$this->SetTimerInterval("PWM", (int)$PWMontime * 1000);
-			
 		}
 		else {
 			SetValueBoolean($this->GetIDForIdent("PWM_Mode"), false);
@@ -370,6 +374,10 @@ class IPS2SingleRoomControl extends IPSModule
 			// 1W-Aktor
 			If ($this->ReadPropertyInteger("1W_ActuatorID") > 0) {
 				OW_SetPin($this->ReadPropertyInteger("1W_ActuatorID"), $this->ReadPropertyInteger("1W_Pin"), false);
+			}
+			// ESP-Aktor
+			If ($this->ReadPropertyInteger("ESP_ActuatorID") > 0) {
+				USCK_SendText($this->ReadPropertyInteger("ESP_ActuatorID"),"3,1");
 			}
 		}
 		
