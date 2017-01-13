@@ -975,6 +975,33 @@ class IPS2GPIO_IO extends IPSModule
         return $Result;
 	}
 	
+	public function GetOneWireData()
+	{
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+			set_include_path(__DIR__);
+			require_once (__DIR__ . '/Net/SFTP.php');
+
+			$sftp = new Net_SFTP($this->ReadPropertyString("IPAddress"));
+			$login = @$sftp->login($this->ReadPropertyString("User"), $this->ReadPropertyString("Password"));
+			
+			if ($login == false)
+			{
+			    	IPS_LogMessage("IPS2GPIO SFTP-Connect","Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert nicht!");
+			    	$Result = "";
+				return false;
+			}
+			IPS_LogMessage("IPS2GPIO SFTP-Connect","Verbindung hergestellt");
+			
+			If (file_exists("ssh2.sftp://".$sftp."/sys/bus/w1")) {
+				IPS_LogMessage("IPS2GPIO SFTP-Connect","/sys/bus/w1 gefunden");
+			}
+			else {
+				IPS_LogMessage("IPS2GPIO SFTP-Connect","/sys/bus/w1 nicht gefunden! Ist 1-Wire aktiviert?");
+			}
+			
+		}
+	}
+	
 	private function CalcBitmask()
 	{
 		$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
