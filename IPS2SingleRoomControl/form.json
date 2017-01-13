@@ -53,6 +53,10 @@
                 ]
             },
             { "type": "Label", "label": "_____________________________________________________________________________________________________" },
+            { "type": "Label", "label": "Alternative 5: Nutzung eines ESP8266-Stellantriebes" },
+            { "type": "Label", "label": "UDP Socket des ESP8266-Stellantriebes" },
+            { "type": "SelectInstance", "name": "ESP_ActuatorID", "caption": "Aktor" },
+            { "type": "Label", "label": "_____________________________________________________________________________________________________" },
             { "type": "Label", "label": "Automatischer Rückfall vom Manuell in den Automatik-Betrieb in Minuten (0 -> aus, empfohlen 120):" },
             { "type": "IntervalBox", "name": "AutomaticFallback", "caption": "Dauer (min)" },
             { "type": "Label", "label": "Variable die Feiertage und ganztägige Anwesenheit (z.B. Urlaub) enthält (Boolean, True -> Feiertag, Urlaub):" },
