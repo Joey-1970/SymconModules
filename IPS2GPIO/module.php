@@ -992,7 +992,7 @@ class IPS2GPIO_IO extends IPSModule
 			}
 			IPS_LogMessage("IPS2GPIO SFTP-Connect","Verbindung hergestellt");
 			
-			If (file_exists("ssh2.sftp://".$sftp."/sys/bus/w1")) {
+			if ($sftp->file_exists("/sys/bus/w1")) {
 				IPS_LogMessage("IPS2GPIO SFTP-Connect","/sys/bus/w1 gefunden");
 			}
 			else {
