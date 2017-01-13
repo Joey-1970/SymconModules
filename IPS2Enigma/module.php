@@ -567,7 +567,6 @@
 			$FilePathDelete = "user".DIRECTORY_SEPARATOR."Enigma_HTML".DIRECTORY_SEPARATOR."Button-Delete_32.png";
 			
 			If ($this->ReadPropertyBoolean("Movielist_Data") == true) {
-				$Servicereference = Array();
 				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/movielist"));
 				$table = '<style type="text/css">';
 				$table .= '<link rel="stylesheet" href="./.../webfront.css">';
@@ -581,10 +580,9 @@
 				$table .= '<th class="tg-kv4b">Länge</th>';
 				$table .= '<th class="tg-kv4b"></th>';
 				$table .= '<th class="tg-kv4b"></th>';
-				//$table .= '<th class="tg-kv4b"></th>';
 				$table .= '</tr>';
 				for ($i = 0; $i <= count($xmlResult) - 1; $i++) {
-					$Servicereference[$i] = (string)$xmlResult->e2movie[$i]->e2servicereference;
+					$Servicereference = (string)$xmlResult->e2movie[$i]->e2servicereference;
 					$table .= '<tr>';
 					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2title.'</td>';
 					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2description.'</td>';
@@ -593,19 +591,15 @@
 					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2length.'</td>';
 					// Aufzeichnung im TV abspielen
 					$table .= '<td class="tg-611x"><img src='.$FilePathPlay.' alt="Abspielen" 
-						onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.$i.'&Source=Movielist_Play\' })"></td>';
+						onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.$i.'&Source=Movielist_Play&SRef='.$Servicereference.'\' })"></td>';
 					// Aufzeichnung aus dem Webfront streamen
 					$MovieFilename = str_replace(" ", "%20", (string)$xmlResult->e2movie[$i]->e2filename);
 					$Targetlink = "http://".$this->ReadPropertyString("IPAddress")."/web/ts.m3u?file=".$MovieFilename; 
 					$table .= '<td class="tg-611x"><a href='.$Targetlink.' target="_blank"><img src='.$FilePathStream.' alt="Stream starten"></td>';
-					// Aufzeichnung löschen
-					//$table .= '<td class="tg-611x"><img src='.$FilePathDelete.' alt="Löschen" 
-						//onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.$i.'&Source=Movielist_Delete\' })"></td>';
 					$table .= '</tr>';
 				}
 				$table .= '</table>';
 				SetValueString($this->GetIDForIdent("e2movielist") , $table);
-				$this->SetBuffer("MovieServicereference", serialize($Servicereference));
 			}
 			
 			If ($this->ReadPropertyBoolean("Signal_Data") == true) {
@@ -1240,7 +1234,6 @@
 			$Source = $_GET["Source"];
 			$Index = $_GET["Index"];
 			$SRef = $_GET["SRef"];
-			$Servicereference = Array();
 			switch($Source) {
 			case "EPGlist_Data_A":
 			    	//IPS_LogMessage("IPS2Enigma","WebHookData - Source: ".$Source." Index: ".$Index);
@@ -1255,20 +1248,8 @@
 				break;
 			case "Movielist_Play":
 				If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
-					$Servicereference = unserialize($this->GetBuffer("MovieServicereference"));
-					$this->MoviePlay($Servicereference[$Index]);
+					$this->MoviePlay($SRef);
 				}
-				break;
-			case "Movielist_Stream":
-			    	//IPS_LogMessage("IPS2Enigma","WebHookData - Source: ".$Source." Index: ".$Index." SRef: ".);
-				If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
-					$Servicereference = unserialize($this->GetBuffer("MovieServicereference"));
-					IPS_LogMessage("IPS2Enigma","WebHookData - Source: ".$Source." Index: ".$Index." SRef: ".$Servicereference[$Index]);
-					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".urlencode($Servicereference[$Index])));
-				}
-				break;
-			case "Movielist_Delete":
-			    	IPS_LogMessage("IPS2Enigma","WebHookData - Source: ".$Source." Index: ".$Index);
 				break;
 			}
 			
