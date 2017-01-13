@@ -1008,17 +1008,13 @@ class IPS2GPIO_IO extends IPSModule
 					IPS_LogMessage("IPS2GPIO SFTP-Connect", $Dir[$i]);
 				}
 			}
+			
 			for ($i = 0; $i < Count($Sensors); $i++) {
 				$TempFilePath = $Path."/".$Sensors[$i]."/w1_slave";
 				$FileContent = $sftp->get($TempFilePath);
 				$Temperatur = (int)substr($FileContent, -6) / 1000;
 				IPS_LogMessage("IPS2GPIO 1-Wire", "Sensor:".$Sensors[$i]." Temperatur: ".$Temperatur."°C");
 			}
-	 
-}
-			
-			
-			
 		}
 	}
 	
