@@ -361,7 +361,7 @@ class IPS2SingleRoomControl extends IPSModule
 			}
 			// ESP-Aktor
 			If ($this->ReadPropertyInteger("ESP_ActuatorID") > 0) {
-				USCK_SendText($this->ReadPropertyInteger("ESP_ActuatorID"),"3,0");
+				USCK_SendText($this->ReadPropertyInteger("ESP_ActuatorID"),"3,1");
 			}
 			$this->SetTimerInterval("PWM", (int)$PWMontime * 1000);
 		}
@@ -377,7 +377,7 @@ class IPS2SingleRoomControl extends IPSModule
 			}
 			// ESP-Aktor
 			If ($this->ReadPropertyInteger("ESP_ActuatorID") > 0) {
-				USCK_SendText($this->ReadPropertyInteger("ESP_ActuatorID"),"3,1");
+				USCK_SendText($this->ReadPropertyInteger("ESP_ActuatorID"),"3,0");
 			}
 		}
 		
