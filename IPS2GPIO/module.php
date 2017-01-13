@@ -992,12 +992,11 @@ class IPS2GPIO_IO extends IPSModule
 			}
 			IPS_LogMessage("IPS2GPIO SFTP-Connect","Verbindung hergestellt");
 			
-			if ($sftp->file_exists("/sys/bus/w1")) {
-				IPS_LogMessage("IPS2GPIO SFTP-Connect","/sys/bus/w1 gefunden");
-			}
-			else {
+			if (!$sftp->file_exists("/sys/bus/w1")) {
 				IPS_LogMessage("IPS2GPIO SFTP-Connect","/sys/bus/w1 nicht gefunden! Ist 1-Wire aktiviert?");
+				return;
 			}
+			
 			
 		}
 	}
