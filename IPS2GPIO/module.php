@@ -1000,9 +1000,23 @@ class IPS2GPIO_IO extends IPSModule
 			}
 			
 			// den Inhalt des Verzeichnisses ermitteln
-			for ($i = 1; $i < Count($sftp->nlist($Path)); $i++) {
-				IPS_LogMessage("IPS2GPIO SFTP-Connect", $Dir[$i]);
+			$Sensors = array();
+			$Dir = $sftp->nlist($Path);
+			for ($i = 0; $i < Count($Dir); $i++) {
+				if ($Dir[$i] != "." && $Dir[$i] != ".." && $Dir[$i] != "w1_bus_master1") {
+					$Sensors[] = $Dir[$i];
+					IPS_LogMessage("IPS2GPIO SFTP-Connect", $Dir[$i]);
+				}
 			}
+			for ($i = 0; $i < Count($Sensors); $i++) {
+				$TempFilePath = $Path."/".$Sensors[$i]."/w1_slave";
+				$FileContent = $sftp->get($TempFilePath);
+				$Temperatur = (int)substr($FileContent, -6) / 1000;
+				IPS_LogMessage("IPS2GPIO 1-Wire", "Sensor:".$Sensors[$i]." Temperatur: ".$Temperatur."°C");
+			}
+	 
+}
+			
 			
 			
 		}
