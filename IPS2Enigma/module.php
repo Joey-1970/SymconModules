@@ -652,7 +652,7 @@
 					SetValueInteger($this->GetIDForIdent("e2eventpast"), 0);
 					SetValueInteger($this->GetIDForIdent("e2eventleft"), 0);
 					SetValueInteger($this->GetIDForIdent("e2eventprogress"), 0);
-					SetValueString($this->GetIDForIdent("e2epgHTML"), 		
+					SetValueString($this->GetIDForIdent("e2epgHTML"), ""); 		
 				}
 				If ($this->ReadPropertyBoolean("EPGnext_Data") == true) {
 					SetValueString($this->GetIDForIdent("e2nexteventtitle"), "N/A");
