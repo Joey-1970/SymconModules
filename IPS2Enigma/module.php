@@ -645,7 +645,7 @@
 					SetValueInteger($this->GetIDForIdent("e2eventpast"), 0);
 					SetValueInteger($this->GetIDForIdent("e2eventleft"), 0);
 					SetValueInteger($this->GetIDForIdent("e2eventprogress"), 0);
-					SetValueString($this->GetIDForIdent("e2eventHTML"), "");
+					SetValueString($this->GetIDForIdent("e2epgHTML"), 		
 				}
 				If ($this->ReadPropertyBoolean("EPGnext_Data") == true) {
 					SetValueString($this->GetIDForIdent("e2nexteventtitle"), "N/A");
@@ -654,7 +654,7 @@
 					SetValueInteger($this->GetIDForIdent("e2nexteventstart"), 0);
 					SetValueInteger($this->GetIDForIdent("e2nexteventend"), 0);
 					SetValueInteger($this->GetIDForIdent("e2nexteventduration"), 0);
-					SetValueString($this->GetIDForIdent("e2nexteventHTML"), "");
+					SetValueString($this->GetIDForIdent("e2epgHTML"), "");
 				}
 
 				If ($this->ReadPropertyBoolean("Signal_Data") == true) {
