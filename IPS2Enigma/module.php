@@ -42,7 +42,7 @@
 		$this->RegisterProfileInteger("time.min", "Clock", "", " min", 0, 1000000, 1);
 		$this->RegisterProfileInteger("snr.db", "Intensity", "", " db", 0, 1000000, 1);
 		$this->RegisterProfileInteger("gigabyte.GB", "Gauge", "", " GB", 0, 1000000, 1);
-		$this->RegisterMediaObject("Screenshot", 1, $this->InstanceID, 1000, true, "Screenshot.jpg");
+		$this->RegisterMediaObject("Screenshot_".$this->InstanceID, 1, $this->InstanceID, 1000, true, "Screenshot.jpg");
 		$this->RegisterHook("/hook/IPS2Enigma");
 
 		$this->SetBuffer("FirstUpdate", "false");
@@ -275,7 +275,7 @@
 			$this->SetTimerInterval("EPGUpdate", ($this->ReadPropertyInteger("EPGUpdate") * 1000));
 			$this->SetTimerInterval("ScreenshotUpdate", ($this->ReadPropertyInteger("ScreenshotUpdate") * 1000));
 			$this->Get_Powerstate();
-			//$this->GetScreenshot();
+			$this->GetScreenshot();
 			$this->Get_EPGUpdate();
 			$this->SetStatus(102);
 		}
@@ -1123,14 +1123,19 @@
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$Content = file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/grab?format=jpg&r=".$this->ReadPropertyInteger("Screenshot"));
-			IPS_SetMediaContent($this->GetIDForIdent("Screenshot"), base64_encode($Content));  //Bild Base64 codieren und ablegen
-			IPS_SendMediaEvent($this->GetIDForIdent("Screenshot")); //aktualisieren
+			IPS_SetMediaContent($this->GetIDForIdent("Screenshot_".$this->InstanceID), base64_encode($Content));  //Bild Base64 codieren und ablegen
+			IPS_SendMediaEvent($this->GetIDForIdent("Screenshot_".$this->InstanceID)); //aktualisieren
 		}
 	} 
 	
 	private function RegisterMediaObject($Name, $Typ, $Parent, $Position, $Cached, $Filename)
 	{
-		if (!IPS_MediaExists($this->GetIDForIdent($Name))) {
+		$MediaID = @$this->GetIDForIdent($Ident);
+		if($MediaID === false) {
+		    	$MediaID = 0;
+		}
+		
+		if ($MediaID == 0) {
 			 // Image im MedienPool anlegen
 			$MediaID = IPS_CreateMedia($Typ); 
 			// Medienobjekt einsortieren unter Kategorie $catid
