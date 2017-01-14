@@ -42,7 +42,7 @@
 		$this->RegisterProfileInteger("time.min", "Clock", "", " min", 0, 1000000, 1);
 		$this->RegisterProfileInteger("snr.db", "Intensity", "", " db", 0, 1000000, 1);
 		$this->RegisterProfileInteger("gigabyte.GB", "Gauge", "", " GB", 0, 1000000, 1);
-		$this->RegisterMediaObject("Screenshot_".$this->InstanceID, 1, $this->InstanceID, 1000, true, "Screenshot.jpg");
+		$this->RegisterMediaObject("Screenshot_".$this->InstanceID, "Screenshot_".$this->InstanceID, 1, $this->InstanceID, 1000, true, "Screenshot.jpg");
 		$this->RegisterHook("/hook/IPS2Enigma");
 
 		$this->SetBuffer("FirstUpdate", "false");
@@ -1128,7 +1128,7 @@
 		}
 	} 
 	
-	private function RegisterMediaObject($Name, $Typ, $Parent, $Position, $Cached, $Filename)
+	private function RegisterMediaObject($Name, $Ident, $Typ, $Parent, $Position, $Cached, $Filename)
 	{
 		$MediaID = @$this->GetIDForIdent($Ident);
 		if($MediaID === false) {
@@ -1140,7 +1140,7 @@
 			$MediaID = IPS_CreateMedia($Typ); 
 			// Medienobjekt einsortieren unter Kategorie $catid
 			IPS_SetParent($MediaID, $Parent);
-			IPS_SetIdent ($MediaID, $Name);
+			IPS_SetIdent($MediaID, $Ident);
 			IPS_SetName($MediaID, $Name);
 			IPS_SetPosition($MediaID, $Position);
                     	IPS_SetMediaCached($MediaID, $Cached);
