@@ -42,6 +42,8 @@
 		$this->RegisterProfileInteger("time.min", "Clock", "", " min", 0, 1000000, 1);
 		$this->RegisterProfileInteger("snr.db", "Intensity", "", " db", 0, 1000000, 1);
 		$this->RegisterProfileInteger("gigabyte.GB", "Gauge", "", " GB", 0, 1000000, 1);
+		
+		// Objekte und Hook anlegen
 		$this->RegisterMediaObject("Screenshot_".$this->InstanceID, "Screenshot_".$this->InstanceID, 1, $this->InstanceID, 1000, true, "Screenshot.jpg");
 		$this->RegisterHook("/hook/IPS2Enigma");
 
