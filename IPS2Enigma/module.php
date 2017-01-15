@@ -994,7 +994,7 @@
 			// Prüfen ob eine Aufname läuft
 			SetValueBoolean($this->GetIDForIdent("isRecording"), boolval($data->isRecording));
 			// Lautstärke
-			SetValueBoolean($this->GetIDForIdent("volume"), intval($data->volume));
+			SetValueInteger($this->GetIDForIdent("volume"), intval($data->volume));
 		}
 	}
 	    
