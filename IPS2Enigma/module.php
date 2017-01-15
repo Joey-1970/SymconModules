@@ -93,6 +93,7 @@
 			$this->DisableAction("e2hddinfo_free");
 		}
 		
+		// Daten aus der Status-Funktion
 		$this->RegisterVariableBoolean("powerstate", "Powerstate", "~Switch", 100);
 		$this->EnableAction("powerstate");
 		$this->RegisterVariableBoolean("muted", "Mute", "~Switch", 102);
