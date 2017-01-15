@@ -987,14 +987,21 @@
 			$JSONString = file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/api/statusinfo?");
 			$data = json_decode($JSONString);
 			// Prüfen ob die Box ein- oder ausgeschaltet ist
-			$Status = boolval($data->inStandby);
-			SetValueBoolean($this->GetIDForIdent("powerstate"), !$Status);
+			If (!boolval($data->inStandby) <> GetValueBoolean($this->GetIDForIdent("powerstate")) ) {
+				SetValueBoolean($this->GetIDForIdent("powerstate"), !boolval($data->inStandby));
+			}
 			// Prüfen des Mute-Status
-			SetValueBoolean($this->GetIDForIdent("muted"), boolval($data->muted));
+			If (boolval($data->muted) <> GetValueBoolean($this->GetIDForIdent("muted")) ) {
+			    	SetValueBoolean($this->GetIDForIdent("muted"), boolval($data->muted));
+			}
 			// Prüfen ob eine Aufname läuft
-			SetValueBoolean($this->GetIDForIdent("isRecording"), boolval($data->isRecording));
+			If (filter_var($data->isRecording, FILTER_VALIDATE_BOOLEAN) <> GetValueBoolean($this->GetIDForIdent("isRecording")) ) {
+				SetValueBoolean($this->GetIDForIdent("isRecording"), filter_var($data->isRecording, FILTER_VALIDATE_BOOLEAN));
+			}
 			// Lautstärke
-			SetValueInteger($this->GetIDForIdent("volume"), intval($data->volume));
+			If (intval($data->volume) <>GSetValueInteger($this->GetIDForIdent("volume")) ) {
+				SetValueInteger($this->GetIDForIdent("volume"), intval($data->volume));
+			}
 		}
 	}
 	    
