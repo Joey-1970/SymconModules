@@ -325,7 +325,7 @@
 			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
 					// Funktion fehlt noch
 					
-				}}
+				}
 				break;
 			case "rc_power":
 			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
