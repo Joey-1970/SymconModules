@@ -987,14 +987,14 @@
 			$JSONString = file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/api/statusinfo?");
 			$data = json_decode($JSONString);
 			// Prüfen ob die Box ein- oder ausgeschaltet ist
-			$Status = boolval(data->inStandby);
+			$Status = boolval($data->inStandby);
 			SetValueBoolean($this->GetIDForIdent("powerstate"), !$Status);
 			// Prüfen des Mute-Status
-			SetValueBoolean($this->GetIDForIdent("muted"), boolval(data->muted));
+			SetValueBoolean($this->GetIDForIdent("muted"), boolval($data->muted));
 			// Prüfen ob eine Aufname läuft
-			SetValueBoolean($this->GetIDForIdent("isRecording"), boolval(data->isRecording));
+			SetValueBoolean($this->GetIDForIdent("isRecording"), boolval($data->isRecording));
 			// Lautstärke
-			SetValueBoolean($this->GetIDForIdent("volume"), intval(data->volume));
+			SetValueBoolean($this->GetIDForIdent("volume"), intval($data->volume));
 		}
 	}
 	    
