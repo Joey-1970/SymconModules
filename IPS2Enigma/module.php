@@ -288,6 +288,9 @@
 			$this->GetScreenshot();
 			$this->Get_EPGUpdate();
 			$this->GetStatusInfo();
+			If ($this->ReadPropertyBoolean("Movielist_Data") == true) {
+				$this->GetMovieListUpdate();
+			}
 			$this->SetStatus(102);
 		}
 		else {
@@ -593,54 +596,11 @@
        			SetValueString($this->GetIDForIdent("e2servicename"), (string)$xmlResult->e2service->e2servicename);
 			$e2servicereference = (string)$xmlResult->e2service->e2servicereference;
 			$e2servicename = (string)$xmlResult->e2service->e2servicename;	
-			$FilePathPlay = "user".DIRECTORY_SEPARATOR."Enigma_HTML".DIRECTORY_SEPARATOR."Button-Play_32.png";
-			$FilePathStream = "user".DIRECTORY_SEPARATOR."Enigma_HTML".DIRECTORY_SEPARATOR."Button-Media-Player_32.png";
-			$FilePathDelete = "user".DIRECTORY_SEPARATOR."Enigma_HTML".DIRECTORY_SEPARATOR."Button-Delete_32.png";
-			
+						
 			If ($this->ReadPropertyBoolean("Movielist_Data") == true) {
-				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/movielist"));
-				$table = '<style type="text/css">';
-				$table .= '<link rel="stylesheet" href="./.../webfront.css">';
-				$table .= "</style>";
-				$table .= '<table class="tg">';
-				$table .= "<tr>";
-				$table .= '<th class="tg-kv4b">Titel</th>';
-				$table .= '<th class="tg-kv4b">Kurzbeschreibung<br></th>';
-				$table .= '<th class="tg-kv4b">Langbeschreibung<br></th>';
-				$table .= '<th class="tg-kv4b">Quelle</th>';
-				$table .= '<th class="tg-kv4b">Länge</th>';
-				$table .= '<th class="tg-kv4b"></th>';
-				$table .= '<th class="tg-kv4b"></th>';
-				$table .= '</tr>';
-				for ($i = 0; $i <= count($xmlResult) - 1; $i++) {
-					$Servicereference = (string)$xmlResult->e2movie[$i]->e2servicereference;
-					$table .= '<tr>';
-					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2title.'</td>';
-					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2description.'</td>';
-					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2descriptionextended.'</td>';
-					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2servicename.'</td>';
-					$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2length.'</td>';
-					// Aufzeichnung im TV abspielen
-					$table .= '<td class="tg-611x"><img src='.$FilePathPlay.' alt="Abspielen" 
-						onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.$i.'&Source=Movielist_Play&SRef='.$Servicereference.'\' })"></td>';
-					// Aufzeichnung aus dem Webfront streamen
-					$MovieFilename = str_replace(" ", "%20", (string)$xmlResult->e2movie[$i]->e2filename);
-					$Targetlink = "http://".$this->ReadPropertyString("IPAddress")."/web/ts.m3u?file=".$MovieFilename; 
-					$table .= '<td class="tg-611x"><a href='.$Targetlink.' target="_blank"><img src='.$FilePathStream.' alt="Stream starten"></td>';
-					$table .= '</tr>';
-				}
-				$table .= '</table>';
-				SetValueString($this->GetIDForIdent("e2movielist") , $table);
+				$this->GetMovieListUpdate();
 			}
 			
-			If ($this->ReadPropertyBoolean("Signal_Data") == true) {
-				// Empfangsstärke ermitteln
-				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/signal?"));
-				SetValueInteger($this->GetIDForIdent("e2snrdb"), (int)$xmlResult->e2snrdb);
-				SetValueInteger($this->GetIDForIdent("e2snr"), (int)$xmlResult->e2snr);
-				SetValueInteger($this->GetIDForIdent("e2ber"), (int)$xmlResult->e2ber);
-				SetValueInteger($this->GetIDForIdent("e2agc"), (int)$xmlResult->e2acg);
-			}
 			If ($this->ReadPropertyBoolean("HDD_Data") == true) {
 				// Festplattendaten
 				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/about"));
@@ -997,13 +957,68 @@
 			// Prüfen ob eine Aufname läuft
 			If (filter_var($data->isRecording, FILTER_VALIDATE_BOOLEAN) <> GetValueBoolean($this->GetIDForIdent("isRecording")) ) {
 				SetValueBoolean($this->GetIDForIdent("isRecording"), filter_var($data->isRecording, FILTER_VALIDATE_BOOLEAN));
+				If ($this->ReadPropertyBoolean("Movielist_Data") == true) {
+					$this->GetMovieListUpdate();
+				}
 			}
 			// Lautstärke
 			If (intval($data->volume) <> GetValueInteger($this->GetIDForIdent("volume")) ) {
 				SetValueInteger($this->GetIDForIdent("volume"), intval($data->volume));
 			}
+			
+			If ($this->ReadPropertyBoolean("Signal_Data") == true) {
+				// Empfangsstärke ermitteln
+				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/signal?"));
+				SetValueInteger($this->GetIDForIdent("e2snrdb"), (int)$xmlResult->e2snrdb);
+				SetValueInteger($this->GetIDForIdent("e2snr"), (int)$xmlResult->e2snr);
+				SetValueInteger($this->GetIDForIdent("e2ber"), (int)$xmlResult->e2ber);
+				SetValueInteger($this->GetIDForIdent("e2agc"), (int)$xmlResult->e2acg);
+			}
+			
 		}
 	}
+	
+	private function GetMovieListUpdate()
+	{
+		$FilePathPlay = "user".DIRECTORY_SEPARATOR."Enigma_HTML".DIRECTORY_SEPARATOR."Button-Play_32.png";
+		$FilePathStream = "user".DIRECTORY_SEPARATOR."Enigma_HTML".DIRECTORY_SEPARATOR."Button-Media-Player_32.png";
+		$FilePathDelete = "user".DIRECTORY_SEPARATOR."Enigma_HTML".DIRECTORY_SEPARATOR."Button-Delete_32.png";
+
+		$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/movielist"));
+		$table = '<style type="text/css">';
+		$table .= '<link rel="stylesheet" href="./.../webfront.css">';
+		$table .= "</style>";
+		$table .= '<table class="tg">';
+		$table .= "<tr>";
+		$table .= '<th class="tg-kv4b">Titel</th>';
+		$table .= '<th class="tg-kv4b">Kurzbeschreibung<br></th>';
+		$table .= '<th class="tg-kv4b">Langbeschreibung<br></th>';
+		$table .= '<th class="tg-kv4b">Quelle</th>';
+		$table .= '<th class="tg-kv4b">Länge</th>';
+		$table .= '<th class="tg-kv4b"></th>';
+		$table .= '<th class="tg-kv4b"></th>';
+		$table .= '</tr>';
+		for ($i = 0; $i <= count($xmlResult) - 1; $i++) {
+			$Servicereference = (string)$xmlResult->e2movie[$i]->e2servicereference;
+			$table .= '<tr>';
+			$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2title.'</td>';
+			$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2description.'</td>';
+			$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2descriptionextended.'</td>';
+			$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2servicename.'</td>';
+			$table .= '<td class="tg-611x">'.$xmlResult->e2movie[$i]->e2length.'</td>';
+			// Aufzeichnung im TV abspielen
+			$table .= '<td class="tg-611x"><img src='.$FilePathPlay.' alt="Abspielen" 
+				onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.$i.'&Source=Movielist_Play&SRef='.$Servicereference.'\' })"></td>';
+			// Aufzeichnung aus dem Webfront streamen
+			$MovieFilename = str_replace(" ", "%20", (string)$xmlResult->e2movie[$i]->e2filename);
+			$Targetlink = "http://".$this->ReadPropertyString("IPAddress")."/web/ts.m3u?file=".$MovieFilename; 
+			$table .= '<td class="tg-611x"><a href='.$Targetlink.' target="_blank"><img src='.$FilePathStream.' alt="Stream starten"></td>';
+			$table .= '</tr>';
+		}
+		$table .= '</table>';
+		SetValueString($this->GetIDForIdent("e2movielist") , $table);
+	}
+	    
 	    
 	private function Get_Powerstate()
 	{
