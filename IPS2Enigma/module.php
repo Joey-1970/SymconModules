@@ -584,7 +584,7 @@
 	// Beginn der Funktionen
 	public function Get_DataUpdate()
 	{
-		$this->GetStatusInfo();
+		//$this->GetStatusInfo();
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
 			$this->SetBuffer("FirstUpdate", "false");
 			//IPS_LogMessage("IPS2Enigma","TV-Daten ermitteln");
@@ -981,7 +981,7 @@
 		}
 	}
 	
-	private function GetStatusInfo()
+	public function GetStatusInfo()
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 			$JSONString = file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/api/statusinfo?");
