@@ -584,7 +584,7 @@
 	// Beginn der Funktionen
 	public function Get_DataUpdate()
 	{
-		//$this->GetStatusInfo();
+		$this->GetStatusInfo();
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
 			$this->SetBuffer("FirstUpdate", "false");
 			//IPS_LogMessage("IPS2Enigma","TV-Daten ermitteln");
