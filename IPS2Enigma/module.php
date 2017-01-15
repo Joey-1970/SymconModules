@@ -999,7 +999,7 @@
 				SetValueBoolean($this->GetIDForIdent("isRecording"), filter_var($data->isRecording, FILTER_VALIDATE_BOOLEAN));
 			}
 			// Lautstärke
-			If (intval($data->volume) <>GSetValueInteger($this->GetIDForIdent("volume")) ) {
+			If (intval($data->volume) <> GetValueInteger($this->GetIDForIdent("volume")) ) {
 				SetValueInteger($this->GetIDForIdent("volume"), intval($data->volume));
 			}
 		}
