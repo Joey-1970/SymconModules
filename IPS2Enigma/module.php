@@ -959,6 +959,21 @@
 		}
 	}
 	
+	private function GetStatusInfo()
+	{
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
+			$JSONString = file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/api/statusinfo?");
+			$data = json_decode($JSONString);
+			// Prüfen ob die Box ein- oder ausgeschaltet ist
+			SetValueBoolean($this->GetIDForIdent("powerstate"), !boolval(data->inStandby));
+			
+			// Prüfen des Mute-Status
+			
+				
+				
+		}
+	}
+	    
 	private function Get_Powerstate()
 	{
 		$result = false;
