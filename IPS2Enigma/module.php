@@ -965,7 +965,11 @@
 			If (intval($data->volume) <> GetValueInteger($this->GetIDForIdent("volume")) ) {
 				SetValueInteger($this->GetIDForIdent("volume"), intval($data->volume));
 			}
-			
+			// Das aktuelle Programm
+			If ($data->currservice_station) <> GetValueString($this->GetIDForIdent("e2servicename")) ) {
+				SetValueString($this->GetIDForIdent("e2servicename"), $data->currservice_station);
+			}
+			// Signalstärke
 			If ($this->ReadPropertyBoolean("Signal_Data") == true) {
 				// Empfangsstärke ermitteln
 				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/signal?"));
