@@ -321,6 +321,12 @@
 					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/remotecontrol?command=114"));
 				}
 				break;
+			case "volume":
+			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+					// Funktion fehlt noch
+					
+				}}
+				break;
 			case "rc_power":
 			    	If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ConnectionTest() == true)) {
 					// 116 Key "Power""
