@@ -987,7 +987,8 @@
 			$JSONString = file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/api/statusinfo?");
 			$data = json_decode($JSONString);
 			// Prüfen ob die Box ein- oder ausgeschaltet ist
-			SetValueBoolean($this->GetIDForIdent("powerstate"), boolval(!data->inStandby));
+			$Status = boolval(data->inStandby);
+			SetValueBoolean($this->GetIDForIdent("powerstate"), !$Status);
 			// Prüfen des Mute-Status
 			SetValueBoolean($this->GetIDForIdent("muted"), boolval(data->muted));
 			// Prüfen ob eine Aufname läuft
