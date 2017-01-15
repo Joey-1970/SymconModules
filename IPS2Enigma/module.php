@@ -95,6 +95,13 @@
 		
 		$this->RegisterVariableBoolean("powerstate", "Powerstate", "~Switch", 100);
 		$this->EnableAction("powerstate");
+		$this->RegisterVariableBoolean("muted", "Mute", "~Switch", 102);
+		$this->EnableAction("muted");
+		$this->RegisterVariableBoolean("isRecording", "Aufnahme", "~Switch", 104);
+		$this->DisableAction("isRecording");
+		$this->RegisterVariableInteger("volume", "Volume", "~Intensity.100", 106);
+		$this->EnableAction("volume");
+		
 		
 		$this->RegisterVariableString("e2servicename", "Service Name", "", 110);
 		$this->DisableAction("e2servicename");
@@ -279,6 +286,7 @@
 			$this->Get_Powerstate();
 			$this->GetScreenshot();
 			$this->Get_EPGUpdate();
+			$this->GetStatusInfo();
 			$this->SetStatus(102);
 		}
 		else {
@@ -563,6 +571,7 @@
 	// Beginn der Funktionen
 	public function Get_DataUpdate()
 	{
+		$this->GetStatusInfo();
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
 			$this->SetBuffer("FirstUpdate", "false");
 			//IPS_LogMessage("IPS2Enigma","TV-Daten ermitteln");
@@ -966,11 +975,12 @@
 			$data = json_decode($JSONString);
 			// Prüfen ob die Box ein- oder ausgeschaltet ist
 			SetValueBoolean($this->GetIDForIdent("powerstate"), !boolval(data->inStandby));
-			
 			// Prüfen des Mute-Status
-			
-				
-				
+			SetValueBoolean($this->GetIDForIdent("muted"), boolval(data->muted));
+			// Prüfen ob eine Aufname läuft
+			SetValueBoolean($this->GetIDForIdent("isRecording"), boolval(data->isRecording));
+			// Lautstärke
+			SetValueBoolean($this->GetIDForIdent("volume"), intval(data->volume));
 		}
 	}
 	    
