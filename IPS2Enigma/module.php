@@ -30,6 +30,7 @@
 		$this->RegisterTimer("DataUpdate", 0, 'Enigma_Get_DataUpdate($_IPS["TARGET"]);');
 		$this->RegisterTimer("EPGUpdate", 0, 'Enigma_Get_EPGUpdate($_IPS["TARGET"]);');
 		$this->RegisterTimer("ScreenshotUpdate", 0, 'Enigma_GetScreenshot($_IPS["TARGET"]);');
+		$this->RegisterTimer("StatusInfo", 0, 'Enigma_GetStatusInfo()($_IPS["TARGET"]);');
 	}
         
 	// Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -102,7 +103,8 @@
 		$this->DisableAction("isRecording");
 		$this->RegisterVariableInteger("volume", "Volume", "~Intensity.100", 106);
 		$this->EnableAction("volume");
-		
+		$this->RegisterVariableString("currservice_serviceref", "Service-Referenz", "", 108);
+		$this->DisableAction("e2hddinfo_model");
 		
 		$this->RegisterVariableString("e2servicename", "Service Name", "", 110);
 		$this->DisableAction("e2servicename");
@@ -284,6 +286,7 @@
 			$this->SetTimerInterval("DataUpdate", ($this->ReadPropertyInteger("DataUpdate") * 1000));
 			$this->SetTimerInterval("EPGUpdate", ($this->ReadPropertyInteger("EPGUpdate") * 1000));
 			$this->SetTimerInterval("ScreenshotUpdate", ($this->ReadPropertyInteger("ScreenshotUpdate") * 1000));
+			$this->SetTimerInterval("StatusInfo", 2 * 1000));
 			$this->Get_Powerstate();
 			$this->GetScreenshot();
 			$this->Get_EPGUpdate();
@@ -587,7 +590,6 @@
 	// Beginn der Funktionen
 	public function Get_DataUpdate()
 	{
-		$this->GetStatusInfo();
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
 			$this->SetBuffer("FirstUpdate", "false");
 			//IPS_LogMessage("IPS2Enigma","TV-Daten ermitteln");
@@ -965,9 +967,13 @@
 			If (intval($data->volume) <> GetValueInteger($this->GetIDForIdent("volume")) ) {
 				SetValueInteger($this->GetIDForIdent("volume"), intval($data->volume));
 			}
-			// Das aktuelle Programm
+			// Der aktuelle Programm-Name
 			If ($data->currservice_station) <> GetValueString($this->GetIDForIdent("e2servicename")) ) {
 				SetValueString($this->GetIDForIdent("e2servicename"), $data->currservice_station);
+			}
+			// Der aktuelle Service-Referenz
+			If ($data->currservice_serviceref) <> GetValueString($this->GetIDForIdent("currservice_serviceref")) ) {
+				SetValueString($this->GetIDForIdent("currservice_serviceref"), $data->currservice_serviceref);
 			}
 			// Signalstärke
 			If ($this->ReadPropertyBoolean("Signal_Data") == true) {
