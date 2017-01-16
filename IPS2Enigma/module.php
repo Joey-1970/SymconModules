@@ -590,7 +590,7 @@
 	// Beginn der Funktionen
 	public function Get_DataUpdate()
 	{
-		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->Get_Powerstate() == true)) {
+		If (($this->ReadPropertyBoolean("Open") == true) AND (GetValueBoolean($this->GetIDForIdent("powerstate")) == true)) {
 			$this->SetBuffer("FirstUpdate", "false");
 			//IPS_LogMessage("IPS2Enigma","TV-Daten ermitteln");
 			// das aktuelle Programm
@@ -1035,7 +1035,9 @@
 	    
 	private function Get_Powerstate()
 	{
-		$result = false;
+		
+		$result = GetValueBoolean($this->GetIDForIdent("powerstate"));
+		/*
 		//$xmlResult = simplexml_load_file("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate");
 		$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/powerstate"));
 		//$wert = $xml->e2instandby;
@@ -1049,6 +1051,7 @@
 			SetValueBoolean($this->GetIDForIdent("powerstate"), false);
 			$result = false;
 		}
+		*/
 	return $result;
 	}
 
