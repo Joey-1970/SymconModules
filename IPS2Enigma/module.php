@@ -968,7 +968,7 @@
 				SetValueInteger($this->GetIDForIdent("volume"), intval($data->volume));
 			}
 			
-			If (!boolval($data->inStandby) == true) {
+			If (!filter_var($data->inStandby, FILTER_VALIDATE_BOOLEAN) == true) {
 				// Der aktuelle Programm-Name
 				If (strval($data->currservice_station) <> GetValueString($this->GetIDForIdent("e2servicename")) ) {
 					SetValueString($this->GetIDForIdent("e2servicename"), strval($data->currservice_station));
