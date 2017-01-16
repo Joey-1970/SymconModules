@@ -97,8 +97,6 @@
 		// Daten aus der Status-Funktion
 		$this->RegisterVariableBoolean("powerstate", "Powerstate", "~Switch", 100);
 		$this->EnableAction("powerstate");
-		$this->RegisterVariableBoolean("muted", "Mute", "~Switch", 102);
-		$this->EnableAction("muted");
 		$this->RegisterVariableBoolean("isRecording", "Aufnahme", "~Switch", 104);
 		$this->DisableAction("isRecording");
 		$this->RegisterVariableInteger("volume", "Volume", "~Intensity.100", 106);
@@ -943,10 +941,6 @@
 			// Prüfen ob die Box ein- oder ausgeschaltet ist
 			If (!filter_var($data->inStandby, FILTER_VALIDATE_BOOLEAN) <> GetValueBoolean($this->GetIDForIdent("powerstate")) ) {
 				SetValueBoolean($this->GetIDForIdent("powerstate"), !filter_var($data->inStandby, FILTER_VALIDATE_BOOLEAN));
-			}
-			// Prüfen des Mute-Status
-			If (boolval($data->muted) <> GetValueBoolean($this->GetIDForIdent("muted")) ) {
-			    	SetValueBoolean($this->GetIDForIdent("muted"), boolval($data->muted));
 			}
 			// Prüfen ob eine Aufname läuft
 			If (filter_var($data->isRecording, FILTER_VALIDATE_BOOLEAN) <> GetValueBoolean($this->GetIDForIdent("isRecording")) ) {
