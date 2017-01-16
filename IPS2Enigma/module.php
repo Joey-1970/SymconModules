@@ -968,11 +968,11 @@
 				SetValueInteger($this->GetIDForIdent("volume"), intval($data->volume));
 			}
 			// Der aktuelle Programm-Name
-			If ($data->currservice_station) <> GetValueString($this->GetIDForIdent("e2servicename")) ) {
+			If ($data->currservice_station <> GetValueString($this->GetIDForIdent("e2servicename")) ) {
 				SetValueString($this->GetIDForIdent("e2servicename"), $data->currservice_station);
 			}
 			// Der aktuelle Service-Referenz
-			If ($data->currservice_serviceref) <> GetValueString($this->GetIDForIdent("currservice_serviceref")) ) {
+			If ($data->currservice_serviceref <> GetValueString($this->GetIDForIdent("currservice_serviceref")) ) {
 				SetValueString($this->GetIDForIdent("currservice_serviceref"), $data->currservice_serviceref);
 			}
 			// Signalstärke
