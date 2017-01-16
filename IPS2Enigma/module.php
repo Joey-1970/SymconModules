@@ -30,7 +30,7 @@
 		$this->RegisterTimer("DataUpdate", 0, 'Enigma_Get_DataUpdate($_IPS["TARGET"]);');
 		$this->RegisterTimer("EPGUpdate", 0, 'Enigma_Get_EPGUpdate($_IPS["TARGET"]);');
 		$this->RegisterTimer("ScreenshotUpdate", 0, 'Enigma_GetScreenshot($_IPS["TARGET"]);');
-		$this->RegisterTimer("StatusInfo", 0, 'Enigma_GetStatusInfo()($_IPS["TARGET"]);');
+		$this->RegisterTimer("StatusInfo", 0, 'Enigma_GetStatusInfo($_IPS["TARGET"]);');
 	}
         
 	// Überschreibt die intere IPS_ApplyChanges($id) Funktion
