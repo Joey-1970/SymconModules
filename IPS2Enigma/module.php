@@ -967,22 +967,25 @@
 			If (intval($data->volume) <> GetValueInteger($this->GetIDForIdent("volume")) ) {
 				SetValueInteger($this->GetIDForIdent("volume"), intval($data->volume));
 			}
-			// Der aktuelle Programm-Name
-			If (strval($data->currservice_station) <> GetValueString($this->GetIDForIdent("e2servicename")) ) {
-				SetValueString($this->GetIDForIdent("e2servicename"), strval($data->currservice_station));
-			}
-			// Der aktuelle Service-Referenz
-			If (strval($data->currservice_serviceref) <> GetValueString($this->GetIDForIdent("currservice_serviceref")) ) {
-				SetValueString($this->GetIDForIdent("currservice_serviceref"), strval($data->currservice_serviceref));
-			}
-			// Signalstärke
-			If ($this->ReadPropertyBoolean("Signal_Data") == true) {
-				// Empfangsstärke ermitteln
-				$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/signal?"));
-				SetValueInteger($this->GetIDForIdent("e2snrdb"), (int)$xmlResult->e2snrdb);
-				SetValueInteger($this->GetIDForIdent("e2snr"), (int)$xmlResult->e2snr);
-				SetValueInteger($this->GetIDForIdent("e2ber"), (int)$xmlResult->e2ber);
-				SetValueInteger($this->GetIDForIdent("e2agc"), (int)$xmlResult->e2acg);
+			
+			If (!boolval($data->inStandby) == true) {
+				// Der aktuelle Programm-Name
+				If (strval($data->currservice_station) <> GetValueString($this->GetIDForIdent("e2servicename")) ) {
+					SetValueString($this->GetIDForIdent("e2servicename"), strval($data->currservice_station));
+				}
+				// Der aktuelle Service-Referenz
+				If (strval($data->currservice_serviceref) <> GetValueString($this->GetIDForIdent("currservice_serviceref")) ) {
+					SetValueString($this->GetIDForIdent("currservice_serviceref"), strval($data->currservice_serviceref));
+				}
+				// Signalstärke
+				If ($this->ReadPropertyBoolean("Signal_Data") == true) {
+					// Empfangsstärke ermitteln
+					$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/signal?"));
+					SetValueInteger($this->GetIDForIdent("e2snrdb"), (int)$xmlResult->e2snrdb);
+					SetValueInteger($this->GetIDForIdent("e2snr"), (int)$xmlResult->e2snr);
+					SetValueInteger($this->GetIDForIdent("e2ber"), (int)$xmlResult->e2ber);
+					SetValueInteger($this->GetIDForIdent("e2agc"), (int)$xmlResult->e2acg);
+				}
 			}
 			
 		}
