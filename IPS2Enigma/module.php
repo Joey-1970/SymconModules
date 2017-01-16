@@ -1035,6 +1035,58 @@
 		SetValueString($this->GetIDForIdent("e2movielist") , $table);
 	}
 	    
+	private function GetEPGNowNextData()
+	{
+		$FilePathStream = "user".DIRECTORY_SEPARATOR."Enigma_HTML".DIRECTORY_SEPARATOR."Button-Media-Player_32.png";
+		$FilePathPlay = "user".DIRECTORY_SEPARATOR."Enigma_HTML".DIRECTORY_SEPARATOR."Button-Play_32.png";
+		$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/getservices"));
+		$bouquet = (string)$xmlResult->e2service[$this->ReadPropertyInteger("BouquetsNumber")]->e2servicereference;
+
+		If ($this->ReadPropertyBoolean("EPGlist_Data") == true) {
+			$xmlResult = new SimpleXMLElement(file_get_contents("http://".$this->ReadPropertyString("IPAddress")."/web/epgnownext?bRef=".urlencode($bouquet)));
+			$table = '<style type="text/css">';
+			$table .= '<link rel="stylesheet" href="./.../webfront.css">';
+			$table .= "</style>";
+			$table .= '<table class="tg">';
+			$table .= "<tr>";
+			$table .= '<th class="tg-kv4b">Sender</th>';
+			$table .= '<th class="tg-kv4b">Beginn<br></th>';
+			$table .= '<th class="tg-kv4b">Titel</th>';
+			$table .= '<th class="tg-kv4b">Kurzbeschreibung<br></th>';
+			$table .= '<th class="tg-kv4b">Dauer<br></th>';
+			$table .= '<th class="tg-kv4b"></th>';
+			$table .= '<th class="tg-kv4b"></th>';
+			$table .= '<colgroup>'; 
+			$table .= '<col width="120">'; 
+			$table .= '<col width="100">'; 
+			$table .= '</colgroup>';
+			$table .= '</tr>';
+			for ($i = 0; $i <= count($xmlResult) - 1; $i=$i+2) {
+				$Servicereference = (string)$xmlResult->e2event[$i]->e2eventservicereference;
+				$table .= '<tr>';
+				$table .= '<td rowspan="2" class="tg-611x"><img src='.$this->Get_Filename($Servicereference).' alt='.(string)$xmlResult->e2event[$i]->e2eventservicename.' 
+					onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.($i/2).'&Source=EPGlist_Data_A&SRef='.$Servicereference.'\' })"></td>';
+				$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event[$i]->e2eventstart).' Uhr'.'</td>';
+				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i]->e2eventtitle).'</td>';
+				$table .= '<td class="tg-611x" onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.($i/2).'&Source=EPGlist_Data_D\' })">'.utf8_decode($xmlResult->e2event[$i]->e2eventdescription).'</td>';			
+				$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event[$i]->e2eventduration / 60).' min'.'</td>';
+				$table .= '</tr>';
+				$table .= '<tr>';
+				$table .= '<td class="tg-611x">'.date("H:i", (int)$xmlResult->e2event[$i+1]->e2eventstart).' Uhr'.'</td>';
+				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i+1]->e2eventtitle).'</td>';
+				$table .= '<td class="tg-611x">'.utf8_decode($xmlResult->e2event[$i+1]->e2eventdescription).'</td>';
+				$table .= '<td class="tg-611x">'.round((int)$xmlResult->e2event[$i+1]->e2eventduration / 60).' min'.'</td>';
+				$table .= '<td class="tg-611x"><img src='.$FilePathPlay.' alt="Umschalten" 
+					onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2Enigma?Index='.($i/2).'&Source=EPGlist_Data_A&SRef='.$Servicereference.'\' })"></td>';
+				$Targetlink = "http://".$this->ReadPropertyString("IPAddress")."/web/stream.m3u?ref=".urlencode((string)$xmlResult->e2event[$i]->e2eventservicereference)."&name=".urlencode((string)$xmlResult->e2event[$i]->e2eventservicename);
+				$table .= '<td class="tg-611x"><a href='.$Targetlink.' target="_blank"><img src='.$FilePathStream.' alt="Stream starten"></td>';
+				$table .= '</tr>';
+			}
+			$table .= '</table>';
+			SetValueString($this->GetIDForIdent("e2epglistHTML"), $table);
+		}
+	}
+	
 	    
 	private function Get_Powerstate()
 	{
