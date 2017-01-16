@@ -625,7 +625,6 @@
 		}
 		else {
 			if ($this->GetBuffer("FirstUpdate") == "false") {
-				SetValueString($this->GetIDForIdent("e2servicename"), "N/A");
 				If ($this->ReadPropertyBoolean("EPGnow_Data") == true) {
 					SetValueString($this->GetIDForIdent("e2eventtitle"), "N/A");
 					SetValueString($this->GetIDForIdent("e2eventdescription"), "N/A");
@@ -646,13 +645,6 @@
 					SetValueInteger($this->GetIDForIdent("e2nexteventend"), 0);
 					SetValueInteger($this->GetIDForIdent("e2nexteventduration"), 0);
 					SetValueString($this->GetIDForIdent("e2epgHTML"), "");
-				}
-
-				If ($this->ReadPropertyBoolean("Signal_Data") == true) {
-					SetValueInteger($this->GetIDForIdent("e2snrdb"), 0);
-					SetValueInteger($this->GetIDForIdent("e2snr"), 0);
-					SetValueInteger($this->GetIDForIdent("e2ber"), 0);
-					SetValueInteger($this->GetIDForIdent("e2agc"), 0);
 				}
 				$this->SetBuffer("FirstUpdate", "true");
 			}
@@ -985,6 +977,23 @@
 					SetValueInteger($this->GetIDForIdent("e2snr"), (int)$xmlResult->e2snr);
 					SetValueInteger($this->GetIDForIdent("e2ber"), (int)$xmlResult->e2ber);
 					SetValueInteger($this->GetIDForIdent("e2agc"), (int)$xmlResult->e2acg);
+				}
+			}
+			else {
+				// Signalstärke
+				If ($this->ReadPropertyBoolean("Signal_Data") == true) {
+					If (GetValueInteger($this->GetIDForIdent("e2snrdb")) <> 0 ) {
+						SetValueInteger($this->GetIDForIdent("e2snrdb"), 0);
+						SetValueInteger($this->GetIDForIdent("e2snr"), 0);
+						SetValueInteger($this->GetIDForIdent("e2ber"), 0);
+						SetValueInteger($this->GetIDForIdent("e2agc"), 0);
+					}
+				}
+				If (GetValueString($this->GetIDForIdent("e2servicename")) <> "N/A" ) {
+					SetValueString($this->GetIDForIdent("e2servicename"), "N/A");
+				}
+				If (GetValueString($this->GetIDForIdent("currservice_serviceref")) <> "N/A" ) {
+					SetValueString($this->GetIDForIdent("currservice_serviceref"), "N/A");
 				}
 			}
 			
