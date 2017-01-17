@@ -67,23 +67,31 @@
 			case "set_1wire_devices":
 			   	$ResultArray = unserialize(utf8_decode($data->Result));
 				SetValueString($this->GetIDForIdent("SensorArray"), utf8_decode($data->Result));
-				for ($i = 0; $i < Count($ResultArray); $i++) {
-					//IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensor ".$ResultArray[$i]);
-					$Ident = "Sensor_".str_replace("-", "", $ResultArray[$i]);
-					$this->RegisterVariableFloat($Ident, "Sensor_".$ResultArray[$i], "~Temperature", ($i + 1) *10);
-					$this->DisableAction($Ident);
-				}
+				If (count($ResultArray) > 0 ) {
+					for ($i = 0; $i < Count($ResultArray); $i++) {
+						//IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensor ".$ResultArray[$i]);
+						$Ident = "Sensor_".str_replace("-", "", $ResultArray[$i]);
+						$this->RegisterVariableFloat($Ident, "Sensor_".$ResultArray[$i], "~Temperature", ($i + 1) *10);
+						$this->DisableAction($Ident);
+					}
+				else {
+					IPS_LogMessage("IPS2GPIO 1-Wire","Keine 1-Wire-Sensoren gefunden!");
+				}	
 			   	break;
 			case "set_1wire_data":
 			   	$ResultArray = unserialize(utf8_decode($data->Result));
 				$SensorArray = unserialize(GetValueString($this->GetIDForIdent("SensorArray")));
-				for ($i = 0; $i < Count($ResultArray); $i++) {
-					$Ident = "Sensor_".str_replace("-", "", $SensorArray[$i]);
-					
-					SetValueFloat($this->GetIDForIdent("$Ident"), (int)substr($ResultArray[$i], -6) / 1000);
-					//IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensorantwort: ".$ResultArray[$i]);
-					
-				}
+				If (count($ResultArray) > 0 ) {
+					for ($i = 0; $i < Count($ResultArray); $i++) {
+						$Ident = "Sensor_".str_replace("-", "", $SensorArray[$i]);
+
+						SetValueFloat($this->GetIDForIdent("$Ident"), (int)substr($ResultArray[$i], -6) / 1000);
+						//IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensorantwort: ".$ResultArray[$i]);
+
+					}
+				else {
+					IPS_LogMessage("IPS2GPIO 1-Wire","Es konnten keine 1-Wire-Messergebnisse ermittelt werden!");
+				}		
 			   	break;
 	 	}
  	}
@@ -100,11 +108,16 @@
 			$CommandArray = Array();
 			// Zusammenstellung der Sensoren
 			$SensorArray = unserialize(GetValueString($this->GetIDForIdent("SensorArray")));
-			for ($i = 0; $i < Count($SensorArray); $i++) {
-				$CommandArray[$i] = "cat /sys/bus/w1/devices/".$SensorArray[$i]."/w1_slave";
-				//IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensoranfrage: ".$CommandArray[$i]);
+			If (count($SensorArray) > 0 ) {
+				for ($i = 0; $i < Count($SensorArray); $i++) {
+					$CommandArray[$i] = "cat /sys/bus/w1/devices/".$SensorArray[$i]."/w1_slave";
+					//IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensoranfrage: ".$CommandArray[$i]);
+				}
+				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_1W_data", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray) )));
 			}
-			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_1W_data", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray) )));
+			else {
+				IPS_LogMessage("IPS2GPIO 1-Wire","Keine Sensoren vorhanden!");
+			}
 		}
 	}
 }
