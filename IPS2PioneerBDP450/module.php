@@ -613,10 +613,13 @@ class IPS2PioneerBDP450 extends IPSModule
 	private function ClientSocket(String $message)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			//IPS_SemaphoreEnter("Communication", 250);
-			$this->SetBuffer("LastCommand", $message);
-			$this->SetBuffer("LastCommandTimestamp", time());
-			$res = $this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode($message))));  
+			if (IPS_SemaphoreEnter("ClientSocket", 500))
+			{
+				$this->SetBuffer("LastCommand", $message);
+				$this->SetBuffer("LastCommandTimestamp", time());
+				$res = $this->SendDataToParent(json_encode(Array("DataID" => "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}", "Buffer" => utf8_encode($message))));
+				IPS_SemaphoreLeave("ClientSocket");
+			}
 		}
 	}
 	
