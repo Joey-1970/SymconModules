@@ -121,6 +121,11 @@ class IPS2GPIO_IO extends IPSModule
 				SetValueInteger($this->GetIDForIdent("Handle"), -1);
 				$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));
 				
+				If ($this->ReadPropertyBoolean("Multiplexer") == true) {
+					// Handle ermitteln
+					$this->CommandClientSocket(pack("LLLLL", 54, 1, $this->ReadPropertyInteger("DeviceAddress"), 4, 0), 16);
+				}
+				
 				$this->Get_PinUpdate();
 				$this->SetStatus(102);
 				
