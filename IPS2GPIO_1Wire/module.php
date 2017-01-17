@@ -74,6 +74,7 @@
 						$this->RegisterVariableFloat($Ident, "Sensor_".$ResultArray[$i], "~Temperature", ($i + 1) *10);
 						$this->DisableAction($Ident);
 					}
+				}
 				else {
 					IPS_LogMessage("IPS2GPIO 1-Wire","Keine 1-Wire-Sensoren gefunden!");
 				}	
@@ -91,6 +92,7 @@
 						//IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensorantwort: ".$ResultArray[$i]);
 
 					}
+				}
 				else {
 					IPS_LogMessage("IPS2GPIO 1-Wire","Es konnten keine 1-Wire-Messergebnisse ermittelt werden!");
 				}		
