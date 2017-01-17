@@ -74,6 +74,13 @@
 					$this->DisableAction($Ident);
 				}
 			   	break;
+			case "set_1wire_data":
+			   	$ResultArray = unserialize(utf8_decode($data->Result));
+				
+				for ($i = 0; $i < Count($ResultArray); $i++) {
+					IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensorantwort: ".$ResultArray[$i]);
+				}
+			   	break;
 	 	}
  	}
 	// Beginn der Funktionen
@@ -91,7 +98,7 @@
 			$SensorArray = unserialize(SetValueString($this->GetIDForIdent("SensorArray")));
 			for ($i = 0; $i < Count($SensorArray); $i++) {
 				$CommandArray[$i] = "cat /sys/bus/w1/devices/'.$SensorArray[$i].'/w1_slave";
-				IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensor ".$CommandArray[$i]);
+				IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensoranfrage: ".$CommandArray[$i]);
 			}
 			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_1W_data", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray) )));
 		}
