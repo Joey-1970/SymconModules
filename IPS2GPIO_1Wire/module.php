@@ -76,7 +76,7 @@
 			   	break;
 			case "set_1wire_data":
 			   	$ResultArray = unserialize(utf8_decode($data->Result));
-				
+				IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensorantwort: angekommen");
 				for ($i = 0; $i < Count($ResultArray); $i++) {
 					IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensorantwort: ".$ResultArray[$i]);
 				}
