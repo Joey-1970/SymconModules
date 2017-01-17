@@ -95,7 +95,7 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$CommandArray = Array();
 			// Zusammenstellung der Sensoren
-			$SensorArray = unserialize(SetValueString($this->GetIDForIdent("SensorArray")));
+			$SensorArray = unserialize(GetValueString($this->GetIDForIdent("SensorArray")));
 			for ($i = 0; $i < Count($SensorArray); $i++) {
 				$CommandArray[$i] = "cat /sys/bus/w1/devices/'.$SensorArray[$i].'/w1_slave";
 				IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensoranfrage: ".$CommandArray[$i]);
