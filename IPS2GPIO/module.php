@@ -995,7 +995,7 @@ class IPS2GPIO_IO extends IPSModule
 			    	$Result = "";
 				return false;
 			}
-			IPS_LogMessage("IPS2GPIO SFTP-Connect","Verbindung hergestellt");
+			//IPS_LogMessage("IPS2GPIO SFTP-Connect","Verbindung hergestellt");
 			
 			$Path = "/sys/bus/w1/devices";
 			// Prüfen, ob der 1-Wire Server die Verzeichnisse angelegt hat
@@ -1010,19 +1010,12 @@ class IPS2GPIO_IO extends IPSModule
 			for ($i = 0; $i < Count($Dir); $i++) {
 				if ($Dir[$i] != "." && $Dir[$i] != ".." && $Dir[$i] != "w1_bus_master1") {
 					$Sensors[] = $Dir[$i];
-					IPS_LogMessage("IPS2GPIO SFTP-Connect", $Dir[$i]);
+					//IPS_LogMessage("IPS2GPIO SFTP-Connect", $Dir[$i]);
 				}
 			}
 			
 			$Result = serialize($Sensors);
-			/*
-			for ($i = 0; $i < Count($Sensors); $i++) {
-				$TempFilePath = $Path."/".$Sensors[$i]."/w1_slave";
-				$FileContent = $sftp->get($TempFilePath);
-				$Temperatur = (int)substr($FileContent, -6) / 1000;
-				IPS_LogMessage("IPS2GPIO 1-Wire", "Sensor:".$Sensors[$i]." Temperatur: ".$Temperatur."°C");
-			}
-			*/
+			
 		}
 		else {
 			$ResultArray = Array();
