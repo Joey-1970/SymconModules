@@ -86,7 +86,7 @@
 				If (count($ResultArray) > 0 ) {
 					for ($i = 0; $i < Count($ResultArray); $i++) {
 						$Ident = "Sensor_".str_replace("-", "", $SensorArray[$i]);
-						$LinesArray = explode("/n", $ResultArray[$i]);
+						$LinesArray = explode(chr(10), $ResultArray[$i]);
 						IPS_LogMessage("IPS2GPIO 1-Wire","Linie 1: ".$LinesArray[0]);
 						SetValueFloat($this->GetIDForIdent("$Ident"), (int)substr($ResultArray[$i], -6) / 1000);
 						//IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensorantwort: ".$ResultArray[$i]);
