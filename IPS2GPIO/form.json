@@ -22,7 +22,7 @@
         { "type": "CheckBox", "name": "SPI_Used", "caption": "SPI" },
         { "type": "CheckBox", "name": "1Wire_Used", "caption": "1-Wire" },
         { "type": "Label", "label": "_____________________________________________________________________________________________________" },
-        { "name": "Multiplexer", "type": "CheckBox",  "caption": "TCA9548a am Bus 1 (GPIO2/3)" },
+        { "name": "Multiplexer", "type": "CheckBox",  "caption": "I²C-Multiplexer TCA9548a am Bus 1 (GPIO2/3)" },
         { "type": "Select", "name": "DeviceAddress", "caption": "Device Adresse",
             "options": [
                 { "label": "112 dez. / 0x70h", "value": 112 },
