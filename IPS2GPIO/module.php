@@ -395,7 +395,8 @@ class IPS2GPIO_IO extends IPSModule
 		    // 1-Wire
 		    case "get_1wire_devices":
 			$Result = $this->GetOneWireDevices();
-			$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_1wire_devices", "InstanceID" => $data->InstanceID, "Result"=>utf8_encode($Result)))); 
+			$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_1wire_devices", "InstanceID" => $data->InstanceID, "Result"=>utf8_encode($Result) )));
+			break;
 		}
 	  }
 	
