@@ -22,7 +22,8 @@
 	        // da kommt einiges
             
                 //ReceiveData-Filter setzen
-		$Filter = '(.*"Function":"get_usedpin".*|.*"Pin":"4".*)';
+		$Filter = '((.*"Function":"get_usedpin".*|.*"Pin":"4".*)|.*"InstanceID":'.$this->InstanceID.'.*)';
+		//$Filter = '(.*"Function":"get_usedpin".*|.*"Pin":"4".*)';
 		$this->SetReceiveDataFilter($Filter);
 		
 		If (IPS_GetKernelRunlevel() == 10103) {
