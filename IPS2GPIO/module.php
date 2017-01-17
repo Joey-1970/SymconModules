@@ -597,55 +597,59 @@ class IPS2GPIO_IO extends IPSModule
 	private function CommandClientSocket(String $message, $ResponseLen = 16)
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
-			// Socket erstellen
-			if(!($sock = socket_create(AF_INET, SOCK_STREAM, 0))) {
-				$errorcode = socket_last_error();
-			    	$errormsg = socket_strerror($errorcode);
-			    	IPS_LogMessage("IPS2GPIO Socket: ", "Fehler beim Erstellen ".$errorcode." ".$errormsg);
-			    	return;
-			}
-			// Timeout setzen
-			socket_set_option($sock,SOL_SOCKET, SO_RCVTIMEO, array("sec"=>2, "usec"=>0));
-			// Verbindung aufbauen
-			if(!(socket_connect($sock, $this->ReadPropertyString("IPAddress"), 8888))) {
-				$errorcode = socket_last_error();
-			    	$errormsg = socket_strerror($errorcode);
-				IPS_LogMessage("IPS2GPIO Socket: ", "Fehler beim Verbindungsaufbaus ".$errorcode." ".$errormsg);
-				return;
-			}
-			// Message senden
-			if( ! socket_send ($sock, $message, strlen($message), 0))
+			if (IPS_SemaphoreEnter("CommandClientSocket", 250))
 			{
-				$errorcode = socket_last_error();
-			    	$errormsg = socket_strerror($errorcode);
-				IPS_LogMessage("IPS2GPIO Socket: ", "Fehler beim beim Senden ".$errorcode." ".$errormsg);
-				return;
-			}
-			//Now receive reply from server
-			if(socket_recv ($sock, $buf, $ResponseLen, MSG_WAITALL ) === FALSE) {
-			    	$errorcode = socket_last_error();
-			    	$errormsg = socket_strerror($errorcode);
-				IPS_LogMessage("IPS2GPIO Socket: ", "Fehler beim beim Empfangen ".$errorcode." ".$errormsg);
-				return;
-			}
-			// Anfragen mit variabler Rückgabelänge
-			$CmdVarLen = array(56, 67, 70, 73, 75, 80, 88, 91, 92, 106, 109);
-			$MessageArray = unpack("L*", $buf);
-			$Command = $MessageArray[1];
-			If (in_array($Command, $CmdVarLen)) {
-				$this->ClientResponse($buf);
-				//IPS_LogMessage("IPS2GPIO ReceiveData", strlen($buf)." Zeichen");
-			}
-			// Standardantworten
-			elseIf ((strlen($buf) == 16) OR ((strlen($buf) / 16) == intval(strlen($buf) / 16))) {
-				$DataArray = str_split($buf, 16);
-		    		//IPS_LogMessage("IPS2GPIO ReceiveData", strlen($buf)." Zeichen");
-		    		for ($i = 0; $i < Count($DataArray); $i++) {
-	    				$this->ClientResponse($DataArray[$i]);
+				// Socket erstellen
+				if(!($sock = socket_create(AF_INET, SOCK_STREAM, 0))) {
+					$errorcode = socket_last_error();
+					$errormsg = socket_strerror($errorcode);
+					IPS_LogMessage("IPS2GPIO Socket: ", "Fehler beim Erstellen ".$errorcode." ".$errormsg);
+					return;
 				}
-			}
-			else {
-				IPS_LogMessage("IPS2GPIO ReceiveData", strlen($buf)." Zeichen - nicht differenzierbar!");
+				// Timeout setzen
+				socket_set_option($sock,SOL_SOCKET, SO_RCVTIMEO, array("sec"=>2, "usec"=>0));
+				// Verbindung aufbauen
+				if(!(socket_connect($sock, $this->ReadPropertyString("IPAddress"), 8888))) {
+					$errorcode = socket_last_error();
+					$errormsg = socket_strerror($errorcode);
+					IPS_LogMessage("IPS2GPIO Socket: ", "Fehler beim Verbindungsaufbaus ".$errorcode." ".$errormsg);
+					return;
+				}
+				// Message senden
+				if( ! socket_send ($sock, $message, strlen($message), 0))
+				{
+					$errorcode = socket_last_error();
+					$errormsg = socket_strerror($errorcode);
+					IPS_LogMessage("IPS2GPIO Socket: ", "Fehler beim beim Senden ".$errorcode." ".$errormsg);
+					return;
+				}
+				//Now receive reply from server
+				if(socket_recv ($sock, $buf, $ResponseLen, MSG_WAITALL ) === FALSE) {
+					$errorcode = socket_last_error();
+					$errormsg = socket_strerror($errorcode);
+					IPS_LogMessage("IPS2GPIO Socket: ", "Fehler beim beim Empfangen ".$errorcode." ".$errormsg);
+					return;
+				}
+				// Anfragen mit variabler Rückgabelänge
+				$CmdVarLen = array(56, 67, 70, 73, 75, 80, 88, 91, 92, 106, 109);
+				$MessageArray = unpack("L*", $buf);
+				$Command = $MessageArray[1];
+				If (in_array($Command, $CmdVarLen)) {
+					$this->ClientResponse($buf);
+					//IPS_LogMessage("IPS2GPIO ReceiveData", strlen($buf)." Zeichen");
+				}
+				// Standardantworten
+				elseIf ((strlen($buf) == 16) OR ((strlen($buf) / 16) == intval(strlen($buf) / 16))) {
+					$DataArray = str_split($buf, 16);
+					//IPS_LogMessage("IPS2GPIO ReceiveData", strlen($buf)." Zeichen");
+					for ($i = 0; $i < Count($DataArray); $i++) {
+						$this->ClientResponse($DataArray[$i]);
+					}
+				}
+				else {
+					IPS_LogMessage("IPS2GPIO ReceiveData", strlen($buf)." Zeichen - nicht differenzierbar!");
+				}
+				IPS_SemaphoreLeave("CommandClientSocket");
 			}
 		}	
 	}
