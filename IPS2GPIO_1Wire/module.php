@@ -80,8 +80,8 @@
 				for ($i = 0; $i < Count($ResultArray); $i++) {
 					$Ident = "Sensor_".str_replace("-", "", $SensorArray[$i]);
 					
-					SetValueFloat($this->GetIDForIdent("$Ident"), );
-					IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensorantwort: ".$ResultArray[$i]);
+					SetValueFloat($this->GetIDForIdent("$Ident"), (int)substr($ResultArray[$i], -6) / 1000);
+					//IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensorantwort: ".$ResultArray[$i]);
 					
 				}
 			   	break;
