@@ -392,6 +392,10 @@ class IPS2GPIO_IO extends IPSModule
 
 			}
 			break;
+		    // 1-Wire
+		    case "get_1wire_devices":
+			$Result = $this->GetOneWireDevices();
+			$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_1wire_devices", "InstanceID" => $data->InstanceID, "Result"=>utf8_encode($Result)))); 
 		}
 	  }
 	
@@ -975,7 +979,7 @@ class IPS2GPIO_IO extends IPSModule
         return $Result;
 	}
 	
-	public function GetOneWireData()
+	private function GetOneWireDevices()
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
 			set_include_path(__DIR__);
@@ -1009,13 +1013,21 @@ class IPS2GPIO_IO extends IPSModule
 				}
 			}
 			
+			$Result = serialize($Sensors);
+			/*
 			for ($i = 0; $i < Count($Sensors); $i++) {
 				$TempFilePath = $Path."/".$Sensors[$i]."/w1_slave";
 				$FileContent = $sftp->get($TempFilePath);
 				$Temperatur = (int)substr($FileContent, -6) / 1000;
 				IPS_LogMessage("IPS2GPIO 1-Wire", "Sensor:".$Sensors[$i]." Temperatur: ".$Temperatur."°C");
 			}
+			*/
 		}
+		else {
+			$ResultArray = Array();
+			$Result = serialize($ResultArray);
+		}
+	return $Result;
 	}
 	
 	private function CalcBitmask()
