@@ -399,6 +399,7 @@ class IPS2GPIO_IO extends IPSModule
 			break;
 		    case "get_1W_data":
 			$Result = $this->SSH_Connect_Array($data->Command);
+			IPS_LogMessage("IPS2GPIO 1-Wire-Data", $data->Command );
 			$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_1W_data", "InstanceID" => $data->InstanceID, "Result"=>utf8_encode($Result) )));
 			break;
 		}
