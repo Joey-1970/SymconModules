@@ -63,7 +63,7 @@
 					//IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensor ".$ResultArray[$i]);
 					$Ident = "Sensor_".str_replace("-", "", $ResultArray[$i]);
 					$this->RegisterVariableFloat($Ident, "Sensor_".$ResultArray[$i], "~Temperature", ($i + 1) *10);
-					$this->DisableAction("Sensor_".$ResultArray[$i]);
+					$this->DisableAction($Ident);
 				}
 			   	break;
 	 	}
