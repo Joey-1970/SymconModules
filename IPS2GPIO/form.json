@@ -22,6 +22,20 @@
         { "type": "CheckBox", "name": "SPI_Used", "caption": "SPI" },
         { "type": "CheckBox", "name": "1Wire_Used", "caption": "1-Wire" },
         { "type": "Label", "label": "_____________________________________________________________________________________________________" },
+        { "name": "Multiplexer", "type": "CheckBox",  "caption": "TCA9548a am Bus 1 (GPIO2/3)" },
+        { "type": "Select", "name": "DeviceAddress", "caption": "Device Adresse",
+            "options": [
+                { "label": "112 dez. / 0x70h", "value": 112 },
+                { "label": "113 dez. / 0x71h", "value": 113 },
+                { "label": "114 dez. / 0x72h", "value": 114 },
+                { "label": "115 dez. / 0x73h", "value": 115 },
+                { "label": "116 dez. / 0x74h", "value": 116 },
+                { "label": "117 dez. / 0x75h", "value": 117 },
+                { "label": "118 dez. / 0x76h", "value": 118 },
+                { "label": "119 dez. / 0x77h", "value": 119 }
+                ]
+        },       
+        { "type": "Label", "label": "_____________________________________________________________________________________________________" },
         { "type": "Label", "label": "Hinweise:" },
         { "type": "Label", "label": "- es sollte PIGPIO in der aktuellsten Version installiert sein" },
         { "type": "Label", "label": "Link: http://abyz.co.uk/rpi/pigpio/index.html" },
