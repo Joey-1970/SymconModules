@@ -90,7 +90,7 @@
 						// CRC auskoppeln
 						//IPS_LogMessage("IPS2GPIO 1-Wire","Linie 1: ".$LinesArray[0]);
 						// Temperatur auskoppeln
-						SetValueFloat($this->GetIDForIdent("$Ident"), (int)substr($LinesArray[1], -6) / 1000);
+						SetValueFloat($this->GetIDForIdent("$Ident"), (int)substr($ResultArray[$i], -6) / 1000);
 						//IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensorantwort: ".$ResultArray[$i]);
 
 					}
