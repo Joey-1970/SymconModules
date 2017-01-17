@@ -60,8 +60,9 @@
 			case "set_1wire_devices":
 			   	$ResultArray = unserialize(utf8_decode($data->Result));
 				for ($i = 0; $i < Count($ResultArray); $i++) {
-					IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensor ".$ResultArray[$i]);
-					$this->RegisterVariableFloat("Sensor_".$ResultArray[$i], "Sensor_".$ResultArray[$i], "~Temperature", ($i + 1) *10);
+					//IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensor ".$ResultArray[$i]);
+					$Ident = "Sensor_".str_replace("-", "", $ResultArray[$i]);
+					$this->RegisterVariableFloat($Ident, "Sensor_".$ResultArray[$i], "~Temperature", ($i + 1) *10);
 					$this->DisableAction("Sensor_".$ResultArray[$i]);
 				}
 			   	break;
