@@ -23,7 +23,7 @@
         { "type": "CheckBox", "name": "1Wire_Used", "caption": "1-Wire" },
         { "type": "Label", "label": "_____________________________________________________________________________________________________" },
         { "name": "Multiplexer", "type": "CheckBox",  "caption": "I²C-Multiplexer TCA9548a am Bus 1 (GPIO2/3)" },
-        { "type": "Label", "label": "Eine Ergänzung in der boot/config.txt um dtoverlay=i2c-mux,pca9548=1 ist erforderlich" },
+        { "type": "Label", "label": "Eine Ergänzung in der boot/config.txt um dtoverlay=i2c-mux,pca9548,addr=0x70 ist erforderlich" },
         { "type": "Label", "label": "_____________________________________________________________________________________________________" },
         { "type": "Label", "label": "Hinweise:" },
         { "type": "Label", "label": "- es sollte PIGPIO in der aktuellsten Version installiert sein" },
