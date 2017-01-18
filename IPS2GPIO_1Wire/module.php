@@ -8,7 +8,7 @@
             	// Diese Zeile nicht löschen.
             	parent::Create();
             	$this->RegisterPropertyBoolean("Open", false);
-		$this->RegisterPropertyInteger("Messzyklus", 5);
+		$this->RegisterPropertyInteger("Messzyklus", 15);
 		$this->RegisterTimer("Messzyklus", 0, 'I2G1W_Measurement($_IPS["TARGET"]);');
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
@@ -73,6 +73,9 @@
 						$Ident = "Sensor_".str_replace("-", "", $ResultArray[$i]);
 						$this->RegisterVariableFloat($Ident, "Sensor_".$ResultArray[$i], "~Temperature", ($i + 1) *10);
 						$this->DisableAction($Ident);
+						$Ident = "CRC_".str_replace("-", "", $ResultArray[$i]);
+						$this->RegisterVariableBoolean($Ident, "CRC_".$ResultArray[$i], "~Alert", ($i + 1) *12);
+						$this->DisableAction($Ident);
 					}
 				}
 				else {
@@ -88,7 +91,8 @@
 						$Ident = "Sensor_".str_replace("-", "", $SensorArray[$i]);
 						$LinesArray = explode(chr(10), $ResultArray[$i]);
 						// CRC auskoppeln
-						//IPS_LogMessage("IPS2GPIO 1-Wire","Linie 1: ".$LinesArray[0]);
+						IPS_LogMessage("IPS2GPIO 1-Wire","Linie 1: ".substr($LinesArray[0], -4);
+						IPS_LogMessage("IPS2GPIO 1-Wire","Linie 2: ".substr($LinesArray[1], -6);
 						// Temperatur auskoppeln
 						SetValueFloat($this->GetIDForIdent("$Ident"), (int)substr($ResultArray[$i], -6) / 1000);
 						//IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensorantwort: ".$ResultArray[$i]);
