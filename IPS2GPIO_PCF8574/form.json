@@ -35,14 +35,14 @@
             "options": [
                 { "label": "I²C-Bus 0", "value": 0 },
                 { "label": "I²C-Bus 1", "value": 1 },
-                { "label": "Multiplexer Bus 0", "value": 10 },
-                { "label": "Multiplexer Bus 1", "value": 11 },
-                { "label": "Multiplexer Bus 2", "value": 12 },
-                { "label": "Multiplexer Bus 3", "value": 13 },
-                { "label": "Multiplexer Bus 4", "value": 14 },
-                { "label": "Multiplexer Bus 5", "value": 15 },
-                { "label": "Multiplexer Bus 6", "value": 16 },
-                { "label": "Multiplexer Bus 7", "value": 17 }
+                { "label": "MUX I²C-Bus 0", "value": 3 },
+                { "label": "MUX I²C-Bus 1", "value": 4 },
+                { "label": "MUX I²C-Bus 2", "value": 5 },
+                { "label": "MUX I²C-Bus 3", "value": 6 },
+                { "label": "MUX I²C-Bus 4", "value": 7 },
+                { "label": "MUX I²C-Bus 5", "value": 8 },
+                { "label": "MUX I²C-Bus 6", "value": 9 },
+                { "label": "MUX I²C-Bus 7", "value": 10 }
                 ]
         },
         { "type": "Label", "label": "_____________________________________________________________________________________________________" },
