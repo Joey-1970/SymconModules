@@ -21,7 +21,6 @@ class IPS2GPIO_IO extends IPSModule
 	    	$this->RegisterPropertyBoolean("SPI_Used", false);
 		$this->RegisterPropertyBoolean("1Wire_Used", false);
 		$this->RegisterPropertyBoolean("Multiplexer", false);
-		$this->RegisterPropertyInteger("DeviceAddress", 112);
 	    	$this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
 	}
   
@@ -120,11 +119,6 @@ class IPS2GPIO_IO extends IPSModule
 				// Notify Starten
 				SetValueInteger($this->GetIDForIdent("Handle"), -1);
 				$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));
-				
-				If ($this->ReadPropertyBoolean("Multiplexer") == true) {
-					// Handle ermitteln
-					$this->CommandClientSocket(pack("LLLLL", 54, 1, $this->ReadPropertyInteger("DeviceAddress"), 4, 0), 16);
-				}
 				
 				$this->Get_PinUpdate();
 				$this->SetStatus(102);
