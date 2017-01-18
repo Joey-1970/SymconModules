@@ -46,14 +46,7 @@
 			IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
 
 			//ReceiveData-Filter setzen
-			If ($this->ReadPropertyInteger("DeviceBus") < 10) {
-				$this->SetBuffer("DeviceIdent", (($this->ReadPropertyInteger("DeviceBus") << 7) + $this->ReadPropertyInteger("DeviceAddress")));
-				$this->SetBuffer("Multiplexer", 0);
-			}
-			else {
-				$this->SetBuffer("DeviceIdent", ((1 << 7) + $this->ReadPropertyInteger("DeviceAddress")));
-				$this->SetBuffer("Multiplexer", 1);
-			}
+			$this->SetBuffer("DeviceIdent", (($this->ReadPropertyInteger("DeviceBus") << 7) + $this->ReadPropertyInteger("DeviceAddress")));
 			$Filter = '((.*"Function":"get_used_i2c".*|.*"DeviceIdent":'.$this->GetBuffer("DeviceIdent").'.*)|.*"Function":"status".*)';
 			//$this->SendDebug("IPS2GPIO", $Filter, 0);
 			$this->SetReceiveDataFilter($Filter);
