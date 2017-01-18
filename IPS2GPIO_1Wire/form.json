@@ -10,7 +10,6 @@
    "elements": 
    [ 
             { "name": "Open", "type": "CheckBox",  "caption": "Aktiv" },
-            { "type": "Label", "label": "Modul ist in der Entwicklung!" },
             { "type": "Label", "label": "GPIO 4 (Pin 7) ist dafür ausschließlich zu verwenden" },
             { "type": "Label", "label": "Wiederholungszyklus in Sekunden (0 -> aus, 15 sek -> Minimum)" },
             { "type": "IntervalBox", "name": "Messzyklus", "caption": "Messzyklus (sek)" }
