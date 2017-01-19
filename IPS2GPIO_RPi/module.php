@@ -91,15 +91,20 @@
 			$Filter = '(.*"Function":"get_start_trigger".*|.*"InstanceID":'.$this->InstanceID.'.*)';
 			$this->SetReceiveDataFilter($Filter);
 				
-			$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
+			
 			If ($this->ReadPropertyBoolean("Open") == true) {
+				$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
 				$this->Measurement();
 				$this->Measurement_1();
 				$this->SetStatus(102);
 			}
 			else {
+				$this->SetTimerInterval("Messzyklus", 0);
 				$this->SetStatus(104);
 			}
+		}
+		else {
+			$this->SetTimerInterval("Messzyklus", 0);
 		}
 	}
 	
