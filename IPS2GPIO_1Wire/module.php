@@ -90,12 +90,19 @@
 					for ($i = 0; $i < Count($ResultArray); $i++) {
 						$Ident = "Sensor_".str_replace("-", "", $SensorArray[$i]);
 						$LinesArray = explode(chr(10), $ResultArray[$i]);
-						// CRC auskoppeln
-						IPS_LogMessage("IPS2GPIO 1-Wire","Linie 1: ".substr($LinesArray[0], -4));
-						IPS_LogMessage("IPS2GPIO 1-Wire","Linie 2: ".substr($LinesArray[1], -6));
+						
+						//IPS_LogMessage("IPS2GPIO 1-Wire","Linie 1: ".substr($LinesArray[0], -4));
+						//IPS_LogMessage("IPS2GPIO 1-Wire","Linie 2: ".substr($LinesArray[1], -5));
 						// Temperatur auskoppeln
-						SetValueFloat($this->GetIDForIdent("$Ident"), (int)substr($ResultArray[$i], -6) / 1000);
-						//IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensorantwort: ".$ResultArray[$i]);
+						SetValueFloat($this->GetIDForIdent("$Ident"), (int)substr($LinesArray[1], -5) / 1000);
+						// CRC auskoppeln
+						$Ident = "CRC_".str_replace("-", "", $SensorArray[$i]);
+						If (trim(substr($LinesArray[0], -4)) == "YES") {
+							SetValueBoolean($this->GetIDForIdent("$Ident"), true);
+						}
+						else {
+							SetValueBoolean($this->GetIDForIdent("$Ident"), false);
+						}
 
 					}
 				}
