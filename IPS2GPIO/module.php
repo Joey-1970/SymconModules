@@ -596,7 +596,7 @@ class IPS2GPIO_IO extends IPSModule
 	private function CommandClientSocket(String $message, $ResponseLen = 16)
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
-			if (IPS_SemaphoreEnter("CommandClientSocket", 250))
+			if (IPS_SemaphoreEnter("CommandClientSocket", 100))
 			{
 				// Socket erstellen
 				if(!($sock = socket_create(AF_INET, SOCK_STREAM, 0))) {
