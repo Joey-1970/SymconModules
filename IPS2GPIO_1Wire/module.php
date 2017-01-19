@@ -74,7 +74,7 @@
 						$this->RegisterVariableFloat($Ident, "Sensor_".$ResultArray[$i], "~Temperature", ($i + 1) *10);
 						$this->DisableAction($Ident);
 						$Ident = "CRC_".str_replace("-", "", $ResultArray[$i]);
-						$this->RegisterVariableBoolean($Ident, "CRC_".$ResultArray[$i], "~Alert", ($i + 1) *12);
+						$this->RegisterVariableBoolean($Ident, "CRC_".$ResultArray[$i], "~Alert.Reversed", ($i + 1) *12);
 						$this->DisableAction($Ident);
 					}
 				}
