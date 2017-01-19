@@ -66,6 +66,10 @@ class IPS2GPIO_IO extends IPSModule
 			$this->DisableAction("I2C_Used");
 			IPS_SetHidden($this->GetIDForIdent("I2C_Used"), true);
 			
+			$this->RegisterVariableString("I2C_Possible", "I2C_Possible", "", 145);
+			$this->DisableAction("I2C_Possible");
+			IPS_SetHidden($this->GetIDForIdent("I2C_Possible"), true);
+			
 			$this->RegisterVariableString("PinI2C", "PinI2C", "", 150);
 			$this->DisableAction("PinI2C");
 			IPS_SetHidden($this->GetIDForIdent("PinI2C"), true);
@@ -121,6 +125,7 @@ class IPS2GPIO_IO extends IPSModule
 				$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));
 				
 				$this->Get_PinUpdate();
+				$this->I2C_Possible();
 				$this->SetStatus(102);
 				
 			}
@@ -1032,6 +1037,50 @@ class IPS2GPIO_IO extends IPSModule
 			$Result = serialize($ResultArray);
 		}
 	return $Result;
+	}
+	
+	private function I2C_Possible()
+	{
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+			set_include_path(__DIR__);
+			require_once (__DIR__ . '/Net/SFTP.php');
+
+			$sftp = new Net_SFTP($this->ReadPropertyString("IPAddress"));
+			$login = @$sftp->login($this->ReadPropertyString("User"), $this->ReadPropertyString("Password"));
+			
+			if ($login == false)
+			{
+			    	IPS_LogMessage("IPS2GPIO SFTP-Connect","Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert nicht!");
+			    	$Result = "";
+				return false;
+			}
+			//IPS_LogMessage("IPS2GPIO SFTP-Connect","Verbindung hergestellt");
+			
+			$Path = "/sys/bus/i2c/devices";
+			// Prüfen, ob der 1-Wire Server die Verzeichnisse angelegt hat
+			if (!$sftp->file_exists($Path)) {
+				IPS_LogMessage("IPS2GPIO SFTP-Connect",$Path." nicht gefunden! Ist I²C aktiviert?");
+				return;
+			}
+			
+			// den Inhalt des Verzeichnisses ermitteln
+			$I2C_Bus = array();
+			$Dir = $sftp->nlist($Path);
+			//print_r($Dir);
+			for ($i = 0; $i < Count($Dir); $i++) {
+				//echo substr($Dir[$i], 0, 3);
+				if (substr($Dir[$i], 0, 3) == "i2c") {
+					$I2C_Bus[] = intval(str_replace("i2c-", "",$Dir[$i]));
+				}
+			}
+
+			print_r(($Sensors));
+			SetValueString($this->GetIDForIdent("I2C_Possible"), serialize($I2C_Bus));
+		}
+		else {
+			$ResultArray = Array();
+			SetValueString($this->GetIDForIdent("I2C_Possible"), "");
+		}
 	}
 	
 	private function CalcBitmask()
