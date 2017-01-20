@@ -1168,7 +1168,7 @@ class IPS2GPIO_IO extends IPSModule
 	{
 		$I2C_DeviceHandle = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
 		If (is_array($I2C_DeviceHandle)) {			
-			If  (count($I2C_DeviceHandle) > 0) {
+			If  ((count($I2C_DeviceHandle) > 0) AND (max($I2C_DeviceHandle) > -1)) {
 				for ($i = 0; $i <= max($I2C_DeviceHandle); $i++) {
 					// Handle löschen
 					$this->CommandClientSocket(pack("LLLL", 55, $i, 0, 0), 16);
