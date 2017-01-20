@@ -1076,8 +1076,6 @@ class IPS2GPIO_IO extends IPSModule
 					$I2C_Bus[] = intval(str_replace("i2c-", "",$Dir[$i]));
 				}
 			}
-
-			print_r(($Sensors));
 			SetValueString($this->GetIDForIdent("I2C_Possible"), serialize($I2C_Bus));
 		}
 		else {
