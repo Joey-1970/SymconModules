@@ -114,7 +114,9 @@ class IPS2GPIO_IO extends IPSModule
 			If (($this->ConnectionTest()) AND ($this->ReadPropertyBoolean("Open") == true))  {
 				// Hardware und Softwareversion feststellen
 				$this->CommandClientSocket(pack("LLLL", 17, 0, 0, 0).pack("LLLL", 26, 0, 0, 0), 32);
-
+				
+				// I2C-Handle zurücksetzen
+				$this->ResetI2CHandle();
 				// Notify Handle zurücksetzen falls gesetzt
 				If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
 					// Handle löschen
@@ -1156,6 +1158,14 @@ class IPS2GPIO_IO extends IPSModule
  			$I2C_Device = array_search($I2C_Handle, $I2C_HandleData);	
  		}			  
 	return $I2C_Device;
+	}
+	
+	private function ResetI2CHandle()
+	{
+		for ($i = 0; $i <= 31; $i++) {
+			// Handle löschen
+			$this->CommandClientSocket(pack("LLLL", 55, $i, 0, 0), 16)
+		}
 	}
 	
 	private function GetParentID()
