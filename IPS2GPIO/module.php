@@ -77,8 +77,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->RegisterVariableString("I2C_Handle", "I2C_Handle", "", 160);
 			$this->DisableAction("I2C_Handle");
 			IPS_SetHidden($this->GetIDForIdent("I2C_Handle"), true);
-			$I2C_DeviceHandle = array();
-			SetValueString($this->GetIDForIdent("I2C_Handle"), serialize($I2C_DeviceHandle));
+			
 			
 			$this->RegisterVariableBoolean("Serial_Used", "Serial_Used", "", 170);
 			$this->DisableAction("Serial_Used");
@@ -119,6 +118,8 @@ class IPS2GPIO_IO extends IPSModule
 					// I2C-Handle zurücksetzen
 					$this->ResetI2CHandle();
 				}
+				$I2C_DeviceHandle = array();
+				SetValueString($this->GetIDForIdent("I2C_Handle"), serialize($I2C_DeviceHandle));
 				
 				// Notify Handle zurücksetzen falls gesetzt
 				If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
@@ -1166,10 +1167,12 @@ class IPS2GPIO_IO extends IPSModule
 	private function ResetI2CHandle()
 	{
 		$I2C_DeviceHandle = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
-		If  (count($I2C_DeviceHandle) > 0) {
-			for ($i = 0; $i <= max($I2C_DeviceHandle); $i++) {
-				// Handle löschen
-				$this->CommandClientSocket(pack("LLLL", 55, $i, 0, 0), 16);
+		If (is_array($I2C_DeviceHandle)) {			
+			If  (count($I2C_DeviceHandle) > 0) {
+				for ($i = 0; $i <= max($I2C_DeviceHandle); $i++) {
+					// Handle löschen
+					$this->CommandClientSocket(pack("LLLL", 55, $i, 0, 0), 16);
+				}
 			}
 		}
 	}
