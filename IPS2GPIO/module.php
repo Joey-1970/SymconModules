@@ -111,7 +111,7 @@ class IPS2GPIO_IO extends IPSModule
 				}
 			}
 	
-			If($this->ConnectionTest()) {
+			If (($this->ConnectionTest()) AND ($this->ReadPropertyBoolean("Open") == true))  {
 				// Hardware und Softwareversion feststellen
 				$this->CommandClientSocket(pack("LLLL", 17, 0, 0, 0).pack("LLLL", 26, 0, 0, 0), 32);
 
@@ -128,6 +128,9 @@ class IPS2GPIO_IO extends IPSModule
 				$this->I2C_Possible();
 				$this->SetStatus(102);
 				
+			}
+			else {
+				$this->SetStatus(104);
 			}
 		}
 		else {
