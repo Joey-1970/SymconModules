@@ -115,8 +115,11 @@ class IPS2GPIO_IO extends IPSModule
 				// Hardware und Softwareversion feststellen
 				$this->CommandClientSocket(pack("LLLL", 17, 0, 0, 0).pack("LLLL", 26, 0, 0, 0), 32);
 				
-				// I2C-Handle zurücksetzen
-				$this->ResetI2CHandle();
+				If ($this->ReadPropertyBoolean("I2C_Used") == true)  {
+					// I2C-Handle zurücksetzen
+					$this->ResetI2CHandle();
+				}
+				
 				// Notify Handle zurücksetzen falls gesetzt
 				If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
 					// Handle löschen
