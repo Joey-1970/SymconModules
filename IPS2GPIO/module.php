@@ -1165,9 +1165,12 @@ class IPS2GPIO_IO extends IPSModule
 	
 	private function ResetI2CHandle()
 	{
-		for ($i = 0; $i <= 31; $i++) {
-			// Handle löschen
-			$this->CommandClientSocket(pack("LLLL", 55, $i, 0, 0), 16);
+		$I2C_DeviceHandle = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
+		If  (count($I2C_DeviceHandle) > 0) {
+			for ($i = 0; $i <= max($I2C_DeviceHandle); $i++) {
+				// Handle löschen
+				$this->CommandClientSocket(pack("LLLL", 55, $i, 0, 0), 16);
+			}
 		}
 	}
 	
