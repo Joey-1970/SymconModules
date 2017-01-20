@@ -1164,7 +1164,7 @@ class IPS2GPIO_IO extends IPSModule
 	{
 		for ($i = 0; $i <= 31; $i++) {
 			// Handle löschen
-			$this->CommandClientSocket(pack("LLLL", 55, $i, 0, 0), 16)
+			$this->CommandClientSocket(pack("LLLL", 55, $i, 0, 0), 16);
 		}
 	}
 	
