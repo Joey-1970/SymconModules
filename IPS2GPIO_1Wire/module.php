@@ -12,7 +12,25 @@
 		$this->RegisterTimer("Messzyklus", 0, 'I2G1W_Measurement($_IPS["TARGET"]);');
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
-       // Überschreibt die intere IPS_ApplyChanges($id) Funktion
+       	
+	public function GetConfigurationForm() { 
+		$arrayStatus = array(); 
+		$arrayStatus[] = array("code" => 101, "icon" => "inactive", "caption" => "Instanz wird erstellt"); 
+		$arrayStatus[] = array("code" => 102, "icon" => "active", "caption" => "Instanz ist aktiv");
+		$arrayStatus[] = array("code" => 104, "icon" => "inactive", "caption" => "Instanz ist inaktiv");
+		$arrayStatus[] = array("code" => 200, "icon" => "error", "caption" => "Instanz ist fehlerhaft"); 
+		
+		$arrayElements = array(); 
+		$arrayElements[] = array("name" => "Open", "type" => "CheckBox",  "caption" => "Aktiv"); 
+ 		$arrayElements[] = array("type" => "Label", "label" => "GPIO 4 (Pin 7) ist dafür ausschließlich zu verwenden"); 
+  		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, 15 sek -> Minimum)"); 
+		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Messzyklus (sek)");
+ 		
+ 		return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements)); 		 
+ 	} 
+
+	
+	// Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
         {
                 // Diese Zeile nicht löschen
