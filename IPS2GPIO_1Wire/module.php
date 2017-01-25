@@ -27,7 +27,7 @@
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Messzyklus (sek)");
  		
 		$SensorArray = unserialize(GetValueString($this->GetIDForIdent("SensorArray")));
-		If (is_array($SensorArray) {
+		If (is_array($SensorArray)) {
 			$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 			$arrayElements[] = array("type" => "Label", "label" => "Detektierte 1-Wire Sensoren:");
 			for ($i = 0; $i < Count($SensorArray); $i++) {
