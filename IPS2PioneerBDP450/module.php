@@ -783,16 +783,16 @@ class IPS2PioneerBDP450 extends IPSModule
 	}
 	
 	private function ResponseWait()
-		{
-			 $i = 0;
-			 do {
-		    		IPS_Sleep(25);
-				if ($i > 20)
-				    {
-					break;
-				    }
-				 $i++;
-			} while ($this->GetBuffer("LastResponseTimestamp") <= $this->GetBuffer("LastCommandTimestamp"));
+	{
+		$i = 0;
+		do {
+			IPS_Sleep(5);
+			if ($i > 100)
+			    {
+				break;
+			    }
+			 $i++;
+		} while ($this->GetBuffer("LastResponseTimestamp") <= $this->GetBuffer("LastCommandTimestamp"));
 	      IPS_Sleep(25);
 	}
 
