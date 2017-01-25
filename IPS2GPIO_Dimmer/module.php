@@ -11,7 +11,27 @@
 		 $this->RegisterPropertyInteger("Pin", -1);
 		 $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
-
+	
+	/*
+	public function GetConfigurationForm() 
+	{ 
+		$arrayStatus = array(); 
+		$arrayStatus[] = array("code" => 101, "icon" => "inactive", "caption" => "Instanz wird erstellt"); 
+		$arrayStatus[] = array("code" => 102, "icon" => "active", "caption" => "Instanz ist aktiv");
+		$arrayStatus[] = array("code" => 104, "icon" => "inactive", "caption" => "Instanz ist inaktiv");
+		$arrayStatus[] = array("code" => 200, "icon" => "error", "caption" => "Pin wird doppelt genutzt!");
+		$arrayStatus[] = array("code" => 201, "icon" => "error", "caption" => "Pin ist an diesem Raspberry Pi Modell nicht vorhanden!"); 
+		
+		$arrayElements = array(); 
+		$arrayElements[] = array("name" => "Open", "type" => "CheckBox",  "caption" => "Aktiv"); 
+ 		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number)"); 
+  		
+		$arrayActions = array();
+		
+ 		return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements, "actions" => $arrayActions)); 		 
+ 	}    
+	*/
+	    
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
         {
