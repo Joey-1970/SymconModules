@@ -26,6 +26,15 @@
   		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, 15 sek -> Minimum)"); 
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Messzyklus (sek)");
  		
+		$SensorArray = unserialize(GetValueString($this->GetIDForIdent("SensorArray")));
+		If (is_array($SensorArray) {
+			$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
+			$arrayElements[] = array("type" => "Label", "label" => "Detektierte 1-Wire Sensoren:");
+			for ($i = 0; $i < Count($SensorArray); $i++) {
+				$arrayElements[] = array("type" => "Label", "label" => $SensorArray[$i]);
+			}
+		}
+		
  		return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements)); 		 
  	} 
 
@@ -113,9 +122,6 @@
 					for ($i = 0; $i < Count($ResultArray); $i++) {
 						$Ident = "Sensor_".str_replace("-", "", $SensorArray[$i]);
 						$LinesArray = explode(chr(10), $ResultArray[$i]);
-						
-						//IPS_LogMessage("IPS2GPIO 1-Wire","Linie 1: ".substr($LinesArray[0], -4));
-						//IPS_LogMessage("IPS2GPIO 1-Wire","Linie 2: ".substr($LinesArray[1], -5));
 						// Temperatur auskoppeln
 						SetValueFloat($this->GetIDForIdent("$Ident"), (int)substr($LinesArray[1], -5) / 1000);
 						// CRC auskoppeln
