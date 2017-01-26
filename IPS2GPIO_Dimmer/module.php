@@ -26,7 +26,24 @@
 		$arrayElements[] = array("name" => "Open", "type" => "CheckBox",  "caption" => "Aktiv"); 
  		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number)"); 
   		
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "ungesetzt", "value" => -1);
+		for ($i = 0; $i < 27; $i++) {
+			$arrayOptions[] = array("label" => $i, "value" => $i);
+		}
+		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
+		
 		$arrayActions = array();
+		If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+			$arrayActions[] = array("type" => "Button", "label" => "On", "onClick" => "I2GDMR_Set_Status($id, true);");
+			$arrayActions[] = array("type" => "Button", "label" => "Off", "onClick" => "I2GDMR_Set_Status($id, false);");
+			$arrayActions[] = array("type" => "Button", "label" => "Toggle", "onClick" => "I2GDMR_Toggle_Status($id);");
+			$arrayActions[] = array("type" => "Label", "label" => "Dimmen");
+			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "Slider", "minimum" => 0,  "maximum" => 255, "onChange" => "I2GDMR_Set_Intensity($id, $Slider);");
+		}
+		else {
+			$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
+		}
 		
  		return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements, "actions" => $arrayActions)); 		 
  	}    
