@@ -35,11 +35,11 @@
 		
 		$arrayActions = array();
 		If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-			$arrayActions[] = array("type" => "Button", "label" => "On", "onClick" => "I2GDMR_Set_Status(".$this->InstanceID.", true);");
-			$arrayActions[] = array("type" => "Button", "label" => "Off", "onClick" => "I2GDMR_Set_Status(".$this->InstanceID.", false);");
-			$arrayActions[] = array("type" => "Button", "label" => "Toggle", "onClick" => "I2GDMR_Toggle_Status(".$this->InstanceID.");");
+			$arrayActions[] = array("type" => "Button", "label" => "On", "onClick" => "I2GDMR_Set_Status('$id', true);");
+			$arrayActions[] = array("type" => "Button", "label" => "Off", "onClick" => "I2GDMR_Set_Status('$id', false);");
+			$arrayActions[] = array("type" => "Button", "label" => "Toggle", "onClick" => "I2GDMR_Toggle_Status('$id');");
 			$arrayActions[] = array("type" => "Label", "label" => "Dimmen");
-			//$arrayActions[] = array("type" => "HorizontalSlider", "name" => "Slider", "minimum" => 0,  "maximum" => 255, "onChange" => "I2GDMR_Set_Intensity(".$this->InstanceID.", $Slider);");
+			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "Slider", "minimum" => 0,  "maximum" => 255, "onChange" => "I2GDMR_Set_Intensity('$id', '$Slider');");
 		}
 		else {
 			$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
