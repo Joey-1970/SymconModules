@@ -123,7 +123,10 @@
 						$Ident = "Sensor_".str_replace("-", "", $SensorArray[$i]);
 						$LinesArray = explode(chr(10), $ResultArray[$i]);
 						// Temperatur auskoppeln
-						SetValueFloat($this->GetIDForIdent("$Ident"), (int)substr($LinesArray[1], -5) / 1000);
+						$TempArray = explode("t=", $LinesArray[1]);
+						//Echo (int)$TempArray[1] / 1000
+						//SetValueFloat($this->GetIDForIdent("$Ident"), (int)substr($LinesArray[1], -5) / 1000);
+						SetValueFloat($this->GetIDForIdent("$Ident"), (int)$TempArray[1] / 1000);
 						// CRC auskoppeln
 						$Ident = "CRC_".str_replace("-", "", $SensorArray[$i]);
 						If (trim(substr($LinesArray[0], -4)) == "YES") {
