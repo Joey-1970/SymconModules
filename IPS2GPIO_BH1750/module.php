@@ -30,9 +30,11 @@
 	    		IPS_LogMessage("IPS2GPIO BH1750","I2C-Device Adresse in einem nicht definierten Bereich!");  
 	    	}
 	    	// Profil anlegen
-		$this->RegisterProfileInteger("illuminance.lx", "Illuminance", "", " lx", 0, 1000000, 1);
-	    	//Status-Variablen anlegen
-             	$this->RegisterVariableInteger("Illuminance", "Illuminance", "illuminance.lx", 10);
+		//$this->RegisterProfileInteger("illuminance.lx", "Illuminance", "", " lx", 0, 1000000, 1);
+	    	$this->RegisterProfileFloat("illuminance.lx", "Illuminance", "", " lx", 0, 1000000, 0.1, 2);
+		//Status-Variablen anlegen
+             	//$this->RegisterVariableInteger("Illuminance", "Illuminance", "illuminance.lx", 10);
+		$this->RegisterVariableFloat("Illuminance", "Illuminance", "illuminance.lx", 10);
 		$this->DisableAction("Illuminance");
 		IPS_SetHidden($this->GetIDForIdent("Illuminance"), false);
 		
@@ -100,7 +102,8 @@
 			  		If ($data->Register == $this->ReadPropertyInteger("DeviceAddress"))  {
 			  			$Lux = (($data->Value & 0xff00)>>8) | (($data->Value & 0x00ff)<<8);
 			  			$Lux = max(0, $Lux);
-			  			SetValueInteger($this->GetIDForIdent("Illuminance"), $Lux);
+			  			//SetValueInteger($this->GetIDForIdent("Illuminance"), $Lux);
+						SetValueFloat($this->GetIDForIdent("Illuminance"), $Lux);
 						// Hysteres Variablen setzen
 						If ($Lux >= $this->ReadPropertyInteger("HysteresisOn")) {
 							SetValueBoolean($this->GetIDForIdent("Hysteresis"), true);
@@ -139,6 +142,24 @@
 	        IPS_SetVariableProfileIcon($Name, $Icon);
 	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
 	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);    
+	}
+	    
+	private function RegisterProfileFloat($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits)
+	{
+	        if (!IPS_VariableProfileExists($Name))
+	        {
+	            IPS_CreateVariableProfile($Name, 2);
+	        }
+	        else
+	        {
+	            $profile = IPS_GetVariableProfile($Name);
+	            if ($profile['ProfileType'] != 2)
+	                throw new Exception("Variable profile type does not match for profile " . $Name);
+	        }
+	        IPS_SetVariableProfileIcon($Name, $Icon);
+	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
+	        IPS_SetVariableProfileDigits($Name, $Digits);
 	}
 
 	private function Setup()
