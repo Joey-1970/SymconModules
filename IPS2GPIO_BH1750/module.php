@@ -31,7 +31,7 @@
 	    	}
 	    	// Profil anlegen
 		//$this->RegisterProfileInteger("illuminance.lx", "Illuminance", "", " lx", 0, 1000000, 1);
-	    	$this->RegisterProfileFloat("illuminance.lx", "Illuminance", "", " lx", 0, 1000000, 0.1, 2);
+	    	$this->RegisterProfileFloat("illuminance.lx.float", "Illuminance", "", " lx", 0, 1000000, 0.1, 2);
 		//Status-Variablen anlegen
              	//$this->RegisterVariableInteger("Illuminance", "Illuminance", "illuminance.lx", 10);
 		$this->RegisterVariableFloat("Illuminance", "Illuminance", "illuminance.lx", 10);
