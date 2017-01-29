@@ -28,7 +28,7 @@
   		
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "ungesetzt", "value" => -1);
-		for ($i = 0; $i < 27; $i++) {
+		for ($i = 0; $i <= 27; $i++) {
 			$arrayOptions[] = array("label" => $i, "value" => $i);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
