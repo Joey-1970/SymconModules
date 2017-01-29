@@ -12,7 +12,7 @@
 		 $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
 	
-	/*
+	
 	public function GetConfigurationForm() 
 	{ 
 		$arrayStatus = array(); 
@@ -47,7 +47,7 @@
 		
  		return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements, "actions" => $arrayActions)); 		 
  	}    
-	*/
+	
 	    
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
