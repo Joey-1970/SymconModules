@@ -32,10 +32,8 @@
 	    		IPS_LogMessage("IPS2GPIO BH1750","I2C-Device Adresse in einem nicht definierten Bereich!");  
 	    	}
 	    	// Profil anlegen
-		//$this->RegisterProfileInteger("illuminance.lx", "Illuminance", "", " lx", 0, 1000000, 1);
 	    	$this->RegisterProfileFloat("illuminance.lx.float", "Illuminance", "", " lx", 0, 1000000, 0.1, 2);
 		//Status-Variablen anlegen
-             	//$this->RegisterVariableInteger("Illuminance", "Illuminance", "illuminance.lx", 10);
 		$this->RegisterVariableFloat("Illuminance", "Illuminance", "illuminance.lx", 10);
 		$this->DisableAction("Illuminance");
 		IPS_SetHidden($this->GetIDForIdent("Illuminance"), false);
@@ -103,8 +101,13 @@
 			  		// Daten der Messung
 			  		If ($data->Register == $this->ReadPropertyInteger("DeviceAddress"))  {
 			  			$Lux = (($data->Value & 0xff00)>>8) | (($data->Value & 0x00ff)<<8);
-			  			$Lux = max(0, $Lux);
-			  			//SetValueInteger($this->GetIDForIdent("Illuminance"), $Lux);
+			  			If ($this->ReadPropertyInteger("Resulution") == 19) {
+							$Lux = max(0, $Lux);
+						}
+						elseif ($this->ReadPropertyInteger("Resulution") == 16) {
+						
+						
+
 						SetValueFloat($this->GetIDForIdent("Illuminance"), $Lux);
 						// Hysteres Variablen setzen
 						If ($Lux >= $this->ReadPropertyInteger("HysteresisOn")) {
