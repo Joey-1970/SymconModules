@@ -113,6 +113,7 @@
 						elseif ($this->ReadPropertyInteger("Resulution") == 17) {
 							// HR 2
 							$Lux = (($data->Value & 0xff00)>>8) | (($data->Value & 0x00ff)<<8);
+							$Lux = (($Lux & 1) * 0.5) + ($Lux >> 1);
 							$Lux = max(0, $Lux / 1.2 * (69 / $this->ReadPropertyInteger("Sensitivity")) / 2 );
 						}
 
