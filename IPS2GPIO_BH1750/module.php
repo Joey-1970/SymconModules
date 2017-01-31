@@ -105,8 +105,11 @@
 							$Lux = max(0, $Lux);
 						}
 						elseif ($this->ReadPropertyInteger("Resulution") == 16) {
-						
-						
+							$Lux = max(0, $Lux / 1.2 * (69 / $this->ReadPropertyInteger("Sensitivity")) );
+						}
+						elseif ($this->ReadPropertyInteger("Resulution") == 17) {
+							$Lux = max(0, $Lux / 1.2 * (69 / $this->ReadPropertyInteger("Sensitivity")) / 2 );
+						}
 
 						SetValueFloat($this->GetIDForIdent("Illuminance"), $Lux);
 						// Hysteres Variablen setzen
