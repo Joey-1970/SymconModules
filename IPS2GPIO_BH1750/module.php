@@ -34,7 +34,7 @@
 	    	// Profil anlegen
 	    	$this->RegisterProfileFloat("illuminance.lx.float", "Illuminance", "", " lx", 0, 1000000, 0.1, 2);
 		//Status-Variablen anlegen
-		$this->RegisterVariableFloat("Illuminance", "Illuminance", "illuminance.lx", 10);
+		$this->RegisterVariableFloat("Illuminance", "Illuminance", "illuminance.lx.float", 10);
 		$this->DisableAction("Illuminance");
 		IPS_SetHidden($this->GetIDForIdent("Illuminance"), false);
 		
