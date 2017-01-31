@@ -12,6 +12,8 @@
  	    	$this->RegisterPropertyInteger("DeviceAddress", 35);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
+		$this->RegisterPropertyInteger("Resulution", 16);
+		$this->RegisterPropertyInteger("Sensitivity", 69);
  	    	$this->RegisterPropertyBoolean("Logging", false);
 		$this->RegisterPropertyInteger("HysteresisOn", 100);
 		$this->RegisterPropertyInteger("HysteresisOff", 0);
