@@ -100,14 +100,19 @@
 			  	If ($data->DeviceIdent == $this->GetBuffer("DeviceIdent")) {
 			  		// Daten der Messung
 			  		If ($data->Register == $this->ReadPropertyInteger("DeviceAddress"))  {
-			  			$Lux = (($data->Value & 0xff00)>>8) | (($data->Value & 0x00ff)<<8);
 			  			If ($this->ReadPropertyInteger("Resulution") == 19) {
-							$Lux = max(0, $Lux);
+							// LR
+							$Lux = (($data->Value & 0xff00)>>8) | (($data->Value & 0x00ff)<<8);
+							$Lux = max(0, $Lux / 1.2);
 						}
 						elseif ($this->ReadPropertyInteger("Resulution") == 16) {
+							// HR
+							$Lux = (($data->Value & 0xff00)>>8) | (($data->Value & 0x00ff)<<8);
 							$Lux = max(0, $Lux / 1.2 * (69 / $this->ReadPropertyInteger("Sensitivity")) );
 						}
 						elseif ($this->ReadPropertyInteger("Resulution") == 17) {
+							// HR 2
+							$Lux = (($data->Value & 0xff00)>>8) | (($data->Value & 0x00ff)<<8);
 							$Lux = max(0, $Lux / 1.2 * (69 / $this->ReadPropertyInteger("Sensitivity")) / 2 );
 						}
 
