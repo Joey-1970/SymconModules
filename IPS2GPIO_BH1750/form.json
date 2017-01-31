@@ -39,7 +39,7 @@
             "options": [
                 { "label": "L-Resulution Mode", "value": 19 },
                 { "label": "H-Resulution Mode", "value": 16 },
-                { "label": "H-Resulution Mode 2", "value": 17 },
+                { "label": "H-Resulution Mode 2", "value": 17 }
                 ]
         },
         { "type": "Label", "label": "Wert muss zwischen 31 und 254 liegen (Default 69)" },
