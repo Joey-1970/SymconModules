@@ -103,23 +103,18 @@
 			  			If ($this->ReadPropertyInteger("Resulution") == 19) {
 							// LR
 							$Lux = (($data->Value & 0xff00)>>8) | (($data->Value & 0x00ff)<<8);
-							$Lux = max(0, $Lux / 1.2);
 						}
 						elseif ($this->ReadPropertyInteger("Resulution") == 16) {
 							// HR
 							$Lux = (($data->Value & 0xff00)>>8) | (($data->Value & 0x00ff)<<8);
-							$Lux = max(0, $Lux / 1.2);
-							//$Lux = max(0, $Lux / 1.2 * (69 / $this->ReadPropertyInteger("Sensitivity")) );
 						}
 						elseif ($this->ReadPropertyInteger("Resulution") == 17) {
 							// HR 2
 							$Lux = (($data->Value & 0xff00)>>8) | (($data->Value & 0x00ff)<<8);
 							$Lux = (($Lux & 1) * 0.5) + ($Lux >> 1);
-							$Lux = max(0, $Lux / 1.2);
-							//$Lux = max(0, $Lux / 1.2 * (69 / $this->ReadPropertyInteger("Sensitivity")) / 2 );
 						}
-
-						SetValueFloat($this->GetIDForIdent("Illuminance"), $Lux);
+						
+						SetValueFloat($this->GetIDForIdent("Illuminance"), max(0, $Lux / 1.2));
 						// Hysteres Variablen setzen
 						If ($Lux >= $this->ReadPropertyInteger("HysteresisOn")) {
 							SetValueBoolean($this->GetIDForIdent("Hysteresis"), true);
