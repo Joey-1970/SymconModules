@@ -170,9 +170,10 @@
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte_onhandle", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => hexdec("01"))));
 		IPS_Sleep(100);
 		// Sensivität setzen
-		// High bit MTreg
+		$MTreg = max(31, min($this->ReadPropertyInteger("Resulution"), 254));
+		// High bit MTreg 01000 + Bit 6,7,8
 		//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte_onhandle", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $this->ReadPropertyInteger("Resulution") )));
-		// Low bit MTreg
+		// Low bit MTreg 011 + Bit 1, 2, 3 ,4, 5
 		//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte_onhandle", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $this->ReadPropertyInteger("Resulution") )));
 
 		// Messwerterfassung setzen
