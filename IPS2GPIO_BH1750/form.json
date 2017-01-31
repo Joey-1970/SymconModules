@@ -34,6 +34,17 @@
         { "type": "Label", "label": "Wiederholungszyklus in Sekunden (0 -> aus, 1 sek -> Minimum)" },
         { "type": "IntervalBox", "name": "Messzyklus", "caption": "Messzyklus (sek)" },
         { "type": "Label", "label": "_____________________________________________________________________________________________________" },
+        { "type": "Label", "label": "An den folgenden Werten muss in der Regel nichts verändert werden" },
+        { "type": "Select", "name": "Resulution", "caption": "Auflösung",
+            "options": [
+                { "label": "L-Resulution Mode", "value": 19 },
+                { "label": "H-Resulution Mode", "value": 16 },
+                { "label": "H-Resulution Mode 2", "value": 17 },
+                ]
+        },
+        { "type": "Label", "label": "Wert muss zwischen 31 und 254 liegen (Default 69)" },
+        { "type": "NumberSpinner", "name": "Sensitivity", "caption": "Sensivität" },
+        { "type": "Label", "label": "_____________________________________________________________________________________________________" },
         { "type": "CheckBox", "name": "Logging", "caption": "Logging aktivieren" },
         { "type": "Label", "label": "Optional: Definition einer Hysterese Variablen" },
         { "type": "NumberSpinner", "name": "HysteresisOn", "caption": "Ein (lx)" },
