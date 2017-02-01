@@ -27,6 +27,7 @@
  	    	$this->RegisterPropertyBoolean("LoggingP5", false);
  	    	$this->RegisterPropertyBoolean("LoggingP6", false);
  	    	$this->RegisterPropertyBoolean("LoggingP7", false);
+		$this->RegisterPropertyInteger("Startoption", 0);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GIO1_Read_Status($_IPS["TARGET"]);');
 	}
@@ -206,15 +207,31 @@
 	{
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte_onhandle", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => 0)));
 		$Bitmask = 0;
-		for ($i = 0; $i <= 7; $i++) {
-			If ($this->ReadPropertyBoolean("P".$i) == true) {
-				// wenn true dann Eingang, dann disable		
- 				$Bitmask = $Bitmask + pow(2, $i);
- 			}		
-		}
-		If ($Bitmask > 0) {
+		If ($this->ReadPropertyInteger("Startoption") == 0) {
+			for ($i = 0; $i <= 7; $i++) {
+				If ($this->ReadPropertyBoolean("P".$i) == true) {
+					// wenn true dann Eingang		
+					$Bitmask = $Bitmask + pow(2, $i);
+				}		
+			}
 			$this->SetOutput($Bitmask);
 		}
+		elseif ($this->ReadPropertyInteger("Startoption") == 1) {
+			$this->SetOutput(255);
+		}
+		elseif ($this->ReadPropertyInteger("Startoption") == 2) {
+			$this->SetOutput(0);
+		}
+		elseif ($this->ReadPropertyInteger("Startoption") == 3) {
+			for ($i = 0; $i <= 7; $i++) {
+				If ($this->ReadPropertyBoolean("P".$i) == false) {
+					// wenn false dann Ausgang		
+					$Bitmask = $Bitmask + pow(2, $i);
+				}		
+			}
+			$this->SetOutput($Bitmask);
+		}
+
 	}
 	
 	public function SetPinOutput(Int $Pin, Bool $Value)
