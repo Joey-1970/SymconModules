@@ -66,6 +66,15 @@
         { "type": "Label", "label": "Wiederholungszyklus in Sekunden (0 -> aus, 1 sek -> Minimum)" },
         { "type": "IntervalBox", "name": "Messzyklus", "caption": "Messzyklus (sek)" },
         { "type": "Label", "label": "_____________________________________________________________________________________________________" },
+        { "type": "Select", "name": "Startoption", "caption": "Startoptionen",
+            "options": [
+                { "label": "Eingänge High, Ausgänge Low", "value": 0 },
+                { "label": "Eingänge High, Ausgänge High", "value": 1 },
+                { "label": "Eingänge Low, Ausgänge Low", "value": 3 },
+                { "label": "Eingänge Low, Ausgänge High", "value": 4 }
+                ]
+        },
+        { "type": "Label", "label": "_____________________________________________________________________________________________________" },
         { "type": "Label", "label": "Hinweise:" },
         { "type": "Label", "label": "- die Device Adresse lautet 32 bis 39 dez (0x20h - 0x27h) bei einem PCF8574" },
         { "type": "Label", "label": "- die Device Adresse lautet 56 bis 63 dez (0x38h - 0x3Fh) bei einem PCF8574A" },
