@@ -69,9 +69,7 @@
         { "type": "Select", "name": "Startoption", "caption": "Startoptionen",
             "options": [
                 { "label": "Eingänge High, Ausgänge Low", "value": 0 },
-                { "label": "Eingänge High, Ausgänge High", "value": 1 },
-                { "label": "Eingänge Low, Ausgänge Low", "value": 2 },
-                { "label": "Eingänge Low, Ausgänge High", "value": 3 }
+                { "label": "Eingänge High, Ausgänge High", "value": 1 }
                 ]
         },
         { "type": "Label", "label": "_____________________________________________________________________________________________________" },
