@@ -219,19 +219,6 @@
 		elseif ($this->ReadPropertyInteger("Startoption") == 1) {
 			$this->SetOutput(255);
 		}
-		elseif ($this->ReadPropertyInteger("Startoption") == 2) {
-			$this->SetOutput(0);
-		}
-		elseif ($this->ReadPropertyInteger("Startoption") == 3) {
-			for ($i = 0; $i <= 7; $i++) {
-				If ($this->ReadPropertyBoolean("P".$i) == false) {
-					// wenn false dann Ausgang		
-					$Bitmask = $Bitmask + pow(2, $i);
-				}		
-			}
-			$this->SetOutput($Bitmask);
-		}
-
 	}
 	
 	public function SetPinOutput(Int $Pin, Bool $Value)
