@@ -205,7 +205,7 @@
 	
 	private function Setup()
 	{
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte_onhandle", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => 0)));
+		//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte_onhandle", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => 0)));
 		$Bitmask = 0;
 		If ($this->ReadPropertyInteger("Startoption") == 0) {
 			for ($i = 0; $i <= 7; $i++) {
