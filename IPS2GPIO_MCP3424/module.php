@@ -28,10 +28,10 @@
 		$arrayElements[] = array("name" => "Open", "type" => "CheckBox",  "caption" => "Aktiv"); 
  		
 		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "ungesetzt", "value" => -1);
-		for ($i = 0; $i <= 27; $i++) {
-			$arrayOptions[] = array("label" => $i, "value" => $i);
-		}
+		$arrayOptions[] = array("label" => "104 dez. / 0x68h", "value" => 104);
+		$arrayOptions[] = array("label" => "106 dez. / 0x6Ah", "value" => 106);
+		$arrayOptions[] = array("label" => "108 dez. / 0x6Ch", "value" => 108);
+		$arrayOptions[] = array("label" => "110 dez. / 0x6Eh", "value" => 110);
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceAddress", "caption" => "Device Adresse", "options" => $arrayOptions );
 		
 		$arrayActions = array();
