@@ -34,6 +34,24 @@
 		$arrayOptions[] = array("label" => "110 dez. / 0x6Eh", "value" => 110);
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceAddress", "caption" => "Device Adresse", "options" => $arrayOptions );
 		
+		$arrayElements[] = array("type" => "Label", "label" => "I²C-Bus (Default ist 1)");
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "I²C-Bus 0", "value" => 0);
+		$arrayOptions[] = array("label" => "I²C-Bus 1", "value" => 1);
+		$arrayOptions[] = array("label" => "MUX I²C-Bus 0", "value" => 3);
+		$arrayOptions[] = array("label" => "MUX I²C-Bus 1", "value" => 4);
+		$arrayOptions[] = array("label" => "MUX I²C-Bus 2", "value" => 5);
+		$arrayOptions[] = array("label" => "MUX I²C-Bus 3", "value" => 6);
+		$arrayOptions[] = array("label" => "MUX I²C-Bus 4", "value" => 7);
+		$arrayOptions[] = array("label" => "MUX I²C-Bus 5", "value" => 8);
+		$arrayOptions[] = array("label" => "MUX I²C-Bus 6", "value" => 9);
+		$arrayOptions[] = array("label" => "MUX I²C-Bus 7", "value" => 10);
+		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "Device Bus", "options" => $arrayOptions );
+		
+		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, 15 sek -> Minimum)"); 
+		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Messzyklus (sek)");
+
+		
 		$arrayActions = array();
 		$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
 		
