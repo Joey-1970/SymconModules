@@ -1,0 +1,14 @@
+{
+  "id": "{0EBA825C-47AD-4BC6-AC0D-1ADF9CD55AB2}",
+  "name": "IPS2GPIO_MCP3424",
+  "type": 3,
+  "vendor": "JP-IPS-Modules",
+  "aliases":
+  [
+    "IPS2GPIO_MCP3424"
+  ],
+  "parentRequirements": ["{A0DAAF26-4A2D-4350-963E-CC02E74BD414}"],
+  "childRequirements": [],
+  "implemented": ["{8D44CA24-3B35-4918-9CBD-85A28C0C8917}"],
+  "prefix": "I2GAD2"
+}
