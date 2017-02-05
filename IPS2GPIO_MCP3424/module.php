@@ -72,10 +72,10 @@
 		
 		$arrayElements[] = array("type" => "Label", "label" => "Verstärkung der Kanäle wählen (Default 1x)"); 
 		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "1x", "value" => 12);
-		$arrayOptions[] = array("label" => "2x", "value" => 14);
-		$arrayOptions[] = array("label" => "4x", "value" => 16);
-		$arrayOptions[] = array("label" => "8x", "value" => 18);
+		$arrayOptions[] = array("label" => "1x", "value" => 1);
+		$arrayOptions[] = array("label" => "2x", "value" => 2);
+		$arrayOptions[] = array("label" => "4x", "value" => 4);
+		$arrayOptions[] = array("label" => "8x", "value" => 8);
 		$arrayElements[] = array("type" => "Select", "name" => "Amplifier_1", "caption" => "Verstärkung Kanal 1", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Select", "name" => "Amplifier_2", "caption" => "Verstärkung Kanal 2", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Select", "name" => "Amplifier_3", "caption" => "Verstärkung Kanal 3", "options" => $arrayOptions );
