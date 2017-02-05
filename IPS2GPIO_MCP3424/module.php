@@ -16,6 +16,10 @@
 		$this->RegisterPropertyInteger("Resolution_2", 12);
 		$this->RegisterPropertyInteger("Resolution_3", 12);
 		$this->RegisterPropertyInteger("Resolution_4", 12);
+		$this->RegisterPropertyInteger("Amplifier_1", 1);
+		$this->RegisterPropertyInteger("Amplifier_2", 1);
+		$this->RegisterPropertyInteger("Amplifier_3", 1);
+		$this->RegisterPropertyInteger("Amplifier_4", 1);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GAD2_Measurement($_IPS["TARGET"]);');
         }
  	
@@ -55,6 +59,7 @@
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, 15 sek -> Minimum)"); 
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Messzyklus (sek)");
 		
+		$arrayElements[] = array("type" => "Label", "label" => "Auflösung der Kanäle wählen (Default 12 Bit)"); 
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "12 Bit", "value" => 12);
 		$arrayOptions[] = array("label" => "14 Bit", "value" => 14);
@@ -65,7 +70,16 @@
 		$arrayElements[] = array("type" => "Select", "name" => "Resolution_3", "caption" => "Auflösung Kanal 3", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Select", "name" => "Resolution_4", "caption" => "Auflösung Kanal 4", "options" => $arrayOptions );
 		
-
+		$arrayElements[] = array("type" => "Label", "label" => "Verstärkung der Kanäle wählen (Default 1x)"); 
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "1x", "value" => 12);
+		$arrayOptions[] = array("label" => "2x", "value" => 14);
+		$arrayOptions[] = array("label" => "4x", "value" => 16);
+		$arrayOptions[] = array("label" => "8x", "value" => 18);
+		$arrayElements[] = array("type" => "Select", "name" => "Amplifier_1", "caption" => "Verstärkung Kanal 1", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Select", "name" => "Amplifier_2", "caption" => "Verstärkung Kanal 2", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Select", "name" => "Amplifier_3", "caption" => "Verstärkung Kanal 3", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Select", "name" => "Amplifier_4", "caption" => "Verstärkung Kanal 4", "options" => $arrayOptions );
 		
 		$arrayActions = array();
 		$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
