@@ -73,7 +73,21 @@
 	    	// Profil anlegen
 	    	
 		//Status-Variablen anlegen
+		$this->RegisterVariableFloat("Channel_1", "Kanal 1", "~Volt", 10);
+          	$this->DisableAction("Channel_1");
+		IPS_SetHidden($this->GetIDForIdent("Channel_1"), false);
 		
+		$this->RegisterVariableFloat("Channel_2", "Kanal 2", "~Volt", 20);
+          	$this->DisableAction("Channel_2");
+		IPS_SetHidden($this->GetIDForIdent("Channel_2"), false);
+		
+		$this->RegisterVariableFloat("Channel_3", "Kanal 3", "~Volt", 30);
+          	$this->DisableAction("Channel_3");
+		IPS_SetHidden($this->GetIDForIdent("Channel_3"), false);
+		
+		$this->RegisterVariableFloat("Channel_4", "Kanal 4", "~Volt", 40);
+          	$this->DisableAction("Channel_4");
+		IPS_SetHidden($this->GetIDForIdent("Channel_4"), false);
 		
 		If (IPS_GetKernelRunlevel() == 10103) {
 			// Logging setzen
