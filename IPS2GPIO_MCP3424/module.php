@@ -12,14 +12,15 @@
  	    	$this->RegisterPropertyInteger("DeviceAddress", 104);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
+		$this->RegisterPropertyInteger("Resolution_0", 0);
 		$this->RegisterPropertyInteger("Resolution_1", 0);
 		$this->RegisterPropertyInteger("Resolution_2", 0);
 		$this->RegisterPropertyInteger("Resolution_3", 0);
-		$this->RegisterPropertyInteger("Resolution_4", 0);
+		$this->RegisterPropertyInteger("Amplifier_0", 0);
 		$this->RegisterPropertyInteger("Amplifier_1", 0);
 		$this->RegisterPropertyInteger("Amplifier_2", 0);
 		$this->RegisterPropertyInteger("Amplifier_3", 0);
-		$this->RegisterPropertyInteger("Amplifier_4", 0);
+		
             	$this->RegisterTimer("Messzyklus", 0, 'I2GAD2_Measurement($_IPS["TARGET"]);');
         }
  	
@@ -65,10 +66,10 @@
 		$arrayOptions[] = array("label" => "14 Bit", "value" => 1);
 		$arrayOptions[] = array("label" => "16 Bit", "value" => 2);
 		$arrayOptions[] = array("label" => "18 Bit", "value" => 3);
-		$arrayElements[] = array("type" => "Select", "name" => "Resolution_1", "caption" => "Auflösung Kanal 1", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Select", "name" => "Resolution_2", "caption" => "Auflösung Kanal 2", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Select", "name" => "Resolution_3", "caption" => "Auflösung Kanal 3", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Select", "name" => "Resolution_4", "caption" => "Auflösung Kanal 4", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Select", "name" => "Resolution_0", "caption" => "Auflösung Kanal 1", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Select", "name" => "Resolution_1", "caption" => "Auflösung Kanal 2", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Select", "name" => "Resolution_2", "caption" => "Auflösung Kanal 3", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Select", "name" => "Resolution_3", "caption" => "Auflösung Kanal 4", "options" => $arrayOptions );
 		
 		$arrayElements[] = array("type" => "Label", "label" => "Verstärkung der Kanäle wählen (Default 1x)"); 
 		$arrayOptions = array();
@@ -76,10 +77,10 @@
 		$arrayOptions[] = array("label" => "2x", "value" => 1);
 		$arrayOptions[] = array("label" => "4x", "value" => 2);
 		$arrayOptions[] = array("label" => "8x", "value" => 3);
-		$arrayElements[] = array("type" => "Select", "name" => "Amplifier_1", "caption" => "Verstärkung Kanal 1", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Select", "name" => "Amplifier_2", "caption" => "Verstärkung Kanal 2", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Select", "name" => "Amplifier_3", "caption" => "Verstärkung Kanal 3", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Select", "name" => "Amplifier_4", "caption" => "Verstärkung Kanal 4", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Select", "name" => "Amplifier_0", "caption" => "Verstärkung Kanal 1", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Select", "name" => "Amplifier_1", "caption" => "Verstärkung Kanal 2", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Select", "name" => "Amplifier_2", "caption" => "Verstärkung Kanal 3", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Select", "name" => "Amplifier_3", "caption" => "Verstärkung Kanal 4", "options" => $arrayOptions );
 		
 		$arrayActions = array();
 		$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
@@ -132,7 +133,7 @@
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 				$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
 				// Setup
-				
+				$this->Setup();
 				// Erste Messdaten einlesen
 				
 				$this->SetStatus(102);
@@ -194,7 +195,12 @@
 	
 	private function Setup()
 	{
-		
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			for ($i = 0; $i <= 3; $i++) {
+				$Configuration = ($i << 5) | (1 << 4) | ($this->ReadPropertyInteger("Resolution_".$i) << 2) | $this->ReadPropertyInteger("Amplifier_".$i);
+				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte_onhandle", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $Configuration)));
+			}
+		} 
 	}
 }
 ?>
