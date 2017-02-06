@@ -12,14 +12,14 @@
  	    	$this->RegisterPropertyInteger("DeviceAddress", 104);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
-		$this->RegisterPropertyInteger("Resolution_1", 12);
-		$this->RegisterPropertyInteger("Resolution_2", 12);
-		$this->RegisterPropertyInteger("Resolution_3", 12);
-		$this->RegisterPropertyInteger("Resolution_4", 12);
-		$this->RegisterPropertyInteger("Amplifier_1", 1);
-		$this->RegisterPropertyInteger("Amplifier_2", 1);
-		$this->RegisterPropertyInteger("Amplifier_3", 1);
-		$this->RegisterPropertyInteger("Amplifier_4", 1);
+		$this->RegisterPropertyInteger("Resolution_1", 0);
+		$this->RegisterPropertyInteger("Resolution_2", 0);
+		$this->RegisterPropertyInteger("Resolution_3", 0);
+		$this->RegisterPropertyInteger("Resolution_4", 0);
+		$this->RegisterPropertyInteger("Amplifier_1", 0);
+		$this->RegisterPropertyInteger("Amplifier_2", 0);
+		$this->RegisterPropertyInteger("Amplifier_3", 0);
+		$this->RegisterPropertyInteger("Amplifier_4", 0);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GAD2_Measurement($_IPS["TARGET"]);');
         }
  	
@@ -61,10 +61,10 @@
 		
 		$arrayElements[] = array("type" => "Label", "label" => "Auflösung der Kanäle wählen (Default 12 Bit)"); 
 		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "12 Bit", "value" => 12);
-		$arrayOptions[] = array("label" => "14 Bit", "value" => 14);
-		$arrayOptions[] = array("label" => "16 Bit", "value" => 16);
-		$arrayOptions[] = array("label" => "18 Bit", "value" => 18);
+		$arrayOptions[] = array("label" => "12 Bit", "value" => 0);
+		$arrayOptions[] = array("label" => "14 Bit", "value" => 1);
+		$arrayOptions[] = array("label" => "16 Bit", "value" => 2);
+		$arrayOptions[] = array("label" => "18 Bit", "value" => 3);
 		$arrayElements[] = array("type" => "Select", "name" => "Resolution_1", "caption" => "Auflösung Kanal 1", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Select", "name" => "Resolution_2", "caption" => "Auflösung Kanal 2", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Select", "name" => "Resolution_3", "caption" => "Auflösung Kanal 3", "options" => $arrayOptions );
@@ -72,10 +72,10 @@
 		
 		$arrayElements[] = array("type" => "Label", "label" => "Verstärkung der Kanäle wählen (Default 1x)"); 
 		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "1x", "value" => 1);
-		$arrayOptions[] = array("label" => "2x", "value" => 2);
-		$arrayOptions[] = array("label" => "4x", "value" => 4);
-		$arrayOptions[] = array("label" => "8x", "value" => 8);
+		$arrayOptions[] = array("label" => "1x", "value" => 0);
+		$arrayOptions[] = array("label" => "2x", "value" => 1);
+		$arrayOptions[] = array("label" => "4x", "value" => 2);
+		$arrayOptions[] = array("label" => "8x", "value" => 3);
 		$arrayElements[] = array("type" => "Select", "name" => "Amplifier_1", "caption" => "Verstärkung Kanal 1", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Select", "name" => "Amplifier_2", "caption" => "Verstärkung Kanal 2", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Select", "name" => "Amplifier_3", "caption" => "Verstärkung Kanal 3", "options" => $arrayOptions );
