@@ -182,6 +182,11 @@
 			  		
 			  	}
 			  	break;
+			case "set_i2c_byte_block":
+			   	If ($data->DeviceIdent == $this->GetBuffer("DeviceIdent")) {
+			   		$this->SetBuffer("MeasurementData", $data->ByteArray);
+			   	}
+			   	break;
 	 	}
  	}
 	// Beginn der Funktionen
@@ -190,6 +195,12 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Messwerterfassung setzen
+			If ($this->ReadPropertyInteger("Resolution_".$i) <= 2) { 
+				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_block_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 13, "Count" => 3)));
+			}
+			elseif ($this->ReadPropertyInteger("Resolution_".$i) == 3) {
+				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_block_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 13, "Count" => 4)));
+			}
 		}
 	}	
 	
