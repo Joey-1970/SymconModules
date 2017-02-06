@@ -758,7 +758,7 @@ class IPS2GPIO_IO extends IPSModule
  					SetValueString($this->GetIDForIdent("I2C_Handle"), serialize($I2C_DeviceHandle));
            			}
            			else {
-           				IPS_LogMessage("IPS2GPIO I2C Handle","Fehler: ".$this->GetErrorText(abs($response[4]))." Handle für Device ".$response[3]." nicht vergeben!");
+           				IPS_LogMessage("IPS2GPIO I2C Handle","Fehlermeldung: ".$this->GetErrorText(abs($response[4]))." Handle für Device ".$response[3]." nicht vergeben!");
            			}
            			
 		        	break;
@@ -779,7 +779,7 @@ class IPS2GPIO_IO extends IPSModule
 					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_byte_block", "DeviceIdent" => $this->GetI2C_HandleDevice($response[2]), "Register" => $response[3], "Count" => $response[4], "ByteArray" => $ByteArray)));
 				}
 		            	else {
-           				IPS_LogMessage("IPS2GPIO I2C Read Bytes","Handle: ".$response[2]." Value: ".$this->GetErrorText(abs($response[4])));
+           				IPS_LogMessage("IPS2GPIO I2C Read Bytes","Handle: ".$response[2]." Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
            			}
 				break; 
 			case "59":
@@ -788,7 +788,7 @@ class IPS2GPIO_IO extends IPSModule
 		            		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "DeviceIdent" => $this->GetI2C_HandleDevice($response[2]), "Value" => $response[4])));
            			}
            			else {
-           				IPS_LogMessage("IPS2GPIO I2C Read Byte Handle","Handle: ".$response[2]." Value: ".$this->GetErrorText(abs($response[4])));
+           				IPS_LogMessage("IPS2GPIO I2C Read Byte Handle","Handle: ".$response[2]." Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
            			}
 		            	break;
 		        case "60":
@@ -797,7 +797,7 @@ class IPS2GPIO_IO extends IPSModule
 		            		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "DeviceIdent" => $this->GetI2C_HandleDevice($response[2]), "Register" => $response[3], "Value" => $response[4])));
            			}
            			else {
-           				IPS_LogMessage("IPS2GPIO I2C Write Byte Handle","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$this->GetErrorText(abs($response[4])));
+           				IPS_LogMessage("IPS2GPIO I2C Write Byte Handle","Handle: ".$response[2]." Value: ".$response[3]." Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
            			}
 		            	break;
 		        case "61":
@@ -806,7 +806,7 @@ class IPS2GPIO_IO extends IPSModule
 		            		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "DeviceIdent" => $this->GetI2C_HandleDevice($response[2]), "Register" => $response[3], "Value" => $response[4])));
 		            	}
 		            	else {
-		            		IPS_LogMessage("IPS2GPIO I2C Read Byte","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$this->GetErrorText(abs($response[4])));	
+		            		IPS_LogMessage("IPS2GPIO I2C Read Byte","Handle: ".$response[2]." Register: ".$response[3]." Fehlermeldung: ".$this->GetErrorText(abs($response[4])));	
 		            	}
 		            	break;
 		        case "62":
@@ -815,7 +815,7 @@ class IPS2GPIO_IO extends IPSModule
 		            		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "DeviceIdent" => $this->GetI2C_HandleDevice($response[2]), "Register" => $response[3], "Value" => $response[4])));
            			}
            			else {
-           				IPS_LogMessage("IPS2GPIO I2C Write Byte","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$this->GetErrorText(abs($response[4])));
+           				IPS_LogMessage("IPS2GPIO I2C Write Byte","Handle: ".$response[2]." Register: ".$response[3]." Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
            			}
 		            	break;
 		        case "63":
@@ -824,7 +824,7 @@ class IPS2GPIO_IO extends IPSModule
 		            		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "DeviceIdent" => $this->GetI2C_HandleDevice($response[2]), "Register" => $response[3], "Value" => $response[4])));
 		            	}
 		            	else {
-		            		IPS_LogMessage("IPS2GPIO I2C Read Word","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$this->GetErrorText(abs($response[4])));
+		            		IPS_LogMessage("IPS2GPIO I2C Read Word","Handle: ".$response[2]." Register: ".$response[3]." Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
 		            	}
 		            	break;
 		        case "67":
@@ -836,7 +836,7 @@ class IPS2GPIO_IO extends IPSModule
 					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_byte_block", "DeviceIdent" => $this->GetI2C_HandleDevice($response[2]), "Register" => $response[3], "Count" => $response[4], "ByteArray" => $ByteArray)));
 				}
 				else {
-		            		IPS_LogMessage("IPS2GPIO I2C Read Block Byte","Handle: ".$response[2]." Register: ".$response[3]." Value: ".$this->GetErrorText(abs($response[4])));
+		            		IPS_LogMessage("IPS2GPIO I2C Read Block Byte","Handle: ".$response[2]." Register: ".$response[3]." Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
 		            	}
 				break;
 		        case "76":
@@ -894,7 +894,7 @@ class IPS2GPIO_IO extends IPSModule
            				//IPS_LogMessage("IPS2GPIO GlitchFilter","gesetzt");
            			}
            			else {
-           				IPS_LogMessage("IPS2GPIO GlitchFilter","Fehler beim Setzen: ".$this->GetErrorText(abs($response[4])));
+           				IPS_LogMessage("IPS2GPIO GlitchFilter","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
            			}
          
 		            	break;
@@ -923,7 +923,7 @@ class IPS2GPIO_IO extends IPSModule
            				IPS_LogMessage("IPS2GPIO Trigger Event","gemeldet");
            			}
            			else {
-           				IPS_LogMessage("IPS2GPIO Trigger Event","Fehler: ".$this->GetErrorText(abs($response[4])));
+           				IPS_LogMessage("IPS2GPIO Trigger Event","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
            			}
          
 		            	break;
