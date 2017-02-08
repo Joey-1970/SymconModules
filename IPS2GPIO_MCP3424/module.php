@@ -192,10 +192,12 @@
 					case 1:
 						IPS_LogMessage("IPS2GPIO MCP", "Auflösung 14 Bit");
 						$SignBit = ($MeasurementData[1] & 32) >> 5;
+						$Value = (($MeasurementData[1] & 31) << 8) | $MeasurementData[2];
 						break;
 					case 2:	
 						IPS_LogMessage("IPS2GPIO MCP", "Auflösung 16 Bit");
 						$SignBit = ($MeasurementData[1] & 128) >> 7;
+						$Value = (($MeasurementData[1] & 127) << 8) | $MeasurementData[2];
 						break;
 					case 3:
 						IPS_LogMessage("IPS2GPIO MCP", "Auflösung 18 Bit");
