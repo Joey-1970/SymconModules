@@ -188,6 +188,7 @@
 					case 0:	
 						IPS_LogMessage("IPS2GPIO MCP", "Auflösung 12 Bit");
 						$SignBit = ($MeasurementData[1] & 8) >> 3;
+						$Value = (($MeasurementData[1] & 7) << 8) | $MeasurementData[2];
 						break;
 					case 1:
 						IPS_LogMessage("IPS2GPIO MCP", "Auflösung 14 Bit");
@@ -208,6 +209,11 @@
 				for ($i = 1; $i <= count($MeasurementData); $i++) {
 					IPS_LogMessage("IPS2GPIO MCP", "Daten ".$i.": ".$MeasurementData[$i]);
 				}
+ 				If ($SignBit == true) {
+					$Value = $Value * -1;
+				}
+				SetValueFloat($this->GetIDForIdent("Channel_".$Channel), $Value);
+				
 			   	break;
 	 	}
  	}
