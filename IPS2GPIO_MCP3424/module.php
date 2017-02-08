@@ -119,6 +119,9 @@
           	$this->DisableAction("Channel_4");
 		IPS_SetHidden($this->GetIDForIdent("Channel_4"), false);
 		
+		$MeasurementData = array();
+		$this->SetBuffer("MeasurementData", serialize($MeasurementData));
+		
 		If (IPS_GetKernelRunlevel() == 10103) {
 			// Logging setzen
 						
@@ -177,11 +180,32 @@
 			   	}
 				// Test
 				$MeasurementData = unserialize($this->GetBuffer("MeasurementData"));
-				//If ($this->ReadPropertyInteger("Resolution_".$i) <= 2) { 
 				IPS_LogMessage("IPS2GPIO MCP", "Anzahl Daten: ".count($MeasurementData));
-				IPS_LogMessage("IPS2GPIO MCP", "Daten 1: ".$MeasurementData[1]);
-				IPS_LogMessage("IPS2GPIO MCP", "Daten 2: ".$MeasurementData[2]);
-				IPS_LogMessage("IPS2GPIO MCP", "Daten 3: ".$MeasurementData[3]);
+				$Configuration = $MeasurementData[count($MeasurementData)];
+				$Channel = ($Configuration & 96) >> 5;
+				IPS_LogMessage("IPS2GPIO MCP", "Channel: ".$Channel);
+				switch ($this->ReadPropertyInteger("Resolution_".$Channel)) {
+					case 0:	
+						IPS_LogMessage("IPS2GPIO MCP", "Auflösung 12 Bit");
+						$SignBit = ($MeasurementData[1] & 8) >> 3;
+						break;
+					case 1:
+						IPS_LogMessage("IPS2GPIO MCP", "Auflösung 14 Bit");
+						$SignBit = ($MeasurementData[1] & 32) >> 5;
+						break;
+					case 2:	
+						IPS_LogMessage("IPS2GPIO MCP", "Auflösung 16 Bit");
+						$SignBit = ($MeasurementData[1] & 128) >> 7;
+						break;
+					case 3:
+						IPS_LogMessage("IPS2GPIO MCP", "Auflösung 18 Bit");
+						$SignBit = ($MeasurementData[1] & 2) >> 1;
+						$Value = (($MeasurementData[1] & 1) << 16) | ($MeasurementData[2] << 8) | $MeasurementData[3];  
+						break;	
+				}	
+				for ($i = 1; $i <= count($MeasurementData); $i++) {
+					IPS_LogMessage("IPS2GPIO MCP", "Daten ".$i.": ".$MeasurementData[$i]);
+				}
 			   	break;
 	 	}
  	}
@@ -190,8 +214,6 @@
 	public function Measurement()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$MeasurementData = array();
-			$this->SetBuffer("MeasurementData", serialize($MeasurementData));
 			// Messwerterfassung setzen
 			for ($i = 0; $i <= 3; $i++) {
 				If ($this->ReadPropertyInteger("Resolution_".$i) <= 2) { 
