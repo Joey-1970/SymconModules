@@ -135,8 +135,6 @@
 			If ($this->ReadPropertyBoolean("Open") == true) {
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 				$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
-				// Setup
-				$this->Setup();
 				// Erste Messdaten einlesen
 				$this->Measurement();
 				$this->SetStatus(102);
@@ -180,38 +178,38 @@
 			   	}
 				// Test
 				$MeasurementData = unserialize($this->GetBuffer("MeasurementData"));
-				IPS_LogMessage("IPS2GPIO MCP", "Anzahl Daten: ".count($MeasurementData));
+				//IPS_LogMessage("IPS2GPIO MCP", "Anzahl Daten: ".count($MeasurementData));
 				$Configuration = $MeasurementData[count($MeasurementData)];
 				$Channel = ($Configuration & 96) >> 5;
-				IPS_LogMessage("IPS2GPIO MCP", "Channel: ".$Channel);
+				//IPS_LogMessage("IPS2GPIO MCP", "Channel: ".$Channel);
 				switch ($this->ReadPropertyInteger("Resolution_".$Channel)) {
 					case 0:	
-						IPS_LogMessage("IPS2GPIO MCP", "Auflösung 12 Bit");
+						//IPS_LogMessage("IPS2GPIO MCP", "Auflösung 12 Bit");
 						$SignBit = ($MeasurementData[1] & 8) >> 3;
 						$Value = (($MeasurementData[1] & 7) << 8) | $MeasurementData[2];
 						$Value = $Value * 0.001 / ($this->ReadPropertyInteger("Amplifier_".$Channel) + 1);
 						break;
 					case 1:
-						IPS_LogMessage("IPS2GPIO MCP", "Auflösung 14 Bit");
+						//IPS_LogMessage("IPS2GPIO MCP", "Auflösung 14 Bit");
 						$SignBit = ($MeasurementData[1] & 32) >> 5;
 						$Value = (($MeasurementData[1] & 31) << 8) | $MeasurementData[2];
 						$Value = $Value * 0.00025 / ($this->ReadPropertyInteger("Amplifier_".$Channel) + 1);
 						break;
 					case 2:	
-						IPS_LogMessage("IPS2GPIO MCP", "Auflösung 16 Bit");
+						//IPS_LogMessage("IPS2GPIO MCP", "Auflösung 16 Bit");
 						$SignBit = ($MeasurementData[1] & 128) >> 7;
 						$Value = (($MeasurementData[1] & 127) << 8) | $MeasurementData[2];
 						$Value = $Value * (6.25 * pow(10,-5)) / ($this->ReadPropertyInteger("Amplifier_".$Channel) + 1);
 						break;
 					case 3:
-						IPS_LogMessage("IPS2GPIO MCP", "Auflösung 18 Bit");
+						//IPS_LogMessage("IPS2GPIO MCP", "Auflösung 18 Bit");
 						$SignBit = ($MeasurementData[1] & 2) >> 1;
 						$Value = (($MeasurementData[1] & 1) << 16) | ($MeasurementData[2] << 8) | $MeasurementData[3];  
 						$Value = $Value * (1.5625 * pow(10,-5)) / ($this->ReadPropertyInteger("Amplifier_".$Channel) + 1);
 						break;	
 				}	
 				for ($i = 1; $i <= count($MeasurementData); $i++) {
-					IPS_LogMessage("IPS2GPIO MCP", "Daten ".$i.": ".$MeasurementData[$i]);
+					//IPS_LogMessage("IPS2GPIO MCP", "Daten ".$i.": ".$MeasurementData[$i]);
 				}
  				If ($SignBit == true) {
 					$Value = $Value * -1;
@@ -240,15 +238,6 @@
 			}
 		}
 	}	
-	
-	private function Setup()
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			for ($i = 0; $i <= 3; $i++) {
-				$Configuration = 128 | ($i << 5) | (1 << 4) | ($this->ReadPropertyInteger("Resolution_".$i) << 2) | $this->ReadPropertyInteger("Amplifier_".$i);
-				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte_onhandle", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $Configuration)));
-			}
-		} 
-	}
+
 }
 ?>
