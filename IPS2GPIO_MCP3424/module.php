@@ -216,7 +216,7 @@
  				If ($SignBit == true) {
 					$Value = $Value * -1;
 				}
-				SetValueFloat($this->GetIDForIdent("Channel_".$Channel), $Value);
+				SetValueFloat($this->GetIDForIdent("Channel_".$Channel + 1), $Value);
 				
 			   	break;
 	 	}
