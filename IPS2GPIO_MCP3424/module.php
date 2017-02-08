@@ -177,6 +177,7 @@
 			   	}
 				// Test
 				$MeasurementData = unserialize($this->GetBuffer("MeasurementData"));
+				//If ($this->ReadPropertyInteger("Resolution_".$i) <= 2) { 
 				IPS_LogMessage("IPS2GPIO MCP", "Anzahl Daten: ".count($MeasurementData));
 				IPS_LogMessage("IPS2GPIO MCP", "Daten 1: ".$MeasurementData[1]);
 				IPS_LogMessage("IPS2GPIO MCP", "Daten 2: ".$MeasurementData[2]);
@@ -194,11 +195,9 @@
 			// Messwerterfassung setzen
 			for ($i = 0; $i <= 3; $i++) {
 				If ($this->ReadPropertyInteger("Resolution_".$i) <= 2) { 
-					//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_block_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $this->ReadPropertyInteger("DeviceAddress"), "Count" => 3)));
 					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_bytes", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $this->ReadPropertyInteger("DeviceAddress"), "Count" => 3)));
 				}
 				elseif ($this->ReadPropertyInteger("Resolution_".$i) == 3) {
-					//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_block_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $this->ReadPropertyInteger("DeviceAddress"), "Count" => 4)));
 					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_bytes", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $this->ReadPropertyInteger("DeviceAddress"), "Count" => 4)));
 				}
 			}
@@ -210,10 +209,7 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			for ($i = 0; $i <= 3; $i++) {
 				$Configuration = 128 | ($i << 5) | (1 << 4) | ($this->ReadPropertyInteger("Resolution_".$i) << 2) | $this->ReadPropertyInteger("Amplifier_".$i);
-				//IPS_LogMessage("IPS2GPIO MCP", "Setup Methode 1");
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte_onhandle", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $Configuration)));
-				//IPS_LogMessage("IPS2GPIO MCP", "Setup Methode 2");
-				//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $this->ReadPropertyInteger("DeviceAddress"), "Value" => $Configuration)));
 			}
 		} 
 	}
