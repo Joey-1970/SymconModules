@@ -208,8 +208,8 @@
 						$Value = $Value * (1.5625 * pow(10,-5)) / ($this->ReadPropertyInteger("Amplifier_".$Channel) + 1);
 						break;	
 				}	
-				for ($i = 1; $i <= count($MeasurementData); $i++) {
-					//IPS_LogMessage("IPS2GPIO MCP", "Daten ".$i.": ".$MeasurementData[$i]);
+				for ($i = 0; $i <= count($MeasurementData); $i++) {
+					IPS_LogMessage("IPS2GPIO MCP", "Daten ".$i.": ".$MeasurementData[$i]);
 				}
  				If ($SignBit == true) {
 					$Value = -$Value;
