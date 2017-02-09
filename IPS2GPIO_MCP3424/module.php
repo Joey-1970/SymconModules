@@ -212,7 +212,7 @@
 					//IPS_LogMessage("IPS2GPIO MCP", "Daten ".$i.": ".$MeasurementData[$i]);
 				}
  				If ($SignBit == true) {
-					$Value = $Value * -1;
+					$Value = -$Value;
 				}
 				SetValueFloat($this->GetIDForIdent("Channel_".($Channel + 1)), $Value);
 				
