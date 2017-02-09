@@ -209,7 +209,7 @@
 						break;	
 				}	
 				for ($i = 0; $i <= count($MeasurementData); $i++) {
-					IPS_LogMessage("IPS2GPIO MCP", "Daten ".$i.": ".$MeasurementData[$i]);
+					IPS_LogMessage("IPS2GPIO MCP", "Kanal: ".$Channel." Daten ".$i.": ".$MeasurementData[$i]);
 				}
  				If ($SignBit == true) {
 					$Value = -$Value;
