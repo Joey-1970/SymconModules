@@ -189,6 +189,7 @@
 				IPS_LogMessage("IPS2GPIO MCP", "Anzahl Daten: ".count($MeasurementData)." Verst: ".$Amplifier." Aufl:: ".$Resolution." RDY:".$ReadyBit);
 				If ($ReadyBit == false) {
 					//IPS_LogMessage("IPS2GPIO MCP", "Channel: ".$Channel);
+					IPS_LogMessage("IPS2GPIO MCP", "ReadCounter: ".$this->GetBuffer("ReadCounter"));
 					switch ($Resolution) {
 						case 0:	
 							//IPS_LogMessage("IPS2GPIO MCP", "Auflösung 12 Bit");
