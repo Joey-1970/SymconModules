@@ -261,7 +261,7 @@
 	private function ReadValue($Resolution)
 	{
 		$this->SetBuffer("ReadCounter", $this->GetBuffer("ReadCounter") + 1);
-		IPS_LogMessage("IPS2GPIO MCP", "ReadCounter: ".$this->GetBuffer("ReadCounter"));
+		IPS_LogMessage("IPS2GPIO MCP", "ReadCounter: ".$this->GetBuffer("ReadCounter")." Aufl: ".$Resolution);
 		If ($Resolution <= 2) { 
 			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_bytes", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $this->ReadPropertyInteger("DeviceAddress"), "Count" => 4)));
 		}
