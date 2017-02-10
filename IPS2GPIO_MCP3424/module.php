@@ -224,6 +224,7 @@
 					SetValueFloat($this->GetIDForIdent("Channel_".($Channel + 1)), $Value);
 				}
 				else {
+					IPS_LogMessage("IPS2GPIO MCP", "Kanal: ".$Channel." Daten: ".$MeasurementData[count($MeasurementData)]);
 					IPS_Sleep(100);
 					$this->ReadValue($Resolution);
 				}
