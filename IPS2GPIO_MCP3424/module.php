@@ -186,7 +186,7 @@
 				$Resolution = ($Configuration & 12) >> 2;
 				$Channel = ($Configuration & 96) >> 5;
 				$ReadyBit = ($Configuration & 128) >> 7;
-				
+				IPS_LogMessage("IPS2GPIO MCP", "Anzahl Daten: ".count($MeasurementData)." Verst: ".$Amplifier." Aufl:: ".$Resolution." RDY:".$ReadyBit);
 				If ($ReadyBit == false) {
 					//IPS_LogMessage("IPS2GPIO MCP", "Channel: ".$Channel);
 					switch ($Resolution) {
