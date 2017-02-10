@@ -226,9 +226,9 @@
 				}
 				else {
 					If ($this->GetBuffer("ReadCounter") <= 5) {
-						IPS_LogMessage("IPS2GPIO MCP", "Kanal: ".$Channel." Daten: ".$MeasurementData[count($MeasurementData)]);
-						IPS_Sleep(150);
-						$this->ReadValue($Resolution);
+						//IPS_LogMessage("IPS2GPIO MCP", "Kanal: ".$Channel." Daten: ".$MeasurementData[count($MeasurementData)]);
+						//IPS_Sleep(150);
+						//$this->ReadValue($Resolution);
 					}
 					else {
 						$this->SetBuffer("ReadCounter", 0);
@@ -245,7 +245,7 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Messwerterfassung setzen
 			$i = 0;
-			//for ($i = 0; $i <= 3; $i++) {
+			for ($i = 0; $i <= 3; $i++) {
 				$Configuration = ($i << 5) | (1 << 4) | ($this->ReadPropertyInteger("Resolution_".$i) << 2) | $this->ReadPropertyInteger("Amplifier_".$i);
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte_onhandle", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $Configuration)));
 				IPS_Sleep(300);
@@ -256,8 +256,29 @@
 				elseif ($this->ReadPropertyInteger("Resolution_".$i) == 3) {
 					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_bytes", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $this->ReadPropertyInteger("DeviceAddress"), "Count" => 5)));
 				}
-				IPS_Sleep(1500);
-			//}
+				IPS_Sleep(150);
+				If ($this->ReadPropertyInteger("Resolution_".$i) <= 2) { 
+					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_bytes", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $this->ReadPropertyInteger("DeviceAddress"), "Count" => 4)));
+				}
+				elseif ($this->ReadPropertyInteger("Resolution_".$i) == 3) {
+					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_bytes", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $this->ReadPropertyInteger("DeviceAddress"), "Count" => 5)));
+				}
+				IPS_Sleep(150);
+				If ($this->ReadPropertyInteger("Resolution_".$i) <= 2) { 
+					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_bytes", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $this->ReadPropertyInteger("DeviceAddress"), "Count" => 4)));
+				}
+				elseif ($this->ReadPropertyInteger("Resolution_".$i) == 3) {
+					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_bytes", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $this->ReadPropertyInteger("DeviceAddress"), "Count" => 5)));
+				}
+				IPS_Sleep(150);
+				If ($this->ReadPropertyInteger("Resolution_".$i) <= 2) { 
+					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_bytes", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $this->ReadPropertyInteger("DeviceAddress"), "Count" => 4)));
+				}
+				elseif ($this->ReadPropertyInteger("Resolution_".$i) == 3) {
+					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_bytes", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $this->ReadPropertyInteger("DeviceAddress"), "Count" => 5)));
+				}
+				IPS_Sleep(150);
+			}
 		}
 	}
 	    
