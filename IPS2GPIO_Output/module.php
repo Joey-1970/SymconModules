@@ -73,6 +73,9 @@
 			If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
 									  "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+				If ($this->ReadPropertyBoolean("Startoption") == true) {
+					$this->Set_Status(true);
+				}
 				$this->SetStatus(102);
 			}
 			else {
