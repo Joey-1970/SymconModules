@@ -194,14 +194,14 @@
 						case 0:	
 							//IPS_LogMessage("IPS2GPIO MCP", "Auflösung 12 Bit");
 							$SignBit = ($MeasurementData[1] & 8) >> 3;
-							If ($SignBit == 1) {
-								$Value = ~$Value;
+							If ($SignBit == 0) {
+								$Value = (($MeasurementData[1] & 7) << 8) | $MeasurementData[2];
+								$Value = $Value * 0.001;
 							}
-							$Value = (($MeasurementData[1] & 7) << 8) | $MeasurementData[2];
-							//IPS_LogMessage("IPS2GPIO MCP", "SignBit: ".$SignBit);
-							$Value = $Value * 0.001;
-							
-							//IPS_LogMessage("IPS2GPIO MCP", "Value: ".$Value);
+							else {
+								$Value = (($MeasurementData[1] & 15) << 8) | $MeasurementData[2];
+								$Value = ~$Value * 0.001;
+							}
 							break;
 						case 1:
 							//IPS_LogMessage("IPS2GPIO MCP", "Auflösung 14 Bit");
