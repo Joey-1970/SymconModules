@@ -216,9 +216,7 @@
 							$Value = $Value * (1.5625 * pow(10,-5)) / pow(2, $Amplifier);
 							break;	
 					}	
-					for ($i = 1; $i <= count($MeasurementData); $i++) {
-						IPS_LogMessage("IPS2GPIO MCP", "Kanal: ".$Channel." Daten ".$i.": ".$MeasurementData[$i]);
-					}
+					
 					If ($SignBit == true) {
 						$Value = -$Value;
 					}
@@ -234,7 +232,9 @@
 						$this->SetBuffer("ReadCounter", 0);
 					}
 				}
-				
+				for ($i = 1; $i <= count($MeasurementData); $i++) {
+					IPS_LogMessage("IPS2GPIO MCP", "Kanal: ".$Channel." Daten ".$i.": ".$MeasurementData[$i]);
+				}
 			   	break;
 	 	}
  	}
