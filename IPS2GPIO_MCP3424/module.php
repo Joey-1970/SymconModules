@@ -101,21 +101,22 @@
 	    		IPS_LogMessage("IPS2GPIO MCP3424","I2C-Device Adresse in einem nicht definierten Bereich!");  
 	    	}
 	    	// Profil anlegen
-	    	
+	    	$this->RegisterProfileFloat("mVolt.mV", "Electricity", "", " mV", -100000, +100000, 0.1, 3);
+		
 		//Status-Variablen anlegen
-		$this->RegisterVariableFloat("Channel_1", "Kanal 1", "~Volt", 10);
+		$this->RegisterVariableFloat("Channel_1", "Kanal 1", "~mVolt.mV", 10);
           	$this->DisableAction("Channel_1");
 		IPS_SetHidden($this->GetIDForIdent("Channel_1"), false);
 		
-		$this->RegisterVariableFloat("Channel_2", "Kanal 2", "~Volt", 20);
+		$this->RegisterVariableFloat("Channel_2", "Kanal 2", "~mVolt.mV", 20);
           	$this->DisableAction("Channel_2");
 		IPS_SetHidden($this->GetIDForIdent("Channel_2"), false);
 		
-		$this->RegisterVariableFloat("Channel_3", "Kanal 3", "~Volt", 30);
+		$this->RegisterVariableFloat("Channel_3", "Kanal 3", "~mVolt.mV", 30);
           	$this->DisableAction("Channel_3");
 		IPS_SetHidden($this->GetIDForIdent("Channel_3"), false);
 		
-		$this->RegisterVariableFloat("Channel_4", "Kanal 4", "~Volt", 40);
+		$this->RegisterVariableFloat("Channel_4", "Kanal 4", "~mVolt.mV", 40);
           	$this->DisableAction("Channel_4");
 		IPS_SetHidden($this->GetIDForIdent("Channel_4"), false);
 		
@@ -186,10 +187,9 @@
 				$Resolution = ($Configuration & 12) >> 2;
 				$Channel = ($Configuration & 96) >> 5;
 				$ReadyBit = ($Configuration & 128) >> 7;
-				IPS_LogMessage("IPS2GPIO MCP", "Anzahl Daten: ".count($MeasurementData)." Verst: ".$Amplifier." Aufl:: ".$Resolution." RDY:".$ReadyBit);
+				//IPS_LogMessage("IPS2GPIO MCP", "Anzahl Daten: ".count($MeasurementData)." Verst: ".$Amplifier." Aufl:: ".$Resolution." RDY:".$ReadyBit);
 				If ($ReadyBit == false) {
 					//IPS_LogMessage("IPS2GPIO MCP", "Channel: ".$Channel);
-					IPS_LogMessage("IPS2GPIO MCP", "ReadCounter: ".$this->GetBuffer("ReadCounter"));
 					switch ($Resolution) {
 						case 0:	
 							//IPS_LogMessage("IPS2GPIO MCP", "Auflösung 12 Bit");
@@ -201,20 +201,20 @@
 							//IPS_LogMessage("IPS2GPIO MCP", "Auflösung 14 Bit");
 							$SignBit = ($MeasurementData[1] & 32) >> 5;
 							$Value = (($MeasurementData[1] & 31) << 8) | $MeasurementData[2];
-							$Value = $Value * 0.00025 / pow(2, $Amplifier);
+							$Value = $Value * 0.00025;
 							break;
 						case 2:	
 							//IPS_LogMessage("IPS2GPIO MCP", "Auflösung 16 Bit");
 							$SignBit = ($MeasurementData[1] & 128) >> 7;
 							$Value = (($MeasurementData[1] & 127) << 8) | $MeasurementData[2];
-							$Value = $Value * (6.25 * pow(10,-5)) / pow(2, $Amplifier);
+							$Value = $Value * (6.25 * pow(10,-5));
 							break;
 						case 3:
 							//IPS_LogMessage("IPS2GPIO MCP", "Auflösung 18 Bit");
 							$SignBit = ($MeasurementData[1] & 2) >> 1;
 							$Value = (($MeasurementData[1] & 1) << 16) | ($MeasurementData[2] << 8) | $MeasurementData[3];  
 							IPS_LogMessage("IPS2GPIO MCP", "Value: ".$Value);
-							$Value = $Value * (1.5625 * pow(10,-5)) / pow(2, $Amplifier);
+							$Value = $Value * (1.5625 * pow(10,-5));
 							break;	
 					}	
 					
@@ -251,17 +251,23 @@
 			}
 		}
 	}
-	    
-	private function ReadValue($Resolution)
+	        
+	private function RegisterProfileFloat($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits)
 	{
-		$this->SetBuffer("ReadCounter", $this->GetBuffer("ReadCounter") + 1);
-		IPS_LogMessage("IPS2GPIO MCP", "ReadCounter: ".$this->GetBuffer("ReadCounter")." Aufl: ".$Resolution);
-		If ($Resolution <= 2) { 
-			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_bytes", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $this->ReadPropertyInteger("DeviceAddress"), "Count" => 4)));
-		}
-		elseif ($Resolution == 3) {
-			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_bytes", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $this->ReadPropertyInteger("DeviceAddress"), "Count" => 5)));
-		}
+	        if (!IPS_VariableProfileExists($Name))
+	        {
+	            IPS_CreateVariableProfile($Name, 2);
+	        }
+	        else
+	        {
+	            $profile = IPS_GetVariableProfile($Name);
+	            if ($profile['ProfileType'] != 2)
+	                throw new Exception("Variable profile type does not match for profile " . $Name);
+	        }
+	        IPS_SetVariableProfileIcon($Name, $Icon);
+	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
+	        IPS_SetVariableProfileDigits($Name, $Digits);
 	}
 
 }
