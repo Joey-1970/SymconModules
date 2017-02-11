@@ -181,7 +181,7 @@
 				//IPS_LogMessage("IPS2GPIO MCP", "Anzahl Daten: ".count($MeasurementData));
 				
 				// Auslesen des Konfigurations-Registers
-				$Configuration = $MeasurementData[count($MeasurementData)];
+				$Configuration = $MeasurementData[4];
 				$Amplifier = ($Configuration & 3);
 				$Resolution = ($Configuration & 12) >> 2;
 				$Channel = ($Configuration & 96) >> 5;
