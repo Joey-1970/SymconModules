@@ -207,7 +207,7 @@
 								*/
 								$Value = (($MeasurementData[1] & 15) << 8) | $MeasurementData[2];
 								$Value = ~$Value;
-								$Value = $Value + 1; 
+								$Value = $Value - 1; 
 								$Value = $Value * 0.001;
 							}
 							break;
