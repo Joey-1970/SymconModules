@@ -200,6 +200,7 @@
 							}
 							else {
 								$Value = (($MeasurementData[1] & 15) << 8) | $MeasurementData[2];
+								$Value = $Value - 1;
 								$Value = ~$Value * 0.001;
 							}
 							break;
@@ -212,6 +213,7 @@
 							}
 							else {
 								$Value = (($MeasurementData[1] & 63) << 8) | $MeasurementData[2];
+								$Value = $Value - 1;
 								$Value = ~$Value * 0.00025;
 							}
 							break;
@@ -224,6 +226,7 @@
 							}
 							else {
 								$Value = (($MeasurementData[1] & 255) << 8) | $MeasurementData[2];
+								$Value = $Value - 1;
 								$Value = ~$Value * (6.25 * pow(10,-5));
 							}
 							break;
@@ -236,6 +239,7 @@
 							}
 							else {
 								$Value = (($MeasurementData[1] & 2) << 16) | ($MeasurementData[2] << 8) | $MeasurementData[3];
+								$Value = $Value - 1;
 								$Value = ~$Value * (1.5625 * pow(10,-5));
 							}
 							break;	
