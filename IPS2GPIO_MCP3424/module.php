@@ -252,7 +252,7 @@
 							}
 							break;	
 					}	
-					SetValueFloat($this->GetIDForIdent("Channel_".($Channel + 1)), $Value);
+					SetValueFloat($this->GetIDForIdent("Channel_".($Channel + 1)), $Value * 1000);
 				}
 				
 				for ($i = 1; $i <= count($MeasurementData); $i++) {
