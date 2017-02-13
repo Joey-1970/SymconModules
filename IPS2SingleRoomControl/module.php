@@ -383,11 +383,19 @@ class IPS2SingleRoomControl extends IPSModule
 		
 		// HM-Aktor
 		If ($this->ReadPropertyInteger("HM_ActuatorID") > 0) {
-			HM_WriteValueFloat($this->ReadPropertyInteger("HM_ActuatorID"), "SET_TEMPERATURE", GetValueFloat($this->GetIDForIdent("SetpointTemperature")) );
+			If ($WindowStatus == true) {
+				HM_WriteValueFloat($this->ReadPropertyInteger("HM_ActuatorID"), "SET_TEMPERATURE", GetValueFloat($this->GetIDForIdent("SetpointTemperature")) );
+			else {
+				HM_WriteValueFloat($this->ReadPropertyInteger("HM_ActuatorID"), "SET_TEMPERATURE", 5 );
+			}
 		}
 		// FS20-Aktor
 		If ($this->ReadPropertyInteger("FS_ActuatorID") > 0) {
-			FHT_SetTemperature($this->ReadPropertyInteger("FS_ActuatorID") , GetValueFloat($this->GetIDForIdent("SetpointTemperature")) );
+			If ($WindowStatus == true) {
+				FHT_SetTemperature($this->ReadPropertyInteger("FS_ActuatorID") , GetValueFloat($this->GetIDForIdent("SetpointTemperature")) );
+			else {
+				FHT_SetTemperature($this->ReadPropertyInteger("FS_ActuatorID") , 5 );
+			}
 		}
 		
 		$this->SetBuffer("LastTrigger", time());
