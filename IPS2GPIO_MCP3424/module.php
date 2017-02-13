@@ -210,15 +210,10 @@
 							$SignBit = ($MeasurementData[1] & 8) >> 3;
 							$Value = (($MeasurementData[1] & 15) << 8) | $MeasurementData[2];
 							If ($SignBit == 0) {
-								//$Value = (($MeasurementData[1] & 7) << 8) | $MeasurementData[2];
 								$Value = $Value * 0.001;
 							}
 							else {
-								//IPS_LogMessage("IPS2GPIO MCP", "Daten 1: ".$MeasurementData[1]." Daten 2: ".$MeasurementData[2]);
  								$Value = -($this->bitflip($Value)) * 0.001;
-								//$Value = -$Value;
-								//IPS_LogMessage("IPS2GPIO MCP", "Value: ".$Value);
-								//$Value = $Value * 0.001;
 							}
 							break;
 						case 1:
@@ -226,13 +221,10 @@
 							$SignBit = ($MeasurementData[1] & 32) >> 5;
 							$Value = (($MeasurementData[1] & 63) << 8) | $MeasurementData[2];
 							If ($SignBit == 0) {
-								//$Value = (($MeasurementData[1] & 31) << 8) | $MeasurementData[2];
 								$Value = $Value * 0.00025;
 							}
 							else {
 								$Value = -($this->bitflip($Value)) * 0.00025;
-								//$Value = $Value - 1;
-								//$Value = ~$Value * 0.00025;
 							}
 							break;
 						case 2:	
@@ -240,35 +232,26 @@
 							$SignBit = ($MeasurementData[1] & 128) >> 7;
 							$Value = (($MeasurementData[1] & 255) << 8) | $MeasurementData[2];
 							If ($SignBit == 0) {
-								//$Value = (($MeasurementData[1] & 127) << 8) | $MeasurementData[2];
 								$Value = $Value * (6.25 * pow(10,-5));
 							}
 							else {
 								$Value = -($this->bitflip($Value)) * (6.25 * pow(10,-5));
-								//$Value = $Value - 1;
-								//$Value = ~$Value * (6.25 * pow(10,-5));
 							}
 							break;
 						case 3:
 							//IPS_LogMessage("IPS2GPIO MCP", "Auflösung 18 Bit");
 							$SignBit = ($MeasurementData[1] & 2) >> 1;
-							$Value = (($MeasurementData[1] & 2) << 16) | ($MeasurementData[2] << 8) | $MeasurementData[3];
+							$Value = (($MeasurementData[1] & 3) << 16) | ($MeasurementData[2] << 8) | $MeasurementData[3];
 							If ($SignBit == 0) {
-								$Value = (($MeasurementData[1] & 1) << 16) | ($MeasurementData[2] << 8) | $MeasurementData[3];  
+								//$Value = (($MeasurementData[1] & 1) << 16) | ($MeasurementData[2] << 8) | $MeasurementData[3];  
 								$Value = $Value * (1.5625 * pow(10,-5));
 							}
 							else {
 								$Value = -($this->bitflip($Value)) * (1.5625 * pow(10,-5));
-								//$Value = $Value - 1;
-								//$Value = ~$Value * (1.5625 * pow(10,-5));
 							}
 							break;	
 					}	
 					SetValueFloat($this->GetIDForIdent("Channel_".($Channel + 1)), $Value * 1000);
-				}
-				
-				for ($i = 1; $i <= count($MeasurementData); $i++) {
-					//IPS_LogMessage("IPS2GPIO MCP", "Kanal: ".$Channel." Daten ".$i.": ".$MeasurementData[$i]);
 				}
 			   	break;
 	 	}
