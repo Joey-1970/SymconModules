@@ -385,6 +385,7 @@ class IPS2SingleRoomControl extends IPSModule
 		If ($this->ReadPropertyInteger("HM_ActuatorID") > 0) {
 			If ($WindowStatus == true) {
 				HM_WriteValueFloat($this->ReadPropertyInteger("HM_ActuatorID"), "SET_TEMPERATURE", GetValueFloat($this->GetIDForIdent("SetpointTemperature")) );
+			}
 			else {
 				HM_WriteValueFloat($this->ReadPropertyInteger("HM_ActuatorID"), "SET_TEMPERATURE", 5 );
 			}
@@ -393,6 +394,7 @@ class IPS2SingleRoomControl extends IPSModule
 		If ($this->ReadPropertyInteger("FS_ActuatorID") > 0) {
 			If ($WindowStatus == true) {
 				FHT_SetTemperature($this->ReadPropertyInteger("FS_ActuatorID") , GetValueFloat($this->GetIDForIdent("SetpointTemperature")) );
+			}
 			else {
 				FHT_SetTemperature($this->ReadPropertyInteger("FS_ActuatorID") , 5 );
 			}
