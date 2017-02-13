@@ -135,7 +135,10 @@
 		$this->SetBuffer("MeasurementData", serialize($MeasurementData));
 		
 		If (IPS_GetKernelRunlevel() == 10103) {
-			// Logging setzen
+			for ($i = 0; $i <= 3; $i++) {
+				AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Channel_".($i + 1)), $this->ReadPropertyBoolean("Logging_".$i));
+			}
+			IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
 						
 			//ReceiveData-Filter setzen
 			$this->SetBuffer("DeviceIdent", (($this->ReadPropertyInteger("DeviceBus") << 7) + $this->ReadPropertyInteger("DeviceAddress")));
