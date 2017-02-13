@@ -254,7 +254,7 @@
 							$SignBit = ($MeasurementData[1] & 2) >> 1;
 							$Value = (($MeasurementData[1] & 2) << 16) | ($MeasurementData[2] << 8) | $MeasurementData[3];
 							If ($SignBit == 0) {
-								//$Value = (($MeasurementData[1] & 1) << 16) | ($MeasurementData[2] << 8) | $MeasurementData[3];  
+								$Value = (($MeasurementData[1] & 1) << 16) | ($MeasurementData[2] << 8) | $MeasurementData[3];  
 								$Value = $Value * (1.5625 * pow(10,-5));
 							}
 							else {
