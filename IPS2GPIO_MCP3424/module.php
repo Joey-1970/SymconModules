@@ -250,7 +250,8 @@
 							}
 							break;	
 					}	
-					SetValueFloat($this->GetIDForIdent("Channel_".($Channel + 1)), $Value * 1000);
+					//SetValueFloat($this->GetIDForIdent("Channel_".($Channel + 1)), $Value * 1000);
+					SetValueFloat($this->GetIDForIdent("Channel_".($Channel + 1)), $Value * 1000 / pow(2, $Amplifier) );
 				}
 			   	break;
 	 	}
