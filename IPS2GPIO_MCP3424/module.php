@@ -205,11 +205,11 @@
 								2) flips the bits (ie: 0011 becomes 1100)
 								3) add 1 (ie: 1100  + 0001 = 1101)
 								*/
-								IPS_LogMessage("IPS2GPIO MCP", "Daten 1: ".$MeasurementData[1]." Daten 2: ".$MeasurementData[2]);
+								//IPS_LogMessage("IPS2GPIO MCP", "Daten 1: ".$MeasurementData[1]." Daten 2: ".$MeasurementData[2]);
 								$Value = (($MeasurementData[1] & 15) << 8) | $MeasurementData[2];
-								$Value = $Value - 1;
-								$Value = ~$Value;
-								IPS_LogMessage("IPS2GPIO MCP", "Value: ".$Value);
+ 								$Value = bitnot($Value);
+								$Value = -$Value;
+								//IPS_LogMessage("IPS2GPIO MCP", "Value: ".$Value);
 								$Value = $Value * 0.001;
 							}
 							break;
@@ -284,6 +284,21 @@
 		}
 	}
 	        
+	private function bitnot(int $Value)
+	{
+	   	// Umwandlung in einen Binär-String
+		$bin = decbin($Value);
+	   	$not = "";
+	   	// Umstellung der Binär-Strings
+		for ($i = 0; $i < strlen($bin); $i++)
+	   		{
+	      		if($bin[$i] == 0) { $not .= '1'; }
+	      		if($bin[$i] == 1) { $not .= '0'; }
+	   	}
+		// Rückgabe als Integer
+	return bindec($not);
+	}
+	
 	private function RegisterProfileFloat($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits)
 	{
 	        if (!IPS_VariableProfileExists($Name))
