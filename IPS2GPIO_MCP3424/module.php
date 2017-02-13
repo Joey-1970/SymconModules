@@ -215,7 +215,7 @@
 							}
 							else {
 								//IPS_LogMessage("IPS2GPIO MCP", "Daten 1: ".$MeasurementData[1]." Daten 2: ".$MeasurementData[2]);
- 								$Value = -(bitflip($Value)) * 0.001;
+ 								$Value = -($this->bitflip($Value)) * 0.001;
 								//$Value = -$Value;
 								//IPS_LogMessage("IPS2GPIO MCP", "Value: ".$Value);
 								//$Value = $Value * 0.001;
@@ -230,7 +230,7 @@
 								$Value = $Value * 0.00025;
 							}
 							else {
-								$Value = -(bitflip($Value)) * 0.00025;
+								$Value = -($this->bitflip($Value)) * 0.00025;
 								//$Value = $Value - 1;
 								//$Value = ~$Value * 0.00025;
 							}
@@ -244,7 +244,7 @@
 								$Value = $Value * (6.25 * pow(10,-5));
 							}
 							else {
-								$Value = -(bitflip($Value)) * (6.25 * pow(10,-5));
+								$Value = -($this->bitflip($Value)) * (6.25 * pow(10,-5));
 								//$Value = $Value - 1;
 								//$Value = ~$Value * (6.25 * pow(10,-5));
 							}
@@ -258,7 +258,7 @@
 								$Value = $Value * (1.5625 * pow(10,-5));
 							}
 							else {
-								$Value = -(bitflip($Value)) * (1.5625 * pow(10,-5));
+								$Value = -($this->bitflip($Value)) * (1.5625 * pow(10,-5));
 								//$Value = $Value - 1;
 								//$Value = ~$Value * (1.5625 * pow(10,-5));
 							}
