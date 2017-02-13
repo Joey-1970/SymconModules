@@ -208,23 +208,17 @@
 						case 0:	
 							//IPS_LogMessage("IPS2GPIO MCP", "Auflösung 12 Bit");
 							$SignBit = ($MeasurementData[1] & 8) >> 3;
+							$Value = (($MeasurementData[1] & 15) << 8) | $MeasurementData[2];
 							If ($SignBit == 0) {
-								$Value = (($MeasurementData[1] & 7) << 8) | $MeasurementData[2];
+								//$Value = (($MeasurementData[1] & 7) << 8) | $MeasurementData[2];
 								$Value = $Value * 0.001;
 							}
 							else {
-								/*
-								Converting a negative decimal number (ie: -3) into binary takes 3 steps:
-								1) convert the positive version of the decimal number into binary (ie: 3 = 0011)
-								2) flips the bits (ie: 0011 becomes 1100)
-								3) add 1 (ie: 1100  + 0001 = 1101)
-								*/
 								//IPS_LogMessage("IPS2GPIO MCP", "Daten 1: ".$MeasurementData[1]." Daten 2: ".$MeasurementData[2]);
-								$Value = (($MeasurementData[1] & 15) << 8) | $MeasurementData[2];
- 								$Value = bitnot($Value);
-								$Value = -$Value;
+ 								$Value = -(bitnot($Value)) * 0.001;
+								//$Value = -$Value;
 								//IPS_LogMessage("IPS2GPIO MCP", "Value: ".$Value);
-								$Value = $Value * 0.001;
+								//$Value = $Value * 0.001;
 							}
 							break;
 						case 1:
