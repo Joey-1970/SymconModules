@@ -26,6 +26,8 @@ IPS2GPIO - Splittermodul für die folgenden Instanzen
   
   IPS2GPIO_iAQ - iAQ-Qore zur Messung von Luftqualität (CO2-Anteil usw.)
   
+  IPS2GPIO_MCP3424 - MCP3424 (I²C 4-fach AD-Wandler mit bis zu 18-Bit Auflösung und Verstärker)
+  
   IPS2GPIO_Display - Unterstützung des Nextion Displays inkl. Fernupdate
   
   IPS2GPIO_RPi - Überwachung des Raspberry Pi (Temperatur, Auslastung etc.)
