@@ -210,10 +210,10 @@
 							$SignBit = ($MeasurementData[1] & 8) >> 3;
 							$Value = (($MeasurementData[1] & 15) << 8) | $MeasurementData[2];
 							If ($SignBit == 0) {
-								$Value = $Value * 0.001;
+								$Value = $Value;
 							}
 							else {
- 								$Value = -($this->bitflip($Value)) * 0.001;
+ 								$Value = -($this->bitflip($Value));
 							}
 							break;
 						case 1:
@@ -221,10 +221,10 @@
 							$SignBit = ($MeasurementData[1] & 32) >> 5;
 							$Value = (($MeasurementData[1] & 63) << 8) | $MeasurementData[2];
 							If ($SignBit == 0) {
-								$Value = $Value * 0.00025;
+								$Value = $Value * 0.25;
 							}
 							else {
-								$Value = -($this->bitflip($Value)) * 0.00025;
+								$Value = -($this->bitflip($Value)) * 0.25;
 							}
 							break;
 						case 2:	
@@ -232,10 +232,10 @@
 							$SignBit = ($MeasurementData[1] & 128) >> 7;
 							$Value = (($MeasurementData[1] & 255) << 8) | $MeasurementData[2];
 							If ($SignBit == 0) {
-								$Value = $Value * (6.25 * pow(10,-5));
+								$Value = $Value * 0.0625;
 							}
 							else {
-								$Value = -($this->bitflip($Value)) * (6.25 * pow(10,-5));
+								$Value = -($this->bitflip($Value)) * 0.0625;
 							}
 							break;
 						case 3:
@@ -243,15 +243,14 @@
 							$SignBit = ($MeasurementData[1] & 2) >> 1;
 							$Value = (($MeasurementData[1] & 3) << 16) | ($MeasurementData[2] << 8) | $MeasurementData[3];
 							If ($SignBit == 0) {
-								$Value = $Value * (1.5625 * pow(10,-5));
+								$Value = $Value * 0.015625;
 							}
 							else {
-								$Value = -($this->bitflip($Value)) * (1.5625 * pow(10,-5));
+								$Value = -($this->bitflip($Value)) * 0.015625;
 							}
 							break;	
 					}	
-					SetValueFloat($this->GetIDForIdent("Channel_".($Channel + 1)), $Value * 1000);
-					//SetValueFloat($this->GetIDForIdent("Channel_".($Channel + 1)), ($Value * 1000) / (pow(2, $Amplifier)) );
+					SetValueFloat($this->GetIDForIdent("Channel_".($Channel + 1)), $Value);
 				}
 			   	break;
 	 	}
