@@ -104,7 +104,7 @@
 				$ResultArray = unserialize(utf8_decode($data->Result));
 				$this->SetBuffer("Summary", false);
 				for ($i = 0; $i < Count($ResultArray); $i++) {
-					If ($ResultArray[key($ResultArray)] <> "Device is not available.") {
+					If ($ResultArray[key($ResultArray)] <> trim("Device is not available.")) {
 						SetValueString($this->GetIDForIdent("MAC".key($ResultArray)."Name"), $ResultArray[key($ResultArray)]);
 						if (strlen($ResultArray[key($ResultArray)]) > 0) {
 							SetValueBoolean($this->GetIDForIdent("MAC".key($ResultArray)."Connect"), true);
