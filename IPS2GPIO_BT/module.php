@@ -104,15 +104,22 @@
 				$ResultArray = unserialize(utf8_decode($data->Result));
 				$this->SetBuffer("Summary", false);
 				for ($i = 0; $i < Count($ResultArray); $i++) {
-					SetValueString($this->GetIDForIdent("MAC".key($ResultArray)."Name"), $ResultArray[key($ResultArray)]);
-					if (strlen($ResultArray[key($ResultArray)]) > 0) {
-						SetValueBoolean($this->GetIDForIdent("MAC".key($ResultArray)."Connect"), true);
-						$this->SetBuffer("Summary", true);
+					If ($ResultArray[key($ResultArray)] <> "Device is not available.") {
+						SetValueString($this->GetIDForIdent("MAC".key($ResultArray)."Name"), $ResultArray[key($ResultArray)]);
+						if (strlen($ResultArray[key($ResultArray)]) > 0) {
+							SetValueBoolean($this->GetIDForIdent("MAC".key($ResultArray)."Connect"), true);
+							$this->SetBuffer("Summary", true);
+						}
+						else {
+							SetValueBoolean($this->GetIDForIdent("MAC".key($ResultArray)."Connect"), false);
+						}
+						Next($ResultArray);
 					}
 					else {
+						SetValueString($this->GetIDForIdent("MAC".key($ResultArray)."Name"), "");
 						SetValueBoolean($this->GetIDForIdent("MAC".key($ResultArray)."Connect"), false);
 					}
-					Next($ResultArray);
+						
 				}
 				If (GetValueBoolean($this->GetIDForIdent("Summary")) <> $this->GetBuffer("Summary")) {
 					SetValueBoolean($this->GetIDForIdent("Summary"), $this->GetBuffer("Summary"));
