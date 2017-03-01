@@ -13,10 +13,49 @@ class IPS2Redundancy extends IPSModule
             	parent::Create();
 		
 		$this->RegisterPropertyBoolean("Open", false);
-	    	$this->RegisterPropertyInteger("ActualTemperatureID", 0);
-		$this->RegisterPropertyFloat("KP", 0.0);
+		$this->RegisterPropertyBoolean("System", false);
+	    	$this->RegisterPropertyString("IPAddress", "127.0.0.1");
+		$this->RegisterPropertyString("IPS_User_primary", "IPS-Benutzername");
+		$this->RegisterPropertyString("IPS_Password_primary", "IPS-Passwort");
+		$this->RegisterPropertyString("IPS_User_secondary", "IPS-Benutzername");
+		$this->RegisterPropertyString("IPS_Password_secondary", "IPS-Passwort");
 		
 	}
+	
+	public function GetConfigurationForm() 
+	{ 
+		$arrayStatus = array(); 
+		$arrayStatus[] = array("code" => 101, "icon" => "inactive", "caption" => "Instanz wird erstellt"); 
+		$arrayStatus[] = array("code" => 102, "icon" => "active", "caption" => "Instanz ist aktiv");
+		$arrayStatus[] = array("code" => 104, "icon" => "inactive", "caption" => "Instanz ist inaktiv");
+				
+		$arrayElements = array(); 
+		$arrayElements[] = array("name" => "Open", "type" => "CheckBox",  "caption" => "Aktiv");
+		
+		$arrayOptionsSystem = array();
+		$arrayOptionsSystem[] = array("label" => "Primärsystem", "value" => 0);
+		$arrayOptionsSystem[] = array("label" => "Sekundärsystem", "value" => 1);
+		
+		$arrayElements[] = array("type" => "Select", "name" => "System", "caption" => "Systembestimmung", "options" => $arrayOptionsSystem );
+		If ($this->ReadPropertyBoolean("System") == false) {
+			$arrayElements[] = array("type" => "Label", "label" => "Daten des Primärsystems:");
+			$arrayElements[] = array("type" => "Label", "label" => "Daten des IP-Symcon Fernzugriffs:");
+			$arrayElements[] = array("name" => "IPS_User_primary", "type" => "ValidationTextBox",  "caption" => "IP-Symcon Benutzername");
+			$arrayElements[] = array("name" => "IPS_Password_primary", "type" => "PasswordTextBox",  "caption" => "IP-Symcon Password");
+			$arrayElements[] = array("type" => "Label", "label" => "Daten des Sekundärsystems:");
+			$arrayElements[] = array("name" => "IPAddress", "type" => "ValidationTextBox",  "caption" => "IP");
+			$arrayElements[] = array("type" => "Label", "label" => "Daten des IP-Symcon Fernzugriffs:");
+			$arrayElements[] = array("name" => "IPS_User_secondary", "type" => "ValidationTextBox",  "caption" => "IP-Symcon Benutzername");
+			$arrayElements[] = array("name" => "IPS_Password_secondary", "type" => "PasswordTextBox",  "caption" => "IP-Symcon Password");
+		}
+  				
+		$arrayActions = array();
+		
+		$arrayActions[] = array("type" => "Label", "label" => "Aktuell sind keine Funktionen definiert");
+		
+ 		return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements, "actions" => $arrayActions)); 		 
+ 	}    
+	
 	public function ApplyChanges()
 	{
 		//Never delete this line!
