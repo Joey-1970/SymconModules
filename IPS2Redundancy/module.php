@@ -65,7 +65,7 @@ class IPS2Redundancy extends IPSModule
 				
 		// Registrierung für Nachrichten
 	
-		$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
+		//$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
 		
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SetStatus(102);
