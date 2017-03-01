@@ -10,9 +10,10 @@ class IPS2Redundancy extends IPSModule
 		
 		$this->RegisterPropertyBoolean("Open", false);
 		$this->RegisterPropertyBoolean("System", false);
-	    	$this->RegisterPropertyString("IPAddress", "127.0.0.1");
+	    	$this->RegisterPropertyString("IPAddress_primary", "127.0.0.1");
 		$this->RegisterPropertyString("IPS_User_primary", "IPS-Benutzername");
 		$this->RegisterPropertyString("IPS_Password_primary", "IPS-Passwort");
+		$this->RegisterPropertyString("IPAddress_secondary", "127.0.0.1");
 		$this->RegisterPropertyString("IPS_User_secondary", "IPS-Benutzername");
 		$this->RegisterPropertyString("IPS_Password_secondary", "IPS-Passwort");
 		
@@ -36,12 +37,13 @@ class IPS2Redundancy extends IPSModule
 		If ($this->ReadPropertyBoolean("System") == false) {
 			$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 			$arrayElements[] = array("type" => "Label", "label" => "Daten des Primärsystems:");
+			$arrayElements[] = array("name" => "IPAddress_primary", "type" => "ValidationTextBox",  "caption" => "IP bzw. DynDNS inkl. Port");
 			$arrayElements[] = array("type" => "Label", "label" => "Daten des IP-Symcon Fernzugriffs:");
 			$arrayElements[] = array("name" => "IPS_User_primary", "type" => "ValidationTextBox",  "caption" => "IP-Symcon Benutzername");
 			$arrayElements[] = array("name" => "IPS_Password_primary", "type" => "PasswordTextBox",  "caption" => "IP-Symcon Password");
 			$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 			$arrayElements[] = array("type" => "Label", "label" => "Daten des Sekundärsystems:");
-			$arrayElements[] = array("name" => "IPAddress", "type" => "ValidationTextBox",  "caption" => "IP");
+			$arrayElements[] = array("name" => "IPAddress_secondary", "type" => "ValidationTextBox",  "caption" => "IP bzw. DynDNS inkl. Port");
 			$arrayElements[] = array("type" => "Label", "label" => "Daten des IP-Symcon Fernzugriffs:");
 			$arrayElements[] = array("name" => "IPS_User_secondary", "type" => "ValidationTextBox",  "caption" => "IP-Symcon Benutzername");
 			$arrayElements[] = array("name" => "IPS_Password_secondary", "type" => "PasswordTextBox",  "caption" => "IP-Symcon Password");
