@@ -74,6 +74,7 @@ class IPS2Redundancy extends IPSModule
 		//$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
 		
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->GetSystemStatus()
 			$this->SetStatus(102);
 		}
 		else {
