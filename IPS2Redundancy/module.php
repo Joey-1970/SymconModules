@@ -60,6 +60,11 @@ class IPS2Redundancy extends IPSModule
 		//Never delete this line!
 		parent::ApplyChanges();
 		
+		//Status-Variablen anlegen
+		$this->RegisterVariableBoolean("SystemStatus", "System Status", "~Alert.Reversed", 10);
+          	$this->DisableAction("SystemStatus");
+		IPS_SetHidden($this->GetIDForIdent("SystemStatus"), false);
+		
 		// Logging setzen
 				
 		// Registrierung für Nachrichten
@@ -98,7 +103,27 @@ class IPS2Redundancy extends IPSModule
     	}
 		
 
-
+	private function GetSystemStatus()
+	{
+		If ($this->ReadPropertyBoolean("System") == false) {
+			$User = $this->ReadPropertyString("IPS_User_secondary");
+			$Password = $this->ReadPropertyString("IPS_Password_secondary");
+			$IP = $this->ReadPropertyString("IPAddress");
+		}
+		else {
+			$User = $this->ReadPropertyString("IPS_User_primary");
+			$Password = $this->ReadPropertyString("IPS_Password_primary");
+		}
+		$rpc = new JSONRPC("http://".$User.":".$Pass."@".$IP."/api/");
+		$Status = $rpc->IPS_GetKernelRunlevel();
+		If ($Status <> 10103) {
+			SetValueBoolean($this->GetIDForIdent("SystemStatus"), true);
+		}
+		else {
+			SetValueBoolean($this->GetIDForIdent("SystemStatus"), false);
+		}
+			
+	}
 
 	
 
