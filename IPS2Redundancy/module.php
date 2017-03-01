@@ -1,11 +1,7 @@
 <?
 class IPS2Redundancy extends IPSModule
 {
-    	// ToDo:
-	// - Variable Tagesgruppen
-	// - Farbauswahl
-	// - Selbstkonfiguration K-Faktoren	
-	
+    	
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
