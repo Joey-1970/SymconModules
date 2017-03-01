@@ -118,7 +118,7 @@ class IPS2Redundancy extends IPSModule
 			$Password = $this->ReadPropertyString("IPS_Password_primary");
 			$IP = $this->ReadPropertyString("IPAddress_primary");
 		}
-		$rpc = new JSONRPC("http://".$User.":".$Pass."@".$IP."/api/");
+		$rpc = new JSONRPC("http://".$User.":".$Password."@".$IP."/api/");
 		$Status = $rpc->IPS_GetKernelRunlevel();
 		If ($Status <> 10103) {
 			SetValueBoolean($this->GetIDForIdent("SystemStatus"), true);
