@@ -135,7 +135,8 @@ class IPS2Redundancy extends IPSModule
 
 		If(file_exists($Filepath."/symcon-redundancy.config")) {
 			$content = file_get_contents($Filepath."/symcon-redundancy.config");
-			echo $content;
+			$Test = filter_var($content, FILTER_VALIDATE_BOOLEAN);
+			
 		}
 		else {
 			If (is_dir($Filepath) == false) {
