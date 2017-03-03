@@ -137,8 +137,10 @@ class IPS2Redundancy extends IPSModule
 		If(file_exists($Filepath."/symcon-redundancy.config")) {
 			$content = file_get_contents($Filepath."/symcon-redundancy.config");
 			$Test = filter_var($content, FILTER_VALIDATE_BOOLEAN);
-			IPS_SetProperty($this->InstanceID, "System", $Test); //I/O Instanz soll aktiviert sein.
-			IPS_ApplyChanges($this->InstanceID);
+			If ($Test <> $this->ReadPropertyInteger("System")) {
+				IPS_SetProperty($this->InstanceID, "System", $Test); //I/O Instanz soll aktiviert sein.
+				IPS_ApplyChanges($this->InstanceID);
+			}
 		}
 		else {
 			If (is_dir($Filepath) == false) {
