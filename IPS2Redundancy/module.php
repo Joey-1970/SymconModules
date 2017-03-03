@@ -9,7 +9,7 @@ class IPS2Redundancy extends IPSModule
             	parent::Create();
 		
 		$this->RegisterPropertyBoolean("Open", false);
-		$this->RegisterPropertyBoolean("System", false);
+		$this->RegisterPropertyInteger("System", 0);
 	    	$this->RegisterPropertyString("IPAddress_primary", "127.0.0.1");
 		$this->RegisterPropertyString("IPS_User_primary", "IPS-Benutzername");
 		$this->RegisterPropertyString("IPS_Password_primary", "IPS-Passwort");
@@ -34,7 +34,7 @@ class IPS2Redundancy extends IPSModule
 		$arrayOptionsSystem[] = array("label" => "Sekundärsystem", "value" => 1);
 		
 		$arrayElements[] = array("type" => "Select", "name" => "System", "caption" => "Systembestimmung", "options" => $arrayOptionsSystem );
-		If ($this->ReadPropertyBoolean("System") == false) {
+		If ($this->ReadPropertyInteger("System") == 0) {
 			$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 			$arrayElements[] = array("type" => "Label", "label" => "Daten des Primärsystems:");
 			$arrayElements[] = array("name" => "IPAddress_primary", "type" => "ValidationTextBox",  "caption" => "IP bzw. DynDNS inkl. Port");
@@ -129,18 +129,22 @@ class IPS2Redundancy extends IPSModule
 			
 	}
 
-	private function CreateConfigFile()
+	private function ConfigFile()
 	{
 		$Filepath = "/var/lib/symcon-redundancy";
-		// Wenn das Verzeichnis noch nicht existiert, ein neues erstellen
-		If (is_dir($Filepath) == false) {
-			mkdir($Filepath);
-		}
-		$handle = fopen($Filepath."/symcon-redundancy.config", "w");
-		fwrite ($handle, $content);
-		fclose ($handle);
-		
 
+		If(file_exists($Filepath."/symcon-redundancy.config")) {
+			$content = file_get_contents($Filepath."/symcon-redundancy.config");
+			echo $content;
+		}
+		else {
+			If (is_dir($Filepath) == false) {
+				mkdir($Filepath);
+				$handle = fopen($Filepath."/symcon-redundancy.config", "w");
+				fwrite ($handle, (boolval($this->ReadPropertyInteger("System")) ? 'true' : 'false'));
+				fclose ($handle);
+			}
+		}
 	}
 
 }
