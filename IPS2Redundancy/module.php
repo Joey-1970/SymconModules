@@ -136,6 +136,9 @@ class IPS2Redundancy extends IPSModule
 		If (is_dir($Filepath) == false) {
 			mkdir($Filepath);
 		}
+		$handle = fopen($Filepath."/symcon-redundancy.config", "w");
+		fwrite ($handle, $content);
+		fclose ($handle);
 		
 
 	}
