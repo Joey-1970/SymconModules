@@ -129,7 +129,16 @@ class IPS2Redundancy extends IPSModule
 			
 	}
 
-	
+	private function CreateConfigFile()
+	{
+		$Filepath = "/var/lib/symcon-redundancy";
+		// Wenn das Verzeichnis noch nicht existiert, ein neues erstellen
+		If (is_dir($Filepath) == false) {
+			mkdir($Filepath);
+		}
+		
+
+	}
 
 }
 ?>
