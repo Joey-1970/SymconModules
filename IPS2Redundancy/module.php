@@ -1,5 +1,5 @@
 <?
-class IPS2Redundancy extends IPSModule
+class Redundancy extends IPSModule
 {
     	
 	// Überschreibt die interne IPS_Create($id) Funktion
