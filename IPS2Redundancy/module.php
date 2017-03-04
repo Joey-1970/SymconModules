@@ -109,8 +109,8 @@ class Redundancy extends IPSModule
 		
 
 	private function GetSystemStatus()
-	{
-		If ($this->ReadPropertyBoolean("System") == false) {
+	{	
+		If (GetValueBoolean($this->GetIDForIdent("SystemFunction")) == false) {
 			$User = $this->ReadPropertyString("IPS_User_secondary");
 			$Password = $this->ReadPropertyString("IPS_Password_secondary");
 			$IP = $this->ReadPropertyString("IPAddress_secondary");
