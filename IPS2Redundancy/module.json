@@ -1,11 +1,11 @@
 {
   "id": "{84954DFF-9D8A-41B1-BADE-2F087CEAEBEF}",
-  "name": "IPS2Redundancy",
+  "name": "Redundancy",
   "type": 0,
   "vendor": "JP-IPS-Modules",
   "aliases":
   [
-    "IPS2Redundancy"
+    "Redundancy"
   ],
   "parentRequirements": [],
   "childRequirements": [],
