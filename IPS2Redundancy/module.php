@@ -28,11 +28,6 @@ class Redundancy extends IPSModule
 		$arrayElements = array(); 
 		$arrayElements[] = array("name" => "Open", "type" => "CheckBox",  "caption" => "Aktiv");
 		
-		$arrayOptionsSystem = array();
-		$arrayOptionsSystem[] = array("label" => "Primärsystem", "value" => 0);
-		$arrayOptionsSystem[] = array("label" => "Sekundärsystem", "value" => 1);
-		
-		$arrayElements[] = array("type" => "Select", "name" => "System", "caption" => "Systembestimmung", "options" => $arrayOptionsSystem );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Daten des Primärsystems:");
 		$arrayElements[] = array("name" => "IPAddress_primary", "type" => "ValidationTextBox",  "caption" => "IP bzw. DynDNS inkl. Port");
