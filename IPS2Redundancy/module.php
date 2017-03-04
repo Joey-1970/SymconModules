@@ -9,7 +9,6 @@ class IPS2Redundancy extends IPSModule
             	parent::Create();
 		
 		$this->RegisterPropertyBoolean("Open", false);
-		$this->RegisterPropertyInteger("System", 0);
 	    	$this->RegisterPropertyString("IPAddress_primary", "127.0.0.1");
 		$this->RegisterPropertyString("IPS_User_primary", "IPS-Benutzername");
 		$this->RegisterPropertyString("IPS_Password_primary", "IPS-Passwort");
@@ -34,21 +33,19 @@ class IPS2Redundancy extends IPSModule
 		$arrayOptionsSystem[] = array("label" => "Sekundärsystem", "value" => 1);
 		
 		$arrayElements[] = array("type" => "Select", "name" => "System", "caption" => "Systembestimmung", "options" => $arrayOptionsSystem );
-		If ($this->ReadPropertyInteger("System") == 0) {
-			$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-			$arrayElements[] = array("type" => "Label", "label" => "Daten des Primärsystems:");
-			$arrayElements[] = array("name" => "IPAddress_primary", "type" => "ValidationTextBox",  "caption" => "IP bzw. DynDNS inkl. Port");
-			$arrayElements[] = array("type" => "Label", "label" => "Daten des IP-Symcon Fernzugriffs:");
-			$arrayElements[] = array("name" => "IPS_User_primary", "type" => "ValidationTextBox",  "caption" => "IP-Symcon Benutzername");
-			$arrayElements[] = array("name" => "IPS_Password_primary", "type" => "PasswordTextBox",  "caption" => "IP-Symcon Password");
-			$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-			$arrayElements[] = array("type" => "Label", "label" => "Daten des Sekundärsystems:");
-			$arrayElements[] = array("name" => "IPAddress_secondary", "type" => "ValidationTextBox",  "caption" => "IP bzw. DynDNS inkl. Port");
-			$arrayElements[] = array("type" => "Label", "label" => "Daten des IP-Symcon Fernzugriffs:");
-			$arrayElements[] = array("name" => "IPS_User_secondary", "type" => "ValidationTextBox",  "caption" => "IP-Symcon Benutzername");
-			$arrayElements[] = array("name" => "IPS_Password_secondary", "type" => "PasswordTextBox",  "caption" => "IP-Symcon Password");
-			$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		}
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "Label", "label" => "Daten des Primärsystems:");
+		$arrayElements[] = array("name" => "IPAddress_primary", "type" => "ValidationTextBox",  "caption" => "IP bzw. DynDNS inkl. Port");
+		$arrayElements[] = array("type" => "Label", "label" => "Daten des IP-Symcon Fernzugriffs:");
+		$arrayElements[] = array("name" => "IPS_User_primary", "type" => "ValidationTextBox",  "caption" => "IP-Symcon Benutzername");
+		$arrayElements[] = array("name" => "IPS_Password_primary", "type" => "PasswordTextBox",  "caption" => "IP-Symcon Password");
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "Label", "label" => "Daten des Sekundärsystems:");
+		$arrayElements[] = array("name" => "IPAddress_secondary", "type" => "ValidationTextBox",  "caption" => "IP bzw. DynDNS inkl. Port");
+		$arrayElements[] = array("type" => "Label", "label" => "Daten des IP-Symcon Fernzugriffs:");
+		$arrayElements[] = array("name" => "IPS_User_secondary", "type" => "ValidationTextBox",  "caption" => "IP-Symcon Benutzername");
+		$arrayElements[] = array("name" => "IPS_Password_secondary", "type" => "PasswordTextBox",  "caption" => "IP-Symcon Password");
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
   				
 		$arrayActions = array();
 		
@@ -63,9 +60,14 @@ class IPS2Redundancy extends IPSModule
 		parent::ApplyChanges();
 		
 		//Status-Variablen anlegen
-		$this->RegisterVariableBoolean("SystemStatus", "System Status", "~Alert.Reversed", 10);
+		$this->RegisterVariableBoolean("SystemFunction", "System Funktion", "", 10);
+          	$this->DisableAction("SystemFunction");
+		IPS_SetHidden($this->GetIDForIdent("SystemFunction"), false);
+
+		$this->RegisterVariableBoolean("SystemStatus", "System Status", "~Alert.Reversed", 20);
           	$this->DisableAction("SystemStatus");
 		IPS_SetHidden($this->GetIDForIdent("SystemStatus"), false);
+		
 		
 		// Logging setzen
 				
@@ -136,18 +138,17 @@ class IPS2Redundancy extends IPSModule
 
 		If(file_exists($Filepath."/symcon-redundancy.config")) {
 			$content = file_get_contents($Filepath."/symcon-redundancy.config");
-			$Test = filter_var($content, FILTER_VALIDATE_BOOLEAN);
-			If ($Test <> $this->ReadPropertyInteger("System")) {
-				IPS_SetProperty($this->InstanceID, "System", $Test); //I/O Instanz soll aktiviert sein.
-				IPS_ApplyChanges($this->InstanceID);
-			}
+			$result = filter_var($content, FILTER_VALIDATE_BOOLEAN);
+			SetValueBoolean($this->GetIDForIdent("SystemFunction"), $result);
 		}
 		else {
 			If (is_dir($Filepath) == false) {
 				mkdir($Filepath);
 				$handle = fopen($Filepath."/symcon-redundancy.config", "w");
-				fwrite ($handle, (boolval($this->ReadPropertyInteger("System")) ? 'true' : 'false'));
+				fwrite ($handle, "false");
+				//fwrite ($handle, (boolval($this->ReadPropertyInteger("System")) ? 'true' : 'false'));
 				fclose ($handle);
+				SetValueBoolean($this->GetIDForIdent("SystemFunction"), false);
 			}
 		}
 	}
