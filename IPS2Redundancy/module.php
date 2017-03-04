@@ -15,6 +15,8 @@ class Redundancy extends IPSModule
 		$this->RegisterPropertyString("IPAddress_secondary", "127.0.0.1");
 		$this->RegisterPropertyString("IPS_User_secondary", "IPS-Benutzername");
 		$this->RegisterPropertyString("IPS_Password_secondary", "IPS-Passwort");
+		$this->RegisterPropertyInteger("Prüfzyklus", 60);
+		$this->RegisterTimer("Prüfzyklus", 0, 'Redundancy_GetSystemStatus($_IPS["TARGET"]);');
 		
 	}
 	
@@ -27,7 +29,7 @@ class Redundancy extends IPSModule
 				
 		$arrayElements = array(); 
 		$arrayElements[] = array("name" => "Open", "type" => "CheckBox",  "caption" => "Aktiv");
-		
+		$arrayElements[] = array("type" => "IntervalBox", "name" => "Prüfzyklus", "caption" => "Prüfzyklus (sek)");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Daten des Primärsystems:");
 		$arrayElements[] = array("name" => "IPAddress_primary", "type" => "ValidationTextBox",  "caption" => "IP bzw. DynDNS inkl. Port");
@@ -72,10 +74,12 @@ class Redundancy extends IPSModule
 		$this->ConfigFile();
 		
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SetTimerInterval("Prüfzyklus", ($this->ReadPropertyInteger("Prüfzyklus") * 1000));
 			$this->GetSystemStatus();
 			$this->SetStatus(102);
 		}
 		else {
+			$this->SetTimerInterval("Messzyklus", 0);
 			$this->SetStatus(104);
 		}
 		
