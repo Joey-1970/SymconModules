@@ -108,7 +108,7 @@ class Redundancy extends IPSModule
     	}
 		
 
-	private function GetSystemStatus()
+	public function GetSystemStatus()
 	{	
 		If (GetValueBoolean($this->GetIDForIdent("SystemFunction")) == false) {
 			$User = $this->ReadPropertyString("IPS_User_secondary");
