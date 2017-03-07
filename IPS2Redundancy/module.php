@@ -46,7 +46,8 @@ class Redundancy extends IPSModule
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
   		//$arrayElements[] = array("type" => "ValidationTextBox", "caption" => "MAC", "name" => "MAC_primary");
 		$arrayElements[] = array("type" => "Label", "label" => "Die MAC dieses Systems lautet: ".$this->GetMAC());
-		$arrayElements[] = array("type" => "Button", "label" => "Diese MAC als Primärsystem setzen", "onClick" => 'Redundancy_SetMAC($id);');	
+		$arrayElements[] = array("type" => "Label", "label" => "Soll diese MAC-Adresse das Primärsystem markieren?");
+		$arrayElements[] = array("type" => "Button", "label" => "Primärsystem setzen", "onClick" => 'Redundancy_SetMAC($id);');	
 		$arrayActions = array();
 		
 		$arrayActions[] = array("type" => "Label", "label" => "Aktuell sind keine Funktionen definiert");
