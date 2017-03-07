@@ -43,7 +43,8 @@ class Redundancy extends IPSModule
 		$arrayElements[] = array("name" => "IPS_User_secondary", "type" => "ValidationTextBox",  "caption" => "IP-Symcon Benutzername");
 		$arrayElements[] = array("name" => "IPS_Password_secondary", "type" => "PasswordTextBox",  "caption" => "IP-Symcon Password");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-  				
+  		$arrayElements[] = array("type" => "ValidationTextBox", "caption" => "MAC", "name" => $this->GetMAC());
+		$arrayElements[] = array("type" => "Button", "label" => "On", "onClick" => 'Redundancy_SetMAC($id, $MAC);');	
 		$arrayActions = array();
 		
 		$arrayActions[] = array("type" => "Label", "label" => "Aktuell sind keine Funktionen definiert");
