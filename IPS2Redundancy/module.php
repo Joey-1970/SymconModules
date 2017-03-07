@@ -45,7 +45,7 @@ class Redundancy extends IPSModule
 		$arrayElements[] = array("name" => "IPS_Password_secondary", "type" => "PasswordTextBox",  "caption" => "IP-Symcon Password");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
   		$arrayElements[] = array("type" => "ValidationTextBox", "caption" => "MAC", "name" => "MAC_primary");
-		$arrayElements[] = array("type" => "Button", "label" => "On", "onClick" => 'Redundancy_SetMAC($id, $MAC);');	
+		$arrayElements[] = array("type" => "Button", "label" => "MAC als Primärsystem setzen", "onClick" => 'Redundancy_SetMAC($id, $MAC_primary);');	
 		$arrayActions = array();
 		
 		$arrayActions[] = array("type" => "Label", "label" => "Aktuell sind keine Funktionen definiert");
@@ -135,7 +135,7 @@ class Redundancy extends IPSModule
 
 	public function SetMAC($MAC)
 	{
-		IPS_LogMessage("Redundancy",$MAC);
+		IPS_LogMessage("Redundancy", $MAC);
 		IPS_SetProperty ($this->InstanceID, "MAC_primary", $MAC);
 		IPS_ApplyChanges($this->InstanceID);
 	}
