@@ -15,6 +15,7 @@ class Redundancy extends IPSModule
 		$this->RegisterPropertyString("IPAddress_secondary", "127.0.0.1");
 		$this->RegisterPropertyString("IPS_User_secondary", "IPS-Benutzername");
 		$this->RegisterPropertyString("IPS_Password_secondary", "IPS-Passwort");
+		$this->RegisterPropertyString("MAC_primary", $this->GetMAC());
 		$this->RegisterPropertyInteger("Pruefzyklus", 60);
 		$this->RegisterTimer("Pruefzyklus", 0, 'Redundancy_GetSystemStatus($_IPS["TARGET"]);');
 		
@@ -43,7 +44,7 @@ class Redundancy extends IPSModule
 		$arrayElements[] = array("name" => "IPS_User_secondary", "type" => "ValidationTextBox",  "caption" => "IP-Symcon Benutzername");
 		$arrayElements[] = array("name" => "IPS_Password_secondary", "type" => "PasswordTextBox",  "caption" => "IP-Symcon Password");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-  		$arrayElements[] = array("type" => "ValidationTextBox", "caption" => "MAC", "name" => $this->GetMAC());
+  		$arrayElements[] = array("type" => "ValidationTextBox", "caption" => "MAC", "name" => "MAC_primary");
 		$arrayElements[] = array("type" => "Button", "label" => "On", "onClick" => 'Redundancy_SetMAC($id, $MAC);');	
 		$arrayActions = array();
 		
@@ -135,6 +136,8 @@ class Redundancy extends IPSModule
 	public function SetMAC($MAC)
 	{
 		IPS_LogMessage("Redundancy",$MAC);
+		IPS_SetProperty ($this->InstanceID, "MAC_primary", $MAC);
+		IPS_ApplyChanges($this->InstanceID);
 	}
 	
 	private function GetMAC()
