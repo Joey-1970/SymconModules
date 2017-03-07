@@ -132,6 +132,17 @@ class Redundancy extends IPSModule
 			
 	}
 
+	public function SetMAC($MAC)
+	{
+		IPS_LogMessage("Redundancy",$MAC);
+	}
+	
+	private function GetMAC()
+	{
+		$MAC = exec("cat /sys/class/net/eth0/address");
+	return $MAC;
+	}
+	
 	private function ConfigFile()
 	{
 		$Filepath = "/var/lib/symcon-redundancy";
