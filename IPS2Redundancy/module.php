@@ -44,7 +44,6 @@ class Redundancy extends IPSModule
 		$arrayElements[] = array("name" => "IPS_User_secondary", "type" => "ValidationTextBox",  "caption" => "IP-Symcon Benutzername");
 		$arrayElements[] = array("name" => "IPS_Password_secondary", "type" => "PasswordTextBox",  "caption" => "IP-Symcon Password");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-  		//$arrayElements[] = array("type" => "ValidationTextBox", "caption" => "MAC", "name" => "MAC_primary");
 		$arrayElements[] = array("type" => "Label", "label" => "Die MAC dieses Systems lautet: ".$this->GetMAC());
 		$arrayElements[] = array("type" => "Label", "label" => "Soll diese MAC-Adresse das Primärsystem markieren?");
 		$arrayElements[] = array("type" => "Button", "label" => "Primärsystem setzen", "onClick" => 'Redundancy_SetMAC($id);');	
@@ -69,6 +68,13 @@ class Redundancy extends IPSModule
           	$this->DisableAction("SystemStatus");
 		IPS_SetHidden($this->GetIDForIdent("SystemStatus"), false);
 		
+		$this->RegisterVariableString("PrimaryMAC", "MAC Primärsystem", "", 30);
+          	$this->DisableAction("PrimaryMAC");
+		IPS_SetHidden($this->GetIDForIdent("PrimaryMAC"), false);
+		
+		$this->RegisterVariableString("ThisMAC", "MAC dieses Systems", "", 40);
+          	$this->DisableAction("ThisMAC");
+		IPS_SetHidden($this->GetIDForIdent("ThisMAC"), false);
 		
 		// Logging setzen
 				
@@ -80,6 +86,8 @@ class Redundancy extends IPSModule
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SetTimerInterval("Pruefzyklus", ($this->ReadPropertyInteger("Pruefzyklus") * 1000));
 			$this->GetSystemStatus();
+			SetValueString($this->GetIDForIdent("PrimaryMAC"), $this->ReadPropertyString("MAC_primary"));
+			SetValueString($this->GetIDForIdent("ThisMAC"), $this->GetMAC());
 			$this->SetStatus(102);
 		}
 		else {
