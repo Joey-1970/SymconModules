@@ -77,17 +77,18 @@ class Redundancy extends IPSModule
 		IPS_SetHidden($this->GetIDForIdent("ThisMAC"), false);
 		
 		// Logging setzen
-				
-		// Registrierung für Nachrichten
-	
-		//$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
-		$this->ConfigFile();
 		
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SetTimerInterval("Pruefzyklus", ($this->ReadPropertyInteger("Pruefzyklus") * 1000));
 			$this->GetSystemStatus();
 			SetValueString($this->GetIDForIdent("PrimaryMAC"), $this->ReadPropertyString("MAC_primary"));
 			SetValueString($this->GetIDForIdent("ThisMAC"), $this->GetMAC());
+			If (GetValueString($this->GetIDForIdent("PrimaryMAC")) == GetValueString($this->GetIDForIdent("ThisMAC"))) {
+				SetValueBoolean($this->GetIDForIdent("SystemFunction"), false);
+			}
+			else {
+				SetValueBoolean($this->GetIDForIdent("SystemFunction"), true);
+			}
 			$this->SetStatus(102);
 		}
 		else {
@@ -155,27 +156,7 @@ class Redundancy extends IPSModule
 		$MAC = exec("cat /sys/class/net/eth0/address");
 	return $MAC;
 	}
-	
-	private function ConfigFile()
-	{
-		$Filepath = "/var/lib/symcon-redundancy";
 
-		If(file_exists($Filepath."/symcon-redundancy.config")) {
-			$content = file_get_contents($Filepath."/symcon-redundancy.config");
-			$result = filter_var($content, FILTER_VALIDATE_BOOLEAN);
-			SetValueBoolean($this->GetIDForIdent("SystemFunction"), $result);
-		}
-		else {
-			If (is_dir($Filepath) == false) {
-				mkdir($Filepath);
-				$handle = fopen($Filepath."/symcon-redundancy.config", "w");
-				fwrite ($handle, "false");
-				//fwrite ($handle, (boolval($this->ReadPropertyInteger("System")) ? 'true' : 'false'));
-				fclose ($handle);
-				SetValueBoolean($this->GetIDForIdent("SystemFunction"), false);
-			}
-		}
-	}
 
 }
 ?>
