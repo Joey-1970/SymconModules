@@ -198,7 +198,8 @@
 				        else {
 				        	$Messages = explode('ffffff', $ByteResponse[1]);
 					   	for($i=1;$i<Count($Messages);$i++) {
-					   		$this->DisplayResponse($Messages[$i]);
+					   		IPS_LogMessage("IPS2GPIO Display", $Messages[$i]);
+							$this->DisplayResponse($Messages[$i]);
 					   		SetValueString($this->GetIDForIdent("Response"), $Messages[$i]);
 					   	}
 				        }
