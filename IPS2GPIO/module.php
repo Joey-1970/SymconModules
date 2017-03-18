@@ -860,7 +860,7 @@ class IPS2GPIO_IO extends IPSModule
 		            	break;
 		        case "80":
            			If ($response[4] >= 0) {
-           				//IPS_LogMessage("IPS2GPIO Serial Read","Serial Handle: ".$response[2]." Value: ".substr($Message, -($response[4])));
+           				IPS_LogMessage("IPS2GPIO Serial Read","Serial Handle: ".$response[2]." Value: ".substr($Message, -($response[4])));
            				If ($response[4] > 0) {
 	           				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_data", "Value"=>utf8_encode(substr($Message, -($response[4]))) )));
            				}
@@ -879,7 +879,7 @@ class IPS2GPIO_IO extends IPSModule
   		            	break;
   		        case "82":
            			If ($response[4] >= 0) {
-           				//IPS_LogMessage("IPS2GPIO Check Bytes Serial","Serial Handle: ".$response[2]." Bytes zum Lesen: ".$response[4]);
+           				IPS_LogMessage("IPS2GPIO Check Bytes Serial","Serial Handle: ".$response[2]." Bytes zum Lesen: ".$response[4]);
            				If ($response[4] > 0) {
            					// Einlesen der vorliegenden Daten
            					$this->CommandClientSocket(pack("L*", 80, GetValueInteger($this->GetIDForIdent("Serial_Handle")), $response[4], 0), 16 + $response[4]);
