@@ -642,9 +642,10 @@ class IPS2GPIO_IO extends IPSModule
 				$CmdVarLen = array(56, 67, 70, 73, 75, 80, 88, 91, 92, 106, 109);
 				$MessageArray = unpack("L*", $buf);
 				$Command = $MessageArray[1];
+				IPS_LogMessage("IPS2GPIO ReceiveData", "Command: ".$Command);
 				If (in_array($Command, $CmdVarLen)) {
 					$this->ClientResponse($buf);
-					//IPS_LogMessage("IPS2GPIO ReceiveData", strlen($buf)." Zeichen");
+					IPS_LogMessage("IPS2GPIO ReceiveData", strlen($buf)." Zeichen");
 				}
 				// Standardantworten
 				elseIf ((strlen($buf) == 16) OR ((strlen($buf) / 16) == intval(strlen($buf) / 16))) {
