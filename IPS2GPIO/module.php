@@ -615,7 +615,7 @@ class IPS2GPIO_IO extends IPSModule
 					return;
 				}
 				// Timeout setzen
-				socket_set_option($sock,SOL_SOCKET, SO_RCVTIMEO, array("sec"=>2, "usec"=>0));
+				socket_set_option($sock,SOL_SOCKET, SO_RCVTIMEO, array("sec"=>4, "usec"=>0));
 				// Verbindung aufbauen
 				if(!(socket_connect($sock, $this->ReadPropertyString("IPAddress"), 8888))) {
 					$errorcode = socket_last_error();
@@ -885,6 +885,7 @@ class IPS2GPIO_IO extends IPSModule
            					// Einlesen der vorliegenden Daten
 						IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Serial Read auslösen");
            					$this->CommandClientSocket(pack("LLLL", 80, GetValueInteger($this->GetIDForIdent("Serial_Handle")), $response[4], 0), 16 + $response[4]);
+						IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Serial Read ausgelöst");
 						//$this->CommandClientSocket(pack("LLLL", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
            				}
            			}
