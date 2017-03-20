@@ -609,7 +609,7 @@ class IPS2GPIO_IO extends IPSModule
 			$Test = unpack("L*", $message);
 			IPS_LogMessage("IPS2GPIO ReceiveData", "Command-Eingang: ".$Test[1]);
 			
-			if (IPS_SemaphoreEnter("CommandClientSocket", 25))
+			if (IPS_SemaphoreEnter("CommandClientSocket", 5))
 			{
 				// Socket erstellen
 				if(!($sock = socket_create(AF_INET, SOCK_STREAM, 0))) {
@@ -884,12 +884,13 @@ class IPS2GPIO_IO extends IPSModule
   		            	break;
   		        case "82":
            			If ($response[4] >= 0) {
-           				IPS_LogMessage("IPS2GPIO Check Bytes Serial","Serial Handle: ".$response[2]." Bytes zum Lesen: ".$response[4]);
+           				//IPS_LogMessage("IPS2GPIO Check Bytes Serial","Serial Handle: ".$response[2]." Bytes zum Lesen: ".$response[4]);
            				If ($response[4] > 0) {
            					// Einlesen der vorliegenden Daten
-						IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Serial Read auslösen");
+						//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Serial Read auslösen");
            					$this->CommandClientSocket(pack("LLLL", 80, GetValueInteger($this->GetIDForIdent("Serial_Handle")), $response[4], 0), 16 + $response[4]);
-						IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Serial Read ausgelöst");
+						$this->CommandClientSocket(pack("LLLL", 80, GetValueInteger($this->GetIDForIdent("Serial_Handle")), $response[4], 0), 16);
+						//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Serial Read ausgelöst");
 						//$this->CommandClientSocket(pack("LLLL", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
            				}
            			}
