@@ -607,7 +607,7 @@ class IPS2GPIO_IO extends IPSModule
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
 			$Test = array();
 			$Test = unpack("L*", $message);
-			IPS_LogMessage("IPS2GPIO ReceiveData", "Command-Eingang: ".$Test[1]);
+			//IPS_LogMessage("IPS2GPIO ReceiveData", "Command-Eingang: ".$Test[1]);
 			
 			if (IPS_SemaphoreEnter("CommandClientSocket", 5))
 			{
@@ -646,7 +646,7 @@ class IPS2GPIO_IO extends IPSModule
 				$CmdVarLen = array(56, 67, 70, 73, 75, 80, 88, 91, 92, 106, 109);
 				$MessageArray = unpack("L*", $buf);
 				$Command = $MessageArray[1];
-				IPS_LogMessage("IPS2GPIO ReceiveData", "Command: ".$Command);
+				//IPS_LogMessage("IPS2GPIO ReceiveData", "Command: ".$Command);
 				If (in_array($Command, $CmdVarLen)) {
 					$this->ClientResponse($buf);
 					IPS_LogMessage("IPS2GPIO ReceiveData", strlen($buf)." Zeichen");
