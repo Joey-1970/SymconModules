@@ -220,7 +220,7 @@
 					$V2 = ($Temp_raw / 131072 - $Dig_T[0] / 8192) * ($Temp_raw / 131072 - $Dig_T[0] / 8192) * $Dig_T[2];
 					$FineCalibrate = $V1 + $V2;
 					$Temp = $FineCalibrate / 5120;
-					SetValueFloat($this->GetIDForIdent("Temperature"), $Temp);
+					SetValueFloat($this->GetIDForIdent("Temperature"), round($Temp, 2));
 				
 					// Luftdruck
 					$Pressure = 0;
@@ -246,7 +246,7 @@
 					$V2 = (($Pressure / 4) * $Dig_P[7]) / 8192;
 					$Pressure = $Pressure + (($V1 + $V2 + $Dig_P[6]) / 16);
 
-					SetValueFloat($this->GetIDForIdent("Pressure"), $Pressure / 100);
+					SetValueFloat($this->GetIDForIdent("Pressure"), round($Pressure / 100, 2));
 				
 					// Luftfeuchtigkeit
 					$Hum = $FineCalibrate - 76800;
@@ -264,7 +264,7 @@
 						$Hum = 0;
 					}
 
-					SetValueFloat($this->GetIDForIdent("Humidity"), $Hum);
+					SetValueFloat($this->GetIDForIdent("Humidity"), round($Hum, 2));
 
 					// Berechnung von Taupunkt und absoluter Luftfeuchtigkeit
 					if ($Temp < 0) {
@@ -283,10 +283,10 @@
 					$af = pow(10,5) * 18.016 / 8314.3 * $dd / ($Temp + 273.15);
 				
 					// Taupunkttemperatur
-					SetValueFloat($this->GetIDForIdent("DewPointTemperature"), $td);
+					SetValueFloat($this->GetIDForIdent("DewPointTemperature"), round($td, 2));
 
 					// Absolute Feuchtigkeit
-					SetValueFloat($this->GetIDForIdent("HumidityAbs"), $af);
+					SetValueFloat($this->GetIDForIdent("HumidityAbs"), round($af, 2));
 
 					// Luftdruck Trends
 					If ($this->ReadPropertyBoolean("LoggingPres") == true) {
