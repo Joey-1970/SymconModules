@@ -31,7 +31,7 @@ class IPS2GPIO_IO extends IPSModule
 		
 		// Nachrichten abonnieren
 		// Kernel
-	        $this->RegisterMessage(0, 10100); // Alle Kernelmessages (10103 muss im MessageSink ausgewertet werden.)
+	        $this->RegisterMessage($this->InstanceID, 10100); // Alle Kernelmessages (10103 muss im MessageSink ausgewertet werden.)
 		
 		If (IPS_GetKernelRunlevel() == 10103) {
 			$this->RegisterVariableInteger("Handle", "Handle", "", 100);
@@ -148,7 +148,7 @@ class IPS2GPIO_IO extends IPSModule
     	{
         IPS_LogMessage("IPS2GPIO MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
 		switch ($Message) {
-			case 10100:
+			case 10103:
 				If ($Data[0] == 10103) {
 					$this->ApplyChanges();
 				}
