@@ -148,7 +148,7 @@ class IPS2GPIO_IO extends IPSModule
     	{
         IPS_LogMessage("IPS2GPIO MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
 		switch ($Message) {
-			case 10103:
+			case 10100:
 				If ($Data[0] == 10103) {
 					$this->ApplyChanges();
 				}
