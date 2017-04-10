@@ -339,7 +339,7 @@
 	
 			for ($i = hexdec("E1"); $i < (hexdec("E1") + 7); $i++) {
 	    			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $i, "Value" => $i)));
-			//}
+			}
 		//}
 	}
 	
