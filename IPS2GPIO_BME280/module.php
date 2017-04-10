@@ -161,6 +161,7 @@
 	// Führt eine Messung aus
 	public function Measurement()
 	{
+		IPS_LogMessage("IPS2GPIO BME280", "Messung!");
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Messwerte aktualisieren
 			$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
