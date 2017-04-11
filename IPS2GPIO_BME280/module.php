@@ -15,7 +15,7 @@
  	    	$this->RegisterPropertyBoolean("LoggingTemp", false);
  	    	$this->RegisterPropertyBoolean("LoggingHum", false);
  	    	$this->RegisterPropertyBoolean("LoggingPres", false);
- 	    	$this->RegisterPropertyBoolean("CalibrateData", true);
+ 	    	//$this->RegisterPropertyBoolean("CalibrateData", true);
  	    	$this->RegisterPropertyInteger("OSRS_T", 1);
  	    	$this->RegisterPropertyInteger("OSRS_H", 1);
  	    	$this->RegisterPropertyInteger("OSRS_P", 1);
@@ -161,7 +161,7 @@
 	// Führt eine Messung aus
 	public function Measurement()
 	{
-		IPS_LogMessage("IPS2GPIO BME280", "Messung!");
+		//IPS_LogMessage("IPS2GPIO BME280", "Messung!");
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Messwerte aktualisieren
 			$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
