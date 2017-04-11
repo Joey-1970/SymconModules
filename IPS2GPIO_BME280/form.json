@@ -37,7 +37,6 @@
         { "type": "CheckBox", "name": "LoggingTemp", "caption": "Logging Temperatur aktivieren" },
         { "type": "CheckBox", "name": "LoggingHum", "caption": "Logging Luftfeuchtigkeit aktivieren" },
         { "type": "CheckBox", "name": "LoggingPres", "caption": "Logging Luftdruck aktivieren" },
-        { "type": "CheckBox", "name": "CalibrateData", "caption": "Kalibrierungsdaten nur einlesen wenn erforderlich" },
         { "type": "Label", "label": "_____________________________________________________________________________________________________" },
         { "type": "Label", "label": "An den folgenden Werten muss in der Regel nichts verändert werden" },
         { "type": "Label", "label": "Oversampling Temperatur (Default: x1)" },
