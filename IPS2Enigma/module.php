@@ -102,7 +102,7 @@
 		$this->RegisterVariableInteger("volume", "Volume", "~Intensity.100", 106);
 		$this->EnableAction("volume");
 		$this->RegisterVariableString("currservice_serviceref", "Service-Referenz", "", 108);
-		$this->DisableAction("e2hddinfo_model");
+		$this->DisableAction("currservice_serviceref");
 		
 		$this->RegisterVariableString("e2servicename", "Service Name", "", 110);
 		$this->DisableAction("e2servicename");
