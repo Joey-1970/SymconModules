@@ -283,7 +283,7 @@
 	// Beginn der Funktionen
 	public function Measurement()
 	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
+		If (($this->ReadPropertyBoolean("Open") == true) AND (IPS_GetKernelRunlevel() == 10103)) {
 			// Daten werden nur einmalig nach Start oder bei Änderung eingelesen
 			$CommandArray = Array();
 			// Betriebsystem
@@ -305,7 +305,7 @@
 	 // Führt eine Messung aus
 	public function Measurement_1()
 	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
+		If (($this->ReadPropertyBoolean("Open") == true) AND (IPS_GetKernelRunlevel() == 10103)) {
 			$CommandArray = Array();
 			// GPU Temperatur
 			$CommandArray[0] = "/opt/vc/bin/vcgencmd measure_temp";
