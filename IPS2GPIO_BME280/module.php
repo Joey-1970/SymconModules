@@ -358,7 +358,8 @@
 	private function PressureTrend(int $interval)
 	{
 		$LoggingArray = AC_GetLoggedValues(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Pressure"), time()- (3600 * $interval), time(), 0); 
-		$Result = ($LoggingArray[0]['Value'] - end($LoggingArray)['Value']); 
+		IPS_LogMessage("IPS2GPIO BME280",print_r($LoggingArray));
+		$Result = 0; //($LoggingArray[0]['Value'] - end($LoggingArray)['Value']); 
 	return $Result;
 	}
 	    
