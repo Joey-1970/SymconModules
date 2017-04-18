@@ -465,8 +465,10 @@ class IPS2GPIO_IO extends IPSModule
 		    						//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle")));
 			   					IPS_Sleep(75);
 			   					$Data = $this->CommandClientSocket(pack("L*", 82, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
-								$this->CommandClientSocket(pack("L*", 80, GetValueInteger($this->GetIDForIdent("Serial_Handle")), $Data, 0), 16 + $Data);
-			   				 	$this->SetBuffer("SerialNotify", $Bitvalue);	
+								If ($Data > 0) {
+									$this->CommandClientSocket(pack("L*", 80, GetValueInteger($this->GetIDForIdent("Serial_Handle")), $Data, 0), 16 + $Data);
+								}
+								$this->SetBuffer("SerialNotify", $Bitvalue);	
 	    						//}
 	    					}
 	    				}
@@ -478,7 +480,9 @@ class IPS2GPIO_IO extends IPSModule
 			If ($this->ReadPropertyBoolean("Serial_Used") == true) {
 				IPS_Sleep(75);
 				$Data = $this->CommandClientSocket(pack("L*", 82, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
-				$this->CommandClientSocket(pack("L*", 80, GetValueInteger($this->GetIDForIdent("Serial_Handle")), $Data, 0), 16 + $Data);
+				If ($Data > 0) {
+					$this->CommandClientSocket(pack("L*", 80, GetValueInteger($this->GetIDForIdent("Serial_Handle")), $Data, 0), 16 + $Data);
+				}
 			}
 			else {
 				IPS_LogMessage("IPS2GPIO ReceiveData", "Überlänge: Datensätze nicht differenzierbar!");
