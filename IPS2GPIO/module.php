@@ -648,7 +648,7 @@ class IPS2GPIO_IO extends IPSModule
 				$Command = $MessageArray[1];
 				//IPS_LogMessage("IPS2GPIO ReceiveData", "Command: ".$Command);
 				If (in_array($Command, $CmdVarLen)) {
-					$this->ClientResponse($buf);
+					$Result = $this->ClientResponse($buf);
 					//IPS_LogMessage("IPS2GPIO ReceiveData", strlen($buf)." Zeichen");
 				}
 				// Standardantworten
@@ -656,7 +656,7 @@ class IPS2GPIO_IO extends IPSModule
 					$DataArray = str_split($buf, 16);
 					//IPS_LogMessage("IPS2GPIO ReceiveData", strlen($buf)." Zeichen");
 					for ($i = 0; $i < Count($DataArray); $i++) {
-						$this->ClientResponse($DataArray[$i]);
+						$Result = $this->ClientResponse($DataArray[$i]);
 					}
 				}
 				else {
@@ -665,6 +665,7 @@ class IPS2GPIO_IO extends IPSModule
 				IPS_SemaphoreLeave("CommandClientSocket");
 			}
 		}	
+	return $Result;
 	}
 	
 	private function ClientResponse(String $Message)
@@ -936,7 +937,9 @@ class IPS2GPIO_IO extends IPSModule
            			}
          
 		            	break;
-		    }
+	
+		}
+	return $response[4];
 	}
 	
 	public function PIGPIOD_Restart()
