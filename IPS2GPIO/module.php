@@ -884,7 +884,7 @@ class IPS2GPIO_IO extends IPSModule
   		            	break;
   		        case "82":
            			If ($response[4] >= 0) {
-           				//IPS_LogMessage("IPS2GPIO Check Bytes Serial","Serial Handle: ".$response[2]." Bytes zum Lesen: ".$response[4]);
+           				IPS_LogMessage("IPS2GPIO Check Bytes Serial","Serial Handle: ".$response[2]." Bytes zum Lesen: ".$response[4]);
            				If ($response[4] > 0) {
            					// Einlesen der vorliegenden Daten
 						//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Serial Read auslösen");
