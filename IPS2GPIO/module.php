@@ -606,6 +606,7 @@ class IPS2GPIO_IO extends IPSModule
 	
 	private function CommandClientSocket(String $message, $ResponseLen = 16)
 	{
+		$Result = -999;
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
 			$Test = array();
 			$Test = unpack("L*", $message);
