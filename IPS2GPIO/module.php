@@ -888,8 +888,8 @@ class IPS2GPIO_IO extends IPSModule
            				If ($response[4] > 0) {
            					// Einlesen der vorliegenden Daten
 						//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Serial Read auslösen");
-           					$this->CommandClientSocket(pack("LLLL", 80, GetValueInteger($this->GetIDForIdent("Serial_Handle")), $response[4], 0), 16 + $response[4]);
-						$this->CommandClientSocket(pack("LLLL", 80, GetValueInteger($this->GetIDForIdent("Serial_Handle")), $response[4], 0), 16);
+           					$this->CommandClientSocket(pack("L*", 80, GetValueInteger($this->GetIDForIdent("Serial_Handle")), $response[4], 0), 16 + $response[4]);
+						//$this->CommandClientSocket(pack("LLLL", 80, GetValueInteger($this->GetIDForIdent("Serial_Handle")), $response[4], 0), 16);
 						//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Serial Read ausgelöst");
 						//$this->CommandClientSocket(pack("LLLL", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
            				}
