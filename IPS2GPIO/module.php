@@ -459,7 +459,7 @@ class IPS2GPIO_IO extends IPSModule
 	    						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $MessageArray[2])));
 	    					}
 	    					elseif (($PinNotify[$j] == 15) AND ($i < 2)) {
-	    						//If ($this->GetBuffer("SerialNotify") <> $Bitvalue) {
+	    						If ($this->GetBuffer("SerialNotify") <> $Bitvalue) {
 		    						// Einlesen der Seriellen Daten veranlassen
 		    						IPS_LogMessage("IPS2GPIO Notify: ","Pin ".$PinNotify[$j]." Value ->".$Bitvalue);
 		    						//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle")));
@@ -469,7 +469,7 @@ class IPS2GPIO_IO extends IPSModule
 									$this->CommandClientSocket(pack("L*", 80, GetValueInteger($this->GetIDForIdent("Serial_Handle")), $Data, 0), 16 + $Data);
 								}
 								$this->SetBuffer("SerialNotify", $Bitvalue);	
-	    						//}
+	    						}
 	    					}
 	    				}
 				}
@@ -612,9 +612,6 @@ class IPS2GPIO_IO extends IPSModule
 	{
 		$Result = -999;
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
-			$Test = array();
-			$Test = unpack("L*", $message);
-			//IPS_LogMessage("IPS2GPIO ReceiveData", "Command-Eingang: ".$Test[1]);
 			
 			if (IPS_SemaphoreEnter("CommandClientSocket", 5))
 			{
@@ -893,14 +890,6 @@ class IPS2GPIO_IO extends IPSModule
   		        case "82":
            			If ($response[4] >= 0) {
            				//IPS_LogMessage("IPS2GPIO Check Bytes Serial","Serial Handle: ".$response[2]." Bytes zum Lesen: ".$response[4]);
-           				If ($response[4] > 0) {
-           					// Einlesen der vorliegenden Daten
-						//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Serial Read auslösen");
-           					//$this->CommandClientSocket(pack("L*", 80, GetValueInteger($this->GetIDForIdent("Serial_Handle")), $response[4], 0), 16 + $response[4]);
-						//$this->CommandClientSocket(pack("LLLL", 80, GetValueInteger($this->GetIDForIdent("Serial_Handle")), $response[4], 0), 16);
-						//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Serial Read ausgelöst");
-						//$this->CommandClientSocket(pack("LLLL", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
-           				}
            			}
            			else {
            				IPS_LogMessage("IPS2GPIO Check Bytes Serial","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
