@@ -298,6 +298,7 @@
 					}
 				}
 				else {
+					$this->Setup();
 					$this->ReadCalibrateData();
 				}
 			}
