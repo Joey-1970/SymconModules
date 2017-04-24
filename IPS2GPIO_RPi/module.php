@@ -21,9 +21,7 @@
         {
                  // Diese Zeile nicht löschen
                  parent::ApplyChanges();
-                 //Connect to available splitter or create a new one
-	         $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
-	   	
+  	   	
 		// Profil anlegen
 		$this->RegisterProfileFloat("megabyte.MB", "Information", "", " MB", 0, 1000000, 0.1, 1);
 		//$this->RegisterProfileInteger("kilobyte", "Information", "", " kb", 0, 1000000, 1);
