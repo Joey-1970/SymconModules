@@ -162,7 +162,7 @@
 	{
 		//IPS_LogMessage("IPS2GPIO BME280", "Messung!");
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("Measurement", "Messung ausführen", 0);
+			$this->SendDebug("Measurement", "Messung ausfuehren", 0);
 			// Messwerte aktualisieren
 			$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
 			If (count($CalibrateData) == 32)  {
