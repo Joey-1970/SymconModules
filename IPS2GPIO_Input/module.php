@@ -22,9 +22,7 @@
         {
                 // Diese Zeile nicht löschen
                 parent::ApplyChanges();
-                //Connect to available splitter or create a new one
-	        $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
-	   
+  	   
 	        //Status-Variablen anlegen
 	        $this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
                 $this->DisableAction("Status");
