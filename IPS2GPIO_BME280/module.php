@@ -162,6 +162,7 @@
 			$this->SendDebug("Measurement", "Messung ausfuehren", 0);
 			// Messwerte aktualisieren
 			$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
+			$this->SendDebug("Measurement", "CalibrateData: ".count($CalibrateData), 0);
 			If (count($CalibrateData) == 32)  {
 				$this->ReadData();
 				// Kalibrierungsdatan aufbereiten
@@ -206,6 +207,7 @@
 
 				// Messwerte aufbereiten
 				$MeasurementData = unserialize($this->GetBuffer("MeasurementData"));
+				$this->SendDebug("Measurement", "MeasurementData: ".count($MeasurementData), 0);
 				If (count($MeasurementData) == 8) {
 					$Pres_raw = (($MeasurementData[1] << 12) | ($MeasurementData[2] << 4) | ($MeasurementData[3] >> 4));
 					$Temp_raw = (($MeasurementData[4] << 12) | ($MeasurementData[5] << 4) | ($MeasurementData[6] >> 4));
