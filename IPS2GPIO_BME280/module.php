@@ -296,10 +296,11 @@
 						SetValueFloat($this->GetIDForIdent("PressureTrend24h"), $this->PressureTrend(24));
 					}
 				}
-				else {
-					$this->Setup();
-					$this->ReadCalibrateData();
-				}
+				
+			}
+			else {
+				$this->Setup();
+				$this->ReadCalibrateData();
 			}
 		}
 	}	
