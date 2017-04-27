@@ -326,6 +326,7 @@
 	private function ReadCalibrateData()
 	{
 		// Kalibrierungsdaten neu einlesen
+		$this->SendDebug("ReadCalibrateData", "Aktuelle Kalibrierungsdaten einlesen", 0);
 		$CalibrateData = array();
 		$this->SetBuffer("CalibrateData", serialize($CalibrateData));
 
@@ -343,6 +344,7 @@
 	private function ReadData()
 	{
 		// Liest die Messdaten ein
+		$this->SendDebug("ReadData", "Aktuelle Messdaten einlesen", 0);
 		$MeasurementData = array();
 		$this->SetBuffer("MeasurementData", serialize($MeasurementData));
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_block_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F7"), "Count" => 8)));
