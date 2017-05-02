@@ -169,6 +169,7 @@ class IPS2SingleRoomControl extends IPSModule
 				$this->SetTimerInterval("AutomaticFallback", ($this->ReadPropertyInteger("AutomaticFallback") * 1000 * 60));	
 			}
 			SetValueFloat($this->GetIDForIdent($Ident), max(5, Min($Value, 35)));
+			SetValueBoolean($this->GetIDForIdent("OperatingMode"),  false);
 			$this->Measurement();
 	            	break;
 	        case "OperatingMode":
