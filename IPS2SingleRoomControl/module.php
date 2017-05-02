@@ -86,12 +86,15 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->RegisterVariableFloat("ActualTemperature", "Ist-Temperatur", "~Temperature", 10);
 		$this->DisableAction("ActualTemperature");
 		$this->RegisterVariableFloat("SetpointTemperature", "Soll-Temperatur", "~Temperature.Room", 20);
+		$this->EnableAction("SetpointTemperature");
+		/*
 		If ($this->GetIDForIdent("OperatingMode") == true) {
 			$this->EnableAction("SetpointTemperature");
 		}
 		else {
 			$this->EnableAction("SetpointTemperature");
 		}
+		*/
 		$this->RegisterVariableBoolean("BoostMode", "Boost-Mode", "~Switch", 35);
 		$this->EnableAction("BoostMode");
 		$this->RegisterVariableInteger("Modus", "Modus", "heating.modus", 37);
@@ -170,7 +173,10 @@ class IPS2SingleRoomControl extends IPSModule
   		switch($Ident) {
 	        case "SetpointTemperature":
 	            	//Neuen Wert in die Statusvariable schreiben
-	            	SetValueFloat($this->GetIDForIdent($Ident), max(5, Min($Value, 35)));
+	            	If ($this->GetIDForIdent("OperatingMode") == true) {
+				$this->SetTimerInterval("AutomaticFallback", ($this->ReadPropertyInteger("AutomaticFallback") * 1000 * 60));	
+			}
+			SetValueFloat($this->GetIDForIdent($Ident), max(5, Min($Value, 35)));
 			$this->Measurement();
 	            	break;
 	        case "OperatingMode":
@@ -439,9 +445,10 @@ class IPS2SingleRoomControl extends IPSModule
 	public function SetTemperature(float $Value)
 	{
 		If ($this->GetIDForIdent("OperatingMode") == true) {
-			SetValueFloat($this->GetIDForIdent("SetpointTemperature"), max(5, Min($Value, 35)));
-			$this->Measurement();
+			$this->SetTimerInterval("AutomaticFallback", ($this->ReadPropertyInteger("AutomaticFallback") * 1000 * 60));	
 		}
+		SetValueFloat($this->GetIDForIdent("SetpointTemperature"), max(5, Min($Value, 35)));
+		$this->Measurement();
 	}
 	
 	public function SetBoostMode(bool $Value)
@@ -473,7 +480,7 @@ class IPS2SingleRoomControl extends IPSModule
 		}
 		else {
 			// Timer für automatischen Fallback starten
-			$this->EnableAction("SetpointTemperature");
+			//$this->EnableAction("SetpointTemperature");
 			$this->SetTimerInterval("AutomaticFallback", ($this->ReadPropertyInteger("AutomaticFallback") * 1000 * 60));
 		}
 	}
