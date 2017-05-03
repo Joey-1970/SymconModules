@@ -84,7 +84,7 @@ class IPS2SingleRoomControl extends IPSModule
 		$arrayOptions[] = array("label" => "PWM", "value" => 1);
 		$arrayOptions[] = array("label" => "HM", "value" => 2);
 		$arrayOptions[] = array("label" => "FS20", "value" => 3);
-		$arrayOptions[] = array("label" => "1-Wire", "value" => 4);
+		$arrayOptions[] = array("label" => "1-Wire (DS2450)", "value" => 4);
 		$arrayOptions[] = array("label" => "ESP8266", "value" => 5);
 		$arrayElements[] = array("type" => "Select", "name" => "ActuatorTyp", "caption" => "Aktor Typ", "options" => $arrayOptions );
 
@@ -103,17 +103,25 @@ class IPS2SingleRoomControl extends IPSModule
 			$arrayElements[] = array("type" => "Label", "label" => "Minmale Schaltzeit des Stellantriebs:");
 			$arrayElements[] = array("type" => "NumberSpinner", "name" => "MinSwitchTime", "caption" => "Minumum (sek)");
 			$arrayElements[] = array("type" => "Label", "label" => "Variable die vom PWM-Ausgang geschaltet werden soll:");
-			$arrayElements[] = array("type" => "SelectVariable", "name" => PWM_ActuatorID", "caption" => "Aktor");     
+			$arrayElements[] = array("type" => "SelectVariable", "name" => "PWM_ActuatorID", "caption" => "Aktor");     
 		}
 		elseif ($this->ReadPropertyInteger("ActuatorTyp") == 2) {
 			$arrayElements[] = array("type" => "Label", "label" => "Instanz des HM-Stellantriebes:");
-			$arrayElements[] = array("type" => "SelectInstance", "name" => HM_ActuatorID", "caption" => "Aktor");	
+			$arrayElements[] = array("type" => "SelectInstance", "name" => "HM_ActuatorID", "caption" => "Aktor");	
 		}
 		elseif ($this->ReadPropertyInteger("ActuatorTyp") == 3) {
-		
+			$arrayElements[] = array("type" => "Label", "label" => "Instanz des FS20-Stellantriebes:");
+			$arrayElements[] = array("type" => "SelectInstance", "name" => "FS_ActuatorID", "caption" => "Aktor");	
 		}
 		elseif ($this->ReadPropertyInteger("ActuatorTyp") == 4) {
-		
+			$arrayElements[] = array("type" => "Label", "label" => "Instanz des 1-Wire-Stellantriebes (DS2450):");
+			$arrayElements[] = array("type" => "SelectInstance", "name" => "1W_ActuatorID", "caption" => "Aktor");
+			$arrayOptions = array();
+			$arrayOptions[] = array("label" => "0 (A)", "value" => 0);
+			$arrayOptions[] = array("label" => "1 (B)", "value" => 1);
+			$arrayOptions[] = array("label" => "2 (C)", "value" => 2);
+			$arrayOptions[] = array("label" => "3 (D)", "value" => 3);
+			$arrayElements[] = array("type" => "Select", "name" => "1W_Pin", "caption" => "Pin", "options" => $arrayOptions );
 		}
 		elseif ($this->ReadPropertyInteger("ActuatorTyp") == 5) {
 		
