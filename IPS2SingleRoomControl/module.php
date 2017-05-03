@@ -124,7 +124,8 @@ class IPS2SingleRoomControl extends IPSModule
 			$arrayElements[] = array("type" => "Select", "name" => "1W_Pin", "caption" => "Pin", "options" => $arrayOptions );
 		}
 		elseif ($this->ReadPropertyInteger("ActuatorTyp") == 5) {
-		
+			$arrayElements[] = array("type" => "Label", "label" => "UDP Socket des ESP8266-Stellantriebes:");
+			$arrayElements[] = array("type" => "SelectInstance", "name" => "ESP_ActuatorID", "caption" => "Aktor");
 		}
 				
 		
