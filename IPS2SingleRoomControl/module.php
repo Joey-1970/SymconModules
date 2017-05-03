@@ -61,7 +61,7 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->RegisterPropertyInteger("ColorTemperatur_8", 0x298A08);
 	}
 
-	/*
+	
 	public function GetConfigurationForm() 
 	{ 
 		$arrayStatus = array(); 
@@ -186,7 +186,7 @@ class IPS2SingleRoomControl extends IPSModule
 		
  		return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements, "actions" => $arrayActions)); 		 
  	} 
-	*/  
+	
 	
 	
 	
