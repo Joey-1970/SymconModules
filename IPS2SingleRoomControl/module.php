@@ -138,18 +138,14 @@ class IPS2SingleRoomControl extends IPSModule
             	$arrayElements[] = array("type" => "NumberSpinner", "name" => "TemperatureReduction", "caption" => "Absenkung (C°)");
             	$arrayElements[] = array("type" => "Label", "label" => "Erhöhung der Soll-Temperatur bei Nutzung der 'Boost'-Funktion:");
             	$arrayElements[] = array("type" => "NumberSpinner", "name" => "TemperatureIncrease", "caption" => "Erhöhung (C°)");
-            	$arrayElements[] = array("type" => "Label", "label" => ""Automatischer Rückfall von der 'Boost'-Funktion in den Automatik-Betrieb in Minuten (0 -> aus, empfohlen 60):");
+            	$arrayElements[] = array("type" => "Label", "label" => "Automatischer Rückfall von der 'Boost'-Funktion in den Automatik-Betrieb in Minuten (0 -> aus, empfohlen 60):");
             	$arrayElements[] = array("type" => "IntervalBox", "name" => "AutomaticFallbackBoost",  "caption" => "Dauer (min)");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		 
-		 
-		 
-		 { "type": "Label", "label": "Variable die den Zustand des Fensters oben enthält (Boolean, True -> Fenster oben geschlossen):" },
-            { "type": "SelectVariable", "name": "WindowStatusID", "caption": "Fenster Status" },
-            { "type": "Label", "label": "Variable die den Zustand des Fensters unten enthält (Boolean, True -> Fenster unten geschlossen):" },
-            { "type": "SelectVariable", "name": "WindowStatusBelowID", "caption": "Fenster Status" },
-            { "name": "WindowStatusMode", "type": "CheckBox",  "caption": "Eingänge der Fenstermelder negieren" },
-	    	
+		$arrayElements[] = array("type" => "Label", "label" => "Variable die den Zustand des Fensters oben enthält (Boolean, True -> Fenster oben geschlossen):"); 
+		$arrayElements[] = array("type" => "SelectVariable", "name" => "WindowStatusID", "caption" => "Fenster Status");
+		$arrayElements[] = array("type" => "Label", "label" => "Variable die den Zustand des Fensters unten enthält (Boolean, True -> Fenster unten geschlossen):"); 
+		$arrayElements[] = array("type" => "SelectVariable", "name" => "WindowStatusBelowID", "caption" => "Fenster Status");
+		$arrayElements[] = array("type" => "CheckBox", "name" => "WindowStatusMode", "caption" => "Eingänge der Fenstermelder negieren");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		
 		 { "type": "CheckBox", "name": "LoggingSetpointTemperature", "caption": "Logging Soll-Temperatur aktivieren" },
