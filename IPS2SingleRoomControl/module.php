@@ -23,6 +23,7 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->RegisterPropertyInteger("PositionElementMax", 100);
 		$this->RegisterTimer("PWM", 0, 'IPS2SRC_PWM($_IPS["TARGET"]);');
 		$this->RegisterPropertyInteger("MinSwitchTime", 5);
+		$this->RegisterPropertyInteger("Actuator", 1);
 		$this->RegisterPropertyInteger("PWM_ActuatorID", 0);
 		$this->RegisterPropertyInteger("HM_ActuatorID", 0);
 		$this->RegisterPropertyInteger("FS_ActuatorID", 0);
@@ -78,8 +79,15 @@ class IPS2SingleRoomControl extends IPSModule
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, empfohlen 120)");
 		$arrayElements[] = array("name" => "Messzyklus", "type" => "IntervalBox",  "caption" => "Messzyklus (sek)"); 
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		
-		
+		$arrayElements[] = array("type" => "Label", "label" => "Wahl des Stellantrieb-Aktors: ");
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "PWM", "value" => 1);
+		$arrayOptions[] = array("label" => "HM", "value" => 2);
+		$arrayOptions[] = array("label" => "FS20", "value" => 3);
+		$arrayOptions[] = array("label" => "1-Wire", "value" => 4);
+		$arrayOptions[] = array("label" => "ESP8266", "value" => 5);
+		$arrayElements[] = array("type" => "Select", "name" => "ActuatorTyp", "caption" => "Aktor Typ", "options" => $arrayOptions );
+
 		
 		
 		
