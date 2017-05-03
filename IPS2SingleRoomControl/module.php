@@ -23,7 +23,7 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->RegisterPropertyInteger("PositionElementMax", 100);
 		$this->RegisterTimer("PWM", 0, 'IPS2SRC_PWM($_IPS["TARGET"]);');
 		$this->RegisterPropertyInteger("MinSwitchTime", 5);
-		$this->RegisterPropertyInteger("Actuator", 1);
+		$this->RegisterPropertyInteger("ActuatorTyp", 1);
 		$this->RegisterPropertyInteger("PWM_ActuatorID", 0);
 		$this->RegisterPropertyInteger("HM_ActuatorID", 0);
 		$this->RegisterPropertyInteger("FS_ActuatorID", 0);
