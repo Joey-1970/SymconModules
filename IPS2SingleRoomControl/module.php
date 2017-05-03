@@ -77,7 +77,7 @@ class IPS2SingleRoomControl extends IPSModule
 		$arrayElements[] = array("type" => "SelectVariable", "name" => "ActualTemperatureID", "caption" => "Ist-Temperatur"); 
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, empfohlen 120)");
-		$arrayElements[] = array("name" => "Messzyklus", "type" => "IntervalBox",  "caption" => "Messzyklus (sek)"); 
+		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus",  "caption" => "Messzyklus (sek)"); 
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Wahl des Stellantrieb-Aktors:");
 		$arrayOptions = array();
@@ -127,7 +127,59 @@ class IPS2SingleRoomControl extends IPSModule
 			$arrayElements[] = array("type" => "Label", "label" => "UDP Socket des ESP8266-Stellantriebes:");
 			$arrayElements[] = array("type" => "SelectInstance", "name" => "ESP_ActuatorID", "caption" => "Aktor");
 		}
-				
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");	
+		$arrayElements[] = array("type" => "Label", "label" => "Automatischer Rückfall vom Manuell in den Automatik-Betrieb in Minuten (0 -> aus, empfohlen 120):");
+		$arrayElements[] = array("type" => "IntervalBox", "name" => "AutomaticFallback",  "caption" => "Dauer (min)");
+		$arrayElements[] = array("type" => "Label", "label" => "Variable die Feiertage und ganztägige Anwesenheit (z.B. Urlaub) enthält (Boolean, True -> Feiertag, Urlaub):");
+		$arrayElements[] = array("type" => "SelectVariable", "name" => "DayStatusID", "caption" => "Feiertags/Urlaub"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Variable die Abwesenheit enthält (Boolean, True -> Anwesend):");
+           	$arrayElements[] = array("type" => "SelectVariable", "name" => "PresenceStatusID", "caption" => "Abwesenheit");
+            	$arrayElements[] = array("type" => "Label", "label" => "Absenkung der Soll-Temperatur bei Abwesenheit:");
+            	$arrayElements[] = array("type" => "NumberSpinner", "name" => "TemperatureReduction", "caption" => "Absenkung (C°)");
+            	$arrayElements[] = array("type" => "Label", "label" => "Erhöhung der Soll-Temperatur bei Nutzung der 'Boost'-Funktion:");
+            	$arrayElements[] = array("type" => "NumberSpinner", "name" => "TemperatureIncrease", "caption" => "Erhöhung (C°)");
+            	$arrayElements[] = array("type" => "Label", "label" => ""Automatischer Rückfall von der 'Boost'-Funktion in den Automatik-Betrieb in Minuten (0 -> aus, empfohlen 60):");
+            	$arrayElements[] = array("type" => "IntervalBox", "name" => "AutomaticFallbackBoost",  "caption" => "Dauer (min)");
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		 
+		 
+		 
+		 { "type": "Label", "label": "Variable die den Zustand des Fensters oben enthält (Boolean, True -> Fenster oben geschlossen):" },
+            { "type": "SelectVariable", "name": "WindowStatusID", "caption": "Fenster Status" },
+            { "type": "Label", "label": "Variable die den Zustand des Fensters unten enthält (Boolean, True -> Fenster unten geschlossen):" },
+            { "type": "SelectVariable", "name": "WindowStatusBelowID", "caption": "Fenster Status" },
+            { "name": "WindowStatusMode", "type": "CheckBox",  "caption": "Eingänge der Fenstermelder negieren" },
+	    	
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		
+		 { "type": "CheckBox", "name": "LoggingSetpointTemperature", "caption": "Logging Soll-Temperatur aktivieren" },
+            { "type": "CheckBox", "name": "LoggingActualTemperature", "caption": "Logging Ist-Temperatur aktivieren" },
+		
+		
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		
+		{ "type": "Label", "label": "Vorgaben für den Wochenplan:" },
+            { "type": "Label", "label": "Temperatur 1:" },
+            { "type": "NumberSpinner", "name": "Temperatur_1", "caption": "Grad C°", "digits": 1},
+            { "type": "Label", "label": "Temperatur 2:" },
+            { "type": "NumberSpinner", "name": "Temperatur_2", "caption": "Grad C°", "digits": 1},
+            { "type": "Label", "label": "Temperatur 3:" },
+            { "type": "NumberSpinner", "name": "Temperatur_3", "caption": "Grad C°", "digits": 1},
+            { "type": "Label", "label": "Temperatur 4:" },
+            { "type": "NumberSpinner", "name": "Temperatur_4", "caption": "Grad C°", "digits": 1},
+            { "type": "Label", "label": "Temperatur 5:" },
+            { "type": "NumberSpinner", "name": "Temperatur_5", "caption": "Grad C°", "digits": 1},
+            { "type": "Label", "label": "Temperatur 6:" },
+            { "type": "NumberSpinner", "name": "Temperatur_6", "caption": "Grad C°", "digits": 1},
+            { "type": "Label", "label": "Temperatur 7:" },
+            { "type": "NumberSpinner", "name": "Temperatur_7", "caption": "Grad C°", "digits": 1},
+            { "type": "Label", "label": "Temperatur 8:" },
+            { "type": "NumberSpinner", "name": "Temperatur_8", "caption": "Grad C°", "digits": 1}
+           
+            
+         
+		
+		
 		
 		
 		$arrayActions = array();
