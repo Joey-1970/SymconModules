@@ -147,36 +147,26 @@ class IPS2SingleRoomControl extends IPSModule
 		$arrayElements[] = array("type" => "SelectVariable", "name" => "WindowStatusBelowID", "caption" => "Fenster Status");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "WindowStatusMode", "caption" => "Eingänge der Fenstermelder negieren");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		
-		 { "type": "CheckBox", "name": "LoggingSetpointTemperature", "caption": "Logging Soll-Temperatur aktivieren" },
-            { "type": "CheckBox", "name": "LoggingActualTemperature", "caption": "Logging Ist-Temperatur aktivieren" },
-		
-		
+		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingSetpointTemperature", "caption" => "Logging Soll-Temperatur aktivieren");
+		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingActualTemperature", "caption" => "Logging Ist-Temperatur aktivieren");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		
-		{ "type": "Label", "label": "Vorgaben für den Wochenplan:" },
-            { "type": "Label", "label": "Temperatur 1:" },
-            { "type": "NumberSpinner", "name": "Temperatur_1", "caption": "Grad C°", "digits": 1},
-            { "type": "Label", "label": "Temperatur 2:" },
-            { "type": "NumberSpinner", "name": "Temperatur_2", "caption": "Grad C°", "digits": 1},
-            { "type": "Label", "label": "Temperatur 3:" },
-            { "type": "NumberSpinner", "name": "Temperatur_3", "caption": "Grad C°", "digits": 1},
-            { "type": "Label", "label": "Temperatur 4:" },
-            { "type": "NumberSpinner", "name": "Temperatur_4", "caption": "Grad C°", "digits": 1},
-            { "type": "Label", "label": "Temperatur 5:" },
-            { "type": "NumberSpinner", "name": "Temperatur_5", "caption": "Grad C°", "digits": 1},
-            { "type": "Label", "label": "Temperatur 6:" },
-            { "type": "NumberSpinner", "name": "Temperatur_6", "caption": "Grad C°", "digits": 1},
-            { "type": "Label", "label": "Temperatur 7:" },
-            { "type": "NumberSpinner", "name": "Temperatur_7", "caption": "Grad C°", "digits": 1},
-            { "type": "Label", "label": "Temperatur 8:" },
-            { "type": "NumberSpinner", "name": "Temperatur_8", "caption": "Grad C°", "digits": 1}
-           
-            
-         
-		
-		
-		
+		$arrayElements[] = array("type" => "Label", "label" => "Vorgaben für den Wochenplan:"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Temperatur 1:");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Temperatur_1"", "caption" => "Grad C°", "digits" => 1);
+		$arrayElements[] = array("type" => "Label", "label" => "Temperatur 2:");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Temperatur_2"", "caption" => "Grad C°", "digits" => 1);
+		$arrayElements[] = array("type" => "Label", "label" => "Temperatur 3:");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Temperatur_3"", "caption" => "Grad C°", "digits" => 1);
+		$arrayElements[] = array("type" => "Label", "label" => "Temperatur 4:");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Temperatur_4"", "caption" => "Grad C°", "digits" => 1);
+		$arrayElements[] = array("type" => "Label", "label" => "Temperatur 5:");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Temperatur_5"", "caption" => "Grad C°", "digits" => 1);
+		$arrayElements[] = array("type" => "Label", "label" => "Temperatur 6:");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Temperatur_6"", "caption" => "Grad C°", "digits" => 1);
+		$arrayElements[] = array("type" => "Label", "label" => "Temperatur 7:");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Temperatur_7"", "caption" => "Grad C°", "digits" => 1);
+		$arrayElements[] = array("type" => "Label", "label" => "Temperatur 8:");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Temperatur_8"", "caption" => "Grad C°", "digits" => 1);
 		
 		$arrayActions = array();
 		If ($this->ReadPropertyBoolean("Open") == true) {   
