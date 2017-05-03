@@ -74,7 +74,7 @@ class IPS2SingleRoomControl extends IPSModule
 		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
  		$arrayElements[] = array("type" => "Label", "label" => "Variable die den aktuellen Temperaturwert enthält:");
-		$arrayElements[] = array("name" => "ActualTemperatureID", "type" => "SelectVariable",  "caption" => "Ist-Temperatur"); 
+		$arrayElements[] = array("type" => "SelectVariable", "name" => "ActualTemperatureID", "caption" => "Ist-Temperatur"); 
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, empfohlen 120)");
 		$arrayElements[] = array("name" => "Messzyklus", "type" => "IntervalBox",  "caption" => "Messzyklus (sek)"); 
@@ -96,7 +96,14 @@ class IPS2SingleRoomControl extends IPSModule
 			$arrayElements[] = array("type" => "Label", "label" => "Verstärkungsfaktor Differenzialregler:");
 			$arrayElements[] = array("type" => "NumberSpinner", "name" => "KD", "caption" => "Kd", "digits" => 1);
 			$arrayElements[] = array("type" => "Label", "label" => "__________________________________________________________" };
-			 
+			$arrayElements[] = array("type" => "Label", "label" => "Minimale Öffnung des Stellantriebs:");
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PositionElementMin", "caption" => "Minimum (%)");
+			$arrayElements[] = array("type" => "Label", "label" => "Maximale Öffnung des Stellantriebs:");
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PositionElementMax", "caption" => "Maximum (%)");
+			$arrayElements[] = array("type" => "Label", "label" => "Minmale Schaltzeit des Stellantriebs:");
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "MinSwitchTime", "caption" => "Minumum (sek)");
+			$arrayElements[] = array("type" => "Label", "label" => "Variable die vom PWM-Ausgang geschaltet werden soll:");
+			$arrayElements[] = array("type" => "SelectVariable", "name" => PWM_ActuatorID", "caption" => "Aktor");     
 		}
 		elseif ($this->ReadPropertyInteger("ActuatorTyp") == 2) {
 		
