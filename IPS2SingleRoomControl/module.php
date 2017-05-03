@@ -79,7 +79,7 @@ class IPS2SingleRoomControl extends IPSModule
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, empfohlen 120)");
 		$arrayElements[] = array("name" => "Messzyklus", "type" => "IntervalBox",  "caption" => "Messzyklus (sek)"); 
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		$arrayElements[] = array("type" => "Label", "label" => "Wahl des Stellantrieb-Aktors: ");
+		$arrayElements[] = array("type" => "Label", "label" => "Wahl des Stellantrieb-Aktors:");
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "PWM", "value" => 1);
 		$arrayOptions[] = array("label" => "HM", "value" => 2);
@@ -88,10 +88,31 @@ class IPS2SingleRoomControl extends IPSModule
 		$arrayOptions[] = array("label" => "ESP8266", "value" => 5);
 		$arrayElements[] = array("type" => "Select", "name" => "ActuatorTyp", "caption" => "Aktor Typ", "options" => $arrayOptions );
 
+		If ($this->ReadPropertyInteger("ActuatorTyp") == 1) {
+			$arrayElements[] = array("type" => "Label", "label" => "Verstärkungsfaktor Proportionalregler:");
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "KP", "caption" => "Kp", "digits" => 1);
+			$arrayElements[] = array("type" => "Label", "label" => "Verstärkungsfaktor Integralregler:");
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "KI", "caption" => "Ki", "digits" => 1);
+			$arrayElements[] = array("type" => "Label", "label" => "Verstärkungsfaktor Differenzialregler:");
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "KD", "caption" => "Kd", "digits" => 1);
+			$arrayElements[] = array("type" => "Label", "label" => "__________________________________________________________" };
+			 
+		}
+		elseif ($this->ReadPropertyInteger("ActuatorTyp") == 2) {
 		
+		}
+		elseif ($this->ReadPropertyInteger("ActuatorTyp") == 3) {
 		
+		}
+		elseif ($this->ReadPropertyInteger("ActuatorTyp") == 4) {
 		
+		}
+		elseif ($this->ReadPropertyInteger("ActuatorTyp") == 5) {
+		
+		}
 				
+		
+		
 		$arrayActions = array();
 		If ($this->ReadPropertyBoolean("Open") == true) {   
 			$arrayActions[] = array("type" => "Label", "label" => "Aktuell sind keine Testfunktionen definiert");
