@@ -106,7 +106,8 @@ class IPS2SingleRoomControl extends IPSModule
 			$arrayElements[] = array("type" => "SelectVariable", "name" => PWM_ActuatorID", "caption" => "Aktor");     
 		}
 		elseif ($this->ReadPropertyInteger("ActuatorTyp") == 2) {
-		
+			$arrayElements[] = array("type" => "Label", "label" => "Instanz des HM-Stellantriebes:");
+			$arrayElements[] = array("type" => "SelectInstance", "name" => HM_ActuatorID", "caption" => "Aktor");	
 		}
 		elseif ($this->ReadPropertyInteger("ActuatorTyp") == 3) {
 		
