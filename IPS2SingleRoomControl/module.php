@@ -95,7 +95,7 @@ class IPS2SingleRoomControl extends IPSModule
 			$arrayElements[] = array("type" => "NumberSpinner", "name" => "KI", "caption" => "Ki", "digits" => 1);
 			$arrayElements[] = array("type" => "Label", "label" => "Verstärkungsfaktor Differenzialregler:");
 			$arrayElements[] = array("type" => "NumberSpinner", "name" => "KD", "caption" => "Kd", "digits" => 1);
-			$arrayElements[] = array("type" => "Label", "label" => "__________________________________________________________" };
+			$arrayElements[] = array("type" => "Label", "label" => "__________________________________________________________");
 			$arrayElements[] = array("type" => "Label", "label" => "Minimale Öffnung des Stellantriebs:");
 			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PositionElementMin", "caption" => "Minimum (%)");
 			$arrayElements[] = array("type" => "Label", "label" => "Maximale Öffnung des Stellantriebs:");
