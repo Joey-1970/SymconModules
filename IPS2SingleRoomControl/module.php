@@ -60,6 +60,44 @@ class IPS2SingleRoomControl extends IPSModule
 		$this->RegisterPropertyInteger("ColorTemperatur_8", 0x298A08);
 	}
 
+	/*
+	public function GetConfigurationForm() 
+	{ 
+		$arrayStatus = array(); 
+		$arrayStatus[] = array("code" => 101, "icon" => "inactive", "caption" => "Instanz wird erstellt"); 
+		$arrayStatus[] = array("code" => 102, "icon" => "active", "caption" => "Instanz ist aktiv");
+		$arrayStatus[] = array("code" => 104, "icon" => "inactive", "caption" => "Instanz ist inaktiv");
+		$arrayStatus[] = array("code" => 200, "icon" => "error", "caption" => "Instanz ist fehlerhaft");
+		
+		$arrayElements = array(); 
+		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv");
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+ 		$arrayElements[] = array("type" => "Label", "label" => "Variable die den aktuellen Temperaturwert enthält:");
+		$arrayElements[] = array("name" => "ActualTemperatureID", "type" => "SelectVariable",  "caption" => "Ist-Temperatur"); 
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, empfohlen 120)");
+		$arrayElements[] = array("name" => "Messzyklus", "type" => "IntervalBox",  "caption" => "Messzyklus (sek)"); 
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		
+		
+		
+		
+		
+				
+		$arrayActions = array();
+		If ($this->ReadPropertyBoolean("Open") == true) {   
+			$arrayActions[] = array("type" => "Label", "label" => "Aktuell sind keine Testfunktionen definiert");
+		}
+		else {
+			$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
+		}
+		
+ 		return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements, "actions" => $arrayActions)); 		 
+ 	} 
+	*/  
+	
+	
+	
 	public function ApplyChanges()
 	{
 		//Never delete this line!
