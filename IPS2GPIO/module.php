@@ -749,7 +749,7 @@ class IPS2GPIO_IO extends IPSModule
 			case "26":
            			If ($response[4] >= 0 ) {
 					SetValueInteger($this->GetIDForIdent("SoftwareVersion"), $response[4]);
-					If ($response[4] < 62 ) {
+					If ($response[4] < 64 ) {
 						IPS_LogMessage("IPS2GPIO PIGPIO Software Version","Bitte neuste PIGPIO-Software installieren!");
 					}
 				}
