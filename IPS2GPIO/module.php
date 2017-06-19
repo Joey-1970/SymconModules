@@ -20,6 +20,7 @@ class IPS2GPIO_IO extends IPSModule
 	    	$this->RegisterPropertyBoolean("Serial_Used", false);
 	    	$this->RegisterPropertyBoolean("SPI_Used", false);
 		$this->RegisterPropertyBoolean("1Wire_Used", false);
+		$this->RegisterPropertyString("Raspi_Config", "");
 		$this->RegisterPropertyBoolean("Multiplexer", false);
 	    	$this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
 	}
