@@ -23,7 +23,7 @@ class IPS2GPIO_IO extends IPSModule
 		$this->RegisterPropertyBoolean("Multiplexer", false);
 	    	$this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
 	}
-  	/*
+  	
 	public function GetConfigurationForm() 
 	{ 
 		$arrayStatus = array(); 
@@ -41,6 +41,13 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "User", "caption" => "User");
 		$arrayElements[] = array("type" => "PasswordTextBox", "name" => "Password", "caption" => "Password");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "Label", "label" => "Auswahl der erforderlichen Schnittstellen:");
+		$arrayElements[] = array("type" => "CheckBox", "name" => "I2C_Used", "caption" => "I²C");
+		$arrayElements[] = array("type" => "CheckBox", "name" => "Serial_Used", "caption" => "Seriell");
+		$arrayElements[] = array("type" => "CheckBox", "name" => "1Wire_Used", "caption" => "1-Wire");
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+
+		
 		$arrayElements[] = array("type" => "Label", "label" => "Analyse der Raspberry Pi Konfiguration:");
 		$arraySort = array();
 		$arraySort[] = array("column" => "Typ", "direction" => "ascending");
@@ -48,7 +55,7 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayColumns[] = array("label" => "Service", "name" => "ServiceTyp", "width" => "200px", "add" => "");
 		$arrayColumns[] = array("label" => "Status", "name" => "ServiceStatus", "width" => "auto", "add" => "");
 		$ServiceArray = array();
-		$ServiceArray = unserialize($this->CheckConfig());
+		//$ServiceArray = unserialize($this->CheckConfig());
 		$arrayValues[] = array("ServiceTyp" => "I²C", "ServiceStatus" => $ServiceArray["I2C"]["Status"], "rowColor" => $ServiceArray["I2C"]["Color"]);
 		$arrayValues[] = array("ServiceTyp" => "Serielle Schnittstelle (RS232)", "ServiceStatus" => $ServiceArray["Serielle Schnittstelle"]["Status"], "rowColor" => $ServiceArray["Serielle Schnittstelle"]["Color"]);
 		$arrayValues[] = array("ServiceTyp" => "Shell Zugriff", "ServiceStatus" => $ServiceArray["Shell Zugriff"]["Status"], "rowColor" => $ServiceArray["Shell Zugriff"]["Color"]);
@@ -57,10 +64,7 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayElements[] = array("type" => "List", "name" => "Raspi_Config", "caption" => "Konfiguration", "rowCount" => 4, "add" => false, "delete" => false, "sort" => $arraySort, "columns" => $arrayColumns, "values" => $arrayValues);
 	
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		$arrayElements[] = array("type" => "Label", "label" => "Filter zum Entprellen angeschlossener Taster und Schalter setzen (0-5000ms):");
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "GlitchFilter", "caption" => "Glitchfilter (ms)");
-		//$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		
+				
 		$arrayColumns = array();
 		$arrayColumns[] = array("label" => "Typ", "name" => "DeviceTyp", "width" => "120px", "add" => "");
 		$arrayColumns[] = array("label" => "Adresse", "name" => "DeviceAddress", "width" => "60px", "add" => "");
@@ -78,7 +82,7 @@ class IPS2GPIO_IO extends IPSModule
 		If (($this->ConnectionTest()) AND ($this->ReadPropertyBoolean("Open") == true))  {
 			// I²C-Devices einlesen und in das Values-Array kopieren
 			$DeviceArray = array();
-			$DeviceArray = unserialize($this->SearchI2CDevices());
+			//$DeviceArray = unserialize($this->SearchI2CDevices());
 			$arrayValues = array();
 			If (count($DeviceArray , COUNT_RECURSIVE) >= 4) {
 				for ($i = 0; $i < Count($DeviceArray); $i++) {
@@ -93,10 +97,8 @@ class IPS2GPIO_IO extends IPSModule
 			// 1-Wire-Devices einlesen und in das Values-Array kopieren
 			$OWDeviceArray = array();
 			$this->OWSearchStart();
-			$OWDeviceArray = unserialize($this->GetBuffer("OWDeviceArray"));
+			//$OWDeviceArray = unserialize($this->GetBuffer("OWDeviceArray"));
 			If (count($OWDeviceArray , COUNT_RECURSIVE) >= 4) {
-				$arrayElements[] = array("type" => "Label", "label" => "Lesezeit der 1-Wire-Devices verändern:");
-				$arrayElements[] = array("type" => "NumberSpinner", "name" => "TimeCorrection", "caption" => "Zeitkorrektur (%)");
 				$arrayOWValues = array();
 				for ($i = 0; $i < Count($OWDeviceArray); $i++) {
 					$arrayOWValues[] = array("DeviceTyp" => $OWDeviceArray[$i][0], "DeviceSerial" => $OWDeviceArray[$i][1], "InstanceID" => $OWDeviceArray[$i][2], "DeviceStatus" => $OWDeviceArray[$i][3], "rowColor" => $OWDeviceArray[$i][4]);
@@ -106,30 +108,13 @@ class IPS2GPIO_IO extends IPSModule
 			else {
 				$arrayElements[] = array("type" => "Label", "label" => "Es wurden keine 1-Wire-Devices gefunden.");
 			}
-			//$arrayElements[] = array("type" => "Button", "label" => "I²C-Devices einlesen", "onClick" => 'GeCoSIO_SearchI2CDevices($id);');
 			$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 			$arrayElements[] = array("type" => "Label", "label" => "Führt einen Restart des PIGPIO aus:");
-			$arrayElements[] = array("type" => "Button", "label" => "PIGPIO Restart", "onClick" => 'GeCoSIO_PIGPIOD_Restart($id);');
-			$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-			$arrayElements[] = array("type" => "Label", "label" => "Setzen der Real-Time-Clock auf IPS-Zeit:");
-			$arrayElements[] = array("type" => "Button", "label" => "RTC setzen", "onClick" => 'GeCoSIO_SetRTC_Data($id);');		
+			$arrayElements[] = array("type" => "Button", "label" => "PIGPIO Restart", "onClick" => 'I2G_PIGPIOD_Restart($id);');
 		}
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		$arrayElements[] = array("type" => "Label", "label" => "Definition der seriellen Schnittstelle (RS232):");
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "2400", "value" => 2400);
-		$arrayOptions[] = array("label" => "4800", "value" => 4800);
-		$arrayOptions[] = array("label" => "9600", "value" => 9600);
-		$arrayOptions[] = array("label" => "19200", "value" => 19200);
-		$arrayOptions[] = array("label" => "38400", "value" => 38400);
-		$arrayOptions[] = array("label" => "57600", "value" => 57600);
-		$arrayOptions[] = array("label" => "115200", "value" => 115200);
-		$arrayElements[] = array("type" => "Select", "name" => "Baud", "caption" => "Baud", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "label" => "Connection String der seriellen Schnittstelle (z.B. /dev/serial0):");
-		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "ConnectionString", "caption" => "Connection String");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		$arrayElements[] = array("type" => "Button", "label" => "Herstellerinformationen", "onClick" => "echo 'https://www.gedad.de/projekte/projekte-f%C3%BCr-privat/gedad-control/'");
-		
+				
 		$arrayActions = array();
 		If ($this->ReadPropertyBoolean("Open") == true) {   
 			$arrayActions[] = array("type" => "Label", "label" => "Aktuell sind keine Testfunktionen definiert");
@@ -140,7 +125,7 @@ class IPS2GPIO_IO extends IPSModule
 		
  		return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements, "actions" => $arrayActions)); 		 
  	} 
-	*/
+	
 	
 	public function ApplyChanges()
 	{
