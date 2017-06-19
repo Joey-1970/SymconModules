@@ -1299,6 +1299,112 @@ class IPS2GPIO_IO extends IPSModule
 		$Status = (IPS_GetInstance($this->GetParentID())['InstanceStatus']);  
 	return $Status;
 	}
+	
+	private function CheckConfig()
+	{
+		$arrayCheckConfig = array();
+		$arrayCheckConfig["I2C"]["Status"] = "unbekannt";
+		$arrayCheckConfig["I2C"]["Color"] = "#FFFF00";
+		$arrayCheckConfig["Serielle Schnittstelle"]["Status"] = "unbekannt";
+		$arrayCheckConfig["Serielle Schnittstelle"]["Color"] = "#FFFF00";
+		$arrayCheckConfig["Shell Zugriff"]["Status"] = "unbekannt";
+		$arrayCheckConfig["Shell Zugriff"]["Color"] = "#FFFF00";
+		$arrayCheckConfig["PIGPIO Server"]["Status"] = "unbekannt";
+		$arrayCheckConfig["PIGPIO Server"]["Color"] = "#FFFF00";
+		
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+			
+			
+			set_include_path(__DIR__);
+			require_once (__DIR__ . '/Net/SFTP.php');
+			$sftp = new Net_SFTP($this->ReadPropertyString("IPAddress"));
+			$login = @$sftp->login($this->ReadPropertyString("User"), $this->ReadPropertyString("Password"));
+			
+			if ($login == false)
+			{
+			    	$this->SendDebug("CheckConfig", "Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert nicht!", 0);
+				IPS_LogMessage("IPS2GPIO_IO CheckConfig","Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert nicht!");
+			    	$Result = "";
+				return serialize($arrayCheckConfig);
+			}
+			
+			// I²C Schnittstelle
+			$PathConfig = "/boot/config.txt";
+			// Prüfen, ob die Datei existiert
+			if (!$sftp->file_exists($PathConfig)) {
+				$this->SendDebug("CheckConfig", $PathConfig." nicht gefunden!", 0);
+				IPS_LogMessage("IPS2GPIO_IO CheckConfig", $PathConfig." nicht gefunden!");
+			}
+			else {
+				$FileContentConfig = $sftp->get($PathConfig);
+				// Prüfen ob I2C aktiviert ist
+				$Pattern = "/(?:\r\n|\n|\r)(\s*)(device_tree_param|dtparam)=([^,]*,)*i2c(_arm)?(=(on|true|yes|1))(\s*)($:\r\n|\n|\r)/";
+				if (preg_match($Pattern, $FileContentConfig)) {
+					$this->SendDebug("CheckConfig", "I2C ist aktiviert", 0);
+					$arrayCheckConfig["I2C"]["Status"] = "aktiviert";
+					$arrayCheckConfig["I2C"]["Color"] = "#00FF00";
+				} else {
+					$this->SendDebug("CheckConfig", "I2C ist deaktiviert!", 0);
+					IPS_LogMessage("IPS2GPIO_IO CheckConfig", "I2C ist deaktiviert!");
+					$arrayCheckConfig["I2C"]["Status"] = "deaktiviert";
+					$arrayCheckConfig["I2C"]["Color"] = "#FF0000";
+				}
+				// Prüfen ob die serielle Schnittstelle aktiviert ist
+				$Pattern = "/(?:\r\n|\n|\r)(\s*)(enable_uart)(=(on|true|yes|1))(\s*)($:\r\n|\n|\r)/";
+				if (preg_match($Pattern, $FileContentConfig)) {
+					$this->SendDebug("CheckConfig", "Serielle Schnittstelle ist aktiviert", 0);
+					$arrayCheckConfig["Serielle Schnittstelle"]["Status"] = "aktiviert";
+					$arrayCheckConfig["Serielle Schnittstelle"]["Color"] = "#00FF00";			
+				} else {
+					$this->SendDebug("CheckConfig", "Serielle Schnittstelle ist deaktiviert!", 0);
+					IPS_LogMessage("IPS2GPIO_IO CheckConfig", "Serielle Schnittstelle ist deaktiviert!");
+					$arrayCheckConfig["Serielle Schnittstelle"]["Status"] = "deaktiviert";
+					$arrayCheckConfig["Serielle Schnittstelle"]["Color"] = "#FF0000";
+				}
+			}
+			
+			//Serielle Schnittstelle
+			$PathCmdline = "/boot/cmdline.txt";
+			// Prüfen, ob die Datei existiert
+			if (!$sftp->file_exists($PathCmdline)) {
+				$this->SendDebug("CheckConfig", $PathCmdline." nicht gefunden!", 0);
+				IPS_LogMessage("GeCoS_IO CheckConfig", $PathCmdline." nicht gefunden!");
+			}
+			else {
+				$FileContentCmdline = $sftp->get($PathCmdline);
+				// Prüfen ob die Shell der serielle Schnittstelle aktiviert ist
+				$Pattern = "/console=(serial0|ttyAMA(0|1)|tty(0|1))/";
+				if (preg_match($Pattern, $FileContentCmdline)) {
+					$this->SendDebug("CheckConfig", "Shell-Zugriff auf serieller Schnittstelle ist deaktiviert", 0);
+					$arrayCheckConfig["Shell Zugriff"]["Status"] = "deaktiviert";
+					$arrayCheckConfig["Shell Zugriff"]["Color"] = "#00FF00";
+				} else {
+					$this->SendDebug("CheckConfig", "Shell-Zugriff auf serieller Schnittstelle ist aktiviert!", 0);
+					IPS_LogMessage("GeCoS_IO CheckConfig", "Shell-Zugriff auf serieller Schnittstelle ist aktiviert!");
+					$arrayCheckConfig["Shell Zugriff"]["Status"] = "aktiviert";
+					$arrayCheckConfig["Shell Zugriff"]["Color"] = "#FF0000";
+				}
+			}
+			
+			//PIGPIOD
+			$PathPIGPIOD = "/etc/systemd/system/pigpiod.service.d/public.conf";
+			// Prüfen, ob die Datei existiert
+			if ($sftp->file_exists($PathPIGPIOD)) {
+				$this->SendDebug("CheckConfig", "PIGPIO-Server ist aktiviert", 0);
+				$arrayCheckConfig["PIGPIO Server"]["Status"] = "aktiviert";
+				$arrayCheckConfig["PIGPIO Server"]["Color"] = "#00FF00";
+			}
+			else {
+				$this->SendDebug("CheckConfig", "PIGPIO-Server ist deaktiviert!", 0);
+				IPS_LogMessage("GeCoS_IO CheckConfig", "PIGPIO-Server ist deaktiviert!");
+				$arrayCheckConfig["PIGPIO Server"]["Status"] = "deaktiviert";
+				$arrayCheckConfig["PIGPIO Server"]["Color"] = "#FF0000";
+			}
+			
+		}
+			
+	return serialize($arrayCheckConfig);
+	}
   	
   	private function GetErrorText(Int $ErrorNumber)
 	{
