@@ -55,6 +55,7 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayColumns[] = array("label" => "Service", "name" => "ServiceTyp", "width" => "200px", "add" => "");
 		$arrayColumns[] = array("label" => "Status", "name" => "ServiceStatus", "width" => "auto", "add" => "");
 		$ServiceArray = array();
+		
 		$ServiceArray = unserialize($this->CheckConfig());
 		$arrayValues[] = array("ServiceTyp" => "I²C", "ServiceStatus" => $ServiceArray["I2C"]["Status"], "rowColor" => $ServiceArray["I2C"]["Color"]);
 		$arrayValues[] = array("ServiceTyp" => "Serielle Schnittstelle (RS232)", "ServiceStatus" => $ServiceArray["Serielle Schnittstelle"]["Status"], "rowColor" => $ServiceArray["Serielle Schnittstelle"]["Color"]);
@@ -89,7 +90,6 @@ class IPS2GPIO_IO extends IPSModule
 			$arrayElements[] = array("type" => "Label", "label" => "Führt einen Restart des PIGPIO aus:");
 			$arrayElements[] = array("type" => "Button", "label" => "PIGPIO Restart", "onClick" => 'I2G_PIGPIOD_Restart($id);');
 		}
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 				
 		$arrayActions = array();
@@ -1290,8 +1290,6 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayCheckConfig["PIGPIO Server"]["Color"] = "#FFFF00";
 		
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
-			
-			
 			set_include_path(__DIR__);
 			require_once (__DIR__ . '/Net/SFTP.php');
 			$sftp = new Net_SFTP($this->ReadPropertyString("IPAddress"));
