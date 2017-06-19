@@ -1,13 +1,13 @@
 <?
 class IPS2GPIO_IO extends IPSModule
 {
-	  public function __construct($InstanceID) {
-            // Diese Zeile nicht löschen
-            parent::__construct($InstanceID);
-         }
+	public function __construct($InstanceID) {
+            	// Diese Zeile nicht löschen
+            	parent::__construct($InstanceID);
+        }
 
-	  public function Create() 
-	  {
+	public function Create() 
+	{
 	    	// Diese Zeile nicht entfernen
 	    	parent::Create();
 	    
@@ -23,9 +23,127 @@ class IPS2GPIO_IO extends IPSModule
 		$this->RegisterPropertyBoolean("Multiplexer", false);
 	    	$this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
 	}
-  
-	  public function ApplyChanges()
-	  {
+  	/*
+	public function GetConfigurationForm() 
+	{ 
+		$arrayStatus = array(); 
+		$arrayStatus[] = array("code" => 101, "icon" => "inactive", "caption" => "Instanz wird erstellt"); 
+		$arrayStatus[] = array("code" => 102, "icon" => "active", "caption" => "Instanz ist aktiv");
+		$arrayStatus[] = array("code" => 104, "icon" => "inactive", "caption" => "Instanz ist inaktiv");
+		$arrayStatus[] = array("code" => 200, "icon" => "error", "caption" => "Instanz ist fehlerhaft");
+		
+		$arrayElements = array(); 
+		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv");
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+ 		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "IPAddress", "caption" => "IP");
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "Label", "label" => "Zugriffsdaten des Raspberry Pi SSH:");
+		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "User", "caption" => "User");
+		$arrayElements[] = array("type" => "PasswordTextBox", "name" => "Password", "caption" => "Password");
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "Label", "label" => "Analyse der Raspberry Pi Konfiguration:");
+		$arraySort = array();
+		$arraySort[] = array("column" => "Typ", "direction" => "ascending");
+		$arrayColumns = array();
+		$arrayColumns[] = array("label" => "Service", "name" => "ServiceTyp", "width" => "200px", "add" => "");
+		$arrayColumns[] = array("label" => "Status", "name" => "ServiceStatus", "width" => "auto", "add" => "");
+		$ServiceArray = array();
+		$ServiceArray = unserialize($this->CheckConfig());
+		$arrayValues[] = array("ServiceTyp" => "I²C", "ServiceStatus" => $ServiceArray["I2C"]["Status"], "rowColor" => $ServiceArray["I2C"]["Color"]);
+		$arrayValues[] = array("ServiceTyp" => "Serielle Schnittstelle (RS232)", "ServiceStatus" => $ServiceArray["Serielle Schnittstelle"]["Status"], "rowColor" => $ServiceArray["Serielle Schnittstelle"]["Color"]);
+		$arrayValues[] = array("ServiceTyp" => "Shell Zugriff", "ServiceStatus" => $ServiceArray["Shell Zugriff"]["Status"], "rowColor" => $ServiceArray["Shell Zugriff"]["Color"]);
+		$arrayValues[] = array("ServiceTyp" => "PIGPIO Server", "ServiceStatus" => $ServiceArray["PIGPIO Server"]["Status"], "rowColor" => $ServiceArray["PIGPIO Server"]["Color"]);
+		
+		$arrayElements[] = array("type" => "List", "name" => "Raspi_Config", "caption" => "Konfiguration", "rowCount" => 4, "add" => false, "delete" => false, "sort" => $arraySort, "columns" => $arrayColumns, "values" => $arrayValues);
+	
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "Label", "label" => "Filter zum Entprellen angeschlossener Taster und Schalter setzen (0-5000ms):");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "GlitchFilter", "caption" => "Glitchfilter (ms)");
+		//$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		
+		$arrayColumns = array();
+		$arrayColumns[] = array("label" => "Typ", "name" => "DeviceTyp", "width" => "120px", "add" => "");
+		$arrayColumns[] = array("label" => "Adresse", "name" => "DeviceAddress", "width" => "60px", "add" => "");
+		$arrayColumns[] = array("label" => "Bus", "name" => "DeviceBus", "width" => "60px", "add" => "");
+		$arrayColumns[] = array("label" => "Instanz ID", "name" => "InstanceID", "width" => "70px", "add" => "");
+		$arrayColumns[] = array("label" => "Status", "name" => "DeviceStatus", "width" => "auto", "add" => "");
+		
+		$arrayOWColumns = array();
+		$arrayOWColumns[] = array("label" => "Typ", "name" => "DeviceTyp", "width" => "120px", "add" => "");
+		$arrayOWColumns[] = array("label" => "Serien-Nr.", "name" => "DeviceSerial", "width" => "120px", "add" => "");
+		$arrayOWColumns[] = array("label" => "Instanz ID", "name" => "InstanceID", "width" => "70px", "add" => "");
+		$arrayOWColumns[] = array("label" => "Status", "name" => "DeviceStatus", "width" => "auto", "add" => "");
+		
+		
+		If (($this->ConnectionTest()) AND ($this->ReadPropertyBoolean("Open") == true))  {
+			// I²C-Devices einlesen und in das Values-Array kopieren
+			$DeviceArray = array();
+			$DeviceArray = unserialize($this->SearchI2CDevices());
+			$arrayValues = array();
+			If (count($DeviceArray , COUNT_RECURSIVE) >= 4) {
+				for ($i = 0; $i < Count($DeviceArray); $i++) {
+					$arrayValues[] = array("DeviceTyp" => $DeviceArray[$i][0], "DeviceAddress" => $DeviceArray[$i][1], "DeviceBus" => $DeviceArray[$i][2], "InstanceID" => $DeviceArray[$i][3], "DeviceStatus" => $DeviceArray[$i][4], "rowColor" => $DeviceArray[$i][5]);
+				}
+				$arrayElements[] = array("type" => "List", "name" => "I2C_Devices", "caption" => "I²C-Devices", "rowCount" => 5, "add" => false, "delete" => false, "sort" => $arraySort, "columns" => $arrayColumns, "values" => $arrayValues);
+			}
+			else {
+				$arrayElements[] = array("type" => "Label", "label" => "Es wurden keine I²C-Devices gefunden.");
+			}
+			$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+			// 1-Wire-Devices einlesen und in das Values-Array kopieren
+			$OWDeviceArray = array();
+			$this->OWSearchStart();
+			$OWDeviceArray = unserialize($this->GetBuffer("OWDeviceArray"));
+			If (count($OWDeviceArray , COUNT_RECURSIVE) >= 4) {
+				$arrayElements[] = array("type" => "Label", "label" => "Lesezeit der 1-Wire-Devices verändern:");
+				$arrayElements[] = array("type" => "NumberSpinner", "name" => "TimeCorrection", "caption" => "Zeitkorrektur (%)");
+				$arrayOWValues = array();
+				for ($i = 0; $i < Count($OWDeviceArray); $i++) {
+					$arrayOWValues[] = array("DeviceTyp" => $OWDeviceArray[$i][0], "DeviceSerial" => $OWDeviceArray[$i][1], "InstanceID" => $OWDeviceArray[$i][2], "DeviceStatus" => $OWDeviceArray[$i][3], "rowColor" => $OWDeviceArray[$i][4]);
+				}
+				$arrayElements[] = array("type" => "List", "name" => "OW_Devices", "caption" => "1-Wire-Devices", "rowCount" => 5, "add" => false, "delete" => false, "sort" => $arraySort, "columns" => $arrayOWColumns, "values" => $arrayOWValues);
+			}
+			else {
+				$arrayElements[] = array("type" => "Label", "label" => "Es wurden keine 1-Wire-Devices gefunden.");
+			}
+			//$arrayElements[] = array("type" => "Button", "label" => "I²C-Devices einlesen", "onClick" => 'GeCoSIO_SearchI2CDevices($id);');
+			$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+			$arrayElements[] = array("type" => "Label", "label" => "Führt einen Restart des PIGPIO aus:");
+			$arrayElements[] = array("type" => "Button", "label" => "PIGPIO Restart", "onClick" => 'GeCoSIO_PIGPIOD_Restart($id);');
+			$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+			$arrayElements[] = array("type" => "Label", "label" => "Setzen der Real-Time-Clock auf IPS-Zeit:");
+			$arrayElements[] = array("type" => "Button", "label" => "RTC setzen", "onClick" => 'GeCoSIO_SetRTC_Data($id);');		
+		}
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "Label", "label" => "Definition der seriellen Schnittstelle (RS232):");
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "2400", "value" => 2400);
+		$arrayOptions[] = array("label" => "4800", "value" => 4800);
+		$arrayOptions[] = array("label" => "9600", "value" => 9600);
+		$arrayOptions[] = array("label" => "19200", "value" => 19200);
+		$arrayOptions[] = array("label" => "38400", "value" => 38400);
+		$arrayOptions[] = array("label" => "57600", "value" => 57600);
+		$arrayOptions[] = array("label" => "115200", "value" => 115200);
+		$arrayElements[] = array("type" => "Select", "name" => "Baud", "caption" => "Baud", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Label", "label" => "Connection String der seriellen Schnittstelle (z.B. /dev/serial0):");
+		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "ConnectionString", "caption" => "Connection String");
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "Button", "label" => "Herstellerinformationen", "onClick" => "echo 'https://www.gedad.de/projekte/projekte-f%C3%BCr-privat/gedad-control/'");
+		
+		$arrayActions = array();
+		If ($this->ReadPropertyBoolean("Open") == true) {   
+			$arrayActions[] = array("type" => "Label", "label" => "Aktuell sind keine Testfunktionen definiert");
+		}
+		else {
+			$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
+		}
+		
+ 		return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements, "actions" => $arrayActions)); 		 
+ 	} 
+	*/
+	
+	public function ApplyChanges()
+	{
 		//Never delete this line!
 		parent::ApplyChanges();
 		
