@@ -109,14 +109,6 @@ class IPS2GPIO_IO extends IPSModule
 	        $this->RegisterMessage(0, 10100); // Alle Kernelmessages (10103 muss im MessageSink ausgewertet werden.)
 		
 		If (IPS_GetKernelRunlevel() == 10103) {
-			$this->RegisterVariableInteger("Handle", "Handle", "", 100);
-			$this->DisableAction("Handle");
-			IPS_SetHidden($this->GetIDForIdent("Handle"), true);
-			
-			$this->RegisterVariableInteger("HardwareRev", "HardwareRev", "", 105);
-			$this->DisableAction("HardwareRev");
-			IPS_SetHidden($this->GetIDForIdent("HardwareRev"), true);
-		
 			$this->RegisterVariableString("Hardware", "Hardware", "", 107);
 			$this->DisableAction("Hardware");
 			IPS_SetHidden($this->GetIDForIdent("Hardware"), true);
@@ -125,6 +117,16 @@ class IPS2GPIO_IO extends IPSModule
 			$this->DisableAction("SoftwareVersion");
 			IPS_SetHidden($this->GetIDForIdent("SoftwareVersion"), true);
 			
+			// **********************************************************************************
+			
+			$this->RegisterVariableInteger("Handle", "Handle", "", 100);
+			$this->DisableAction("Handle");
+			IPS_SetHidden($this->GetIDForIdent("Handle"), true);
+			
+			$this->RegisterVariableInteger("HardwareRev", "HardwareRev", "", 105);
+			$this->DisableAction("HardwareRev");
+			IPS_SetHidden($this->GetIDForIdent("HardwareRev"), true);
+		
 			$this->RegisterVariableString("PinPossible", "PinPossible", "", 110);
 			$this->DisableAction("PinPossible");
 			IPS_SetHidden($this->GetIDForIdent("PinPossible"), true);
@@ -161,6 +163,8 @@ class IPS2GPIO_IO extends IPSModule
 			$this->RegisterVariableInteger("Serial_Handle", "Serial_Handle", "", 180);
 			$this->DisableAction("Serial_Handle");
 			IPS_SetHidden($this->GetIDForIdent("Serial_Handle"), true);
+			
+			// **********************************************************************************
 			
 			$this->SetBuffer("SerialNotify", "false");
 			$this->SetBuffer("Default_I2C_Bus", 1);
