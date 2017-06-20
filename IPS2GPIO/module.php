@@ -1185,34 +1185,41 @@ class IPS2GPIO_IO extends IPSModule
 	{
 	      $result = false;
 	      If (Sys_Ping($this->ReadPropertyString("IPAddress"), 2000)) {
-			IPS_LogMessage("IPS2GPIO Netzanbindung","Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert");
+			//IPS_LogMessage("IPS2GPIO Netzanbindung","Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert");
+		      	$this->SendDebug("Netzanbindung", "Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert", 0);
 			$status = @fsockopen($this->ReadPropertyString("IPAddress"), 8888, $errno, $errstr, 10);
 				if (!$status) {
 					IPS_LogMessage("IPS2GPIO Netzanbindung: ","Port ist geschlossen!");
+					$this->SendDebug("Netzanbindung", "Port ist geschlossen!", 0);
 					// Versuchen PIGPIO zu starten
 					IPS_LogMessage("IPS2GPIO Netzanbindung: ","Versuche PIGPIO per SSH zu starten...");
+					$this->SendDebug("Netzanbindung", "Versuche PIGPIO per SSH zu starten...", 0);
 					$this->SSH_Connect("sudo pigpiod");
 					$status = @fsockopen($this->ReadPropertyString("IPAddress"), 8888, $errno, $errstr, 10);
 					if (!$status) {
 						IPS_LogMessage("IPS2GPIO Netzanbindung: ","Port ist geschlossen!");
+						$this->SendDebug("Netzanbindung", "Port ist geschlossen!", 0);
 						$this->SetStatus(104);
 					}
 					else {
 						fclose($status);
-						IPS_LogMessage("IPS2GPIO Netzanbindung: ","Port ist geöffnet");
+						//IPS_LogMessage("IPS2GPIO Netzanbindung: ","Port ist geöffnet");
+						$this->SendDebug("Netzanbindung", "Port ist geoeffnet", 0);
 						$result = true;
 						$this->SetStatus(102);
 					}
 	   			}
 	   			else {
 	   				fclose($status);
-					IPS_LogMessage("IPS2GPIO Netzanbindung: ","Port ist geöffnet");
+					//IPS_LogMessage("IPS2GPIO Netzanbindung: ","Port ist geöffnet");
+					$this->SendDebug("Netzanbindung", "Port ist geoeffnet", 0);
 					$result = true;
 					$this->SetStatus(102);
 	   			}
 		}
 		else {
 			IPS_LogMessage("GPIO Netzanbindung: ","IP ".$this->ReadPropertyString("IPAddress")." reagiert nicht!");
+			$this->SendDebug("Netzanbindung", "IP ".$this->ReadPropertyString("IPAddress")." reagiert nicht!", 0);
 			$this->SetStatus(104);
 		}
 	return $result;
