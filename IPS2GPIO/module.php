@@ -18,7 +18,6 @@ class IPS2GPIO_IO extends IPSModule
 	    	$this->RegisterPropertyString("Password", "Passwort");
 	    	$this->RegisterPropertyBoolean("I2C_Used", false);
 	    	$this->RegisterPropertyBoolean("Serial_Used", false);
-	    	$this->RegisterPropertyBoolean("SPI_Used", false);
 		$this->RegisterPropertyBoolean("1Wire_Used", false);
 		$this->RegisterPropertyString("Raspi_Config", "");
 		$this->RegisterPropertyBoolean("Multiplexer", false);
@@ -653,14 +652,7 @@ class IPS2GPIO_IO extends IPSModule
 			// wird Serial nicht benötigt die Pin auf in Input setzen
 			$this->CommandClientSocket(pack("LLLL", 0, 14, 0, 0).pack("LLLL", 0, 15, 0, 0), 16);
 		}
-		If ($this->ReadPropertyBoolean("SPI_Used") == true)  {
-			for ($i = 7; $i < 11; $i++) {
-    				$PinUsed[$i] = 99999;
-			}
-		}
-		else {
-			// wird SPI nicht benötigt die Pin auf Input setzen
-		}
+		
 		// Reseervierung des 1-Wire-Pins
 		If ($this->ReadPropertyBoolean("1Wire_Used") == true)  {
 			$PinUsed[4] = 99999;
