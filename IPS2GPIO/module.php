@@ -122,11 +122,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->RegisterVariableInteger("Handle", "Handle", "", 100);
 			$this->DisableAction("Handle");
 			IPS_SetHidden($this->GetIDForIdent("Handle"), true);
-			
-			$this->RegisterVariableInteger("HardwareRev", "HardwareRev", "", 105);
-			$this->DisableAction("HardwareRev");
-			IPS_SetHidden($this->GetIDForIdent("HardwareRev"), true);
-		
+
 			$this->RegisterVariableString("PinPossible", "PinPossible", "", 110);
 			$this->DisableAction("PinPossible");
 			IPS_SetHidden($this->GetIDForIdent("PinPossible"), true);
@@ -166,6 +162,7 @@ class IPS2GPIO_IO extends IPSModule
 			
 			// **********************************************************************************
 			
+			$this->SetBuffer("HardwareRev", 0);
 			$this->SetBuffer("SerialNotify", "false");
 			$this->SetBuffer("Default_I2C_Bus", 1);
 			$this->SetBuffer("Default_Serial_Bus", 0);
@@ -311,11 +308,11 @@ class IPS2GPIO_IO extends IPSModule
 				$PinPossible = unserialize(GetValueString($this->GetIDForIdent("PinPossible")));
 				if (in_array($data->Pin, $PinPossible)) {
 			    		//IPS_LogMessage("IPS2GPIO Pin: ","Gewählter Pin ist bei diesem Modell verfügbar");
-			    		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>102, "HardwareRev"=>GetValueInteger($this->GetIDForIdent("HardwareRev")))));
+			    		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>102, "HardwareRev"=>$this->GetBuffer("HardwareRev") )));
 				}
 				else {
 					IPS_LogMessage("IPS2GPIO Pin: ","Gewählter Pin ist bei diesem Modell nicht verfügbar!");
-					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>201, "HardwareRev"=>GetValueInteger($this->GetIDForIdent("HardwareRev")))));
+					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>201, "HardwareRev"=>$this->GetBuffer("HardwareRev") )));
 				}
 				// Erstellt ein Array für alle Pins die genutzt werden 	
 				$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
@@ -323,7 +320,7 @@ class IPS2GPIO_IO extends IPSModule
 			        If (array_key_exists($data->Pin, $PinUsed)) {
 			        	If (($PinUsed[$data->Pin] <> $data->InstanceID) AND ($PinUsed[$data->Pin] <> 99999)) {
 			        		IPS_LogMessage("IPS2GPIO Pin", "Achtung: Pin ".$data->Pin." wird mehrfach genutzt!");
-			        		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>200, "HardwareRev"=>GetValueInteger($this->GetIDForIdent("HardwareRev")))));
+			        		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>200, "HardwareRev"=>$this->GetBuffer("HardwareRev")) ));
 			        	}	
 			        }
 			        $PinUsed[$data->Pin] = $data->InstanceID;
@@ -390,7 +387,7 @@ class IPS2GPIO_IO extends IPSModule
 		   	// Handle ermitteln
 		   	$this->CommandClientSocket(pack("LLLLL", 54, $data->DeviceBus, $data->DeviceAddress, 4, 0), 16);	
 		   	
-			//IPS_LogMessage("IPS2GPIO I2C Handle: ","Device Adresse: ".$data->DeviceAddress.", Hardware Rev:: ".GetValueInteger($this->GetIDForIdent("HardwareRev"))); 
+			//IPS_LogMessage("IPS2GPIO I2C Handle: ","Device Adresse: ".$data->DeviceAddress.", Hardware Rev:: ".$this->GetBuffer("HardwareRev")); 
 		   	break;
 		   case "i2c_destroy":
 		   	//IPS_LogMessage("IPS2GPIO I2C Destroy: ",$data->DeviceAddress." , ".$data->Register); 
@@ -611,12 +608,12 @@ class IPS2GPIO_IO extends IPSModule
 		$PinUsed = array();
 		SetValueBoolean($this->GetIDForIdent("I2C_Used"), false);
 		// Reservieren der Schnittstellen GPIO
-		If (($this->ReadPropertyBoolean("I2C_Used") == true) AND (GetValueInteger($this->GetIDForIdent("HardwareRev"))) <= 3) {
+		If (($this->ReadPropertyBoolean("I2C_Used") == true) AND ($this->GetBuffer("HardwareRev") <= 3)) {
 			$PinUsed[0] = 99999; 
 			$PinUsed[1] = 99999;
 			$this->CommandClientSocket(pack("LLLL", 0, 0, 4, 0).pack("LLLL", 0, 1, 4, 0), 32);
 		}
-		elseif (($this->ReadPropertyBoolean("I2C_Used") == true) AND (GetValueInteger($this->GetIDForIdent("HardwareRev"))) > 3) {
+		elseif (($this->ReadPropertyBoolean("I2C_Used") == true) AND ($this->GetBuffer("HardwareRev") > 3)) {
 			$PinUsed[2] = 99999; 
 			$PinUsed[3] = 99999;
 			$this->CommandClientSocket(pack("LLLL", 0, 2, 4, 0).pack("LLLL", 0, 3, 4, 0), 32);
@@ -794,7 +791,7 @@ class IPS2GPIO_IO extends IPSModule
            			$Typ[1] = array(2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27);
            			$Typ[2] = array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27);
            			
-           			SetValueInteger($this->GetIDForIdent("HardwareRev"), $response[4]);
+           			$this->SetBuffer("HardwareRev", $response[4]);
 				SetValueString($this->GetIDForIdent("Hardware"), $this->GetHardware($response[4]));
            			
            			if (in_array($response[4], $Model[0])) {
