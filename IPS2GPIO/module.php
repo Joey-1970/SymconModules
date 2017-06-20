@@ -46,8 +46,6 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayElements[] = array("type" => "CheckBox", "name" => "Serial_Used", "caption" => "Seriell");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "1Wire_Used", "caption" => "1-Wire");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-
-		
 		$arrayElements[] = array("type" => "Label", "label" => "Analyse der Raspberry Pi Konfiguration:");
 		$arraySort = array();
 		$arraySort[] = array("column" => "Typ", "direction" => "ascending");
@@ -55,16 +53,13 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayColumns[] = array("label" => "Service", "name" => "ServiceTyp", "width" => "200px", "add" => "");
 		$arrayColumns[] = array("label" => "Status", "name" => "ServiceStatus", "width" => "auto", "add" => "");
 		$ServiceArray = array();
-		
 		$ServiceArray = unserialize($this->CheckConfig());
 		$arrayValues[] = array("ServiceTyp" => "I²C", "ServiceStatus" => $ServiceArray["I2C"]["Status"], "rowColor" => $ServiceArray["I2C"]["Color"]);
 		$arrayValues[] = array("ServiceTyp" => "Serielle Schnittstelle (RS232)", "ServiceStatus" => $ServiceArray["Serielle Schnittstelle"]["Status"], "rowColor" => $ServiceArray["Serielle Schnittstelle"]["Color"]);
 		$arrayValues[] = array("ServiceTyp" => "Shell Zugriff", "ServiceStatus" => $ServiceArray["Shell Zugriff"]["Status"], "rowColor" => $ServiceArray["Shell Zugriff"]["Color"]);
 		$arrayValues[] = array("ServiceTyp" => "PIGPIO Server", "ServiceStatus" => $ServiceArray["PIGPIO Server"]["Status"], "rowColor" => $ServiceArray["PIGPIO Server"]["Color"]);		
 		$arrayElements[] = array("type" => "List", "name" => "Raspi_Config", "caption" => "Konfiguration", "rowCount" => 4, "add" => false, "delete" => false, "sort" => $arraySort, "columns" => $arrayColumns, "values" => $arrayValues);
-	
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-				
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");		
 		$arrayColumns = array();
 		$arrayColumns[] = array("label" => "Typ", "name" => "DeviceTyp", "width" => "120px", "add" => "");
 		$arrayColumns[] = array("label" => "Adresse", "name" => "DeviceAddress", "width" => "60px", "add" => "");
@@ -529,20 +524,23 @@ class IPS2GPIO_IO extends IPSModule
 	    				$Bitvalue = boolval($MessageParts[3]&(1<<$PinNotify[$j]));
 	    				If ($this->ReadPropertyBoolean("Serial_Used") == false) {
 	    					// Serieller Port ist deaktiviert
-	    					IPS_LogMessage("IPS2GPIO Notify: ","Pin ".$PinNotify[$j]." Value ->".$Bitvalue);
+	    					//IPS_LogMessage("IPS2GPIO Notify: ","Pin ".$PinNotify[$j]." Value ->".$Bitvalue);
+						$this->SendDebug("ReceiveData", "Pin: ".$PinNotify[$j]." Value:".(int)$Bitvalue, 0);
 	    					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $MessageArray[2])));
 	    				}
 	    				else {
 	    					If ($PinNotify[$j] <> 15) {
 	    						// alle Pins außer dem RxD werden normal verarbeitet
-	    						IPS_LogMessage("IPS2GPIO Notify: ","Pin ".$PinNotify[$j]." Value ->".$Bitvalue);
-	    						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $MessageArray[2])));
+	    						//IPS_LogMessage("IPS2GPIO Notify: ","Pin ".$PinNotify[$j]." Value ->".$Bitvalue);
+	    						$this->SendDebug("ReceiveData", "Pin: ".$PinNotify[$j]." Value:".(int)$Bitvalue, 0);
+							$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $MessageArray[2])));
 	    					}
 	    					elseif (($PinNotify[$j] == 15) AND ($i < 2)) {
 	    						If ($this->GetBuffer("SerialNotify") <> $Bitvalue) {
 		    						// Einlesen der Seriellen Daten veranlassen
-		    						IPS_LogMessage("IPS2GPIO Notify: ","Pin ".$PinNotify[$j]." Value ->".$Bitvalue);
-		    						//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle")));
+		    						//IPS_LogMessage("IPS2GPIO Notify: ","Pin ".$PinNotify[$j]." Value ->".$Bitvalue);
+		    						$this->SendDebug("ReceiveData", "Pin: ".$PinNotify[$j]." Value:".(int)$Bitvalue, 0);
+								//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle")));
 			   					IPS_Sleep(75);
 			   					$Data = $this->CommandClientSocket(pack("L*", 82, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
 								If ($Data > 0) {
