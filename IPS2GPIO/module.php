@@ -163,8 +163,15 @@ class IPS2GPIO_IO extends IPSModule
 				If (IPS_GetProperty($ParentID, 'Port') <> 8888) {
 		                	IPS_SetProperty($ParentID, 'Port', 8888);
 				}
+				If (IPS_GetProperty($ParentID, 'Open') <> $this->ReadPropertyBoolean("Open")) {
+		                	IPS_SetProperty($ParentID, 'Open', $this->ReadPropertyBoolean("Open"));
+				}
 				If (IPS_GetName($ParentID) == "Client Socket") {
 		                	IPS_SetName($ParentID, "IPS2GPIO");
+				}
+				if(IPS_HasChanges($ParentID))
+				{
+				    IPS_ApplyChanges($ParentID);
 				}
 			}
 	
@@ -202,6 +209,13 @@ class IPS2GPIO_IO extends IPSModule
 		}
 	}
 
+	public function GetConfigurationForParent()
+	{
+	  	$JsonArray = array( "Host" => $this->ReadPropertyString('IPAddress'), "Port" => 8888, "Open" => $this->ReadPropertyBoolean("Open"));
+	  	$Json = json_encode($JsonArray);        
+	  	return $Json;
+	}  
+	
 	public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     	{
         IPS_LogMessage("IPS2GPIO MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
