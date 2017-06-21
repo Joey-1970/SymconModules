@@ -144,9 +144,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->DisableAction("Serial_Used");
 			IPS_SetHidden($this->GetIDForIdent("Serial_Used"), true);
 			
-			$this->RegisterVariableInteger("Serial_Handle", "Serial_Handle", "", 180);
-			$this->DisableAction("Serial_Handle");
-			IPS_SetHidden($this->GetIDForIdent("Serial_Handle"), true);
+
 			
 			// **********************************************************************************
 			
@@ -458,11 +456,11 @@ class IPS2GPIO_IO extends IPSModule
 		   case "write_bytes_serial":
 		   	$Command = utf8_decode($data->Command);
 		   	//IPS_LogMessage("IPS2GPIO Write Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle"))." Command: ".$Command);
-		   	$this->CommandClientSocket(pack("L*", 81, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, strlen($Command)).$Command, 16);
+		   	$this->CommandClientSocket(pack("L*", 81, $this->GetBuffer("Serial_Handle"), 0, strlen($Command)).$Command, 16);
 		   	break;
 		   case "check_bytes_serial":
 		   	//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle")));
-		   	$this->CommandClientSocket(pack("L*", 82, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
+		   	$this->CommandClientSocket(pack("L*", 82, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
 		   	break;
 		    
 		    // Raspberry Pi Kommunikation
@@ -542,9 +540,9 @@ class IPS2GPIO_IO extends IPSModule
 		    						$this->SendDebug("ReceiveData", "Pin: ".$PinNotify[$j]." Value:".(int)$Bitvalue, 0);
 								//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle")));
 			   					IPS_Sleep(75);
-			   					$Data = $this->CommandClientSocket(pack("L*", 82, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
+			   					$Data = $this->CommandClientSocket(pack("L*", 82, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
 								If ($Data > 0) {
-									$this->CommandClientSocket(pack("L*", 80, GetValueInteger($this->GetIDForIdent("Serial_Handle")), $Data, 0), 16 + $Data);
+									$this->CommandClientSocket(pack("L*", 80, $this->GetBuffer("Serial_Handle"), $Data, 0), 16 + $Data);
 								}
 								$this->SetBuffer("SerialNotify", $Bitvalue);	
 	    						}
@@ -557,9 +555,9 @@ class IPS2GPIO_IO extends IPSModule
 	 		// Prüfen ob Daten im Serial Buffer vorhanden sind
 			If ($this->ReadPropertyBoolean("Serial_Used") == true) {
 				IPS_Sleep(75);
-				$Data = $this->CommandClientSocket(pack("L*", 82, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
+				$Data = $this->CommandClientSocket(pack("L*", 82, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
 				If ($Data > 0) {
-					$this->CommandClientSocket(pack("L*", 80, GetValueInteger($this->GetIDForIdent("Serial_Handle")), $Data, 0), 16 + $Data);
+					$this->CommandClientSocket(pack("L*", 80, $this->GetBuffer("Serial_Handle"), $Data, 0), 16 + $Data);
 				}
 			}
 			else {
@@ -634,10 +632,10 @@ class IPS2GPIO_IO extends IPSModule
 				// Beim Raspberry Pi 3 ist Bus 0 schon durch die Bluetooth-Schnittstelle belegt
 				$this->CommandClientSocket(pack("LLLL", 0, 14, 2, 0).pack("LLLL", 0, 15, 2, 0), 32);
 			}
-			If (GetValueInteger($this->GetIDForIdent("Serial_Handle")) >= 0) {
-				$this->CommandClientSocket(pack("L*", 77, GetValueInteger($this->GetIDForIdent("Serial_Handle")), 0, 0), 16);
+			If (GetValueInteger($this->GetBuffer("Serial_Handle")) >= 0) {
+				$this->CommandClientSocket(pack("L*", 77, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
 			}
-			SetValueInteger($this->GetIDForIdent("Serial_Handle"), -1);
+			$this->SetBuffer("Serial_Handle", -1);
 			SetValueBoolean($this->GetIDForIdent("Serial_Used"), false);
 			// den Notify für den TxD-Pin einschalten
 	   		$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
@@ -932,8 +930,8 @@ class IPS2GPIO_IO extends IPSModule
 				break;
 		        case "76":
            			If ($response[4] >= 0) {
-           				//IPS_LogMessage("IPS2GPIO Serial Handle","Serial Handle: ".$response[4]);
-           				SetValueInteger($this->GetIDForIdent("Serial_Handle"), $response[4]);
+           				$this->SetBuffer("Serial_Handle", $response[4]);
+					$this->SendDebug("Serial_Handle", $response[4], 0);
            				SetValueBoolean($this->GetIDForIdent("Serial_Used"), true);
 				}
 				else {
