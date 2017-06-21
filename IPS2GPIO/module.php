@@ -135,10 +135,6 @@ class IPS2GPIO_IO extends IPSModule
 			$this->DisableAction("I2C_Used");
 			IPS_SetHidden($this->GetIDForIdent("I2C_Used"), true);
 			
-			$this->RegisterVariableString("I2C_Possible", "I2C_Possible", "", 145);
-			$this->DisableAction("I2C_Possible");
-			IPS_SetHidden($this->GetIDForIdent("I2C_Possible"), true);
-						
 			$this->RegisterVariableString("I2C_Handle", "I2C_Handle", "", 160);
 			$this->DisableAction("I2C_Handle");
 			IPS_SetHidden($this->GetIDForIdent("I2C_Handle"), true);
@@ -157,6 +153,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("HardwareRev", 0);
 			$this->SetBuffer("PinPossible", "");
 			$this->SetBuffer("PinI2C", "");
+			$this->SetBuffer("I2C_Possible", "");
 			$this->SetBuffer("SerialNotify", "false");
 			$this->SetBuffer("Default_I2C_Bus", 1);
 			$this->SetBuffer("Default_Serial_Bus", 0);
@@ -1174,11 +1171,11 @@ class IPS2GPIO_IO extends IPSModule
 					$I2C_Bus[] = intval(str_replace("i2c-", "",$Dir[$i]));
 				}
 			}
-			SetValueString($this->GetIDForIdent("I2C_Possible"), serialize($I2C_Bus));
+			$this->SetBuffer("I2C_Possible", serialize($I2C_Bus));
 		}
 		else {
-			$ResultArray = Array();
-			SetValueString($this->GetIDForIdent("I2C_Possible"), "");
+			$I2C_Bus = array();
+			$this->SetBuffer("I2C_Possible", serialize($I2C_Bus));
 		}
 	}
 	
