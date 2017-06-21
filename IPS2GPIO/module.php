@@ -122,10 +122,6 @@ class IPS2GPIO_IO extends IPSModule
 			$this->RegisterVariableInteger("Handle", "Handle", "", 100);
 			$this->DisableAction("Handle");
 			IPS_SetHidden($this->GetIDForIdent("Handle"), true);
-
-			$this->RegisterVariableString("PinPossible", "PinPossible", "", 110);
-			$this->DisableAction("PinPossible");
-			IPS_SetHidden($this->GetIDForIdent("PinPossible"), true);
 			
 			$this->RegisterVariableString("PinUsed", "PinUsed", "", 120);
 			$this->DisableAction("PinUsed");
@@ -163,6 +159,7 @@ class IPS2GPIO_IO extends IPSModule
 			// **********************************************************************************
 			
 			$this->SetBuffer("HardwareRev", 0);
+			$this->SetBuffer("PinPossible", "");
 			$this->SetBuffer("SerialNotify", "false");
 			$this->SetBuffer("Default_I2C_Bus", 1);
 			$this->SetBuffer("Default_Serial_Bus", 0);
@@ -305,16 +302,20 @@ class IPS2GPIO_IO extends IPSModule
 		case "set_usedpin":
 		   	If ($data->Pin >= 0) {
 				// Prüfen, ob der gewählte GPIO bei dem Modell überhaupt vorhanden ist
-				$PinPossible = unserialize(GetValueString($this->GetIDForIdent("PinPossible")));
+				$PinPossible = array();
+				$PinPossible = unserialize($this->GetBuffer("PinPossible"));
 				if (in_array($data->Pin, $PinPossible)) {
 			    		//IPS_LogMessage("IPS2GPIO Pin: ","Gewählter Pin ist bei diesem Modell verfügbar");
+					$this->SendDebug("set_usedpin", "Gewählter Pin ist bei diesem Modell verfügbar", 0);
 			    		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>102, "HardwareRev"=>$this->GetBuffer("HardwareRev") )));
 				}
 				else {
+					$this->SendDebug("set_usedpin", "Gewählter Pin ist bei diesem Modell nicht verfügbar!", 0);
 					IPS_LogMessage("IPS2GPIO Pin: ","Gewählter Pin ist bei diesem Modell nicht verfügbar!");
 					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>201, "HardwareRev"=>$this->GetBuffer("HardwareRev") )));
 				}
 				// Erstellt ein Array für alle Pins die genutzt werden 	
+				$PinUsed = array();
 				$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
 				// Prüft, ob der ausgeählte Pin schon einmal genutzt wird
 			        If (array_key_exists($data->Pin, $PinUsed)) {
@@ -359,15 +360,19 @@ class IPS2GPIO_IO extends IPSModule
 		   	$this->Get_PinUpdate();
 		   	break;
 		   case "get_freepin":
-		   	$PinPossible = unserialize(GetValueString($this->GetIDForIdent("PinPossible")));
+		   	$PinPossible = array();
+			$PinPossible = unserialize($this->GetBuffer("PinPossible"));
+			$PinUsed = array();
 		   	$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
 		   	$PinFreeArray = array_diff_assoc($PinPossible, $PinUsed);
 		   	If (is_array($PinFreeArray)) {
-		   		IPS_LogMessage("IPS2GPIO Pin", "Pin ".$PinFreeArray[0]." ist noch ungenutzt");
+		   		$this->SendDebug("get_freepin", "Pin ".$PinFreeArray[0]." ist noch ungenutzt", 0);
+				//IPS_LogMessage("IPS2GPIO Pin", "Pin ".$PinFreeArray[0]." ist noch ungenutzt");
 			        $this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"freepin", "Pin"=>$PinFreeArray[0])));
 		   	}
 		   	else {
-		   		IPS_LogMessage("IPS2GPIO Pin", "Achtung: Kein ungenutzter Pin gefunden");	
+		   		$this->SendDebug("get_freepin", "Kein ungenutzter Pin gefunden!", 0);
+				IPS_LogMessage("IPS2GPIO Pin", "Kein ungenutzter Pin gefunden");	
 		   	}
 		   	break;
 
@@ -795,34 +800,44 @@ class IPS2GPIO_IO extends IPSModule
 				SetValueString($this->GetIDForIdent("Hardware"), $this->GetHardware($response[4]));
            			
            			if (in_array($response[4], $Model[0])) {
-    					SetValueString($this->GetIDForIdent("PinPossible"), serialize(array(0, 1, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 21, 22, 23, 24, 25)));
+    					$this->SetBuffer("PinPossible", serialize(array(0, 1, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 21, 22, 23, 24, 25))); 
     					SetValueString($this->GetIDForIdent("PinI2C"), serialize(array(0, 1)));
-    					IPS_LogMessage("IPS2GPIO Hardwareermittlung: ","Raspberry Pi Typ 0");
+    					$this->SendDebug("Hardwareermittlung", "Raspberry Pi Typ 0", 0);
+					//IPS_LogMessage("IPS2GPIO Hardwareermittlung: ","Raspberry Pi Typ 0");
 				}
 				else if (in_array($response[4], $Model[1])) {
-					SetValueString($this->GetIDForIdent("PinPossible"), serialize(array(2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27)));
+					$this->SetBuffer("PinPossible", serialize(array(2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27)));
 					SetValueString($this->GetIDForIdent("PinI2C"), serialize(array(2, 3)));
-					IPS_LogMessage("IPS2GPIO Hardwareermittlung: ","Raspberry Pi Typ 1");
+					$this->SendDebug("Hardwareermittlung", "Raspberry Pi Typ 1", 0);
+					//IPS_LogMessage("IPS2GPIO Hardwareermittlung: ","Raspberry Pi Typ 1");
 				}
 				else if ($response[4] >= 16) {
-					SetValueString($this->GetIDForIdent("PinPossible"), serialize(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27)));
+					$this->SetBuffer("PinPossible", serialize(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27)));
 					SetValueString($this->GetIDForIdent("PinI2C"), serialize(array(2, 3)));
-					IPS_LogMessage("IPS2GPIO Hardwareermittlung: ","Raspberry Pi Typ 2");
+					$this->SendDebug("Hardwareermittlung", "Raspberry Pi Typ 2", 0);
+					//IPS_LogMessage("IPS2GPIO Hardwareermittlung: ","Raspberry Pi Typ 2");
 				}
 				else
 					IPS_LogMessage("IPS2GPIO Hardwareermittlung","nicht erfolgreich! Fehler:".$this->GetErrorText(abs($response[4])));
+					$this->SendDebug("Hardwareermittlung", "nicht erfolgreich! Fehler:".$this->GetErrorText(abs($response[4])), 0);
 				break;
            		case "19":
-           			IPS_LogMessage("IPS2GPIO Notify","gestartet");
+           			//IPS_LogMessage("IPS2GPIO Notify","gestartet");
+				$this->SendDebug("Notify", "gestartet", 0);
 		            	break;
            		case "21":
-           			IPS_LogMessage("IPS2GPIO Notify","gestoppt");
+           			//IPS_LogMessage("IPS2GPIO Notify","gestoppt");
+				$this->SendDebug("Notify", "gestoppt", 0);
 		            	break;
 			case "26":
            			If ($response[4] >= 0 ) {
 					SetValueInteger($this->GetIDForIdent("SoftwareVersion"), $response[4]);
 					If ($response[4] < 64 ) {
 						IPS_LogMessage("IPS2GPIO PIGPIO Software Version","Bitte neuste PIGPIO-Software installieren!");
+						$this->SendDebug("PIGPIO Version", "Bitte neuste PIGPIO-Software installieren!", 0);
+					}
+					else {
+						$this->SendDebug("PIGPIO Version", "PIGPIO-Software ist aktuell", 0);
 					}
 				}
            			else {
