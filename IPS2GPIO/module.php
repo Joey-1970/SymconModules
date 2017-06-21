@@ -138,11 +138,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->RegisterVariableString("I2C_Possible", "I2C_Possible", "", 145);
 			$this->DisableAction("I2C_Possible");
 			IPS_SetHidden($this->GetIDForIdent("I2C_Possible"), true);
-			
-			$this->RegisterVariableString("PinI2C", "PinI2C", "", 150);
-			$this->DisableAction("PinI2C");
-			IPS_SetHidden($this->GetIDForIdent("PinI2C"), true);
-			
+						
 			$this->RegisterVariableString("I2C_Handle", "I2C_Handle", "", 160);
 			$this->DisableAction("I2C_Handle");
 			IPS_SetHidden($this->GetIDForIdent("I2C_Handle"), true);
@@ -160,6 +156,7 @@ class IPS2GPIO_IO extends IPSModule
 			
 			$this->SetBuffer("HardwareRev", 0);
 			$this->SetBuffer("PinPossible", "");
+			$this->SetBuffer("PinI2C", "");
 			$this->SetBuffer("SerialNotify", "false");
 			$this->SetBuffer("Default_I2C_Bus", 1);
 			$this->SetBuffer("Default_Serial_Bus", 0);
@@ -801,19 +798,19 @@ class IPS2GPIO_IO extends IPSModule
            			
            			if (in_array($response[4], $Model[0])) {
     					$this->SetBuffer("PinPossible", serialize(array(0, 1, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 21, 22, 23, 24, 25))); 
-    					SetValueString($this->GetIDForIdent("PinI2C"), serialize(array(0, 1)));
+    					$this->SetBuffer("PinI2C", serialize(array(0, 1))); 
     					$this->SendDebug("Hardwareermittlung", "Raspberry Pi Typ 0", 0);
 					//IPS_LogMessage("IPS2GPIO Hardwareermittlung: ","Raspberry Pi Typ 0");
 				}
 				else if (in_array($response[4], $Model[1])) {
 					$this->SetBuffer("PinPossible", serialize(array(2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27)));
-					SetValueString($this->GetIDForIdent("PinI2C"), serialize(array(2, 3)));
+					$this->SetBuffer("PinI2C", serialize(array(2, 3))); 
 					$this->SendDebug("Hardwareermittlung", "Raspberry Pi Typ 1", 0);
 					//IPS_LogMessage("IPS2GPIO Hardwareermittlung: ","Raspberry Pi Typ 1");
 				}
 				else if ($response[4] >= 16) {
 					$this->SetBuffer("PinPossible", serialize(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27)));
-					SetValueString($this->GetIDForIdent("PinI2C"), serialize(array(2, 3)));
+					$this->SetBuffer("PinI2C", serialize(array(2, 3)));
 					$this->SendDebug("Hardwareermittlung", "Raspberry Pi Typ 2", 0);
 					//IPS_LogMessage("IPS2GPIO Hardwareermittlung: ","Raspberry Pi Typ 2");
 				}
