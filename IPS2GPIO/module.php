@@ -139,13 +139,6 @@ class IPS2GPIO_IO extends IPSModule
 			$this->DisableAction("I2C_Handle");
 			IPS_SetHidden($this->GetIDForIdent("I2C_Handle"), true);
 			
-			
-			$this->RegisterVariableBoolean("Serial_Used", "Serial_Used", "", 170);
-			$this->DisableAction("Serial_Used");
-			IPS_SetHidden($this->GetIDForIdent("Serial_Used"), true);
-			
-
-			
 			// **********************************************************************************
 			
 			$this->SetBuffer("HardwareRev", 0);
@@ -619,7 +612,7 @@ class IPS2GPIO_IO extends IPSModule
 			// wird I²C nicht benötigt die Pin auf in Input setzen
 			$this->CommandClientSocket(pack("LLLL", 0, 0, 0, 0).pack("LLLL", 0, 1, 0, 0).pack("LLLL", 0, 2, 0, 0).pack("LLLL", 0, 3, 0, 0), 64);
 		}
-		SetValueBoolean($this->GetIDForIdent("Serial_Used"), false);
+		$this->SetBuffer("Serial_Used", 0);
 		If ($this->ReadPropertyBoolean("Serial_Used") == true)  {
 			$PinUsed[14] = 99999; 
 			$PinUsed[15] = 99999;
@@ -636,7 +629,7 @@ class IPS2GPIO_IO extends IPSModule
 				$this->CommandClientSocket(pack("L*", 77, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
 			}
 			$this->SetBuffer("Serial_Handle", -1);
-			SetValueBoolean($this->GetIDForIdent("Serial_Used"), false);
+			$this->SetBuffer("Serial_Used", 0);
 			// den Notify für den TxD-Pin einschalten
 	   		$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
 			$PinNotify[0] = 15;
@@ -932,7 +925,7 @@ class IPS2GPIO_IO extends IPSModule
            			If ($response[4] >= 0) {
            				$this->SetBuffer("Serial_Handle", $response[4]);
 					$this->SendDebug("Serial_Handle", $response[4], 0);
-           				SetValueBoolean($this->GetIDForIdent("Serial_Used"), true);
+					$this->SetBuffer("Serial_Used", 1);
 				}
 				else {
 					IPS_LogMessage("IPS2GPIO I2C Get Serial Handle","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
