@@ -805,9 +805,10 @@ class IPS2GPIO_IO extends IPSModule
 					$this->SetBuffer("PinI2C", serialize(array(2, 3)));
 					$this->SendDebug("Hardwareermittlung", "Raspberry Pi Typ 2", 0);
 				}
-				else
+				else {
 					IPS_LogMessage("IPS2GPIO Hardwareermittlung","nicht erfolgreich! Fehler:".$this->GetErrorText(abs($response[4])));
 					$this->SendDebug("Hardwareermittlung", "nicht erfolgreich! Fehler:".$this->GetErrorText(abs($response[4])), 0);
+				}	
 				break;
            		case "19":
            			//IPS_LogMessage("IPS2GPIO Notify","gestartet");
