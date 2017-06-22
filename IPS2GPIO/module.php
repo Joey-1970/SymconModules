@@ -118,10 +118,6 @@ class IPS2GPIO_IO extends IPSModule
 			IPS_SetHidden($this->GetIDForIdent("SoftwareVersion"), true);
 			
 			// **********************************************************************************
-			$this->RegisterVariableString("PinUsed", "PinUsed", "", 120);
-			$this->DisableAction("PinUsed");
-			IPS_SetHidden($this->GetIDForIdent("PinUsed"), true);
-			
 			$this->RegisterVariableString("PinNotify", "PinNotify", "", 130);
 			$this->DisableAction("PinNotify");
 			IPS_SetHidden($this->GetIDForIdent("PinNotify"), true);
@@ -244,13 +240,13 @@ class IPS2GPIO_IO extends IPSModule
 		    case "gpio_destroy":
 		    	// Löschen einer GPIO-Belegung
 		    	// aus der Liste der genutzten GPIO
-		    	$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
+		    	$PinUsed = unserialize($this->GetBuffer("PinUsed"));
 		    	IPS_LogMessage("IPS2GPIO GPIO Destroy: ",$data->Pin);
 		    	if (in_array($data->Pin, $PinUsed)) {
 		    		IPS_LogMessage("IPS2GPIO GPIO Destroy: ","Pin in PinUsed");
 		    		array_splice($PinUsed, $data->Pin, 1);	
 		    	}
-		    	SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
+			$this->SetBuffer("PinUsed", serialize($PinUsed));
 		        // aus der Liste der Notify-GPIO
 		        $PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
 		        if (in_array($data->Pin, $PinNotify)) {
@@ -310,7 +306,7 @@ class IPS2GPIO_IO extends IPSModule
 				}
 				// Erstellt ein Array für alle Pins die genutzt werden 	
 				$PinUsed = array();
-				$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
+				$PinUsed = unserialize($this->GetBuffer("PinUsed"));
 				// Prüft, ob der ausgeählte Pin schon einmal genutzt wird
 			        If (array_key_exists($data->Pin, $PinUsed)) {
 			        	If (($PinUsed[$data->Pin] <> $data->InstanceID) AND ($PinUsed[$data->Pin] <> 99999)) {
@@ -346,7 +342,7 @@ class IPS2GPIO_IO extends IPSModule
 					// R/W-Mode setzen
 					//IPS_LogMessage("IPS2GPIO SetMode",$data->Pin." , ".$data->Modus);
 					$this->CommandClientSocket(pack("LLLL", 0, $data->Pin, $data->Modus, 0), 16);
-					SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
+					$this->SetBuffer("PinUsed", serialize($PinUsed));
 				}
 		   	}
 		        break;
@@ -357,7 +353,7 @@ class IPS2GPIO_IO extends IPSModule
 		   	$PinPossible = array();
 			$PinPossible = unserialize($this->GetBuffer("PinPossible"));
 			$PinUsed = array();
-		   	$PinUsed = unserialize(GetValueString($this->GetIDForIdent("PinUsed")));
+		   	$PinUsed = unserialize($this->GetBuffer("PinUsed"));
 		   	$PinFreeArray = array_diff_assoc($PinPossible, $PinUsed);
 		   	If (is_array($PinFreeArray)) {
 		   		$this->SendDebug("get_freepin", "Pin ".$PinFreeArray[0]." ist noch ungenutzt", 0);
@@ -661,7 +657,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->CommandClientSocket(pack("LLLL", 0, 4, 0, 0), 16);
 		}
 		// Sichern der Voreinstellungen
-		SetValueString($this->GetIDForIdent("PinUsed"), serialize($PinUsed));
+		$this->SetBuffer("PinUsed", serialize($PinUsed));
 		// Ermitteln der genutzten I2C-Adressen
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_used_i2c")));
 		// Ermitteln der sonstigen genutzen GPIO
