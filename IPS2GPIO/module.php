@@ -135,6 +135,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("HardwareRev", 0);
 			$this->SetBuffer("PinPossible", "");
 			$this->SetBuffer("PinI2C", "");
+			$this->SetBuffer("I2CSearch", 0);
 			$this->SetBuffer("I2C_Possible", "");
 			$this->SetBuffer("SerialNotify", "false");
 			$this->SetBuffer("Default_I2C_Bus", 1);
@@ -872,10 +873,14 @@ class IPS2GPIO_IO extends IPSModule
 			case "59":
            			If ($response[4] >= 0) {
            				//IPS_LogMessage("IPS2GPIO I2C Read Byte Handle","Handle: ".$response[2]." Value: ".$response[4]);
-		            		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "DeviceIdent" => $this->GetI2C_HandleDevice($response[2]), "Value" => $response[4])));
+		            		If ($this->GetBuffer("I2CSearch") = 0) {
+						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "DeviceIdent" => $this->GetI2C_HandleDevice($response[2]), "Value" => $response[4])));
+					}
            			}
            			else {
-           				IPS_LogMessage("IPS2GPIO I2C Read Byte Handle","Handle: ".$response[2]." Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
+           				If ($this->GetBuffer("I2CSearch") = 0) {
+						IPS_LogMessage("IPS2GPIO I2C Read Byte Handle","Handle: ".$response[2]." Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
+					}
            			}
 		            	break;
 		        case "60":
@@ -1391,10 +1396,10 @@ class IPS2GPIO_IO extends IPSModule
 		$SearchArray = Array();
 			
 		$k = 0;
-		
+		$this->SetBuffer("I2CSearch", 1);
 		for ($j = 0; $j <= 1; $j++) {
 
-			for ($i = 0; $i >=128; $i++) {
+			for ($i = 0; $i <128; $i++) {
 				
 				// Handle ermitteln
 				$Handle = $this->CommandClientSocket(pack("L*", 54, $j, $i, 4, 0), 16);
@@ -1423,6 +1428,7 @@ class IPS2GPIO_IO extends IPSModule
 					
 			}
 		}
+		$this->SetBuffer("I2CSearch", 0);
 	return serialize($DeviceArray);
 	}
 	
