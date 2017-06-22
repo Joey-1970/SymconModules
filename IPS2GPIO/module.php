@@ -1407,6 +1407,7 @@ class IPS2GPIO_IO extends IPSModule
 				if ($Handle >= 0) {
 					// Testweise lesen
 					$Result = $this->CommandClientSocket(pack("L*", 59, $Handle, 0, 0), 16);
+					$this->SendDebug("SearchI2CDevices", "Device lesen auf Bus: ".$j." Adresse: ".$i, 0);
 
 					If ($Result >= 0) {
 						$this->SendDebug("SearchI2CDevices", "Device gefunden auf Bus: ".$j." Adresse: ".$i." Ergebnis des Test-Lesen: ".$Result, 0);
