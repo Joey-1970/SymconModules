@@ -70,7 +70,7 @@ class IPS2GPIO_IO extends IPSModule
 		If (($this->ConnectionTest()) AND ($this->ReadPropertyBoolean("Open") == true))  {
 			// I²C-Devices einlesen und in das Values-Array kopieren
 			$DeviceArray = array();
-			//$DeviceArray = unserialize($this->SearchI2CDevices());
+			$DeviceArray = unserialize($this->SearchI2CDevices());
 			$arrayValues = array();
 			If (count($DeviceArray , COUNT_RECURSIVE) >= 4) {
 				for ($i = 0; $i < Count($DeviceArray); $i++) {
@@ -1408,17 +1408,16 @@ class IPS2GPIO_IO extends IPSModule
 					$Result = $this->CommandClientSocket(pack("L*", 59, $Handle, 0, 0), 16);
 
 					If ($Result >= 0) {
-						$this->SendDebug("SearchI2CDevices", "Device gefunden auf Bus: ".$j." Adresse: ".$i, 0);
-						$this->SendDebug("SearchI2CDevices", "Ergebnis des Test-Lesen: ".$Result, 0);
-						$DeviceArray[$k][0] = $DeviceName[$i];
-						$DeviceArray[$k][1] = $SearchArray[$i];
-						$DeviceArray[$k][2] = $j - 4;
+						$this->SendDebug("SearchI2CDevices", "Device gefunden auf Bus: ".$j." Adresse: ".$i." Ergebnis des Test-Lesen: ".$Result, 0);
+						$DeviceArray[$k][0] = "unbekannt";
+						$DeviceArray[$k][1] = $i;
+						$DeviceArray[$k][2] = $j;
 						$DeviceArray[$k][3] = 0;
 						$DeviceArray[$k][4] = "OK";
 						// Farbe gelb für erreichbare aber nicht registrierte Instanzen
 						$DeviceArray[$k][5] = "#FFFF00";
 						$k = $k + 1;
-						$this->SendDebug("SearchI2CDevices", "Ergebnis: ".$DeviceName[$i]." DeviceAddresse: ".$SearchArray[$i]." an Bus: ".($j - 4), 0);
+						//$this->SendDebug("SearchI2CDevices", "Ergebnis: ".$DeviceName[$i]." DeviceAddresse: ".$SearchArray[$i]." an Bus: ".($j - 4), 0);
 						//IPS_LogMessage("GeCoS_IO I2C-Suche","Ergebnis: ".$DeviceName[$i]." DeviceAddresse: ".$SearchArray[$i]." an Bus: ".($j - 4));
 					}
 					// Handle löschen
