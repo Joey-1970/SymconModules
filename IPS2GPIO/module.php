@@ -592,7 +592,7 @@ class IPS2GPIO_IO extends IPSModule
 		SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
 		// Notify zurücksetzen	
 		If ($this->GetBuffer("Handle") >= 0) {
-	           	$this->CommandClientSocket(pack("LLLL", 19, $this->GetBuffer("Handle");, $this->CalcBitmask(), 0), 16);
+	           	$this->CommandClientSocket(pack("LLLL", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 16);
 		}
 		// Ermitteln ob der I2C-Bus genutzt wird und welcher Device Adressen
 		// Bisherige I2C-Handle löschen
