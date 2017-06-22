@@ -873,12 +873,12 @@ class IPS2GPIO_IO extends IPSModule
 			case "59":
            			If ($response[4] >= 0) {
            				//IPS_LogMessage("IPS2GPIO I2C Read Byte Handle","Handle: ".$response[2]." Value: ".$response[4]);
-		            		If ($this->GetBuffer("I2CSearch") = 0) {
+		            		If ($this->GetBuffer("I2CSearch") == 0) {
 						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "DeviceIdent" => $this->GetI2C_HandleDevice($response[2]), "Value" => $response[4])));
 					}
            			}
            			else {
-           				If ($this->GetBuffer("I2CSearch") = 0) {
+           				If ($this->GetBuffer("I2CSearch") == 0) {
 						IPS_LogMessage("IPS2GPIO I2C Read Byte Handle","Handle: ".$response[2]." Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
 					}
            			}
