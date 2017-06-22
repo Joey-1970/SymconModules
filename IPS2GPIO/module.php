@@ -780,7 +780,6 @@ class IPS2GPIO_IO extends IPSModule
 		        	}
 		        	break;
 		        case "17":
-		            	//IPS_LogMessage("IPS2GPIO Hardwareermittlung: ","gestartet");
 		            	$Model[0] = array(2, 3);
 		            	$Model[1] = array(4, 5, 6, 13, 14, 15);
 		            	$Model[2] = array(16);
@@ -795,19 +794,16 @@ class IPS2GPIO_IO extends IPSModule
     					$this->SetBuffer("PinPossible", serialize(array(0, 1, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 21, 22, 23, 24, 25))); 
     					$this->SetBuffer("PinI2C", serialize(array(0, 1))); 
     					$this->SendDebug("Hardwareermittlung", "Raspberry Pi Typ 0", 0);
-					//IPS_LogMessage("IPS2GPIO Hardwareermittlung: ","Raspberry Pi Typ 0");
 				}
 				else if (in_array($response[4], $Model[1])) {
 					$this->SetBuffer("PinPossible", serialize(array(2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27)));
 					$this->SetBuffer("PinI2C", serialize(array(2, 3))); 
 					$this->SendDebug("Hardwareermittlung", "Raspberry Pi Typ 1", 0);
-					//IPS_LogMessage("IPS2GPIO Hardwareermittlung: ","Raspberry Pi Typ 1");
 				}
 				else if ($response[4] >= 16) {
 					$this->SetBuffer("PinPossible", serialize(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27)));
 					$this->SetBuffer("PinI2C", serialize(array(2, 3)));
 					$this->SendDebug("Hardwareermittlung", "Raspberry Pi Typ 2", 0);
-					//IPS_LogMessage("IPS2GPIO Hardwareermittlung: ","Raspberry Pi Typ 2");
 				}
 				else
 					IPS_LogMessage("IPS2GPIO Hardwareermittlung","nicht erfolgreich! Fehler:".$this->GetErrorText(abs($response[4])));
@@ -1404,12 +1400,12 @@ class IPS2GPIO_IO extends IPSModule
 				
 				// Handle ermitteln
 				$Handle = $this->CommandClientSocket(pack("L*", 54, $j, $i, 4, 0), 16);
-				$this->SendDebug("SearchI2CDevices", "Device prüfen auf Bus: ".$j." Adresse: ".$i, 0);
+				//$this->SendDebug("SearchI2CDevices", "Device prüfen auf Bus: ".$j." Adresse: ".$i, 0);
 
 				if ($Handle >= 0) {
 					// Testweise lesen
 					$Result = $this->CommandClientSocket(pack("L*", 59, $Handle, 0, 0), 16);
-					$this->SendDebug("SearchI2CDevices", "Device lesen auf Bus: ".$j." Adresse: ".$i, 0);
+					//$this->SendDebug("SearchI2CDevices", "Device lesen auf Bus: ".$j." Adresse: ".$i, 0);
 
 					If ($Result >= 0) {
 						$this->SendDebug("SearchI2CDevices", "Device gefunden auf Bus: ".$j." Adresse: ".$i." Ergebnis des Test-Lesen: ".$Result, 0);
