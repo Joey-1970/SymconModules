@@ -640,7 +640,7 @@ class IPS2GPIO_IO extends IPSModule
 	   		$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
 			$PinNotify[0] = 15;
 			SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
-			$this->CommandClientSocket(pack("L*", 19, $this->GetBuffer("Handle");, $this->CalcBitmask(), 0), 16);
+			$this->CommandClientSocket(pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 16);
 
 		}
 		else {
