@@ -1388,6 +1388,49 @@ class IPS2GPIO_IO extends IPSModule
 	return serialize($arrayCheckConfig);
 	}
   	
+	private function SearchI2CDevices()
+	{
+		$DeviceArray = Array();
+		$DeviceName = Array();
+		$SearchArray = Array();
+			
+		$k = 0;
+		
+		for ($j = 0; $j <= 1; $j++) {
+
+			for ($i = 0; $i >=128; $i++) {
+				
+				// Handle ermitteln
+				$Handle = $this->CommandClientSocket(pack("L*", 54, $j, $i, 4, 0), 16);
+
+				if ($Handle >= 0) {
+					// Testweise lesen
+					$Result = $this->CommandClientSocket(pack("L*", 59, $Handle, 0, 0), 16);
+
+					If ($Result >= 0) {
+						$this->SendDebug("SearchI2CDevices", "Device gefunden auf Bus: ".$j." Adresse: ".$i, 0);
+						$this->SendDebug("SearchI2CDevices", "Ergebnis des Test-Lesen: ".$Result, 0);
+						$DeviceArray[$k][0] = $DeviceName[$i];
+						$DeviceArray[$k][1] = $SearchArray[$i];
+						$DeviceArray[$k][2] = $j - 4;
+						$DeviceArray[$k][3] = 0;
+						$DeviceArray[$k][4] = "OK";
+						// Farbe gelb für erreichbare aber nicht registrierte Instanzen
+						$DeviceArray[$k][5] = "#FFFF00";
+						$k = $k + 1;
+						$this->SendDebug("SearchI2CDevices", "Ergebnis: ".$DeviceName[$i]." DeviceAddresse: ".$SearchArray[$i]." an Bus: ".($j - 4), 0);
+						//IPS_LogMessage("GeCoS_IO I2C-Suche","Ergebnis: ".$DeviceName[$i]." DeviceAddresse: ".$SearchArray[$i]." an Bus: ".($j - 4));
+					}
+					// Handle löschen
+					$Result = $this->CommandClientSocket(pack("L*", 55, $Handle, 0, 0), 16);
+					//$this->SendDebug("SearchI2CDevices", "Ergebnis des Handle-Loeschen: ".$Result, 0);
+				}
+					
+			}
+		}
+	return serialize($DeviceArray);
+	}
+	
   	private function GetErrorText(Int $ErrorNumber)
 	{
 		$ErrorMessage = array(1 => "PI_INIT_FAILED", 2 => "PI_BAD_USER_GPIO", 3 => "PI_BAD_GPIO", 4 => "PI_BAD_MODE", 5 => "PI_BAD_LEVEL", 6 => "PI_BAD_PUD", 7 => "PI_BAD_PULSEWIDTH",
