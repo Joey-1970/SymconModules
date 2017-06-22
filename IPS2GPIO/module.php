@@ -632,7 +632,7 @@ class IPS2GPIO_IO extends IPSModule
 				// Beim Raspberry Pi 3 ist Bus 0 schon durch die Bluetooth-Schnittstelle belegt
 				$this->CommandClientSocket(pack("LLLL", 0, 14, 2, 0).pack("LLLL", 0, 15, 2, 0), 32);
 			}
-			If (GetValueInteger($this->GetBuffer("Serial_Handle")) >= 0) {
+			If ($this->GetBuffer("Serial_Handle") >= 0) {
 				$this->CommandClientSocket(pack("L*", 77, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
 			}
 			$this->SetBuffer("Serial_Handle", -1);
