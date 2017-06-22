@@ -20,6 +20,7 @@ class IPS2GPIO_IO extends IPSModule
 	    	$this->RegisterPropertyBoolean("Serial_Used", false);
 		$this->RegisterPropertyBoolean("1Wire_Used", false);
 		$this->RegisterPropertyString("Raspi_Config", "");
+		$this->RegisterPropertyString("I2C_Devices", "");
 		$this->RegisterPropertyBoolean("Multiplexer", false);
 	    	$this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
 	}
@@ -1397,7 +1398,7 @@ class IPS2GPIO_IO extends IPSModule
 			
 		$k = 0;
 		$this->SetBuffer("I2CSearch", 1);
-		for ($j = 0; $j <= 1; $j++) {
+		for ($j = 1; $j <= 1; $j++) {
 
 			for ($i = 0; $i <128; $i++) {
 				
