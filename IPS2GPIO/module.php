@@ -1393,8 +1393,6 @@ class IPS2GPIO_IO extends IPSModule
 	private function SearchI2CDevices()
 	{
 		$DeviceArray = Array();
-		$DeviceName = Array();
-		$SearchArray = Array();
 			
 		$k = 0;
 		$this->SetBuffer("I2CSearch", 1);
@@ -1404,6 +1402,7 @@ class IPS2GPIO_IO extends IPSModule
 				
 				// Handle ermitteln
 				$Handle = $this->CommandClientSocket(pack("L*", 54, $j, $i, 4, 0), 16);
+				$this->SendDebug("SearchI2CDevices", "Device prüfen auf Bus: ".$j." Adresse: ".$i, 0);
 
 				if ($Handle >= 0) {
 					// Testweise lesen
