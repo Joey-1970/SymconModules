@@ -118,11 +118,6 @@ class IPS2GPIO_IO extends IPSModule
 			IPS_SetHidden($this->GetIDForIdent("SoftwareVersion"), true);
 			
 			// **********************************************************************************
-			
-			$this->RegisterVariableInteger("Handle", "Handle", "", 100);
-			$this->DisableAction("Handle");
-			IPS_SetHidden($this->GetIDForIdent("Handle"), true);
-			
 			$this->RegisterVariableString("PinUsed", "PinUsed", "", 120);
 			$this->DisableAction("PinUsed");
 			IPS_SetHidden($this->GetIDForIdent("PinUsed"), true);
@@ -187,13 +182,13 @@ class IPS2GPIO_IO extends IPSModule
 				SetValueString($this->GetIDForIdent("I2C_Handle"), serialize($I2C_DeviceHandle));
 				
 				// Notify Handle zurücksetzen falls gesetzt
-				If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
+				If ($this->GetBuffer("Handle") >= 0) {
 					// Handle löschen
-					//$this->ClientSocket(pack("LLLL", 21, GetValueInteger($this->GetIDForIdent("Handle")), 0, 0));
+					//$this->ClientSocket(pack("LLLL", 21, $this->GetBuffer("Handle");, 0, 0));
 				}
 				// Notify Starten
-				SetValueInteger($this->GetIDForIdent("Handle"), -1);
-				$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));
+				$this->SetBuffer("Handle", -1);
+				$this->ClientSocket(pack("L*", 99, 0, 0, 0));
 				
 				$this->Get_PinUpdate();
 				$this->I2C_Possible();
@@ -262,9 +257,9 @@ class IPS2GPIO_IO extends IPSModule
 		    		IPS_LogMessage("IPS2GPIO GPIO Destroy: ","Pin in PinNotify");
 		    		array_splice($PinNotify, $data->Pin, 1);
 		    		SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
-		    		If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
+		    		If ($this->GetBuffer("Handle") >= 0) {
 			           	// Notify neu setzen
-			           	$this->CommandClientSocket(pack("LLLL", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
+			           	$this->CommandClientSocket(pack("L*", 19, $this->GetBuffer("Handle");, $this->CalcBitmask(), 0), 16);
 				}
 		    	}
 		        break;
@@ -335,10 +330,10 @@ class IPS2GPIO_IO extends IPSModule
 					}
 					SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
 					// startet das Notify neu
-					$this->CommandClientSocket(pack("LLLL", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
+					$this->CommandClientSocket(pack("L*", 19, $this->GetBuffer("Handle");, $this->CalcBitmask(), 0), 16);
 					// Setzt den Glitch Filter
 					//IPS_LogMessage("IPS2GPIO SetGlitchFilter Parameter",$data->Pin." , ".$data->GlitchFilter);
-					$this->CommandClientSocket(pack("LLLL", 97, $data->Pin, $data->GlitchFilter, 0), 16);
+					$this->CommandClientSocket(pack("L*", 97, $data->Pin, $data->GlitchFilter, 0), 16);
 			        }
 			        // Pin in den entsprechenden R/W-Mode setzen, ggf. gleichzeitig Pull-Up/Down setzen
 				If ($data->Modus == 0) {
@@ -455,7 +450,7 @@ class IPS2GPIO_IO extends IPSModule
 		   // Serielle Kommunikation
 		   case "get_handle_serial":
 	   		//IPS_LogMessage("IPS2GPIO Get Handle Serial", "Handle anfordern");
-	   		$this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device.pack("L*", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 32);
+	   		$this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device.pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 32);
 			// Messages einrichten
 			$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
 		        $this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
@@ -599,8 +594,8 @@ class IPS2GPIO_IO extends IPSModule
 		$PinNotify = array();
 		SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
 		// Notify zurücksetzen	
-		If (GetValueInteger($this->GetIDForIdent("Handle")) >= 0) {
-	           	$this->CommandClientSocket(pack("LLLL", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
+		If ($this->GetBuffer("Handle") >= 0) {
+	           	$this->CommandClientSocket(pack("LLLL", 19, $this->GetBuffer("Handle");, $this->CalcBitmask(), 0), 16);
 		}
 		// Ermitteln ob der I2C-Bus genutzt wird und welcher Device Adressen
 		// Bisherige I2C-Handle löschen
@@ -648,7 +643,7 @@ class IPS2GPIO_IO extends IPSModule
 	   		$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
 			$PinNotify[0] = 15;
 			SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
-			$this->CommandClientSocket(pack("L*", 19, GetValueInteger($this->GetIDForIdent("Handle")), $this->CalcBitmask(), 0), 16);
+			$this->CommandClientSocket(pack("L*", 19, $this->GetBuffer("Handle");, $this->CalcBitmask(), 0), 16);
 
 		}
 		else {
@@ -992,13 +987,12 @@ class IPS2GPIO_IO extends IPSModule
 		            	break;
 		        case "99":
            			If ($response[4] >= 0 ) {
-           				IPS_LogMessage("IPS2GPIO Handle",$response[4]);
-           				SetValueInteger($this->GetIDForIdent("Handle"), $response[4]);
-           				
-           				$this->ClientSocket(pack("LLLL", 19, $response[4], $this->CalcBitmask(), 0));
+           				$this->SendDebug("Handle", $response[4], 0);
+					$this->SetBuffer("Handle", $response[4]);
+           				$this->ClientSocket(pack("L*", 19, $response[4], $this->CalcBitmask(), 0));
            			}
            			else {
-           				$this->ClientSocket(pack("LLLL", 99, 0, 0, 0));		
+           				$this->ClientSocket(pack("L*", 99, 0, 0, 0));		
            			}
            			break;
 			case "115":
