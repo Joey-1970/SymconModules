@@ -298,12 +298,12 @@ class IPS2GPIO_IO extends IPSModule
 				$PinPossible = unserialize($this->GetBuffer("PinPossible"));
 				if (in_array($data->Pin, $PinPossible)) {
 			    		//IPS_LogMessage("IPS2GPIO Pin: ","Gewählter Pin ist bei diesem Modell verfügbar");
-					$this->SendDebug("set_usedpin", "Gewaehlter Pin ist bei diesem Modell verfuegbar", 0);
+					$this->SendDebug("set_usedpin", "Gewaehlter Pin ".$data->Pin." ist bei diesem Modell verfuegbar", 0);
 			    		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>102, "HardwareRev"=>$this->GetBuffer("HardwareRev") )));
 				}
 				else {
-					$this->SendDebug("set_usedpin", "Gewaehlter Pin ist bei diesem Modell nicht verfuegbar!", 0);
-					IPS_LogMessage("IPS2GPIO Pin: ","Gewählter Pin ist bei diesem Modell nicht verfügbar!");
+					$this->SendDebug("set_usedpin", "Gewaehlter Pin ".$data->Pin." ist bei diesem Modell nicht verfuegbar!", 0);
+					IPS_LogMessage("IPS2GPIO Pin: ","Gewählter Pin ".$data->Pin." ist bei diesem Modell nicht verfügbar!");
 					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>201, "HardwareRev"=>$this->GetBuffer("HardwareRev") )));
 				}
 				// Erstellt ein Array für alle Pins die genutzt werden 	
