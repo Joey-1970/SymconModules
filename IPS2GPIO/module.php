@@ -345,7 +345,7 @@ class IPS2GPIO_IO extends IPSModule
 			        	$PinNotify = unserialize($this->GetBuffer("PinNotify"));
 				        if (in_array($data->Pin, $PinNotify) == false) {
 						$PinNotify[] = $data->Pin;
-						$this->SendDebug("set_usedpin", "Gewaehlter Pin ".$data->Pin." wurde dem Notify hinzugefügt", 0);
+						$this->SendDebug("set_usedpin", "Gewaehlter Pin ".$data->Pin." wurde dem Notify hinzugefuegt", 0);
 					}
 					$this->SetBuffer("PinNotify", serialize($PinNotify));
 					// startet das Notify neu
