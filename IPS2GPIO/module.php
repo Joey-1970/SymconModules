@@ -120,11 +120,11 @@ class IPS2GPIO_IO extends IPSModule
 	        $this->RegisterMessage(0, 10100); // Alle Kernelmessages (10103 muss im MessageSink ausgewertet werden.)
 		
 		If (IPS_GetKernelRunlevel() == 10103) {
-			$this->RegisterVariableString("Hardware", "Hardware", "", 107);
+			$this->RegisterVariableString("Hardware", "Hardware", "", 10);
 			$this->DisableAction("Hardware");
 			IPS_SetHidden($this->GetIDForIdent("Hardware"), true);
 			
-			$this->RegisterVariableInteger("SoftwareVersion", "SoftwareVersion", "", 108);
+			$this->RegisterVariableInteger("SoftwareVersion", "SoftwareVersion", "", 20);
 			$this->DisableAction("SoftwareVersion");
 			IPS_SetHidden($this->GetIDForIdent("SoftwareVersion"), true);
 			
