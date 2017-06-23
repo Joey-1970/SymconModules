@@ -139,7 +139,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("PinPossible", "");
 			$this->SetBuffer("PinI2C", "");
 			$this->SetBuffer("I2CSearch", 0);
-			$this->SetBuffer("SerialNotify", "false");
+			$this->SetBuffer("SerialNotify", 0);
 			$this->SetBuffer("Default_I2C_Bus", 1);
 			$this->SetBuffer("Default_Serial_Bus", 0);
 			$this->SetBuffer("MUX_Handle", -1);
