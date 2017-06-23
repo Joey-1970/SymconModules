@@ -1466,6 +1466,9 @@ class IPS2GPIO_IO extends IPSModule
 			$SearchArray[] = $i;
 			$DeviceName[] = "MCP3424";
 		}
+		// MUX
+		$SearchArray[] = 112;
+		$DeviceName[] = "MUX";
 		// BME280
 		for ($i = 118; $i <= 119; $i++) {
 			$SearchArray[] = $i;
