@@ -136,7 +136,8 @@ class IPS2GPIO_IO extends IPSModule
 			// **********************************************************************************
 			
 			$this->SetBuffer("HardwareRev", 0);
-			$this->SetBuffer("PinPossible", "");
+			$Typ = array(2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27);
+			$this->SetBuffer("PinPossible", serialize($Typ));
 			$this->SetBuffer("PinI2C", "");
 			$this->SetBuffer("I2CSearch", 0);
 			$this->SetBuffer("SerialNotify", 0);
