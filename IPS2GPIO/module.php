@@ -183,7 +183,7 @@ class IPS2GPIO_IO extends IPSModule
 				$this->ResetSerialHandle();
 				
 				// MUX einrichten
-				If ($this->ReadPropertyInteger("MUX") > 0)) {
+				If ($this->ReadPropertyInteger("MUX") > 0) {
 					$MUX_Handle = $Handle = $this->CommandClientSocket(pack("L*", 54, 1, 112, 4, 0), 16);
 					$this->SetBuffer("MUX_Handle", $MUX_Handle);
 					$this->SendDebug("MUX Handle", $MUX_Handle, 0);
