@@ -11,6 +11,7 @@
 		$this->RegisterPropertyInteger("Pin_R", -1);
             	$this->RegisterPropertyInteger("Pin_G", -1);
             	$this->RegisterPropertyInteger("Pin_B", -1);
+		$this->RegisterPropertyInteger("Pin_W", -1);
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 	}
 	    
@@ -35,6 +36,7 @@
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_R", "caption" => "GPIO-Nr. Rot", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_G", "caption" => "GPIO-Nr. Grün", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_B", "caption" => "GPIO-Nr. Blau", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Select", "name" => "Pin_W", "caption" => "GPIO-Nr. Blau", "options" => $arrayOptions );
 		
 		$arrayActions = array();
 		If (($this->ReadPropertyInteger("Pin_R") >= 0) AND ($this->ReadPropertyInteger("Pin_G") >= 0) AND ($this->ReadPropertyInteger("Pin_B") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
@@ -42,11 +44,13 @@
 			$arrayActions[] = array("type" => "Button", "label" => "Off", "onClick" => 'I2GRGB_Set_Status($id, false);');
 			$arrayActions[] = array("type" => "Button", "label" => "Toggle", "onClick" => 'I2GRGB_Toggle_Status($id);');
 			$arrayActions[] = array("type" => "Label", "label" => "Rot");
-			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "SliderR", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GRGB_Set_RGB($id, $SliderR, $SliderG, $SliderB);');
+			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "SliderR", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GRGB_Set_RGB($id, $SliderR, $SliderG, $SliderB, $SliderW);');
 			$arrayActions[] = array("type" => "Label", "label" => "Grün");
-			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "SliderG", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GRGB_Set_RGB($id, $SliderR, $SliderG, $SliderB);');
+			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "SliderG", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GRGB_Set_RGB($id, $SliderR, $SliderG, $SliderB, $SliderW);');
 			$arrayActions[] = array("type" => "Label", "label" => "Blau");
-			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "SliderB", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GRGB_Set_RGB($id, $SliderR, $SliderG, $SliderB);');
+			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "SliderB", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GRGB_Set_RGB($id, $SliderR, $SliderG, $SliderB, $SliderW);');
+			$arrayActions[] = array("type" => "Label", "label" => "Weiß");
+			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "SliderW", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GRGB_Set_RGB($id, $SliderR, $SliderG, $SliderB, $SliderW);');
 		}
 		else {
 			$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
