@@ -119,10 +119,6 @@ class IPS2GPIO_IO extends IPSModule
 			IPS_SetHidden($this->GetIDForIdent("SoftwareVersion"), true);
 			
 			// **********************************************************************************
-			$this->RegisterVariableString("PinNotify", "PinNotify", "", 130);
-			$this->DisableAction("PinNotify");
-			IPS_SetHidden($this->GetIDForIdent("PinNotify"), true);
-			
 			$this->RegisterVariableBoolean("I2C_Used", "I2C_Used", "", 140);
 			$this->DisableAction("I2C_Used");
 			IPS_SetHidden($this->GetIDForIdent("I2C_Used"), true);
@@ -250,11 +246,12 @@ class IPS2GPIO_IO extends IPSModule
 		    	}
 			$this->SetBuffer("PinUsed", serialize($PinUsed));
 		        // aus der Liste der Notify-GPIO
-		        $PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
+			$PinNotify = array();
+		        $PinNotify = unserialize($this->GetBuffer("PinNotify"));
 		        if (in_array($data->Pin, $PinNotify)) {
 		    		IPS_LogMessage("IPS2GPIO GPIO Destroy: ","Pin in PinNotify");
 		    		array_splice($PinNotify, $data->Pin, 1);
-		    		SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
+				$this->SetBuffer("PinNotify", serialize($PinNotify));
 		    		If ($this->GetBuffer("Handle") >= 0) {
 			           	// Notify neu setzen
 			           	$this->CommandClientSocket(pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 16);
@@ -323,11 +320,13 @@ class IPS2GPIO_IO extends IPSModule
 		        	$this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
 			        // Erstellt ein Array für alle Pins für die die Notifikation erforderlich ist
 			        If ($data->Notify == true) {
-			        	$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
+					$PinNotify = array();
+			        	$PinNotify = unserialize($this->GetBuffer("PinNotify"));
 				        if (in_array($data->Pin, $PinNotify) == false) {
 						$PinNotify[] = $data->Pin;
+						$this->SendDebug("set_usedpin", "Gewaehlter Pin ".$data->Pin." wurde dem Notify hinzugefügt", 0);
 					}
-					SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
+					$this->SetBuffer("PinNotify", serialize($PinNotify));
 					// startet das Notify neu
 					$this->CommandClientSocket(pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 16);
 					// Setzt den Glitch Filter
@@ -516,7 +515,8 @@ class IPS2GPIO_IO extends IPSModule
 	    		// wenn es sich um mehrere Notifikationen handelt
 	    		$DataArray = str_split($Message, 12);
 	    		//IPS_LogMessage("IPS2GPIO ReceiveData", "Überlänge: ".Count($DataArray)." Notify-Datensätze");
-	    		$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
+			$PinNotify = array();
+			$PinNotify = unserialize($this->GetBuffer("PinNotify"));
 	    		for ($i = 0; $i < min(5, Count($DataArray)); $i++) {
 				$MessageParts = unpack("L*", $DataArray[$i]);
 				for ($j = 0; $j < Count($PinNotify); $j++) {
@@ -591,7 +591,7 @@ class IPS2GPIO_IO extends IPSModule
 	{
 		// Pins ermitteln für die ein Notify erforderlich ist
 		$PinNotify = array();
-		SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
+		$this->SetBuffer("PinNotify", serialize($PinNotify));
 		// Notify zurücksetzen	
 		If ($this->GetBuffer("Handle") >= 0) {
 	           	$this->CommandClientSocket(pack("LLLL", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 16);
@@ -639,9 +639,10 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("Serial_Handle", -1);
 			$this->SetBuffer("Serial_Used", 0);
 			// den Notify für den TxD-Pin einschalten
-	   		$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
+	   		$PinNotify = array();
+			$PinNotify = unserialize($this->GetBuffer("PinNotify"));
 			$PinNotify[0] = 15;
-			SetValueString($this->GetIDForIdent("PinNotify"), serialize($PinNotify));
+			$this->SetBuffer("PinNotify", serialize($PinNotify));
 			$this->CommandClientSocket(pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 16);
 
 		}
@@ -1182,7 +1183,8 @@ class IPS2GPIO_IO extends IPSModule
 	
 	private function CalcBitmask()
 	{
-		$PinNotify = unserialize(GetValueString($this->GetIDForIdent("PinNotify")));
+		$PinNotify = array();
+		$PinNotify = unserialize($this->GetBuffer("PinNotify"));
 
 		$Bitmask = 0;
 		for ($i = 0; $i < Count($PinNotify); $i++) {
