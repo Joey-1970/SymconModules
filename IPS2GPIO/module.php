@@ -17,6 +17,7 @@ class IPS2GPIO_IO extends IPSModule
 	    	$this->RegisterPropertyString("User", "User");
 	    	$this->RegisterPropertyString("Password", "Passwort");
 	    	$this->RegisterPropertyBoolean("I2C_Used", false);
+		$this->RegisterPropertyBoolean("I2CBus0", false);
 	    	$this->RegisterPropertyBoolean("Serial_Used", false);
 		$this->RegisterPropertyBoolean("1Wire_Used", false);
 		$this->RegisterPropertyString("Raspi_Config", "");
@@ -46,6 +47,10 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayElements[] = array("type" => "CheckBox", "name" => "I2C_Used", "caption" => "I²C");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "Serial_Used", "caption" => "Seriell");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "1Wire_Used", "caption" => "1-Wire");
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "Label", "label" => "Detaillierung der I²C-Schnittstelle:");
+		$arrayElements[] = array("type" => "CheckBox", "name" => "I2CBus0", "caption" => "I²C-Bus 0");
+		
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Analyse der Raspberry Pi Konfiguration:");
 		$arraySort = array();
