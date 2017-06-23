@@ -1429,9 +1429,19 @@ class IPS2GPIO_IO extends IPSModule
 			$SearchArray[] = $i;
 			$DeviceName[] = "PCF8591";
 		}
+		// iAQ
+		for ($i = 90; $i <= 91; $i++) {
+			$SearchArray[] = $i;
+			$DeviceName[] = "iAQ";
+		}
 		// BH1750
 		$SearchArray[] = 92;
-		$DeviceName[] = "BH1750";		
+		$DeviceName[] = "BH1750";
+		// iAQ
+		for ($i = 93; $i <= 95; $i++) {
+			$SearchArray[] = $i;
+			$DeviceName[] = "iAQ";
+		}
 		// MCP3424
 		for ($i = 104; $i <= 110; $i++) {
 			$SearchArray[] = $i;
