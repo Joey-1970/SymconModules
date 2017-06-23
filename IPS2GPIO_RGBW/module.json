@@ -1,0 +1,14 @@
+{
+  "id": "{E51C7E8D-40B3-45F6-BB91-7E505A614207}",
+  "name": "IPS2GPIO_RGBW",
+  "type": 3,
+  "vendor": "JP-IPS-Modules",
+  "aliases":
+  [
+    "IPS2GPIO_RGBW"
+  ],
+  "parentRequirements": ["{A0DAAF26-4A2D-4350-963E-CC02E74BD414}"],
+  "childRequirements": [],
+  "implemented": ["{8D44CA24-3B35-4918-9CBD-85A28C0C8917}"],
+  "prefix": "I2GRGBW"
+}
