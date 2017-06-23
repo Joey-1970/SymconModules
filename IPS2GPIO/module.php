@@ -1436,10 +1436,10 @@ class IPS2GPIO_IO extends IPSModule
 		$this->SetBuffer("I2CSearch", 1);
 		for ($j = 1; $j <= 1; $j++) {
 
-			for ($i = 0; $i <128; $i++) {
+			for ($i = 0; $i < count($SearchArray); $i++) {
 				
 				// Handle ermitteln
-				$Handle = $this->CommandClientSocket(pack("L*", 54, $j, $i, 4, 0), 16);
+				$Handle = $this->CommandClientSocket(pack("L*", 54, $j, $SearchArray[$i], 4, 0), 16);
 				//$this->SendDebug("SearchI2CDevices", "Device prüfen auf Bus: ".$j." Adresse: ".$i, 0);
 
 				if ($Handle >= 0) {
@@ -1448,9 +1448,9 @@ class IPS2GPIO_IO extends IPSModule
 					//$this->SendDebug("SearchI2CDevices", "Device lesen auf Bus: ".$j." Adresse: ".$i, 0);
 
 					If ($Result >= 0) {
-						$this->SendDebug("SearchI2CDevices", "Device gefunden auf Bus: ".$j." Adresse: ".$i." Ergebnis des Test-Lesen: ".$Result, 0);
-						$DeviceArray[$k][0] = "unbekannt";
-						$DeviceArray[$k][1] = $i;
+						$this->SendDebug("SearchI2CDevices", "Device gefunden auf Bus: ".$j." Adresse: ".$SearchArray[$i]." Ergebnis des Test-Lesen: ".$Result, 0);
+						$DeviceArray[$k][0] = $DeviceName[$i];
+						$DeviceArray[$k][1] = $SearchArray[$i];
 						$DeviceArray[$k][2] = $j;
 						$DeviceArray[$k][3] = 0;
 						$DeviceArray[$k][4] = "OK";
