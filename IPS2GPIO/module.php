@@ -139,7 +139,6 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("PinPossible", "");
 			$this->SetBuffer("PinI2C", "");
 			$this->SetBuffer("I2CSearch", 0);
-			$this->SetBuffer("I2C_Possible", "");
 			$this->SetBuffer("SerialNotify", "false");
 			$this->SetBuffer("Default_I2C_Bus", 1);
 			$this->SetBuffer("Default_Serial_Bus", 0);
@@ -207,7 +206,6 @@ class IPS2GPIO_IO extends IPSModule
 				$this->ClientSocket(pack("L*", 99, 0, 0, 0));
 				
 				$this->Get_PinUpdate();
-				$this->I2C_Possible();
 				$this->SetStatus(102);
 				
 			}
@@ -1159,49 +1157,7 @@ class IPS2GPIO_IO extends IPSModule
 		}
 	return $Result;
 	}
-	
-	private function I2C_Possible()
-	{
-		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
-			set_include_path(__DIR__);
-			require_once (__DIR__ . '/Net/SFTP.php');
-
-			$sftp = new Net_SFTP($this->ReadPropertyString("IPAddress"));
-			$login = @$sftp->login($this->ReadPropertyString("User"), $this->ReadPropertyString("Password"));
-			
-			if ($login == false)
-			{
-			    	IPS_LogMessage("IPS2GPIO SFTP-Connect","Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert nicht!");
-			    	$Result = "";
-				return false;
-			}
-			//IPS_LogMessage("IPS2GPIO SFTP-Connect","Verbindung hergestellt");
-			
-			$Path = "/sys/bus/i2c/devices";
-			// Prüfen, ob der 1-Wire Server die Verzeichnisse angelegt hat
-			if (!$sftp->file_exists($Path)) {
-				IPS_LogMessage("IPS2GPIO SFTP-Connect",$Path." nicht gefunden! Ist I²C aktiviert?");
-				return;
-			}
-			
-			// den Inhalt des Verzeichnisses ermitteln
-			$I2C_Bus = array();
-			$Dir = $sftp->nlist($Path);
-			//print_r($Dir);
-			for ($i = 0; $i < Count($Dir); $i++) {
-				//echo substr($Dir[$i], 0, 3);
-				if (substr($Dir[$i], 0, 3) == "i2c") {
-					$I2C_Bus[] = intval(str_replace("i2c-", "",$Dir[$i]));
-				}
-			}
-			$this->SetBuffer("I2C_Possible", serialize($I2C_Bus));
-		}
-		else {
-			$I2C_Bus = array();
-			$this->SetBuffer("I2C_Possible", serialize($I2C_Bus));
-		}
-	}
-	
+		
 	private function CalcBitmask()
 	{
 		$PinNotify = array();
