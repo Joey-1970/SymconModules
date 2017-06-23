@@ -79,7 +79,7 @@
            	$this->EnableAction("Color");
            	
           	//ReceiveData-Filter setzen
-          	$Filter = '((.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_R").'.*)|(.*"Pin":'.$this->ReadPropertyInteger("Pin_G").'.*|.*"Pin":'.$this->ReadPropertyInteger("Pin_B").'.*))';
+          	$Filter = '((.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_R").'.*)|(.*"Pin":'.$this->ReadPropertyInteger("Pin_G").'.*|.*"Pin":'.$this->ReadPropertyInteger("Pin_B").'.*)|(.*"Pin":'.$this->ReadPropertyInteger("Pin_W").'.*))';
 		$this->SetReceiveDataFilter($Filter);
 		
 		If (IPS_GetKernelRunlevel() == 10103) {
