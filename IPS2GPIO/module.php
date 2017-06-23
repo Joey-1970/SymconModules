@@ -119,10 +119,6 @@ class IPS2GPIO_IO extends IPSModule
 			IPS_SetHidden($this->GetIDForIdent("SoftwareVersion"), true);
 			
 			// **********************************************************************************
-			$this->RegisterVariableBoolean("I2C_Used", "I2C_Used", "", 140);
-			$this->DisableAction("I2C_Used");
-			IPS_SetHidden($this->GetIDForIdent("I2C_Used"), true);
-			
 			$this->RegisterVariableString("I2C_Handle", "I2C_Handle", "", 160);
 			$this->DisableAction("I2C_Handle");
 			IPS_SetHidden($this->GetIDForIdent("I2C_Handle"), true);
@@ -370,8 +366,7 @@ class IPS2GPIO_IO extends IPSModule
 
 		   // I2C Kommunikation
 		   case "set_used_i2c":
-		   	SetValueBoolean($this->GetIDForIdent("I2C_Used"), true);
-		   	
+			$this->SetBuffer("I2C_Used", 1);
 		   	// die genutzten Device Adressen anlegen
 		   	$I2C_DeviceHandle = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
 		   	// Bei Bus 1 Addition von 128
@@ -395,7 +390,7 @@ class IPS2GPIO_IO extends IPSModule
 		   		// Device aus dem Array löschen
 				array_splice($I2C_DeviceHandle, $data->DeviceAddress, 1); 
 				If (Count($I2C_DeviceHandle) == 0) {
-					SetValueBoolean($this->GetIDForIdent("I2C_Used"), false);
+					$this->SetBuffer("I2C_Used", 0);
 				}
 				SetValueString($this->GetIDForIdent("I2C_Handle"), serialize($I2C_DeviceHandle));
 		   	}
@@ -604,7 +599,7 @@ class IPS2GPIO_IO extends IPSModule
 		}
 		// Pins ermitteln die genutzt werden
 		$PinUsed = array();
-		SetValueBoolean($this->GetIDForIdent("I2C_Used"), false);
+		$this->SetBuffer("I2C_Used", 0);
 		// Reservieren der Schnittstellen GPIO
 		If (($this->ReadPropertyBoolean("I2C_Used") == true) AND ($this->GetBuffer("HardwareRev") <= 3)) {
 			$PinUsed[0] = 99999; 
