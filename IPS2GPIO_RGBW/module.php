@@ -44,13 +44,13 @@
 			$arrayActions[] = array("type" => "Button", "label" => "Off", "onClick" => 'I2GRGB_Set_Status($id, false);');
 			$arrayActions[] = array("type" => "Button", "label" => "Toggle", "onClick" => 'I2GRGB_Toggle_Status($id);');
 			$arrayActions[] = array("type" => "Label", "label" => "Rot");
-			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "SliderR", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GRGB_Set_RGB($id, $SliderR, $SliderG, $SliderB, $SliderW);');
+			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "SliderR", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GRGB_Set_RGB($id, $SliderR, $SliderG, $SliderB);');
 			$arrayActions[] = array("type" => "Label", "label" => "Grün");
-			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "SliderG", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GRGB_Set_RGB($id, $SliderR, $SliderG, $SliderB, $SliderW);');
+			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "SliderG", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GRGB_Set_RGB($id, $SliderR, $SliderG, $SliderB);');
 			$arrayActions[] = array("type" => "Label", "label" => "Blau");
-			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "SliderB", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GRGB_Set_RGB($id, $SliderR, $SliderG, $SliderB, $SliderW);');
+			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "SliderB", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GRGB_Set_RGB($id, $SliderR, $SliderG, $SliderB);');
 			$arrayActions[] = array("type" => "Label", "label" => "Weiß");
-			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "SliderW", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GRGB_Set_RGB($id, $SliderR, $SliderG, $SliderB, $SliderW);');
+			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "SliderW", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GRGB_Set_White($id, $SliderW);');
 		}
 		else {
 			$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
@@ -73,7 +73,9 @@
            	$this->EnableAction("Intensity_G");
            	$this->RegisterVariableInteger("Intensity_B", "Intensity Blau", "~Intensity.255", 40);
            	$this->EnableAction("Intensity_B");
-           	$this->RegisterVariableInteger("Color", "Farbe", "~HexColor", 50);
+		$this->RegisterVariableInteger("Intensity_W", "Intensity Weiß", "~Intensity.255", 50);
+           	$this->EnableAction("Intensity_B");
+           	$this->RegisterVariableInteger("Color", "Farbe", "~HexColor", 60);
            	$this->EnableAction("Color");
            	
           	//ReceiveData-Filter setzen
@@ -81,10 +83,11 @@
 		$this->SetReceiveDataFilter($Filter);
 		
 		If (IPS_GetKernelRunlevel() == 10103) {
-			If (($this->ReadPropertyInteger("Pin_R") >= 0) AND ($this->ReadPropertyInteger("Pin_G") >= 0) AND ($this->ReadPropertyInteger("Pin_B") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+			If (($this->ReadPropertyInteger("Pin_R") >= 0) AND ($this->ReadPropertyInteger("Pin_G") >= 0) AND ($this->ReadPropertyInteger("Pin_B") >= 0) AND ($this->ReadPropertyInteger("Pin_W") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_R"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_G"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_B"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_W"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 				$this->SetStatus(102);
 			}
 			else {
@@ -119,6 +122,11 @@
 	            SetValueInteger($this->GetIDForIdent($Ident), $Value);
 	            SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex(GetValueInteger($this->GetIDForIdent("Intensity_R")), GetValueInteger($this->GetIDForIdent("Intensity_G")), GetValueInteger($this->GetIDForIdent("Intensity_B"))));
 	            break;
+		case "Intensity_W":
+	            $this->Set_White($Value);
+	            //Neuen Wert in die Statusvariable schreiben
+	            SetValueInteger($this->GetIDForIdent($Ident), $Value);
+	            break;
 	        case "Color":
 	            list($r, $g, $b) = $this->Hex2RGB($Value);
 	            $this->Set_RGB($r, $g, $b);
@@ -146,7 +154,7 @@
 			}
 			break;
 		case "status":
-			If (($data->Pin == $this->ReadPropertyInteger("Pin_R")) OR ($data->Pin == $this->ReadPropertyInteger("Pin_G")) OR ($data->Pin == $this->ReadPropertyInteger("Pin_B"))) {
+			If (($data->Pin == $this->ReadPropertyInteger("Pin_R")) OR ($data->Pin == $this->ReadPropertyInteger("Pin_G")) OR ($data->Pin == $this->ReadPropertyInteger("Pin_B")) OR ($data->Pin == $this->ReadPropertyInteger("Pin_W")) ) {
 			   	$this->SetStatus($data->Status);
 			}
 			break;
@@ -162,6 +170,9 @@
 			}
 			If (($data->Pin == $this->ReadPropertyInteger("Pin_B")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
 			   	SetValueInteger($this->GetIDForIdent("Intensity_B"), $data->Value);
+			}
+			If (($data->Pin == $this->ReadPropertyInteger("Pin_W")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
+				SetValueInteger($this->GetIDForIdent("Intensity_W"), $data->Value);
 			}
 			break;
     		}
@@ -186,6 +197,19 @@
 		}
 	}
 	
+	public function Set_White(Int $value)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$value = min(255, max(0, $value));
+			If (GetValueBoolean($this->GetIDForIdent("Status")) == true) {
+				$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $value)));
+			}
+			else {
+				SetValueInteger($this->GetIDForIdent("Intensity_W"), $value);
+			}
+		}
+	}    
+	    
 	public function Set_Status(Bool $value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
