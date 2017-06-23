@@ -143,6 +143,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("SerialNotify", "false");
 			$this->SetBuffer("Default_I2C_Bus", 1);
 			$this->SetBuffer("Default_Serial_Bus", 0);
+			$this->SetBuffer("MUX_Handle", -1);
 			
 			$ParentID = $this->GetParentID();
 		        // Änderung an den untergeordneten Instanzen
@@ -171,13 +172,28 @@ class IPS2GPIO_IO extends IPSModule
 			}
 	
 			If (($this->ConnectionTest()) AND ($this->ReadPropertyBoolean("Open") == true))  {
+				$this->SendDebug("ApplyChangges", "Starte Vorbereitung", 0);
+				$this->CheckConfig();
 				// Hardware und Softwareversion feststellen
 				$this->CommandClientSocket(pack("LLLL", 17, 0, 0, 0).pack("LLLL", 26, 0, 0, 0), 32);
 				
-				If ($this->ReadPropertyBoolean("I2C_Used") == true)  {
-					// I2C-Handle zurücksetzen
-					$this->ResetI2CHandle();
+				// I2C-Handle zurücksetzen
+				$this->ResetI2CHandle(0);
+				
+				// Serial-Handle zurücksetzen
+				$this->ResetSerialHandle();
+				
+				// MUX einrichten
+				If ($this->ReadPropertyInteger("MUX") > 0)) {
+					$MUX_Handle = $Handle = $this->CommandClientSocket(pack("L*", 54, 1, 112, 4, 0), 16);
+					$this->SetBuffer("MUX_Handle", $MUX_Handle);
+					$this->SendDebug("MUX Handle", $MUX_Handle, 0);
+					If ($MUX_Handle >= 0) {
+						// MUX setzen
+						$this->SetMUX(0);
+					}
 				}
+			
 				$I2C_DeviceHandle = array();
 				SetValueString($this->GetIDForIdent("I2C_Handle"), serialize($I2C_DeviceHandle));
 				
@@ -1297,16 +1313,19 @@ class IPS2GPIO_IO extends IPSModule
 	return $I2C_Device;
 	}
 	
-	private function ResetI2CHandle()
+	private function ResetI2CHandle($MinHandle = 0)
 	{
-		$I2C_DeviceHandle = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
-		If (is_array($I2C_DeviceHandle)) {			
-			If  ((count($I2C_DeviceHandle) > 0) AND (max($I2C_DeviceHandle) > -1)) {
-				for ($i = 0; $i <= max($I2C_DeviceHandle); $i++) {
-					// Handle löschen
-					$this->CommandClientSocket(pack("LLLL", 55, $i, 0, 0), 16);
-				}
-			}
+		$Handle = $this->CommandClientSocket(pack("L*", 54, 1, 1, 4, 0), 16);
+		for ($i = $MinHandle; $i <= $Handle ; $i++) {
+			$this->CommandClientSocket(pack("L*", 55, $i, 0, 0), 16);
+		}
+	}
+	
+	private function ResetSerialHandle()
+	{
+		$SerialHandle = $this->CommandClientSocket(pack("L*", 76, $this->ReadPropertyInteger('Baud'), 0, strlen($this->ReadPropertyString('ConnectionString')) ).$this->ReadPropertyString('ConnectionString'), 16);
+		for ($i = 0; $i <= $SerialHandle; $i++) {
+			$this->CommandClientSocket(pack("L*", 77, $i, 0, 0), 16);
 		}
 	}
 	
