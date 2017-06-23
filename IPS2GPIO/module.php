@@ -1393,8 +1393,46 @@ class IPS2GPIO_IO extends IPSModule
 	private function SearchI2CDevices()
 	{
 		$DeviceArray = Array();
-			
+		$DeviceName = Array();
+		$SearchArray = Array();
+		// PCF8574
+		for ($i = 32; $i <= 34; $i++) {
+			$SearchArray[] = $i;
+			$DeviceName[] = "PCF8574";
+		}
+		// BH1750
+		$SearchArray[] = 35;
+		$DeviceName[] = "BH1750";
+		// PCF8574
+		for ($i = 36; $i <= 39; $i++) {
+			$SearchArray[] = $i;
+			$DeviceName[] = "PCF8574";
+		}
+		// PCF8574
+		for ($i = 56; $i <= 63; $i++) {
+			$SearchArray[] = $i;
+			$DeviceName[] = "PCF8574";
+		}
+		// PCF8591
+		for ($i = 72; $i <= 79; $i++) {
+			$SearchArray[] = $i;
+			$DeviceName[] = "PCF8591";
+		}
+		// BH1750
+		$SearchArray[] = 92;
+		$DeviceName[] = "BH1750";		
+		// MCP3424
+		for ($i = 104; $i <= 110; $i++) {
+			$SearchArray[] = $i;
+			$DeviceName[] = "MCP3424";
+		}
+		// BME280
+		for ($i = 118; $i <= 119; $i++) {
+			$SearchArray[] = $i;
+			$DeviceName[] = "BME280";
+		}					
 		$k = 0;
+		
 		$this->SetBuffer("I2CSearch", 1);
 		for ($j = 1; $j <= 1; $j++) {
 
