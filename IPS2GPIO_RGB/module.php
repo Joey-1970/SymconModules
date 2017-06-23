@@ -37,7 +37,7 @@
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_B", "caption" => "GPIO-Nr. Blau", "options" => $arrayOptions );
 		
 		$arrayActions = array();
-		If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+		If (($this->ReadPropertyInteger("Pin_R") >= 0) AND ($this->ReadPropertyInteger("Pin_G") >= 0) AND ($this->ReadPropertyInteger("Pin_B") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 			$arrayActions[] = array("type" => "Button", "label" => "On", "onClick" => 'I2GRGB_Set_Status($id, true);');
 			$arrayActions[] = array("type" => "Button", "label" => "Off", "onClick" => 'I2GRGB_Set_Status($id, false);');
 			$arrayActions[] = array("type" => "Button", "label" => "Toggle", "onClick" => 'I2GRGB_Toggle_Status($id);');
