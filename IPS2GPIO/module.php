@@ -1272,6 +1272,7 @@ class IPS2GPIO_IO extends IPSModule
 	
 	private function ResetI2CHandle($MinHandle = 0)
 	{
+		$this->SendDebug("ResetI2CHandle", "I2C Handle loeschen", 0);
 		$Handle = $this->CommandClientSocket(pack("L*", 54, 1, 1, 4, 0), 16);
 		for ($i = $MinHandle; $i <= $Handle ; $i++) {
 			$this->CommandClientSocket(pack("L*", 55, $i, 0, 0), 16);
@@ -1280,7 +1281,8 @@ class IPS2GPIO_IO extends IPSModule
 	
 	private function ResetSerialHandle()
 	{
-		$SerialHandle = $this->CommandClientSocket(pack("L*", 76, $this->ReadPropertyInteger('Baud'), 0, strlen($this->ReadPropertyString('ConnectionString')) ).$this->ReadPropertyString('ConnectionString'), 16);
+		$this->SendDebug("ResetSerialHandle", "Serial Handle loeschen", 0);
+		$SerialHandle = $this->CommandClientSocket(pack("L*", 76, 9600, 0, strlen("/dev/serial0") )."/dev/serial0", 16);
 		for ($i = 0; $i <= $SerialHandle; $i++) {
 			$this->CommandClientSocket(pack("L*", 77, $i, 0, 0), 16);
 		}
@@ -1347,6 +1349,18 @@ class IPS2GPIO_IO extends IPSModule
 					$arrayCheckConfig["I2C"]["Status"] = "deaktiviert";
 					$arrayCheckConfig["I2C"]["Color"] = "#FF0000";
 				}
+				// Prüfen ob 1-Wie-Server aktiviert ist
+				$Pattern = "/(?:\r\n|\n|\r)(\s*)(dtoverlay)(=(w1-gpio))(\s*)($:\r\n|\n|\r)/";
+				if (preg_match($Pattern, $FileContentConfig)) {
+					$this->SendDebug("CheckConfig", "1-Wire-Server ist aktiviert", 0);
+					$arrayCheckConfig["1-Wire-Server"]["Status"] = "aktiviert";
+					$arrayCheckConfig["1-Wire-Server"]["Color"] = "#00FF00";			
+				} else {
+					$this->SendDebug("CheckConfig", "1-Wire-Server ist deaktiviert!", 0);
+					IPS_LogMessage("IPS2GPIO_IO CheckConfig", "1-Wire-Server ist deaktiviert!");
+					$arrayCheckConfig["1-Wire-Server"]["Status"] = "deaktiviert";
+					$arrayCheckConfig["1-Wire-Server"]["Color"] = "#FF0000";
+				}
 				// Prüfen ob die serielle Schnittstelle aktiviert ist
 				$Pattern = "/(?:\r\n|\n|\r)(\s*)(enable_uart)(=(on|true|yes|1))(\s*)($:\r\n|\n|\r)/";
 				if (preg_match($Pattern, $FileContentConfig)) {
@@ -1359,18 +1373,7 @@ class IPS2GPIO_IO extends IPSModule
 					$arrayCheckConfig["Serielle Schnittstelle"]["Status"] = "deaktiviert";
 					$arrayCheckConfig["Serielle Schnittstelle"]["Color"] = "#FF0000";
 				}
-				// Prüfen ob 1-Wie-Server aktiviert ist
-				$Pattern = "/(?:\r\n|\n|\r)(\s*)(dtoverlay)(=(w1-gpio))(\s*)($:\r\n|\n|\r)/";
-				if (preg_match($Pattern, $FileContentConfig)) {
-					$this->SendDebug("CheckConfig", "1-Wire-Server ist aktiviert", 0);
-					$arrayCheckConfig["1-Wire-Server"]["Status"] = "aktiviert";
-					$arrayCheckConfig["1-Wire-Server"]["Color"] = "#00FF00";			
-				} else {
-					$this->SendDebug("CheckConfig", "Serielle Schnittstelle ist deaktiviert!", 0);
-					IPS_LogMessage("IPS2GPIO_IO CheckConfig", "Serielle Schnittstelle ist deaktiviert!");
-					$arrayCheckConfig["1-Wire-Server"]["Status"] = "deaktiviert";
-					$arrayCheckConfig["1-Wire-Server"]["Color"] = "#FF0000";
-				}
+				
 			}
 			
 			//Serielle Schnittstelle
