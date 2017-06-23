@@ -18,7 +18,7 @@ class IPS2GPIO_IO extends IPSModule
 	    	$this->RegisterPropertyString("Password", "Passwort");
 	    	$this->RegisterPropertyBoolean("I2C_Used", false);
 		$this->RegisterPropertyBoolean("I2CBus0", false);
-		$this->RegisterPropertyInteger("TCA9548", 0);
+		$this->RegisterPropertyInteger("MUX", 0);
 	    	$this->RegisterPropertyBoolean("Serial_Used", false);
 		$this->RegisterPropertyBoolean("1Wire_Used", false);
 		$this->RegisterPropertyString("Raspi_Config", "");
@@ -52,10 +52,10 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayElements[] = array("type" => "Label", "label" => "Detaillierung der I²C-Schnittstelle:");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "I2CBus0", "caption" => "I²C-Bus 0");
 		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "Kein", "value" => 0);
-		$arrayOptions[] = array("label" => "Adresse 112/0x70", "value" => 1);
-		$arrayOptions[] = array("label" => "Adresse 113/0x71", "value" => 1);
-		$arrayElements[] = array("type" => "Select", "name" => "TCA9548", "caption" => "TCA9548a", "options" => $arrayOptions );
+		$arrayOptions[] = array("label" => "Kein MUX", "value" => 0);
+		$arrayOptions[] = array("label" => "TCA9548a Adr. 112/0x70", "value" => 1);
+		$arrayOptions[] = array("label" => "PCA9542 Adr. 112/0x70", "value" => 2);
+		$arrayElements[] = array("type" => "Select", "name" => "MUX", "caption" => "MUX-Auswahl", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Analyse der Raspberry Pi Konfiguration:");
 		$arraySort = array();
@@ -1240,6 +1240,35 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetStatus(104);
 		}
 	return $result;
+	}
+	
+	private function SetMUX($Port)
+	{
+		// PCA9542
+		// 0 = No Channel selected
+		// 4 = Channel 0
+		// 5 = Channel 1
+		
+		// TCA9548a
+		// 0 = No Channel selected
+		// 1 = Channel 0 enable
+		// 2 = Channel 1 enable
+		// 4 = Channel 2 enable
+		// 8 = Channel 3 enable
+		// 16 = Channel 4 enable
+		// 32 = Channel 5 enable
+		// 64 = Channel 6 enable
+		// 128 = Channel 7 enable
+		
+		$this->SetBuffer("MUX_Channel", $Port);
+		$MUX_Handle = $this->GetBuffer("MUX_Handle");
+		If ($Port == 1) {
+			$this->CommandClientSocket(pack("L*", 60, $MUX_Handle, 0, 0), 16);
+		}
+		else {
+			$this->CommandClientSocket(pack("L*", 60, $MUX_Handle, $Port, 0), 16);
+		}
+	return;
 	}
 	
 	private function GetI2C_DeviceHandle(Int $DeviceAddress)
