@@ -44,13 +44,13 @@
 			$arrayActions[] = array("type" => "Button", "label" => "Off", "onClick" => 'I2GRGB_Set_Status($id, false);');
 			$arrayActions[] = array("type" => "Button", "label" => "Toggle", "onClick" => 'I2GRGB_Toggle_Status($id);');
 			$arrayActions[] = array("type" => "Label", "label" => "Rot");
-			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "SliderR", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GRGB_Set_RGB($id, $SliderR, $SliderG, $SliderB);');
+			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "SliderR", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GRGBW_Set_RGB($id, $SliderR, $SliderG, $SliderB);');
 			$arrayActions[] = array("type" => "Label", "label" => "Grün");
-			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "SliderG", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GRGB_Set_RGB($id, $SliderR, $SliderG, $SliderB);');
+			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "SliderG", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GRGBW_Set_RGB($id, $SliderR, $SliderG, $SliderB);');
 			$arrayActions[] = array("type" => "Label", "label" => "Blau");
-			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "SliderB", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GRGB_Set_RGB($id, $SliderR, $SliderG, $SliderB);');
+			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "SliderB", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GRGBW_Set_RGB($id, $SliderR, $SliderG, $SliderB);');
 			$arrayActions[] = array("type" => "Label", "label" => "Weiß");
-			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "SliderW", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GRGB_Set_White($id, $SliderW);');
+			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "SliderW", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GRGBW_Set_White($id, $SliderW);');
 		}
 		else {
 			$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
