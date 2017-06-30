@@ -126,14 +126,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->RegisterVariableInteger("SoftwareVersion", "SoftwareVersion", "", 20);
 			$this->DisableAction("SoftwareVersion");
 			IPS_SetHidden($this->GetIDForIdent("SoftwareVersion"), true);
-			
-			// **********************************************************************************
-			$this->RegisterVariableString("I2C_Handle", "I2C_Handle", "", 160);
-			$this->DisableAction("I2C_Handle");
-			IPS_SetHidden($this->GetIDForIdent("I2C_Handle"), true);
-			
-			// **********************************************************************************
-			
+						
 			$this->SetBuffer("HardwareRev", 0);
 			$Typ = array(2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27);
 			$this->SetBuffer("PinPossible", serialize($Typ));
@@ -194,7 +187,7 @@ class IPS2GPIO_IO extends IPSModule
 				}
 			
 				$I2C_DeviceHandle = array();
-				SetValueString($this->GetIDForIdent("I2C_Handle"), serialize($I2C_DeviceHandle));
+				$this->SetBuffer("I2C_Handle", serialize($I2C_DeviceHandle));
 				
 				// Notify Handle zurücksetzen falls gesetzt
 				If ($this->GetBuffer("Handle") >= 0) {
@@ -392,11 +385,11 @@ class IPS2GPIO_IO extends IPSModule
 		   case "set_used_i2c":
 			$this->SetBuffer("I2C_Used", 1);
 		   	// die genutzten Device Adressen anlegen
-		   	$I2C_DeviceHandle = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
+		   	$I2C_DeviceHandle = unserialize($this->GetBuffer("I2C_Handle"));
 		   	// Bei Bus 1 Addition von 128
 			$I2C_DeviceHandle[($data->DeviceBus << 7) + $data->DeviceAddress] = -1;
 			// genutzte Device-Ident noch ohne Handle sichern
-		   	SetValueString($this->GetIDForIdent("I2C_Handle"), serialize($I2C_DeviceHandle));
+			$this->SetBuffer("I2C_Handle", serialize($I2C_DeviceHandle));
 		   	// Messages einrichten
 			$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
 		        $this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
@@ -408,7 +401,7 @@ class IPS2GPIO_IO extends IPSModule
 		   case "i2c_destroy":
 		   	//IPS_LogMessage("IPS2GPIO I2C Destroy: ",$data->DeviceAddress." , ".$data->Register); 
 		   	If ($this->GetI2C_DeviceHandle($data->DeviceAddress) >= 0) {
-		   		$I2C_DeviceHandle = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
+		   		$I2C_DeviceHandle = unserialize($this->GetBuffer("I2C_Handle"));
 		   		// Handle für das Device löschen
 		   		$this->CommandClientSocket(pack("L*", 55, GetI2C_DeviceHandle($data->DeviceAddress), 0, 0), 16);
 		   		// Device aus dem Array löschen
@@ -416,7 +409,7 @@ class IPS2GPIO_IO extends IPSModule
 				If (Count($I2C_DeviceHandle) == 0) {
 					$this->SetBuffer("I2C_Used", 0);
 				}
-				SetValueString($this->GetIDForIdent("I2C_Handle"), serialize($I2C_DeviceHandle));
+				$this->SetBuffer("I2C_Handle", serialize($I2C_DeviceHandle));
 		   	}
 		   	break;
 		   case "i2c_read_byte":
@@ -617,7 +610,7 @@ class IPS2GPIO_IO extends IPSModule
 		}
 		// Ermitteln ob der I2C-Bus genutzt wird und welcher Device Adressen
 		// Bisherige I2C-Handle löschen
-		$I2C_DeviceHandle = array_values(unserialize(GetValueString($this->GetIDForIdent("I2C_Handle"))));
+		$I2C_DeviceHandle = array_values(unserialize($this->GetBuffer("I2C_Handle")));
 		for ($i = 0; $i < Count($I2C_DeviceHandle); $i++) {
 			$this->CommandClientSocket(pack("L*", 55, $I2C_DeviceHandle[$i], 0, 0), 16);
 		}
@@ -858,12 +851,12 @@ class IPS2GPIO_IO extends IPSModule
 		        	If ($response[4] >= 0 ) {
            				If ($this->GetBuffer("I2CSearch") == 0) {
 						//IPS_LogMessage("IPS2GPIO I2C Handle",$response[4]." für Device ".$response[3]);
-						$I2C_DeviceHandle = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
+						$I2C_DeviceHandle = unserialize($this->GetBuffer("I2C_Handle"));
 						// Hier wird der ermittelte Handle der DiviceAdresse/Bus hinzugefügt
 						$I2C_DeviceHandle[($response[2] << 7) + $response[3]] = $response[4];
 
 						//$I2C_DeviceHandle[$response[3]] = $response[4];
-						SetValueString($this->GetIDForIdent("I2C_Handle"), serialize($I2C_DeviceHandle));
+						$this->SetBuffer("I2C_Handle", serialize($I2C_DeviceHandle));
 					}
            			}
            			else {
@@ -1246,7 +1239,7 @@ class IPS2GPIO_IO extends IPSModule
 	private function GetI2C_DeviceHandle(Int $DeviceAddress)
 	{
 		// Gibt für ein Device den verknüpften Handle aus
-		$I2C_HandleData = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
+		$I2C_HandleData = unserialize($this->GetBuffer("I2C_Handle"));
  		If (array_key_exists($DeviceAddress, $I2C_HandleData)) {
  			$I2C_Handle = $I2C_HandleData[$DeviceAddress];
  		}
@@ -1259,7 +1252,7 @@ class IPS2GPIO_IO extends IPSModule
 	private function GetI2C_HandleDevice(Int $I2C_Handle)
 	{
 		// Gibt für ein I2C-Device die Adresse aus
-		$I2C_HandleData = unserialize(GetValueString($this->GetIDForIdent("I2C_Handle")));
+		$I2C_HandleData = unserialize($this->GetBuffer("I2C_Handle"));
  		If (array_search($I2C_Handle, $I2C_HandleData) == false) {
  			$I2C_Device = -1;
  		}
