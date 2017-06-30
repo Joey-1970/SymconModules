@@ -17,7 +17,6 @@ class IPS2GPIO_IO extends IPSModule
 	    	$this->RegisterPropertyString("User", "User");
 	    	$this->RegisterPropertyString("Password", "Passwort");
 	    	$this->RegisterPropertyBoolean("I2C_Used", false);
-		$this->RegisterPropertyBoolean("I2CBus0", false);
 		$this->RegisterPropertyInteger("MUX", 0);
 	    	$this->RegisterPropertyBoolean("Serial_Used", false);
 		$this->RegisterPropertyBoolean("1Wire_Used", false);
@@ -50,7 +49,6 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayElements[] = array("type" => "CheckBox", "name" => "1Wire_Used", "caption" => "1-Wire");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Detaillierung der I²C-Schnittstelle:");
-		$arrayElements[] = array("type" => "CheckBox", "name" => "I2CBus0", "caption" => "I²C-Bus 0");
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "Kein MUX", "value" => 0);
 		$arrayOptions[] = array("label" => "TCA9548a Adr. 112/0x70", "value" => 1);
