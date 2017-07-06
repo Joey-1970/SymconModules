@@ -8,10 +8,11 @@ class IPS2GPIO_IO extends IPSModule
             	parent::__construct($InstanceID);
 	}
 	
-	public function __construct($InstanceID) {
-            	// Diese Zeile nicht löschen
-            	parent::__construct($InstanceID);
-        }
+	public function __destruct()
+	{
+		if ($this->Socket)
+		    	fclose($this->Socket);
+	} 
 
 	public function Create() 
 	{
