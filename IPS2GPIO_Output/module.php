@@ -9,6 +9,7 @@
             	parent::Create();
             	$this->RegisterPropertyBoolean("Open", false);
 		$this->RegisterPropertyInteger("Pin", -1);
+		$this->RegisterPropertyBoolean("Invert", false);
 		$this->RegisterPropertyBoolean("Logging", false);
 		$this->RegisterPropertyBoolean("Startoption", false);
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
@@ -34,6 +35,7 @@
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("name" => "Invert", "type" => "CheckBox",  "caption" => "Invertiere Anzeige");
 		$arrayElements[] = array("name" => "Logging", "type" => "CheckBox",  "caption" => "Logging aktivieren");
 		$arrayElements[] = array("type" => "Label", "label" => "Status des Ausgangs nach Neustart");
 		$arrayElements[] = array("name" => "Startoption", "type" => "CheckBox",  "caption" => "Status");
@@ -87,8 +89,6 @@
 	        case "Status":
 	            If ($this->ReadPropertyBoolean("Open") == true) {
 		    	$this->Set_Status($Value);
-	            	//Neuen Wert in die Statusvariable schreiben
-	            	//SetValue($this->GetIDForIdent($Ident), $Value);
 		    }
 	            break;
 	        default:
@@ -112,10 +112,6 @@
 			   		$this->SetStatus($data->Status);
 			   	}
 			   	break;
-			  case "result":
-				If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
-			   		//SetValueBoolean($this->GetIDForIdent("Status"), $data->Value);
-				}
 			break;
 			   case "freepin":
 			   	// Funktion zum erstellen dynamischer Pulldown-Menüs
@@ -129,12 +125,11 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Set_Status", "Ausfuehrung", 0);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value)));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => ($Value ^ $this->ReadPropertyBoolean("Open")) )));
 			$this->SendDebug("Set_Status", "Ergebnis: ".(int)$Result, 0);
 			IF ($Result) {
-				SetValueBoolean($this->GetIDForIdent("Status"), $Value);
+				SetValueBoolean($this->GetIDForIdent("Status"), ($Value ^ $this->ReadPropertyBoolean("Invert")));
 			}
-			//$this->Get_Status();
 		}
 	}
 	
@@ -147,15 +142,5 @@
 		}
 	}
 	    
-	private function Get_Status()
-	{
-		/*
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("Get_Status", "Ausfuehrung", 0);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_value", "Pin" => $this->ReadPropertyInteger("Pin") )));
-			SetValueBoolean($this->GetIDForIdent($this->GetIDForIdent("Status")), $Result);
-		}
-		*/
-	}
 }
 ?>
