@@ -305,7 +305,7 @@ class IPS2GPIO_IO extends IPSModule
 		    	// Schaltet den Pin
 		    	If ($data->Pin >= 0) {
 		    		//IPS_LogMessage("IPS2GPIO SetValue Parameter : ",$data->Pin." , ".$data->Value); 
-		    		$this->CommandClientSocket(pack("LLLL", 4, $data->Pin, $data->Value, 0), 16);
+		    		$Result = $this->CommandClientSocket(pack("L*", 4, $data->Pin, $data->Value, 0), 16);
 		    	}
 		        break;
 		    case "set_trigger":
@@ -858,11 +858,14 @@ class IPS2GPIO_IO extends IPSModule
 			case "4":
 		        	If ($response[4] == 0) {
 		        		//IPS_LogMessage("IPS2GPIO Write", "Pin: ".$response[2]." Wert: ".$response[3]." erfolgreich gesendet");
-		        		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"result", "Pin" => $response[2], "Value"=> $response[3])));
+		        		$Result = true;
+					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"result", "Pin" => $response[2], "Value"=> $response[3])));
 		        	}
 		        	else {
 		        		IPS_LogMessage("IPS2GPIO Write", "Pin: ".$response[2]." Wert: ".$response[3]." konnte nicht erfolgreich gesendet werden! Fehler:".$this->GetErrorText(abs($response[4])));
+					$Result = false;
 		        	}
+				return $Result;
 		        	break;
 		        case "5":
 		        	If ($response[4] == 0) {
