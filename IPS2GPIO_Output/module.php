@@ -141,6 +141,17 @@
 			$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")));
 		}
 	}
+	
+	// Ermittelt den Status
+	public function Get_Status()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Get_Status", "Ausfuehrung", 0);
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_value", "Pin" => $this->ReadPropertyInteger("Pin") )));
+			$this->SendDebug("Get_Status", "Ergebnis: ".(int)$Result, 0);
+		}
+	}
+	
 	    
 }
 ?>
