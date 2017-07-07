@@ -253,7 +253,7 @@ class IPS2GPIO_IO extends IPSModule
 	 {
 	 	// Empfangene Daten von der Device Instanz
 	    	$data = json_decode($JSONString);
-	    	
+	    	$Result = -999;
 	 	switch ($data->Function) {
 		    // GPIO Kommunikation
 		    case "gpio_destroy":
@@ -298,7 +298,6 @@ class IPS2GPIO_IO extends IPSModule
 		    	If ($data->Pin >= 0) {
 		    		$this->SendDebug("get_value", "Pin: ".$data->Pin, 0);
 		    		$Result = $this->CommandClientSocket(pack("L*", 3, $data->Pin, 0, 0), 16);
-				return $Result;
 		    	}
 		        break;
 		    case "set_value":
@@ -518,8 +517,10 @@ class IPS2GPIO_IO extends IPSModule
 			//IPS_LogMessage("IPS2GPIO 1-Wire-Data", $Result );
 			$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_1wire_data", "InstanceID" => $data->InstanceID, "Result"=>utf8_encode($Result) )));
 			break;
+		
 		}
-	  }
+	 return $Result;
+	 }
 	
 	 public function ReceiveData($JSONString) {
  	    	$CmdPossible = array(19, 21, 76, 81, 99, 115, 116);
@@ -859,11 +860,13 @@ class IPS2GPIO_IO extends IPSModule
 			case "4":
 		        	If ($response[4] == 0) {
 		        		//IPS_LogMessage("IPS2GPIO Write", "Pin: ".$response[2]." Wert: ".$response[3]." erfolgreich gesendet");
-		        		$Result = true;
+		        		$this->SendDebug("ClientResponse", "Write Pin: ".$response[2]." Wert: ".$response[3], 0);
+					$Result = true;
 					//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"result", "Pin" => $response[2], "Value"=> $response[3])));
 		        	}
 		        	else {
-		        		IPS_LogMessage("IPS2GPIO Write", "Pin: ".$response[2]." Wert: ".$response[3]." konnte nicht erfolgreich gesendet werden! Fehler:".$this->GetErrorText(abs($response[4])));
+		        		$this->SendDebug("ClientResponse", "Write Pin: ".$response[2]." Wert: ".$response[3]." konnte nicht erfolgreich gesendet werden! Fehler:".$this->GetErrorText(abs($response[4])), 0);
+					IPS_LogMessage("IPS2GPIO Write", "Pin: ".$response[2]." Wert: ".$response[3]." konnte nicht erfolgreich gesendet werden! Fehler:".$this->GetErrorText(abs($response[4])));
 					$Result = false;
 		        	}
 		        	break;
