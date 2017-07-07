@@ -293,6 +293,14 @@ class IPS2GPIO_IO extends IPSModule
 		        	$this->CommandClientSocket(pack("LLLL", 5, $data->Pin_R, $data->Value_R, 0).pack("LLLL", 5, $data->Pin_G, $data->Value_G, 0).pack("LLLL", 5, $data->Pin_B, $data->Value_B, 0), 48);
 		    	}
 		        break;
+		    case "get_value":
+		    	// liest den Pin
+		    	If ($data->Pin >= 0) {
+		    		//IPS_LogMessage("IPS2GPIO SetValue Parameter : ",$data->Pin." , ".$data->Value); 
+		    		$Result = $this->CommandClientSocket(pack("L*", 3, $data->Pin, 0, 0), 16);
+				return $Result;
+		    	}
+		        break;
 		    case "set_value":
 		    	// Schaltet den Pin
 		    	If ($data->Pin >= 0) {
@@ -835,6 +843,15 @@ class IPS2GPIO_IO extends IPSModule
 		        	}
 		        	else {
 		        		IPS_LogMessage("IPS2GPIO Set Pull-up/Down-Widerstand", "Pin: ".$response[2]." Wert: ".$response[3]." konnte nicht erfolgreich gesendet werden! Fehler:".$this->GetErrorText(abs($response[4])));
+		        	}
+		        	break;
+			case "3":
+		        	If ($response[4] == 0) {
+		        		//IPS_LogMessage("IPS2GPIO Read", "Pin: ".$response[2]." Wert: ".$response[3]." erfolgreich gesendet");
+		        		//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"result", "Pin" => $response[2], "Value"=> $response[3])));
+		        	}
+		        	else {
+		        		IPS_LogMessage("IPS2GPIO Read", "Pin: ".$response[2]." konnte nicht erfolgreich ermittelt werden! Fehler:".$this->GetErrorText(abs($response[4])));
 		        	}
 		        	break;
 			case "4":
