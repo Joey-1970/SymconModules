@@ -294,9 +294,9 @@ class IPS2GPIO_IO extends IPSModule
 		    	}
 		        break;
 		    case "get_value":
-		    	// liest den Pin
+		    	// Liest den Pin
 		    	If ($data->Pin >= 0) {
-		    		//IPS_LogMessage("IPS2GPIO SetValue Parameter : ",$data->Pin." , ".$data->Value); 
+		    		$this->SendDebug("get_value", "Pin: ".$data->Pin, 0);
 		    		$Result = $this->CommandClientSocket(pack("L*", 3, $data->Pin, 0, 0), 16);
 				return $Result;
 		    	}
@@ -805,6 +805,7 @@ class IPS2GPIO_IO extends IPSModule
 				// Anfragen mit variabler Rückgabelänge
 				$CmdVarLen = array(56, 67, 70, 73, 75, 80, 88, 91, 92, 106, 109);
 				$MessageArray = unpack("L*", $buf);
+				
 				$Command = $MessageArray[1];
 				If (in_array($Command, $CmdVarLen)) {
 					$Result = $this->ClientResponse($buf);
