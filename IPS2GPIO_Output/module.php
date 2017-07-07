@@ -88,7 +88,7 @@
 	            If ($this->ReadPropertyBoolean("Open") == true) {
 		    	$this->Set_Status($Value);
 	            	//Neuen Wert in die Statusvariable schreiben
-	            	SetValue($this->GetIDForIdent($Ident), $Value);
+	            	//SetValue($this->GetIDForIdent($Ident), $Value);
 		    }
 	            break;
 	        default:
@@ -114,7 +114,7 @@
 			   	break;
 			  case "result":
 				If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
-			   		SetValueBoolean($this->GetIDForIdent("Status"), $data->Value);
+			   		//SetValueBoolean($this->GetIDForIdent("Status"), $data->Value);
 				}
 			break;
 			   case "freepin":
@@ -129,6 +129,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value)));
+			$this->Get_Status();
 		}
 	}
 	
@@ -137,6 +138,13 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")));
+		}
+	}
+	    
+	private function Get_Status()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_value", "Pin" => $this->ReadPropertyInteger("Pin") )));
 		}
 	}
 }
