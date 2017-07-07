@@ -129,8 +129,12 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Set_Status", "Ausfuehrung", 0);
-			$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value)));
-			$this->Get_Status();
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value)));
+			$this->SendDebug("Set_Status", "Ergebnis: ".(int)$Result, 0);
+			IF ($Result) {
+				SetValueBoolean($this->GetIDForIdent($this->GetIDForIdent("Status")), $Value);
+			}
+			//$this->Get_Status();
 		}
 	}
 	
@@ -145,11 +149,13 @@
 	    
 	private function Get_Status()
 	{
+		/*
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Get_Status", "Ausfuehrung", 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_value", "Pin" => $this->ReadPropertyInteger("Pin") )));
 			SetValueBoolean($this->GetIDForIdent($this->GetIDForIdent("Status")), $Result);
 		}
+		*/
 	}
 }
 ?>
