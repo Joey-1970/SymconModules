@@ -74,6 +74,7 @@
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
 									  "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 				
+				$this->Get_Status();
 				$this->Set_Status($this->ReadPropertyBoolean("Startoption"));
 				$this->SetStatus(102);
 			}
@@ -128,7 +129,7 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => ($Value ^ $this->ReadPropertyBoolean("Open")) )));
 			$this->SendDebug("Set_Status", "Ergebnis: ".(int)$Result, 0);
 			IF ($Result) {
-				SetValueBoolean($this->GetIDForIdent("Status"), ($Value ^ $this->ReadPropertyBoolean("Invert")));
+				$this->Get_Status();
 			}
 		}
 	}
@@ -149,6 +150,7 @@
 			$this->SendDebug("Get_Status", "Ausfuehrung", 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_value", "Pin" => $this->ReadPropertyInteger("Pin") )));
 			$this->SendDebug("Get_Status", "Ergebnis: ".(int)$Result, 0);
+			SetValueBoolean($this->GetIDForIdent("Status"), ($Value ^ $this->ReadPropertyBoolean("Invert")));
 		}
 	}
 	
