@@ -802,7 +802,7 @@ class IPS2GPIO_IO extends IPSModule
 				
 				stream_set_timeout($this->Socket, 5);
 				stream_socket_sendto($this->Socket, $Data);
-				$buf = fread($this->Socket, $ResponseLen + 1);
+				$buf = fread($this->Socket, $ResponseLen);
 				// Anfragen mit variabler Rückgabelänge
 				$CmdVarLen = array(56, 67, 70, 73, 75, 80, 88, 91, 92, 106, 109);
 				$MessageArray = unpack("L*", $buf);
