@@ -11,7 +11,7 @@ class IPS2GPIO_IO extends IPSModule
 	public function __destruct()
 	{
 		if ($this->Socket)
-		    	fclose($this->Socket);
+		    	socket_close($this->Socket);
 	} 
 
 	public function Create() 
@@ -716,6 +716,40 @@ class IPS2GPIO_IO extends IPSModule
 			
 			if (IPS_SemaphoreEnter("CommandClientSocket", 5))
 			{
+				if (!$this->Socket)
+				{
+					// Socket erstellen
+					if(!($this->Socket = socket_create(AF_INET, SOCK_STREAM, 0))) {
+						$errorcode = socket_last_error();
+						$errormsg = socket_strerror($errorcode);
+						//IPS_LogMessage("GeCoS_IO Socket", "Fehler beim Erstellen ".$errorcode." ".$errormsg);
+						//$this->SendDebug("CommandClientSocket", "Fehler beim Erstellen ".$errorcode." ".$errormsg, 0);
+						return;
+					}
+					// Timeout setzen
+					socket_set_option($this->Socket, SOL_SOCKET, SO_RCVTIMEO, array("sec"=>2, "usec"=>0));
+					// Verbindung aufbauen
+					if(!(socket_connect($this->Socket, $this->ReadPropertyString("IPAddress"), 8888))) {
+						$errorcode = socket_last_error();
+						$errormsg = socket_strerror($errorcode);
+						//IPS_LogMessage("GeCoS_IO Socket", "Fehler beim Verbindungsaufbaus ".$errorcode." ".$errormsg);
+						//$this->SendDebug("CommandClientSocket", "Fehler beim Verbindungsaufbaus ".$errorcode." ".$errormsg, 0);
+						return;
+					}
+					
+					
+					if (!$this->Socket) {
+						IPS_LogMessage("IPS2GPIO Socket", "Fehler beim Verbindungsaufbau ".$errno." ".$errstr);
+						$this->SendDebug("CommandClientSocket", "Fehler beim Verbindungsaufbau ".$errno." ".$errstr, 0);
+						// Testballon an IPS-ClientSocket
+						$this->ClientSocket(pack("L*", 17, 0, 0, 0));						
+						$this->SetStatus(201);
+						IPS_SemaphoreLeave("CommandClientSocket");
+						return $Result;
+					}
+				}
+				
+				/*
 				// Socket erstellen
 				if(!($sock = socket_create(AF_INET, SOCK_STREAM, 0))) {
 					$errorcode = socket_last_error();
@@ -732,8 +766,10 @@ class IPS2GPIO_IO extends IPSModule
 					IPS_LogMessage("IPS2GPIO Socket", "Fehler beim Verbindungsaufbaus ".$errorcode." ".$errormsg);
 					return;
 				}
+				*/
+				
 				// Message senden
-				if( ! socket_send ($sock, $message, strlen($message), 0))
+				if( ! socket_send ($this->Socket, $message, strlen($message), 0))
 				{
 					$errorcode = socket_last_error();
 					$errormsg = socket_strerror($errorcode);
@@ -741,7 +777,7 @@ class IPS2GPIO_IO extends IPSModule
 					return;
 				}
 				//Now receive reply from server
-				if(socket_recv ($sock, $buf, $ResponseLen, MSG_WAITALL ) === FALSE) {
+				if(socket_recv ($this->Socket, $buf, $ResponseLen, MSG_WAITALL ) === FALSE) {
 					$errorcode = socket_last_error();
 					$errormsg = socket_strerror($errorcode);
 					IPS_LogMessage("IPS2GPIO Socket", "Fehler beim beim Empfangen ".$errorcode." ".$errormsg);
