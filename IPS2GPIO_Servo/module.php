@@ -35,9 +35,9 @@
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
-		$arrayElements[] = array("name" => "most_anti_clockwise", "type" => "NumberSpinner",  "caption" => "Max. geg. Uhrzeigersinn"); 
-		$arrayElements[] = array("name" => "midpoint", "type" => "NumberSpinner",  "caption" => "Mittelwert"); 
-		$arrayElements[] = array("name" => "most_clockwise", "type" => "NumberSpinner",  "caption" => "Max. Uhrzeigersinn"); 
+		$arrayElements[] = array("name" => "most_anti_clockwise", "type" => "NumberSpinner",  "caption" => "Max. Links"); 
+		$arrayElements[] = array("name" => "midpoint", "type" => "NumberSpinner",  "caption" => "Mittelstellung"); 
+		$arrayElements[] = array("name" => "most_clockwise", "type" => "NumberSpinner",  "caption" => "Max. Rechts"); 
 		$arrayActions = array();
 		If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 			//$arrayActions[] = array("type" => "Button", "label" => "Toggle Output", "onClick" => 'I2GOUT_Toggle_Status($id);');
