@@ -55,13 +55,9 @@
 		// Diese Zeile nicht löschen
 		parent::ApplyChanges();
 		//Status-Variablen anlegen
-		$this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
-		$this->EnableAction("Status");
+		
             	
-		// Logging setzen
-		AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Status"), $this->ReadPropertyBoolean("Logging"));
-		IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
-             	//ReceiveData-Filter setzen
+		//ReceiveData-Filter setzen
                 $Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*)';
 		$this->SetReceiveDataFilter($Filter);
 		If (IPS_GetKernelRunlevel() == 10103) {
