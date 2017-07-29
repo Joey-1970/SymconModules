@@ -114,6 +114,7 @@
 	// Schaltet den gewaehlten Pin
 	public function SetOutput(Int $Value)
 	{
+		$this->SendDebug("SetOutput", "Ausfuehrung", 0);
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$Left = $this->ReadPropertyInteger("most_anti_clockwise");
 			$Right = $this->ReadPropertyInteger("most_clockwise");
@@ -133,6 +134,7 @@
 	    
 	private function Setup()
 	{
+		$this->SendDebug("Setup", "Ausfuehrung", 0);
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $this->ReadPropertyInteger("midpoint"))));
 			If (!$Result) {
