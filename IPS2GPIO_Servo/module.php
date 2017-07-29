@@ -35,9 +35,11 @@
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
-		$arrayElements[] = array("name" => "most_anti_clockwise", "type" => "NumberSpinner",  "caption" => "Max. Links"); 
-		$arrayElements[] = array("name" => "midpoint", "type" => "NumberSpinner",  "caption" => "Mittelstellung"); 
-		$arrayElements[] = array("name" => "most_clockwise", "type" => "NumberSpinner",  "caption" => "Max. Rechts"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Angabe der Microsekunden bei 50 Hz:"); 
+		$arrayElements[] = array("name" => "most_anti_clockwise", "type" => "NumberSpinner",  "caption" => "Max. Links (ms)"); 
+		$arrayElements[] = array("name" => "midpoint", "type" => "NumberSpinner",  "caption" => "Mittelstellung (ms)"); 
+		$arrayElements[] = array("name" => "most_clockwise", "type" => "NumberSpinner",  "caption" => "Max. Rechts (ms)");
+		$arrayElements[] = array("type" => "Label", "label" => "ACHTUNG: Falsche Werte können zur Beschädigung des Servo führen!");
 		$arrayActions = array();
 		If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 			//$arrayActions[] = array("type" => "Button", "label" => "Toggle Output", "onClick" => 'I2GOUT_Toggle_Status($id);');
@@ -113,19 +115,35 @@
 	public function SetOutput(Int $Value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$Left = $this->ReadPropertyInteger("most_anti_clockwise");
+			$Right = $this->ReadPropertyInteger("most_clockwise");
+			
 			$Value = intval(($Value * 20) + 500);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value)));
+			If (!$Result) {
+				$this->SendDebug("SetOutput", "Fehler beim Positionieren!", 0);
+			}
 			IPS_Sleep(100);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => 0)));
+			If (!$Result) {
+				$this->SendDebug("SetOutput", "Fehler beim Ausschalten!", 0);
+			}
 		}
 	}
 	    
 	private function Setup()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => 1500)));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $this->ReadPropertyInteger("midpoint"))));
+			If (!$Result) {
+				$this->SendDebug("Setup", "Fehler beim Stellen der Mittelstellung!", 0);
+			}
+			SetValueInteger($this->GetIDForIdent("Output"), 50);
 			IPS_Sleep(100);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => 0)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "Fehler beim Ausschalten!", 0);
+			}
 		}
 	}
 	    
