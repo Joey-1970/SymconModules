@@ -119,7 +119,8 @@
 			$Left = $this->ReadPropertyInteger("most_anti_clockwise");
 			$Right = $this->ReadPropertyInteger("most_clockwise");
 			
-			$Value = intval(($Value * 20) + 500);
+			$Value = intval(($Value * ($Right - $Left) / 100) + $Left);
+			$this->SendDebug("SetOutput", "Errechneter Zielwert: ".$Value, 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value)));
 			If (!$Result) {
 				$this->SendDebug("SetOutput", "Fehler beim Positionieren!", 0);
