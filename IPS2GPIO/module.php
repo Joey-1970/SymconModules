@@ -308,10 +308,17 @@ class IPS2GPIO_IO extends IPSModule
 		    	}
 		        break;
 		    case "set_trigger":
-		    	// Setzten einen Trigger
+		    	// Setzt einen Trigger
 		    	If ($data->Pin >= 0) {
 		        	//IPS_LogMessage("IPS2GPIO SetTrigger Parameter : ",$data->Pin." , ".$data->Time);
 		        	$this->CommandClientSocket(pack("LLLLL", 37, $data->Pin, $data->Time, 4, 1), 16);
+		    	}
+		        break;
+		    case "set_servo":
+		    	// Setzt ein Servo S/SERVO u v - Set GPIO servo pulsewidth
+		    	If ($data->Pin >= 0) {
+		        	//IPS_LogMessage("IPS2GPIO SetTrigger Parameter : ",$data->Pin." , ".$data->Time);
+		        	$Result = $this->CommandClientSocket(pack("L*", 8, $data->Pin, $data->Value, 0), 16);
 		    	}
 		        break;
 		    
@@ -809,60 +816,7 @@ class IPS2GPIO_IO extends IPSModule
 	return $Result;
 	}
 	
-	/*
-	private function CommandClientSocket(String $message, $ResponseLen = 16)
-	{
-		$Result = -999;
-		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
-			
-			if (IPS_SemaphoreEnter("CommandClientSocket", 200))
-			{
-				$Host = $this->ReadPropertyString("IPAddress");
-				$Port = 8888;
-				$Data = $message;
-				
-				if (!$this->Socket)
-				{
-					$this->Socket = @stream_socket_client("tcp://".$Host.":".$Port, $errno, $errstr, 5);
-					if (!$this->Socket) {
-						IPS_LogMessage("GeCoS_IO Socket", "Fehler beim Verbindungsaufbau ".$errno." ".$errstr);
-						$this->SendDebug("CommandClientSocket", "Fehler beim Verbindungsaufbau ".$errno." ".$errstr, 0);
-						$this->SetStatus(201);
-						// Testballon über IPS-ClientSocket senden
-						//$this->ConnectionTest();
-						//$this->ClientSocket(pack("L*", 17, 0, 0, 0));
-						IPS_SemaphoreLeave("CommandClientSocket");
-						return $Result;
-					}
-				}
-				
-				stream_set_timeout($this->Socket, 5);
-				stream_socket_sendto($this->Socket, $Data);
-				$buf = fread($this->Socket, $ResponseLen);
-				// Anfragen mit variabler Rückgabelänge
-				$CmdVarLen = array(56, 67, 70, 73, 75, 80, 88, 91, 92, 106, 109);
-				$MessageArray = unpack("L*", $buf);
-				
-				$Command = $MessageArray[1];
-				If (in_array($Command, $CmdVarLen)) {
-					$Result = $this->ClientResponse($buf);
-				}
-				// Standardantworten
-				elseIf ((strlen($buf) == 16) OR ((strlen($buf) / 16) == intval(strlen($buf) / 16))) {
-					$DataArray = str_split($buf, 16);
-					for ($i = 0; $i < Count($DataArray); $i++) {
-						$Result = $this->ClientResponse($DataArray[$i]);
-					}
-				}
-				IPS_SemaphoreLeave("CommandClientSocket");
-			}
-			else {
-				$this->SendDebug("CommandClientSocket", "Semaphore Abbruch", 0);
-			}
-		}	
-	return $Result;
-	}
-	*/
+
 	private function ClientResponse(String $Message)
 	{
 		$response = unpack("L*", $Message);
@@ -915,7 +869,18 @@ class IPS2GPIO_IO extends IPSModule
 		        		IPS_LogMessage("IPS2GPIO PWM", "Pin: ".$response[2]." Wert: ".$response[3]." konnte nicht erfolgreich gesendet werden! Fehler:".$this->GetErrorText(abs($response[4])));
 		        	}
 		        	break;
-		        case "17":
+		        case "8":
+		        	If ($response[4] == 0) {
+		        		$Result = true;
+					//IPS_LogMessage("IPS2GPIO PWM", "Pin: ".$response[2]." Wert: ".$response[3]." erfolgreich gesendet");
+		        		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"result", "Pin" => $response[2], "Value"=> $response[3])));
+		        	}
+		        	else {
+		        		$Result = false;
+					IPS_LogMessage("IPS2GPIO PWM", "Pin: ".$response[2]." Wert: ".$response[3]." konnte nicht erfolgreich gesendet werden! Fehler:".$this->GetErrorText(abs($response[4])));
+		        	}
+		        	break;
+			case "17":
 		            	$Model[0] = array(2, 3);
 		            	$Model[1] = array(4, 5, 6, 13, 14, 15);
 		            	$Model[2] = array(16);
