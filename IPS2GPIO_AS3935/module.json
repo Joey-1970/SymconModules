@@ -1,0 +1,14 @@
+{
+  "id": "{BC292F9B-7CAB-4195-A85D-A6228B521E08}",
+  "name": "IPS2GPIO_AS3935",
+  "type": 3,
+  "vendor": "JP-IPS-Modules",
+  "aliases":
+  [
+    "IPS2GPIO_AS3935"
+  ],
+  "parentRequirements": ["{A0DAAF26-4A2D-4350-963E-CC02E74BD414}"],
+  "childRequirements": [],
+  "implemented": ["{8D44CA24-3B35-4918-9CBD-85A28C0C8917}"],
+  "prefix": "I2GAS"
+}
