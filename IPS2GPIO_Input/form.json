@@ -51,9 +51,9 @@
         { "type": "Label", "label": "Setzen der internen Pull Up/Down Widerstände" },
         { "type": "Select", "name": "PUL", "caption": "Widerstand setzen",
             "options": [
-                { "label": "Kein", "value": "o" },
-                { "label": "Pull-Down", "value": "d" },
-                { "label": "Pull-Up", "value": "u" }
+                { "label": "Kein", "value": 0 },
+                { "label": "Pull-Down", "value": 1 },
+                { "label": "Pull-Up", "value": 2 }
                 ]
         },
         { "type": "Label", "label": "Skriptausführung als Reaktion auf: " },
