@@ -61,10 +61,10 @@
 	    		IPS_LogMessage("IPS2GPIO MCP3424","I2C-Device Adresse in einem nicht definierten Bereich!");  
 	    	}
 	    	// Profil anlegen
-		
+		$this->RegisterProfileInteger("IPS2GPIO.km", "Entfernung", "", " km", 0, 10000, 1);
 		
 		//Status-Variablen anlegen
-		$this->RegisterVariableInteger("Distance", "Entfernung", "", 10);
+		$this->RegisterVariableInteger("Distance", "Entfernung", "IPS2GPIO.km", 10);
            	$this->EnableAction("Distance");
 		IPS_SetHidden($this->GetIDForIdent("Distance"), false);
 		
@@ -128,7 +128,22 @@
 	// Beginn der Funktionen
 	// Führt eine Messung aus
 
-	
+	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
+	{
+	        if (!IPS_VariableProfileExists($Name))
+	        {
+	            IPS_CreateVariableProfile($Name, 1);
+	        }
+	        else
+	        {
+	            $profile = IPS_GetVariableProfile($Name);
+	            if ($profile['ProfileType'] != 1)
+	                throw new Exception("Variable profile type does not match for profile " . $Name);
+	        }
+	        IPS_SetVariableProfileIcon($Name, $Icon);
+	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);        
+	}
 
 }
 ?>
