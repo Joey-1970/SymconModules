@@ -67,14 +67,14 @@
 		$arrayElements[] = array("type" => "Select", "name" => "Number", "caption" => "Anzahl", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 
-		$arrayElements[] = array("type" => "Label", "label" => "Antennen Tuning"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Frequenzteilungsverhältnis anpassen"); 
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "16", "value" => 0);
 		$arrayOptions[] = array("label" => "32", "value" => 1);
 		$arrayOptions[] = array("label" => "64", "value" => 2);
 		$arrayOptions[] = array("label" => "128", "value" => 3);
 		
-		$arrayElements[] = array("type" => "Select", "name" => "FrequencyDivisionRatio", "caption" => "Frequenzteilungsverhältnis", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Select", "name" => "FrequencyDivisionRatio", "caption" => "Teilungsverhältnis", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 
 		$arrayActions = array();
