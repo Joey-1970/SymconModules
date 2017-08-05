@@ -44,7 +44,18 @@
 		$arrayOptions[] = array("label" => "MUX I²C-Bus 6", "value" => 9);
 		$arrayOptions[] = array("label" => "MUX I²C-Bus 7", "value" => 10);
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "Device Bus", "options" => $arrayOptions );
-						
+
+		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für den Interrupt"); 
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "ungesetzt", "value" => -1);
+		for ($i = 0; $i <= 27; $i++) {
+			$arrayOptions[] = array("label" => $i, "value" => $i);
+		}
+		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
+
+		
+		
 		$arrayActions = array();
 		$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
 		
