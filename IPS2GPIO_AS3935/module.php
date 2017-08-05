@@ -10,7 +10,8 @@
  	    	$this->RegisterPropertyBoolean("Open", false);
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
  	    	$this->RegisterPropertyInteger("DeviceAddress", 104);
-		$this->RegisterPropertyInteger("DeviceBus", 1);		
+		$this->RegisterPropertyInteger("DeviceBus", 1);	
+		$this->RegisterPropertyInteger("Pin", -1);
         }
  	
 	public function GetConfigurationForm() 
@@ -83,12 +84,7 @@
            	$this->EnableAction("Energy");
 		IPS_SetHidden($this->GetIDForIdent("Energy"), false);		
 		
-		If (IPS_GetKernelRunlevel() == 10103) {
-			for ($i = 0; $i <= 3; $i++) {
-				AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Channel_".($i + 1)), $this->ReadPropertyBoolean("Logging_".$i));
-			}
-			IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
-						
+		If (IPS_GetKernelRunlevel() == 10103) {						
 			//ReceiveData-Filter setzen
 			$this->SetBuffer("DeviceIdent", (($this->ReadPropertyInteger("DeviceBus") << 7) + $this->ReadPropertyInteger("DeviceAddress")));
 			$Filter = '((.*"Function":"get_used_i2c".*|.*"DeviceIdent":'.$this->GetBuffer("DeviceIdent").'.*)|.*"Function":"status".*)';
@@ -98,6 +94,9 @@
 			
 			If ($this->ReadPropertyBoolean("Open") == true) {
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
+				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+									  "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true)));
+
 				// Erste Messdaten einlesen
 				$this->SetStatus(102);
 			}
