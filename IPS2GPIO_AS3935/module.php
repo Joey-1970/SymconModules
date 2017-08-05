@@ -9,9 +9,11 @@
             	parent::Create();
  	    	$this->RegisterPropertyBoolean("Open", false);
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
- 	    	$this->RegisterPropertyInteger("DeviceAddress", 104);
+ 	    	$this->RegisterPropertyInteger("DeviceAddress", 3);
 		$this->RegisterPropertyInteger("DeviceBus", 1);	
 		$this->RegisterPropertyInteger("Pin", -1);
+		$this->RegisterPropertyInteger("Number", 0);
+		$this->RegisterPropertyInteger("FrequencyDivisionRatio", 0);
         }
  	
 	public function GetConfigurationForm() 
@@ -55,8 +57,26 @@
 		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 
+		$arrayElements[] = array("type" => "Label", "label" => "Minimale Anzahl der Detektionen bevor ein Interrupt ausgelöst wird"); 
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "1", "value" => 0);
+		$arrayOptions[] = array("label" => "5", "value" => 1);
+		$arrayOptions[] = array("label" => "9", "value" => 2);
+		$arrayOptions[] = array("label" => "16", "value" => 3);
 		
+		$arrayElements[] = array("type" => "Select", "name" => "Number", "caption" => "Anzahl", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
+
+		$arrayElements[] = array("type" => "Label", "label" => "Antennen Tuning"); 
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "16", "value" => 0);
+		$arrayOptions[] = array("label" => "32", "value" => 1);
+		$arrayOptions[] = array("label" => "64", "value" => 2);
+		$arrayOptions[] = array("label" => "128", "value" => 3);
 		
+		$arrayElements[] = array("type" => "Select", "name" => "FrequencyDivisionRatio", "caption" => "Frequenzteilungsverhältnis", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
+
 		$arrayActions = array();
 		$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
 		
