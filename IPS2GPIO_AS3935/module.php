@@ -62,9 +62,15 @@
 	    	}
 	    	// Profil anlegen
 		
-		//Status-Variablen anlegen
-
 		
+		//Status-Variablen anlegen
+		$this->RegisterVariableInteger("Distance", "Entfernung", "", 10);
+           	$this->EnableAction("Distance");
+		IPS_SetHidden($this->GetIDForIdent("Distance"), false);
+		
+		$this->RegisterVariableInteger("Energy", "Energie", "", 20);
+           	$this->EnableAction("Energy");
+		IPS_SetHidden($this->GetIDForIdent("Energy"), false);		
 		
 		If (IPS_GetKernelRunlevel() == 10103) {
 			for ($i = 0; $i <= 3; $i++) {
