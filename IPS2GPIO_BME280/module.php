@@ -24,7 +24,122 @@
  	    	$this->RegisterPropertyInteger("IIR_Filter", 0);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GBME_Measurement($_IPS["TARGET"]);');
         }
- 
+	
+	public function GetConfigurationForm() 
+	{ 
+		$arrayStatus = array(); 
+		$arrayStatus[] = array("code" => 101, "icon" => "inactive", "caption" => "Instanz wird erstellt"); 
+		$arrayStatus[] = array("code" => 102, "icon" => "active", "caption" => "Instanz ist aktiv");
+		$arrayStatus[] = array("code" => 104, "icon" => "inactive", "caption" => "Instanz ist inaktiv");
+		$arrayStatus[] = array("code" => 200, "icon" => "error", "caption" => "Pin wird doppelt genutzt!");
+		$arrayStatus[] = array("code" => 201, "icon" => "error", "caption" => "Pin ist an diesem Raspberry Pi Modell nicht vorhanden!"); 
+		
+		$arrayElements = array(); 
+		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv"); 
+ 		
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "118 dez. / 0x76h", "value" => 118);
+		$arrayOptions[] = array("label" => "119 dez. / 0x77h", "value" => 119);
+		$arrayElements[] = array("type" => "Select", "name" => "DeviceAddress", "caption" => "Device Adresse", "options" => $arrayOptions );
+		
+		$arrayElements[] = array("type" => "Label", "label" => "I²C-Bus (Default ist 1)");
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "I²C-Bus 0", "value" => 0);
+		$arrayOptions[] = array("label" => "I²C-Bus 1", "value" => 1);
+		$arrayOptions[] = array("label" => "MUX I²C-Bus 0", "value" => 3);
+		$arrayOptions[] = array("label" => "MUX I²C-Bus 1", "value" => 4);
+		$arrayOptions[] = array("label" => "MUX I²C-Bus 2", "value" => 5);
+		$arrayOptions[] = array("label" => "MUX I²C-Bus 3", "value" => 6);
+		$arrayOptions[] = array("label" => "MUX I²C-Bus 4", "value" => 7);
+		$arrayOptions[] = array("label" => "MUX I²C-Bus 5", "value" => 8);
+		$arrayOptions[] = array("label" => "MUX I²C-Bus 6", "value" => 9);
+		$arrayOptions[] = array("label" => "MUX I²C-Bus 7", "value" => 10);
+		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "Device Bus", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, 1 sek -> Minimum)");
+		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingTemp", "caption" => "Logging Temperatur aktivieren");
+		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingHum", "caption" => "Logging Luftfeuchtigkeit aktivieren");
+		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingPres", "caption" => "Logging Luftdruck aktivieren");
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "Label", "label" => "An den folgenden Werten muss in der Regel nichts verändert werden");
+		
+		$arrayElements[] = array("type" => "Label", "label" => "Oversampling Temperatur (Default: x1)");
+		$arrayOptions[] = array("label" => "0 (aus)", "value" => 0);
+		$arrayOptions[] = array("label" => "x1 (Default)", "value" => 1);
+		$arrayOptions[] = array("label" => "x2", "value" => 2);
+		$arrayOptions[] = array("label" => "x4", "value" => 3);
+		$arrayOptions[] = array("label" => "x8", "value" => 4);
+		$arrayOptions[] = array("label" => "x16", "value" => 5);
+		$arrayElements[] = array("type" => "Select", "name" => "OSRS_T", "caption" => "Oversampling", "options" => $arrayOptions );
+		
+		$arrayElements[] = array("type" => "Label", "label" => "Oversampling Luftfeuchtigkeit (Default: x1)");
+		$arrayOptions[] = array("label" => "0 (aus)", "value" => 0);
+		$arrayOptions[] = array("label" => "x1 (Default)", "value" => 1);
+		$arrayOptions[] = array("label" => "x2", "value" => 2);
+		$arrayOptions[] = array("label" => "x4", "value" => 3);
+		$arrayOptions[] = array("label" => "x8", "value" => 4);
+		$arrayOptions[] = array("label" => "x16", "value" => 5);
+		$arrayElements[] = array("type" => "Select", "name" => "OSRS_H", "caption" => "Oversampling", "options" => $arrayOptions );
+
+		$arrayElements[] = array("type" => "Label", "label" => "Oversampling Luftdruck (Default: x1)");
+		$arrayOptions[] = array("label" => "0 (aus)", "value" => 0);
+		$arrayOptions[] = array("label" => "x1 (Default)", "value" => 1);
+		$arrayOptions[] = array("label" => "x2", "value" => 2);
+		$arrayOptions[] = array("label" => "x4", "value" => 3);
+		$arrayOptions[] = array("label" => "x8", "value" => 4);
+		$arrayOptions[] = array("label" => "x16", "value" => 5);
+		$arrayElements[] = array("type" => "Select", "name" => "OSRS_P", "caption" => "Oversampling", "options" => $arrayOptions );
+
+       		$arrayElements[] = array("type" => "Label", "label" => "Mode (Default: Normal Mode)");
+		$arrayOptions[] = array("label" => "Sleep Mode", "value" => 0);
+		$arrayOptions[] = array("label" => "Forced Mode", "value" => 1);
+		$arrayOptions[] = array("label" => "Normal Mode (Default)", "value" => 3);
+		$arrayElements[] = array("type" => "Select", "name" => "Mode", "caption" => "Mode", "options" => $arrayOptions );
+
+      
+        
+      
+        { "type": "Label", "label": "IIR-Filter (Default: 0->aus)" },
+        { "type": "Select", "name": "IIR_Filter", "caption": "IIR-Filter",
+            "options": [
+                { "label": "0 (aus)", "value": 0 },
+                { "label": "2", "value": 1 },
+                { "label": "4", "value": 2 },
+                { "label": "8", "value": 3 },
+                { "label": "16", "value": 4 }
+                ]
+        },
+        { "type": "Label", "label": "StandBy Zeit (Default: 1000ms)" },
+        { "type": "Select", "name": "SB_T", "caption": "StandBy Zeit (ms)",
+            "options": [
+                { "label": "0.5", "value": 0 },
+                { "label": "62.5", "value": 1 },
+                { "label": "125", "value": 2 },
+                { "label": "250", "value": 3 },
+                { "label": "500", "value": 4 },
+                { "label": "1000 (Default)", "value": 5 },
+                { "label": "10", "value": 6 },
+                { "label": "20", "value": 7 }
+                ]
+        },
+		
+		
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "Label", "label" => "Hinweise:");
+		$arrayElements[] = array("type" => "Label", "label" => "- die Device Adresse lautet 35 dez (0x23h) bei ADDR an GND");
+		$arrayElements[] = array("type" => "Label", "label" => "- die Device Adresse lautet 92 dez (0x5Ch) bei ADDR an 5V");
+		$arrayElements[] = array("type" => "Label", "label" => "- die I2C-Nutzung muss in der Raspberry Pi-Konfiguration freigegeben werden (sudo raspi-config -> Advanced Options -> I2C Enable = true)");
+		$arrayElements[] = array("type" => "Label", "label" => "- die korrekte Nutzung der GPIO ist zwingend erforderlich (GPIO-Nr. 0/1 nur beim Raspberry Pi Model B Revision 1, alle anderen GPIO-Nr. 2/3)");
+		$arrayElements[] = array("type" => "Label", "label" => "- auf den korrekten Anschluss von SDA/SCL achten");
+		
+		$arrayActions = array();
+		$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
+		
+ 		return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements, "actions" => $arrayActions)); 		 
+ 	}  
+	    
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
         {
