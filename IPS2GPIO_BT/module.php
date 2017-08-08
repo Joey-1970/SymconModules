@@ -5,24 +5,62 @@
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
-            // Diese Zeile nicht löschen.
-            parent::Create();
-	    $this->RegisterPropertyBoolean("Open", false);
-	    $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
-	    $this->RegisterPropertyInteger("Messzyklus", 60);
-	    $this->RegisterPropertyString("MAC0", " ");
-	    $this->RegisterPropertyBoolean("LoggingMAC0", false);
-	    $this->RegisterPropertyString("MAC1", " ");
-	    $this->RegisterPropertyBoolean("LoggingMAC1", false);
-	    $this->RegisterPropertyString("MAC2", " ");
-	    $this->RegisterPropertyBoolean("LoggingMAC2", false);
-	    $this->RegisterPropertyString("MAC3", " ");
-	    $this->RegisterPropertyBoolean("LoggingMAC3", false);
-	    $this->RegisterPropertyString("MAC4", " ");
-	    $this->RegisterPropertyBoolean("LoggingMAC4", false);
-	    $this->RegisterTimer("Messzyklus", 0, 'I2GBT_Measurement($_IPS["TARGET"]);');
-      }
- 
+		// Diese Zeile nicht löschen.
+		parent::Create();
+		$this->RegisterPropertyBoolean("Open", false);
+		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+		$this->RegisterPropertyInteger("Messzyklus", 60);
+		$this->RegisterPropertyString("MAC0", " ");
+		$this->RegisterPropertyBoolean("LoggingMAC0", false);
+		$this->RegisterPropertyString("MAC1", " ");
+		$this->RegisterPropertyBoolean("LoggingMAC1", false);
+		$this->RegisterPropertyString("MAC2", " ");
+		$this->RegisterPropertyBoolean("LoggingMAC2", false);
+		$this->RegisterPropertyString("MAC3", " ");
+		$this->RegisterPropertyBoolean("LoggingMAC3", false);
+		$this->RegisterPropertyString("MAC4", " ");
+		$this->RegisterPropertyBoolean("LoggingMAC4", false);
+		$this->RegisterTimer("Messzyklus", 0, 'I2GBT_Measurement($_IPS["TARGET"]);');
+      	}
+	
+	/*
+	public function GetConfigurationForm() 
+	{ 
+		$arrayStatus = array(); 
+		$arrayStatus[] = array("code" => 101, "icon" => "inactive", "caption" => "Instanz wird erstellt"); 
+		$arrayStatus[] = array("code" => 102, "icon" => "active", "caption" => "Instanz ist aktiv");
+		$arrayStatus[] = array("code" => 104, "icon" => "inactive", "caption" => "Instanz ist inaktiv");
+				
+		$arrayElements = array(); 
+		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv"); 
+ 		
+		$arrayElements[] = array("type" => "Label", "label" => "Angabe der MAC-Adresse(n) (Format 00:00:00:00:00:00)");
+		
+		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "MAC0", "caption" => "MAC-Adresse 1"); 
+		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingMAC0", "caption" => "Logging aktivieren"); 
+		
+		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "MAC1", "caption" => "MAC-Adresse 2");
+ 		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingMAC1", "caption" => "Logging aktivieren");
+		
+		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "MAC2", "caption" => "MAC-Adresse 3");
+		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingMAC2", "caption" => "Logging aktivieren");
+		
+		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "MAC3", "caption" => "MAC-Adresse 4");
+		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingMAC3", "caption" => "Logging aktivieren"); 
+		
+		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "MAC4", "caption" => "MAC-Adresse 5");
+		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingMAC4", "caption" => "Logging aktivieren"); 
+		
+		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, 30 sek -> Minimum)");
+		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
+				
+		$arrayActions = array();
+		$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
+		
+ 		return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements, "actions" => $arrayActions)); 		 
+ 	} 
+	*/
+	
 	// Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
         {
