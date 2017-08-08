@@ -33,9 +33,9 @@
 		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv"); 
  		
 		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "3 dez. / 0x03h", "value" => 3);
-		//$arrayOptions[] = array("label" => "106 dez. / 0x6Ah", "value" => 106);
-		
+		$arrayOptions[] = array("label" => "35 dez. / 0x23h", "value" => 35);
+		$arrayOptions[] = array("label" => "92 dez. / 0x5Ch", "value" => 92);
+
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceAddress", "caption" => "Device Adresse", "options" => $arrayOptions );
 		
 		$arrayElements[] = array("type" => "Label", "label" => "I²C-Bus (Default ist 1)");
