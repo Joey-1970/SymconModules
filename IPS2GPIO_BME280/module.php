@@ -25,6 +25,7 @@
             	$this->RegisterTimer("Messzyklus", 0, 'I2GBME_Measurement($_IPS["TARGET"]);');
         }
 	
+	/*
 	public function GetConfigurationForm() 
 	{ 
 		$arrayStatus = array(); 
@@ -98,47 +99,39 @@
 		$arrayOptions[] = array("label" => "Normal Mode (Default)", "value" => 3);
 		$arrayElements[] = array("type" => "Select", "name" => "Mode", "caption" => "Mode", "options" => $arrayOptions );
 
-      
-        
-      
-        { "type": "Label", "label": "IIR-Filter (Default: 0->aus)" },
-        { "type": "Select", "name": "IIR_Filter", "caption": "IIR-Filter",
-            "options": [
-                { "label": "0 (aus)", "value": 0 },
-                { "label": "2", "value": 1 },
-                { "label": "4", "value": 2 },
-                { "label": "8", "value": 3 },
-                { "label": "16", "value": 4 }
-                ]
-        },
-        { "type": "Label", "label": "StandBy Zeit (Default: 1000ms)" },
-        { "type": "Select", "name": "SB_T", "caption": "StandBy Zeit (ms)",
-            "options": [
-                { "label": "0.5", "value": 0 },
-                { "label": "62.5", "value": 1 },
-                { "label": "125", "value": 2 },
-                { "label": "250", "value": 3 },
-                { "label": "500", "value": 4 },
-                { "label": "1000 (Default)", "value": 5 },
-                { "label": "10", "value": 6 },
-                { "label": "20", "value": 7 }
-                ]
-        },
-		
-		
+      		$arrayElements[] = array("type" => "Label", "label" => "IIR-Filter (Default: 0->aus)");
+		$arrayOptions[] = array("label" => "0 (aus)", "value" => 0);
+		$arrayOptions[] = array("label" => "2", "value" => 1);
+		$arrayOptions[] = array("label" => "4", "value" => 2);
+		$arrayOptions[] = array("label" => "8", "value" => 3);
+		$arrayOptions[] = array("label" => "16", "value" => 4);
+		$arrayElements[] = array("type" => "Select", "name" => "IIR_Filter", "caption" => "IIR_Filter", "options" => $arrayOptions );
+
+        	$arrayElements[] = array("type" => "Label", "label" => "StandBy Zeit (Default: 1000ms)");
+		$arrayOptions[] = array("label" => "0.5", "value" => 0);
+		$arrayOptions[] = array("label" => "62.5", "value" => 1);
+		$arrayOptions[] = array("label" => "125", "value" => 2);
+		$arrayOptions[] = array("label" => "250", "value" => 3);
+		$arrayOptions[] = array("label" => "500", "value" => 4);
+		$arrayOptions[] = array("label" => "1000 (Default)", "value" => 5);
+		$arrayOptions[] = array("label" => "10", "value" => 6);
+		$arrayOptions[] = array("label" => "20", "value" => 7);
+		$arrayElements[] = array("type" => "Select", "name" => "OSRS_P", "caption" => "Oversampling", "options" => $arrayOptions );
+
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Hinweise:");
-		$arrayElements[] = array("type" => "Label", "label" => "- die Device Adresse lautet 35 dez (0x23h) bei ADDR an GND");
-		$arrayElements[] = array("type" => "Label", "label" => "- die Device Adresse lautet 92 dez (0x5Ch) bei ADDR an 5V");
+		$arrayElements[] = array("type" => "Label", "label" => "- die Device Adresse lautet 118 dez (0x76h) bei SDO an GND");
+		$arrayElements[] = array("type" => "Label", "label" => "- die Device Adresse lautet 119 dez (0x77h) als Default");
 		$arrayElements[] = array("type" => "Label", "label" => "- die I2C-Nutzung muss in der Raspberry Pi-Konfiguration freigegeben werden (sudo raspi-config -> Advanced Options -> I2C Enable = true)");
 		$arrayElements[] = array("type" => "Label", "label" => "- die korrekte Nutzung der GPIO ist zwingend erforderlich (GPIO-Nr. 0/1 nur beim Raspberry Pi Model B Revision 1, alle anderen GPIO-Nr. 2/3)");
-		$arrayElements[] = array("type" => "Label", "label" => "- auf den korrekten Anschluss von SDA/SCL achten");
+		$arrayElements[] = array("type" => "Label", "label" => "- auf den korrekten Anschluss von SDA/SCL achten");	
 		
 		$arrayActions = array();
 		$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
 		
  		return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements, "actions" => $arrayActions)); 		 
  	}  
+	*/
 	    
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
