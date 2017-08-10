@@ -62,7 +62,7 @@
 		$arrayElements[] = array("type" => "Label", "label" => "- Echo über Spannungsteiler an freien GPIO-Pin nach Wahl"); 
 		
 		$arrayActions = array();
-		If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+		If (($this->ReadPropertyInteger("Pin_I") >= 0) AND ($this->ReadPropertyInteger("Pin_O") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 					}
 		else {
 			$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
