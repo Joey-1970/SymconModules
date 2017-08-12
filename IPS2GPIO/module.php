@@ -1138,7 +1138,7 @@ class IPS2GPIO_IO extends IPSModule
 		}
 	}
 	
-	private function SSH_Connect(String $Command)
+	public function SSH_Connect(String $Command)
 	{
 	        If (($this->ReadPropertyBoolean("Open") == true) ) {
 			set_include_path(__DIR__.'/libs');
