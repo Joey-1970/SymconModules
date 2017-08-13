@@ -115,7 +115,7 @@
 		$arrayOptions[] = array("label" => "1000 (Default)", "value" => 5);
 		$arrayOptions[] = array("label" => "10", "value" => 6);
 		$arrayOptions[] = array("label" => "20", "value" => 7);
-		$arrayElements[] = array("type" => "Select", "name" => "OSRS_P", "caption" => "Oversampling", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Select", "name" => "SB_T", "caption" => "StandBy Zeit (ms)", "options" => $arrayOptions );
 
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Hinweise:");
