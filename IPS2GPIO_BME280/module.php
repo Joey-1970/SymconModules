@@ -66,6 +66,7 @@
 		$arrayElements[] = array("type" => "Label", "label" => "An den folgenden Werten muss in der Regel nichts verändert werden");
 		
 		$arrayElements[] = array("type" => "Label", "label" => "Oversampling Temperatur (Default: x1)");
+		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "0 (aus)", "value" => 0);
 		$arrayOptions[] = array("label" => "x1 (Default)", "value" => 1);
 		$arrayOptions[] = array("label" => "x2", "value" => 2);
@@ -75,6 +76,7 @@
 		$arrayElements[] = array("type" => "Select", "name" => "OSRS_T", "caption" => "Oversampling", "options" => $arrayOptions );
 		
 		$arrayElements[] = array("type" => "Label", "label" => "Oversampling Luftfeuchtigkeit (Default: x1)");
+		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "0 (aus)", "value" => 0);
 		$arrayOptions[] = array("label" => "x1 (Default)", "value" => 1);
 		$arrayOptions[] = array("label" => "x2", "value" => 2);
@@ -84,6 +86,7 @@
 		$arrayElements[] = array("type" => "Select", "name" => "OSRS_H", "caption" => "Oversampling", "options" => $arrayOptions );
 
 		$arrayElements[] = array("type" => "Label", "label" => "Oversampling Luftdruck (Default: x1)");
+		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "0 (aus)", "value" => 0);
 		$arrayOptions[] = array("label" => "x1 (Default)", "value" => 1);
 		$arrayOptions[] = array("label" => "x2", "value" => 2);
@@ -93,12 +96,14 @@
 		$arrayElements[] = array("type" => "Select", "name" => "OSRS_P", "caption" => "Oversampling", "options" => $arrayOptions );
 
        		$arrayElements[] = array("type" => "Label", "label" => "Mode (Default: Normal Mode)");
+		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "Sleep Mode", "value" => 0);
 		$arrayOptions[] = array("label" => "Forced Mode", "value" => 1);
 		$arrayOptions[] = array("label" => "Normal Mode (Default)", "value" => 3);
 		$arrayElements[] = array("type" => "Select", "name" => "Mode", "caption" => "Mode", "options" => $arrayOptions );
 
       		$arrayElements[] = array("type" => "Label", "label" => "IIR-Filter (Default: 0->aus)");
+		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "0 (aus)", "value" => 0);
 		$arrayOptions[] = array("label" => "2", "value" => 1);
 		$arrayOptions[] = array("label" => "4", "value" => 2);
@@ -107,6 +112,7 @@
 		$arrayElements[] = array("type" => "Select", "name" => "IIR_Filter", "caption" => "IIR_Filter", "options" => $arrayOptions );
 
         	$arrayElements[] = array("type" => "Label", "label" => "StandBy Zeit (Default: 1000ms)");
+		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "0.5", "value" => 0);
 		$arrayOptions[] = array("label" => "62.5", "value" => 1);
 		$arrayOptions[] = array("label" => "125", "value" => 2);
