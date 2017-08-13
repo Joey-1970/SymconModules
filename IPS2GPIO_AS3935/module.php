@@ -30,7 +30,7 @@
  		
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "3 dez. / 0x03h", "value" => 3);
-		//$arrayOptions[] = array("label" => "106 dez. / 0x6Ah", "value" => 106);
+		$arrayOptions[] = array("label" => "4 dez. / 0x04h", "value" => 4);
 		
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceAddress", "caption" => "Device Adresse", "options" => $arrayOptions );
 		
