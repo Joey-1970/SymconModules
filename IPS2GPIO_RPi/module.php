@@ -15,7 +15,30 @@
  	    	$this->RegisterPropertyBoolean("LoggingTempGPU", false);
  	    	$this->RegisterPropertyBoolean("LoggingLoadAvg", false);
        }
- 
+ 	
+	public function GetConfigurationForm() 
+	{ 
+		$arrayStatus = array(); 
+		$arrayStatus[] = array("code" => 101, "icon" => "inactive", "caption" => "Instanz wird erstellt"); 
+		$arrayStatus[] = array("code" => 102, "icon" => "active", "caption" => "Instanz ist aktiv");
+		$arrayStatus[] = array("code" => 104, "icon" => "inactive", "caption" => "Instanz ist inaktiv");
+		$arrayStatus[] = array("code" => 200, "icon" => "error", "caption" => "Instanz ist fehlerhaft");
+		
+		$arrayElements = array(); 
+		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv"); 
+ 			
+		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingTempCPU", "caption" => "Logging CPU-Temperatur aktivieren");
+		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingTempGPU", "caption" => "Logging GPU-Temperatur aktivieren");
+		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingLoadAvg", "caption" => "Logging Auslastung aktivieren");
+		
+		$arrayActions = array();
+		$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
+				
+ 		return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements, "actions" => $arrayActions)); 		 
+ 	}       	
+	    
 	// Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
         {
