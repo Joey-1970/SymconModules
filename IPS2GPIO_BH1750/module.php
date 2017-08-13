@@ -19,7 +19,7 @@
 		$this->RegisterPropertyInteger("HysteresisOff", 0);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GBH_Measurement($_IPS["TARGET"]);');
         }
-	/*
+	    
 	public function GetConfigurationForm() 
 	{ 
 		$arrayStatus = array(); 
@@ -56,6 +56,7 @@
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "label" => "An den folgenden Werten muss in der Regel nichts verändert werden");
+		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "L-Resulution Mode", "value" => 19);
 		$arrayOptions[] = array("label" => "H-Resulution Mode", "value" => 16);
 		$arrayOptions[] = array("label" => "H-Resulution Mode 2", "value" => 17);
@@ -80,7 +81,6 @@
 		
  		return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements, "actions" => $arrayActions)); 		 
  	}  
- 	*/
 	    
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
