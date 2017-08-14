@@ -26,6 +26,7 @@ class IPS2GPIO_IO extends IPSModule
 	    	$this->RegisterPropertyString("Password", "Passwort");
 	    	$this->RegisterPropertyBoolean("I2C_Used", false);
 		$this->RegisterPropertyInteger("MUX", 0);
+		$this->RegisterPropertyBoolean("I2C0", false);
 	    	$this->RegisterPropertyBoolean("Serial_Used", false);
 		$this->RegisterPropertyBoolean("1Wire_Used", false);
 		$this->RegisterPropertyString("Raspi_Config", "");
@@ -62,6 +63,7 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayOptions[] = array("label" => "TCA9548a Adr. 112/0x70", "value" => 1);
 		$arrayOptions[] = array("label" => "PCA9542 Adr. 112/0x70", "value" => 2);
 		$arrayElements[] = array("type" => "Select", "name" => "MUX", "caption" => "MUX-Auswahl", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "CheckBox", "name" => "I2C0", "caption" => "I²C-Schnittstelle 0");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Analyse der Raspberry Pi Konfiguration:");
 		$arraySort = array();
@@ -434,7 +436,27 @@ class IPS2GPIO_IO extends IPSModule
 				$this->SetBuffer("I2C_Handle", serialize($I2C_DeviceHandle));
 		   	}
 		   	break;
-		   case "i2c_read_byte":
+		case "i2c_get_ports":
+		   	$DevicePorts = array();
+			If ($this->ReadPropertyBoolean("I2C0") == true) {
+				$DevicePorts[0] = "I²C-Bus 0";
+			}
+			$DevicePorts[1] = "I²C-Bus 1";
+			If ($this->ReadPropertyInteger("MUX") == 1) {
+				// TCA9548a
+				for ($i = 3; $i <= 10; $i++) {
+					$DevicePorts[$i] = "MUX I²C-Bus ".($i -3);
+				}
+			}
+			elseif ($this->ReadPropertyInteger("MUX") == 2) {
+				// PCA9542
+				for ($i = 3; $i <= 4; $i++) {
+					$DevicePorts[$i] = "MUX I²C-Bus ".($i -3);
+				}
+			}
+		   	$Result = serialize($DevicePorts);
+		   	break;
+		 case "i2c_read_byte":
 		   	//IPS_LogMessage("IPS2GPIO I2C Read Byte Parameter: ",$data->Handle." , ".$data->Register); 
 		   	If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
 		   		$this->CommandClientSocket(pack("L*", 61, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 0), 16);
