@@ -84,7 +84,7 @@
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Hinweise:");
 		$arrayElements[] = array("type" => "Label", "label" => "- die Device Adresse lautet 32 bis 39 dez (0x20h - 0x27h) bei einem PCF8574");
-		$arrayElements[] = array("type" => "Label", "label" => "- - die Device Adresse lautet 56 bis 63 dez (0x38h - 0x3Fh) bei einem PCF8574A");
+		$arrayElements[] = array("type" => "Label", "label" => "- die Device Adresse lautet 56 bis 63 dez (0x38h - 0x3Fh) bei einem PCF8574A");
 		$arrayElements[] = array("type" => "Label", "label" => "- die I2C-Nutzung muss in der Raspberry Pi-Konfiguration freigegeben werden (sudo raspi-config -> Advanced Options -> I2C Enable = true)");
 		$arrayElements[] = array("type" => "Label", "label" => "- die korrekte Nutzung der GPIO ist zwingend erforderlich (GPIO-Nr. 0/1 nur beim Raspberry Pi Model B Revision 1, alle anderen GPIO-Nr. 2/3)");
 		$arrayElements[] = array("type" => "Label", "label" => "- auf den korrekten Anschluss von SDA/SCL achten");			
