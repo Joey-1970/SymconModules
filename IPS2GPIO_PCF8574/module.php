@@ -31,7 +31,7 @@
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GIO1_Read_Status($_IPS["TARGET"]);');
 	}
-	/*
+	
 	public function GetConfigurationForm() 
 	{ 
 		$arrayStatus = array(); 
@@ -94,7 +94,7 @@
 		
  		return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements, "actions" => $arrayActions)); 		 
  	}   
-	*/    
+   
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
         {
