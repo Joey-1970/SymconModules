@@ -1503,6 +1503,11 @@ class IPS2GPIO_IO extends IPSModule
 		$DeviceArray = Array();
 		$DeviceName = Array();
 		$SearchArray = Array();
+		// AS3935
+		for ($i = 3; $i <= 4; $i++) {
+			$SearchArray[] = $i;
+			$DeviceName[] = "AS3935";
+		}
 		// PCF8574
 		for ($i = 32; $i <= 34; $i++) {
 			$SearchArray[] = $i;
