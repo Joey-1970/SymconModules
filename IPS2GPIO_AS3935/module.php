@@ -35,6 +35,9 @@
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceAddress", "caption" => "Device Adresse", "options" => $arrayOptions );
 		
 		$arrayElements[] = array("type" => "Label", "label" => "I²C-Bus (Default ist 1)");
+		
+		$I2C_Ports = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_get_ports")));
+		
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "I²C-Bus 0", "value" => 0);
 		$arrayOptions[] = array("label" => "I²C-Bus 1", "value" => 1);
