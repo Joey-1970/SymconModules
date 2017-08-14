@@ -37,9 +37,9 @@
 		$arrayElements[] = array("type" => "Label", "label" => "I²C-Bus (Default ist 1)");
 		
 		$arrayOptions = array();
-		$I2C_Ports = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_get_ports")));
+		/*
 		$I2C_Ports_array = array();
-		$I2C_Ports_array = unserialize($I2C_Ports);
+		$I2C_Ports_array = unserialize($this->Get_I2C_Ports());
 		If (is_array($I2C_Ports_array)) {
 			foreach($I2C_Ports_array AS $Value => $ValueText) {
 				$arrayOptions[] = array("label" => $ValueText, "value" => $Value);
@@ -48,7 +48,7 @@
 			$arrayOptions[] = array("label" => "I²C-Bus 1", "value" => 1);
 		}
 		
-		/*
+		*/
 		$arrayOptions[] = array("label" => "I²C-Bus 0", "value" => 0);
 		$arrayOptions[] = array("label" => "I²C-Bus 1", "value" => 1);
 		$arrayOptions[] = array("label" => "MUX I²C-Bus 0", "value" => 3);
@@ -59,7 +59,7 @@
 		$arrayOptions[] = array("label" => "MUX I²C-Bus 5", "value" => 8);
 		$arrayOptions[] = array("label" => "MUX I²C-Bus 6", "value" => 9);
 		$arrayOptions[] = array("label" => "MUX I²C-Bus 7", "value" => 10);
-		*/
+		
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "Device Bus", "options" => $arrayOptions );
 
 		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für den Interrupt"); 
@@ -171,6 +171,12 @@
  	}
 	// Beginn der Funktionen
 	// Führt eine Messung aus
+		
+	private function Get_I2C_Ports()
+	{
+		$I2C_Ports = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_get_ports")));
+	return $I2C_Ports;
+	}
 
 	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
 	{
