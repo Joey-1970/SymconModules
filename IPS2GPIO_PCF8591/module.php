@@ -23,8 +23,63 @@
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GAD1_Measurement($_IPS["TARGET"]);');
 	}
-
-        // Überschreibt die intere IPS_ApplyChanges($id) Funktion
+	/*
+        public function GetConfigurationForm() 
+	{ 
+		$arrayStatus = array(); 
+		$arrayStatus[] = array("code" => 101, "icon" => "inactive", "caption" => "Instanz wird erstellt"); 
+		$arrayStatus[] = array("code" => 102, "icon" => "active", "caption" => "Instanz ist aktiv");
+		$arrayStatus[] = array("code" => 104, "icon" => "inactive", "caption" => "Instanz ist inaktiv");
+		$arrayStatus[] = array("code" => 200, "icon" => "error", "caption" => "Pin wird doppelt genutzt!");
+		$arrayStatus[] = array("code" => 201, "icon" => "error", "caption" => "Pin ist an diesem Raspberry Pi Modell nicht vorhanden!"); 
+		
+		$arrayElements = array(); 
+		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv"); 
+ 			
+		$arrayOptions = array();
+		for ($i = 72; $i <= 79; $i++) {
+		    	$arrayOptions[] = array("label" => $i." dez. / 0x".strtoupper(dechex($i))."h", "value" => $i);
+		}
+		$arrayElements[] = array("type" => "Select", "name" => "DeviceAddress", "caption" => "Device Adresse", "options" => $arrayOptions );
+		
+		$arrayElements[] = array("type" => "Label", "label" => "I²C-Bus (Default ist 1)");
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "I²C-Bus 0", "value" => 0);
+		$arrayOptions[] = array("label" => "I²C-Bus 1", "value" => 1);
+		$arrayOptions[] = array("label" => "MUX I²C-Bus 0", "value" => 3);
+		$arrayOptions[] = array("label" => "MUX I²C-Bus 1", "value" => 4);
+		$arrayOptions[] = array("label" => "MUX I²C-Bus 2", "value" => 5);
+		$arrayOptions[] = array("label" => "MUX I²C-Bus 3", "value" => 6);
+		$arrayOptions[] = array("label" => "MUX I²C-Bus 4", "value" => 7);
+		$arrayOptions[] = array("label" => "MUX I²C-Bus 5", "value" => 8);
+		$arrayOptions[] = array("label" => "MUX I²C-Bus 6", "value" => 9);
+		$arrayOptions[] = array("label" => "MUX I²C-Bus 7", "value" => 10);
+		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "Device Bus", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Genutzte Eingänge");
+		for ($i = 0; $i <= 3; $i++) {
+			$arrayElements[] = array("type" => "CheckBox", "name" => "Ain".$i, "caption" => "Ain".$i);
+			$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingAin".$i, "caption" => "Logging Ain".$i." aktivieren");
+		}
+		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingOut", "caption" => "Logging Output aktivieren");
+		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, 1 sek -> Minimum)");
+		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Hinweise:");
+		$arrayElements[] = array("type" => "Label", "label" => "- die Device Adresse lautet 72 dez (0x48h) bei A0 an GND");
+		$arrayElements[] = array("type" => "Label", "label" => "- die Device Adresse lautet 73 dez (0x49h) bei A0 an 5V");
+		$arrayElements[] = array("type" => "Label", "label" => "- die Device Adresse kann weitere Werte bei Beschaltung von A1 und A2 annehmen");
+		$arrayElements[] = array("type" => "Label", "label" => "- eine Abfrage des Ausgangs ist nicht direkt möglich, dazu muss er auf einen Eingang geschaltet werden");
+		$arrayElements[] = array("type" => "Label", "label" => "- die I2C-Nutzung muss in der Raspberry Pi-Konfiguration freigegeben werden (sudo raspi-config -> Advanced Options -> I2C Enable = true)");
+		$arrayElements[] = array("type" => "Label", "label" => "- die korrekte Nutzung der GPIO ist zwingend erforderlich (GPIO-Nr. 0/1 nur beim Raspberry Pi Model B Revision 1, alle anderen GPIO-Nr. 2/3)");
+		$arrayElements[] = array("type" => "Label", "label" => "- auf den korrekten Anschluss von SDA/SCL achten");			
+		$arrayActions = array();
+		$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
+		
+ 		return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements, "actions" => $arrayActions)); 		 
+ 	}   
+	*/    
+	// Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
         {
             	// Diese Zeile nicht löschen
