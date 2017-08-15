@@ -149,7 +149,14 @@
 	    	// Empfangene Daten vom Gateway/Splitter
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
-			 case "get_used_i2c":
+			case "notify":
+			   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
+			   		$this->SendDebug("Notify", "Wert: ".(int)$data->Value, 0);
+					$this->GetOutput();
+			   	}
+			   	break; 
+			
+			case "get_used_i2c":
 			   	If ($this->ReadPropertyBoolean("Open") == true) {
 					//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 					$this->ApplyChanges();
@@ -178,6 +185,43 @@
 		$Data = array();
 		$Data = unserialize($Result);
 		$this->SendDebug("Daten", $Result, 0);
+		
+		$PowerDown = $Data[1] & 1;
+		$this->SendDebug("PowerDown", $PowerDown, 0);
+		$GainBoost = $Data[1] & 62;
+		$this->SendDebug("GainBoost", $GainBoost, 0);
+		
+		$NoiseFloorLevel = $Data[2] & 112;
+		$this->SendDebug("NoiseFloorLevel", $NoiseFloorLevel, 0);
+		$WatchdogThreshold = $Data[2] & 15;
+		$this->SendDebug("WatchdogThreshold", $WatchdogThreshold, 0);
+		
+		$MinNumLigh = $Data[3] & 48;
+		$this->SendDebug("MinNumLigh", $MinNumLigh, 0);
+		
+		
+		$Interrupt = $Data[4] & 15;
+		$this->SendDebug("Interrupt", $Interrupt, 0);
+		$LcoFdiv = $Data[4] & 192;
+		$this->SendDebug("LcoFdiv", $LcoFdiv, 0);
+		$MaskDisturber = $Data[4] & 32;
+		$this->SendDebug("MaskDisturber", $MaskDisturber, 0);
+
+		$Energy = (($Data[7] & 31) << 16) & ($Data[6] << 8) & $Data[5] ;
+		$this->SendDebug("Energy", $Energy, 0);
+		
+		$Distance = $Data[8] & 63;
+		$this->SendDebug("Distance", $Distance, 0);
+		
+		$LCO = $Data[9] & 128;
+		$this->SendDebug("LCO", $LCO, 0);
+		$SRCO = $Data[9] & 64;
+		$this->SendDebug("SRCO", $SRCO, 0);
+		$TRCO = $Data[9] & 32;
+		$this->SendDebug("TRCO", $TRCO, 0);
+		$Capacitor = $Data[9] & 15;
+		$this->SendDebug("Capacitor", $Capacitor, 0);
+		
 		
 	}
 	    
