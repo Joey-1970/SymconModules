@@ -412,15 +412,28 @@ class IPS2GPIO_IO extends IPSModule
 		   	$I2C_DeviceHandle = unserialize($this->GetBuffer("I2C_Handle"));
 		   	// Bei Bus 1 Addition von 128
 			$I2C_DeviceHandle[($data->DeviceBus << 7) + $data->DeviceAddress] = -1;
-			// genutzte Device-Ident noch ohne Handle sichern
-			$this->SetBuffer("I2C_Handle", serialize($I2C_DeviceHandle));
 		   	// Messages einrichten
 			$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
 		        $this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
 		   	// Handle ermitteln
-		   	$this->CommandClientSocket(pack("LLLLL", 54, $data->DeviceBus, $data->DeviceAddress, 4, 0), 16);	
-		   	
-			//IPS_LogMessage("IPS2GPIO I2C Handle: ","Device Adresse: ".$data->DeviceAddress.", Hardware Rev:: ".$this->GetBuffer("HardwareRev")); 
+		   	$Handle = $this->CommandClientSocket(pack("L*", 54, $data->DeviceBus, $data->DeviceAddress, 4, 0), 16);	
+		   	$this->SendDebug("Set Used I2C", "Handle fuer Device-Adresse ".$data->DeviceAddress." an Bus ".($data->DeviceBus).": ".$Handle, 0);
+			$I2C_DeviceHandle[(($data->DeviceBus << 7) + $data->DeviceAddress] = $Handle;
+			// genutzte Device-Ident mit Handle sichern
+			$this->SetBuffer("I2C_Handle", serialize($I2C_DeviceHandle));	
+			// Testweise lesen
+			If ($Handle >= 0) {
+				$Result = $this->CommandClientSocket(pack("L*", 59, $Handle, 0, 0), 16);
+				If ($Result >= 0) {
+					$this->SendDebug("Set Used I2C", "Test-Lesen auf Device-Adresse ".$data->DeviceAddress." Bus ".($data->DeviceBus)." erfolgreich!", 0);
+					//$this->SendDataToChildren(json_encode(Array("DataID" => "{573FFA75-2A0C-48AC-BF45-FCB01D6BF910}", "Function"=>"status", "InstanceID" => $data->InstanceID, "Status" => 102)));
+				}
+				else {
+					$this->SendDebug("Set Used I2C", "Test-Lesen auf Device-Adresse ".$data->DeviceAddress." Bus ".($data->DeviceBus)." nicht erfolgreich!", 0);
+					IPS_LogMessage("IPS2GPIO I2C", "Test-Lesen auf Device-Adresse ".$data->DeviceAddress." Bus ".($data->DeviceBus - 4)." nicht erfolgreich!");
+					//$this->SendDataToChildren(json_encode(Array("DataID" => "{573FFA75-2A0C-48AC-BF45-FCB01D6BF910}", "Function"=>"status", "InstanceID" => $data->InstanceID, "Status" => 201)));
+				}		
+			}
 		   	break;
 		   case "i2c_destroy":
 		   	//IPS_LogMessage("IPS2GPIO I2C Destroy: ",$data->DeviceAddress." , ".$data->Register); 
@@ -960,12 +973,12 @@ class IPS2GPIO_IO extends IPSModule
 		        	If ($response[4] >= 0 ) {
            				If ($this->GetBuffer("I2CSearch") == 0) {
 						//IPS_LogMessage("IPS2GPIO I2C Handle",$response[4]." für Device ".$response[3]);
-						$I2C_DeviceHandle = unserialize($this->GetBuffer("I2C_Handle"));
+						//$I2C_DeviceHandle = unserialize($this->GetBuffer("I2C_Handle"));
 						// Hier wird der ermittelte Handle der DiviceAdresse/Bus hinzugefügt
 						$I2C_DeviceHandle[($response[2] << 7) + $response[3]] = $response[4];
 
 						//$I2C_DeviceHandle[$response[3]] = $response[4];
-						$this->SetBuffer("I2C_Handle", serialize($I2C_DeviceHandle));
+						//$this->SetBuffer("I2C_Handle", serialize($I2C_DeviceHandle));
 					}
            			}
            			else {
