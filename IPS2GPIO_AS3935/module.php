@@ -195,23 +195,36 @@
 		$this->SendDebug("NoiseFloorLevel", $NoiseFloorLevel, 0);
 		$WatchdogThreshold = $Data[2] & 15;
 		$this->SendDebug("WatchdogThreshold", $WatchdogThreshold, 0);
-		
+		/*
+		0 = 1 Blitze
+		1 = 5
+		2 = 9 
+		3 = 16
+		*/
 		$MinNumLigh = $Data[3] & 48;
 		$this->SendDebug("MinNumLigh", $MinNumLigh, 0);
 		
-		
+		/*
+		1 Noise Level to high
+		4 Disturber Detected
+		8 Lightning interrupt
+		*/
 		$Interrupt = $Data[4] & 15;
 		$this->SendDebug("Interrupt", $Interrupt, 0);
+		
 		$LcoFdiv = $Data[4] & 192;
 		$this->SendDebug("LcoFdiv", $LcoFdiv, 0);
 		$MaskDisturber = $Data[4] & 32;
 		$this->SendDebug("MaskDisturber", $MaskDisturber, 0);
 
 		$Energy = (($Data[7] & 31) << 16) & ($Data[6] << 8) & $Data[5] ;
+		SetValueInteger($this->GetIDForIdent("Energy"), $Energy);
 		$this->SendDebug("Energy", $Energy, 0);
 		
 		$Distance = $Data[8] & 63;
+		SetValueInteger($this->GetIDForIdent("Distance"), $Distance);
 		$this->SendDebug("Distance", $Distance, 0);
+		
 		
 		$LCO = $Data[9] & 128;
 		$this->SendDebug("LCO", $LCO, 0);
