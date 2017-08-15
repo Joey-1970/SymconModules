@@ -172,7 +172,15 @@
  	}
 	// Beginn der Funktionen
 	// Führt eine Messung aus
+	public function GetOutput()
+	{
+		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_AS3935_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Count" => 9 )));
+		$Data = array();
+		$Data = unserialize($Result);
+		$this->SendDebug("Daten", $Result, 0);
 		
+	}
+	    
 	private function Get_I2C_Ports()
 	{
 		$I2C_Ports = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_get_ports")));
