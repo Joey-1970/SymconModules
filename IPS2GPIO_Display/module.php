@@ -66,7 +66,7 @@
 		$arrayElements[] = array("type" => "Label", "label" => "- auf den korrekten Anschluss von RX/TX achten");	
 		
 		$arrayActions = array();
-		If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+		If ($this->ReadPropertyBoolean("Open") == true) {
 					}
 		else {
 			$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
