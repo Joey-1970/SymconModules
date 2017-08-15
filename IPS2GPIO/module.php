@@ -481,6 +481,12 @@ class IPS2GPIO_IO extends IPSModule
 		   		$this->CommandClientSocket(pack("L*", 56, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Count, 0), 16 + ($data->Count));
 		   	}
 			break;  
+		 case "i2c_AS3935_read":
+		   	//IPS_LogMessage("IPS2GPIO I2C Read Bytes",$this->GetI2C_DeviceHandle($data->DeviceAddress)." , ".$data->Register." , ".$data->Count);  	
+		   	If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
+		   		$Result = $this->CommandClientSocket(pack("L*", 56, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Count, 0), 16 + ($data->Count));
+		   	}
+			break;  
 		case "i2c_read_word":
 		   	//IPS_LogMessage("IPS2GPIO I2C Read Word Parameter : ","DeviceAdresse: ".$data->DeviceAddress.", Handle: ".$this->GetI2C_DeviceHandle($data->DeviceAddress)." ,Register: ".$data->Register);
 		   	If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
@@ -1000,6 +1006,7 @@ class IPS2GPIO_IO extends IPSModule
 					$ByteMessage = substr($Message, -($response[4]));
 					$ByteResponse = unpack("C*", $ByteMessage);
 					$ByteArray = serialize($ByteResponse);
+					$Result = serialize($ByteResponse);
 					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_byte_block", "DeviceIdent" => $this->GetI2C_HandleDevice($response[2]), "Register" => $response[3], "Count" => $response[4], "ByteArray" => $ByteArray)));
 				}
 		            	else {
