@@ -19,7 +19,63 @@
             $this->RegisterPropertyInteger("CmdRet", 2);
             $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
- 
+ 	/*
+	public function GetConfigurationForm() 
+	{ 
+		$arrayStatus = array(); 
+		$arrayStatus[] = array("code" => 101, "icon" => "inactive", "caption" => "Instanz wird erstellt"); 
+		$arrayStatus[] = array("code" => 102, "icon" => "active", "caption" => "Instanz ist aktiv");
+		$arrayStatus[] = array("code" => 104, "icon" => "inactive", "caption" => "Instanz ist inaktiv");
+		$arrayStatus[] = array("code" => 200, "icon" => "error", "caption" => "Pin wird doppelt genutzt!");
+		$arrayStatus[] = array("code" => 201, "icon" => "error", "caption" => "Pin ist an diesem Raspberry Pi Modell nicht vorhanden!"); 
+		
+		$arrayElements = array(); 
+		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv"); 
+ 		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "2400", "value" => 2400);
+		$arrayOptions[] = array("label" => "4800", "value" => 4800);
+		$arrayOptions[] = array("label" => "9600", "value" => 9600);
+		$arrayOptions[] = array("label" => "19200", "value" => 19200);
+		$arrayOptions[] = array("label" => "38400", "value" => 38400);
+		$arrayOptions[] = array("label" => "57600", "value" => 57600);
+		$arrayOptions[] = array("label" => "115200", "value" => 115200);
+		$arrayElements[] = array("type" => "Select", "name" => "Baud", "caption" => "Baud", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Label", "label" => "Connection String der seriellen Schnittstelle (z.B. /dev/serial0):");
+		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "ConnectionString", "caption" => "Connection String");
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "CheckBox", "name" => "DateTime", "caption" => "Datum/Uhrzeit aktualisieren");
+		$arrayElements[] = array("type" => "Label", "label" => "Setzen der Default Display Helligkeit (0-100)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Brightness", "caption" => "Display-Helligkeit");
+		$arrayElements[] = array("type" => "Label", "label" => "Display Sleep Modus ohne Serielle Kommunikation (0->aus, 3-65535 Sekunden)");
+        	$arrayElements[] = array("type" => "NumberSpinner", "name" => "SleepNoSerial", "caption" => "Sekunden");
+		$arrayElements[] = array("type" => "Label", "label" => "Display Sleep Modus ohne Touch (0->aus, 3-65535 Sekunden)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "SleepNoTouch", "caption" => "Sekunden");
+		$arrayElements[] = array("type" => "CheckBox", "name" => "TouchAwake", "caption" => "Touch beendet Sleep Modus");
+		$arrayElements[] = array("type" => "CheckBox", "name" => "SendTouchCoordinate", "caption" => "Sende XY");
+  		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "Keine Rückgabe", "value" => 0);
+		$arrayOptions[] = array("label" => "Nur erfolgreiche Daten", "value" => 1);
+		$arrayOptions[] = array("label" => "Nur fehlerhafte Daten", "value" => 2);
+		$arrayOptions[] = array("label" => "Alle Daten", "value" => 3);
+		$arrayElements[] = array("type" => "Select", "name" => "CmdRet", "caption" => "Return der Kommandos", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "Label", "label" => "Steuerung eines Nextion Enhanced Displays");
+		$arrayElements[] = array("type" => "Label", "label" => "Hinweise:");
+		$arrayElements[] = array("type" => "Label", "label" => "- die UART-Nutzung muss in der Raspberry Pi-Konfiguration freigegeben werden (sudo raspi-config -> Advanced Options -> Serial Enable = false)");
+		$arrayElements[] = array("type" => "Label", "label" => "- die korrekte Nutzung der GPIO ist zwingend erforderlich (GPIO-Nr. 14/15)");
+		$arrayElements[] = array("type" => "Label", "label" => "- auf den korrekten Anschluss von RX/TX achten");	
+		
+		$arrayActions = array();
+		If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+					}
+		else {
+			$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
+		}
+		
+ 		return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements, "actions" => $arrayActions)); 		 
+ 	}    
+	*/    
+	    
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
         {
