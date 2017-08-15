@@ -14,6 +14,7 @@
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->RegisterPropertyInteger("Number", 0);
 		$this->RegisterPropertyInteger("FrequencyDivisionRatio", 0);
+		$this->RegisterPropertyBoolean("Outdoor", false);
         }
  	
 	public function GetConfigurationForm() 
@@ -79,7 +80,7 @@
 		$arrayOptions[] = array("label" => "16", "value" => 3);
 		
 		$arrayElements[] = array("type" => "Select", "name" => "Number", "caption" => "Anzahl", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
+		//$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 
 		$arrayElements[] = array("type" => "Label", "label" => "Frequenzteilungsverhältnis anpassen"); 
 		$arrayOptions = array();
@@ -89,6 +90,8 @@
 		$arrayOptions[] = array("label" => "128", "value" => 3);
 		
 		$arrayElements[] = array("type" => "Select", "name" => "FrequencyDivisionRatio", "caption" => "Teilungsverhältnis", "options" => $arrayOptions );
+		
+		$arrayElements[] = array("type" => "CheckBox", "name" => "Outdoor", "caption" => "Nutzung Outdoor"); 
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 
 		$arrayActions = array();
@@ -188,6 +191,7 @@
 		
 		$PowerDown = $Data[1] & 1;
 		$this->SendDebug("PowerDown", $PowerDown, 0);
+		
 		/*
 		Indoor = 18
 		Outdoor = 14
