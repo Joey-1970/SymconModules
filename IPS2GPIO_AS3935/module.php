@@ -188,8 +188,12 @@
 		
 		$PowerDown = $Data[1] & 1;
 		$this->SendDebug("PowerDown", $PowerDown, 0);
-		$GainBoost = $Data[1] & 62;
-		$this->SendDebug("GainBoost", $GainBoost, 0);
+		/*
+		Indoor = 18
+		Outdoor = 14
+		*/
+		$AFEGainBoost = $Data[1] & 62;
+		$this->SendDebug("AFEGainBoost", $AFEGainBoost, 0);
 		
 		$NoiseFloorLevel = $Data[2] & 112;
 		$this->SendDebug("NoiseFloorLevel", $NoiseFloorLevel, 0);
