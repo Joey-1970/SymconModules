@@ -136,6 +136,10 @@ class IPS2GPIO_IO extends IPSModule
 			$this->RegisterVariableInteger("SoftwareVersion", "SoftwareVersion", "", 20);
 			$this->DisableAction("SoftwareVersion");
 			IPS_SetHidden($this->GetIDForIdent("SoftwareVersion"), true);
+			
+			$this->RegisterVariableInteger("LastKeepAlive", "Letztes Keep Alive", "~UnixTimestamp", 30);
+			$this->DisableAction("LastKeepAlive");
+			IPS_SetHidden($this->GetIDForIdent("LastKeepAlive"), false);
 						
 			$this->SetBuffer("HardwareRev", 0);
 			$Typ = array(2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27);
@@ -146,6 +150,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("Default_I2C_Bus", 1);
 			$this->SetBuffer("Default_Serial_Bus", 0);
 			$this->SetBuffer("MUX_Handle", -1);
+			$this->SetBuffer("NotifyCounter", -1);
 			
 			$ParentID = $this->GetParentID();
 		        // Änderung an den untergeordneten Instanzen
@@ -206,6 +211,7 @@ class IPS2GPIO_IO extends IPSModule
 				}
 				// Notify Starten
 				$this->SetBuffer("Handle", -1);
+				$this->SetBuffer("NotifyCounter", 0);
 				$this->ClientSocket(pack("L*", 99, 0, 0, 0));
 				
 				$this->Get_PinUpdate();
@@ -365,6 +371,7 @@ class IPS2GPIO_IO extends IPSModule
 					}
 					$this->SetBuffer("PinNotify", serialize($PinNotify));
 					// startet das Notify neu
+					$this->SetBuffer("NotifyCounter", 0);
 					$this->CommandClientSocket(pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 16);
 					// Setzt den Glitch Filter
 					//IPS_LogMessage("IPS2GPIO SetGlitchFilter Parameter",$data->Pin." , ".$data->GlitchFilter);
@@ -567,10 +574,10 @@ class IPS2GPIO_IO extends IPSModule
 			break;
 		
 		}
-	 return $Result;
-	 }
+	return $Result;
+	}
 	
-	 public function ReceiveData($JSONString) {
+	public function ReceiveData($JSONString) {
  	    	$CmdPossible = array(19, 21, 76, 81, 99, 115, 116);
  	    	$RDlen = array(16, 32);	
  	    	// Empfangene Daten vom I/O
@@ -579,7 +586,66 @@ class IPS2GPIO_IO extends IPSModule
 	    	$MessageLen = strlen($Message);
 	    	$MessageArray = unpack("L*", $Message);
 		$Command = $MessageArray[1];
+		$SerialRead = false;
 	    	
+		/*
+		 // Analyse der eingegangenen Daten
+		 for ($i = 1; $i <= Count($MessageArray); $i++) {
+			$this->SendDebug("Datenanalyse", "i: ".$i." Laenge: ".$MessageLen." SeqNo: ".($MessageArray[$i] & 65535)." Counter: ".$this->GetBuffer("NotifyCounter"), 0);
+			 
+			If (($MessageLen == 12) OR (($MessageArray[$i] & 65535) == $this->GetBuffer("NotifyCounter"))) {
+				// Struktur:
+				// H seqno: starts at 0 each time the handle is opened and then increments by one for each report.
+				// H flags: three flags are defined, PI_NTFY_FLAGS_WDOG, PI_NTFY_FLAGS_ALIVE, and PI_NTFY_FLAGS_EVENT. 
+					//If bit 5 is set (PI_NTFY_FLAGS_WDOG) then bits 0-4 of the flags indicate a GPIO which has had a watchdog timeout. 
+					//If bit 6 is set (PI_NTFY_FLAGS_ALIVE) this indicates a keep alive signal on the pipe/socket and is sent once a minute in the absence of other notification activity. 
+					//If bit 7 is set (PI_NTFY_FLAGS_EVENT) then bits 0-4 of the flags indicate an event which has been triggered. 
+				// I tick: the number of microseconds since system boot. It wraps around after 1h12m. 
+				// I level: indicates the level of each GPIO. If bit 1<<x is set then GPIO x is high. 
+				if (array_key_exists($i + 2, $MessageArray)) {
+					$SeqNo = $MessageArray[$i] & 65535;
+					$Flags = $MessageArray[$i] >> 16;
+					$KeepAlive = (int)boolval($Flags & 64);
+					$Tick = $MessageArray[$i + 1];
+					$Level = $MessageArray[$i + 2];
+					If ($KeepAlive == 1) {
+						// es handelt sich um ein Event
+						$this->SendDebug("Datenanalyse", "Event: KeepAlive", 0);
+						SetValueInteger($this->GetIDForIdent("LastKeepAlive"), time() );
+						//$this->SendDataToChildren(json_encode(Array("DataID" => "{573FFA75-2A0C-48AC-BF45-FCB01D6BF910}", "Function"=>"interrupt", "DeviceBus" => 4)));
+						//$this->SendDataToChildren(json_encode(Array("DataID" => "{573FFA75-2A0C-48AC-BF45-FCB01D6BF910}", "Function"=>"interrupt", "DeviceBus" => 5)));
+					}
+					else {
+						// Werte durchlaufen
+						for ($j = 0; $j < Count($PinNotify); $j++) {
+	    						$Bitvalue = boolval($MessageParts[3]&(1<<$PinNotify[$j]));
+								$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit ".(int)$j." Wert: ".$Bitvalue, 0);
+
+						}
+
+						// Wert von Pin 15
+						$Bitvalue_15 = boolval($Level & pow(2, 15));			
+						If (($this->GetBuffer("Serial_Handle") >= 0) AND ($SerialRead = false)) {
+							$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit 15 (RS232): ".(int)$Bitvalue_15, 0);	
+							$SerialRead = true;
+							IPS_Sleep(75);
+							//$this->CheckSerial();
+						}
+					}
+					$this->SetBuffer("NotifyCounter", $SeqNo + 1);
+					$i = $i + 2;
+				}
+			}
+			else {
+				if (array_key_exists($i + 3, $MessageArray)) {
+					$this->SendDebug("Datenanalyse", "Kommando: ".$MessageArray[$i], 0);
+					//$this->ClientResponse(pack("L*", $MessageArray[$i], $MessageArray[$i + 1], $MessageArray[$i + 2], $MessageArray[$i + 3]));
+					$i = $i + 3;
+				}
+			}
+		 }
+		*/
+		
 	    	If ((in_array($Command, $CmdPossible)) AND (in_array($MessageLen, $RDlen))) {
 	    		// wenn es sich um mehrere Standarddatensätze handelt
 	    		$DataArray = str_split($Message, 16);
@@ -796,25 +862,6 @@ class IPS2GPIO_IO extends IPSModule
 						return $Result;
 					}
 				}
-				
-				/*
-				// Socket erstellen
-				if(!($sock = socket_create(AF_INET, SOCK_STREAM, 0))) {
-					$errorcode = socket_last_error();
-					$errormsg = socket_strerror($errorcode);
-					IPS_LogMessage("IPS2GPIO Socket", "Fehler beim Erstellen ".$errorcode." ".$errormsg);
-					return;
-				}
-				// Timeout setzen
-				socket_set_option($sock,SOL_SOCKET, SO_RCVTIMEO, array("sec"=>4, "usec"=>0));
-				// Verbindung aufbauen
-				if(!(socket_connect($sock, $this->ReadPropertyString("IPAddress"), 8888))) {
-					$errorcode = socket_last_error();
-					$errormsg = socket_strerror($errorcode);
-					IPS_LogMessage("IPS2GPIO Socket", "Fehler beim Verbindungsaufbaus ".$errorcode." ".$errormsg);
-					return;
-				}
-				*/
 				
 				// Message senden
 				if( ! socket_send ($this->Socket, $message, strlen($message), 0))
