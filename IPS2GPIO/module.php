@@ -622,14 +622,13 @@ class IPS2GPIO_IO extends IPSModule
 						//$this->SendDataToChildren(json_encode(Array("DataID" => "{573FFA75-2A0C-48AC-BF45-FCB01D6BF910}", "Function"=>"interrupt", "DeviceBus" => 5)));
 					}
 					else {
-						$this->SendDebug("Datenanalyse", "Event: Interrupt", 0);
 						$PinNotify = array();
 						$PinNotify = unserialize($this->GetBuffer("PinNotify"));
 						// Werte durchlaufen
-						If ($this->ReadPropertyBoolean("Serial_Used") == false) {
+						If ($this->ReadPropertyBoolean("Serial_Used") == 0) {
 							for ($j = 0; $j < Count($PinNotify); $j++) {
 								$Bitvalue = boolval($Level & (1<<$PinNotify[$j]));
-								$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit ".$PinNotify[$j]." Wert: ".$Bitvalue, 0);
+								$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit ".$PinNotify[$j]." Wert: ".(int)$Bitvalue, 0);
 								$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $Tick)));
 							}
 						}
@@ -637,16 +636,16 @@ class IPS2GPIO_IO extends IPSModule
 							for ($j = 0; $j < Count($PinNotify); $j++) {
 								If ($PinNotify[$j] <> 15) {
 									$Bitvalue = boolval($Level &(1<<$PinNotify[$j]));
-									$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit ".$PinNotify[$j]." Wert: ".$Bitvalue, 0);
+									$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit ".$PinNotify[$j]." Wert: ".(int)$Bitvalue, 0);
 									$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $Tick)));
 								}
 								else {
-									If (($this->GetBuffer("Serial_Handle") >= 0) AND ($SerialRead = false)) {
+									If ($SerialRead == false) {
 										// Wert von Pin 15
 										$Bitvalue_15 = boolval($Level & pow(2, 15));
 										$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit 15 (RS232): ".(int)$Bitvalue_15, 0);	
 										$SerialRead = true;
-										IPS_Sleep(75);
+										IPS_Sleep(100);
 										$Data = $this->CommandClientSocket(pack("L*", 82, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
 										If ($Data > 0) {
 											$this->CommandClientSocket(pack("L*", 80, $this->GetBuffer("Serial_Handle"), $Data, 0), 16 + $Data);
