@@ -618,8 +618,6 @@ class IPS2GPIO_IO extends IPSModule
 						// es handelt sich um ein Event
 						$this->SendDebug("Datenanalyse", "Event: KeepAlive", 0);
 						SetValueInteger($this->GetIDForIdent("LastKeepAlive"), time() );
-						//$this->SendDataToChildren(json_encode(Array("DataID" => "{573FFA75-2A0C-48AC-BF45-FCB01D6BF910}", "Function"=>"interrupt", "DeviceBus" => 4)));
-						//$this->SendDataToChildren(json_encode(Array("DataID" => "{573FFA75-2A0C-48AC-BF45-FCB01D6BF910}", "Function"=>"interrupt", "DeviceBus" => 5)));
 					}
 					else {
 						$PinNotify = array();
@@ -635,7 +633,7 @@ class IPS2GPIO_IO extends IPSModule
 						else {
 							for ($j = 0; $j < Count($PinNotify); $j++) {
 								If ($PinNotify[$j] <> 15) {
-									$Bitvalue = boolval($Level &(1<<$PinNotify[$j]));
+									$Bitvalue = boolval($Level & (1<<$PinNotify[$j]));
 									$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit ".$PinNotify[$j]." Wert: ".(int)$Bitvalue, 0);
 									$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $Tick)));
 								}
