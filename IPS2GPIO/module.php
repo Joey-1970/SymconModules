@@ -594,7 +594,7 @@ class IPS2GPIO_IO extends IPSModule
 		$Command = $MessageArray[1];
 		$SerialRead = false;
 	    	
-		/*
+		
 		 // Analyse der eingegangenen Daten
 		 for ($i = 1; $i <= Count($MessageArray); $i++) {
 			$this->SendDebug("Datenanalyse", "i: ".$i." Laenge: ".$MessageLen." SeqNo: ".($MessageArray[$i] & 65535)." Counter: ".$this->GetBuffer("NotifyCounter"), 0);
@@ -662,8 +662,8 @@ class IPS2GPIO_IO extends IPSModule
 				}
 			}
 		 }
-		*/
 		
+		/*
 	    	If ((in_array($Command, $CmdPossible)) AND (in_array($MessageLen, $RDlen))) {
 	    		// wenn es sich um mehrere Standarddatensätze handelt
 	    		$DataArray = str_split($Message, 16);
@@ -726,6 +726,7 @@ class IPS2GPIO_IO extends IPSModule
 				IPS_LogMessage("IPS2GPIO ReceiveData", "Überlänge: Datensätze nicht differenzierbar!");
 			}
 	 	}
+		*/
 	 }
  
 	  public function RequestAction($Ident, $Value) 
