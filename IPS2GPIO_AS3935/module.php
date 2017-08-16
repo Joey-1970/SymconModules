@@ -12,7 +12,7 @@
  	    	$this->RegisterPropertyInteger("DeviceAddress", 3);
 		$this->RegisterPropertyInteger("DeviceBus", 1);	
 		$this->RegisterPropertyInteger("Pin", -1);
-		$this->RegisterPropertyInteger("Number", 0);
+		$this->RegisterPropertyInteger("MinNumLigh", 0);
 		$this->RegisterPropertyInteger("NoiseFloorLevel", 0);
 		$this->RegisterPropertyInteger("FrequencyDivisionRatio", 0);
 		$this->RegisterPropertyInteger("AFEGain", 36);
@@ -111,14 +111,13 @@
 		
 		
 		
-		$arrayElements[] = array("type" => "Label", "label" => "Minimale Anzahl der Detektionen bevor ein Interrupt ausgelöst wird"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Minimale Anzahl der Detektionen in den letzten 15 Minuten bevor ein Interrupt ausgelöst wird"); 
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "1", "value" => 0);
 		$arrayOptions[] = array("label" => "5", "value" => 1);
 		$arrayOptions[] = array("label" => "9", "value" => 2);
 		$arrayOptions[] = array("label" => "16", "value" => 3);
-		$arrayElements[] = array("type" => "Select", "name" => "Number", "caption" => "Anzahl", "options" => $arrayOptions );
-		//$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("type" => "Select", "name" => "MinNumLigh", "caption" => "Anzahl", "options" => $arrayOptions );
 
 		$arrayElements[] = array("type" => "Label", "label" => "Frequenzteilungsverhältnis anpassen"); 
 		$arrayOptions = array();
@@ -287,9 +286,10 @@
 	{
 		
 		$Register[0] = $this->ReadPropertyInteger("AFEGain");
-		$Register[1] = $this->ReadPropertyInteger("NoiseFloorLevel") << 4 | $this->ReadPropertyInteger("WDTH");
-		//$Register[2] = 
-		
+		$Register[1] = ($this->ReadPropertyInteger("NoiseFloorLevel") << 4) | $this->ReadPropertyInteger("WDTH");
+		$Register[2] = (3 << 6) | ($this->ReadPropertyInteger("NoiseFloorLevel") << 4) | $this->ReadPropertyInteger("SREJ");
+		$Register[3] = ($this->ReadPropertyInteger("FrequencyDivisionRatio") << 6) | (0 << 5) | (0 << 4) | 0;
+		//$Register[8] = $this->ReadPropertyInteger("AFEGain");
 	
 	}
 	    
