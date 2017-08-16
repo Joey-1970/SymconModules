@@ -225,7 +225,7 @@
 		$MaskDisturber = $Data[4] & 32;
 		$this->SendDebug("MaskDisturber", $MaskDisturber, 0);
 
-		$Energy = (($Data[7] & 31) << 16) & ($Data[6] << 8) & $Data[5] ;
+		$Energy = (($Data[7] & 31) << 16) | ($Data[6] << 8) | $Data[5] ;
 		SetValueInteger($this->GetIDForIdent("Energy"), $Energy);
 		$this->SendDebug("Energy", $Energy, 0);
 		
