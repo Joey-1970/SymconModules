@@ -147,12 +147,18 @@
 		
 		$this->RegisterVariableInteger("Energy", "Energie", "", 20);
            	$this->EnableAction("Energy");
-		IPS_SetHidden($this->GetIDForIdent("Energy"), false);		
+		IPS_SetHidden($this->GetIDForIdent("Energy"), false);
+		
+		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 30);
+		$this->DisableAction("LastInterrupt");
+		IPS_SetHidden($this->GetIDForIdent("LastInterrupt"), false);
+		
+		
 		
 		If (IPS_GetKernelRunlevel() == 10103) {						
 			//ReceiveData-Filter setzen
 			$this->SetBuffer("DeviceIdent", (($this->ReadPropertyInteger("DeviceBus") << 7) + $this->ReadPropertyInteger("DeviceAddress")));
-			$Filter = '((.*"Function":"get_used_i2c".*|.*"DeviceIdent":'.$this->GetBuffer("DeviceIdent").'.*)|.*"Function":"status".*)';
+			$Filter = '((.*"Function":"get_used_i2c".*|.*"DeviceIdent":'.$this->GetBuffer("DeviceIdent").'.*)|(.*"Function":"status".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*))';
 			//$this->SendDebug("IPS2GPIO", $Filter, 0);
 			$this->SetReceiveDataFilter($Filter);
 		
@@ -183,8 +189,11 @@
 	 	switch ($data->Function) {
 			case "notify":
 			   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
-			   		$this->SendDebug("Notify", "Wert: ".(int)$data->Value, 0);
-					$this->GetOutput();
+			   		SetValueInteger($this->GetIDForIdent("LastInterrupt"), time() );
+					$this->SendDebug("Notify", "Wert: ".(int)$data->Value, 0);
+					If ($data->Value == 0) {
+						$this->GetOutput();
+					}
 			   	}
 			   	break; 
 			
