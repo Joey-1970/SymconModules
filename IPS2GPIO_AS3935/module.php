@@ -213,81 +213,85 @@
 	// Führt eine Messung aus
 	public function GetOutput()
 	{
-		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_AS3935_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Count" => 9 )));
-		$Data = array();
-		$Data = unserialize($Result);
-		$this->SendDebug("Daten", $Result, 0);
-		
-		$PowerDown = $Data[1] & 1;
-		$this->SendDebug("PowerDown", $PowerDown, 0);
-		
-		/*
-		Indoor = 18
-		Outdoor = 14
-		*/
-		$AFEGainBoost = $Data[1] & 62;
-		$this->SendDebug("AFEGainBoost", $AFEGainBoost, 0);
-		
-		$NoiseFloorLevel = $Data[2] & 112;
-		$this->SendDebug("NoiseFloorLevel", $NoiseFloorLevel, 0);
-		$WatchdogThreshold = $Data[2] & 15;
-		$this->SendDebug("WatchdogThreshold", $WatchdogThreshold, 0);
-		/*
-		0 = 1 Blitze
-		1 = 5
-		2 = 9 
-		3 = 16
-		*/
-		$MinNumLigh = $Data[3] & 48;
-		$this->SendDebug("MinNumLigh", $MinNumLigh, 0);
-		
-		/*
-		1 Noise Level to high
-		4 Disturber Detected
-		8 Lightning interrupt
-		*/
-		$Interrupt = $Data[4] & 15;
-		$this->SendDebug("Interrupt", $Interrupt, 0);
-		
-		$LcoFdiv = $Data[4] & 192;
-		$this->SendDebug("LcoFdiv", $LcoFdiv, 0);
-		$MaskDisturber = $Data[4] & 32;
-		$this->SendDebug("MaskDisturber", $MaskDisturber, 0);
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_AS3935_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Count" => 9 )));
+			$Data = array();
+			$Data = unserialize($Result);
+			$this->SendDebug("Daten", $Result, 0);
 
-		$Energy = (($Data[7] & 31) << 16) | ($Data[6] << 8) | $Data[5] ;
-		SetValueInteger($this->GetIDForIdent("Energy"), $Energy);
-		$this->SendDebug("Energy", $Energy, 0);
-		
-		$Distance = $Data[8] & 63;
-		SetValueInteger($this->GetIDForIdent("Distance"), $Distance);
-		$this->SendDebug("Distance", $Distance, 0);
-		
-		
-		$LCO = $Data[9] & 128;
-		$this->SendDebug("LCO", $LCO, 0);
-		$SRCO = $Data[9] & 64;
-		$this->SendDebug("SRCO", $SRCO, 0);
-		$TRCO = $Data[9] & 32;
-		$this->SendDebug("TRCO", $TRCO, 0);
-		$Capacitor = $Data[9] & 15;
-		$this->SendDebug("Capacitor", $Capacitor, 0);
+			$PowerDown = $Data[1] & 1;
+			$this->SendDebug("PowerDown", $PowerDown, 0);
+
+			/*
+			Indoor = 18
+			Outdoor = 14
+			*/
+			$AFEGainBoost = $Data[1] & 62;
+			$this->SendDebug("AFEGainBoost", $AFEGainBoost, 0);
+
+			$NoiseFloorLevel = $Data[2] & 112;
+			$this->SendDebug("NoiseFloorLevel", $NoiseFloorLevel, 0);
+			$WatchdogThreshold = $Data[2] & 15;
+			$this->SendDebug("WatchdogThreshold", $WatchdogThreshold, 0);
+			/*
+			0 = 1 Blitze
+			1 = 5
+			2 = 9 
+			3 = 16
+			*/
+			$MinNumLigh = $Data[3] & 48;
+			$this->SendDebug("MinNumLigh", $MinNumLigh, 0);
+
+			/*
+			1 Noise Level to high
+			4 Disturber Detected
+			8 Lightning interrupt
+			*/
+			$Interrupt = $Data[4] & 15;
+			$this->SendDebug("Interrupt", $Interrupt, 0);
+
+			$LcoFdiv = $Data[4] & 192;
+			$this->SendDebug("LcoFdiv", $LcoFdiv, 0);
+			$MaskDisturber = $Data[4] & 32;
+			$this->SendDebug("MaskDisturber", $MaskDisturber, 0);
+
+			$Energy = (($Data[7] & 31) << 16) | ($Data[6] << 8) | $Data[5] ;
+			SetValueInteger($this->GetIDForIdent("Energy"), $Energy);
+			$this->SendDebug("Energy", $Energy, 0);
+
+			$Distance = $Data[8] & 63;
+			SetValueInteger($this->GetIDForIdent("Distance"), $Distance);
+			$this->SendDebug("Distance", $Distance, 0);
+
+
+			$LCO = $Data[9] & 128;
+			$this->SendDebug("LCO", $LCO, 0);
+			$SRCO = $Data[9] & 64;
+			$this->SendDebug("SRCO", $SRCO, 0);
+			$TRCO = $Data[9] & 32;
+			$this->SendDebug("TRCO", $TRCO, 0);
+			$Capacitor = $Data[9] & 15;
+			$this->SendDebug("Capacitor", $Capacitor, 0);
+		}
 		
 		
 	}
 	    
 	private function Setup()
 	{
-		$Register = array();
-		$Register[0] = $this->ReadPropertyInteger("AFEGain");
-		$Register[1] = ($this->ReadPropertyInteger("NoiseFloorLevel") << 4) | $this->ReadPropertyInteger("WDTH");
-		$Register[2] = (3 << 6) | ($this->ReadPropertyInteger("NoiseFloorLevel") << 4) | $this->ReadPropertyInteger("SREJ");
-		$Register[3] = ($this->ReadPropertyInteger("FrequencyDivisionRatio") << 6) | (0 << 5) | (0 << 4) | 0;
-		$Register[8] = $this->ReadPropertyInteger("TunCap");
-		
-		foreach($Register AS $Key => $Value) {
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_AS3935_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $Key, "Value" => $Value)));
-			If (!$Result) {
-				$this->SendDebug("Setup", "Schreiben von Wert ".$Value." in Register ".$Key." nicht erfolgreich!", 0);
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$Register = array();
+			$Register[0] = $this->ReadPropertyInteger("AFEGain");
+			$Register[1] = ($this->ReadPropertyInteger("NoiseFloorLevel") << 4) | $this->ReadPropertyInteger("WDTH");
+			$Register[2] = (3 << 6) | ($this->ReadPropertyInteger("NoiseFloorLevel") << 4) | $this->ReadPropertyInteger("SREJ");
+			$Register[3] = ($this->ReadPropertyInteger("FrequencyDivisionRatio") << 6) | (0 << 5) | (0 << 4) | 0;
+			$Register[8] = $this->ReadPropertyInteger("TunCap");
+
+			foreach($Register AS $Key => $Value) {
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_AS3935_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $Key, "Value" => $Value)));
+				If (!$Result) {
+					$this->SendDebug("Setup", "Schreiben von Wert ".$Value." in Register ".$Key." nicht erfolgreich!", 0);
+				}
 			}
 		}
 	}    
