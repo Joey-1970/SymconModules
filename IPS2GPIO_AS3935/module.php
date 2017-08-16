@@ -138,7 +138,13 @@
 	    		IPS_LogMessage("IPS2GPIO MCP3424","I2C-Device Adresse in einem nicht definierten Bereich!");  
 	    	}
 	    	// Profil anlegen
-		$this->RegisterProfileInteger("IPS2GPIO.km", "Entfernung", "", " km", 0, 10000, 1);
+		$this->RegisterProfileInteger("IPS2GPIO.km", "Distance", "", " km", 0, 10000, 1);
+		
+		$this->RegisterProfileInteger("IPS2GPIO.interrupt", "Information", "", "", 0, 3, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.interrupt", 0, "kein", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.interrupt", 1, "Geräusch Level zu hoch", "Graph", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.interrupt", 2, "Störer detektiert", "Graph", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.interrupt", 3, "Blitz detektiert", "Electricity", -1);
 		
 		//Status-Variablen anlegen
 		$this->RegisterVariableInteger("Distance", "Entfernung", "IPS2GPIO.km", 10);
@@ -152,6 +158,10 @@
 		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 30);
 		$this->DisableAction("LastInterrupt");
 		IPS_SetHidden($this->GetIDForIdent("LastInterrupt"), false);
+		
+		$this->RegisterVariableInteger("Interrupt", "Auslöser", "IPS2GPIO.interrupt", 40);
+		$this->DisableAction("Interrupt");
+		IPS_SetHidden($this->GetIDForIdent("Interrupt"), false);
 		
 		
 		
@@ -258,6 +268,19 @@
 			*/
 			$Interrupt = $Data[4] & 15;
 			$this->SendDebug("Interrupt", $Interrupt, 0);
+			If ($Interrupt == 0) {
+				SetValueInteger($this->GetIDForIdent("Interrupt"), 0);
+			}
+			elseIf ($Interrupt == 1) {
+				SetValueInteger($this->GetIDForIdent("Interrupt"), 1);
+			}
+			elseIf ($Interrupt == 4) {
+				SetValueInteger($this->GetIDForIdent("Interrupt"), 2);
+			}
+			elseIf ($Interrupt == 8) {
+				SetValueInteger($this->GetIDForIdent("Interrupt"), 3);
+			}
+			
 
 			$LcoFdiv = $Data[4] & 192;
 			$this->SendDebug("LcoFdiv", $LcoFdiv, 0);
