@@ -644,7 +644,10 @@ class IPS2GPIO_IO extends IPSModule
 										$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit 15 (RS232): ".(int)$Bitvalue_15, 0);	
 										$SerialRead = true;
 										IPS_Sleep(75);
-										//$this->CheckSerial();
+										$Data = $this->CommandClientSocket(pack("L*", 82, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
+										If ($Data > 0) {
+											$this->CommandClientSocket(pack("L*", 80, $this->GetBuffer("Serial_Handle"), $Data, 0), 16 + $Data);
+										}
 									}
 								}
 							}
@@ -1352,7 +1355,7 @@ class IPS2GPIO_IO extends IPSModule
 	{
 		$PinNotify = array();
 		$PinNotify = unserialize($this->GetBuffer("PinNotify"));
-
+		$this->SetBuffer("NotifyCounter", 0);
 		$Bitmask = 0;
 		for ($i = 0; $i < Count($PinNotify); $i++) {
     			$Bitmask = $Bitmask + pow(2, $PinNotify[$i]);
