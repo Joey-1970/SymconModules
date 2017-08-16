@@ -18,6 +18,7 @@
 		$this->RegisterPropertyInteger("AFEGain", 36);
 		$this->RegisterPropertyInteger("WDTH", 0);
 		$this->RegisterPropertyInteger("SREJ", 2);
+		$this->RegisterPropertyInteger("TunCap", 0);
         }
  	
 	public function GetConfigurationForm() 
@@ -107,6 +108,12 @@
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "SREJ", "caption" => "Spitzen Ablehnung", "options" => $arrayOptions );
 	
+		$arrayElements[] = array("type" => "Label", "label" => "Interner Kondensator (pF)"); 
+		$arrayOptions = array();
+		for ($i = 0; $i <= 10; $i++) {
+			$arrayOptions[] = array("label" => ($i * 8)."pF", "value" => $i);
+		}
+		$arrayElements[] = array("type" => "Select", "name" => "TunCap", "caption" => "Größe", "options" => $arrayOptions );
 
 		
 		
@@ -172,6 +179,7 @@
 									  "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 5, "Resistance" => 0)));
 
 				// Erste Messdaten einlesen
+				$this->Setup();
 				$this->SetStatus(102);
 			}
 			else {
@@ -284,15 +292,21 @@
 	    
 	private function Setup()
 	{
-		
+		$Register = array();
 		$Register[0] = $this->ReadPropertyInteger("AFEGain");
 		$Register[1] = ($this->ReadPropertyInteger("NoiseFloorLevel") << 4) | $this->ReadPropertyInteger("WDTH");
 		$Register[2] = (3 << 6) | ($this->ReadPropertyInteger("NoiseFloorLevel") << 4) | $this->ReadPropertyInteger("SREJ");
 		$Register[3] = ($this->ReadPropertyInteger("FrequencyDivisionRatio") << 6) | (0 << 5) | (0 << 4) | 0;
-		//$Register[8] = $this->ReadPropertyInteger("AFEGain");
+		$Register[8] = $this->ReadPropertyInteger("TunCap");
+		
+		foreach($Register AS $Key => $Value) {
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_AS3935_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $Key, "Value" => $Value)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "Schreiben von Wert ".$Value." in Register ".$Key." nicht erfolgreich!", 0);
+			}
+		}
+	}    
 	
-	}
-	    
 	private function Get_I2C_Ports()
 	{
 		$I2C_Ports = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_get_ports")));
