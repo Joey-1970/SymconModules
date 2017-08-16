@@ -42,18 +42,6 @@
 		$arrayElements[] = array("type" => "Label", "label" => "I²C-Bus (Default ist 1)");
 		
 		$arrayOptions = array();
-		/*
-		$I2C_Ports_array = array();
-		$I2C_Ports_array = unserialize($this->Get_I2C_Ports());
-		If (is_array($I2C_Ports_array)) {
-			foreach($I2C_Ports_array AS $Value => $ValueText) {
-				$arrayOptions[] = array("label" => $ValueText, "value" => $Value);
-			}
-		else {
-			$arrayOptions[] = array("label" => "I²C-Bus 1", "value" => 1);
-		}
-		
-		*/
 		$arrayOptions[] = array("label" => "I²C-Bus 0", "value" => 0);
 		$arrayOptions[] = array("label" => "I²C-Bus 1", "value" => 1);
 		$arrayOptions[] = array("label" => "MUX I²C-Bus 0", "value" => 3);
@@ -114,10 +102,7 @@
 			$arrayOptions[] = array("label" => ($i * 8)."pF", "value" => $i);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "TunCap", "caption" => "Größe", "options" => $arrayOptions );
-
-		
-		
-		
+	
 		$arrayElements[] = array("type" => "Label", "label" => "Minimale Anzahl der Detektionen in den letzten 15 Minuten bevor ein Interrupt ausgelöst wird"); 
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "1", "value" => 0);
