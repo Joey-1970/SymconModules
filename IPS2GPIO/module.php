@@ -617,20 +617,32 @@ class IPS2GPIO_IO extends IPSModule
 					}
 					else {
 						// Werte durchlaufen
-						for ($j = 0; $j < Count($PinNotify); $j++) {
-	    						$Bitvalue = boolval($MessageParts[3]&(1<<$PinNotify[$j]));
-								$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit ".(int)$j." Wert: ".$Bitvalue, 0);
-
+						If ($this->ReadPropertyBoolean("Serial_Used") == false) {
+							for ($j = 0; $j < Count($PinNotify); $j++) {
+								$Bitvalue = boolval($MessageParts[3]&(1<<$PinNotify[$j]));
+								$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit ".$PinNotify[$j]." Wert: ".$Bitvalue, 0);
+								$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $Tick)));
+							}
 						}
-
-						// Wert von Pin 15
-						$Bitvalue_15 = boolval($Level & pow(2, 15));			
-						If (($this->GetBuffer("Serial_Handle") >= 0) AND ($SerialRead = false)) {
-							$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit 15 (RS232): ".(int)$Bitvalue_15, 0);	
-							$SerialRead = true;
-							IPS_Sleep(75);
-							//$this->CheckSerial();
-						}
+						else {
+							for ($j = 0; $j < Count($PinNotify); $j++) {
+								If ($PinNotify[$j] <> 15) {
+									$Bitvalue = boolval($MessageParts[3]&(1<<$PinNotify[$j]));
+									$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit ".$PinNotify[$j]." Wert: ".$Bitvalue, 0);
+									$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $Tick)));
+								}
+								else {
+									If (($this->GetBuffer("Serial_Handle") >= 0) AND ($SerialRead = false)) {
+										// Wert von Pin 15
+										$Bitvalue_15 = boolval($Level & pow(2, 15));
+										$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit 15 (RS232): ".(int)$Bitvalue_15, 0);	
+										$SerialRead = true;
+										IPS_Sleep(75);
+										//$this->CheckSerial();
+									}
+								}
+							}
+						}	
 					}
 					$this->SetBuffer("NotifyCounter", $SeqNo + 1);
 					$i = $i + 2;
@@ -639,7 +651,7 @@ class IPS2GPIO_IO extends IPSModule
 			else {
 				if (array_key_exists($i + 3, $MessageArray)) {
 					$this->SendDebug("Datenanalyse", "Kommando: ".$MessageArray[$i], 0);
-					//$this->ClientResponse(pack("L*", $MessageArray[$i], $MessageArray[$i + 1], $MessageArray[$i + 2], $MessageArray[$i + 3]));
+					$this->ClientResponse(pack("L*", $MessageArray[$i], $MessageArray[$i + 1], $MessageArray[$i + 2], $MessageArray[$i + 3]));
 					$i = $i + 3;
 				}
 			}
