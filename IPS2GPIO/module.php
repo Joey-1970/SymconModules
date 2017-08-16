@@ -622,10 +622,13 @@ class IPS2GPIO_IO extends IPSModule
 						//$this->SendDataToChildren(json_encode(Array("DataID" => "{573FFA75-2A0C-48AC-BF45-FCB01D6BF910}", "Function"=>"interrupt", "DeviceBus" => 5)));
 					}
 					else {
+						$this->SendDebug("Datenanalyse", "Event: Interrupt", 0);
+						$PinNotify = array();
+						$PinNotify = unserialize($this->GetBuffer("PinNotify"));
 						// Werte durchlaufen
 						If ($this->ReadPropertyBoolean("Serial_Used") == false) {
 							for ($j = 0; $j < Count($PinNotify); $j++) {
-								$Bitvalue = boolval($MessageParts[3]&(1<<$PinNotify[$j]));
+								$Bitvalue = boolval($Level & (1<<$PinNotify[$j]));
 								$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit ".$PinNotify[$j]." Wert: ".$Bitvalue, 0);
 								$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $Tick)));
 							}
@@ -633,7 +636,7 @@ class IPS2GPIO_IO extends IPSModule
 						else {
 							for ($j = 0; $j < Count($PinNotify); $j++) {
 								If ($PinNotify[$j] <> 15) {
-									$Bitvalue = boolval($MessageParts[3]&(1<<$PinNotify[$j]));
+									$Bitvalue = boolval($Level &(1<<$PinNotify[$j]));
 									$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit ".$PinNotify[$j]." Wert: ".$Bitvalue, 0);
 									$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $Tick)));
 								}
