@@ -13,8 +13,10 @@
 		$this->RegisterPropertyInteger("DeviceBus", 1);	
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->RegisterPropertyInteger("Number", 0);
+		$this->RegisterPropertyInteger("NoiseFloorLevel", 0);
 		$this->RegisterPropertyInteger("FrequencyDivisionRatio", 0);
-		$this->RegisterPropertyBoolean("Outdoor", false);
+		$this->RegisterPropertyInteger("AFEGain", 36);
+		$this->RegisterPropertyInteger("WDTH", 0);
         }
  	
 	public function GetConfigurationForm() 
@@ -71,14 +73,42 @@
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
-
+		
+		$arrayElements[] = array("type" => "Label", "label" => "Geräuschpegel (uVrms) - (Outdoor/Indoor)"); 
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "390/28", "value" => 0);
+		$arrayOptions[] = array("label" => "630/45", "value" => 1);
+		$arrayOptions[] = array("label" => "860/62", "value" => 2);
+		$arrayOptions[] = array("label" => "1100/78", "value" => 3);
+		$arrayOptions[] = array("label" => "1140/95", "value" => 4);
+		$arrayOptions[] = array("label" => "1570/112", "value" => 5);
+		$arrayOptions[] = array("label" => "1800/130", "value" => 6);
+		$arrayOptions[] = array("label" => "2000/146", "value" => 7);
+		$arrayElements[] = array("type" => "Select", "name" => "NoiseFloorLevel", "caption" => "Geräuschpegel", "options" => $arrayOptions );
+		
+		$arrayElements[] = array("type" => "Label", "label" => "Nutzung"); 
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "Indoor", "value" => 36);
+		$arrayOptions[] = array("label" => "Outdoor", "value" => 28);
+		$arrayElements[] = array("type" => "Select", "name" => "AFEGain", "caption" => "Nutzung", "options" => $arrayOptions );
+	
+		$arrayElements[] = array("type" => "Label", "label" => "Schwellwert (Watchdog Threshold)"); 
+		$arrayOptions = array();
+		for ($i = 0; $i <= 10; $i++) {
+			$arrayOptions[] = array("label" => $i, "value" => $i);
+		}
+		$arrayElements[] = array("type" => "Select", "name" => "WDTH", "caption" => "Schwellwert", "options" => $arrayOptions );
+	
+		
+		
+		
+		
 		$arrayElements[] = array("type" => "Label", "label" => "Minimale Anzahl der Detektionen bevor ein Interrupt ausgelöst wird"); 
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "1", "value" => 0);
 		$arrayOptions[] = array("label" => "5", "value" => 1);
 		$arrayOptions[] = array("label" => "9", "value" => 2);
 		$arrayOptions[] = array("label" => "16", "value" => 3);
-		
 		$arrayElements[] = array("type" => "Select", "name" => "Number", "caption" => "Anzahl", "options" => $arrayOptions );
 		//$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 
@@ -88,10 +118,9 @@
 		$arrayOptions[] = array("label" => "32", "value" => 1);
 		$arrayOptions[] = array("label" => "64", "value" => 2);
 		$arrayOptions[] = array("label" => "128", "value" => 3);
-		
 		$arrayElements[] = array("type" => "Select", "name" => "FrequencyDivisionRatio", "caption" => "Teilungsverhältnis", "options" => $arrayOptions );
 		
-		$arrayElements[] = array("type" => "CheckBox", "name" => "Outdoor", "caption" => "Nutzung Outdoor"); 
+		 
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 
 		$arrayActions = array();
@@ -244,6 +273,16 @@
 		$this->SendDebug("Capacitor", $Capacitor, 0);
 		
 		
+	}
+	    
+	private function Setup()
+	{
+		
+		$Register[0] = $this->ReadPropertyInteger("AFEGain");
+		$Register[1] = $this->ReadPropertyInteger("NoiseFloorLevel") << 4 | $this->ReadPropertyInteger("WDTH");
+		//$Register[2] = 
+		
+	
 	}
 	    
 	private function Get_I2C_Ports()
