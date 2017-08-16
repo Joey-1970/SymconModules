@@ -17,6 +17,7 @@
 		$this->RegisterPropertyInteger("FrequencyDivisionRatio", 0);
 		$this->RegisterPropertyInteger("AFEGain", 36);
 		$this->RegisterPropertyInteger("WDTH", 0);
+		$this->RegisterPropertyInteger("SREJ", 2);
         }
  	
 	public function GetConfigurationForm() 
@@ -99,7 +100,14 @@
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "WDTH", "caption" => "Schwellwert", "options" => $arrayOptions );
 	
-		
+		$arrayElements[] = array("type" => "Label", "label" => "Spitzen Ablehnung (Spike Rejection)"); 
+		$arrayOptions = array();
+		for ($i = 0; $i <= 10; $i++) {
+			$arrayOptions[] = array("label" => $i, "value" => $i);
+		}
+		$arrayElements[] = array("type" => "Select", "name" => "SREJ", "caption" => "Spitzen Ablehnung", "options" => $arrayOptions );
+	
+
 		
 		
 		
