@@ -147,24 +147,23 @@
 		IPS_SetVariableProfileAssociation("IPS2GPIO.interrupt", 3, "Blitz detektiert", "Electricity", -1);
 		
 		//Status-Variablen anlegen
-		$this->RegisterVariableInteger("Distance", "Entfernung", "IPS2GPIO.km", 10);
-           	$this->DisableAction("Distance");
-		IPS_SetHidden($this->GetIDForIdent("Distance"), false);
-		
-		$this->RegisterVariableInteger("Energy", "Energie", "", 20);
-           	$this->DisableAction("Energy");
-		IPS_SetHidden($this->GetIDForIdent("Energy"), false);
-		
-		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 30);
+		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 10);
 		$this->DisableAction("LastInterrupt");
 		IPS_SetHidden($this->GetIDForIdent("LastInterrupt"), false);
 		
-		$this->RegisterVariableInteger("Interrupt", "Auslöser", "IPS2GPIO.interrupt", 40);
+		$this->RegisterVariableInteger("Interrupt", "Auslöser", "IPS2GPIO.interrupt", 20);
 		$this->DisableAction("Interrupt");
 		IPS_SetHidden($this->GetIDForIdent("Interrupt"), false);
 		
+		$this->RegisterVariableInteger("Distance", "Entfernung", "IPS2GPIO.km", 30);
+           	$this->DisableAction("Distance");
+		IPS_SetHidden($this->GetIDForIdent("Distance"), false);
 		
+		$this->RegisterVariableInteger("Energy", "Energie", "", 40);
+           	$this->DisableAction("Energy");
+		IPS_SetHidden($this->GetIDForIdent("Energy"), false);
 		
+			
 		If (IPS_GetKernelRunlevel() == 10103) {						
 			//ReceiveData-Filter setzen
 			$this->SetBuffer("DeviceIdent", (($this->ReadPropertyInteger("DeviceBus") << 7) + $this->ReadPropertyInteger("DeviceAddress")));
