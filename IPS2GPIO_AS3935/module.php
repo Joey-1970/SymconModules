@@ -274,16 +274,18 @@
 			$this->SendDebug("Interrupt", $Interrupt, 0);
 			SetValueInteger($this->GetIDForIdent("Interrupt"),  $InterruptAssociation[$Interrupt]);
 			
-			$this->SendDebug("Energie LSB", $Data[5], 0);
-			$this->SendDebug("Energie MSB", $Data[6], 0);
-			$this->SendDebug("Energie MMSB", ($Data[7] & 31), 0);
-			$Energy = (($Data[7] & 31) << 16) | ($Data[6] << 8) | $Data[5] ;
-			SetValueInteger($this->GetIDForIdent("Energy"), $Energy);
-			$this->SendDebug("Energy", $Energy, 0);
+			If ($Interrupt == 8) {
+				$this->SendDebug("Energie LSB", $Data[5], 0);
+				$this->SendDebug("Energie MSB", $Data[6], 0);
+				$this->SendDebug("Energie MMSB", ($Data[7] & 31), 0);
+				$Energy = (($Data[7] & 31) << 16) | ($Data[6] << 8) | $Data[5] ;
+				SetValueInteger($this->GetIDForIdent("Energy"), $Energy);
+				$this->SendDebug("Energy", $Energy, 0);
 
-			$Distance = $Data[8] & 63;
-			SetValueInteger($this->GetIDForIdent("Distance"), $Distance);
-			$this->SendDebug("Distance", $Distance, 0);			
+				$Distance = $Data[8] & 63;
+				SetValueInteger($this->GetIDForIdent("Distance"), $Distance);
+				$this->SendDebug("Distance", $Distance, 0);
+			}
 		}
 	}
 	    
