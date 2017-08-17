@@ -198,9 +198,9 @@
 	 	switch ($data->Function) {
 			case "notify":
 			   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
-			   		SetValueInteger($this->GetIDForIdent("LastInterrupt"), time() );
-					$this->SendDebug("Notify", "Wert: ".(int)$data->Value, 0);
-					If ($data->Value == 0) {
+					If (($data->Value == 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+						$this->SendDebug("Notify", "Wert: ".(int)$data->Value, 0);
+						SetValueInteger($this->GetIDForIdent("LastInterrupt"), time() );
 						$this->GetOutput();
 					}
 			   	}
