@@ -14,6 +14,7 @@
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->RegisterPropertyInteger("MinNumLigh", 0);
 		$this->RegisterPropertyInteger("NoiseFloorLevel", 0);
+		$this->RegisterPropertyInteger("MaskDisturber", 0);
 		$this->RegisterPropertyInteger("FrequencyDivisionRatio", 0);
 		$this->RegisterPropertyInteger("AFEGain", 36);
 		$this->RegisterPropertyInteger("WDTH", 0);
@@ -81,6 +82,12 @@
 		$arrayOptions[] = array("label" => "Indoor", "value" => 36);
 		$arrayOptions[] = array("label" => "Outdoor", "value" => 28);
 		$arrayElements[] = array("type" => "Select", "name" => "AFEGain", "caption" => "Nutzung", "options" => $arrayOptions );
+		
+		$arrayElements[] = array("type" => "Label", "label" => "Störer anzeigen"); 
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "Ja", "value" => 0);
+		$arrayOptions[] = array("label" => "Nein", "value" => 1);
+		$arrayElements[] = array("type" => "Select", "name" => "MaskDisturber", "caption" => "Anzeige", "options" => $arrayOptions );
 	
 		$arrayElements[] = array("type" => "Label", "label" => "Schwellwert (Watchdog Threshold)"); 
 		$arrayOptions = array();
@@ -297,7 +304,7 @@
 			$Register[0] = $this->ReadPropertyInteger("AFEGain");
 			$Register[1] = ($this->ReadPropertyInteger("NoiseFloorLevel") << 4) | $this->ReadPropertyInteger("WDTH");
 			$Register[2] = (3 << 6) | ($this->ReadPropertyInteger("NoiseFloorLevel") << 4) | $this->ReadPropertyInteger("SREJ");
-			$Register[3] = ($this->ReadPropertyInteger("FrequencyDivisionRatio") << 6) | (0 << 5) | (0 << 4) | 0;
+			$Register[3] = ($this->ReadPropertyInteger("FrequencyDivisionRatio") << 6) | ($this->ReadPropertyInteger("MaskDisturber") << 5) | (0 << 4) | 0;
 			$Register[8] = $this->ReadPropertyInteger("TunCap");
 
 			foreach($Register AS $Key => $Value) {
@@ -331,6 +338,18 @@
 			
 		}
 	}
+	
+	public function Reset()
+	{ 
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Reset", "Ausfuehrung", 0);
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_AS3935_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 60, "Value" => 150)));
+			If (!$Result) {
+				$this->SendDebug("Reset", "Schreiben von Wert 150 in Register 60 nicht erfolgreich!", 0);
+			}
+		}
+	}
+	    
 	private function Get_I2C_Ports()
 	{
 		$I2C_Ports = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_get_ports")));
