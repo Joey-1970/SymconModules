@@ -284,7 +284,9 @@
 			elseIf ($Interrupt == 8) {
 				SetValueInteger($this->GetIDForIdent("Interrupt"), 3);
 			}
-			
+			$this->SendDebug("Energie LSB", $Data[5], 0);
+			$this->SendDebug("Energie MSB", $Data[6], 0);
+			$this->SendDebug("Energie MMSB", ($Data[7] & 31), 0);
 			$Energy = (($Data[7] & 31) << 16) | ($Data[6] << 8) | $Data[5] ;
 			SetValueInteger($this->GetIDForIdent("Energy"), $Energy);
 			$this->SendDebug("Energy", $Energy, 0);
