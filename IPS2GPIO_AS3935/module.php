@@ -270,20 +270,11 @@
 			4 Disturber Detected
 			8 Lightning interrupt
 			*/
+			$InterruptAssociation = array(0 => 0, 1 => 1, 4 => 2, 8 => 3);
 			$Interrupt = $Data[4] & 15;
 			$this->SendDebug("Interrupt", $Interrupt, 0);
-			If ($Interrupt == 0) {
-				SetValueInteger($this->GetIDForIdent("Interrupt"), 0);
-			}
-			elseIf ($Interrupt == 1) {
-				SetValueInteger($this->GetIDForIdent("Interrupt"), 1);
-			}
-			elseIf ($Interrupt == 4) {
-				SetValueInteger($this->GetIDForIdent("Interrupt"), 2);
-			}
-			elseIf ($Interrupt == 8) {
-				SetValueInteger($this->GetIDForIdent("Interrupt"), 3);
-			}
+			SetValueInteger($this->GetIDForIdent("Interrupt"),  $InterruptAssociation[$Interrupt]);
+			
 			$this->SendDebug("Energie LSB", $Data[5], 0);
 			$this->SendDebug("Energie MSB", $Data[6], 0);
 			$this->SendDebug("Energie MMSB", ($Data[7] & 31), 0);
