@@ -292,6 +292,7 @@
 	private function Setup()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Setup", "Ausfuehrung", 0);
 			$Register = array();
 			$Register[0] = $this->ReadPropertyInteger("AFEGain");
 			$Register[1] = ($this->ReadPropertyInteger("NoiseFloorLevel") << 4) | $this->ReadPropertyInteger("WDTH");
@@ -311,12 +312,13 @@
 	public function Calibrate()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Calibrate", "Ausfuehrung", 0);
 			// Zur Kalibrierung auffordern
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_AS3935_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 61, "Value" => 150)));
 			If (!$Result) {
 				$this->SendDebug("Calibrate", "Schreiben von Wert 150 in Register 61 nicht erfolgreich!", 0);
 			}
-			$Value = 1 << 4 | $this->ReadPropertyInteger("TunCap");
+			$Value = (1 << 4) | $this->ReadPropertyInteger("TunCap");
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_AS3935_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 8, "Value" => $Value)));
 			If (!$Result) {
 				$this->SendDebug("Calibrate", "Schreiben von Wert ".$Value." in Register 8 nicht erfolgreich!", 0);
@@ -324,7 +326,7 @@
 			IPS_Sleep(2);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_AS3935_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 8, "Value" =>  $this->ReadPropertyInteger("TunCap"))));
 			If (!$Result) {
-				$this->SendDebug("Calibrate", "Schreiben von Wert ".$Value." in Register 8 nicht erfolgreich!", 0);
+				$this->SendDebug("Calibrate", "Schreiben von Wert ".$this->ReadPropertyInteger("TunCap")." in Register 8 nicht erfolgreich!", 0);
 			}
 			
 		}
