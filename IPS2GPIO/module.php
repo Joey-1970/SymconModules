@@ -537,8 +537,8 @@ class IPS2GPIO_IO extends IPSModule
 		   // Serielle Kommunikation
 		   case "get_handle_serial":
 	   		//IPS_LogMessage("IPS2GPIO Get Handle Serial", "Handle anfordern");
-	   		//$this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device.pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 32);
-			$this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device, 32);
+	   		$this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device.pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 32);
+			//$this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device, 32);
 
 			// Messages einrichten
 			$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
@@ -639,7 +639,7 @@ class IPS2GPIO_IO extends IPSModule
 						}
 						If ($this->ReadPropertyBoolean("Serial_Used") == 1) {
 							// WatchDog setzen
-							$this->CommandClientSocket(pack("L*", 9, 15, $this->GetBuffer("WatchDog"), 0), 16);
+							//$this->CommandClientSocket(pack("L*", 9, 15, $this->GetBuffer("WatchDog"), 0), 16);
 						}
 					}
 					else {
@@ -663,6 +663,7 @@ class IPS2GPIO_IO extends IPSModule
 								else {
 									If ($SerialRead == false) {
 										// Wert von Pin 15
+										/*
 										$Bitvalue_15 = boolval($Level & pow(2, 15));
 										$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit 15 (RS232): ".(int)$Bitvalue_15, 0);	
 										$SerialRead = true;
@@ -671,6 +672,7 @@ class IPS2GPIO_IO extends IPSModule
 										If ($Data > 0) {
 											$this->CommandClientSocket(pack("L*", 80, $this->GetBuffer("Serial_Handle"), $Data, 0), 16 + $Data);
 										}
+										*/
 									}
 								}
 							}
