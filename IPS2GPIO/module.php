@@ -623,8 +623,10 @@ class IPS2GPIO_IO extends IPSModule
 						// es handelt sich um ein Event
 						$this->SendDebug("Datenanalyse", "Event: KeepAlive", 0);
 						SetValueInteger($this->GetIDForIdent("LastKeepAlive"), time() );
-						// WatchDog setzen
-						$this->CommandClientSocket(pack("L*", 9, 15, 60000, 0), 16);
+						If ($this->ReadPropertyBoolean("Serial_Used") == 1) {
+							// WatchDog setzen
+							$this->CommandClientSocket(pack("L*", 9, 15, 60000, 0), 16);
+						}
 					}
 					elseif ($WatchDog == 1) {
 						$Bitvalue_15 = boolval($Level & pow(2, 15));
@@ -634,8 +636,10 @@ class IPS2GPIO_IO extends IPSModule
 						If ($Data > 0) {
 							$this->CommandClientSocket(pack("L*", 80, $this->GetBuffer("Serial_Handle"), $Data, 0), 16 + $Data);
 						}
-						// WatchDog setzen
-						$this->CommandClientSocket(pack("L*", 9, 15, 60000, 0), 16);
+						If ($this->ReadPropertyBoolean("Serial_Used") == 1) {
+							// WatchDog setzen
+							$this->CommandClientSocket(pack("L*", 9, 15, 60000, 0), 16);
+						}
 					}
 					else {
 						$PinNotify = array();
@@ -821,12 +825,14 @@ class IPS2GPIO_IO extends IPSModule
 			}
 			$this->SetBuffer("Serial_Handle", -1);
 			$this->SetBuffer("Serial_Used", 0);
-			// den Notify für den TxD-Pin einschalten
-	   		$PinNotify = array();
+			// den Notify für den RxD-Pin einschalten
+	   		/*
+			$PinNotify = array();
 			$PinNotify = unserialize($this->GetBuffer("PinNotify"));
 			$PinNotify[0] = 15;
 			$this->SetBuffer("PinNotify", serialize($PinNotify));
 			$this->CommandClientSocket(pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 16);
+			*/
 
 		}
 		else {
