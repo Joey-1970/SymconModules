@@ -639,7 +639,6 @@ class IPS2GPIO_IO extends IPSModule
 						}
 						If ($this->ReadPropertyBoolean("Serial_Used") == 1) {
 							// WatchDog setzen
-							$this->GetBuffer("WatchDog")
 							$this->CommandClientSocket(pack("L*", 9, 15, $this->GetBuffer("WatchDog"), 0), 16);
 						}
 					}
