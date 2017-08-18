@@ -544,7 +544,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
 		        $this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
 			// WatchDog setzen
-			$this->CommandClientSocket(pack("L*", 9, 15, $this->GetBuffer("WatchDog"), 0), 16);
+			//$this->CommandClientSocket(pack("L*", 9, 15, $this->GetBuffer("WatchDog"), 0), 16);
 	   		break;
 		   case "write_bytes_serial":
 		   	$Command = utf8_decode($data->Command);
@@ -624,10 +624,6 @@ class IPS2GPIO_IO extends IPSModule
 						// es handelt sich um ein Event
 						$this->SendDebug("Datenanalyse", "Event: KeepAlive", 0);
 						SetValueInteger($this->GetIDForIdent("LastKeepAlive"), time() );
-						If ($this->ReadPropertyBoolean("Serial_Used") == 1) {
-							// WatchDog setzen
-							//$this->CommandClientSocket(pack("L*", 9, 15, 60000, 0), 16);
-						}
 					}
 					elseif ($WatchDog == 1) {
 						$Bitvalue_15 = boolval($Level & pow(2, 15));
@@ -636,10 +632,6 @@ class IPS2GPIO_IO extends IPSModule
 						$Data = $this->CommandClientSocket(pack("L*", 82, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
 						If ($Data > 0) {
 							$this->CommandClientSocket(pack("L*", 80, $this->GetBuffer("Serial_Handle"), $Data, 0), 16 + $Data);
-						}
-						If ($this->ReadPropertyBoolean("Serial_Used") == 1) {
-							// WatchDog setzen
-							//$this->CommandClientSocket(pack("L*", 9, 15, $this->GetBuffer("WatchDog"), 0), 16);
 						}
 					}
 					else {
