@@ -151,6 +151,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("Default_Serial_Bus", 0);
 			$this->SetBuffer("MUX_Handle", -1);
 			$this->SetBuffer("NotifyCounter", -1);
+			$this->SetBuffer("WatchDog", 75);
 			
 			$ParentID = $this->GetParentID();
 		        // Änderung an den untergeordneten Instanzen
@@ -625,7 +626,7 @@ class IPS2GPIO_IO extends IPSModule
 						SetValueInteger($this->GetIDForIdent("LastKeepAlive"), time() );
 						If ($this->ReadPropertyBoolean("Serial_Used") == 1) {
 							// WatchDog setzen
-							$this->CommandClientSocket(pack("L*", 9, 15, 60000, 0), 16);
+							//$this->CommandClientSocket(pack("L*", 9, 15, 60000, 0), 16);
 						}
 					}
 					elseif ($WatchDog == 1) {
@@ -638,7 +639,8 @@ class IPS2GPIO_IO extends IPSModule
 						}
 						If ($this->ReadPropertyBoolean("Serial_Used") == 1) {
 							// WatchDog setzen
-							$this->CommandClientSocket(pack("L*", 9, 15, 60000, 0), 16);
+							$this->GetBuffer("WatchDog")
+							$this->CommandClientSocket(pack("L*", 9, 15, $this->GetBuffer("WatchDog"), 0), 16);
 						}
 					}
 					else {
