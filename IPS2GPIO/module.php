@@ -829,14 +829,11 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("Serial_Handle", -1);
 			$this->SetBuffer("Serial_Used", 0);
 			// den Notify für den RxD-Pin einschalten
-	   		/*
 			$PinNotify = array();
 			$PinNotify = unserialize($this->GetBuffer("PinNotify"));
 			$PinNotify[0] = 15;
 			$this->SetBuffer("PinNotify", serialize($PinNotify));
 			$this->CommandClientSocket(pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 16);
-			*/
-
 		}
 		else {
 			// wird Serial nicht benötigt die Pin auf in Input setzen
