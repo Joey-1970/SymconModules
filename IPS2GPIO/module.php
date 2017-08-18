@@ -1014,6 +1014,16 @@ class IPS2GPIO_IO extends IPSModule
 					IPS_LogMessage("IPS2GPIO PWM", "Pin: ".$response[2]." Wert: ".$response[3]." konnte nicht erfolgreich gesendet werden! Fehler:".$this->GetErrorText(abs($response[4])));
 		        	}
 		        	break;
+			case "9":
+           			If ($response[4] >= 0 ) {
+           				//IPS_LogMessage("GeCoS_IO Handle",$response[4]);
+           				$this->SendDebug("WatchDog", "gesetzt", 0);
+           			}
+           			else {
+           				IPS_LogMessage("GeCoS_IO WatchDog","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
+					$this->SendDebug("WatchDog", "Fehlermeldung: ".$this->GetErrorText(abs($response[4])), 0);
+           			}
+		            	break;
 			case "17":
 		            	$Model[0] = array(2, 3);
 		            	$Model[1] = array(4, 5, 6, 13, 14, 15);
