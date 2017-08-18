@@ -536,10 +536,14 @@ class IPS2GPIO_IO extends IPSModule
 		   // Serielle Kommunikation
 		   case "get_handle_serial":
 	   		//IPS_LogMessage("IPS2GPIO Get Handle Serial", "Handle anfordern");
-	   		$this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device.pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 32);
+	   		//$this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device.pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 32);
+			$this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device, 32);
+
 			// Messages einrichten
 			$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
 		        $this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
+			// WatchDog setzen
+			$this->CommandClientSocket(pack("L*", 9, 15, 60000, 0), 16);
 	   		break;
 		   case "write_bytes_serial":
 		   	$Command = utf8_decode($data->Command);
@@ -612,12 +616,26 @@ class IPS2GPIO_IO extends IPSModule
 					$SeqNo = $MessageArray[$i] & 65535;
 					$Flags = $MessageArray[$i] >> 16;
 					$KeepAlive = (int)boolval($Flags & 64);
+					$WatchDog = (int)boolval($Flags & 16);
 					$Tick = $MessageArray[$i + 1];
 					$Level = $MessageArray[$i + 2];
 					If ($KeepAlive == 1) {
 						// es handelt sich um ein Event
 						$this->SendDebug("Datenanalyse", "Event: KeepAlive", 0);
 						SetValueInteger($this->GetIDForIdent("LastKeepAlive"), time() );
+						// WatchDog setzen
+						$this->CommandClientSocket(pack("L*", 9, 15, 60000, 0), 16);
+					}
+					elseif ($WatchDog == 1) {
+						$Bitvalue_15 = boolval($Level & pow(2, 15));
+						$this->SendDebug("Datenanalyse", "Event: WatchDog - Bit 15 (RS232): ".(int)$Bitvalue_15, 0);	
+						IPS_Sleep(75);
+						$Data = $this->CommandClientSocket(pack("L*", 82, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
+						If ($Data > 0) {
+							$this->CommandClientSocket(pack("L*", 80, $this->GetBuffer("Serial_Handle"), $Data, 0), 16 + $Data);
+						}
+						// WatchDog setzen
+						$this->CommandClientSocket(pack("L*", 9, 15, 60000, 0), 16);
 					}
 					else {
 						$PinNotify = array();
