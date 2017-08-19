@@ -210,6 +210,10 @@
 						SetValueInteger($this->GetIDForIdent("LastInterrupt"), time() );
 						$this->GetOutput();
 					}
+					elseIf (($data->Value == 1) AND ($this->ReadPropertyBoolean("Open") == true)) {
+						$this->SendDebug("Notify", "Wert: ".(int)$data->Value, 0);
+						$this->GetOutput();
+					}
 			   	}
 			   	break; 
 			
@@ -281,7 +285,7 @@
 			$this->SendDebug("Interrupt", $Interrupt, 0);
 			SetValueInteger($this->GetIDForIdent("Interrupt"),  $InterruptAssociation[$Interrupt]);
 			
-			If ($Interrupt == 8) {
+			//If ($Interrupt == 8) {
 				$this->SendDebug("Energie LSB", $Data[5], 0);
 				$this->SendDebug("Energie MSB", $Data[6], 0);
 				$this->SendDebug("Energie MMSB", ($Data[7] & 31), 0);
@@ -292,7 +296,7 @@
 				$Distance = $Data[8] & 63;
 				SetValueInteger($this->GetIDForIdent("Distance"), $Distance);
 				$this->SendDebug("Distance", $Distance, 0);
-			}
+			//}
 		}
 	}
 	    
