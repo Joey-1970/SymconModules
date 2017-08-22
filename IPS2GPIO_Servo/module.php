@@ -80,9 +80,9 @@
 	{
   		switch($Ident) {
 	        case "Output":
-	            If ($this->ReadPropertyBoolean("Open") == true) {
-		    	$this->SetOutput($Value);
-		    }
+	            	If ($this->ReadPropertyBoolean("Open") == true) {
+		    		$this->SetOutput($Value);
+		    	}
 	            break;
 	        default:
 	            throw new Exception("Invalid Ident");
@@ -119,6 +119,7 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$Left = $this->ReadPropertyInteger("most_anti_clockwise");
 			$Right = $this->ReadPropertyInteger("most_clockwise");
+			$Value = min($Right, max($Left, $Value));
 			
 			$Value = intval(($Value * ($Right - $Left) / 100) + $Left);
 			$this->SendDebug("SetOutput", "Errechneter Zielwert: ".$Value, 0);
@@ -127,6 +128,8 @@
 				$this->SendDebug("SetOutput", "Fehler beim Positionieren!", 0);
 			}
 			else {
+				$Output = ($Value / ($Right - $Left)) * 100;
+				SetValueInteger($this->GetIDForIdent("Output"), $Output);
 				$this->GetOutput();
 			}
 			IPS_Sleep(500);
@@ -147,6 +150,8 @@
 			}
 			else {
 				$this->SendDebug("GetOutput", "Wert: ".$Result, 0);
+				$Output = ($Value / ($Right - $Left)) * 100;
+				SetValueInteger($this->GetIDForIdent("Output"), $Output);
 			}
 		}
 	}   
