@@ -316,20 +316,28 @@ class IPS2GPIO_IO extends IPSModule
 		    		$Result = $this->CommandClientSocket(pack("L*", 4, $data->Pin, $data->Value, 0), 16);
 		    	}
 		        break;
-		    case "set_trigger":
+		case "set_trigger":
 		    	// Setzt einen Trigger
 		    	If ($data->Pin >= 0) {
 		        	//IPS_LogMessage("IPS2GPIO SetTrigger Parameter : ",$data->Pin." , ".$data->Time);
 		        	$this->CommandClientSocket(pack("LLLLL", 37, $data->Pin, $data->Time, 4, 1), 16);
 		    	}
 		        break;
-		    case "set_servo":
+		case "set_servo":
 		    	// Setzt ein Servo S/SERVO u v - Set GPIO servo pulsewidth
 		    	If ($data->Pin >= 0) {
 		        	//IPS_LogMessage("IPS2GPIO SetTrigger Parameter : ",$data->Pin." , ".$data->Time);
 		        	$Result = $this->CommandClientSocket(pack("L*", 8, $data->Pin, $data->Value, 0), 16);
 		    	}
 		        break;
+		case "get_servo":
+		    	// Servo GPW u - Get GPIO servo pulsewidth
+		    	If ($data->Pin >= 0) {
+		        	//IPS_LogMessage("IPS2GPIO SetTrigger Parameter : ",$data->Pin." , ".$data->Time);
+				$Result = $this->CommandClientSocket(pack("L*", 84, $data->Pin, 0, 0), 16);
+		    	}
+		        break;
+				
 		    
 		// interne Kommunikation
 		case "set_usedpin":
@@ -1215,6 +1223,15 @@ class IPS2GPIO_IO extends IPSModule
            			}
            			else {
            				IPS_LogMessage("IPS2GPIO Check Bytes Serial","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
+          			}
+  		            	break;
+			case "84":
+           			If ($response[4] >= 0) {
+           				$Result = true;
+           			}
+           			else {
+           				$Result = false;
+					IPS_LogMessage("IPS2GPIO Check Servo Pulsewidth","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
           			}
   		            	break;
 		        case "97":
