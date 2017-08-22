@@ -68,6 +68,7 @@
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
 									  "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 				$this->Setup();
+				$this->GetOutput();
 				$this->SetStatus(102);
 			}
 			else {
@@ -125,6 +126,9 @@
 			If (!$Result) {
 				$this->SendDebug("SetOutput", "Fehler beim Positionieren!", 0);
 			}
+			else {
+				$this->GetOutput();
+			}
 			IPS_Sleep(500);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => 0)));
 			If (!$Result) {
@@ -132,7 +136,20 @@
 			}
 		}
 	}
-	    
+	  
+	public function GetOutput()
+	{
+		$this->SendDebug("GetOutput", "Ausfuehrung", 0);
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_servo", "Pin" => $this->ReadPropertyInteger("Pin") )));
+			If (!$Result) {
+				$this->SendDebug("GetOutput", "Fehler beim Lesen!", 0);
+			}
+			else {
+				$this->SendDebug("GetOutput", "Wert: ".$Result, 0);
+			}
+		}
+	}   
 	private function Setup()
 	{
 		$this->SendDebug("Setup", "Ausfuehrung", 0);
