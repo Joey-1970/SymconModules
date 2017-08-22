@@ -152,7 +152,7 @@
 				$this->SendDebug("GetOutput", "Wert: ".$Result, 0);
 				$Left = $this->ReadPropertyInteger("most_anti_clockwise");
 				$Right = $this->ReadPropertyInteger("most_clockwise");
-				$Output = ($Result / ($Right - $Left)) * 100;
+				$Output = (($Result - $Left)/ ($Right - $Left)) * 100;
 				SetValueInteger($this->GetIDForIdent("Output"), $Output);
 			}
 		}
