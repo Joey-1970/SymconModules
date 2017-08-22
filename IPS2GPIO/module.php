@@ -213,9 +213,14 @@ class IPS2GPIO_IO extends IPSModule
 				// Notify Starten
 				$this->SetBuffer("Handle", -1);
 				$this->SetBuffer("NotifyCounter", 0);
-				$this->ClientSocket(pack("L*", 99, 0, 0, 0));
 				
+				$Handle = $this->ClientSocket(pack("L*", 99, 0, 0, 0));
+				$this->SetBuffer("Handle", $Handle);
+				If ($Handle >= 0) {
+					$this->ClientSocket(pack("L*", 19, $response[4], $this->CalcBitmask(), 0));
+				}
 				$this->Get_PinUpdate();
+				
 				$this->SetStatus(102);
 				
 			}
@@ -1260,8 +1265,9 @@ class IPS2GPIO_IO extends IPSModule
 		        case "99":
            			If ($response[4] >= 0 ) {
            				$this->SendDebug("Handle", $response[4], 0);
-					$this->SetBuffer("Handle", $response[4]);
-           				$this->ClientSocket(pack("L*", 19, $response[4], $this->CalcBitmask(), 0));
+					
+					//$this->SetBuffer("Handle", $response[4]);
+           				//$this->ClientSocket(pack("L*", 19, $response[4], $this->CalcBitmask(), 0));
            			}
            			else {
            				$this->ClientSocket(pack("L*", 99, 0, 0, 0));		
@@ -1269,19 +1275,21 @@ class IPS2GPIO_IO extends IPSModule
            			break;
 			case "115":
            			If ($response[4] >= 0) {
-           				IPS_LogMessage("IPS2GPIO Set Event Monitor","gesetzt");
+           				$this->SendDebug("Event Monitor", "gesetzt", 0);
            			}
            			else {
-           				IPS_LogMessage("IPS2GPIO Set Event Monitor","Fehler beim Setzen: ".$this->GetErrorText(abs($response[4])));
+           				$this->SendDebug("Event Monitor", "Fehler beim Setzen: ".$this->GetErrorText(abs($response[4])), 0);
+					IPS_LogMessage("IPS2GPIO Set Event Monitor","Fehler beim Setzen: ".$this->GetErrorText(abs($response[4])));
            			}
          
 		            	break;
 			case "116":
            			If ($response[4] >= 0) {
-           				IPS_LogMessage("IPS2GPIO Trigger Event","gemeldet");
+					$this->SendDebug("Event Monitor", "gemeldet", 0);
            			}
            			else {
-           				IPS_LogMessage("IPS2GPIO Trigger Event","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
+           				$this->SendDebug("Event Monitor", "Fehlermeldung: ".$this->GetErrorText(abs($response[4])), 0);
+					IPS_LogMessage("IPS2GPIO Trigger Event","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
            			}
          
 		            	break;
