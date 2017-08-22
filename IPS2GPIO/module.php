@@ -151,7 +151,6 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("Default_Serial_Bus", 0);
 			$this->SetBuffer("MUX_Handle", -1);
 			$this->SetBuffer("NotifyCounter", -1);
-			$this->SetBuffer("WatchDog", 100);
 			
 			$ParentID = $this->GetParentID();
 		        // Änderung an den untergeordneten Instanzen
@@ -576,7 +575,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
 		        $this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
 			// WatchDog setzen
-			$this->ClientSocket(pack("L*", 9, 15, 250, 0), 16);
+			$this->ClientSocket(pack("L*", 9, 15, 150, 0), 16);
 	   		break;
 		   case "write_bytes_serial":
 		   	$Command = utf8_decode($data->Command);
@@ -661,16 +660,6 @@ class IPS2GPIO_IO extends IPSModule
 					elseif ($WatchDog == 1) {
 						$Bitvalue_15 = boolval($Level & pow(2, 15));
 						$this->SendDebug("Datenanalyse", "Event: WatchDog - Bit 15 (RS232): ".(int)$Bitvalue_15, 0);	
-						IPS_Sleep(75);
-						$Data = $this->CommandClientSocket(pack("L*", 82, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
-						If ($Data > 0) {
-							$this->CommandClientSocket(pack("L*", 80, $this->GetBuffer("Serial_Handle"), $Data, 0), 16 + $Data);
-						}
-					}
-					elseif ($Event == 1) {
-						$Bitvalue_15 = boolval($Level & pow(2, 15));
-						$this->SendDebug("Datenanalyse", "Event: Event - Bit 15 (RS232): ".(int)$Bitvalue_15, 0);	
-						//IPS_Sleep(75);
 						$Data = $this->CommandClientSocket(pack("L*", 82, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
 						If ($Data > 0) {
 							$this->CommandClientSocket(pack("L*", 80, $this->GetBuffer("Serial_Handle"), $Data, 0), 16 + $Data);
