@@ -1182,10 +1182,9 @@ class IPS2GPIO_IO extends IPSModule
   		            	break;
 			case "84":
            			If ($response[4] >= 0) {
-           				$Result = true;
+           				
            			}
            			else {
-           				$Result = false;
 					IPS_LogMessage("IPS2GPIO Check Servo Pulsewidth","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
           			}
   		            	break;
