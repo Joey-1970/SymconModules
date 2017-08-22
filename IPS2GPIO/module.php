@@ -151,7 +151,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("Default_Serial_Bus", 0);
 			$this->SetBuffer("MUX_Handle", -1);
 			$this->SetBuffer("NotifyCounter", -1);
-			$this->SetBuffer("WatchDog", 75);
+			$this->SetBuffer("WatchDog", 100);
 			
 			$ParentID = $this->GetParentID();
 		        // Änderung an den untergeordneten Instanzen
@@ -557,9 +557,9 @@ class IPS2GPIO_IO extends IPSModule
 			$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
 		        $this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
 			// WatchDog setzen
-			//$this->CommandClientSocket(pack("L*", 9, 15, $this->GetBuffer("WatchDog"), 0), 16);
+			$this->CommandClientSocket(pack("L*", 9, 15, $this->GetBuffer("WatchDog"), 0), 16);
 			// Event setzen
-			$this->CommandClientSocket(pack("L*", 115, $this->GetBuffer("Handle"), pow(2, 15), 0), 16);
+			//$this->CommandClientSocket(pack("L*", 115, $this->GetBuffer("Handle"), pow(2, 15), 0), 16);
 	   		break;
 		   case "write_bytes_serial":
 		   	$Command = utf8_decode($data->Command);
