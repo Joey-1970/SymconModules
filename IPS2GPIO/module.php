@@ -559,9 +559,19 @@ class IPS2GPIO_IO extends IPSModule
 				$this->CommandClientSocket(pack("LLLL", 0, 14, 2, 0).pack("LLLL", 0, 15, 2, 0), 32);
 			}
 			
-	   		$this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device.pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 32);
-			//$this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device, 32);
-
+	   		//$this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device.pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 32);
+			$SerialHandle = $this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device, 16);
+			
+			$this->SetBuffer("Serial_Handle", $SerialHandle);
+			$this->SendDebug("Serial_Handle", $SerialHandle, 0);
+				
+			// den Notify für den RxD-Pin einschalten
+			$PinNotify = array();
+			$PinNotify = unserialize($this->GetBuffer("PinNotify"));
+			$PinNotify[] = 15;
+			$this->SetBuffer("PinNotify", serialize($PinNotify));
+			$this->CommandClientSocket(pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 16);
+				
 			// Messages einrichten
 			$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
 		        $this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
@@ -781,13 +791,7 @@ class IPS2GPIO_IO extends IPSModule
 			}
 			$this->SetBuffer("Serial_Handle", -1);
 			$this->SetBuffer("Serial_Used", 0);
-			// den Notify für den RxD-Pin einschalten
 			
-			$PinNotify = array();
-			$PinNotify = unserialize($this->GetBuffer("PinNotify"));
-			$PinNotify[0] = 15;
-			$this->SetBuffer("PinNotify", serialize($PinNotify));
-			$this->CommandClientSocket(pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 16);
 			
 		}
 		else {
@@ -1136,8 +1140,6 @@ class IPS2GPIO_IO extends IPSModule
 				break;
 		        case "76":
            			If ($response[4] >= 0) {
-           				$this->SetBuffer("Serial_Handle", $response[4]);
-					$this->SendDebug("Serial_Handle", $response[4], 0);
 					$this->SetBuffer("Serial_Used", 1);
 				}
 				else {
