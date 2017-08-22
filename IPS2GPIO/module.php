@@ -548,8 +548,17 @@ class IPS2GPIO_IO extends IPSModule
 		   	
 		   
 		   // Serielle Kommunikation
-		   case "get_handle_serial":
-	   		//IPS_LogMessage("IPS2GPIO Get Handle Serial", "Handle anfordern");
+		case "get_handle_serial":
+	   		// Raspberry Pi 3 = Alt5(Rxd1/TxD1) => 2
+			// Alle anderen = Alt0(Rxd0/TxD0) => 4
+			If ($this->GetBuffer("Default_Serial_Bus") == 0) {
+				$this->CommandClientSocket(pack("LLLL", 0, 14, 4, 0).pack("LLLL", 0, 15, 4, 0), 32);
+			}
+			elseif ($this->GetBuffer("Default_Serial_Bus") == 1) {
+				// Beim Raspberry Pi 3 ist Bus 0 schon durch die Bluetooth-Schnittstelle belegt
+				$this->CommandClientSocket(pack("LLLL", 0, 14, 2, 0).pack("LLLL", 0, 15, 2, 0), 32);
+			}
+			
 	   		//$this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device.pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 32);
 			$this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device, 32);
 
@@ -558,8 +567,6 @@ class IPS2GPIO_IO extends IPSModule
 		        $this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
 			// WatchDog setzen
 			$this->ClientSocket(pack("L*", 9, 15, $this->GetBuffer("WatchDog"), 0), 16);
-			// Event setzen
-			//$this->CommandClientSocket(pack("L*", 115, $this->GetBuffer("Handle"), pow(2, 15), 0), 16);
 	   		break;
 		   case "write_bytes_serial":
 		   	$Command = utf8_decode($data->Command);
@@ -677,10 +684,11 @@ class IPS2GPIO_IO extends IPSModule
 									$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit ".$PinNotify[$j]." Wert: ".(int)$Bitvalue, 0);
 									$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $Tick)));
 								}
+								/*
 								else {
 									If ($SerialRead == false) {
 										// Wert von Pin 15
-										/*
+										
 										$Bitvalue_15 = boolval($Level & pow(2, 15));
 										$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit 15 (RS232): ".(int)$Bitvalue_15, 0);	
 										$SerialRead = true;
@@ -689,9 +697,10 @@ class IPS2GPIO_IO extends IPSModule
 										If ($Data > 0) {
 											$this->CommandClientSocket(pack("L*", 80, $this->GetBuffer("Serial_Handle"), $Data, 0), 16 + $Data);
 										}
-										*/
+										
 									}
 								}
+								*/
 							}
 						}	
 					}
@@ -707,71 +716,6 @@ class IPS2GPIO_IO extends IPSModule
 				}
 			}
 		 }
-		
-		/*
-	    	If ((in_array($Command, $CmdPossible)) AND (in_array($MessageLen, $RDlen))) {
-	    		// wenn es sich um mehrere Standarddatensätze handelt
-	    		$DataArray = str_split($Message, 16);
-	    		//IPS_LogMessage("IPS2GPIO ReceiveData", "Überlänge: ".Count($DataArray)." Command-Datensätze");
-	    		for ($i = 0; $i < Count($DataArray); $i++) {
-    				$this->ClientResponse($DataArray[$i]);
-			}
-	    	}
-		elseif (($MessageLen / 12) == intval($MessageLen / 12)) {
-	    		// wenn es sich um mehrere Notifikationen handelt
-	    		$DataArray = str_split($Message, 12);
-	    		//IPS_LogMessage("IPS2GPIO ReceiveData", "Überlänge: ".Count($DataArray)." Notify-Datensätze");
-			$PinNotify = array();
-			$PinNotify = unserialize($this->GetBuffer("PinNotify"));
-	    		for ($i = 0; $i < min(5, Count($DataArray)); $i++) {
-				$MessageParts = unpack("L*", $DataArray[$i]);
-				for ($j = 0; $j < Count($PinNotify); $j++) {
-	    				$Bitvalue = boolval($MessageParts[3]&(1<<$PinNotify[$j]));
-	    				If ($this->ReadPropertyBoolean("Serial_Used") == false) {
-	    					// Serieller Port ist deaktiviert
-	    					//IPS_LogMessage("IPS2GPIO Notify: ","Pin ".$PinNotify[$j]." Value ->".$Bitvalue);
-						$this->SendDebug("ReceiveData", "Pin: ".$PinNotify[$j]." Value:".(int)$Bitvalue, 0);
-	    					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $MessageArray[2])));
-	    				}
-	    				else {
-	    					If ($PinNotify[$j] <> 15) {
-	    						// alle Pins außer dem RxD werden normal verarbeitet
-	    						//IPS_LogMessage("IPS2GPIO Notify: ","Pin ".$PinNotify[$j]." Value ->".$Bitvalue);
-	    						$this->SendDebug("ReceiveData", "Pin: ".$PinNotify[$j]." Value:".(int)$Bitvalue, 0);
-							$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $MessageArray[2])));
-	    					}
-	    					elseif (($PinNotify[$j] == 15) AND ($i < 2)) {
-	    						If ($this->GetBuffer("SerialNotify") <> $Bitvalue) {
-		    						// Einlesen der Seriellen Daten veranlassen
-		    						//IPS_LogMessage("IPS2GPIO Notify: ","Pin ".$PinNotify[$j]." Value ->".$Bitvalue);
-		    						$this->SendDebug("ReceiveData", "Pin: ".$PinNotify[$j]." Value:".(int)$Bitvalue, 0);
-								//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle")));
-			   					IPS_Sleep(75);
-			   					$Data = $this->CommandClientSocket(pack("L*", 82, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
-								If ($Data > 0) {
-									$this->CommandClientSocket(pack("L*", 80, $this->GetBuffer("Serial_Handle"), $Data, 0), 16 + $Data);
-								}
-								$this->SetBuffer("SerialNotify", $Bitvalue);	
-	    						}
-	    					}
-	    				}
-				}
-			}
-		}
-	 	else {
-	 		// Prüfen ob Daten im Serial Buffer vorhanden sind
-			If ($this->ReadPropertyBoolean("Serial_Used") == true) {
-				IPS_Sleep(75);
-				$Data = $this->CommandClientSocket(pack("L*", 82, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
-				If ($Data > 0) {
-					$this->CommandClientSocket(pack("L*", 80, $this->GetBuffer("Serial_Handle"), $Data, 0), 16 + $Data);
-				}
-			}
-			else {
-				IPS_LogMessage("IPS2GPIO ReceiveData", "Überlänge: Datensätze nicht differenzierbar!");
-			}
-	 	}
-		*/
 	 }
  
 	  public function RequestAction($Ident, $Value) 
@@ -831,15 +775,7 @@ class IPS2GPIO_IO extends IPSModule
 		If ($this->ReadPropertyBoolean("Serial_Used") == true)  {
 			$PinUsed[14] = 99999; 
 			$PinUsed[15] = 99999;
-			// Raspberry Pi 3 = Alt5(Rxd1/TxD1) => 2
-			// Alle anderen = Alt0(Rxd0/TxD0) => 4
-			If ($this->GetBuffer("Default_Serial_Bus") == 0) {
-				$this->CommandClientSocket(pack("LLLL", 0, 14, 4, 0).pack("LLLL", 0, 15, 4, 0), 32);
-			}
-			elseif ($this->GetBuffer("Default_Serial_Bus") == 1) {
-				// Beim Raspberry Pi 3 ist Bus 0 schon durch die Bluetooth-Schnittstelle belegt
-				$this->CommandClientSocket(pack("LLLL", 0, 14, 2, 0).pack("LLLL", 0, 15, 2, 0), 32);
-			}
+			
 			If ($this->GetBuffer("Serial_Handle") >= 0) {
 				$this->CommandClientSocket(pack("L*", 77, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
 			}
