@@ -119,7 +119,7 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$Left = $this->ReadPropertyInteger("most_anti_clockwise");
 			$Right = $this->ReadPropertyInteger("most_clockwise");
-			$Value = min($Right, max($Left, $Value));
+			$Value = min(100, max(0, $Value));
 			
 			$Value = intval(($Value * ($Right - $Left) / 100) + $Left);
 			$this->SendDebug("SetOutput", "Errechneter Zielwert: ".$Value, 0);
