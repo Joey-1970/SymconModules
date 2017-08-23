@@ -15,7 +15,6 @@
  	    	$this->RegisterPropertyBoolean("LoggingTemp", false);
  	    	$this->RegisterPropertyBoolean("LoggingHum", false);
  	    	$this->RegisterPropertyBoolean("LoggingPres", false);
- 	    	//$this->RegisterPropertyBoolean("CalibrateData", true);
  	    	$this->RegisterPropertyInteger("OSRS_T", 1);
  	    	$this->RegisterPropertyInteger("OSRS_H", 1);
  	    	$this->RegisterPropertyInteger("OSRS_P", 1);
@@ -192,7 +191,7 @@
 		IPS_SetHidden($this->GetIDForIdent("PressureTrend24h"), false);
 		SetValueFloat($this->GetIDForIdent("PressureTrend24h"), 0);
 		
-		If (IPS_GetKernelRunlevel() == 10103) {
+		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 			// Logging setzen
 			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Temperature"), $this->ReadPropertyBoolean("LoggingTemp"));
 			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Pressure"), $this->ReadPropertyBoolean("LoggingPres"));
@@ -490,6 +489,18 @@
 	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
 	        IPS_SetVariableProfileDigits($Name, $Digits);
 	}
+	    
+	private function HasActiveParent()
+    	{
+		$Instance = @IPS_GetInstance($this->InstanceID);
+		if ($Instance['ConnectionID'] > 0)
+		{
+			$Parent = IPS_GetInstance($Instance['ConnectionID']);
+			if ($Parent['InstanceStatus'] == 102)
+			return true;
+		}
+        return false;
+    	}  
 
 }
 ?>
