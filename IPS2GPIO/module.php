@@ -34,7 +34,7 @@ class IPS2GPIO_IO extends IPSModule
 		$this->RegisterPropertyBoolean("Multiplexer", false);
 	    	$this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
 		$PinNotify = array();
-		$PinNotify = unserialize($this->GetBuffer("PinNotify"));
+		$this->SetBuffer("$PinNotify", serialize($PinNotify));
 	}
   	
 	public function GetConfigurationForm() 
