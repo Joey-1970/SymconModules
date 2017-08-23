@@ -148,7 +148,7 @@
 	    	}
 	    	
 		// Profil anlegen
-		$this->RegisterProfileFloat("humidity.gm3", "Drops", "", " g/m³", 0, 1000, 0.1, 1);
+		$this->RegisterProfileFloat("IPS2GPIO.gm3", "Drops", "", " g/m³", 0, 1000, 0.1, 1);
 		
 		//Status-Variablen anlegen
              	$this->RegisterVariableFloat("Temperature", "Temperature", "~Temperature", 10);
@@ -167,7 +167,7 @@
 		$this->DisableAction("DewPointTemperature");
 		IPS_SetHidden($this->GetIDForIdent("DewPointTemperature"), false);
 		
-		$this->RegisterVariableFloat("HumidityAbs", "Humidity (abs)", "humidity.gm3", 50);
+		$this->RegisterVariableFloat("HumidityAbs", "Humidity (abs)", "IPS2GPIO.gm3", 50);
 		$this->DisableAction("HumidityAbs");
 		IPS_SetHidden($this->GetIDForIdent("HumidityAbs"), false);
 		
@@ -247,13 +247,6 @@
 				   	}
 				}
 			   	break;
-			  /*
-			case "set_i2c_byte_block":
-			   	If ($data->DeviceIdent == $this->GetBuffer("DeviceIdent")) {
-			   		$this->SetBuffer("MeasurementData", $data->ByteArray);
-			   	}
-			   	break;
-				*/
 	 	}
  	}
 	// Beginn der Funktionen
@@ -261,7 +254,6 @@
 	// Führt eine Messung aus
 	public function Measurement()
 	{
-		//IPS_LogMessage("IPS2GPIO BME280", "Messung!");
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Measurement", "Ausfuehrung", 0);
 			// Messwerte aktualisieren
@@ -499,7 +491,6 @@
 	{
 		$Result = 0;
 		$LoggingArray = AC_GetLoggedValues(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Pressure"), time()- (3600 * $interval), time(), 0); 
-		//IPS_LogMessage("IPS2GPIO BME280",print_r($LoggingArray));
 		$Result = @($LoggingArray[0]['Value'] - end($LoggingArray)['Value']); 
 	return $Result;
 	}
