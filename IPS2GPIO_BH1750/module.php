@@ -247,7 +247,7 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Setup", "Ausfuehrung", 0);
 			// Einschalten
-			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BH1750_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => hexdec("01"))));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BH1750_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => hexdec("01"))));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Fehler beim Einschalten!", 0);
 			}
@@ -256,18 +256,18 @@
 			$MTreg = max(31, min($this->ReadPropertyInteger("Resulution"), 254));
 			// High bit MTreg 01000 + Bit 6,7,8
 			$HighMTreg =  (8 << 3) | ($MTreg >> 5);
-			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BH1750_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $HighMTreg)));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BH1750_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $HighMTreg)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Fehler beim Schreiben des HighMTreg!", 0);
 			}
 			// Low bit MTreg 011 + Bit 1, 2, 3 ,4, 5
 			$LowMTreg =  ($MTreg & 31) | 96;
-			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BH1750_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $LowMTreg)));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BH1750_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $LowMTreg)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Fehler beim Schreiben des LowMTreg!", 0);
 			}
 			// Messwerterfassung setzen
-			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BH1750_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $this->ReadPropertyInteger("Resulution") )));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BH1750_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $this->ReadPropertyInteger("Resulution") )));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Fehler beim Schreiben des Auflösung!", 0);
 			}
