@@ -157,38 +157,6 @@
 				   	}
 				}
 			   	break;
-			  /*
-			case "set_i2c_data":
-			  	If ($data->DeviceIdent == $this->GetBuffer("DeviceIdent")) {
-			  		// Daten der Messung
-			  		If ($data->Register == $this->ReadPropertyInteger("DeviceAddress"))  {
-			  			If ($this->ReadPropertyInteger("Resulution") == 19) {
-							// LR
-							$Lux = (($data->Value & 0xff00)>>8) | (($data->Value & 0x00ff)<<8);
-						}
-						elseif ($this->ReadPropertyInteger("Resulution") == 16) {
-							// HR
-							$Lux = (($data->Value & 0xff00)>>8) | (($data->Value & 0x00ff)<<8);
-						}
-						elseif ($this->ReadPropertyInteger("Resulution") == 17) {
-							// HR 2
-							$Lux = (($data->Value & 0xff00)>>8) | (($data->Value & 0x00ff)<<8);
-							$Lux = (($Lux & 1) * 0.5) + ($Lux >> 1);
-						}
-						
-						SetValueFloat($this->GetIDForIdent("Illuminance"), max(0, $Lux / 1.2));
-						// Hysteres Variablen setzen
-						If ($Lux >= $this->ReadPropertyInteger("HysteresisOn")) {
-							SetValueBoolean($this->GetIDForIdent("Hysteresis"), true);
-						}
-						elseif ($Lux <= $this->ReadPropertyInteger("HysteresisOff")) {
-							SetValueBoolean($this->GetIDForIdent("Hysteresis"), false);
-						}
-			  		}
-			  		
-			  	}
-			  	break;
-			*/
 	 	}
  	}
 	// Beginn der Funktionen
