@@ -141,7 +141,6 @@
 	 	switch ($data->Function) {
 			   case "get_used_i2c":
 			   	If ($this->ReadPropertyBoolean("Open") == true) {
-					//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 					$this->ApplyChanges();
 				}
 				break;
@@ -203,23 +202,6 @@
 			}
 		}
 	}	
-
-	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
-	{
-	        if (!IPS_VariableProfileExists($Name))
-	        {
-	            IPS_CreateVariableProfile($Name, 1);
-	        }
-	        else
-	        {
-	            $profile = IPS_GetVariableProfile($Name);
-	            if ($profile['ProfileType'] != 1)
-	                throw new Exception("Variable profile type does not match for profile " . $Name);
-	        }
-	        IPS_SetVariableProfileIcon($Name, $Icon);
-	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
-	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);    
-	}
 	    
 	private function RegisterProfileFloat($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits)
 	{
