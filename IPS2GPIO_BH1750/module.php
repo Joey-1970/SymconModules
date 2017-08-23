@@ -103,7 +103,7 @@
 		$this->DisableAction("Hysteresis");
 		IPS_SetHidden($this->GetIDForIdent("Hysteresis"), false);
 		
-		If (IPS_GetKernelRunlevel() == 10103) {
+		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 			// Logging setzen
 			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Illuminance"), $this->ReadPropertyBoolean("Logging"));
 			IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
@@ -251,6 +251,18 @@
 			}
 		}
 	}
+	
+	private function HasActiveParent()
+    	{
+		$Instance = @IPS_GetInstance($this->InstanceID);
+		if ($Instance['ConnectionID'] > 0)
+		{
+			$Parent = IPS_GetInstance($Instance['ConnectionID']);
+			if ($Parent['InstanceStatus'] == 102)
+			return true;
+		}
+        return false;
+    	}  
 
 }
 ?>
