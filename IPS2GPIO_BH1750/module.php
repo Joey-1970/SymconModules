@@ -157,7 +157,8 @@
 				   	}
 				}
 			   	break;
-			  case "set_i2c_data":
+			  /*
+			case "set_i2c_data":
 			  	If ($data->DeviceIdent == $this->GetBuffer("DeviceIdent")) {
 			  		// Daten der Messung
 			  		If ($data->Register == $this->ReadPropertyInteger("DeviceAddress"))  {
@@ -187,6 +188,7 @@
 			  		
 			  	}
 			  	break;
+			*/
 	 	}
  	}
 	// Beginn der Funktionen
@@ -199,11 +201,38 @@
 			// Messwerterfassung setzen
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BH1750_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $this->ReadPropertyInteger("Resulution") )));
 			If (!$Result) {
-				$this->SendDebug("Setup", "Fehler beim Schreiben des HighMTreg!", 0);
+				$this->SendDebug("Measurement", "Fehler beim Schreiben des HighMTreg!", 0);
 			}
 			IPS_Sleep(180);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BH1750_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $this->ReadPropertyInteger("DeviceAddress"))));
 			$this->SendDebug("Measurement", "Wert: ".$Result, 0);
+			If ($Result >= 0) {
+				If ($this->ReadPropertyInteger("Resulution") == 19) {
+					// LR
+					$Lux = (($Result & 0xff00)>>8) | (($Result & 0x00ff)<<8);
+				}
+				elseif ($this->ReadPropertyInteger("Resulution") == 16) {
+					// HR
+					$Lux = (($Result & 0xff00)>>8) | (($Result & 0x00ff)<<8);
+				}
+				elseif ($this->ReadPropertyInteger("Resulution") == 17) {
+					// HR 2
+					$Lux = (($Result & 0xff00)>>8) | (($Result & 0x00ff)<<8);
+					$Lux = (($Lux & 1) * 0.5) + ($Lux >> 1);
+				}
+
+				SetValueFloat($this->GetIDForIdent("Illuminance"), max(0, $Lux / 1.2));
+				// Hysteres Variablen setzen
+				If ($Lux >= $this->ReadPropertyInteger("HysteresisOn")) {
+					SetValueBoolean($this->GetIDForIdent("Hysteresis"), true);
+				}
+				elseif ($Lux <= $this->ReadPropertyInteger("HysteresisOff")) {
+					SetValueBoolean($this->GetIDForIdent("Hysteresis"), false);
+				}
+			}
+			else {
+				$this->SendDebug("Measurement", "Fehler beim Lesen des Wertes!", 0);
+			}
 		}
 	}	
 
