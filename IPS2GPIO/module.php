@@ -546,7 +546,13 @@ class IPS2GPIO_IO extends IPSModule
 		   	If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
 		   		$Result = $this->CommandClientSocket(pack("L*", 60, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Value, 0), 16);
 		   	}
-		   	break;	
+		   	break;
+		case "i2c_BH1750_read":
+		   	//IPS_LogMessage("IPS2GPIO I2C Read Word Parameter : ","DeviceAdresse: ".$data->DeviceAddress.", Handle: ".$this->GetI2C_DeviceHandle($data->DeviceAddress)." ,Register: ".$data->Register);
+		   	If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
+		   		$Result = $this->CommandClientSocket(pack("L*", 63, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 0), 16);
+		   	}
+		   	break; 
 		   	
 		   
 		   // Serielle Kommunikation
