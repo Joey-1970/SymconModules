@@ -247,18 +247,6 @@
 				   	}
 				}
 			   	break;
-			  /*
-			case "set_i2c_data":
-			  	If ($data->DeviceIdent == $this->GetBuffer("DeviceIdent")) {
-			  		// Daten zur Kalibrierung
-			  		If (($data->Register >= hexdec("88")) AND ($data->Register < hexdec("E8"))) {
-			  			$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
-			  			$CalibrateData[$data->Register] = $data->Value;
-			  			$this->SetBuffer("CalibrateData", serialize($CalibrateData));
-			  		}
-			  	}
-			  	break;
-				*/
 			  case "set_i2c_byte_block":
 			   	If ($data->DeviceIdent == $this->GetBuffer("DeviceIdent")) {
 			   		$this->SetBuffer("MeasurementData", $data->ByteArray);
@@ -273,7 +261,7 @@
 	{
 		//IPS_LogMessage("IPS2GPIO BME280", "Messung!");
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("Measurement", "Messung ausfuehren", 0);
+			$this->SendDebug("Measurement", "Ausfuehrung", 0);
 			// Messwerte aktualisieren
 			$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
 			$this->SendDebug("Measurement", "CalibrateData: ".count($CalibrateData), 0);
@@ -453,7 +441,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Kalibrierungsdaten neu einlesen
-			$this->SendDebug("ReadCalibrateData", "Aktuelle Kalibrierungsdaten einlesen", 0);
+			$this->SendDebug("ReadCalibrateData", "Ausfuehrung", 0);
 			$CalibrateData = array();
 
 			for ($i = hexdec("88"); $i < (hexdec("88") + 24); $i++) {
@@ -492,8 +480,10 @@
 		// Liest die Messdaten ein
 		$this->SendDebug("ReadData", "Aktuelle Messdaten einlesen", 0);
 		$MeasurementData = array();
+		
+		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_read_block", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F7"), "Count" => 8)));
+		
 		$this->SetBuffer("MeasurementData", serialize($MeasurementData));
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_block_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F7"), "Count" => 8)));
 	}
 	
 	private function PressureTrend(int $interval)
