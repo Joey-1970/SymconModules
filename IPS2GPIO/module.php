@@ -216,7 +216,7 @@ class IPS2GPIO_IO extends IPSModule
 				$Handle = $this->ClientSocket(pack("L*", 99, 0, 0, 0));
 				$this->SetBuffer("Handle", $Handle);
 				If ($Handle >= 0) {
-					$this->ClientSocket(pack("L*", 19, $response[4], $this->CalcBitmask(), 0));
+					$this->ClientSocket(pack("L*", 19, $Handle, $this->CalcBitmask(), 0));
 				}
 				$this->Get_PinUpdate();
 				
