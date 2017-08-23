@@ -247,11 +247,13 @@
 				   	}
 				}
 			   	break;
-			  case "set_i2c_byte_block":
+			  /*
+			case "set_i2c_byte_block":
 			   	If ($data->DeviceIdent == $this->GetBuffer("DeviceIdent")) {
 			   		$this->SetBuffer("MeasurementData", $data->ByteArray);
 			   	}
 			   	break;
+				*/
 	 	}
  	}
 	// Beginn der Funktionen
@@ -477,13 +479,20 @@
 	
 	private function ReadData()
 	{
-		// Liest die Messdaten ein
-		$this->SendDebug("ReadData", "Aktuelle Messdaten einlesen", 0);
-		$MeasurementData = array();
-		
-		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_read_block", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F7"), "Count" => 8)));
-		
-		$this->SetBuffer("MeasurementData", serialize($MeasurementData));
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			// Liest die Messdaten ein
+			$this->SendDebug("ReadData", "Ausfuehrung", 0);
+			$MeasurementData = array();
+
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_read_block", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F7"), "Count" => 8)));
+			If ($Result >= 0) {
+				$this->SetBuffer("MeasurementData", $Result);
+			}
+			else {
+				$this->SetBuffer("MeasurementData", $MeasurementData);
+				$this->SendDebug("ReadData", "Fehler bei der Datenermittung", 0);
+			}
+		}	
 	}
 	
 	private function PressureTrend(int $interval)
