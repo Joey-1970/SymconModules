@@ -182,36 +182,41 @@
 			$CommandArray = Array();
 			for ($i = 0; $i <= 4; $i++) {
 				If (filter_var(trim($this->ReadPropertyString("MAC".$i)), FILTER_VALIDATE_MAC)) {
-					//IPS_LogMessage("IPS2GPIO SSH-Connect", "Sende MAC ".$i+1 );
 					$CommandArray[$i] = "hcitool name ".$this->ReadPropertyString("MAC".$i);
 				}
 			}	
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 0, "IsArray" => true )));
 			/*
-			$ResultArray = unserialize($Result);
-			$this->SetBuffer("Summary", false);
-			for ($i = 0; $i < Count($ResultArray); $i++) {
-				//IPS_LogMessage("IPS2GPIO BT-Connect", $ResultArray[key($ResultArray)] );
-				If ($ResultArray[key($ResultArray)] <> trim("Device is not available.")) {
-					SetValueString($this->GetIDForIdent("MAC".key($ResultArray)."Name"), $ResultArray[key($ResultArray)]);
-					if (strlen($ResultArray[key($ResultArray)]) > 0) {
-						SetValueBoolean($this->GetIDForIdent("MAC".key($ResultArray)."Connect"), true);
-						$this->SetBuffer("Summary", true);
+			If (is_array(unserialize($Result)) ) { 
+				$ResultArray = unserialize($Result);
+				$this->SetBuffer("Summary", false);
+				for ($i = 0; $i < Count($ResultArray); $i++) {
+					//IPS_LogMessage("IPS2GPIO BT-Connect", $ResultArray[key($ResultArray)] );
+					If ($ResultArray[key($ResultArray)] <> trim("Device is not available.")) {
+						SetValueString($this->GetIDForIdent("MAC".key($ResultArray)."Name"), $ResultArray[key($ResultArray)]);
+						if (strlen($ResultArray[key($ResultArray)]) > 0) {
+							SetValueBoolean($this->GetIDForIdent("MAC".key($ResultArray)."Connect"), true);
+							$this->SetBuffer("Summary", true);
+						}
+						else {
+							SetValueBoolean($this->GetIDForIdent("MAC".key($ResultArray)."Connect"), false);
+						}
+						Next($ResultArray);
 					}
 					else {
+						SetValueString($this->GetIDForIdent("MAC".key($ResultArray)."Name"), "");
 						SetValueBoolean($this->GetIDForIdent("MAC".key($ResultArray)."Connect"), false);
 					}
-					Next($ResultArray);
-				}
-				else {
-					SetValueString($this->GetIDForIdent("MAC".key($ResultArray)."Name"), "");
-					SetValueBoolean($this->GetIDForIdent("MAC".key($ResultArray)."Connect"), false);
-				}
 
+				}
+				If (GetValueBoolean($this->GetIDForIdent("Summary")) <> $this->GetBuffer("Summary")) {
+					SetValueBoolean($this->GetIDForIdent("Summary"), $this->GetBuffer("Summary"));
+				}
 			}
-			If (GetValueBoolean($this->GetIDForIdent("Summary")) <> $this->GetBuffer("Summary")) {
-				SetValueBoolean($this->GetIDForIdent("Summary"), $this->GetBuffer("Summary"));
+			else {
+				$this->SendDebug("Measurement", "Fehler bei der Datenrueckgabe!", 0);
 			}
+			
 			*/
 		}
 	}
