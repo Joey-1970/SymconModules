@@ -298,14 +298,21 @@ class IPS2GPIO_IO extends IPSModule
 				}
 		    	}
 		        break;
-		    case "set_PWM_dutycycle":
+		case "set_PWM_dutycycle":
 		    	// Dimmt einen Pin
 		    	If ($data->Pin >= 0) {
 		        	//IPS_LogMessage("IPS2GPIO Set Intensity : ",$data->Pin." , ".$data->Value);
-		        	$this->CommandClientSocket(pack("LLLL", 5, $data->Pin, $data->Value, 0), 16);
+		        	$Result = $this->CommandClientSocket(pack("L*", 5, $data->Pin, $data->Value, 0), 16);
 		        }
 		        break;
-		    case "set_PWM_dutycycle_RGB":
+		case "get_PWM_dutycycle":
+		    	// Dimmt einen Pin
+		    	If ($data->Pin >= 0) {
+		        	//IPS_LogMessage("IPS2GPIO Set Intensity : ",$data->Pin." , ".$data->Value);
+				$Result = $this->CommandClientSocket(pack("L*", 83, $data->Pin, 0, 0), 16);
+		        }
+		        break;
+		case "set_PWM_dutycycle_RGB":
 		    	// Setzt die RGB-Farben
 		    	If (($data->Pin_R >= 0) AND ($data->Pin_G >= 0) AND ($data->Pin_B >= 0)) {
 		        	//IPS_LogMessage("IPS2GPIO Set Intensity RGB : ",$data->Pin_R." , ".$data->Value_R." ".$data->Pin_G." , ".$data->Value_G." ".$data->Pin_B." , ".$data->Value_B);  
@@ -979,9 +986,11 @@ class IPS2GPIO_IO extends IPSModule
 		        	If ($response[4] == 0) {
 		        		//IPS_LogMessage("IPS2GPIO PWM", "Pin: ".$response[2]." Wert: ".$response[3]." erfolgreich gesendet");
 		        		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"result", "Pin" => $response[2], "Value"=> $response[3])));
+					$Result = true;
 		        	}
 		        	else {
 		        		IPS_LogMessage("IPS2GPIO PWM", "Pin: ".$response[2]." Wert: ".$response[3]." konnte nicht erfolgreich gesendet werden! Fehler:".$this->GetErrorText(abs($response[4])));
+					$Result = false;
 		        	}
 		        	break;
 		        case "8":
@@ -1205,6 +1214,14 @@ class IPS2GPIO_IO extends IPSModule
            			}
            			else {
            				IPS_LogMessage("IPS2GPIO Check Bytes Serial","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
+          			}
+  		            	break;
+			case "83":
+           			If ($response[4] >= 0) {
+           				
+           			}
+           			else {
+					IPS_LogMessage("IPS2GPIO PWM dutycycle","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
           			}
   		            	break;
 			case "84":
