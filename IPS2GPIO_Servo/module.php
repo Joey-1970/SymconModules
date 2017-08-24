@@ -115,8 +115,8 @@
 	// Schaltet den gewaehlten Pin
 	public function SetOutput(Int $Value)
 	{
-		$this->SendDebug("SetOutput", "Ausfuehrung", 0);
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("SetOutput", "Ausfuehrung", 0);
 			$Left = $this->ReadPropertyInteger("most_anti_clockwise");
 			$Right = $this->ReadPropertyInteger("most_clockwise");
 			$Value = min(100, max(0, $Value));
@@ -142,8 +142,8 @@
 	  
 	public function GetOutput()
 	{
-		$this->SendDebug("GetOutput", "Ausfuehrung", 0);
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("GetOutput", "Ausfuehrung", 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_servo", "Pin" => $this->ReadPropertyInteger("Pin") )));
 			If ($Result < 0) {
 				$this->SendDebug("GetOutput", "Fehler beim Lesen!", 0);
@@ -157,19 +157,22 @@
 			}
 		}
 	}   
+	
 	private function Setup()
 	{
-		$this->SendDebug("Setup", "Ausfuehrung", 0);
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Setup", "Ausfuehrung", 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $this->ReadPropertyInteger("midpoint"))));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Fehler beim Stellen der Mittelstellung!", 0);
 			}
-			SetValueInteger($this->GetIDForIdent("Output"), 50);
-			IPS_Sleep(500);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => 0)));
-			If (!$Result) {
-				$this->SendDebug("Setup", "Fehler beim Ausschalten!", 0);
+			else {
+				SetValueInteger($this->GetIDForIdent("Output"), 50);
+				IPS_Sleep(500);
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => 0)));
+				If (!$Result) {
+					$this->SendDebug("Setup", "Fehler beim Ausschalten!", 0);
+				}
 			}
 		}
 	}
