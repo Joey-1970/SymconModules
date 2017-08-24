@@ -116,7 +116,7 @@
 				   break;
 			case "result":
 				If (($data->Pin == $this->ReadPropertyInteger("Pin")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
-					SetValueInteger($this->GetIDForIdent("Intensity"), $data->Value);
+					//SetValueInteger($this->GetIDForIdent("Intensity"), $data->Value);
 				}
 				break;
 		}
@@ -127,9 +127,13 @@
 	public function Set_Intensity(Int $value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Set_Intensity", "Ausfuehrung", 0);
 			$value = min(255, max(0, $value));
 			If (GetValueBoolean($this->GetIDForIdent("Status")) == true) {
-				$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $value)));
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $value)));
+				If (!$Result) {
+					$this->SendDebug("Set_Intensity", "Fehler beim Schreiben des Wertes!", 0);
+				}
 			}
 			else {
 				SetValueInteger($this->GetIDForIdent("Intensity"), $value);
@@ -137,21 +141,67 @@
 		}
 	}
 	
+	public function Fade_Intensity(Int $Value, Int $Fadetime)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Fade_Intensity", "Ausfuehrung", 0);
+			$Value = min(255, max(0, $Value));
+			$ActualValue = GetValueInteger($this->GetIDForIdent("Intensity"));
+			$TargetValue = $Value;
+			
+			If (GetValueBoolean($this->GetIDForIdent("Status")) == true) {
+				$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value)));
+			}
+			else {
+				SetValueInteger($this->GetIDForIdent("Intensity"), $Value);
+			}
+		}
+	}
+	    
 	// Schaltet den gewaehlten Pin
 	public function Set_Status(Bool $value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			SetValueBoolean($this->GetIDForIdent("Status"), $value);
+			$this->SendDebug("Set_Status", "Ausfuehrung", 0);
 
 			If ($value == true) {
-				$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => GetValueInteger($this->GetIDForIdent("Intensity")))));
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => GetValueInteger($this->GetIDForIdent("Intensity")))));
+				If (!$Result) {
+					$this->SendDebug("Set_Status", "Fehler beim Schreiben des Wertes!", 0);
+				}
+				else {
+					$this->Get_Status();
+					SetValueBoolean($this->GetIDForIdent("Status"), true);
+				}
 			}
 			else {
-				$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => 0)));
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => 0)));
+				If (!$Result) {
+					$this->SendDebug("Set_Status", "Fehler beim Schreiben des Wertes!", 0);
+				}
+				else {
+					SetValueBoolean($this->GetIDForIdent("Status"), false);
+				}
 			}
 		}
 	}
 	
+	public function Get_Status()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Get_Status", "Ausfuehrung", 0);
+			
+			If (GetValueBoolean($this->GetIDForIdent("Status")) == true) {
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin") )));
+				If ($Result >= 0) {
+					SetValueInteger($this->GetIDForIdent("Intensity"),$Result);
+				}
+				else {
+					$this->SendDebug("Get_Status", "Fehler beim Lesen des Wertes!", 0);
+				}
+			}
+		}
+	}
 	// Toggelt den Status
 	public function Toggle_Status()
 	{
