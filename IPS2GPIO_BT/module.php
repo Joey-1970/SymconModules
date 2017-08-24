@@ -140,7 +140,8 @@
 	    	// Empfangene Daten vom Gateway/Splitter
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
-			   case "set_RPi_connect":
+			   /*
+			case "set_RPi_connect":
 				//IPS_LogMessage("IPS2GPIO SSH-Connect","Ergebnis: ".utf8_decode($data->Result));
 				$ResultArray = unserialize(utf8_decode($data->Result));
 				$this->SetBuffer("Summary", false);
@@ -168,6 +169,7 @@
 				}
 					
 			   	break;
+				*/
 			  case "get_start_trigger":
 			   	$this->ApplyChanges();
 				break;
