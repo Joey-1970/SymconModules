@@ -604,7 +604,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
 		        $this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
 			// WatchDog setzen
-			$this->ClientSocket(pack("L*", 9, 15, 500, 0), 16);
+			//$this->ClientSocket(pack("L*", 9, 15, 500, 0), 16);
 	   		break;
 		   case "write_bytes_serial":
 		   	$Command = utf8_decode($data->Command);
