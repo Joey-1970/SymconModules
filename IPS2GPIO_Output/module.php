@@ -11,7 +11,7 @@
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->RegisterPropertyBoolean("Invert", false);
 		$this->RegisterPropertyBoolean("Logging", false);
-		$this->RegisterPropertyBoolean("Startoption", false);
+		$this->RegisterPropertyInteger("Startoption", false);
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
 	
@@ -38,6 +38,11 @@
 		$arrayElements[] = array("name" => "Invert", "type" => "CheckBox",  "caption" => "Invertiere Anzeige");
 		$arrayElements[] = array("name" => "Logging", "type" => "CheckBox",  "caption" => "Logging aktivieren");
 		$arrayElements[] = array("type" => "Label", "label" => "Status des Ausgangs nach Neustart");
+		$arrayOptions[] = array("label" => "Aus", "value" => 0);
+		$arrayOptions[] = array("label" => "An", "value" => 1);
+		$arrayOptions[] = array("label" => "undefiniert", "value" => 2);
+		$arrayElements[] = array("type" => "Select", "name" => "Startoption", "caption" => "Startoption", "options" => $arrayOptions );
+		
 		$arrayElements[] = array("name" => "Startoption", "type" => "CheckBox",  "caption" => "Status");
 		
 		$arrayActions = array();
@@ -75,7 +80,12 @@
 									  "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 				
 				$this->Get_Status();
-				$this->Set_Status($this->ReadPropertyBoolean("Startoption"));
+				If ($this->ReadPropertyInteger("Startoption") == 0) {
+					$this->Set_Status(false);
+				}
+				elseif ($this->ReadPropertyInteger("Startoption") == 1) {
+					$this->Set_Status(true);
+				}
 				$this->SetStatus(102);
 			}
 			else {
