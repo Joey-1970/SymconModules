@@ -35,6 +35,12 @@
  		
 		$arrayElements[] = array("type" => "Label", "label" => "Angabe der MAC-Adresse(n) (Format 00:00:00:00:00:00)");
 		
+		/*
+		for ($i = 0; $i <= 4; $i++) {
+		    	$arrayElements[] = array("type" => "ValidationTextBox", "name" => "MAC".$i, "caption" => "MAC-Adresse ".($i + 1)); 
+			$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingMAC.".$i, "caption" => "Logging aktivieren"); 
+		}
+		*/
 		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "MAC0", "caption" => "MAC-Adresse 1"); 
 		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingMAC0", "caption" => "Logging aktivieren"); 
 		
