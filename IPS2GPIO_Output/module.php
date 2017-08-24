@@ -139,8 +139,9 @@
 			$this->SendDebug("Set_Status", "Ergebnis: ".(int)$Result, 0);
 			IF (!$Result) {
 				$this->SendDebug("Set_Status", "Fehler beim Setzen des Status!", 0);
+			}
 			else {
-				SetValueBoolean($this->GetIDForIdent("Status"), ($Result ^ $this->ReadPropertyBoolean("Invert")));
+				SetValueBoolean($this->GetIDForIdent("Status"), ($Value ^ $this->ReadPropertyBoolean("Invert")));
 				$this->Get_Status();
 			}
 		}
@@ -164,6 +165,7 @@
 			If ($Result >= 0) {
 				$this->SendDebug("Get_Status", "Ergebnis: ".(int)$Result, 0);
 				SetValueBoolean($this->GetIDForIdent("Status"), ($Result ^ $this->ReadPropertyBoolean("Invert")));
+			}
 			else {
 				$this->SendDebug("Set_Status", "Fehler beim Lesen des Status!", 0);
 			}
