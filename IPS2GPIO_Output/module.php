@@ -11,7 +11,7 @@
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->RegisterPropertyBoolean("Invert", false);
 		$this->RegisterPropertyBoolean("Logging", false);
-		$this->RegisterPropertyInteger("Startoption", false);
+		$this->RegisterPropertyInteger("Startoption", 2);
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
 	
@@ -38,13 +38,12 @@
 		$arrayElements[] = array("name" => "Invert", "type" => "CheckBox",  "caption" => "Invertiere Anzeige");
 		$arrayElements[] = array("name" => "Logging", "type" => "CheckBox",  "caption" => "Logging aktivieren");
 		$arrayElements[] = array("type" => "Label", "label" => "Status des Ausgangs nach Neustart");
+		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "Aus", "value" => 0);
 		$arrayOptions[] = array("label" => "An", "value" => 1);
 		$arrayOptions[] = array("label" => "undefiniert", "value" => 2);
 		$arrayElements[] = array("type" => "Select", "name" => "Startoption", "caption" => "Startoption", "options" => $arrayOptions );
-		
-		//$arrayElements[] = array("name" => "Startoption", "type" => "CheckBox",  "caption" => "Status");
-		
+
 		$arrayActions = array();
 		If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 			$arrayActions[] = array("type" => "Button", "label" => "Toggle Output", "onClick" => 'I2GOUT_Toggle_Status($id);');
@@ -138,7 +137,10 @@
 			$this->SendDebug("Set_Status", "Ausfuehrung", 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => ($Value ^ $this->ReadPropertyBoolean("Invert")) )));
 			$this->SendDebug("Set_Status", "Ergebnis: ".(int)$Result, 0);
-			IF ($Result) {
+			IF (!$Result) {
+				$this->SendDebug("Set_Status", "Fehler beim Setzen des Status!", 0);
+			else {
+				SetValueBoolean($this->GetIDForIdent("Status"), ($Result ^ $this->ReadPropertyBoolean("Invert")));
 				$this->Get_Status();
 			}
 		}
@@ -159,8 +161,12 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Get_Status", "Ausfuehrung", 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_value", "Pin" => $this->ReadPropertyInteger("Pin") )));
-			$this->SendDebug("Get_Status", "Ergebnis: ".(int)$Result, 0);
-			SetValueBoolean($this->GetIDForIdent("Status"), ($Result ^ $this->ReadPropertyBoolean("Invert")));
+			If ($Result >= 0) {
+				$this->SendDebug("Get_Status", "Ergebnis: ".(int)$Result, 0);
+				SetValueBoolean($this->GetIDForIdent("Status"), ($Result ^ $this->ReadPropertyBoolean("Invert")));
+			else {
+				$this->SendDebug("Set_Status", "Fehler beim Lesen des Status!", 0);
+			}
 		}
 	}
 	
