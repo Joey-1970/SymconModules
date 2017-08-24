@@ -90,7 +90,7 @@
 		 $this->DisableAction("Summary");
 		 $this->SetBuffer("Summary", false);
 		
-		If (IPS_GetKernelRunlevel() == 10103) {
+		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
 			// Logging setzen
 			for ($i = 0; $i <= 4; $i++) {
 				AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("MAC".$i."Connect"),  $this->ReadPropertyBoolean("LoggingMAC".$i)); 
@@ -172,6 +172,7 @@
 	public function Measurement()
 	{	
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Measurement", "Ausfuehrung", 0);
 			$CommandArray = Array();
 			for ($i = 0; $i <= 4; $i++) {
 				If (filter_var(trim($this->ReadPropertyString("MAC".$i)), FILTER_VALIDATE_MAC)) {
@@ -179,9 +180,46 @@
 					$CommandArray[$i] = "hcitool name ".$this->ReadPropertyString("MAC".$i);
 				}
 			}	
-			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 0, "IsArray" => true )));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 0, "IsArray" => true )));
+			/*
+			$ResultArray = unserialize($Result);
+			$this->SetBuffer("Summary", false);
+			for ($i = 0; $i < Count($ResultArray); $i++) {
+				//IPS_LogMessage("IPS2GPIO BT-Connect", $ResultArray[key($ResultArray)] );
+				If ($ResultArray[key($ResultArray)] <> trim("Device is not available.")) {
+					SetValueString($this->GetIDForIdent("MAC".key($ResultArray)."Name"), $ResultArray[key($ResultArray)]);
+					if (strlen($ResultArray[key($ResultArray)]) > 0) {
+						SetValueBoolean($this->GetIDForIdent("MAC".key($ResultArray)."Connect"), true);
+						$this->SetBuffer("Summary", true);
+					}
+					else {
+						SetValueBoolean($this->GetIDForIdent("MAC".key($ResultArray)."Connect"), false);
+					}
+					Next($ResultArray);
+				}
+				else {
+					SetValueString($this->GetIDForIdent("MAC".key($ResultArray)."Name"), "");
+					SetValueBoolean($this->GetIDForIdent("MAC".key($ResultArray)."Connect"), false);
+				}
+
+			}
+			If (GetValueBoolean($this->GetIDForIdent("Summary")) <> $this->GetBuffer("Summary")) {
+				SetValueBoolean($this->GetIDForIdent("Summary"), $this->GetBuffer("Summary"));
+			}
+			*/
 		}
 	}
 	
+	private function HasActiveParent()
+    	{
+		$Instance = @IPS_GetInstance($this->InstanceID);
+		if ($Instance['ConnectionID'] > 0)
+		{
+			$Parent = IPS_GetInstance($Instance['ConnectionID']);
+			if ($Parent['InstanceStatus'] == 102)
+			return true;
+		}
+        return false;
+    	}  
 }
 ?>
