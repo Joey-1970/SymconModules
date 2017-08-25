@@ -77,9 +77,9 @@
 	            parent::ApplyChanges();
 
 		    // Profil anlegen
-		    $this->RegisterProfileFloat("length.cm", "Distance", "", " cm", 0, 1000, 0.1, 1);
+		    $this->RegisterProfileFloat("IPS2GPIO.cm", "Distance", "", " cm", 0, 1000, 0.1, 1);
 		    //Status-Variablen anlegen
-		    $this->RegisterVariableFloat("Distance", "Distance", "length.cm", 10);
+		    $this->RegisterVariableFloat("Distance", "Distance", "IPS2GPIO.cm", 10);
 	            $this->DisableAction("Distance");
 	            IPS_SetHidden($this->GetIDForIdent("Distance"), false);
 
@@ -91,7 +91,7 @@
 		    $Filter = '((.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_I").'.*)|.*"Pin":'.$this->ReadPropertyInteger("Pin_O").'.*)';
 		    $this->SetReceiveDataFilter($Filter);
 			
-		    If (IPS_GetKernelRunlevel() == 10103) {
+		    If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 				If (($this->ReadPropertyInteger("Pin_I") >= 0) AND ($this->ReadPropertyInteger("Pin_O") >= 0) AND ($this->ReadPropertyBoolean("Open") == true) ) {
 					  $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
 										    "Pin" => $this->ReadPropertyInteger("Pin_I"), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 0, "Resistance" => $this->ReadPropertyInteger("PUL"))));
@@ -154,7 +154,11 @@
 	public function Measurement()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_trigger", "Pin" => $this->ReadPropertyInteger("Pin_O"), "Time" => 10)));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_trigger", "Pin" => $this->ReadPropertyInteger("Pin_O"), "Time" => 10)));
+			If (!$Result) {
+				$this->SendDebug("Measurement", "Fehler beim Schreiben des Triggers!", 0);
+				return;
+			}
 		}
 	}
 	
@@ -176,5 +180,16 @@
 	        IPS_SetVariableProfileDigits($Name, $Digits);
 	}
 	
+	private function HasActiveParent()
+    	{
+		$Instance = @IPS_GetInstance($this->InstanceID);
+		if ($Instance['ConnectionID'] > 0)
+		{
+			$Parent = IPS_GetInstance($Instance['ConnectionID']);
+			if ($Parent['InstanceStatus'] == 102)
+			return true;
+		}
+        return false;
+    	}  
 }
 ?>
