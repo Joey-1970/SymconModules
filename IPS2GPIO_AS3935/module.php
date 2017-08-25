@@ -43,10 +43,10 @@
 		$arrayElements[] = array("type" => "Label", "label" => "I²C-Bus (Default ist 1)");
 		
 		$arrayOptions = array();
-		If ($this->HasActiveParent() == true)) {
-			$arrayOptions[] = array("label" => "I²C-Bus 1", "value" => 1);
-		}
-		else {
+		//If ($this->HasActiveParent() == true)) {
+		//	$arrayOptions[] = array("label" => "I²C-Bus 1", "value" => 1);
+		//}
+		//else {
 			$arrayOptions[] = array("label" => "I²C-Bus 0", "value" => 0);
 			$arrayOptions[] = array("label" => "I²C-Bus 1", "value" => 1);
 			$arrayOptions[] = array("label" => "MUX I²C-Bus 0", "value" => 3);
@@ -57,7 +57,7 @@
 			$arrayOptions[] = array("label" => "MUX I²C-Bus 5", "value" => 8);
 			$arrayOptions[] = array("label" => "MUX I²C-Bus 6", "value" => 9);
 			$arrayOptions[] = array("label" => "MUX I²C-Bus 7", "value" => 10);
-		}
+		//}
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "Device Bus", "options" => $arrayOptions );
 
 		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für den Interrupt"); 
