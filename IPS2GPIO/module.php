@@ -337,7 +337,7 @@ class IPS2GPIO_IO extends IPSModule
 		    	// Setzt einen Trigger
 		    	If ($data->Pin >= 0) {
 		        	//IPS_LogMessage("IPS2GPIO SetTrigger Parameter : ",$data->Pin." , ".$data->Time);
-		        	$this->CommandClientSocket(pack("LLLLL", 37, $data->Pin, $data->Time, 4, 1), 16);
+		        	$Result = $this->CommandClientSocket(pack("L*", 37, $data->Pin, $data->Time, 4, 1), 16);
 		    	}
 		        break;
 		case "set_servo":
@@ -1068,7 +1068,15 @@ class IPS2GPIO_IO extends IPSModule
            				IPS_LogMessage("IPS2GPIO PIGPIO Software Version","Fehler: ".$this->GetErrorText(abs($response[4])));
            			}
 		            	break;
-		        case "54":
+		         case "37":
+           			If ($response[4] >= 0) {
+           				$Result = true;
+           			}
+           			else {
+           				$Result = false;
+           			}
+		            	break;
+			case "54":
 		        	If ($response[4] >= 0 ) {
            				If ($this->GetBuffer("I2CSearch") == 0) {
 						//IPS_LogMessage("IPS2GPIO I2C Handle",$response[4]." für Device ".$response[3]);
