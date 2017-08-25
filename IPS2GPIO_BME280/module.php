@@ -419,14 +419,17 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F2"), "Value" => $ctrl_hum_reg)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "ctrl_hum_reg setzen fehlerhaft!", 0);
+				return;
 			}
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F4"), "Value" => $ctrl_meas_reg)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "ctrl_meas_reg setzen fehlerhaft!", 0);
+				return;
 			}
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F5"), "Value" => $config_reg)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "config_reg setzen fehlerhaft!", 0);
+				return;
 			}
 		}
 	}
@@ -440,29 +443,32 @@
 
 			for ($i = hexdec("88"); $i < (hexdec("88") + 24); $i++) {
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $i)));
-				If ($Result >= 0) {
-					$CalibrateData[$i] = $Result;
+				If ($Result < 0) {
+					$this->SendDebug("ReadCalibrateData", "Fehler beim Einlesen der Kalibrierungsdaten bei Byte ".$i, 0);
+					return;
 				}
 				else {
-					$this->SendDebug("ReadCalibrateData", "Fehler beim Kalibrierungsdaten einlesen bei Byte ".$i, 0);
+					$CalibrateData[$i] = $Result;
 				}
 			}
 
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("A1"))));
-			If ($Result >= 0) {
-				$CalibrateData[161] = $Result;
+			If ($Result < 0) {
+				$this->SendDebug("ReadCalibrateData", "Fehler beim Einlesen der Kalibrierungsdaten bei Byte 161", 0);
+				return;
 			}
 			else {
-				$this->SendDebug("ReadCalibrateData", "Fehler beim Kalibrierungsdaten einlesen bei Byte 161", 0);
+				$CalibrateData[161] = $Result;
 			}
 
 			for ($i = hexdec("E1"); $i < (hexdec("E1") + 7); $i++) {
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $i)));
-				If ($Result >= 0) {
-					$CalibrateData[$i] = $Result;
+				If ($Result < 0) {
+					$this->SendDebug("ReadCalibrateData", "Fehler beim Einlesen der Kalibrierungsdaten bei Byte ".$i, 0);
+					return;
 				}
 				else {
-					$this->SendDebug("ReadCalibrateData", "Fehler beim Kalibrierungsdaten einlesen bei Byte ".$i, 0);
+					$CalibrateData[$i] = $Result;
 				}
 			}
 			$this->SetBuffer("CalibrateData", serialize($CalibrateData));
@@ -474,15 +480,16 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Liest die Messdaten ein
 			$this->SendDebug("ReadData", "Ausfuehrung", 0);
-			$MeasurementData = array();
-
+			
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_read_block", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F7"), "Count" => 8)));
-			If ($Result >= 0) {
-				$this->SetBuffer("MeasurementData", $Result);
-			}
-			else {
+			If ($Result < 0) {
+				$MeasurementData = array();
 				$this->SetBuffer("MeasurementData", $MeasurementData);
 				$this->SendDebug("ReadData", "Fehler bei der Datenermittung", 0);
+				return;
+			}
+			else {
+				$this->SetBuffer("MeasurementData", $Result);
 			}
 		}	
 	}
