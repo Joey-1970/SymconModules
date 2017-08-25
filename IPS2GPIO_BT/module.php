@@ -39,24 +39,7 @@
 		for ($i = 0; $i <= 4; $i++) {
 		    	$arrayElements[] = array("type" => "ValidationTextBox", "name" => "MAC".$i, "caption" => "MAC-Adresse ".($i + 1)); 
 			$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingMAC.".$i, "caption" => "Logging aktivieren"); 
-		}
-		/*
-		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "MAC0", "caption" => "MAC-Adresse 1"); 
-		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingMAC0", "caption" => "Logging aktivieren"); 
-		
-		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "MAC1", "caption" => "MAC-Adresse 2");
- 		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingMAC1", "caption" => "Logging aktivieren");
-		
-		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "MAC2", "caption" => "MAC-Adresse 3");
-		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingMAC2", "caption" => "Logging aktivieren");
-		
-		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "MAC3", "caption" => "MAC-Adresse 4");
-		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingMAC3", "caption" => "Logging aktivieren"); 
-		
-		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "MAC4", "caption" => "MAC-Adresse 5");
-		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingMAC4", "caption" => "Logging aktivieren"); 
-		*/
-		
+		}	
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, 30 sek -> Minimum)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
 				
@@ -140,36 +123,6 @@
 	    	// Empfangene Daten vom Gateway/Splitter
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
-			   /*
-			case "set_RPi_connect":
-				//IPS_LogMessage("IPS2GPIO SSH-Connect","Ergebnis: ".utf8_decode($data->Result));
-				$ResultArray = unserialize(utf8_decode($data->Result));
-				$this->SetBuffer("Summary", false);
-				for ($i = 0; $i < Count($ResultArray); $i++) {
-					//IPS_LogMessage("IPS2GPIO BT-Connect", $ResultArray[key($ResultArray)] );
-					If ($ResultArray[key($ResultArray)] <> trim("Device is not available.")) {
-						SetValueString($this->GetIDForIdent("MAC".key($ResultArray)."Name"), $ResultArray[key($ResultArray)]);
-						if (strlen($ResultArray[key($ResultArray)]) > 0) {
-							SetValueBoolean($this->GetIDForIdent("MAC".key($ResultArray)."Connect"), true);
-							$this->SetBuffer("Summary", true);
-						}
-						else {
-							SetValueBoolean($this->GetIDForIdent("MAC".key($ResultArray)."Connect"), false);
-						}
-						Next($ResultArray);
-					}
-					else {
-						SetValueString($this->GetIDForIdent("MAC".key($ResultArray)."Name"), "");
-						SetValueBoolean($this->GetIDForIdent("MAC".key($ResultArray)."Connect"), false);
-					}
-						
-				}
-				If (GetValueBoolean($this->GetIDForIdent("Summary")) <> $this->GetBuffer("Summary")) {
-					SetValueBoolean($this->GetIDForIdent("Summary"), $this->GetBuffer("Summary"));
-				}
-					
-			   	break;
-				*/
 			  case "get_start_trigger":
 			   	$this->ApplyChanges();
 				break;
