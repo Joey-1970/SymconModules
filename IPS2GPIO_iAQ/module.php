@@ -79,18 +79,18 @@
 	    		IPS_LogMessage("IPS2GPIO iAQ-Core","I2C-Device Adresse in einem nicht definierten Bereich!");  
 	    	}
 	    	// Profil anlegen
-		$this->RegisterProfileInteger("CO2.ppm", "Gauge", "", " ppm", 450, 2000, 1);
-		$this->RegisterProfileInteger("TVOC.ppb", "Gauge", "", " ppb", 125, 600, 1);
-		$this->RegisterProfileInteger("resistance.ohm", "Gauge", "", " Ohm", 0, 1000000, 1);
+		$this->RegisterProfileInteger("IPS2GPIO.ppm", "Gauge", "", " ppm", 450, 2000, 1);
+		$this->RegisterProfileInteger("IPS2GPIO.ppb", "Gauge", "", " ppb", 125, 600, 1);
+		$this->RegisterProfileInteger("IPS2GPIO.ohm", "Gauge", "", " Ohm", 0, 1000000, 1);
 	    	
 		//Status-Variablen anlegen
-             	$this->RegisterVariableInteger("CO2", "CO2", "CO2.ppm", 10);
+             	$this->RegisterVariableInteger("CO2", "CO2", "IPS2GPIO.ppm", 10);
 		$this->DisableAction("CO2");
 		IPS_SetHidden($this->GetIDForIdent("CO2"), false);
-		$this->RegisterVariableInteger("TVOC", "TVOC", "TVOC.ppb", 20);
+		$this->RegisterVariableInteger("TVOC", "TVOC", "IPS2GPIO.ppb", 20);
 		$this->DisableAction("TVOC");
 		IPS_SetHidden($this->GetIDForIdent("TVOC"), false);
-		$this->RegisterVariableInteger("Resistance", "Resistance", "resistance.ohm", 30);
+		$this->RegisterVariableInteger("Resistance", "Resistance", "IPS2GPIO.ohm", 30);
 		$this->DisableAction("Resistance");
 		IPS_SetHidden($this->GetIDForIdent("Resistance"), false);
 		$this->RegisterVariableString("Status", "Status", "", 40);
@@ -98,7 +98,7 @@
 		IPS_SetHidden($this->GetIDForIdent("Status"), false);
 		
 		
-		If (IPS_GetKernelRunlevel() == 10103) {
+		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
 			// Logging setzen
 			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("CO2"), $this->ReadPropertyBoolean("LoggingCO2"));
 			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("TVOC"), $this->ReadPropertyBoolean("LoggingTVOC"));
@@ -198,6 +198,18 @@
 	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
 	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);        
 	}
+	    
+	private function HasActiveParent()
+    	{
+		$Instance = @IPS_GetInstance($this->InstanceID);
+		if ($Instance['ConnectionID'] > 0)
+		{
+			$Parent = IPS_GetInstance($Instance['ConnectionID']);
+			if ($Parent['InstanceStatus'] == 102)
+			return true;
+		}
+        return false;
+    	}  
 
 }
 ?>
