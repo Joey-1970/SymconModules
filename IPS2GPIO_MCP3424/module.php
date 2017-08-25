@@ -184,9 +184,10 @@
 				   		$this->SetStatus($data->Status);
 				   	}
 				}
-			   	break;  
+			   	break;
+				/*
 			case "set_i2c_byte_block":
-			   	If ($data->DeviceIdent == $this->GetBuffer("DeviceIdent")) {
+				If ($data->DeviceIdent == $this->GetBuffer("DeviceIdent")) {
 			   		$this->SetBuffer("MeasurementData", $data->ByteArray);
 			   	}
 				// Test
@@ -251,6 +252,7 @@
 					SetValueFloat($this->GetIDForIdent("Channel_".($Channel + 1)), $Value);
 				}
 			   	break;
+				*/
 	 	}
  	}
 	// Beginn der Funktionen
@@ -350,6 +352,7 @@
 					}
 				}
 			}
+		}
 	}
 	        
 	private function bitflip($Value)
