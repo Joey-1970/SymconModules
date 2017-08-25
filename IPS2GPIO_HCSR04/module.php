@@ -121,20 +121,19 @@
 	 	switch ($data->Function) {
 			   case "notify":
 			   	If (($data->Pin == $this->ReadPropertyInteger("Pin_I")) AND ($data->Value == false)) {
-			   		$TimeDiff = $data->Timestamp - intval($this->GetBuffer("Timestamp"));
+			   		$this->SendDebug("Notify", "Messwert", 0);
+					$TimeDiff = $data->Timestamp - intval($this->GetBuffer("Timestamp"));
 			   		$TimeDiff = abs($TimeDiff/1000000);
    					$Distance = round(($TimeDiff * 34300 / 2), 1);
    					SetValueFloat($this->GetIDForIdent("Distance"), min($Distance, 999.99));
 			   	}
 			   	elseif (($data->Pin == $this->ReadPropertyInteger("Pin_I")) AND ($data->Value == true)) {
-			   		$this->SetBuffer("Timestamp", $data->Timestamp);	
+			   		$this->SendDebug("Notify", "Zeitstempel", 0);
+					$this->SetBuffer("Timestamp", $data->Timestamp);	
 			   	}
 			   	break;
 			   case "get_usedpin":
 			   	If ($this->ReadPropertyBoolean("Open") == true) {
-					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
-										  "Pin" => $this->ReadPropertyInteger("Pin_I"), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 0, "Resistance" => $this->ReadPropertyInteger("PUL"))));
-					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_O"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 					$this->ApplyChanges();
 				}
 				break;
@@ -154,6 +153,7 @@
 	public function Measurement()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Measurement", "Ausfuehrung", 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_trigger", "Pin" => $this->ReadPropertyInteger("Pin_O"), "Time" => 10)));
 			If (!$Result) {
 				$this->SendDebug("Measurement", "Fehler beim Schreiben des Triggers!", 0);
