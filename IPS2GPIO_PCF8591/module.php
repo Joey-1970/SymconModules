@@ -112,7 +112,7 @@
           	$this->EnableAction("Output");
 		IPS_SetHidden($this->GetIDForIdent("Output"), false);
 		
-		If (IPS_GetKernelRunlevel() == 10103) {
+		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
 			// Logging setzen
 			for ($i = 0; $i <= 3; $i++) {
 				AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Channel_".$i), $this->ReadPropertyBoolean("LoggingAin".$i)); 
@@ -161,7 +161,6 @@
 	 	switch ($data->Function) {
 			   case "get_used_i2c":
 			   	If ($this->ReadPropertyBoolean("Open") == true) {
-					//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 					$this->ApplyChanges();
 				}
 				break;
@@ -234,5 +233,17 @@
 	            	SetValueInteger($this->GetIDForIdent("Output"), $Value);
 		}
 	}
+	    
+	private function HasActiveParent()
+    	{
+		$Instance = @IPS_GetInstance($this->InstanceID);
+		if ($Instance['ConnectionID'] > 0)
+		{
+			$Parent = IPS_GetInstance($Instance['ConnectionID']);
+			if ($Parent['InstanceStatus'] == 102)
+			return true;
+		}
+        return false;
+    	}  
 }
 ?>
