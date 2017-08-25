@@ -65,6 +65,7 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayOptions[] = array("label" => "TCA9548a Adr. 112/0x70", "value" => 1);
 		$arrayOptions[] = array("label" => "PCA9542 Adr. 112/0x70", "value" => 2);
 		$arrayElements[] = array("type" => "Select", "name" => "MUX", "caption" => "MUX-Auswahl", "options" => $arrayOptions );
+		$arrayOptions = array();
 		$arrayElements[] = array("type" => "Label", "label" => "Nutzung der I²C-Schnittstelle 0:");
 		$arrayOptions[] = array("label" => "Nein", "value" => false);
 		$arrayOptions[] = array("label" => "Ja", "value" => true);
