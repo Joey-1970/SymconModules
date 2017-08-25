@@ -139,6 +139,7 @@
 			$this->SendDebug("Set_Status", "Ergebnis: ".(int)$Result, 0);
 			IF (!$Result) {
 				$this->SendDebug("Set_Status", "Fehler beim Setzen des Status!", 0);
+				return;
 			}
 			else {
 				SetValueBoolean($this->GetIDForIdent("Status"), ($Value ^ $this->ReadPropertyBoolean("Invert")));
@@ -162,12 +163,13 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Get_Status", "Ausfuehrung", 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_value", "Pin" => $this->ReadPropertyInteger("Pin") )));
-			If ($Result >= 0) {
-				$this->SendDebug("Get_Status", "Ergebnis: ".(int)$Result, 0);
-				SetValueBoolean($this->GetIDForIdent("Status"), ($Result ^ $this->ReadPropertyBoolean("Invert")));
+			If ($Result < 0) {
+				$this->SendDebug("Set_Status", "Fehler beim Lesen des Status!", 0);
+				return;
 			}
 			else {
-				$this->SendDebug("Set_Status", "Fehler beim Lesen des Status!", 0);
+				$this->SendDebug("Get_Status", "Ergebnis: ".(int)$Result, 0);
+				SetValueBoolean($this->GetIDForIdent("Status"), ($Result ^ $this->ReadPropertyBoolean("Invert")));
 			}
 		}
 	}
