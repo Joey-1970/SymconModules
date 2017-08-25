@@ -124,6 +124,7 @@
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $value)));
 				If (!$Result) {
 					$this->SendDebug("Set_Intensity", "Fehler beim Schreiben des Wertes!", 0);
+					return;
 				}
 				else {
 					SetValueInteger($this->GetIDForIdent("Intensity"), $value);
@@ -189,6 +190,7 @@
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin") )));
 				If ($Result < 0) {
 					$this->SendDebug("Get_Status", "Fehler beim Lesen des Wertes!", 0);
+					return;
 				}
 				else {
 					SetValueInteger($this->GetIDForIdent("Intensity"), $Result);
