@@ -68,7 +68,7 @@
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
 									  "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 				$this->Setup();
-				$this->GetOutput();
+				
 				$this->SetStatus(102);
 			}
 			else {
@@ -168,6 +168,7 @@
 			}
 			else {
 				SetValueInteger($this->GetIDForIdent("Output"), 50);
+				$this->GetOutput();
 				IPS_Sleep(500);
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => 0)));
 				If (!$Result) {
