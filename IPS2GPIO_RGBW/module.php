@@ -82,7 +82,7 @@
           	$Filter = '((.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_R").'.*)|(.*"Pin":'.$this->ReadPropertyInteger("Pin_G").'.*|.*"Pin":'.$this->ReadPropertyInteger("Pin_B").'.*)|(.*"Pin":'.$this->ReadPropertyInteger("Pin_W").'.*))';
 		$this->SetReceiveDataFilter($Filter);
 		
-		If (IPS_GetKernelRunlevel() == 10103) {
+		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
 			If (($this->ReadPropertyInteger("Pin_R") >= 0) AND ($this->ReadPropertyInteger("Pin_G") >= 0) AND ($this->ReadPropertyInteger("Pin_B") >= 0) AND ($this->ReadPropertyInteger("Pin_W") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_R"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_G"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
@@ -148,10 +148,7 @@
     	switch ($data->Function) {
     		case "get_usedpin":
 		   	If ($this->ReadPropertyBoolean("Open") == true) {
-				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_R"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
-				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_G"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
-				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_B"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
-			}
+				$this->ApplyChanges();			}
 			break;
 		case "status":
 			If (($data->Pin == $this->ReadPropertyInteger("Pin_R")) OR ($data->Pin == $this->ReadPropertyInteger("Pin_G")) OR ($data->Pin == $this->ReadPropertyInteger("Pin_B")) OR ($data->Pin == $this->ReadPropertyInteger("Pin_W")) ) {
@@ -246,5 +243,17 @@
 		$Hex = hexdec(str_pad(dechex($r), 2,'0', STR_PAD_LEFT).str_pad(dechex($g), 2,'0', STR_PAD_LEFT).str_pad(dechex($b), 2,'0', STR_PAD_LEFT));
 	return $Hex;
 	}
-    }
+	    
+	private function HasActiveParent()
+    	{
+		$Instance = @IPS_GetInstance($this->InstanceID);
+		if ($Instance['ConnectionID'] > 0)
+		{
+			$Parent = IPS_GetInstance($Instance['ConnectionID']);
+			if ($Parent['InstanceStatus'] == 102)
+			return true;
+		}
+        return false;
+    	}  
+}
 ?>
