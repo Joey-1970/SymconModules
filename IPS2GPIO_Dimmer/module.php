@@ -82,13 +82,9 @@
   		switch($Ident) {
 	        case "Status":
 	            $this->Set_Status($Value);
-	            //Neuen Wert in die Statusvariable schreiben
-	            SetValue($this->GetIDForIdent($Ident), $Value);
 	            break;
 	        case "Intensity":
 	            $this->Set_Intensity($Value);
-	            //Neuen Wert in die Statusvariable schreiben
-	            SetValue($this->GetIDForIdent($Ident), $Value);
 	            break;
 	        default:
 	            throw new Exception("Invalid Ident");
@@ -99,7 +95,7 @@
 	{
 		// Empfangene Daten vom Gateway/Splitter
 		$data = json_decode($JSONString);
-		//IPS_LogMessage("ReceiveData_Dimmer", utf8_decode($data->Buffer));
+
 		switch ($data->Function) {
 			case "get_usedpin":
 				If ($this->ReadPropertyBoolean("Open") == true) {
@@ -114,11 +110,6 @@
 			case "freepin":
 				   // Funktion zum erstellen dynamischer Pulldown-Menüs
 				   break;
-			case "result":
-				If (($data->Pin == $this->ReadPropertyInteger("Pin")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
-					//SetValueInteger($this->GetIDForIdent("Intensity"), $data->Value);
-				}
-				break;
 		}
  	}
 	// Beginn der Funktionen
@@ -133,6 +124,9 @@
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $value)));
 				If (!$Result) {
 					$this->SendDebug("Set_Intensity", "Fehler beim Schreiben des Wertes!", 0);
+				}
+				else {
+					SetValueInteger($this->GetIDForIdent("Intensity"), $value);
 				}
 			}
 			else {
@@ -193,11 +187,11 @@
 			
 			If (GetValueBoolean($this->GetIDForIdent("Status")) == true) {
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin") )));
-				If ($Result >= 0) {
-					SetValueInteger($this->GetIDForIdent("Intensity"),$Result);
+				If ($Result < 0) {
+					$this->SendDebug("Get_Status", "Fehler beim Lesen des Wertes!", 0);
 				}
 				else {
-					$this->SendDebug("Get_Status", "Fehler beim Lesen des Wertes!", 0);
+					SetValueInteger($this->GetIDForIdent("Intensity"), $Result);
 				}
 			}
 		}
