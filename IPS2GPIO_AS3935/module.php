@@ -44,7 +44,11 @@
 		
 		$arrayOptions = array();
 		If ($this->HasActiveParent() == true) {
-			$arrayOptions[] = array("label" => "I²C-Bus 1", "value" => 1);
+			$DevicePorts = array();
+			$DevicePorts = unserialize($this->Get_I2C_Ports());
+			foreach($DevicePorts AS $Value => $Label) {
+			 	$arrayOptions[] = array("label" => $Label, "value" => $Value);
+			}
 		}
 		else {
 			$arrayOptions[] = array("label" => "I²C-Bus 0", "value" => 0);
