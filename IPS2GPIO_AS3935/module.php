@@ -43,17 +43,21 @@
 		$arrayElements[] = array("type" => "Label", "label" => "I²C-Bus (Default ist 1)");
 		
 		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "I²C-Bus 0", "value" => 0);
-		$arrayOptions[] = array("label" => "I²C-Bus 1", "value" => 1);
-		$arrayOptions[] = array("label" => "MUX I²C-Bus 0", "value" => 3);
-		$arrayOptions[] = array("label" => "MUX I²C-Bus 1", "value" => 4);
-		$arrayOptions[] = array("label" => "MUX I²C-Bus 2", "value" => 5);
-		$arrayOptions[] = array("label" => "MUX I²C-Bus 3", "value" => 6);
-		$arrayOptions[] = array("label" => "MUX I²C-Bus 4", "value" => 7);
-		$arrayOptions[] = array("label" => "MUX I²C-Bus 5", "value" => 8);
-		$arrayOptions[] = array("label" => "MUX I²C-Bus 6", "value" => 9);
-		$arrayOptions[] = array("label" => "MUX I²C-Bus 7", "value" => 10);
-		
+		If ($this->HasActiveParent() == true)) {
+			$arrayOptions[] = array("label" => "I²C-Bus 1", "value" => 1);
+		}
+		else {
+			$arrayOptions[] = array("label" => "I²C-Bus 0", "value" => 0);
+			$arrayOptions[] = array("label" => "I²C-Bus 1", "value" => 1);
+			$arrayOptions[] = array("label" => "MUX I²C-Bus 0", "value" => 3);
+			$arrayOptions[] = array("label" => "MUX I²C-Bus 1", "value" => 4);
+			$arrayOptions[] = array("label" => "MUX I²C-Bus 2", "value" => 5);
+			$arrayOptions[] = array("label" => "MUX I²C-Bus 3", "value" => 6);
+			$arrayOptions[] = array("label" => "MUX I²C-Bus 4", "value" => 7);
+			$arrayOptions[] = array("label" => "MUX I²C-Bus 5", "value" => 8);
+			$arrayOptions[] = array("label" => "MUX I²C-Bus 6", "value" => 9);
+			$arrayOptions[] = array("label" => "MUX I²C-Bus 7", "value" => 10);
+		}
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "Device Bus", "options" => $arrayOptions );
 
 		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für den Interrupt"); 
@@ -356,7 +360,9 @@
 	    
 	private function Get_I2C_Ports()
 	{
-		$I2C_Ports = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_get_ports")));
+		If ($this->HasActiveParent() == true)) {
+			$I2C_Ports = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_get_ports")));
+		}	
 	return $I2C_Ports;
 	}
 
