@@ -26,7 +26,7 @@ class IPS2GPIO_IO extends IPSModule
 	    	$this->RegisterPropertyString("Password", "Passwort");
 	    	$this->RegisterPropertyBoolean("I2C_Used", false);
 		$this->RegisterPropertyInteger("MUX", 0);
-		$this->RegisterPropertyBoolean("I2C0", false);
+		$this->RegisterPropertyInteger("I2C0", 0);
 	    	$this->RegisterPropertyBoolean("Serial_Used", false);
 		$this->RegisterPropertyBoolean("1Wire_Used", false);
 		$this->RegisterPropertyString("Raspi_Config", "");
@@ -67,8 +67,8 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayElements[] = array("type" => "Select", "name" => "MUX", "caption" => "MUX-Auswahl", "options" => $arrayOptions );
 		$arrayOptions = array();
 		$arrayElements[] = array("type" => "Label", "label" => "Nutzung der I²C-Schnittstelle 0:");
-		$arrayOptions[] = array("label" => "Nein", "value" => false);
-		$arrayOptions[] = array("label" => "Ja", "value" => true);
+		$arrayOptions[] = array("label" => "Nein", "value" => 0);
+		$arrayOptions[] = array("label" => "Ja", "value" => 1);
 		$arrayElements[] = array("type" => "Select", "name" => "I2C0", "caption" => "I²C 0", "options" => $arrayOptions );
 		//$arrayElements[] = array("type" => "CheckBox", "name" => "I2C0", "caption" => "I²C-Schnittstelle 0");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
@@ -485,7 +485,7 @@ class IPS2GPIO_IO extends IPSModule
 		   	break;
 		case "i2c_get_ports":
 		   	$DevicePorts = array();
-			If ($this->ReadPropertyBoolean("I2C0") == true) {
+			If ($this->ReadPropertyInteger("I2C0") == 1) {
 				$DevicePorts[0] = "I²C-Bus 0";
 			}
 			$DevicePorts[1] = "I²C-Bus 1";
