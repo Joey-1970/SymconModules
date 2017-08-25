@@ -147,7 +147,7 @@
  			}
 		}
 		
-		If (IPS_GetKernelRunlevel() == 10103) {
+		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 			// Logging setzen
 			for ($i = 0; $i <= 7; $i++) {
 				AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("P".$i), $this->ReadPropertyBoolean("LoggingP".$i)); 
@@ -243,7 +243,8 @@
 				   	}
 				}
 			   	break;
-			  case "set_i2c_data":
+			  /*
+			case "set_i2c_data":
 			  	If ($data->DeviceIdent == $this->GetBuffer("DeviceIdent")) {
 			  		// Daten der Messung
 			  		SetValueInteger($this->GetIDForIdent("Value"), $data->Value);
@@ -253,6 +254,7 @@
 			  		}
 			  	}
 			  	break;
+				*/
 	 	}
  	}
 	
@@ -261,7 +263,19 @@
 	public function Read_Status()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte_onhandle", "DeviceIdent" => $this->GetBuffer("DeviceIdent"))));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"))));
+			If ($Result < 0) {
+				$this->SendDebug("Read_Status", "Fehler beim Einlesen der Ausgänge!", 0);
+				return;
+			}
+			else {
+				// Daten der Messung
+				SetValueInteger($this->GetIDForIdent("Value"), $Result);
+				$Result  = str_pad(decbin($Result), 8, '0', STR_PAD_LEFT );
+				for ($i = 0; $i <= 7; $i++) {
+					SetValueBoolean($this->GetIDForIdent("P".$i), substr($Result, 7-$i, 1));
+				}
+			}
 		}
 	}
 	
@@ -299,8 +313,14 @@
 				$Bitmask = $this->unsetBit($Bitmask, $Pin);
 			}
 			$Bitmask = min(255, max(0, $Bitmask));
-			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte_onhandle", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $Bitmask)));
-			$this->Read_Status();
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $Bitmask)));
+			If (!$Result) {
+				$this->SendDebug("SetPinOutput", "Setzen des Ausgangs fehlerhaft!", 0);
+				return;
+			}
+			else {
+				$this->Read_Status();
+			}
 		}
 	}
 	
@@ -309,8 +329,14 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Setzt alle Ausgänge
 			$Value = min(255, max(0, $Value));
-			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte_onhandle", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $Value)));
-			$this->Read_Status();
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $Value)));
+			If (!$Result) {
+				$this->SendDebug("SetOutput", "Setzen der Ausgaenge fehlerhaft!", 0);
+				return;
+			}
+			else {
+				$this->Read_Status();
+			}
 		}
 	}
 	
@@ -323,6 +349,17 @@
 	    // ein bestimmtes Bit auf 0 setzen
 	    return $byte & ~(1<<$significance);
 	}
-
+	
+	private function HasActiveParent()
+    	{
+		$Instance = @IPS_GetInstance($this->InstanceID);
+		if ($Instance['ConnectionID'] > 0)
+		{
+			$Parent = IPS_GetInstance($Instance['ConnectionID']);
+			if ($Parent['InstanceStatus'] == 102)
+			return true;
+		}
+        return false;
+    	}  
 }
 ?>
