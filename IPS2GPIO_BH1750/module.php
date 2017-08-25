@@ -168,11 +168,16 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BH1750_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $this->ReadPropertyInteger("Resulution") )));
 			If (!$Result) {
 				$this->SendDebug("Measurement", "Fehler beim Schreiben der Aufloesung!", 0);
+				return;
 			}
 			IPS_Sleep(180);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BH1750_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $this->ReadPropertyInteger("DeviceAddress"))));
 			$this->SendDebug("Measurement", "Wert: ".$Result, 0);
-			If ($Result >= 0) {
+			If ($Result < 0) {
+				$this->SendDebug("Measurement", "Fehler beim Lesen des Wertes!", 0);
+				return;
+			}
+			else {
 				If ($this->ReadPropertyInteger("Resulution") == 19) {
 					// LR
 					$Lux = (($Result & 0xff00)>>8) | (($Result & 0x00ff)<<8);
@@ -195,9 +200,6 @@
 				elseif ($Lux <= $this->ReadPropertyInteger("HysteresisOff")) {
 					SetValueBoolean($this->GetIDForIdent("Hysteresis"), false);
 				}
-			}
-			else {
-				$this->SendDebug("Measurement", "Fehler beim Lesen des Wertes!", 0);
 			}
 		}
 	}	
@@ -228,6 +230,7 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BH1750_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => hexdec("01"))));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Fehler beim Einschalten!", 0);
+				return;
 			}
 			IPS_Sleep(100);
 			// Sensivität setzen
@@ -237,17 +240,20 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BH1750_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $HighMTreg)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Fehler beim Schreiben des HighMTreg!", 0);
+				return;
 			}
 			// Low bit MTreg 011 + Bit 1, 2, 3 ,4, 5
 			$LowMTreg =  ($MTreg & 31) | 96;
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BH1750_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $LowMTreg)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Fehler beim Schreiben des LowMTreg!", 0);
+				return;
 			}
 			// Messwerterfassung setzen
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BH1750_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $this->ReadPropertyInteger("Resulution") )));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Fehler beim Schreiben des Auflösung!", 0);
+				return;
 			}
 		}
 	}
