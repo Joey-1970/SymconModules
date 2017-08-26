@@ -364,7 +364,28 @@
 		}
 	return $I2C_Ports;
 	}
-
+	
+	private function Get_GPIO()
+	{
+		If ($this->HasActiveParent() == true) {
+			$GPIO = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_GPIO")));
+		}
+		else {
+			$AllGPIO = array();
+			$AllGPIO[-1] = "ungesetzt";
+			for ($i = 2; $i <= 27; $i++) {
+				$AllGPIO[$i] = "GPIO".(sprintf("%'.02d", $i));
+			}
+			$GPIO = serialize($AllGPIO);
+		}
+	return $GPIO;
+	}
+	 
+	$arrayOptions[] = array("label" => "ungesetzt", "value" => -1);
+		for ($i = 0; $i <= 27; $i++) {
+			$arrayOptions[] = array("label" => $i, "value" => $i);
+		}    
+	    
 	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
 	{
 	        if (!IPS_VariableProfileExists($Name))
