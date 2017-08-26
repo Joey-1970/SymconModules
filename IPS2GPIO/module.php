@@ -419,28 +419,26 @@ class IPS2GPIO_IO extends IPSModule
 				}
 		   	}
 		        break;
-		   case "get_pinupdate":
+		case "get_pinupdate":
 		   	$this->Get_PinUpdate();
 		   	break;
-		   case "get_freepin":
+		case "get_GPIO":
 		   	$PinPossible = array();
 			$PinPossible = unserialize($this->GetBuffer("PinPossible"));
 			$PinUsed = array();
 		   	$PinUsed = unserialize($this->GetBuffer("PinUsed"));
-		   	$PinFreeArray = array_diff_assoc($PinPossible, $PinUsed);
-		   	If (is_array($PinFreeArray)) {
-		   		$this->SendDebug("get_freepin", "Pin ".$PinFreeArray[0]." ist noch ungenutzt", 0);
-				//IPS_LogMessage("IPS2GPIO Pin", "Pin ".$PinFreeArray[0]." ist noch ungenutzt");
-			        $this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"freepin", "Pin"=>$PinFreeArray[0])));
-		   	}
-		   	else {
-		   		$this->SendDebug("get_freepin", "Kein ungenutzter Pin gefunden!", 0);
-				IPS_LogMessage("IPS2GPIO Pin", "Kein ungenutzter Pin gefunden");	
-		   	}
-		   	break;
+			$PinFreeArray = array();
+		   	$PinFreeArray = array_diff($PinPossible, $PinUsed);
+			$arrayGPIO = array();
+			$arrayGPIO[-1] = "ungesetzt";
+			foreach($PinFreeArray AS $Value) {
+				$arrayGPIO[$Value] = "GPIO".(sprintf("%'.02d", $Value));
+			}
+		   	return serialize($arrayGPIO);
+			break;
 
-		   // I2C Kommunikation
-		   case "set_used_i2c":
+		// I2C Kommunikation
+		case "set_used_i2c":
 			$this->SetBuffer("I2C_Used", 1);
 		   	// die genutzten Device Adressen anlegen
 		   	$I2C_DeviceHandle = unserialize($this->GetBuffer("I2C_Handle"));
