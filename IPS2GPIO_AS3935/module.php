@@ -383,7 +383,7 @@
 		}
 		else {
 			$AllGPIO = array();
-			$AllGPIO[-1] = "ungesetzt";
+			$AllGPIO[-1] = "undefiniert";
 			for ($i = 2; $i <= 27; $i++) {
 				$AllGPIO[$i] = "GPIO".(sprintf("%'.02d", $i));
 			}
