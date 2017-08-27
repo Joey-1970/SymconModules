@@ -103,7 +103,6 @@
 			//ReceiveData-Filter setzen
 			$this->SetBuffer("DeviceIdent", (($this->ReadPropertyInteger("DeviceBus") << 7) + $this->ReadPropertyInteger("DeviceAddress")));
 			$Filter = '((.*"Function":"get_used_i2c".*|.*"DeviceIdent":'.$this->GetBuffer("DeviceIdent").'.*)|.*"Function":"status".*)';
-			//$this->SendDebug("IPS2GPIO", $Filter, 0);
 			$this->SetReceiveDataFilter($Filter);
 		
 			
@@ -131,7 +130,6 @@
 	 	switch ($data->Function) {
 			case "get_used_i2c":
 			   	If ($this->ReadPropertyBoolean("Open") == true) {
-					//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 					$this->ApplyChanges();
 				}
 				break;
@@ -147,6 +145,7 @@
 				   	}
 				}
 			   	break;
+				/*
 			case "set_i2c_byte_block":
 				 If ($data->DeviceIdent == $this->GetBuffer("DeviceIdent")) {
 			   		// Daten der Messung
@@ -163,6 +162,7 @@
 					SetValueInteger($this->GetIDForIdent("TVOC"), ($MeasurementArray[8] << 8) + $MeasurementArray[9]);
 			   	}
 			   	break;
+				*/
 	 	}
  	}
 	
@@ -172,8 +172,24 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Daten anfordern
-			//IPS_LogMessage("IPS2GPIO GPIO iAQ", "Daten sind angefordert");
-			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_bytes", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("5A"), "Count" => 9)));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_bytes", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("5A"), "Count" => 9)));
+			If ($Result < 0) {
+				$this->SendDebug("Measurement", "Einlesen der Werte fehlerhaft!", 0);
+				return;
+			}
+			else {
+				$MeasurementData = array();
+				$MeasurementData = unserialize($Result);
+				// CO2 berechnen
+				SetValueInteger($this->GetIDForIdent("CO2"), ($MeasurementArray[1] << 8) + $MeasurementArray[2]);
+				// Status
+				$StatusArray = Array(0 => "OK", 1 => "BUSY", 16 => "RUNNIN", 128 => "ERROR");
+				SetValueString($this->GetIDForIdent("Status"), $StatusArray[$MeasurementArray[3]]);
+				// Widerstand ausgeben
+				SetValueInteger($this->GetIDForIdent("Resistance"), ($MeasurementArray[5] << 16) + ($MeasurementArray[6] << 8) + $MeasurementArray[7]);
+				// TVOC berechnen
+				SetValueInteger($this->GetIDForIdent("TVOC"), ($MeasurementArray[8] << 8) + $MeasurementArray[9]);
+			}		
 		}
 	}	
 	
