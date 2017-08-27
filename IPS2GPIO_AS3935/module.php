@@ -389,12 +389,7 @@
 		}
 	return $GPIO;
 	}
-	 
-	$arrayOptions[] = array("label" => "ungesetzt", "value" => -1);
-		for ($i = 0; $i <= 27; $i++) {
-			$arrayOptions[] = array("label" => $i, "value" => $i);
-		}    
-	    
+	 	    
 	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
 	{
 	        if (!IPS_VariableProfileExists($Name))
