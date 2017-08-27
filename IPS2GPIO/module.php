@@ -430,7 +430,7 @@ class IPS2GPIO_IO extends IPSModule
 			$PinFreeArray = array();
 		   	$PinFreeArray = array_diff($PinPossible, $PinUsed);
 			$arrayGPIO = array();
-			$arrayGPIO[-1] = "ungesetzt";
+			$arrayGPIO[-1] = "undefiniert";
 			foreach($PinFreeArray AS $Value) {
 				$arrayGPIO[$Value] = "GPIO".(sprintf("%'.02d", $Value));
 			}
