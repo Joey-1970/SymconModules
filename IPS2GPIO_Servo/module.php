@@ -29,11 +29,22 @@
  		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number)"); 
   		
 		$arrayOptions = array();
+		$GPIO = array();
+		$GPIO = unserialize($this->Get_GPIO());
+		If ($this->ReadPropertyInteger("Pin") >= 0 ) {
+			$GPIO[$this->ReadPropertyInteger("Pin")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin")));
+		}
+		foreach($GPIO AS $Value => $Label) {
+			$arrayOptions[] = array("label" => $Label, "value" => $Value);
+		}
+		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
+		/*
+		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "ungesetzt", "value" => -1);
 		for ($i = 0; $i <= 27; $i++) {
 			$arrayOptions[] = array("label" => $i, "value" => $i);
 		}
-		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
+		*/
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Angabe der Microsekunden bei 50 Hz:"); 
 		$arrayElements[] = array("name" => "most_anti_clockwise", "type" => "NumberSpinner",  "caption" => "Max. Links (ms)"); 
@@ -179,6 +190,22 @@
 		}
 	}
 	
+	private function Get_GPIO()
+	{
+		If ($this->HasActiveParent() == true) {
+			$GPIO = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_GPIO")));
+		}
+		else {
+			$AllGPIO = array();
+			$AllGPIO[-1] = "undefiniert";
+			for ($i = 2; $i <= 27; $i++) {
+				$AllGPIO[$i] = "GPIO".(sprintf("%'.02d", $i));
+			}
+			$GPIO = serialize($AllGPIO);
+		}
+	return $GPIO;
+	}    
+	    
 	private function HasActiveParent()
     	{
 		$Instance = @IPS_GetInstance($this->InstanceID);
