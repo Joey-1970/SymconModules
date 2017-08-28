@@ -24,7 +24,6 @@ class IPS2GPIO_IO extends IPSModule
 	    	$this->RegisterPropertyString("IPAddress", "127.0.0.1");
 	    	$this->RegisterPropertyString("User", "User");
 	    	$this->RegisterPropertyString("Password", "Passwort");
-	    	$this->RegisterPropertyBoolean("I2C_Used", false);
 		$this->RegisterPropertyInteger("MUX", 0);
 		$this->RegisterPropertyInteger("I2C0", 0);
 	    	$this->RegisterPropertyBoolean("Serial_Used", false);
@@ -55,7 +54,6 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayElements[] = array("type" => "PasswordTextBox", "name" => "Password", "caption" => "Password");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Auswahl der erforderlichen Schnittstellen:");
-		$arrayElements[] = array("type" => "CheckBox", "name" => "I2C_Used", "caption" => "I²C");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "Serial_Used", "caption" => "Seriell");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "1Wire_Used", "caption" => "1-Wire");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
@@ -471,8 +469,6 @@ class IPS2GPIO_IO extends IPSModule
 				$this->SendDebug("Set Used I2C", "Mode der GPIO fuer I2C Bus 1 gesetzt", 0);
 			}
 			
-				
-			$this->SetBuffer("I2C_Used", 1);
 		   	// die genutzten Device Adressen anlegen
 		   	$I2C_DeviceHandle = unserialize($this->GetBuffer("I2C_Handle"));
 		   	// Bei Bus 1 Addition von 128
@@ -499,20 +495,6 @@ class IPS2GPIO_IO extends IPSModule
 					//$this->SendDataToChildren(json_encode(Array("DataID" => "{573FFA75-2A0C-48AC-BF45-FCB01D6BF910}", "Function"=>"status", "InstanceID" => $data->InstanceID, "Status" => 201)));
 				}		
 			}
-		   	break;
-		   case "i2c_destroy":
-		   	//IPS_LogMessage("IPS2GPIO I2C Destroy: ",$data->DeviceAddress." , ".$data->Register); 
-		   	If ($this->GetI2C_DeviceHandle(intval($data->DeviceAddress)) >= 0) {
-		   		$I2C_DeviceHandle = unserialize($this->GetBuffer("I2C_Handle"));
-		   		// Handle für das Device löschen
-		   		$this->CommandClientSocket(pack("L*", 55, GetI2C_DeviceHandle(intval($data->DeviceAddress)), 0, 0), 16);
-		   		// Device aus dem Array löschen
-				array_splice($I2C_DeviceHandle, intval($data->DeviceAddress), 1); 
-				If (Count($I2C_DeviceHandle) == 0) {
-					$this->SetBuffer("I2C_Used", 0);
-				}
-				$this->SetBuffer("I2C_Handle", serialize($I2C_DeviceHandle));
-		   	}
 		   	break;
 		case "i2c_get_ports":
 		   	$DevicePorts = array();
@@ -847,24 +829,8 @@ class IPS2GPIO_IO extends IPSModule
 		}
 		// Pins ermitteln die genutzt werden
 		$PinUsed = array();
-		$this->SetBuffer("I2C_Used", 0);
-		/*
-		// Reservieren der Schnittstellen GPIO
-		If (($this->ReadPropertyBoolean("I2C_Used") == true) AND ($this->GetBuffer("HardwareRev") <= 3)) {
-			$PinUsed[0] = 99999; 
-			$PinUsed[1] = 99999;
-			$this->CommandClientSocket(pack("LLLL", 0, 0, 4, 0).pack("LLLL", 0, 1, 4, 0), 32);
-		}
-		elseif (($this->ReadPropertyBoolean("I2C_Used") == true) AND ($this->GetBuffer("HardwareRev") > 3)) {
-			$PinUsed[2] = 99999; 
-			$PinUsed[3] = 99999;
-			$this->CommandClientSocket(pack("LLLL", 0, 2, 4, 0).pack("LLLL", 0, 3, 4, 0), 32);
-		}
-		elseif ($this->ReadPropertyBoolean("I2C_Used") == false) {
-			// wird I²C nicht benötigt die Pin auf in Input setzen
-			$this->CommandClientSocket(pack("LLLL", 0, 0, 0, 0).pack("LLLL", 0, 1, 0, 0).pack("LLLL", 0, 2, 0, 0).pack("LLLL", 0, 3, 0, 0), 64);
-		}
-		*/
+		
+		
 		$this->SetBuffer("Serial_Used", 0);
 		If ($this->ReadPropertyBoolean("Serial_Used") == true)  {
 			$PinUsed[14] = 99999; 
