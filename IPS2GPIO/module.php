@@ -35,6 +35,8 @@ class IPS2GPIO_IO extends IPSModule
 		$this->SetBuffer("PinNotify", serialize($PinNotify));
 		$PinPossible = array();
 		$this->SetBuffer("PinPossible", serialize($PinPossible));
+		$PinUsed = array();
+		$this->SetBuffer("PinUsed", serialize($PinUsed));
 	}
   	
 	public function GetConfigurationForm() 
