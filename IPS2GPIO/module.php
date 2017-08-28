@@ -153,6 +153,8 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("PinPossible", serialize($Typ));
 			$this->SetBuffer("PinI2C", "");
 			$this->SetBuffer("I2CSearch", 0);
+			$this->SetBuffer("I2C_0_Configured", 0);
+			$this->SetBuffer("I2C_1_Configured", 0);
 			$this->SetBuffer("SerialNotify", 0);
 			$this->SetBuffer("Default_I2C_Bus", 1);
 			$this->SetBuffer("Default_Serial_Bus", 0);
@@ -439,6 +441,37 @@ class IPS2GPIO_IO extends IPSModule
 
 		// I2C Kommunikation
 		case "set_used_i2c":
+			// Konfiguration für I²C Bus 0 - GPIO 28/29 an P5
+			If (($this->GetBuffer("I2C_0_Configured") == 0) AND (intval($data->DeviceBus) == 0)) {
+				$PinUsed = array();
+				// Reservieren der Schnittstellen für I²C
+				$this->CommandClientSocket(pack("LLLL", 0, 28, 4, 0).pack("LLLL", 0, 29, 4, 0), 32);
+				// Sichern der Einstellungen
+				$this->SetBuffer("I2C_0_Configured", 1);
+				$this->SendDebug("Set Used I2C", "Mode der GPIO fuer I2C Bus 0 gesetzt", 0);
+			}
+			// Konfiguration für I²C Bus 1 (Default) - GPIO 0/1 bzw. 2/3 an P1
+			If (($this->GetBuffer("I2C_1_Configured") == 0) AND (intval($data->DeviceBus) == 1)) {
+				$PinUsed = array();
+				$PinUsed = $this->GetBuffer("PinUsed");
+				// Reservieren der Schnittstellen für I²C
+				If ($this->GetBuffer("HardwareRev") <= 3) {
+					$PinUsed[0] = 99999; 
+					$PinUsed[1] = 99999;
+					$this->CommandClientSocket(pack("L*", 0, 0, 4, 0).pack("L*", 0, 1, 4, 0), 32);
+				}
+				elseif ($this->GetBuffer("HardwareRev") > 3) {
+					$PinUsed[2] = 99999; 
+					$PinUsed[3] = 99999;
+					$this->CommandClientSocket(pack("L*", 0, 2, 4, 0).pack("L*", 0, 3, 4, 0), 32);
+				}
+				// Sichern der Einstellungen
+				$this->SetBuffer("PinUsed", serialize($PinUsed));
+				$this->SetBuffer("I2C_1_Configured", 1);
+				$this->SendDebug("Set Used I2C", "Mode der GPIO fuer I2C Bus 1 gesetzt", 0);
+			}
+			
+				
 			$this->SetBuffer("I2C_Used", 1);
 		   	// die genutzten Device Adressen anlegen
 		   	$I2C_DeviceHandle = unserialize($this->GetBuffer("I2C_Handle"));
@@ -815,6 +848,7 @@ class IPS2GPIO_IO extends IPSModule
 		// Pins ermitteln die genutzt werden
 		$PinUsed = array();
 		$this->SetBuffer("I2C_Used", 0);
+		/*
 		// Reservieren der Schnittstellen GPIO
 		If (($this->ReadPropertyBoolean("I2C_Used") == true) AND ($this->GetBuffer("HardwareRev") <= 3)) {
 			$PinUsed[0] = 99999; 
@@ -830,6 +864,7 @@ class IPS2GPIO_IO extends IPSModule
 			// wird I²C nicht benötigt die Pin auf in Input setzen
 			$this->CommandClientSocket(pack("LLLL", 0, 0, 0, 0).pack("LLLL", 0, 1, 0, 0).pack("LLLL", 0, 2, 0, 0).pack("LLLL", 0, 3, 0, 0), 64);
 		}
+		*/
 		$this->SetBuffer("Serial_Used", 0);
 		If ($this->ReadPropertyBoolean("Serial_Used") == true)  {
 			$PinUsed[14] = 99999; 
