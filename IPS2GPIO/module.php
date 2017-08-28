@@ -287,29 +287,6 @@ class IPS2GPIO_IO extends IPSModule
 	    	$Result = -999;
 	 	switch ($data->Function) {
 		    // GPIO Kommunikation
-		    case "gpio_destroy":
-		    	// Löschen einer GPIO-Belegung
-		    	// aus der Liste der genutzten GPIO
-		    	$PinUsed = unserialize($this->GetBuffer("PinUsed"));
-		    	IPS_LogMessage("IPS2GPIO GPIO Destroy: ",$data->Pin);
-		    	if (in_array($data->Pin, $PinUsed)) {
-		    		IPS_LogMessage("IPS2GPIO GPIO Destroy: ","Pin in PinUsed");
-		    		array_splice($PinUsed, $data->Pin, 1);	
-		    	}
-			$this->SetBuffer("PinUsed", serialize($PinUsed));
-		        // aus der Liste der Notify-GPIO
-			$PinNotify = array();
-		        $PinNotify = unserialize($this->GetBuffer("PinNotify"));
-		        if (in_array($data->Pin, $PinNotify)) {
-		    		IPS_LogMessage("IPS2GPIO GPIO Destroy: ","Pin in PinNotify");
-		    		array_splice($PinNotify, $data->Pin, 1);
-				$this->SetBuffer("PinNotify", serialize($PinNotify));
-		    		If ($this->GetBuffer("Handle") >= 0) {
-			           	// Notify neu setzen
-			           	$this->CommandClientSocket(pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 16);
-				}
-		    	}
-		        break;
 		case "set_PWM_dutycycle":
 		    	// Dimmt einen Pin
 		    	If ($data->Pin >= 0) {
@@ -397,7 +374,8 @@ class IPS2GPIO_IO extends IPSModule
 						}	
 					}
 				}
-			        $PinUsed[$data->Pin] = $data->InstanceID;
+			        $PinUsed[intval($data->Pin)] = $data->InstanceID;
+				$this->SetBuffer("PinUsed", serialize($PinUsed));
 			        // Messages einrichten
 			        $this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
 		        	$this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
@@ -405,8 +383,8 @@ class IPS2GPIO_IO extends IPSModule
 			        If ($data->Notify == true) {
 					$PinNotify = array();
 			        	$PinNotify = unserialize($this->GetBuffer("PinNotify"));
-				        if (in_array($data->Pin, $PinNotify) == false) {
-						$PinNotify[] = $data->Pin;
+				        if (in_array(intval($data->Pin), $PinNotify) == false) {
+						$PinNotify[] = intval($data->Pin);
 						$this->SendDebug("set_usedpin", "Gewaehlter Pin ".$data->Pin." wurde dem Notify hinzugefuegt", 0);
 					}
 					$this->SetBuffer("PinNotify", serialize($PinNotify));
@@ -467,7 +445,7 @@ class IPS2GPIO_IO extends IPSModule
 			// Konfiguration für I²C Bus 1 (Default) - GPIO 0/1 bzw. 2/3 an P1
 			If (($this->GetBuffer("I2C_1_Configured") == 0) AND (intval($data->DeviceBus) == 1)) {
 				$PinUsed = array();
-				$PinUsed = $this->GetBuffer("PinUsed");
+				$PinUsed = unserialize($this->GetBuffer("PinUsed"));
 				// Reservieren der Schnittstellen für I²C
 				If ($this->GetBuffer("HardwareRev") <= 3) {
 					$PinUsed[0] = 99999; 
