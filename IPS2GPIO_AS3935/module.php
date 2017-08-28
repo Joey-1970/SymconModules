@@ -56,8 +56,9 @@
 		$GPIO = array();
 		$GPIO = unserialize($this->Get_GPIO());
 		If ($this->ReadPropertyInteger("Pin") >= 0 ) {
-			$GPIO[] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin")));
+			$GPIO[$this->ReadPropertyInteger("Pin")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin")));
 		}
+		asort($GPIO);
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
