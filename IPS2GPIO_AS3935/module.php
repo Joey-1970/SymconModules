@@ -248,8 +248,14 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_AS3935_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Count" => 9 )));
-			$Data = array();
-			$Data = unserialize($Result);
+			If ($Result < 0) {
+				$this->SendDebug("GetOutput", "Fehler beim Lesen der Werte!", 0);
+				return;
+			}
+			else {
+				$Data = array();
+				$Data = unserialize($Result);
+			}
 			/*
 			$PowerDown = $Data[1] & 1;
 			$this->SendDebug("PowerDown", $PowerDown, 0);
