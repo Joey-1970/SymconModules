@@ -153,6 +153,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("I2CSearch", 0);
 			$this->SetBuffer("I2C_0_Configured", 0);
 			$this->SetBuffer("I2C_1_Configured", 0);
+			$this->SetBuffer("Serial_Configured", 0);
 			$this->SetBuffer("SerialNotify", 0);
 			$this->SetBuffer("Default_I2C_Bus", 1);
 			$this->SetBuffer("Default_Serial_Bus", 0);
@@ -623,15 +624,25 @@ class IPS2GPIO_IO extends IPSModule
 		   
 		   // Serielle Kommunikation
 		case "get_handle_serial":
-	   		// Raspberry Pi 3 = Alt5(Rxd1/TxD1) => 2
-			// Alle anderen = Alt0(Rxd0/TxD0) => 4
-			If ($this->GetBuffer("Default_Serial_Bus") == 0) {
-				$this->CommandClientSocket(pack("LLLL", 0, 14, 4, 0).pack("LLLL", 0, 15, 4, 0), 32);
+	   		If ($this->GetBuffer("Serial_Configured") == 0) {
+				$PinUsed = array();
+				$PinUsed = $this->GetBuffer("PinUsed");
+				// Raspberry Pi 3 = Alt5(Rxd1/TxD1) => 2
+				// Alle anderen = Alt0(Rxd0/TxD0) => 4
+				If ($this->GetBuffer("Default_Serial_Bus") == 0) {
+					$this->CommandClientSocket(pack("L*", 0, 14, 4, 0).pack("L*", 0, 15, 4, 0), 32);
+				}
+				elseif ($this->GetBuffer("Default_Serial_Bus") == 1) {
+					// Beim Raspberry Pi 3 ist Bus 0 schon durch die Bluetooth-Schnittstelle belegt
+					$this->CommandClientSocket(pack("L*", 0, 14, 2, 0).pack("L*", 0, 15, 2, 0), 32);
+				}
+				$PinUsed[14] = 99999; 
+				$PinUsed[15] = 99999;
+				$this->SetBuffer("PinUsed", serialize($PinUsed));
+				$this->SetBuffer("Serial_Configured", 1);
+				$this->SendDebug("Get Serial Handle", "Mode der GPIO fuer Seriellen Bus gesetzt", 0);
 			}
-			elseif ($this->GetBuffer("Default_Serial_Bus") == 1) {
-				// Beim Raspberry Pi 3 ist Bus 0 schon durch die Bluetooth-Schnittstelle belegt
-				$this->CommandClientSocket(pack("LLLL", 0, 14, 2, 0).pack("LLLL", 0, 15, 2, 0), 32);
-			}
+				
 			
 	   		//$this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device.pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 32);
 			$SerialHandle = $this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device, 16);
