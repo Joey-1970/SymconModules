@@ -152,11 +152,14 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("I2C_0_Configured", 0);
 			$this->SetBuffer("I2C_1_Configured", 0);
 			$this->SetBuffer("Serial_Configured", 0);
+			$this->SetBuffer("1Wire_Configured", 0);
 			$this->SetBuffer("SerialNotify", 0);
 			$this->SetBuffer("Default_I2C_Bus", 1);
 			$this->SetBuffer("Default_Serial_Bus", 0);
 			$this->SetBuffer("MUX_Handle", -1);
 			$this->SetBuffer("NotifyCounter", -1);
+			$PinNotify = array();
+			$this->SetBuffer("PinNotify", serialize($PinNotify));
 			
 			$ParentID = $this->GetParentID();
 		        // Änderung an den untergeordneten Instanzen
@@ -188,7 +191,7 @@ class IPS2GPIO_IO extends IPSModule
 				$this->SendDebug("ApplyChangges", "Starte Vorbereitung", 0);
 				$this->CheckConfig();
 				// Hardware und Softwareversion feststellen
-				$this->CommandClientSocket(pack("LLLL", 17, 0, 0, 0).pack("LLLL", 26, 0, 0, 0), 32);
+				$this->CommandClientSocket(pack("L*", 17, 0, 0, 0).pack("L*", 26, 0, 0, 0), 32);
 				
 				// I2C-Handle zurücksetzen
 				$this->ResetI2CHandle(0);
@@ -224,6 +227,7 @@ class IPS2GPIO_IO extends IPSModule
 				If ($Handle >= 0) {
 					$this->ClientSocket(pack("L*", 19, $Handle, $this->CalcBitmask(), 0));
 				}
+				
 				$this->Get_PinUpdate();
 				
 				$this->SetStatus(102);
@@ -689,11 +693,20 @@ class IPS2GPIO_IO extends IPSModule
 			}
 			break;
 		    // 1-Wire
-		    case "get_1wire_devices":
+		case "get_1wire_devices":
+			If ($this->GetBuffer("1Wire_Configured") == 0) {
+				$PinUsed = array();
+				$PinUsed = $this->GetBuffer("PinUsed");
+				$this->CommandClientSocket(pack("L*", 0, 4, 1, 0), 16);
+				$PinUsed[4] = 99999; 
+				$this->SetBuffer("PinUsed", serialize($PinUsed));
+				$this->SetBuffer("1Wire_Configured", 1);
+				$this->SendDebug("Get Serial Handle", "Mode der GPIO fuer 1Wire gesetzt", 0);
+			}
 			$Result = $this->GetOneWireDevices();
 			$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_1wire_devices", "InstanceID" => $data->InstanceID, "Result"=>utf8_encode($Result) )));
 			break;
-		    case "get_1W_data":
+		case "get_1W_data":
 			$Result = $this->SSH_Connect_Array($data->Command);
 			//IPS_LogMessage("IPS2GPIO 1-Wire-Data", $Result );
 			$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_1wire_data", "InstanceID" => $data->InstanceID, "Result"=>utf8_encode($Result) )));
@@ -828,34 +841,15 @@ class IPS2GPIO_IO extends IPSModule
 		$this->SetBuffer("PinNotify", serialize($PinNotify));
 		// Notify zurücksetzen	
 		If ($this->GetBuffer("Handle") >= 0) {
-	           	$this->CommandClientSocket(pack("LLLL", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 16);
+	           	$this->CommandClientSocket(pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 16);
 		}
-		// Ermitteln ob der I2C-Bus genutzt wird und welcher Device Adressen
-		// Bisherige I2C-Handle löschen
-		$I2C_DeviceHandle = array_values(unserialize($this->GetBuffer("I2C_Handle")));
-		for ($i = 0; $i < Count($I2C_DeviceHandle); $i++) {
-			$this->CommandClientSocket(pack("L*", 55, $I2C_DeviceHandle[$i], 0, 0), 16);
-		}
-		// Pins ermitteln die genutzt werden
-		$PinUsed = array();
 		
-		// Reseervierung des 1-Wire-Pins
-		If ($this->ReadPropertyBoolean("1Wire_Used") == true)  {
-			$PinUsed[4] = 99999;
-			$this->CommandClientSocket(pack("LLLL", 0, 4, 1, 0), 16);
-		}
-		else {
-			// wird 1-Wire nicht benötigt die Pin auf Input setzen
-			$this->CommandClientSocket(pack("LLLL", 0, 4, 0, 0), 16);
-		}
-		// Sichern der Voreinstellungen
-		$this->SetBuffer("PinUsed", serialize($PinUsed));
 		// Ermitteln der genutzten I2C-Adressen
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_used_i2c")));
-		// Ermitteln der sonstigen genutzen GPIO
-		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_usedpin")));
 		// Ermitteln der sonstigen Seriellen Schnittstellen-Daten
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_serial")));
+		// Ermitteln der sonstigen genutzen GPIO
+		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_usedpin")));
 		// Start-trigger für andere Instanzen (BT, RPi)
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_start_trigger")));
 	}
