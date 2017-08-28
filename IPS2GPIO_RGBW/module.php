@@ -34,6 +34,7 @@
 		If ($this->ReadPropertyInteger("Pin_R") >= 0 ) {
 			$GPIO[$this->ReadPropertyInteger("Pin_R")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_R")));
 		}
+		ksort($GPIO);
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
@@ -45,6 +46,7 @@
 		If ($this->ReadPropertyInteger("Pin_G") >= 0 ) {
 			$GPIO[$this->ReadPropertyInteger("Pin_G")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_G")));
 		}
+		ksort($GPIO);
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
@@ -56,6 +58,7 @@
 		If ($this->ReadPropertyInteger("Pin_B") >= 0 ) {
 			$GPIO[$this->ReadPropertyInteger("Pin_B")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_B")));
 		}
+		ksort($GPIO);
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
@@ -67,22 +70,12 @@
 		If ($this->ReadPropertyInteger("Pin_W") >= 0 ) {
 			$GPIO[$this->ReadPropertyInteger("Pin_W")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_W")));
 		}
+		ksort($GPIO);
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_W", "caption" => "GPIO-Nr. Weiß", "options" => $arrayOptions );
 
-		/*
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "ungesetzt", "value" => -1);
-		for ($i = 0; $i <= 27; $i++) {
-			$arrayOptions[] = array("label" => $i, "value" => $i);
-		}
-		$arrayElements[] = array("type" => "Select", "name" => "Pin_R", "caption" => "GPIO-Nr. Rot", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Select", "name" => "Pin_G", "caption" => "GPIO-Nr. Grün", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Select", "name" => "Pin_B", "caption" => "GPIO-Nr. Blau", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Select", "name" => "Pin_W", "caption" => "GPIO-Nr. Weiß", "options" => $arrayOptions );
-		*/
 		$arrayActions = array();
 		If (($this->ReadPropertyInteger("Pin_R") >= 0) AND ($this->ReadPropertyInteger("Pin_G") >= 0) AND ($this->ReadPropertyInteger("Pin_B") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 			$arrayActions[] = array("type" => "Button", "label" => "On", "onClick" => 'I2GRGB_Set_Status($id, true);');
