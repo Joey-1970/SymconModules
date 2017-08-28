@@ -709,7 +709,7 @@ class IPS2GPIO_IO extends IPSModule
 		case "get_1wire_devices":
 			If ($this->GetBuffer("1Wire_Configured") == 0) {
 				$PinUsed = array();
-				$PinUsed = $this->GetBuffer("PinUsed");
+				$PinUsed = unserialize($this->GetBuffer("PinUsed"));
 				$this->CommandClientSocket(pack("L*", 0, 4, 1, 0), 16);
 				$PinUsed[4] = 99999; 
 				$this->SetBuffer("PinUsed", serialize($PinUsed));
