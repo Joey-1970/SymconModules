@@ -33,6 +33,8 @@ class IPS2GPIO_IO extends IPSModule
 	    	$this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
 		$PinNotify = array();
 		$this->SetBuffer("PinNotify", serialize($PinNotify));
+		$PinPossible = array();
+		$this->SetBuffer("PinPossible", serialize($PinPossible));
 	}
   	
 	public function GetConfigurationForm() 
