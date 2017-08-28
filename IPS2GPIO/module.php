@@ -415,8 +415,10 @@ class IPS2GPIO_IO extends IPSModule
 			$PinPossible = unserialize($this->GetBuffer("PinPossible"));
 			$PinUsed = array();
 		   	$PinUsed = unserialize($this->GetBuffer("PinUsed"));
-			$this->SendDebug("PinUsed", $this->GetBuffer("PinUsed"), 0);
-		   	$PinFreeArray = array();
+			//$this->SendDebug("PinUsed", $this->GetBuffer("PinUsed"), 0);
+		   	$PinUsedKeys = array();
+			$PinUsedKeys = (array_keys($PinUsed));
+			$PinFreeArray = array();
 			If (is_array($PinUsed)) {
 				$PinFreeArray = array_diff($PinPossible, $PinUsed);
 			}
