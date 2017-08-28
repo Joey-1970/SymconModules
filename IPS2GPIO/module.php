@@ -641,7 +641,7 @@ class IPS2GPIO_IO extends IPSModule
 		case "get_handle_serial":
 	   		If ($this->GetBuffer("Serial_Configured") == 0) {
 				$PinUsed = array();
-				$PinUsed = $this->GetBuffer("PinUsed");
+				$PinUsed = unserialize($this->GetBuffer("PinUsed"));
 				// Raspberry Pi 3 = Alt5(Rxd1/TxD1) => 2
 				// Alle anderen = Alt0(Rxd0/TxD0) => 4
 				If ($this->GetBuffer("Default_Serial_Bus") == 0) {
