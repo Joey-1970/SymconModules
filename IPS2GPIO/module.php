@@ -228,7 +228,15 @@ class IPS2GPIO_IO extends IPSModule
 					$this->ClientSocket(pack("L*", 19, $Handle, $this->CalcBitmask(), 0));
 				}
 				
-				$this->Get_PinUpdate();
+				// Ermitteln der genutzten I2C-Adressen
+				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_used_i2c")));
+				// Ermitteln der sonstigen Seriellen Schnittstellen-Daten
+				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_serial")));
+				// Ermitteln der sonstigen genutzen GPIO
+				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_usedpin")));
+				// Start-trigger für andere Instanzen (BT, RPi)
+				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_start_trigger")));
+
 				
 				$this->SetStatus(102);
 				
@@ -422,9 +430,6 @@ class IPS2GPIO_IO extends IPSModule
 				}
 		   	}
 		        break;
-		case "get_pinupdate":
-		   	$this->Get_PinUpdate();
-		   	break;
 		case "get_GPIO":
 		   	$PinPossible = array();
 			$PinPossible = unserialize($this->GetBuffer("PinPossible"));
@@ -832,27 +837,6 @@ class IPS2GPIO_IO extends IPSModule
 		            throw new Exception("Invalid Ident");
 		    }
 	 }
-  
-	// Aktualisierung der genutzten Pins und der Notifikation
-	private function Get_PinUpdate()
-	{
-		// Pins ermitteln für die ein Notify erforderlich ist
-		$PinNotify = array();
-		$this->SetBuffer("PinNotify", serialize($PinNotify));
-		// Notify zurücksetzen	
-		If ($this->GetBuffer("Handle") >= 0) {
-	           	$this->CommandClientSocket(pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 16);
-		}
-		
-		// Ermitteln der genutzten I2C-Adressen
-		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_used_i2c")));
-		// Ermitteln der sonstigen Seriellen Schnittstellen-Daten
-		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_serial")));
-		// Ermitteln der sonstigen genutzen GPIO
-		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_usedpin")));
-		// Start-trigger für andere Instanzen (BT, RPi)
-		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_start_trigger")));
-	}
 
 	private function ClientSocket(String $message)
 	{
