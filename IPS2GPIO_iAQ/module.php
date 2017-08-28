@@ -172,7 +172,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Daten anfordern
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_bytes", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("5A"), "Count" => 9)));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_iAQ_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("5A"), "Count" => 9)));
 			If ($Result < 0) {
 				$this->SendDebug("Measurement", "Einlesen der Werte fehlerhaft!", 0);
 				return;
