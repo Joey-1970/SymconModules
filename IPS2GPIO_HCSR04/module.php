@@ -33,13 +33,33 @@
  		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number)"); 
   		
 		$arrayOptions = array();
+		$GPIO = array();
+		$GPIO = unserialize($this->Get_GPIO());
+		If ($this->ReadPropertyInteger("Pin_I") >= 0 ) {
+			$GPIO[$this->ReadPropertyInteger("Pin_I")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_I")));
+		}
+		foreach($GPIO AS $Value => $Label) {
+			$arrayOptions[] = array("label" => $Label, "value" => $Value);
+		}
+		$arrayElements[] = array("type" => "Select", "name" => "Pin_I", "caption" => "GPIO-Nr. Echo", "options" => $arrayOptions );
+		
+		$GPIO = array();
+		$GPIO = unserialize($this->Get_GPIO());
+		If ($this->ReadPropertyInteger("Pin_O") >= 0 ) {
+			$GPIO[$this->ReadPropertyInteger("Pin_O")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_O")));
+		}
+		foreach($GPIO AS $Value => $Label) {
+			$arrayOptions[] = array("label" => $Label, "value" => $Value);
+		}
+		$arrayElements[] = array("type" => "Select", "name" => "Pin_O", "caption" => "GPIO-Nr. Trigger", "options" => $arrayOptions );
+
+		/*
+		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "ungesetzt", "value" => -1);
 		for ($i = 0; $i <= 27; $i++) {
 			$arrayOptions[] = array("label" => $i, "value" => $i);
 		}
-		$arrayElements[] = array("type" => "Select", "name" => "Pin_I", "caption" => "GPIO-Nr. Echo", "options" => $arrayOptions );
-		
-		$arrayElements[] = array("type" => "Select", "name" => "Pin_O", "caption" => "GPIO-Nr. Trigger", "options" => $arrayOptions );
+		*/		
 		
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, 1 sek -> Minimum)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
@@ -180,6 +200,22 @@
 	        IPS_SetVariableProfileDigits($Name, $Digits);
 	}
 	
+	private function Get_GPIO()
+	{
+		If ($this->HasActiveParent() == true) {
+			$GPIO = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_GPIO")));
+		}
+		else {
+			$AllGPIO = array();
+			$AllGPIO[-1] = "undefiniert";
+			for ($i = 2; $i <= 27; $i++) {
+				$AllGPIO[$i] = "GPIO".(sprintf("%'.02d", $i));
+			}
+			$GPIO = serialize($AllGPIO);
+		}
+	return $GPIO;
+	}    
+	     
 	private function HasActiveParent()
     	{
 		$Instance = @IPS_GetInstance($this->InstanceID);
