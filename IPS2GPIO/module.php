@@ -26,7 +26,6 @@ class IPS2GPIO_IO extends IPSModule
 	    	$this->RegisterPropertyString("Password", "Passwort");
 		$this->RegisterPropertyInteger("MUX", 0);
 		$this->RegisterPropertyInteger("I2C0", 0);
-		$this->RegisterPropertyBoolean("1Wire_Used", false);
 		$this->RegisterPropertyString("Raspi_Config", "");
 		$this->RegisterPropertyString("I2C_Devices", "");
 		$this->RegisterPropertyBoolean("Multiplexer", false);
@@ -55,9 +54,6 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayElements[] = array("type" => "Label", "label" => "Zugriffsdaten des Raspberry Pi SSH:");
 		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "User", "caption" => "User");
 		$arrayElements[] = array("type" => "PasswordTextBox", "name" => "Password", "caption" => "Password");
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		$arrayElements[] = array("type" => "Label", "label" => "Auswahl der erforderlichen Schnittstellen:");
-		$arrayElements[] = array("type" => "CheckBox", "name" => "1Wire_Used", "caption" => "1-Wire");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Detaillierung der genutzten I²C-Schnittstelle:");
 		$arrayOptions = array();
@@ -441,6 +437,7 @@ class IPS2GPIO_IO extends IPSModule
 			$PinPossible = unserialize($this->GetBuffer("PinPossible"));
 			$PinUsed = array();
 		   	$PinUsed = unserialize($this->GetBuffer("PinUsed"));
+			$this->SendDebug("PinUsed", $this->GetBuffer("PinUsed"), 0);
 		   	$PinFreeArray = array();
 			If (is_array($PinUsed)) {
 				$PinFreeArray = array_diff($PinPossible, $PinUsed);
