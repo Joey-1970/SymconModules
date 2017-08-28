@@ -34,17 +34,11 @@
 		If ($this->ReadPropertyInteger("Pin") >= 0 ) {
 			$GPIO[$this->ReadPropertyInteger("Pin")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin")));
 		}
+		ksort($GPIO);
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
-		/*
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "ungesetzt", "value" => -1);
-		for ($i = 0; $i <= 27; $i++) {
-			$arrayOptions[] = array("label" => $i, "value" => $i);
-		}
-		*/
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("name" => "Invert", "type" => "CheckBox",  "caption" => "Invertiere Anzeige");
 		$arrayElements[] = array("name" => "Logging", "type" => "CheckBox",  "caption" => "Logging aktivieren");
