@@ -38,6 +38,7 @@
 		If ($this->ReadPropertyInteger("Pin_I") >= 0 ) {
 			$GPIO[$this->ReadPropertyInteger("Pin_I")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_I")));
 		}
+		ksort($GPIO);
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
@@ -48,6 +49,7 @@
 		If ($this->ReadPropertyInteger("Pin_O") >= 0 ) {
 			$GPIO[$this->ReadPropertyInteger("Pin_O")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_O")));
 		}
+		ksort($GPIO);
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
