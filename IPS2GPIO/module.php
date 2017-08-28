@@ -420,7 +420,7 @@ class IPS2GPIO_IO extends IPSModule
 			$PinUsedKeys = (array_keys($PinUsed));
 			$PinFreeArray = array();
 			If (is_array($PinUsed)) {
-				$PinFreeArray = array_diff($PinPossible, $PinUsed);
+				$PinFreeArray = array_diff($PinPossible, $PinUsedKeys);
 			}
 			else {
 				$PinFreeArray = $PinPossible;
