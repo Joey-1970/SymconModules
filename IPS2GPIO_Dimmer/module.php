@@ -30,18 +30,12 @@
 		$GPIO = array();
 		$GPIO = unserialize($this->Get_GPIO());
 		If ($this->ReadPropertyInteger("Pin") >= 0 ) {
-			$GPIO[$this->ReadPropertyInteger("Pin")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin")));
+			$GPIO[] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin")));
 		}
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
-		/*
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "ungesetzt", "value" => -1);
-		for ($i = 0; $i <= 27; $i++) {
-			$arrayOptions[] = array("label" => $i, "value" => $i);
-		}
-		*/
+		
 		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		
 		$arrayActions = array();
