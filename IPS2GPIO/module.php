@@ -392,13 +392,15 @@ class IPS2GPIO_IO extends IPSModule
 				$PinUsed = array();
 				$PinUsed = unserialize($this->GetBuffer("PinUsed"));
 				// Prüft, ob der ausgeählte Pin schon einmal genutzt wird
-			        If (array_key_exists(intval($data->Pin), $PinUsed)) {
-			        	If (($PinUsed[$data->Pin] <> $data->InstanceID) AND ($PinUsed[$data->Pin] <> 99999)) {
-			        		IPS_LogMessage("IPS2GPIO Pin", "Achtung: Pin ".$data->Pin." wird mehrfach genutzt!");
-						$this->SendDebug("set_usedpin", "Achtung: Pin ".$data->Pin." wird mehrfach genutzt!", 0);
-			        		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>200, "HardwareRev"=>$this->GetBuffer("HardwareRev")) ));
-			        	}	
-			        }
+			        If (is_array($PinUsed)) {
+					If (array_key_exists(intval($data->Pin), $PinUsed)) {
+						If (($PinUsed[$data->Pin] <> $data->InstanceID) AND ($PinUsed[$data->Pin] <> 99999)) {
+							IPS_LogMessage("IPS2GPIO Pin", "Achtung: Pin ".$data->Pin." wird mehrfach genutzt!");
+							$this->SendDebug("set_usedpin", "Achtung: Pin ".$data->Pin." wird mehrfach genutzt!", 0);
+							$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>200, "HardwareRev"=>$this->GetBuffer("HardwareRev")) ));
+						}	
+					}
+				}
 			        $PinUsed[$data->Pin] = $data->InstanceID;
 			        // Messages einrichten
 			        $this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
