@@ -26,7 +26,6 @@ class IPS2GPIO_IO extends IPSModule
 	    	$this->RegisterPropertyString("Password", "Passwort");
 		$this->RegisterPropertyInteger("MUX", 0);
 		$this->RegisterPropertyInteger("I2C0", 0);
-	    	$this->RegisterPropertyBoolean("Serial_Used", false);
 		$this->RegisterPropertyBoolean("1Wire_Used", false);
 		$this->RegisterPropertyString("Raspi_Config", "");
 		$this->RegisterPropertyString("I2C_Devices", "");
@@ -54,7 +53,6 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayElements[] = array("type" => "PasswordTextBox", "name" => "Password", "caption" => "Password");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Auswahl der erforderlichen Schnittstellen:");
-		$arrayElements[] = array("type" => "CheckBox", "name" => "Serial_Used", "caption" => "Seriell");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "1Wire_Used", "caption" => "1-Wire");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Detaillierung der genutzten I²C-Schnittstelle:");
@@ -755,7 +753,7 @@ class IPS2GPIO_IO extends IPSModule
 						$PinNotify = array();
 						$PinNotify = unserialize($this->GetBuffer("PinNotify"));
 						// Werte durchlaufen
-						If ($this->ReadPropertyBoolean("Serial_Used") == 0) {
+						If ($this->GetBuffer("Serial_Configured") == 0) {
 							for ($j = 0; $j < Count($PinNotify); $j++) {
 								$Bitvalue = boolval($Level & (1<<$PinNotify[$j]));
 								$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit ".$PinNotify[$j]." Wert: ".(int)$Bitvalue, 0);
@@ -840,25 +838,6 @@ class IPS2GPIO_IO extends IPSModule
 		}
 		// Pins ermitteln die genutzt werden
 		$PinUsed = array();
-		
-		
-		$this->SetBuffer("Serial_Used", 0);
-		If ($this->ReadPropertyBoolean("Serial_Used") == true)  {
-			$PinUsed[14] = 99999; 
-			$PinUsed[15] = 99999;
-			
-			If ($this->GetBuffer("Serial_Handle") >= 0) {
-				$this->CommandClientSocket(pack("L*", 77, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
-			}
-			$this->SetBuffer("Serial_Handle", -1);
-			$this->SetBuffer("Serial_Used", 0);
-			
-			
-		}
-		else {
-			// wird Serial nicht benötigt die Pin auf in Input setzen
-			$this->CommandClientSocket(pack("LLLL", 0, 14, 0, 0).pack("LLLL", 0, 15, 0, 0), 16);
-		}
 		
 		// Reseervierung des 1-Wire-Pins
 		If ($this->ReadPropertyBoolean("1Wire_Used") == true)  {
@@ -1214,7 +1193,7 @@ class IPS2GPIO_IO extends IPSModule
 				break;
 		        case "76":
            			If ($response[4] >= 0) {
-					$this->SetBuffer("Serial_Used", 1);
+					// 
 				}
 				else {
 					IPS_LogMessage("IPS2GPIO I2C Get Serial Handle","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
