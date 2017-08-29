@@ -128,20 +128,13 @@
 		}
 	}
 	
-	public function RequestAction($Ident, $Value) 
-	{
-  		switch($Ident) {
-	       
-	        default:
-	            throw new Exception("Invalid Ident");
-	    	}
-	}
-	
 	public function ReceiveData($JSONString) 
 	{
-	    	// Empfangene Daten vom Gateway/Splitter
+	    	
+		// Empfangene Daten vom Gateway/Splitter
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
+			/*
 			case "set_RPi_connect":
 				$ResultArray = unserialize(utf8_decode($data->Result));
 				If ($data->CommandNumber == 0) {
@@ -294,6 +287,7 @@
 					}
 				}
 				break;
+				*/
 			case "get_start_trigger":
 			   	$this->ApplyChanges();
 				break;
@@ -318,7 +312,53 @@
 			$CommandArray[4] = "hostname";
 
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 0, "IsArray" => true )));
-			
+			$ResultArray = unserialize(utf8_decode($Result));
+			for ($i = 0; $i < Count($ResultArray); $i++) {
+				switch(key($ResultArray)) {
+					case "0":
+						// Betriebssystem
+						$Result = $ResultArray[key($ResultArray)];
+						SetValueString($this->GetIDForIdent("Software"), $Result);
+						break;
+					case "1":
+						// Hardware-Daten
+						$HardwareArray = explode("\n", $ResultArray[key($ResultArray)]);
+						for ($j = 0; $j <= Count($HardwareArray) - 1; $j++) {
+							If (Substr($HardwareArray[$j], 0, 8) == "Hardware") {
+								$PartArray = explode(":", $HardwareArray[$j]);
+								SetValueString($this->GetIDForIdent("Hardware"), trim($PartArray[1]));
+							}
+							If (Substr($HardwareArray[$j], 0, 8) == "Revision") {
+								$PartArray = explode(":", $HardwareArray[$j]);
+								SetValueString($this->GetIDForIdent("Revision"), trim($PartArray[1]));
+								SetValueString($this->GetIDForIdent("Board"), $this->GetHardware(hexdec($PartArray[1])) );
+							}
+							If (Substr($HardwareArray[$j], 0, 6) == "Serial") {
+								$PartArray = explode(":", $HardwareArray[$j]);
+								SetValueString($this->GetIDForIdent("Serial"), trim($PartArray[1]));
+							}
+
+						}
+						break;
+					case "2":
+						// CPU Speicher
+						$Result = intval(substr($ResultArray[key($ResultArray)], 4, -1));
+						SetValueFloat($this->GetIDForIdent("MemoryCPU"), $Result);
+						break;
+					case "3":
+						// GPU Speicher
+						$Result = intval(substr($ResultArray[key($ResultArray)], 4, -1));
+						SetValueFloat($this->GetIDForIdent("MemoryGPU"), $Result);
+						break;
+					case "4":
+						// Hostname
+						$Result = trim($ResultArray[key($ResultArray)]);
+						SetValueString($this->GetIDForIdent("Hostname"), $Result);
+						break;
+
+				}
+				Next($ResultArray);
+			}
 		}
 	}
 	    
@@ -347,6 +387,106 @@
 
 
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 1, "IsArray" => true )));
+			$ResultArray = unserialize(utf8_decode($Result));
+			for ($i = 0; $i < Count($ResultArray); $i++) {
+				switch(key($ResultArray)) {
+					case "0":
+						// GPU Temperatur
+						$Result = floatval(substr($ResultArray[key($ResultArray)], 5, -2));
+						SetValueFloat($this->GetIDForIdent("TemperaturGPU"), $Result);
+						break;
+
+					case "1":
+						// CPU Temperatur
+						$Result = floatval(intval($ResultArray[key($ResultArray)]) / 1000);
+						SetValueFloat($this->GetIDForIdent("TemperaturCPU"), $Result);
+						break;
+					case "2":
+						// CPU Spannung
+						$Result = floatval(substr($ResultArray[key($ResultArray)], 5, -1));
+						SetValueFloat($this->GetIDForIdent("VoltageCPU"), $Result);
+						break;
+					case "3":
+						// ARM Frequenz
+						$Result = intval(substr($ResultArray[key($ResultArray)], 14))/1000000;
+						SetValueFloat($this->GetIDForIdent("ARM_Frequenzy"), $Result);
+						break;
+					case "4":
+						// CPU Auslastung über proc/stat
+						$LoadAvgArray = explode("\n", $ResultArray[key($ResultArray)]);
+						$LineOneArray = explode(" ", $LoadAvgArray[0]);
+						// Array mit "cpu" und "" löschen
+						unset($LineOneArray[array_search("cpu", $LineOneArray)]);
+						unset($LineOneArray[array_search("", $LineOneArray)]);
+						// Array neu durchnummerieren
+						$LineOneArray = array_merge($LineOneArray);
+						If (count($LineOneArray) >= 8) {
+							//IPS_LogMessage("IPS2GPIO RPi", serialize($LineOneArray));
+							// Idle = idle + iowait
+							$Idle = intval($LineOneArray[3]) + intval($LineOneArray[4]);
+							// NonIdle = user+nice+system+irq+softrig+steal
+							$NonIdle = intval($LineOneArray[0]) + intval($LineOneArray[1]) + intval($LineOneArray[2]) + intval($LineOneArray[5]) + intval($LineOneArray[6]) + intval($LineOneArray[7]);
+							// Total = Idle + NonIdle
+							$Total = $Idle + $NonIdle;
+							// Differenzen berechnen
+							$TotalDiff = $Total - intval($this->GetBuffer("PrevTotal"));
+							$IdleDiff = $Idle - intval($this->GetBuffer("PrevIdle"));
+							// Auslastung berechnen
+							$CPU_Usage = (($TotalDiff - $IdleDiff) / $TotalDiff);
+							// Wert nur ausgeben, wenn der Buffer schon einmal mit den aktuellen Werten beschrieben wurde
+							If (intval($this->GetBuffer("PrevTotal")) + intval($this->GetBuffer("PrevIdle")) > 0) {
+								//IPS_LogMessage("IPS2GPIO RPi", "CPU-Auslastung bei ".$CPU_Usage."%");
+								SetValueFloat($this->GetIDForIdent("AverageLoad"), $CPU_Usage);
+							}
+							else {
+								SetValueFloat($this->GetIDForIdent("AverageLoad"), 0);
+							}
+							// Aktuelle Werte für die nächste Berechnung in den Buffer schreiben
+							$this->SetBuffer("PrevTotal", $Total);
+							$this->SetBuffer("PrevIdle", $Idle);
+						}
+						else {
+							SetValueFloat($this->GetIDForIdent("AverageLoad"), 0);
+							IPS_LogMessage("IPS2GPIO RPi", "Es ist ein unbekannter Fehler bei der CPU-Usage-Berechnung aufgetreten!");
+						}
+						break;
+					case "5":
+						// Speicher
+						$MemArray = explode("\n", $ResultArray[key($ResultArray)]);
+						SetValueFloat($this->GetIDForIdent("MemoryTotal"), intval(substr($MemArray[0], 16, -3)) / 1000);
+						SetValueFloat($this->GetIDForIdent("MemoryFree"), intval(substr($MemArray[1], 16, -3)) / 1000);
+						SetValueFloat($this->GetIDForIdent("MemoryAvailable"), intval(substr($MemArray[2], 16, -3)) / 1000);
+						break;
+					case "6":
+						// SD-Card
+						$Result = trim(substr($ResultArray[key($ResultArray)], 10, -4));
+						// Array anhand der Leerzeichen trennen
+						$MemArray = explode(" ", $Result);
+						// Leere ArrayValues löschen
+						$MemArray = array_filter($MemArray);
+						// Array neu durchnummerieren
+						$MemArray = array_merge($MemArray);
+						//IPS_LogMessage("IPS2GPIO RPi", serialize($MemArray));
+						SetValueFloat($this->GetIDForIdent("SD_Card_Total"), intval($MemArray[0]) / 1000);
+						SetValueFloat($this->GetIDForIdent("SD_Card_Used"), intval($MemArray[1]) / 1000);
+						SetValueFloat($this->GetIDForIdent("SD_Card_Available"), intval($MemArray[2]) / 1000);
+						SetValueFloat($this->GetIDForIdent("SD_Card_Used_rel"), intval($MemArray[3]) / 100 );
+						break;
+					case "7":
+						// Uptime
+						$UptimeArray = explode(",", $ResultArray[key($ResultArray)]);
+						$pos = strpos($UptimeArray[0], "days");
+						if ($pos !== false) {
+						    SetValueString($this->GetIDForIdent("Uptime"), trim(substr($UptimeArray[0].$UptimeArray[1], 12)));
+						} else {
+						    SetValueString($this->GetIDForIdent("Uptime"), trim(substr($UptimeArray[0], 12)));
+						}
+						//IPS_LogMessage("IPS2GPIO RPi", $ResultArray[key($ResultArray)]);
+						break;
+
+				}
+				Next($ResultArray);
+			}
 		}
 	}
  	
