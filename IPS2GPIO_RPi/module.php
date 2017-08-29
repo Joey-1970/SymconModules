@@ -161,6 +161,11 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 0, "IsArray" => true )));
 			$this->SendDebug("Measurement", "Daten: ".$Result, 0);
 			$ResultArray = unserialize(utf8_decode($Result));
+			If (is_array($ResultArray) == false) {
+				$this->SendDebug("Measurement", "Fehler bei der Datenermittlung!", 0);
+				return;
+			}
+			
 			for ($i = 0; $i < Count($ResultArray); $i++) {
 				switch(key($ResultArray)) {
 					case "0":
@@ -238,6 +243,10 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 1, "IsArray" => true )));
 			$this->SendDebug("Measurement_1", "Daten: ".$Result, 0);
 			$ResultArray = unserialize(utf8_decode($Result));
+			If (is_array($ResultArray) == false) {
+				$this->SendDebug("Measurement_1", "Fehler bei der Datenermittlung!", 0);
+				return;
+			}
 			for ($i = 0; $i < Count($ResultArray); $i++) {
 				switch(key($ResultArray)) {
 					case "0":
