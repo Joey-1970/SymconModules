@@ -442,7 +442,7 @@ class IPS2GPIO_IO extends IPSModule
 				$this->CommandClientSocket(pack("LLLL", 0, 28, 4, 0).pack("LLLL", 0, 29, 4, 0), 32);
 				// Sichern der Einstellungen
 				$this->SetBuffer("I2C_0_Configured", 1);
-				$this->SendDebug("Set Used I2C", "Mode der GPIO fuer I2C Bus 0 gesetzt", 0);
+				$this->SendDebug("Set Used I2C", "GPIO-Mode fuer I2C Bus 0 gesetzt", 0);
 			}
 			// Konfiguration für I²C Bus 1 (Default) - GPIO 0/1 bzw. 2/3 an P1
 			If (($this->GetBuffer("I2C_1_Configured") == 0) AND (intval($data->DeviceBus) == 1)) {
@@ -462,13 +462,11 @@ class IPS2GPIO_IO extends IPSModule
 				// Sichern der Einstellungen
 				$this->SetBuffer("PinUsed", serialize($PinUsed));
 				$this->SetBuffer("I2C_1_Configured", 1);
-				$this->SendDebug("Set Used I2C", "Mode der GPIO fuer I2C Bus 1 gesetzt", 0);
+				$this->SendDebug("Set Used I2C", "GPIO-Mode fuer I2C Bus 1 gesetzt", 0);
 			}
 			
 		   	// die genutzten Device Adressen anlegen
 		   	$I2C_DeviceHandle = unserialize($this->GetBuffer("I2C_Handle"));
-		   	// Bei Bus 1 Addition von 128
-			$I2C_DeviceHandle[($data->DeviceBus << 7) + $data->DeviceAddress] = -1;
 		   	// Messages einrichten
 			$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
 		        $this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
