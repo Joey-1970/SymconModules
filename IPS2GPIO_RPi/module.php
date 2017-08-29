@@ -144,6 +144,7 @@
 	public function Measurement()
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND (IPS_GetKernelRunlevel() == 10103)) {
+			$this->SendDebug("Measurement", "Ausfuehrung", 0);
 			// Daten werden nur einmalig nach Start oder bei Änderung eingelesen
 			$CommandArray = Array();
 			// Betriebsystem
@@ -158,6 +159,7 @@
 			$CommandArray[4] = "hostname";
 
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 0, "IsArray" => true )));
+			$this->SendDebug("Measurement", "Daten: ".$Result, 0);
 			$ResultArray = unserialize(utf8_decode($Result));
 			for ($i = 0; $i < Count($ResultArray); $i++) {
 				switch(key($ResultArray)) {
@@ -213,6 +215,7 @@
 	public function Measurement_1()
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND (IPS_GetKernelRunlevel() == 10103)) {
+			$this->SendDebug("Measurement_1", "Ausfuehrung", 0);
 			$CommandArray = Array();
 			// GPU Temperatur
 			$CommandArray[0] = "/opt/vc/bin/vcgencmd measure_temp";
@@ -233,6 +236,7 @@
 
 
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_RPi_connect", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray), "CommandNumber" => 1, "IsArray" => true )));
+			$this->SendDebug("Measurement_1", "Daten: ".$Result, 0);
 			$ResultArray = unserialize(utf8_decode($Result));
 			for ($i = 0; $i < Count($ResultArray); $i++) {
 				switch(key($ResultArray)) {
