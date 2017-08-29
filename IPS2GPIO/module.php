@@ -680,7 +680,6 @@ class IPS2GPIO_IO extends IPSModule
 				// wenn es sich um ein Array von Kommandos handelt
 				$Result = $this->SSH_Connect_Array($data->Command);
 				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_RPi_connect", "InstanceID" => $data->InstanceID, "CommandNumber" => $data->CommandNumber, "Result"=>utf8_encode($Result), "IsArray"=>true  )));
-
 			}
 			break;
 		    // 1-Wire
