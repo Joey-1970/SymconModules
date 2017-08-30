@@ -755,7 +755,7 @@ class IPS2GPIO_IO extends IPSModule
 					else {
 						$PinNotify = array();
 						$PinNotify = unserialize($this->GetBuffer("PinNotify"));
-						$this->SendDebug("Datenanalyse", "PinNotify: ".$this->GetBuffer("PinNotify"), 0);
+						//$this->SendDebug("Datenanalyse", "PinNotify: ".$this->GetBuffer("PinNotify"), 0);
 						// Werte durchlaufen
 						If ($this->GetBuffer("Serial_Configured") == 0) {
 							for ($j = 0; $j < Count($PinNotify); $j++) {
@@ -1376,7 +1376,7 @@ class IPS2GPIO_IO extends IPSModule
 	private function CalcBitmask()
 	{
 		$PinNotify = array();
-		$this->SendDebug("CalcBitmask", "PinNotify: ".$this->GetBuffer("PinNotify"), 0);
+		//$this->SendDebug("CalcBitmask", "PinNotify: ".$this->GetBuffer("PinNotify"), 0);
 		$PinNotify = unserialize($this->GetBuffer("PinNotify"));
 		$this->SetBuffer("NotifyCounter", 0);
 		$Bitmask = 0;
