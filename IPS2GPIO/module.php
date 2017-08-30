@@ -1376,6 +1376,7 @@ class IPS2GPIO_IO extends IPSModule
 	private function CalcBitmask()
 	{
 		$PinNotify = array();
+		$this->SendDebug("CalcBitmask", "PinNotify: ".$this->GetBuffer("PinNotify"), 0);
 		$PinNotify = unserialize($this->GetBuffer("PinNotify"));
 		$this->SetBuffer("NotifyCounter", 0);
 		$Bitmask = 0;
