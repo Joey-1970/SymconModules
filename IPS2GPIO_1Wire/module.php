@@ -82,7 +82,6 @@
 			  
 			case "get_usedpin":
 			   	If ($this->ReadPropertyBoolean("Open") == true) {
-					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => 4, "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 					$this->ApplyChanges();
 				}
 				break;
@@ -90,9 +89,6 @@
 			   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
 			   		$this->SetStatus($data->Status);
 			   	}
-			   	break;
-			case "freepin":
-			   	// Funktion zum erstellen dynamischer Pulldown-Menüs
 			   	break;
 			/*
 			case "set_1wire_devices":
@@ -113,7 +109,7 @@
 					IPS_LogMessage("IPS2GPIO 1-Wire","Keine 1-Wire-Sensoren gefunden!");
 				}	
 			   	break;
-			*/
+			
 			case "set_1wire_data":
 			   	$ResultArray = unserialize(utf8_decode($data->Result));
 				$SensorArray = unserialize(GetValueString($this->GetIDForIdent("SensorArray")));
@@ -142,39 +138,44 @@
 					IPS_LogMessage("IPS2GPIO 1-Wire","Es konnten keine 1-Wire-Messergebnisse ermittelt werden!");
 				}		
 			   	break;
+				*/
 	 	}
  	}
 	// Beginn der Funktionen
 	private function Setup()
 	{
-		// Ermittlung der angeschlossenen Sensoren
-		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_1wire_devices", "InstanceID" => $this->InstanceID )));
-		$ResultArray = unserialize(utf8_decode($Result));
-		If (is_array($ResultArray) == false) {
-			$this->SendDebug("Setup", "Fehler bei der Datenermittlung!", 0);
-			return;
-		}
-		SetValueString($this->GetIDForIdent("SensorArray"), utf8_decode($Result));
-		If (count($ResultArray) > 0 ) {
-			for ($i = 0; $i < Count($ResultArray); $i++) {
-				//IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensor ".$ResultArray[$i]);
-				$Ident = "Sensor_".str_replace("-", "", $ResultArray[$i]);
-				$this->RegisterVariableFloat($Ident, "Sensor_".$ResultArray[$i], "~Temperature", ($i + 1) *10);
-				$this->DisableAction($Ident);
-				$Ident = "CRC_".str_replace("-", "", $ResultArray[$i]);
-				$this->RegisterVariableBoolean($Ident, "CRC_".$ResultArray[$i], "~Alert.Reversed", ($i + 1) *12);
-				$this->DisableAction($Ident);
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Setup", "Ausfuehrung", 0);
+			// Ermittlung der angeschlossenen Sensoren
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_1wire_devices", "InstanceID" => $this->InstanceID )));
+			$ResultArray = unserialize(utf8_decode($Result));
+			If (is_array($ResultArray) == false) {
+				$this->SendDebug("Setup", "Fehler bei der Datenermittlung!", 0);
+				return;
+			}
+			SetValueString($this->GetIDForIdent("SensorArray"), utf8_decode($Result));
+			If (count($ResultArray) > 0 ) {
+				for ($i = 0; $i < Count($ResultArray); $i++) {
+					//IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensor ".$ResultArray[$i]);
+					$Ident = "Sensor_".str_replace("-", "", $ResultArray[$i]);
+					$this->RegisterVariableFloat($Ident, "Sensor_".$ResultArray[$i], "~Temperature", ($i + 1) *10);
+					$this->DisableAction($Ident);
+					$Ident = "CRC_".str_replace("-", "", $ResultArray[$i]);
+					$this->RegisterVariableBoolean($Ident, "CRC_".$ResultArray[$i], "~Alert.Reversed", ($i + 1) *12);
+					$this->DisableAction($Ident);
+				}
+			}
+			else {
+				$this->SendDebug("Setup", "Keine 1-Wire-Sensoren gefunden!", 0);
+				IPS_LogMessage("IPS2GPIO 1-Wire","Keine 1-Wire-Sensoren gefunden!");
 			}
 		}
-		else {
-			$this->SendDebug("Setup", "Keine 1-Wire-Sensoren gefunden!", 0);
-			IPS_LogMessage("IPS2GPIO 1-Wire","Keine 1-Wire-Sensoren gefunden!");
-		}	
 	}
 	    
 	public function Measurement()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Measurement", "Ausfuehrung", 0);
 			$CommandArray = Array();
 			// Zusammenstellung der Sensoren
 			$SensorArray = unserialize(GetValueString($this->GetIDForIdent("SensorArray")));
@@ -183,10 +184,36 @@
 					$CommandArray[$i] = "cat /sys/bus/w1/devices/".$SensorArray[$i]."/w1_slave";
 					//IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensoranfrage: ".$CommandArray[$i]);
 				}
-				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_1W_data", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray) )));
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_1W_data", "InstanceID" => $this->InstanceID,  "Command" => serialize($CommandArray) )));
+				$ResultArray = unserialize(utf8_decode($Result));
+				$SensorArray = unserialize(GetValueString($this->GetIDForIdent("SensorArray")));
+				If (is_array($ResultArray) == false) {
+					$this->SendDebug("Measurement", "Fehler bei der Datenermittlung!", 0);
+					return;
+				}
+				If (count($ResultArray) > 0 ) {
+					for ($i = 0; $i < Count($ResultArray); $i++) {
+						$Ident = "Sensor_".str_replace("-", "", $SensorArray[$i]);
+						$LinesArray = explode(chr(10), $ResultArray[$i]);
+						// Temperatur auskoppeln
+						$TempArray = explode("t=", $LinesArray[1]);
+						SetValueFloat($this->GetIDForIdent("$Ident"), (int)$TempArray[1] / 1000);
+						// CRC auskoppeln
+						$Ident = "CRC_".str_replace("-", "", $SensorArray[$i]);
+						If (trim(substr($LinesArray[0], -4)) == "YES") {
+							SetValueBoolean($this->GetIDForIdent("$Ident"), true);
+						}
+						else {
+							SetValueBoolean($this->GetIDForIdent("$Ident"), false);
+						}
+
+					}
+				}
+				
 			}
 			else {
-				IPS_LogMessage("IPS2GPIO 1-Wire","Keine Sensoren vorhanden!");
+				$this->SendDebug("Measurement", "Es konnten keine 1-Wire-Messergebnisse ermittelt werden!", 0);
+				IPS_LogMessage("IPS2GPIO 1-Wire","Es konnten keine 1-Wire-Messergebnisse ermittelt werden!");
 			}
 		}
 	}
