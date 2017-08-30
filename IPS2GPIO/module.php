@@ -694,12 +694,12 @@ class IPS2GPIO_IO extends IPSModule
 				$this->SendDebug("Get Serial Handle", "Mode der GPIO fuer 1Wire gesetzt", 0);
 			}
 			$Result = utf8_encode($this->GetOneWireDevices());
-			$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_1wire_devices", "InstanceID" => $data->InstanceID, "Result"=>$Result )));
+			//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_1wire_devices", "InstanceID" => $data->InstanceID, "Result"=>$Result )));
 			break;
 		case "get_1W_data":
 			$Result = utf8_encode($this->SSH_Connect_Array($data->Command));
 			//IPS_LogMessage("IPS2GPIO 1-Wire-Data", $Result );
-			$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_1wire_data", "InstanceID" => $data->InstanceID, "Result"=>$Result )));
+			//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_1wire_data", "InstanceID" => $data->InstanceID, "Result"=>$Result )));
 			break;
 		
 		}
