@@ -224,9 +224,6 @@ class IPS2GPIO_IO extends IPSModule
 				
 				$Handle = $this->ClientSocket(pack("L*", 99, 0, 0, 0));
 				$this->SetBuffer("Handle", $Handle);
-				If ($Handle >= 0) {
-					$this->ClientSocket(pack("L*", 19, $Handle, $this->CalcBitmask(), 0));
-				}
 				
 				// Ermitteln der genutzten I2C-Adressen
 				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_used_i2c")));
@@ -237,7 +234,10 @@ class IPS2GPIO_IO extends IPSModule
 				// Start-trigger für andere Instanzen (BT, RPi)
 				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_start_trigger")));
 
-				
+				If ($Handle >= 0) {
+					$this->SetBuffer("NotifyCounter", 0);
+					$this->CommandClientSocket(pack("L*", 19, $Handle, $this->CalcBitmask(), 0), 16);
+				}
 				$this->SetStatus(102);
 				
 			}
