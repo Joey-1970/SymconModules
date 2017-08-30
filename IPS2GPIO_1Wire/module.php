@@ -55,7 +55,7 @@
 		//$Filter = '(.*"Function":"get_usedpin".*|.*"Pin":"4".*)';
 		$this->SetReceiveDataFilter($Filter);
 		
-		If (IPS_GetKernelRunlevel() == 10103) {
+		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 			If ($this->ReadPropertyBoolean("Open") == true) {
 				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => 4, "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 				$this->Setup();
@@ -94,6 +94,7 @@
 			case "freepin":
 			   	// Funktion zum erstellen dynamischer Pulldown-Menüs
 			   	break;
+			/*
 			case "set_1wire_devices":
 			   	$ResultArray = unserialize(utf8_decode($data->Result));
 				SetValueString($this->GetIDForIdent("SensorArray"), utf8_decode($data->Result));
@@ -112,6 +113,7 @@
 					IPS_LogMessage("IPS2GPIO 1-Wire","Keine 1-Wire-Sensoren gefunden!");
 				}	
 			   	break;
+			*/
 			case "set_1wire_data":
 			   	$ResultArray = unserialize(utf8_decode($data->Result));
 				$SensorArray = unserialize(GetValueString($this->GetIDForIdent("SensorArray")));
@@ -146,7 +148,28 @@
 	private function Setup()
 	{
 		// Ermittlung der angeschlossenen Sensoren
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_1wire_devices", "InstanceID" => $this->InstanceID )));
+		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_1wire_devices", "InstanceID" => $this->InstanceID )));
+		$ResultArray = unserialize(utf8_decode($Result));
+		If (is_array($ResultArray) == false) {
+			$this->SendDebug("Setup", "Fehler bei der Datenermittlung!", 0);
+			return;
+		}
+		SetValueString($this->GetIDForIdent("SensorArray"), utf8_decode($Result));
+		If (count($ResultArray) > 0 ) {
+			for ($i = 0; $i < Count($ResultArray); $i++) {
+				//IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensor ".$ResultArray[$i]);
+				$Ident = "Sensor_".str_replace("-", "", $ResultArray[$i]);
+				$this->RegisterVariableFloat($Ident, "Sensor_".$ResultArray[$i], "~Temperature", ($i + 1) *10);
+				$this->DisableAction($Ident);
+				$Ident = "CRC_".str_replace("-", "", $ResultArray[$i]);
+				$this->RegisterVariableBoolean($Ident, "CRC_".$ResultArray[$i], "~Alert.Reversed", ($i + 1) *12);
+				$this->DisableAction($Ident);
+			}
+		}
+		else {
+			$this->SendDebug("Setup", "Keine 1-Wire-Sensoren gefunden!", 0);
+			IPS_LogMessage("IPS2GPIO 1-Wire","Keine 1-Wire-Sensoren gefunden!");
+		}	
 	}
 	    
 	public function Measurement()
@@ -167,5 +190,17 @@
 			}
 		}
 	}
+	    
+	private function HasActiveParent()
+    	{
+		$Instance = @IPS_GetInstance($this->InstanceID);
+		if ($Instance['ConnectionID'] > 0)
+		{
+			$Parent = IPS_GetInstance($Instance['ConnectionID']);
+			if ($Parent['InstanceStatus'] == 102)
+			return true;
+		}
+        return false;
+    	}  
 }
 ?>
