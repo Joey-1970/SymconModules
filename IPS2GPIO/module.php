@@ -755,6 +755,7 @@ class IPS2GPIO_IO extends IPSModule
 					else {
 						$PinNotify = array();
 						$PinNotify = unserialize($this->GetBuffer("PinNotify"));
+						$this->SendDebug("Datenanalyse", "PinNotify: ".$this->GetBuffer("PinNotify"), 0);
 						// Werte durchlaufen
 						If ($this->GetBuffer("Serial_Configured") == 0) {
 							for ($j = 0; $j < Count($PinNotify); $j++) {
