@@ -202,7 +202,6 @@
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
 			 case "get_serial":
-			   	$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_handle_serial", "Baud" => 9600, "Device" => $this->ReadPropertyString('ConnectionString'), "InstanceID" => $this->InstanceID )));
 			   	$this->ApplyChanges();
 				break;
 			 case "set_serial_data":
@@ -221,7 +220,8 @@
 			        }
 			        else {
 				        $ByteResponse = unpack("H*", $ByteMessage);
-				        IPS_LogMessage("IPS2GPIO Display","Empfangene Daten: ".$ByteResponse[1]);
+					$this->SendDebug("Empfangene Daten", $ByteResponse[1], 0);
+				        //IPS_LogMessage("IPS2GPIO Display","Empfangene Daten: ".$ByteResponse[1]);
 				        If (($this->GetBuffer("Update") == true) AND ($ByteResponse[1] == "05")) {
 						// Update starten
 						// Datei öffnen und einlesen
@@ -232,7 +232,8 @@
 						// Datei in Einheiten <4096 Bytes teilen
 						$contentarray = str_split($FileContent, 4096);
 						$Message = utf8_encode($contentarray[$this->GetBuffer("FileCounter")]);
-						IPS_LogMessage("IPS2GPIO Display","Senden Datenpaket ".$this->GetBuffer("FileCounter")." von ".$this->GetBuffer("FileParts"));
+						$this->SendDebug("Update", "Senden Datenpaket ".$this->GetBuffer("FileCounter")." von ".$this->GetBuffer("FileParts"), 0);
+						//IPS_LogMessage("IPS2GPIO Display","Senden Datenpaket ".$this->GetBuffer("FileCounter")." von ".$this->GetBuffer("FileParts"));
 						
 						If ($this->GetBuffer("FileCounter") == 0) {
 							// Sichern der Anzahl der Datei-Teile
@@ -245,6 +246,7 @@
 						// Prüfen, ob es sich um den letzten Datei-Teil handelt
 						If ($this->GetBuffer("FileCounter") == $this->GetBuffer("FileParts")) {
 							$this->SetBuffer("Update", false);
+							$this->SendDebug("Update", "beendet", 0);
 							IPS_LogMessage("IPS2GPIO Display","Update beendet");
 						}
 					}
@@ -252,6 +254,7 @@
 				        	$Messages = explode('ffffff', $ByteResponse[1]);
 					   	for($i=1;$i<Count($Messages);$i++) {
 					   		IPS_LogMessage("IPS2GPIO Display", $Messages[$i]);
+							$this->SendDebug("Message", $Messages[$i], 0);
 							$this->DisplayResponse($Messages[$i]);
 					   		SetValueString($this->GetIDForIdent("Response"), $Messages[$i]);
 					   	}
@@ -478,7 +481,8 @@
 		    $this->Send("0000");
 		    $this->Send("whmi-wri ".$this->GetBuffer("FileSize").",9600,0");
 		} else {
-		    IPS_LogMessage("IPS2GPIO Display","Fehler: Die angegebene Datei ".$Filename." wurde nicht gefunden!");
+			 $this->SendDebug("Update", "Fehler: Die angegebene Datei ".$Filename." wurde nicht gefunden!", 0);
+		    	IPS_LogMessage("IPS2GPIO Display","Fehler: Die angegebene Datei ".$Filename." wurde nicht gefunden!");
 		}		
 	}
 }
