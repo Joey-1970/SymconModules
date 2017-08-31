@@ -263,9 +263,6 @@
 			   		$this->SetStatus($data->Status);
 			   	}
 			   	break;
-			case "freepin":
-			   	// Funktion zum erstellen dynamischer Pulldown-Menüs
-			   	break;
 	 	}
  	}
 	// Beginn der Funktionen
