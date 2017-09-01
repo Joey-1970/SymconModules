@@ -108,8 +108,9 @@
 			$arrayOptions[] = array("label" => $i, "value" => $i);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "SREJ", "caption" => "Spitzen Ablehnung", "options" => $arrayOptions );
-	
-		$arrayElements[] = array("type" => "Label", "label" => "Interner Kondensator (pF)"); 
+		
+		// TUN_CAP Byte 0x08 [3:0] Default = 0
+		$arrayElements[] = array("type" => "Label", "label" => "Interner Kondensator (pF) Default = 0pF"); 
 		$arrayOptions = array();
 		for ($i = 0; $i <= 10; $i++) {
 			$arrayOptions[] = array("label" => ($i * 8)."pF", "value" => $i);
@@ -126,7 +127,7 @@
 		$arrayElements[] = array("type" => "Select", "name" => "MinNumLigh", "caption" => "Anzahl", "options" => $arrayOptions );
 		
 		// LCO_FDIV Byte 0 [7:6] Default = 0
-		$arrayElements[] = array("type" => "Label", "label" => "Frequenzteilungsverhältnis anpassen"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Frequenzteilungsverhältnis anpassen Default = 16"); 
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "16", "value" => 0);
 		$arrayOptions[] = array("label" => "32", "value" => 1);
