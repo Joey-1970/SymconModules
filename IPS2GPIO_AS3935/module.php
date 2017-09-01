@@ -13,11 +13,11 @@
 		$this->RegisterPropertyInteger("DeviceBus", 1);	
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->RegisterPropertyInteger("MinNumLigh", 0);
-		$this->RegisterPropertyInteger("NoiseFloorLevel", 0);
+		$this->RegisterPropertyInteger("NoiseFloorLevel", 2);
 		$this->RegisterPropertyInteger("MaskDisturber", 0);
 		$this->RegisterPropertyInteger("FrequencyDivisionRatio", 0);
 		$this->RegisterPropertyInteger("AFEGain", 36);
-		$this->RegisterPropertyInteger("WDTH", 0);
+		$this->RegisterPropertyInteger("WDTH", 1);
 		$this->RegisterPropertyInteger("SREJ", 2);
 		$this->RegisterPropertyInteger("TunCap", 0);
         }
@@ -66,6 +66,7 @@
 		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		
+		// NF_LEV Byte 0x01 [6:4] Default 2
 		$arrayElements[] = array("type" => "Label", "label" => "Geräuschpegel (uVrms) - (Outdoor/Indoor)"); 
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "390/28", "value" => 0);
@@ -78,26 +79,30 @@
 		$arrayOptions[] = array("label" => "2000/146", "value" => 7);
 		$arrayElements[] = array("type" => "Select", "name" => "NoiseFloorLevel", "caption" => "Geräuschpegel", "options" => $arrayOptions );
 		
-		$arrayElements[] = array("type" => "Label", "label" => "Nutzung"); 
+		// AFE_GB Byte 0x00 [5:1] Default 18 (Indoor), 14 (Outdoor) (+ Bit [0] = 36/28)
+		$arrayElements[] = array("type" => "Label", "label" => "Nutzung Default = Indoor"); 
 		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "Indoor", "value" => 36);
-		$arrayOptions[] = array("label" => "Outdoor", "value" => 28);
+		$arrayOptions[] = array("label" => "Indoor", "value" => 36); // Default
+		$arrayOptions[] = array("label" => "Outdoor", "value" => 28); 
 		$arrayElements[] = array("type" => "Select", "name" => "AFEGain", "caption" => "Nutzung", "options" => $arrayOptions );
 		
-		$arrayElements[] = array("type" => "Label", "label" => "Störer anzeigen"); 
+		// MASK_DIST byte 0x03 [5] Default = 0
+		$arrayElements[] = array("type" => "Label", "label" => "Störer anzeigen Default = Ja"); 
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "Ja", "value" => 0);
 		$arrayOptions[] = array("label" => "Nein", "value" => 1);
 		$arrayElements[] = array("type" => "Select", "name" => "MaskDisturber", "caption" => "Anzeige", "options" => $arrayOptions );
-	
-		$arrayElements[] = array("type" => "Label", "label" => "Schwellwert (Watchdog Threshold)"); 
+		
+		// WDTH Byte 0x01 [3:0] Default 1
+		$arrayElements[] = array("type" => "Label", "label" => "Schwellwert (Watchdog Threshold) Default = 1"); 
 		$arrayOptions = array();
 		for ($i = 0; $i <= 10; $i++) {
 			$arrayOptions[] = array("label" => $i, "value" => $i);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "WDTH", "caption" => "Schwellwert", "options" => $arrayOptions );
-	
-		$arrayElements[] = array("type" => "Label", "label" => "Spitzen Ablehnung (Spike Rejection)"); 
+		
+		// SREJ Byte 0x02 [3:0] Default = 2
+		$arrayElements[] = array("type" => "Label", "label" => "Spitzen Ablehnung (Spike Rejection) Default = 2"); 
 		$arrayOptions = array();
 		for ($i = 0; $i <= 10; $i++) {
 			$arrayOptions[] = array("label" => $i, "value" => $i);
@@ -110,15 +115,17 @@
 			$arrayOptions[] = array("label" => ($i * 8)."pF", "value" => $i);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "TunCap", "caption" => "Größe", "options" => $arrayOptions );
-	
-		$arrayElements[] = array("type" => "Label", "label" => "Minimale Anzahl der Detektionen in den letzten 15 Minuten bevor ein Interrupt ausgelöst wird"); 
+		
+		// MIN_NUM_LIGH Byte 0x02 [5:4] Default = 0
+		$arrayElements[] = array("type" => "Label", "label" => "Minimale Anzahl der Detektionen in den letzten 15 Minuten bevor ein Interrupt ausgelöst wird. Default = 0"); 
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "1", "value" => 0);
 		$arrayOptions[] = array("label" => "5", "value" => 1);
 		$arrayOptions[] = array("label" => "9", "value" => 2);
 		$arrayOptions[] = array("label" => "16", "value" => 3);
 		$arrayElements[] = array("type" => "Select", "name" => "MinNumLigh", "caption" => "Anzahl", "options" => $arrayOptions );
-
+		
+		// LCO_FDIV Byte 0 [7:6] Default = 0
 		$arrayElements[] = array("type" => "Label", "label" => "Frequenzteilungsverhältnis anpassen"); 
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "16", "value" => 0);
