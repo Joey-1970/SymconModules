@@ -478,11 +478,12 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_read_block", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F7"), "Count" => 8)));
 			If ($Result < 0) {
 				$MeasurementData = array();
-				$this->SetBuffer("MeasurementData", $MeasurementData);
+				$this->SetBuffer("MeasurementData", serialize($MeasurementData));
 				$this->SendDebug("ReadData", "Fehler bei der Datenermittung", 0);
 				return;
 			}
 			else {
+				
 				$this->SetBuffer("MeasurementData", $Result);
 			}
 		}	
