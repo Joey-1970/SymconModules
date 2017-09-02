@@ -1289,7 +1289,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SSH_Connect("sudo killall pigpiod");
 			// Wartezeit
 			IPS_Sleep(2000);
-			$this->SSH_Connect("sudo pigpiod -t");
+			$this->SSH_Connect("sudo pigpiod -t 0");
 			// Wartezeit
 			IPS_Sleep(2000);
 			IPS_SetProperty($this->GetParentID(), "Open", true);
@@ -1423,7 +1423,7 @@ class IPS2GPIO_IO extends IPSModule
 					// Versuchen PIGPIO zu starten
 					IPS_LogMessage("IPS2GPIO Netzanbindung: ","Versuche PIGPIO per SSH zu starten...");
 					$this->SendDebug("Netzanbindung", "Versuche PIGPIO per SSH zu starten...", 0);
-					$this->SSH_Connect("sudo pigpiod -t");
+					$this->SSH_Connect("sudo pigpiod -t 0");
 					$status = @fsockopen($this->ReadPropertyString("IPAddress"), 8888, $errno, $errstr, 10);
 					if (!$status) {
 						IPS_LogMessage("IPS2GPIO Netzanbindung: ","Port ist geschlossen!");
