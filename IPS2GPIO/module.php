@@ -146,7 +146,7 @@ class IPS2GPIO_IO extends IPSModule
 			IPS_SetHidden($this->GetIDForIdent("LastKeepAlive"), false);
 						
 			$this->SetBuffer("HardwareRev", 0);
-			$Typ = array(2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27);
+			$Typ = array(2 => 2, 3, 4, 7 => 7, 8, 9, 10, 11, 14 => 14, 15, 17 => 17, 18, 22 => 22, 23, 24, 25, 27 => 27);
 			$this->SetBuffer("PinPossible", serialize($Typ));
 			$this->SetBuffer("PinI2C", "");
 			$this->SetBuffer("I2CSearch", 0);
@@ -997,9 +997,9 @@ class IPS2GPIO_IO extends IPSModule
 		            	$Model[0] = array(2, 3);
 		            	$Model[1] = array(4, 5, 6, 13, 14, 15);
 		            	$Model[2] = array(16);
-		            	$Typ[0] = array(0, 1, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 21, 22, 23, 24, 25);	
-           			$Typ[1] = array(2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27);
-           			$Typ[2] = array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27);
+		            	$Typ[0] = array(0, 1, 4 => 4, 7 => 7, 8, 9, 10, 11, 14 => 14, 15, 17 => 17, 18, 21 => 21, 22, 23, 24, 25);	
+           			$Typ[1] = array(2 => 2, 3, 4, 7 => 7, 8, 9, 10, 11, 14 => 14, 15, 17 => 17, 18, 22 => 22, 23, 24, 25, 27 => 27);
+           			$Typ[2] = array(2 => 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27);
            			
            			$this->SetBuffer("HardwareRev", $response[4]);
 				SetValueString($this->GetIDForIdent("Hardware"), $this->GetHardware($response[4]));
