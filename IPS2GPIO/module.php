@@ -660,7 +660,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SendDebug("Serial_Handle", $SerialHandle, 0);
 			
 			$Parameter = array();
-			$Parameter = array(65536, 25, 1);
+			$Parameter = array(32768, 50, 1);
 			$this->StartProc($this->GetBuffer("SerialScriptID"), $Parameter);
 				
 				
