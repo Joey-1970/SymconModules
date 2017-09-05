@@ -226,7 +226,7 @@ class IPS2GPIO_IO extends IPSModule
 				$this->SetBuffer("NotifyCounter", 0);
 				
 				$Handle = $this->ClientSocket(pack("L*", 99, 0, 0, 0));
-				pigs evt 5
+				$this->SetBuffer("Handle", $Handle);
 
 				
 				//Skripte senden
@@ -252,8 +252,6 @@ class IPS2GPIO_IO extends IPSModule
 					$this->SetBuffer("NotifyCounter", 0);
 					// Notify setzen
 					$this->CommandClientSocket(pack("L*", 19, $Handle, $this->CalcBitmask(), 0), 16);
-					// Event setzen für den seriellen Anschluss
-					$this->CommandClientSocket(pack("L*", 115, $Handle, 32768, 0), 16);
 				}
 					
 				$this->SetStatus(102);
@@ -665,6 +663,9 @@ class IPS2GPIO_IO extends IPSModule
 			$Parameter = array();
 			$Parameter = array(32768, 50, 1);
 			$this->StartProc($this->GetBuffer("SerialScriptID"), $Parameter);
+			// Event setzen für den seriellen Anschluss
+			$this->CommandClientSocket(pack("L*", 115, $this->GetBuffer("Handle"), 32768, 0), 16);
+				
 				
 				
 			/*
