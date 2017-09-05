@@ -1316,7 +1316,7 @@ class IPS2GPIO_IO extends IPSModule
 		}
 	}
 	
-	private function StartProc(Int $ScriptID, string $Parameter = "")
+	private function StartProc(Int $ScriptID, String $Parameter)
 	{
 		// PROCR	40	script_id	0	4*X uint32_t pars[X]	
 		$ParameterArray = array();
