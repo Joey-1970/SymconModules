@@ -249,9 +249,11 @@ class IPS2GPIO_IO extends IPSModule
 
 				If ($Handle >= 0) {
 					$this->SetBuffer("NotifyCounter", 0);
+					// Notify setzen
 					$this->CommandClientSocket(pack("L*", 19, $Handle, $this->CalcBitmask(), 0), 16);
+					// Event setzen für den seriellen Anschluss
+					$this->CommandClientSocket(pack("L*", 115, $Handle, 32768, 0), 16);
 				}
-				
 					
 				$this->SetStatus(102);
 				
