@@ -1316,7 +1316,7 @@ class IPS2GPIO_IO extends IPSModule
 			return false;
 		}
 		else {
-			$this->SendDebug("Skriptsendung", "Sript-ID: ".$Result, 0);
+			$this->SendDebug("Skriptsendung", "Sript-ID: ".(int)$Result, 0);
 			return $Result;
 		}
 	}
@@ -1327,12 +1327,12 @@ class IPS2GPIO_IO extends IPSModule
 		$ParameterArray = array();
 		$ParameterArray = unserialize($Parameter);
 		$Result = $this->CommandClientSocket(pack("L*", 40, $ScriptID, 0, 4 * count($ParameterArray)).pack("L*", ...$ParameterArray), 16);
-		If (!$Result) {
+		If ($Result < 0) {
 			$this->SendDebug("Skriptstart", "Fehlgeschlagen!", 0);
 			return false;
 		}
 		else {
-			$this->SendDebug("Skriptstart", "Sript-ID: ".$ScriptID. " Status: ".$Result, 0);
+			$this->SendDebug("Skriptstart", "Skript-ID: ".(int)$ScriptID. " Status: ".(int)$Result, 0);
 			/*
 			0	being initialised
 			1	halted
