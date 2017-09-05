@@ -155,6 +155,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("Serial_Configured", 0);
 			$this->SetBuffer("1Wire_Configured", 0);
 			$this->SetBuffer("SerialNotify", 0);
+			$this->SetBuffer("SerialScriptID", 0);
 			$this->SetBuffer("Default_I2C_Bus", 1);
 			$this->SetBuffer("Default_Serial_Bus", 0);
 			$this->SetBuffer("MUX_Handle", -1);
@@ -240,6 +241,14 @@ class IPS2GPIO_IO extends IPSModule
 					$this->SetBuffer("NotifyCounter", 0);
 					$this->CommandClientSocket(pack("L*", 19, $Handle, $this->CalcBitmask(), 0), 16);
 				}
+				
+				//Skripte senden
+				$Result = $this->SendProc("tag 100 wait p0 mils p1 evt p2 jmp 100");
+				If ($Result >= 0) {
+					$this->SetBuffer("SerialScriptID", $Result);
+					
+				}
+					
 				$this->SetStatus(102);
 				
 			}
@@ -1289,16 +1298,26 @@ class IPS2GPIO_IO extends IPSModule
 		
 	}
 	
-	private function SendProc($Message)
+	private function SendProc(String $Message)
 	{
-		// PROC	38	0	0	X	uint8_t text[X]
 		$Result = $this->CommandClientSocket(pack("L*", 38, 0, 0, strlen($Message)).$Message, 16);
 		If (!$Result) {
 			$this->SendDebug("Skriptsendung", "Fehlgeschlagen!", 0);
+			return false;
 		}
 		else {
 			$this->SendDebug("Skriptsendung", "Sript-ID: ".$Result, 0);
+			return $Result;
 		}
+	}
+	
+	private function StartProc(Int $ScriptID, int $P0 = 0, int $P1 = 0, int $P2 = 0)
+	{
+		// PROCR	40	script_id	0	4*X uint32_t pars[X]
+		//$Result = $this->CommandClientSocket(pack("L*", 40, $ScriptID, 0, strlen($Message)).$Message, 16);
+		
+		
+		//$this->CommandClientSocket(pack("L*", 57, $I2CInstanceArray[$data->InstanceID]["Handle"], 0, count($ByteArray)).pack("C*", ...$ByteArray), 16);
 	}
 	
 	public function PIGPIOD_Restart()
