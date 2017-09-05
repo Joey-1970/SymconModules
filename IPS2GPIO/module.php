@@ -742,8 +742,10 @@ class IPS2GPIO_IO extends IPSModule
 					$SeqNo = $MessageArray[$i] & 65535;
 					$Flags = $MessageArray[$i] >> 16;
 					$Event = (int)boolval($Flags & 128);
+					$EventNumber = $Flags & 31;
 					$KeepAlive = (int)boolval($Flags & 64);
 					$WatchDog = (int)boolval($Flags & 32);
+					$WatchDogNumber = $Flags & 31;
 					$Tick = $MessageArray[$i + 1];
 					$Level = $MessageArray[$i + 2];
 					If ($KeepAlive == 1) {
@@ -752,12 +754,10 @@ class IPS2GPIO_IO extends IPSModule
 						SetValueInteger($this->GetIDForIdent("LastKeepAlive"), time() );
 					}
 					elseif ($WatchDog == 1) {
-						$Bitvalue_15 = boolval($Level & pow(2, 15));
-						$this->SendDebug("Datenanalyse", "Event: WatchDog - Bit 15 (RS232): ".(int)$Bitvalue_15, 0);	
-						$Data = $this->CommandClientSocket(pack("L*", 82, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
-						If ($Data > 0) {
-							$this->CommandClientSocket(pack("L*", 80, $this->GetBuffer("Serial_Handle"), $Data, 0), 16 + $Data);
-						}
+						$this->SendDebug("Datenanalyse", "WatchDog-Nummer: ".$WatchDogNumber, 0);
+					}
+					elseif ($Event == 1) {
+						$this->SendDebug("Datenanalyse", "Event-Nummer: ".$EventNumber, 0);	
 					}
 					else {
 						$PinNotify = array();
@@ -814,8 +814,8 @@ class IPS2GPIO_IO extends IPSModule
 		 }
 	 }
  
-	  public function RequestAction($Ident, $Value) 
-	  {
+	public function RequestAction($Ident, $Value) 
+	{
 		    switch($Ident) {
 		        case "Open":
 		            If ($Value = True) {
@@ -831,7 +831,7 @@ class IPS2GPIO_IO extends IPSModule
 		        default:
 		            throw new Exception("Invalid Ident");
 		    }
-	 }
+	}
 
 	private function ClientSocket(String $message)
 	{
@@ -1053,6 +1053,16 @@ class IPS2GPIO_IO extends IPSModule
            			}
            			else {
            				$Result = false;
+           			}
+		            	break;
+			case "38":
+           			If ($response[4] >= 0) {
+           				$Result = $response[4]; // SkriptID
+           			}
+           			else {
+           				$Result = false;
+					$this->SendDebug("IPS2GPIO", "Skriptregistrierung mit Fehlermeldung: ".$this->GetErrorText(abs($response[4])), 0);
+					IPS_LogMessage("IPS2GPIO","Skriptregistrierung mit Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
            			}
 		            	break;
 			case "54":
@@ -1277,6 +1287,18 @@ class IPS2GPIO_IO extends IPSModule
 			//IPS_LogMessage("GeCoS_IO CheckSerial", $Data);
 		}
 		
+	}
+	
+	private function SendProc($Message)
+	{
+		// PROC	38	0	0	X	uint8_t text[X]
+		$Result = $this->CommandClientSocket(pack("L*", 38, 0, 0, strlen($Message)).$Message, 16);
+		If (!$Result) {
+			$this->SendDebug("Skriptsendung", "Fehlgeschlagen!", 0);
+		}
+		else {
+			$this->SendDebug("Skriptsendung", "Sript-ID: ".$Result, 0);
+		}
 	}
 	
 	public function PIGPIOD_Restart()
