@@ -155,7 +155,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("Serial_Configured", 0);
 			$this->SetBuffer("1Wire_Configured", 0);
 			$this->SetBuffer("SerialNotify", 0);
-			$this->SetBuffer("SerialScriptID", 0);
+			$this->SetBuffer("SerialScriptID", -1);
 			$this->SetBuffer("Default_I2C_Bus", 1);
 			$this->SetBuffer("Default_Serial_Bus", 0);
 			$this->SetBuffer("MUX_Handle", -1);
@@ -656,7 +656,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SendDebug("Serial_Handle", $SerialHandle, 0);
 			
 			$Parameter = array();
-			$Parameter = (65536, 25, 1);
+			$Parameter = array(65536, 25, 1);
 			$this->StartProc($this->GetBuffer("SerialScriptID"), $Parameter);
 				
 				
