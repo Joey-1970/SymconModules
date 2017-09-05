@@ -1311,13 +1311,27 @@ class IPS2GPIO_IO extends IPSModule
 		}
 	}
 	
-	private function StartProc(Int $ScriptID, int $P0 = 0, int $P1 = 0, int $P2 = 0)
+	private function StartProc(Int $ScriptID, string $Parameter = "")
 	{
-		// PROCR	40	script_id	0	4*X uint32_t pars[X]
-		//$Result = $this->CommandClientSocket(pack("L*", 40, $ScriptID, 0, strlen($Message)).$Message, 16);
-		
-		
-		//$this->CommandClientSocket(pack("L*", 57, $I2CInstanceArray[$data->InstanceID]["Handle"], 0, count($ByteArray)).pack("C*", ...$ByteArray), 16);
+		// PROCR	40	script_id	0	4*X uint32_t pars[X]	
+		$ParameterArray = array();
+		$ParameterArray = unserialize($Parameter);
+		$Result = $this->CommandClientSocket(pack("L*", 40, $ScriptID, 0, 4 * count($ParameterArray)).pack("L*", ...$ParameterArray), 16);
+		If (!$Result) {
+			$this->SendDebug("Skriptstart", "Fehlgeschlagen!", 0);
+			return false;
+		}
+		else {
+			$this->SendDebug("Skriptstart", "Sript-ID: ".$ScriptID. " Status: ".$Result, 0);
+			/*
+			0	being initialised
+			1	halted
+			2	running
+			3	waiting
+			4	failed
+			*/
+			return $Result;
+		}
 	}
 	
 	public function PIGPIOD_Restart()
