@@ -1311,7 +1311,7 @@ class IPS2GPIO_IO extends IPSModule
 	{
 		//$Result = $this->CommandClientSocket(pack("L*", 38, 0, 0, strlen($Message)).$Message, 16);
 		$Result = $this->CommandClientSocket(pack("L*", 38, $ScriptID, 0, strlen($Message)).pack("C*", $Message), 16);
-		If (!$Result) {
+		If ($Result < 0) {
 			$this->SendDebug("Skriptsendung", "Fehlgeschlagen!", 0);
 			return false;
 		}
