@@ -655,6 +655,11 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("Serial_Handle", $SerialHandle);
 			$this->SendDebug("Serial_Handle", $SerialHandle, 0);
 			
+			$Parameter = array();
+			$Parameter = (65536, 25, 1);
+			$this->StartProc($this->GetBuffer("SerialScriptID"), $Parameter);
+				
+				
 			/*
 			// den Notify für den RxD-Pin einschalten
 			$PinNotify = array();
