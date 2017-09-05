@@ -226,7 +226,8 @@ class IPS2GPIO_IO extends IPSModule
 				$this->SetBuffer("NotifyCounter", 0);
 				
 				$Handle = $this->ClientSocket(pack("L*", 99, 0, 0, 0));
-				$this->SetBuffer("Handle", $Handle);
+				pigs evt 5
+
 				
 				//Skripte senden
 				//$ScriptArray = array("tag", 100, "wait", "p0", "mils", "p1", "evt", "p2", "jmp", 100);
