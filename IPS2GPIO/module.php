@@ -1081,9 +1081,18 @@ class IPS2GPIO_IO extends IPSModule
            				$Result = $response[4]; // SkriptID
            			}
            			else {
-           				$Result = false;
-					$this->SendDebug("IPS2GPIO", "Skriptregistrierung mit Fehlermeldung: ".$this->GetErrorText(abs($response[4])), 0);
+           				$Result = -1;
+					$this->SendDebug("Skript", "Registrierung mit Fehlermeldung: ".$this->GetErrorText(abs($response[4])), 0);
 					IPS_LogMessage("IPS2GPIO","Skriptregistrierung mit Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
+           			}
+		            	break;
+			case "40":
+           			If ($response[4] >= 0) {
+           				$Result = $response[4]; // Skriptstatus
+           			}
+           			else {
+           				$Result = -1;
+					$this->SendDebug("Skript", "Start mit Fehlermeldung: ".$this->GetErrorText(abs($response[4])), 0);
            			}
 		            	break;
 			case "54":
