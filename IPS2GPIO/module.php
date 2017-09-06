@@ -1330,7 +1330,7 @@ class IPS2GPIO_IO extends IPSModule
 		$ParameterArray = array();
 		$ParameterArray = unserialize($Parameter);
 		//$Result = $this->CommandClientSocket(pack("L*", 40, $ScriptID, 0, 4 * count($ParameterArray)).pack("L*", ...$ParameterArray), 16);
-		$Result = $this->CommandClientSocket(pack("L*", 40, $ScriptID, 0, 4 * 3, 32768, 50, 1), 16);
+		$Result = $this->CommandClientSocket(pack("L*", 40, $ScriptID, 0, (4 * 3), 32768, 50, 1), 16);
 		If ($Result < 0) {
 			$this->SendDebug("Skriptstart", "Fehlgeschlagen!", 0);
 			return -1;
