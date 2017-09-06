@@ -230,7 +230,7 @@ class IPS2GPIO_IO extends IPSModule
 
 				
 				//Skripte senden
-				$Result = $this->SendProc("tag 999 wait p0 mils p1 evt p2 jmp 999");
+				$Result = $this->SendProc("tag 100 wait p0 mils p1 evt p2 jmp 100");
 				If ($Result >= 0) {
 					$this->SetBuffer("SerialScriptID", $Result);
 					
