@@ -659,9 +659,11 @@ class IPS2GPIO_IO extends IPSModule
 			
 			$Parameter = array();
 			$Parameter = array(32768, 50, 1);
-			$this->StartProc($this->GetBuffer("SerialScriptID"), $Parameter);
-			// Event setzen für den seriellen Anschluss
-			$this->CommandClientSocket(pack("L*", 115, $this->GetBuffer("Handle"), 32768, 0), 16);
+			$Result = $this->StartProc($this->GetBuffer("SerialScriptID"), $Parameter);
+			If ($Result >= 0) {
+				// Event setzen für den seriellen Anschluss
+				$this->CommandClientSocket(pack("L*", 115, $this->GetBuffer("Handle"), 32768, 0), 16);
+			}
 				
 				
 				
@@ -1310,30 +1312,31 @@ class IPS2GPIO_IO extends IPSModule
 	
 	private function SendProc(String $Message)
 	{
-		//$Result = $this->CommandClientSocket(pack("L*", 38, 0, 0, strlen($Message)).$Message, 16);
+		// Sendet ein Skript an PIGPIO
 		$Result = $this->CommandClientSocket(pack("L*", 38, $ScriptID, 0, strlen($Message)).pack("C*", $Message), 16);
 		If ($Result < 0) {
 			$this->SendDebug("Skriptsendung", "Fehlgeschlagen!", 0);
-			return false;
+			return -1;
 		}
 		else {
-			$this->SendDebug("Skriptsendung", "Sript-ID: ".(int)$Result, 0);
+			$this->SendDebug("Skriptsendung", "Skript-ID: ".(int)$Result, 0);
 			return $Result;
 		}
 	}
 	
 	private function StartProc(Int $ScriptID, String $Parameter)
 	{
-		// PROCR	40	script_id	0	4*X uint32_t pars[X]	
+		// Startet ein PIGPIO-Skript
 		$ParameterArray = array();
 		$ParameterArray = unserialize($Parameter);
 		$Result = $this->CommandClientSocket(pack("L*", 40, $ScriptID, 0, 4 * count($ParameterArray)).pack("L*", ...$ParameterArray), 16);
 		If ($Result < 0) {
 			$this->SendDebug("Skriptstart", "Fehlgeschlagen!", 0);
-			return false;
+			return -1;
 		}
 		else {
-			$this->SendDebug("Skriptstart", "Skript-ID: ".(int)$ScriptID. " Status: ".(int)$Result, 0);
+			$StatusArray = array("wird initialisiert", "angehalten", "laeuft", "wartet", "fehlerhaft");
+			$this->SendDebug("Skriptstart", "Skript-ID: ".(int)$ScriptID. " Status: ".($StatusArray[(int)$Result]), 0);
 			/*
 			0	being initialised
 			1	halted
@@ -1341,6 +1344,7 @@ class IPS2GPIO_IO extends IPSModule
 			3	waiting
 			4	failed
 			*/
+			
 			return $Result;
 		}
 	}
