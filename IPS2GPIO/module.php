@@ -659,10 +659,12 @@ class IPS2GPIO_IO extends IPSModule
 			
 			$Parameter = array();
 			$Parameter = array(32768, 50, 1);
-			$Result = $this->StartProc($this->GetBuffer("SerialScriptID"), serialize($Parameter));
+			$this->SendDebug("get_handle_serial", "SerialScriptID: ".(int)$this->GetBuffer("SerialScriptID"), 0);
+			$Result = $this->StartProc((int)$this->GetBuffer("SerialScriptID"), serialize($Parameter));
 			
 			// Event setzen für den seriellen Anschluss
-			$this->CommandClientSocket(pack("L*", 115, $this->GetBuffer("Handle"), 32768, 0), 16);
+			$this->SendDebug("get_handle_serial", "Handle: ".(int)$this->GetBuffer("Handle"), 0);
+			$this->CommandClientSocket(pack("L*", 115, (int)$this->GetBuffer("Handle"), 32768, 0), 16);
 
 				
 				
