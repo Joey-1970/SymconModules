@@ -660,10 +660,10 @@ class IPS2GPIO_IO extends IPSModule
 			$Parameter = array();
 			$Parameter = array(32768, 50, 1);
 			$Result = $this->StartProc($this->GetBuffer("SerialScriptID"), serialize($Parameter));
-			If ($Result >= 0) {
-				// Event setzen für den seriellen Anschluss
-				$this->CommandClientSocket(pack("L*", 115, $this->GetBuffer("Handle"), 32768, 0), 16);
-			}
+			
+			// Event setzen für den seriellen Anschluss
+			$this->CommandClientSocket(pack("L*", 115, $this->GetBuffer("Handle"), 32768, 0), 16);
+
 				
 				
 				
@@ -1326,10 +1326,11 @@ class IPS2GPIO_IO extends IPSModule
 	
 	private function StartProc(Int $ScriptID, String $Parameter)
 	{
-		// Startet ein PIGPIO-Skript
+		// Startet ein PIGPIO-Skript32768, 50, 1
 		$ParameterArray = array();
 		$ParameterArray = unserialize($Parameter);
-		$Result = $this->CommandClientSocket(pack("L*", 40, $ScriptID, 0, 4 * count($ParameterArray)).pack("L*", ...$ParameterArray), 16);
+		//$Result = $this->CommandClientSocket(pack("L*", 40, $ScriptID, 0, 4 * count($ParameterArray)).pack("L*", ...$ParameterArray), 16);
+		$Result = $this->CommandClientSocket(pack("L*", 40, $ScriptID, 0, 4 * 3, 32768, 50, 1), 16);
 		If ($Result < 0) {
 			$this->SendDebug("Skriptstart", "Fehlgeschlagen!", 0);
 			return -1;
