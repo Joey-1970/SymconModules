@@ -661,7 +661,7 @@ class IPS2GPIO_IO extends IPSModule
 				// Event setzen für den seriellen Anschluss
 				$Handle = $this->GetBuffer("Handle");
 				$this->SendDebug("get_handle_serial", "Handle: ".(int)$Handle, 0);
-				$this->CommandClientSocket(pack("L*", 115, (int)$Handle, 1, 0), 16);
+				$this->CommandClientSocket(pack("L*", 115, $Handle, 1, 0), 16);
 				
 				$this->SetTimerInterval("CheckSerial", 3 * 1000);
 			}
@@ -669,7 +669,7 @@ class IPS2GPIO_IO extends IPSModule
 
 			$SerialHandle = $this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device, 16);
 			
-			$this->SetBuffer("Serial_Handle", (int)$SerialHandle);
+			$this->SetBuffer("Serial_Handle", $SerialHandle);
 			$this->SendDebug("Serial_Handle", $SerialHandle, 0);
 			
 			// Messages einrichten
