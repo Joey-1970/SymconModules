@@ -144,7 +144,8 @@ class IPS2GPIO_IO extends IPSModule
 			$this->RegisterVariableInteger("LastKeepAlive", "Letztes Keep Alive", "~UnixTimestamp", 30);
 			$this->DisableAction("LastKeepAlive");
 			IPS_SetHidden($this->GetIDForIdent("LastKeepAlive"), false);
-						
+			
+			$this->SetBuffer("Handle", -1);
 			$this->SetBuffer("HardwareRev", 0);
 			$Typ = array(2 => 2, 3, 4, 7 => 7, 8, 9, 10, 11, 14 => 14, 15, 17 => 17, 18, 22 => 22, 23, 24, 25, 27 => 27);
 			$this->SetBuffer("PinPossible", serialize($Typ));
@@ -216,15 +217,8 @@ class IPS2GPIO_IO extends IPSModule
 				$I2C_DeviceHandle = array();
 				$this->SetBuffer("I2C_Handle", serialize($I2C_DeviceHandle));
 				
-				// Notify Handle zurücksetzen falls gesetzt
-				If ($this->GetBuffer("Handle") >= 0) {
-					// Handle löschen
-					//$this->ClientSocket(pack("LLLL", 21, $this->GetBuffer("Handle");, 0, 0));
-				}
 				// Notify Starten
-				$this->SetBuffer("Handle", -1);
 				$this->SetBuffer("NotifyCounter", 0);
-				
 				$Handle = $this->ClientSocket(pack("L*", 99, 0, 0, 0));
 				$this->CommandClientSocket(pack("L*", 115, $Handle, 1, 0), 16);
 				$this->SetBuffer("Handle", $Handle);
@@ -660,10 +654,11 @@ class IPS2GPIO_IO extends IPSModule
 				}
 				// Event setzen für den seriellen Anschluss
 				$Handle = $this->GetBuffer("Handle");
-				$this->SendDebug("get_handle_serial", "Handle: ".(int)$Handle, 0);
-				$this->CommandClientSocket(pack("L*", 115, $Handle, 1, 0), 16);
+				If ($Handle >= 0) {
+					$this->CommandClientSocket(pack("L*", 115, $Handle, 1, 0), 16);
+				}
 				
-				$this->SetTimerInterval("CheckSerial", 3 * 1000);
+				//$this->SetTimerInterval("CheckSerial", 3 * 1000);
 			}
 			
 
