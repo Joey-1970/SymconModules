@@ -229,12 +229,11 @@ class IPS2GPIO_IO extends IPSModule
 				$this->SetBuffer("Handle", $Handle);
 
 				
-				//Skripte senden
-				$Result = $this->SendProc("tag 999 wait p0 mils p1 evt p2 jmp 999");
-				If ($Result >= 0) {
-					$this->SetBuffer("SerialScriptID", $Result);
-					
-				}
+				//Skripte für Seriellen Datenempfang senden
+				$Script = "tag 999 wait p0 mils p1 evt p2 jmp 999";
+				$Result = $this->CommandClientSocket(pack("L*", 38, 0, 0, strlen($Script)).pack("C*", $Script), 16);
+				//$Result = $this->SendProc("tag 999 wait p0 mils p1 evt p2 jmp 999");
+				$this->SetBuffer("SerialScriptID", $Result);
 				
 				// Ermitteln der genutzten I2C-Adressen
 				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_used_i2c")));
@@ -660,7 +659,11 @@ class IPS2GPIO_IO extends IPSModule
 			$Parameter = array();
 			$Parameter = array(32768, 50, 1);
 			$this->SendDebug("get_handle_serial", "SerialScriptID: ".(int)$this->GetBuffer("SerialScriptID"), 0);
-			$Result = $this->StartProc((int)$this->GetBuffer("SerialScriptID"), serialize($Parameter));
+			If ((int)$this->GetBuffer("SerialScriptID") >= 0) {
+				$Result = $this->StartProc((int)$this->GetBuffer("SerialScriptID"), serialize($Parameter));
+			}
+				
+			
 			
 			// Event setzen für den seriellen Anschluss
 			$this->SendDebug("get_handle_serial", "Handle: ".(int)$this->GetBuffer("Handle"), 0);
@@ -1080,6 +1083,7 @@ class IPS2GPIO_IO extends IPSModule
 		            	break;
 			case "38":
            			If ($response[4] >= 0) {
+					$this->SendDebug("Skriptsendung", "Skript-ID: ".(int)$Result, 0);
            				$Result = $response[4]; // SkriptID
            			}
            			else {
