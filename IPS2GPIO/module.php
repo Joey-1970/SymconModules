@@ -646,42 +646,29 @@ class IPS2GPIO_IO extends IPSModule
 				$this->SetBuffer("PinUsed", serialize($PinUsed));
 				$this->SetBuffer("Serial_Configured", 1);
 				$this->SendDebug("Get Serial Handle", "Mode der GPIO fuer Seriellen Bus gesetzt", 0);
+				$Parameter = array();
+				$Parameter = array(32768, 50, 1);
+				$this->SendDebug("get_handle_serial", "SerialScriptID: ".(int)$this->GetBuffer("SerialScriptID"), 0);
+				If ((int)$this->GetBuffer("SerialScriptID") >= 0) {
+					$Result = $this->StartProc((int)$this->GetBuffer("SerialScriptID"), serialize($Parameter));
+				}
+				// Event setzen für den seriellen Anschluss
+				$Handle = (int)$this->GetBuffer("Handle");
+				$this->SendDebug("get_handle_serial", "Handle: ".$Handle, 0);
+				$this->CommandClientSocket(pack("L*", 115, $Handle, 1, 0), 16);
+				
 				$this->SetTimerInterval("CheckSerial", 3 * 1000);
 			}
-				
-			
-	   		//$this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device.pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 32);
+
 			$SerialHandle = $this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device, 16);
 			
 			$this->SetBuffer("Serial_Handle", $SerialHandle);
 			$this->SendDebug("Serial_Handle", $SerialHandle, 0);
 			
-			$Parameter = array();
-			$Parameter = array(32768, 50, 1);
-			$this->SendDebug("get_handle_serial", "SerialScriptID: ".(int)$this->GetBuffer("SerialScriptID"), 0);
-			If ((int)$this->GetBuffer("SerialScriptID") >= 0) {
-				$Result = $this->StartProc((int)$this->GetBuffer("SerialScriptID"), serialize($Parameter));
-			}
-				
-			// Event setzen für den seriellen Anschluss
-			$Handle = (int)$this->GetBuffer("Handle");
-			$this->SendDebug("get_handle_serial", "Handle: ".$Handle, 0);
-			$this->CommandClientSocket(pack("L*", 115, $Handle, 1, 0), 16);
-	
-			/*
-			// den Notify für den RxD-Pin einschalten
-			$PinNotify = array();
-			$PinNotify = unserialize($this->GetBuffer("PinNotify"));
-			$PinNotify[] = 15;
-			$this->SetBuffer("PinNotify", serialize($PinNotify));
-			$this->CommandClientSocket(pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 16);
-			*/
-				
 			// Messages einrichten
 			$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
 		        $this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
-			// WatchDog setzen
-			//$this->ClientSocket(pack("L*", 9, 15, 500, 0), 16);
+			
 	   		break;
 		  case "write_bytes_serial":
 		   	$Command = utf8_decode($data->Command);
@@ -772,7 +759,7 @@ class IPS2GPIO_IO extends IPSModule
 					$Level = $MessageArray[$i + 2];
 					If ($KeepAlive == 1) {
 						// es handelt sich um ein Event
-						$this->SendDebug("Datenanalyse", "Event: KeepAlive", 0);
+						$this->SendDebug("Datenanalyse", "KeepAlive", 0);
 						SetValueInteger($this->GetIDForIdent("LastKeepAlive"), time() );
 					}
 					elseif ($WatchDog == 1) {
