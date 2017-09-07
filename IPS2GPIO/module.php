@@ -228,12 +228,12 @@ class IPS2GPIO_IO extends IPSModule
 				$Handle = $this->ClientSocket(pack("L*", 99, 0, 0, 0));
 				$this->SetBuffer("Handle", $Handle);
 
-				
+				/*
 				//Skripte für Seriellen Datenempfang senden
 				$Script = "tag 999 wait p0 mils p1 evt p2 jmp 999";
 				$Result = $this->CommandClientSocket(pack("L*", 38, 0, 0, strlen($Script)).pack("C*", $Script), 16);
-				//$Result = $this->SendProc("tag 999 wait p0 mils p1 evt p2 jmp 999");
 				$this->SetBuffer("SerialScriptID", $Result);
+				*/
 				
 				// Ermitteln der genutzten I2C-Adressen
 				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_used_i2c")));
@@ -646,10 +646,14 @@ class IPS2GPIO_IO extends IPSModule
 				$this->SetBuffer("PinUsed", serialize($PinUsed));
 				$this->SetBuffer("Serial_Configured", 1);
 				$this->SendDebug("Get Serial Handle", "Mode der GPIO fuer Seriellen Bus gesetzt", 0);
+				//Skripte für Seriellen Datenempfang senden
+				$Script = "tag 999 wait p0 mils p1 evt p2 jmp 999";
+				$SerialScriptID = $this->CommandClientSocket(pack("L*", 38, 0, 0, strlen($Script)).pack("C*", $Script), 16);
+				$this->SetBuffer("SerialScriptID", $SerialScriptID );
 				$Parameter = array();
 				$Parameter = array(32768, 50, 1);
-				$SerialScriptID = $this->GetBuffer("SerialScriptID");
-				$this->SendDebug("get_handle_serial", "SerialScriptID: ".(int)$SerialScriptID, 0);
+				
+				$this->SendDebug("Serial Skript ID", "SerialScriptID: ".(int)$SerialScriptID, 0);
 				If ($this->GetBuffer("SerialScriptID") >= 0) {
 					$Result = $this->StartProc((int)$SerialScriptID, serialize($Parameter));
 				}
@@ -657,10 +661,7 @@ class IPS2GPIO_IO extends IPSModule
 				
 				$this->SetTimerInterval("CheckSerial", 3 * 1000);
 			}
-			// Event setzen für den seriellen Anschluss
-			$Handle = $this->GetBuffer("Handle");
-			$this->SendDebug("get_handle_serial", "Handle: ".(int)$Handle, 0);
-			$this->CommandClientSocket(pack("L*", 115, (int)$Handle, 1, 0), 16);
+			
 
 			$SerialHandle = $this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device, 16);
 			
@@ -670,6 +671,11 @@ class IPS2GPIO_IO extends IPSModule
 			// Messages einrichten
 			$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
 		        $this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
+			
+			// Event setzen für den seriellen Anschluss
+			$Handle = $this->GetBuffer("Handle");
+			$this->SendDebug("get_handle_serial", "Handle: ".(int)$Handle, 0);
+			$this->CommandClientSocket(pack("L*", 115, (int)$Handle, 1, 0), 16);
 			
 	   		break;
 		  case "write_bytes_serial":
