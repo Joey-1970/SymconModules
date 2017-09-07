@@ -664,8 +664,9 @@ class IPS2GPIO_IO extends IPSModule
 			}
 				
 			// Event setzen für den seriellen Anschluss
-			$this->SendDebug("get_handle_serial", "Handle: ".(int)$this->GetBuffer("Handle"), 0);
-			$this->CommandClientSocket(pack("L*", 115, (int)$this->GetBuffer("Handle"), 1, 0), 16);
+			$Handle = (int)$this->GetBuffer("Handle");
+			$this->SendDebug("get_handle_serial", "Handle: ".$Handle, 0);
+			$this->CommandClientSocket(pack("L*", 115, $Handle, 1, 0), 16);
 	
 			/*
 			// den Notify für den RxD-Pin einschalten
