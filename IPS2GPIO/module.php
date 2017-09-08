@@ -223,14 +223,8 @@ class IPS2GPIO_IO extends IPSModule
 				$Handle = $this->ClientSocket(pack("L*", 99, 0, 0, 0));
 				$this->CommandClientSocket(pack("L*", 115, $Handle, 1, 0), 16);
 				$this->SetBuffer("Handle", $Handle);
-
-				/*
-				//Skripte für Seriellen Datenempfang senden
-				$Script = "tag 999 wait p0 mils p1 evt p2 jmp 999";
-				$Result = $this->CommandClientSocket(pack("L*", 38, 0, 0, strlen($Script)).pack("C*", $Script), 16);
-				$this->SetBuffer("SerialScriptID", $Result);
-				*/
 				
+				// Vorbereitung beendet
 				$this->SendDebug("ApplyChanges", "Beende Vorbereitung", 0);
 				$this->SetBuffer("ModuleReady", 1);
 				
@@ -359,68 +353,70 @@ class IPS2GPIO_IO extends IPSModule
 		    
 		// interne Kommunikation
 		case "set_usedpin":
-		   	If ($data->Pin >= 0) {
-				// Prüfen, ob der gewählte GPIO bei dem Modell überhaupt vorhanden ist
-				$PinPossible = array();
-				$PinPossible = unserialize($this->GetBuffer("PinPossible"));
-				if (in_array($data->Pin, $PinPossible)) {
-			    		//IPS_LogMessage("IPS2GPIO Pin: ","Gewählter Pin ist bei diesem Modell verfügbar");
-					$this->SendDebug("set_usedpin", "Gewaehlter Pin ".$data->Pin." ist bei diesem Modell verfuegbar", 0);
-			    		$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>102, "HardwareRev"=>$this->GetBuffer("HardwareRev") )));
-				}
-				else {
-					$this->SendDebug("set_usedpin", "Gewaehlter Pin ".$data->Pin." ist bei diesem Modell nicht verfuegbar!", 0);
-					IPS_LogMessage("IPS2GPIO Pin: ","Gewählter Pin ".$data->Pin." ist bei diesem Modell nicht verfügbar!");
-					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>201, "HardwareRev"=>$this->GetBuffer("HardwareRev") )));
-				}
-				// Erstellt ein Array für alle Pins die genutzt werden 	
-				$PinUsed = array();
-				$PinUsed = unserialize($this->GetBuffer("PinUsed"));
-				// Prüft, ob der ausgeählte Pin schon einmal genutzt wird
-			        If (is_array($PinUsed)) {
-					If (array_key_exists(intval($data->Pin), $PinUsed)) {
-						If (($PinUsed[$data->Pin] <> $data->InstanceID) AND ($PinUsed[$data->Pin] <> 99999)) {
-							IPS_LogMessage("IPS2GPIO Pin", "Achtung: Pin ".$data->Pin." wird mehrfach genutzt!");
-							$this->SendDebug("set_usedpin", "Achtung: Pin ".$data->Pin." wird mehrfach genutzt!", 0);
-							$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>200, "HardwareRev"=>$this->GetBuffer("HardwareRev")) ));
-						}	
+		   	If ($this->GetBuffer("ModuleReady") == 1) {
+				If ($data->Pin >= 0) {
+					// Prüfen, ob der gewählte GPIO bei dem Modell überhaupt vorhanden ist
+					$PinPossible = array();
+					$PinPossible = unserialize($this->GetBuffer("PinPossible"));
+					if (in_array($data->Pin, $PinPossible)) {
+						//IPS_LogMessage("IPS2GPIO Pin: ","Gewählter Pin ist bei diesem Modell verfügbar");
+						$this->SendDebug("set_usedpin", "Gewaehlter Pin ".$data->Pin." ist bei diesem Modell verfuegbar", 0);
+						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>102, "HardwareRev"=>$this->GetBuffer("HardwareRev") )));
 					}
-				}
-			        $PinUsed[intval($data->Pin)] = $data->InstanceID;
-				$this->SetBuffer("PinUsed", serialize($PinUsed));
-			        // Messages einrichten
-			        $this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
-		        	$this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
-			        // Erstellt ein Array für alle Pins für die die Notifikation erforderlich ist
-			        If ($data->Notify == true) {
-					$PinNotify = array();
-			        	$PinNotify = unserialize($this->GetBuffer("PinNotify"));
-				        if (in_array(intval($data->Pin), $PinNotify) == false) {
-						$PinNotify[] = intval($data->Pin);
-						$this->SendDebug("set_usedpin", "Gewaehlter Pin ".$data->Pin." wurde dem Notify hinzugefuegt", 0);
+					else {
+						$this->SendDebug("set_usedpin", "Gewaehlter Pin ".$data->Pin." ist bei diesem Modell nicht verfuegbar!", 0);
+						IPS_LogMessage("IPS2GPIO Pin: ","Gewählter Pin ".$data->Pin." ist bei diesem Modell nicht verfügbar!");
+						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>201, "HardwareRev"=>$this->GetBuffer("HardwareRev") )));
 					}
-					$this->SetBuffer("PinNotify", serialize($PinNotify));
-					// startet das Notify neu
-					$this->SetBuffer("NotifyCounter", 0);
-					$this->CommandClientSocket(pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 16);
-					// Setzt den Glitch Filter
-					//IPS_LogMessage("IPS2GPIO SetGlitchFilter Parameter",$data->Pin." , ".$data->GlitchFilter);
-					$this->CommandClientSocket(pack("L*", 97, $data->Pin, $data->GlitchFilter, 0), 16);
-			        }
-			        // Pin in den entsprechenden R/W-Mode setzen, ggf. gleichzeitig Pull-Up/Down setzen
-				If ($data->Modus == 0) {
-					// R/W-Mode und Pull Up/Down Widerstände für den Pin setzen
-					//IPS_LogMessage("IPS2GPIO Set Pull Up/Down",$data->Pin." , ".$data->Resistance);
-					//IPS_LogMessage("IPS2GPIO SetMode",$data->Pin." , ".$data->Modus);
-			        	$this->CommandClientSocket(pack("LLLL", 0, $data->Pin, 0, 0).pack("LLLL", 2, $data->Pin, $data->Resistance, 0), 32);
-				}
-				else {
-					// R/W-Mode setzen
-					//IPS_LogMessage("IPS2GPIO SetMode",$data->Pin." , ".$data->Modus);
-					$this->CommandClientSocket(pack("LLLL", 0, $data->Pin, $data->Modus, 0), 16);
+					// Erstellt ein Array für alle Pins die genutzt werden 	
+					$PinUsed = array();
+					$PinUsed = unserialize($this->GetBuffer("PinUsed"));
+					// Prüft, ob der ausgeählte Pin schon einmal genutzt wird
+					If (is_array($PinUsed)) {
+						If (array_key_exists(intval($data->Pin), $PinUsed)) {
+							If (($PinUsed[$data->Pin] <> $data->InstanceID) AND ($PinUsed[$data->Pin] <> 99999)) {
+								IPS_LogMessage("IPS2GPIO Pin", "Achtung: Pin ".$data->Pin." wird mehrfach genutzt!");
+								$this->SendDebug("set_usedpin", "Achtung: Pin ".$data->Pin." wird mehrfach genutzt!", 0);
+								$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "Pin"=>$data->Pin, "Status"=>200, "HardwareRev"=>$this->GetBuffer("HardwareRev")) ));
+							}	
+						}
+					}
+					$PinUsed[intval($data->Pin)] = $data->InstanceID;
 					$this->SetBuffer("PinUsed", serialize($PinUsed));
+					// Messages einrichten
+					$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
+					$this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
+					// Erstellt ein Array für alle Pins für die die Notifikation erforderlich ist
+					If ($data->Notify == true) {
+						$PinNotify = array();
+						$PinNotify = unserialize($this->GetBuffer("PinNotify"));
+						if (in_array(intval($data->Pin), $PinNotify) == false) {
+							$PinNotify[] = intval($data->Pin);
+							$this->SendDebug("set_usedpin", "Gewaehlter Pin ".$data->Pin." wurde dem Notify hinzugefuegt", 0);
+						}
+						$this->SetBuffer("PinNotify", serialize($PinNotify));
+						// startet das Notify neu
+						$this->SetBuffer("NotifyCounter", 0);
+						$this->CommandClientSocket(pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 16);
+						// Setzt den Glitch Filter
+						//IPS_LogMessage("IPS2GPIO SetGlitchFilter Parameter",$data->Pin." , ".$data->GlitchFilter);
+						$this->CommandClientSocket(pack("L*", 97, $data->Pin, $data->GlitchFilter, 0), 16);
+					}
+					// Pin in den entsprechenden R/W-Mode setzen, ggf. gleichzeitig Pull-Up/Down setzen
+					If ($data->Modus == 0) {
+						// R/W-Mode und Pull Up/Down Widerstände für den Pin setzen
+						//IPS_LogMessage("IPS2GPIO Set Pull Up/Down",$data->Pin." , ".$data->Resistance);
+						//IPS_LogMessage("IPS2GPIO SetMode",$data->Pin." , ".$data->Modus);
+						$this->CommandClientSocket(pack("LLLL", 0, $data->Pin, 0, 0).pack("LLLL", 2, $data->Pin, $data->Resistance, 0), 32);
+					}
+					else {
+						// R/W-Mode setzen
+						//IPS_LogMessage("IPS2GPIO SetMode",$data->Pin." , ".$data->Modus);
+						$this->CommandClientSocket(pack("LLLL", 0, $data->Pin, $data->Modus, 0), 16);
+						$this->SetBuffer("PinUsed", serialize($PinUsed));
+					}
 				}
-		   	}
+			}
 		        break;
 		case "get_GPIO":
 		   	$PinPossible = array();
@@ -447,59 +443,61 @@ class IPS2GPIO_IO extends IPSModule
 
 		// I2C Kommunikation
 		case "set_used_i2c":
-			// Konfiguration für I²C Bus 0 - GPIO 28/29 an P5
-			If (($this->GetBuffer("I2C_0_Configured") == 0) AND (intval($data->DeviceBus) == 0)) {
-				$PinUsed = array();
-				// Reservieren der Schnittstellen für I²C
-				$this->CommandClientSocket(pack("LLLL", 0, 28, 4, 0).pack("LLLL", 0, 29, 4, 0), 32);
-				// Sichern der Einstellungen
-				$this->SetBuffer("I2C_0_Configured", 1);
-				$this->SendDebug("Set Used I2C", "GPIO-Mode fuer I2C Bus 0 gesetzt", 0);
-			}
-			// Konfiguration für I²C Bus 1 (Default) - GPIO 0/1 bzw. 2/3 an P1
-			If (($this->GetBuffer("I2C_1_Configured") == 0) AND (intval($data->DeviceBus) == 1)) {
-				$PinUsed = array();
-				$PinUsed = unserialize($this->GetBuffer("PinUsed"));
-				// Reservieren der Schnittstellen für I²C
-				If ($this->GetBuffer("HardwareRev") <= 3) {
-					$PinUsed[0] = 99999; 
-					$PinUsed[1] = 99999;
-					$this->CommandClientSocket(pack("L*", 0, 0, 4, 0).pack("L*", 0, 1, 4, 0), 32);
+			If ($this->GetBuffer("ModuleReady") == 1) {
+				// Konfiguration für I²C Bus 0 - GPIO 28/29 an P5
+				If (($this->GetBuffer("I2C_0_Configured") == 0) AND (intval($data->DeviceBus) == 0)) {
+					$PinUsed = array();
+					// Reservieren der Schnittstellen für I²C
+					$this->CommandClientSocket(pack("LLLL", 0, 28, 4, 0).pack("LLLL", 0, 29, 4, 0), 32);
+					// Sichern der Einstellungen
+					$this->SetBuffer("I2C_0_Configured", 1);
+					$this->SendDebug("Set Used I2C", "GPIO-Mode fuer I2C Bus 0 gesetzt", 0);
 				}
-				elseif ($this->GetBuffer("HardwareRev") > 3) {
-					$PinUsed[2] = 99999; 
-					$PinUsed[3] = 99999;
-					$this->CommandClientSocket(pack("L*", 0, 2, 4, 0).pack("L*", 0, 3, 4, 0), 32);
+				// Konfiguration für I²C Bus 1 (Default) - GPIO 0/1 bzw. 2/3 an P1
+				If (($this->GetBuffer("I2C_1_Configured") == 0) AND (intval($data->DeviceBus) == 1)) {
+					$PinUsed = array();
+					$PinUsed = unserialize($this->GetBuffer("PinUsed"));
+					// Reservieren der Schnittstellen für I²C
+					If ($this->GetBuffer("HardwareRev") <= 3) {
+						$PinUsed[0] = 99999; 
+						$PinUsed[1] = 99999;
+						$this->CommandClientSocket(pack("L*", 0, 0, 4, 0).pack("L*", 0, 1, 4, 0), 32);
+					}
+					elseif ($this->GetBuffer("HardwareRev") > 3) {
+						$PinUsed[2] = 99999; 
+						$PinUsed[3] = 99999;
+						$this->CommandClientSocket(pack("L*", 0, 2, 4, 0).pack("L*", 0, 3, 4, 0), 32);
+					}
+					// Sichern der Einstellungen
+					$this->SetBuffer("PinUsed", serialize($PinUsed));
+					$this->SetBuffer("I2C_1_Configured", 1);
+					$this->SendDebug("Set Used I2C", "GPIO-Mode fuer I2C Bus 1 gesetzt", 0);
 				}
-				// Sichern der Einstellungen
-				$this->SetBuffer("PinUsed", serialize($PinUsed));
-				$this->SetBuffer("I2C_1_Configured", 1);
-				$this->SendDebug("Set Used I2C", "GPIO-Mode fuer I2C Bus 1 gesetzt", 0);
-			}
-			
-		   	// die genutzten Device Adressen anlegen
-		   	$I2C_DeviceHandle = unserialize($this->GetBuffer("I2C_Handle"));
-		   	// Messages einrichten
-			$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
-		        $this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
-		   	// Handle ermitteln
-		   	$Handle = $this->CommandClientSocket(pack("L*", 54, $data->DeviceBus, $data->DeviceAddress, 4, 0), 16);	
-		   	$this->SendDebug("Set Used I2C", "Handle fuer Device-Adresse ".$data->DeviceAddress." an Bus ".($data->DeviceBus).": ".$Handle, 0);
-			$I2C_DeviceHandle[($data->DeviceBus << 7) + $data->DeviceAddress] = $Handle;
-			// genutzte Device-Ident mit Handle sichern
-			$this->SetBuffer("I2C_Handle", serialize($I2C_DeviceHandle));	
-			// Testweise lesen
-			If ($Handle >= 0) {
-				$Result = $this->CommandClientSocket(pack("L*", 59, $Handle, 0, 0), 16);
-				If ($Result >= 0) {
-					$this->SendDebug("Set Used I2C", "Test-Lesen auf Device-Adresse ".$data->DeviceAddress." Bus ".($data->DeviceBus)." erfolgreich!", 0);
-					//$this->SendDataToChildren(json_encode(Array("DataID" => "{573FFA75-2A0C-48AC-BF45-FCB01D6BF910}", "Function"=>"status", "InstanceID" => $data->InstanceID, "Status" => 102)));
+
+				// die genutzten Device Adressen anlegen
+				$I2C_DeviceHandle = unserialize($this->GetBuffer("I2C_Handle"));
+				// Messages einrichten
+				$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
+				$this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
+				// Handle ermitteln
+				$Handle = $this->CommandClientSocket(pack("L*", 54, $data->DeviceBus, $data->DeviceAddress, 4, 0), 16);	
+				$this->SendDebug("Set Used I2C", "Handle fuer Device-Adresse ".$data->DeviceAddress." an Bus ".($data->DeviceBus).": ".$Handle, 0);
+				$I2C_DeviceHandle[($data->DeviceBus << 7) + $data->DeviceAddress] = $Handle;
+				// genutzte Device-Ident mit Handle sichern
+				$this->SetBuffer("I2C_Handle", serialize($I2C_DeviceHandle));	
+				// Testweise lesen
+				If ($Handle >= 0) {
+					$Result = $this->CommandClientSocket(pack("L*", 59, $Handle, 0, 0), 16);
+					If ($Result >= 0) {
+						$this->SendDebug("Set Used I2C", "Test-Lesen auf Device-Adresse ".$data->DeviceAddress." Bus ".($data->DeviceBus)." erfolgreich!", 0);
+						//$this->SendDataToChildren(json_encode(Array("DataID" => "{573FFA75-2A0C-48AC-BF45-FCB01D6BF910}", "Function"=>"status", "InstanceID" => $data->InstanceID, "Status" => 102)));
+					}
+					else {
+						$this->SendDebug("Set Used I2C", "Test-Lesen auf Device-Adresse ".$data->DeviceAddress." Bus ".($data->DeviceBus)." nicht erfolgreich!", 0);
+						IPS_LogMessage("IPS2GPIO I2C", "Test-Lesen auf Device-Adresse ".$data->DeviceAddress." Bus ".($data->DeviceBus - 4)." nicht erfolgreich!");
+						//$this->SendDataToChildren(json_encode(Array("DataID" => "{573FFA75-2A0C-48AC-BF45-FCB01D6BF910}", "Function"=>"status", "InstanceID" => $data->InstanceID, "Status" => 201)));
+					}		
 				}
-				else {
-					$this->SendDebug("Set Used I2C", "Test-Lesen auf Device-Adresse ".$data->DeviceAddress." Bus ".($data->DeviceBus)." nicht erfolgreich!", 0);
-					IPS_LogMessage("IPS2GPIO I2C", "Test-Lesen auf Device-Adresse ".$data->DeviceAddress." Bus ".($data->DeviceBus - 4)." nicht erfolgreich!");
-					//$this->SendDataToChildren(json_encode(Array("DataID" => "{573FFA75-2A0C-48AC-BF45-FCB01D6BF910}", "Function"=>"status", "InstanceID" => $data->InstanceID, "Status" => 201)));
-				}		
 			}
 		   	break;
 		case "i2c_get_ports":
@@ -629,55 +627,54 @@ class IPS2GPIO_IO extends IPSModule
 		   
 		   // Serielle Kommunikation
 		case "get_handle_serial":
-	   		If ($this->GetBuffer("Serial_Configured") == 0) {
-				$PinUsed = array();
-				$PinUsed = unserialize($this->GetBuffer("PinUsed"));
-				// Raspberry Pi 3 = Alt5(Rxd1/TxD1) => 2
-				// Alle anderen = Alt0(Rxd0/TxD0) => 4
-				If ($this->GetBuffer("Default_Serial_Bus") == 0) {
-					$this->CommandClientSocket(pack("L*", 0, 14, 4, 0).pack("L*", 0, 15, 4, 0), 32);
-				}
-				elseif ($this->GetBuffer("Default_Serial_Bus") == 1) {
-					// Beim Raspberry Pi 3 ist Bus 0 schon durch die Bluetooth-Schnittstelle belegt
-					$this->CommandClientSocket(pack("L*", 0, 14, 2, 0).pack("L*", 0, 15, 2, 0), 32);
-				}
-				$PinUsed[14] = 99999; 
-				$PinUsed[15] = 99999;
-				$this->SetBuffer("PinUsed", serialize($PinUsed));
-				$this->SetBuffer("Serial_Configured", 1);
-				$this->SendDebug("Get Serial Handle", "Mode der GPIO fuer Seriellen Bus gesetzt", 0);
-				//Skripte für Seriellen Datenempfang senden
-				$Script = "tag 999 wait p0 mils p1 evt p2 jmp 999";
-				$SerialScriptID = $this->CommandClientSocket(pack("L*", 38, 0, 0, strlen($Script)).pack("C*", $Script), 16);
-				$this->SetBuffer("SerialScriptID", $SerialScriptID );
-				$Parameter = array();
-				$Parameter = array(32768, 50, 1);
-				
-				$this->SendDebug("Serial Skript ID", "SerialScriptID: ".(int)$SerialScriptID, 0);
-				If ($this->GetBuffer("SerialScriptID") >= 0) {
-					$Result = $this->StartProc((int)$SerialScriptID, serialize($Parameter));
-				}
-				// Event setzen für den seriellen Anschluss
-				$Handle = $this->GetBuffer("Handle");
-				If ($Handle >= 0) {
-					$this->CommandClientSocket(pack("L*", 115, $Handle, 1, 0), 16);
-				}
-				
-				//$this->SetTimerInterval("CheckSerial", 3 * 1000);
-			}
-			
+	   		If ($this->GetBuffer("ModuleReady") == 1) {
+				If ($this->GetBuffer("Serial_Configured") == 0) {
+					$PinUsed = array();
+					$PinUsed = unserialize($this->GetBuffer("PinUsed"));
+					// Raspberry Pi 3 = Alt5(Rxd1/TxD1) => 2
+					// Alle anderen = Alt0(Rxd0/TxD0) => 4
+					If ($this->GetBuffer("Default_Serial_Bus") == 0) {
+						$this->CommandClientSocket(pack("L*", 0, 14, 4, 0).pack("L*", 0, 15, 4, 0), 32);
+					}
+					elseif ($this->GetBuffer("Default_Serial_Bus") == 1) {
+						// Beim Raspberry Pi 3 ist Bus 0 schon durch die Bluetooth-Schnittstelle belegt
+						$this->CommandClientSocket(pack("L*", 0, 14, 2, 0).pack("L*", 0, 15, 2, 0), 32);
+					}
+					$PinUsed[14] = 99999; 
+					$PinUsed[15] = 99999;
+					$this->SetBuffer("PinUsed", serialize($PinUsed));
+					$this->SetBuffer("Serial_Configured", 1);
+					$this->SendDebug("Get Serial Handle", "Mode der GPIO fuer Seriellen Bus gesetzt", 0);
+					//Skripte für Seriellen Datenempfang senden
+					$Script = "tag 999 wait p0 mils p1 evt p2 jmp 999";
+					$SerialScriptID = $this->CommandClientSocket(pack("L*", 38, 0, 0, strlen($Script)).pack("C*", $Script), 16);
+					$this->SetBuffer("SerialScriptID", $SerialScriptID );
+					$Parameter = array();
+					$Parameter = array(32768, 50, 1);
 
-			$SerialHandle = $this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device, 16);
-			
-			$this->SetBuffer("Serial_Handle", $SerialHandle);
-			$this->SendDebug("Serial_Handle", $SerialHandle, 0);
-			
-			// Messages einrichten
-			$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
-		        $this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
-			
-			
-			
+					$this->SendDebug("Serial Skript ID", "SerialScriptID: ".(int)$SerialScriptID, 0);
+					If ($this->GetBuffer("SerialScriptID") >= 0) {
+						$Result = $this->StartProc((int)$SerialScriptID, serialize($Parameter));
+					}
+					// Event setzen für den seriellen Anschluss
+					$Handle = $this->GetBuffer("Handle");
+					If ($Handle >= 0) {
+						$this->CommandClientSocket(pack("L*", 115, $Handle, 1, 0), 16);
+					}
+
+					//$this->SetTimerInterval("CheckSerial", 3 * 1000);
+				}
+
+
+				$SerialHandle = $this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device, 16);
+
+				$this->SetBuffer("Serial_Handle", $SerialHandle);
+				$this->SendDebug("Serial_Handle", $SerialHandle, 0);
+
+				// Messages einrichten
+				$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
+				$this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
+			}
 	   		break;
 		  case "write_bytes_serial":
 		   	$Command = utf8_decode($data->Command);
