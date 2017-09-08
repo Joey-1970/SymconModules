@@ -221,8 +221,10 @@ class IPS2GPIO_IO extends IPSModule
 				// Notify Starten
 				$this->SetBuffer("NotifyCounter", 0);
 				$Handle = $this->ClientSocket(pack("L*", 99, 0, 0, 0));
-				$this->CommandClientSocket(pack("L*", 115, $Handle, 1, 0), 16);
 				$this->SetBuffer("Handle", $Handle);
+				$this->SendDebug("Handle", (int)$Handle, 0);
+				$this->CommandClientSocket(pack("L*", 115, $Handle, 1, 0), 16);
+				
 				
 				// Vorbereitung beendet
 				$this->SendDebug("ApplyChanges", "Beende Vorbereitung", 0);
@@ -676,8 +678,8 @@ class IPS2GPIO_IO extends IPSModule
 
 				$SerialHandle = $this->CommandClientSocket(pack("L*", 76, $data->Baud, 0, strlen($data->Device)).$data->Device, 16);
 
-				$this->SetBuffer("Serial_Handle", $SerialHandle);
-				$this->SendDebug("Serial_Handle", $SerialHandle, 0);
+				$this->SetBuffer("Serial_Handle", (int)$SerialHandle);
+				$this->SendDebug("Serial_Handle", (int)$SerialHandle, 0);
 
 				// Messages einrichten
 				$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
@@ -1278,7 +1280,7 @@ class IPS2GPIO_IO extends IPSModule
 		            	break;
 		        case "99":
            			If ($response[4] >= 0 ) {
-           				$this->SendDebug("Handle", $response[4], 0);
+           				//$this->SendDebug("Handle", $response[4], 0);
          			}
            			else {
            				$this->ClientSocket(pack("L*", 99, 0, 0, 0));		
