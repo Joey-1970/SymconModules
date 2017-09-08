@@ -416,6 +416,10 @@ class IPS2GPIO_IO extends IPSModule
 						$this->SetBuffer("PinUsed", serialize($PinUsed));
 					}
 				}
+				$Result = true;
+			}
+			else {
+				$Result = false;
 			}
 		        break;
 		case "get_GPIO":
@@ -498,6 +502,10 @@ class IPS2GPIO_IO extends IPSModule
 						//$this->SendDataToChildren(json_encode(Array("DataID" => "{573FFA75-2A0C-48AC-BF45-FCB01D6BF910}", "Function"=>"status", "InstanceID" => $data->InstanceID, "Status" => 201)));
 					}		
 				}
+				$Result = true;
+			}
+			else {
+				$Result = false;
 			}
 		   	break;
 		case "i2c_get_ports":
@@ -674,6 +682,10 @@ class IPS2GPIO_IO extends IPSModule
 				// Messages einrichten
 				$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
 				$this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
+				$Result = true;
+			}
+			else {
+				$Result = false;
 			}
 	   		break;
 		  case "write_bytes_serial":
