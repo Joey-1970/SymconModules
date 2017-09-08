@@ -115,16 +115,18 @@
 			
 		    If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 				If (($this->ReadPropertyInteger("Pin_I") >= 0) AND ($this->ReadPropertyInteger("Pin_O") >= 0) AND ($this->ReadPropertyBoolean("Open") == true) ) {
-					  $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+					  $Result_I = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
 										    "Pin" => $this->ReadPropertyInteger("Pin_I"), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 0, "Resistance" => $this->ReadPropertyInteger("PUL"))));
-					  $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+					  $Result_O = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
 										    "Pin" => $this->ReadPropertyInteger("Pin_O"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 					  $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_O"), "Value" => 0)));
 
-					  $this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
-					  // Erste Messung durchführen
-					  $this->Measurement();
-					  $this->SetStatus(102);
+					If (($Result_I == true) AND ($Result_O == true)) {   
+						$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
+					  	// Erste Messung durchführen
+					  	$this->Measurement();
+					  	$this->SetStatus(102);
+					}
 				}
 				else {
 					 $this->SetTimerInterval("Messzyklus", 0);
