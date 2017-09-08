@@ -30,7 +30,6 @@ class IPS2GPIO_IO extends IPSModule
 		$this->RegisterPropertyString("I2C_Devices", "");
 		$this->RegisterPropertyBoolean("Multiplexer", false);
 	    	$this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
-		$this->RegisterTimer("CheckSerial", 0, 'I2G_CheckSerial($_IPS["TARGET"]);');
 		$PinNotify = array();
 		$this->SetBuffer("PinNotify", serialize($PinNotify));
 		$PinPossible = array();
@@ -671,8 +670,6 @@ class IPS2GPIO_IO extends IPSModule
 					If ($Handle >= 0) {
 						$this->CommandClientSocket(pack("L*", 115, $Handle, 1, 0), 16);
 					}
-
-					//$this->SetTimerInterval("CheckSerial", 3 * 1000);
 				}
 
 
