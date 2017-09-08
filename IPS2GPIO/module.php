@@ -145,6 +145,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->DisableAction("LastKeepAlive");
 			IPS_SetHidden($this->GetIDForIdent("LastKeepAlive"), false);
 			
+			$this->SetBuffer("ModuleReady", 0);
 			$this->SetBuffer("Handle", -1);
 			$this->SetBuffer("HardwareRev", 0);
 			$Typ = array(2 => 2, 3, 4, 7 => 7, 8, 9, 10, 11, 14 => 14, 15, 17 => 17, 18, 22 => 22, 23, 24, 25, 27 => 27);
@@ -191,7 +192,7 @@ class IPS2GPIO_IO extends IPSModule
 			}
 	
 			If (($this->ConnectionTest()) AND ($this->ReadPropertyBoolean("Open") == true))  {
-				$this->SendDebug("ApplyChangges", "Starte Vorbereitung", 0);
+				$this->SendDebug("ApplyChanges", "Starte Vorbereitung", 0);
 				$this->CheckConfig();
 				// Hardware und Softwareversion feststellen
 				$this->CommandClientSocket(pack("L*", 17, 0, 0, 0).pack("L*", 26, 0, 0, 0), 32);
@@ -230,6 +231,9 @@ class IPS2GPIO_IO extends IPSModule
 				$this->SetBuffer("SerialScriptID", $Result);
 				*/
 				
+				$this->SendDebug("ApplyChanges", "Beende Vorbereitung", 0);
+				$this->SetBuffer("ModuleReady", 1);
+				
 				// Ermitteln der genutzten I2C-Adressen
 				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_used_i2c")));
 				// Ermitteln der sonstigen Seriellen Schnittstellen-Daten
@@ -250,6 +254,7 @@ class IPS2GPIO_IO extends IPSModule
 			}
 			else {
 				$this->SetStatus(104);
+				$this->SetBuffer("ModuleReady", 0);
 			}
 		}
 		else {
