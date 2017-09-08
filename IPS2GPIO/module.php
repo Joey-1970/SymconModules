@@ -201,7 +201,6 @@ class IPS2GPIO_IO extends IPSModule
 				
 				// Serial-Handle zurücksetzen
 				$this->ResetSerialHandle();
-				$this->SetTimerInterval("CheckSerial", 0);
 				
 				// MUX einrichten
 				If ($this->ReadPropertyInteger("MUX") > 0) {
