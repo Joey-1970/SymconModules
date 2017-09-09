@@ -898,7 +898,6 @@ class IPS2GPIO_IO extends IPSModule
 					// Testballon an IPS-ClientSocket
 					$this->ClientSocket(pack("L*", 17, 0, 0, 0));						
 					$this->SetStatus(201);
-					IPS_SemaphoreLeave("CommandClientSocket");
 					return $Result;
 				}
 			}
