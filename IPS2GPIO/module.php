@@ -908,14 +908,14 @@ class IPS2GPIO_IO extends IPSModule
 			{
 				$errorcode = socket_last_error();
 				$errormsg = socket_strerror($errorcode);
-				IPS_LogMessage("IPS2GPIO Socket", "Fehler beim beim Senden ".$errorcode." ".$errormsg);
+				IPS_LogMessage("IPS2GPIO Socket", "Fehler beim Senden ".$errorcode." ".$errormsg);
 				return;
 			}
 			//Now receive reply from server
 			if(socket_recv ($this->Socket, $buf, $ResponseLen, MSG_WAITALL ) === FALSE) {
 				$errorcode = socket_last_error();
 				$errormsg = socket_strerror($errorcode);
-				IPS_LogMessage("IPS2GPIO Socket", "Fehler beim beim Empfangen ".$errorcode." ".$errormsg);
+				IPS_LogMessage("IPS2GPIO Socket", "Fehler beim Empfangen ".$errorcode." ".$errormsg);
 				return;
 			}
 			// Anfragen mit variabler Rückgabelänge
