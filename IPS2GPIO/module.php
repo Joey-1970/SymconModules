@@ -654,7 +654,8 @@ class IPS2GPIO_IO extends IPSModule
 					$this->SetBuffer("Serial_Configured", 1);
 					$this->SendDebug("Get Serial Handle", "Mode der GPIO fuer Seriellen Bus gesetzt", 0);
 					//Skripte für Seriellen Datenempfang senden
-					$Script = "tag 999 wait p0 mils p1 evt p2 jmp 999";
+					//$Script = "tag 999 wait p0 mils p1 evt p2 jmp 999";
+					$Script = "tag 999 wait p0 mils p1 evt p2";
 					$SerialScriptID = $this->CommandClientSocket(pack("L*", 38, 0, 0, strlen($Script)).pack("C*", $Script), 16);
 					$this->SetBuffer("SerialScriptID", $SerialScriptID );
 					$Parameter = array();
