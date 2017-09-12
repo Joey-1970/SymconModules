@@ -713,7 +713,7 @@ class IPS2GPIO_IO extends IPSModule
 					// Event setzen für den seriellen Anschluss
 					$Handle = $this->GetBuffer("Handle");
 					If ($Handle >= 0) {
-						$this->CommandClientSocket(pack("L*", 115, $Handle, (int)$data->Pin_RxD, 0), 16);
+						$this->CommandClientSocket(pack("L*", 115, $Handle, pow(2, (int)$data->Pin_RxD), 0), 16);
 					}
 					$this->SetBuffer("Serial_Display_Configured", 1);
 				}
