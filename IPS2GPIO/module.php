@@ -688,18 +688,58 @@ class IPS2GPIO_IO extends IPSModule
 				$Result = false;
 			}
 	   		break;
-		  case "write_bytes_serial":
+		case "write_bytes_serial":
 		   	$Command = utf8_decode($data->Command);
 		   	//IPS_LogMessage("IPS2GPIO Write Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle"))." Command: ".$Command);
 		   	$this->CommandClientSocket(pack("L*", 81, $this->GetBuffer("Serial_Handle"), 0, strlen($Command)).$Command, 16);
 		   	IPS_Sleep(75);
 			$this->CheckSerial();
 			break;
+		case "open_bb_serial":
+	   		If ($this->GetBuffer("ModuleReady") == 1) {
+				If ($this->GetBuffer("Serial_BB_Configured") == 0) {
+					$PinUsed = array();
+					$PinUsed = unserialize($this->GetBuffer("PinUsed"));
+					// GPIO RxD als Input konfigurieren
+					$this->CommandClientSocket(pack("L*", 0, (int)$data->Pin_RxD, 0, 0), 16);
+					$PinUsed[(int)$data->Pin_RxD] = $data->InstanceID; 
+					// GPIO TxD als Output konfigurieren
+					$this->CommandClientSocket(pack("L*", 0, (int)$data->Pin_TxD, 1, 0), 16);
+					$PinUsed[(int)$data->Pin_TxD] = $data->InstanceID; 
+					
+					$this->SetBuffer("PinUsed", serialize($PinUsed));
+					$this->SetBuffer("Serial_Configured", 1);
+					//Skripte für Seriellen Datenempfang senden
+					$Script = "tag 999 wait p0 mils p1 evt p2 jmp 999";
+					//$Script = "tag 999 wait p0 mils p1 evt p2";
+					$SerialScriptID = $this->CommandClientSocket(pack("L*", 38, 0, 0, strlen($Script)).$Script, 16);
+					$Parameter = array();
+					$Parameter = array(pow(2, (int)$data->Pin_RxD), 50, 1);
+					$this->SendDebug("Serial Skript ID", "SerialScriptID: ".(int)$SerialScriptID, 0);
+					If ($this->GetBuffer("SerialScriptID") >= 0) {
+						$Result = $this->StartProc((int)$SerialScriptID, serialize($Parameter));
+					}
+					// Event setzen für den seriellen Anschluss
+					$Handle = $this->GetBuffer("Handle");
+					If ($Handle >= 0) {
+						$this->CommandClientSocket(pack("L*", 115, $Handle, 1, 0), 16);
+					}
+				}
+				
+				// Messages einrichten
+				$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
+				$this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
+				$Result = true;
+			}
+			else {
+				$Result = false;
+			}
+	   		break;
 		case "write_bb_bytes_serial":	
 		   	$Command = utf8_decode($data->Command);
 		   	$Result = $this->CommandClientSocket(pack("L*", 29, (int)$data->Pin, (int)$data->Baud, 12 + strlen($Command), 8, 1, 0).$Command, 16);
 			break;
-		  case "check_bytes_serial":
+		case "check_bytes_serial":
 		   	//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle")));
 		   	$this->CommandClientSocket(pack("L*", 82, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
 		   	break;
