@@ -5,19 +5,21 @@
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
-            // Diese Zeile nicht löschen.
-            parent::Create();
-            $this->RegisterPropertyBoolean("Open", false);
-	    $this->RegisterPropertyInteger("Baud", 3);
-            $this->RegisterPropertyString("ConnectionString", "/dev/ttyAMA0");
-            $this->RegisterPropertyBoolean("DateTime", true);
-            $this->RegisterPropertyInteger("Brightness", 100);
-            $this->RegisterPropertyInteger("SleepNoSerial", 60);
-            $this->RegisterPropertyInteger("SleepNoTouch", 60);
-            $this->RegisterPropertyBoolean("TouchAwake", true);
-            $this->RegisterPropertyBoolean("SendTouchCoordinate", true);
-            $this->RegisterPropertyInteger("CmdRet", 2);
-            $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+            	// Diese Zeile nicht löschen.
+            	parent::Create();
+            	$this->RegisterPropertyBoolean("Open", false);
+	    	$this->RegisterPropertyInteger("Baud", 3);
+            	$this->RegisterPropertyString("ConnectionString", "/dev/ttyAMA0");
+		$this->RegisterPropertyInteger("Pin_RxD", 15);
+		$this->RegisterPropertyInteger("Pin_TxD", 14);
+            	$this->RegisterPropertyBoolean("DateTime", true);
+            	$this->RegisterPropertyInteger("Brightness", 100);
+            	$this->RegisterPropertyInteger("SleepNoSerial", 60);
+            	$this->RegisterPropertyInteger("SleepNoTouch", 60);
+            	$this->RegisterPropertyBoolean("TouchAwake", true);
+            	$this->RegisterPropertyBoolean("SendTouchCoordinate", true);
+            	$this->RegisterPropertyInteger("CmdRet", 2);
+            	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
 
 	public function GetConfigurationForm() 
@@ -164,7 +166,10 @@
         	If (IPS_GetKernelRunlevel() == 10103) {
 			// den Handle für dieses Gerät ermitteln
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_handle_serial", "Baud" => 9600, "Device" => $this->ReadPropertyString('ConnectionString'), "InstanceID" => $this->InstanceID )));
-	
+			
+			//$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "open_bb_serial_display", "Baud" => 9600, "Pin_RxD" => $this->ReadPropertyInteger("Pin_RxD"), "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "InstanceID" => $this->InstanceID )));
+
+			
 			If (($Result == true) AND ($this->ReadPropertyBoolean("Open") == true)) {
 				$this->Setup();
 				$this->SetStatus(102);
@@ -216,7 +221,7 @@
 			        	SetValueInteger($this->GetIDForIdent("FirmwareVersion"), $Messages[3]);
 			        	SetValueInteger($this->GetIDForIdent("MCU_Code"), $Messages[4]);
 			        	SetValueString($this->GetIDForIdent("SerialNumber"), $Messages[5]);
-			        	SetValueString($this->GetIDForIdent("FlashSize"), $Messages[6]);
+			        	//SetValueString($this->GetIDForIdent("FlashSize"), $Messages[6]);
 			        }
 			        else {
 				        $ByteResponse = unpack("H*", $ByteMessage);
