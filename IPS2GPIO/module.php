@@ -154,6 +154,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("I2C_0_Configured", 0);
 			$this->SetBuffer("I2C_1_Configured", 0);
 			$this->SetBuffer("Serial_Configured", 0);
+			$this->SetBuffer("Serial_Display_Configured", 0);
 			$this->SetBuffer("1Wire_Configured", 0);
 			$this->SetBuffer("SerialNotify", 0);
 			$this->SetBuffer("SerialScriptID", -1);
@@ -695,9 +696,9 @@ class IPS2GPIO_IO extends IPSModule
 		   	IPS_Sleep(75);
 			$this->CheckSerial();
 			break;
-		case "open_bb_serial":
+		case "open_bb_serial_display":
 	   		If ($this->GetBuffer("ModuleReady") == 1) {
-				If ($this->GetBuffer("Serial_BB_Configured") == 0) {
+				If ($this->GetBuffer("Serial_Display_Configured") == 0) {
 					$PinUsed = array();
 					$PinUsed = unserialize($this->GetBuffer("PinUsed"));
 					// GPIO RxD als Input konfigurieren
@@ -706,24 +707,14 @@ class IPS2GPIO_IO extends IPSModule
 					// GPIO TxD als Output konfigurieren
 					$this->CommandClientSocket(pack("L*", 0, (int)$data->Pin_TxD, 1, 0), 16);
 					$PinUsed[(int)$data->Pin_TxD] = $data->InstanceID; 
-					
 					$this->SetBuffer("PinUsed", serialize($PinUsed));
-					$this->SetBuffer("Serial_Configured", 1);
-					//Skripte für Seriellen Datenempfang senden
-					$Script = "tag 999 wait p0 mils p1 evt p2 jmp 999";
-					//$Script = "tag 999 wait p0 mils p1 evt p2";
-					$SerialScriptID = $this->CommandClientSocket(pack("L*", 38, 0, 0, strlen($Script)).$Script, 16);
-					$Parameter = array();
-					$Parameter = array(pow(2, (int)$data->Pin_RxD), 50, 1);
-					$this->SendDebug("Serial Skript ID", "SerialScriptID: ".(int)$SerialScriptID, 0);
-					If ($this->GetBuffer("SerialScriptID") >= 0) {
-						$Result = $this->StartProc((int)$SerialScriptID, serialize($Parameter));
-					}
+					
 					// Event setzen für den seriellen Anschluss
 					$Handle = $this->GetBuffer("Handle");
 					If ($Handle >= 0) {
-						$this->CommandClientSocket(pack("L*", 115, $Handle, 1, 0), 16);
+						$this->CommandClientSocket(pack("L*", 115, $Handle, (int)$data->Pin_RxD, 0), 16);
 					}
+					$this->SetBuffer("Serial_Display_Configured", 1);
 				}
 				
 				// Messages einrichten
