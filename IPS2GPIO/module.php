@@ -1113,7 +1113,9 @@ class IPS2GPIO_IO extends IPSModule
            				$Result = true;
            			}
            			else {
-           				$Result = false;
+           				$this->SendDebug("Bit Bang Serial", "Fehlermeldung: ".$this->GetErrorText(abs($response[4])), 0);
+					IPS_LogMessage("IPS2GPIO","Bit Bang Serial mit Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
+					$Result = false;
            			}
 		            	break;
 		         case "37":
