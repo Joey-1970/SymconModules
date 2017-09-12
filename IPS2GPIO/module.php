@@ -695,6 +695,10 @@ class IPS2GPIO_IO extends IPSModule
 		   	IPS_Sleep(75);
 			$this->CheckSerial();
 			break;
+		case "write_bb_bytes_serial":	
+		   	$Command = utf8_decode($data->Command);
+		   	$Result = $this->CommandClientSocket(pack("L*", 29, (int)$data->Pin, (int)$data->Baud, 12 + strlen($Command), 8, 1, 0).$Command, 16);
+			break;
 		  case "check_bytes_serial":
 		   	//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle")));
 		   	$this->CommandClientSocket(pack("L*", 82, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
@@ -1071,6 +1075,14 @@ class IPS2GPIO_IO extends IPSModule
 				}
            			else {
            				IPS_LogMessage("IPS2GPIO PIGPIO Software Version","Fehler: ".$this->GetErrorText(abs($response[4])));
+           			}
+		            	break;
+			case "29":
+           			If ($response[4] >= 0) {
+           				$Result = true;
+           			}
+           			else {
+           				$Result = false;
            			}
 		            	break;
 		         case "37":
