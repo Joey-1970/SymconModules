@@ -1114,7 +1114,8 @@ class IPS2GPIO_IO extends IPSModule
 		            	break;
 			case "29":
            			If ($response[4] >= 0) {
-           				$Result = true;
+           				$this->SendDebug("Bit Bang Serial", "Anzahl gesendet: ".$response[4], 0);
+					$Result = true;
            			}
            			else {
            				$this->SendDebug("Bit Bang Serial", "Fehlermeldung: ".$this->GetErrorText(abs($response[4])), 0);
