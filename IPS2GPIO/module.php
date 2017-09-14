@@ -977,7 +977,7 @@ class IPS2GPIO_IO extends IPSModule
 				}
 			}
 			// Anfragen mit variabler Rückgabelänge
-			$CmdVarLen = array(56, 67, 70, 73, 75, 80, 88, 91, 92, 106, 109);
+			$CmdVarLen = array(43, 56, 67, 70, 73, 75, 80, 88, 91, 92, 106, 109);
 			$MessageArray = unpack("L*", $buf);
 			$Command = $MessageArray[1];
 			//IPS_LogMessage("IPS2GPIO ReceiveData", "Command: ".$Command);
