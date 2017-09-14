@@ -1181,11 +1181,11 @@ class IPS2GPIO_IO extends IPSModule
 		            	break;
 			case "43":
            			If ($response[4] >= 0) {
-					//IPS_LogMessage("IPS2GPIO I2C Read Bytes","Handle: ".$response[2]." Register: ".$response[3]." Count: ".$response[4]);
 					$ByteMessage = substr($Message, -($response[4]));
 					$ByteResponse = unpack("C*", $ByteMessage);
+					$MessageLen = $ByteResponse[0];
 					$ByteArray = serialize($ByteResponse);
-					$this->SendDebug("Serielle Daten", $ByteArray, 0);
+					$this->SendDebug("Serielle Daten", "Laenge: ".$MessageLen." Array: ".$ByteArray, 0);
 					$Result = serialize($ByteResponse);
 					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_data", "Value"=> $Result )));
 					
