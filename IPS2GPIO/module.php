@@ -1185,12 +1185,14 @@ class IPS2GPIO_IO extends IPSModule
 					$ByteMessage = substr($Message, -($response[4]));
 					$ByteResponse = unpack("C*", $ByteMessage);
 					$ByteArray = serialize($ByteResponse);
+					$this->SendDebug("Serielle Daten", $ByteArray, 0);
 					$Result = serialize($ByteResponse);
+					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_data", "Value"=> $Result )));
 					
-					//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_byte_block", "DeviceIdent" => $this->GetI2C_HandleDevice($response[2]), "Register" => $response[3], "Count" => $response[4], "ByteArray" => $ByteArray)));
 				}
 		            	else {
-           				IPS_LogMessage("IPS2GPIO I2C Read Bytes","Handle: ".$response[2]." Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
+           				$this->SendDebug("Serielle Daten", "Fehlermeldung: ".$this->GetErrorText(abs($response[4])), 0);
+					IPS_LogMessage("IPS2GPIO Serielle Daten", "Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
            			}
 				break; 
 			case "54":
