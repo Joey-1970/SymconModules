@@ -155,6 +155,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("I2C_1_Configured", 0);
 			$this->SetBuffer("Serial_Configured", 0);
 			$this->SetBuffer("Serial_Display_Configured", 0);
+			$this->SetBuffer("Serial_Display_RxD", -1);
 			$this->SetBuffer("1Wire_Configured", 0);
 			$this->SetBuffer("SerialNotify", 0);
 			$this->SetBuffer("SerialScriptID", -1);
@@ -702,6 +703,7 @@ class IPS2GPIO_IO extends IPSModule
 					// GPIO RxD als Input konfigurieren
 					$this->CommandClientSocket(pack("L*", 0, (int)$data->Pin_RxD, 0, 0), 16);
 					$PinUsed[(int)$data->Pin_RxD] = $data->InstanceID; 
+					$this->SetBuffer("Serial_Display_RxD", (int)$data->Pin_RxD);
 					// GPIO TxD als Output konfigurieren
 					$this->CommandClientSocket(pack("L*", 0, (int)$data->Pin_TxD, 1, 0), 16);
 					$PinUsed[(int)$data->Pin_TxD] = $data->InstanceID; 
@@ -821,7 +823,13 @@ class IPS2GPIO_IO extends IPSModule
 						$this->SendDebug("Datenanalyse", "WatchDog-Nummer: ".$WatchDogNumber, 0);
 					}
 					elseif ($Event == 1) {
-						$this->SendDebug("Datenanalyse", "Event-Nummer: ".$EventNumber, 0);	
+						$this->SendDebug("Datenanalyse", "Event-Nummer: ".$EventNumber, 0);
+						If ($EventNumber == $this->GetBuffer("Serial_Display_RxD")) {
+							// Daten de Displays
+							// SLR 	43 	gpio 	count 	0 	-
+							$this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_Display_RxD"), 50, 0), 16 + 50);
+						}
+						
 					}
 					else {
 						$PinNotify = array();
@@ -950,11 +958,22 @@ class IPS2GPIO_IO extends IPSModule
 				return;
 			}
 			//Now receive reply from server
-			if(socket_recv ($this->Socket, $buf, $ResponseLen, MSG_WAITALL ) === FALSE) {
-				$errorcode = socket_last_error();
-				$errormsg = socket_strerror($errorcode);
-				IPS_LogMessage("IPS2GPIO Socket", "Fehler beim Empfangen ".$errorcode." ".$errormsg);
-				return;
+			$MessageCommand = unpack("L*", $message);
+			If ($MessageCommand <> 43) {
+				if(socket_recv ($this->Socket, $buf, $ResponseLen, MSG_WAITALL ) === FALSE) {
+					$errorcode = socket_last_error();
+					$errormsg = socket_strerror($errorcode);
+					IPS_LogMessage("IPS2GPIO Socket", "Fehler beim Empfangen ".$errorcode." ".$errormsg);
+					return;
+				}
+			}
+			else {
+				if(socket_recv ($this->Socket, $buf, $ResponseLen, MSG_DONTWAIT ) === FALSE) {
+					$errorcode = socket_last_error();
+					$errormsg = socket_strerror($errorcode);
+					IPS_LogMessage("IPS2GPIO Socket", "Fehler beim Empfangen ".$errorcode." ".$errormsg);
+					return;
+				}
 			}
 			// Anfragen mit variabler Rückgabelänge
 			$CmdVarLen = array(56, 67, 70, 73, 75, 80, 88, 91, 92, 106, 109);
@@ -1160,6 +1179,20 @@ class IPS2GPIO_IO extends IPSModule
  
            			}
 		            	break;
+			case "43":
+           			If ($response[4] >= 0) {
+					//IPS_LogMessage("IPS2GPIO I2C Read Bytes","Handle: ".$response[2]." Register: ".$response[3]." Count: ".$response[4]);
+					$ByteMessage = substr($Message, -($response[4]));
+					$ByteResponse = unpack("C*", $ByteMessage);
+					$ByteArray = serialize($ByteResponse);
+					$Result = serialize($ByteResponse);
+					
+					//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_byte_block", "DeviceIdent" => $this->GetI2C_HandleDevice($response[2]), "Register" => $response[3], "Count" => $response[4], "ByteArray" => $ByteArray)));
+				}
+		            	else {
+           				IPS_LogMessage("IPS2GPIO I2C Read Bytes","Handle: ".$response[2]." Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
+           			}
+				break; 
 			case "54":
 		        	If ($response[4] >= 0 ) {
            				If ($this->GetBuffer("I2CSearch") == 0) {
