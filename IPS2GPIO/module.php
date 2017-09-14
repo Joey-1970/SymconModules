@@ -222,8 +222,6 @@ class IPS2GPIO_IO extends IPSModule
 				$Handle = $this->ClientSocket(pack("L*", 99, 0, 0, 0));
 				$this->SetBuffer("Handle", $Handle);
 				$this->SendDebug("Handle", (int)$Handle, 0);
-				$this->CommandClientSocket(pack("L*", 115, $Handle, 1, 0), 16);
-				
 				
 				// Vorbereitung beendet
 				$this->SendDebug("ApplyChanges", "Beende Vorbereitung", 0);
