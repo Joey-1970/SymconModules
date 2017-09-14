@@ -824,6 +824,7 @@ class IPS2GPIO_IO extends IPSModule
 					}
 					elseif ($Event == 1) {
 						$this->SendDebug("Datenanalyse", "Event-Nummer: ".$EventNumber, 0);
+						$this->SendDebug("Datenanalyse", "Serial_Display_RxD: ".$this->GetBuffer("Serial_Display_RxD"), 0);
 						If ($EventNumber == $this->GetBuffer("Serial_Display_RxD")) {
 							// Daten de Displays
 							// SLR 	43 	gpio 	count 	0 	-
