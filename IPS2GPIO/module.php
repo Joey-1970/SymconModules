@@ -1184,7 +1184,8 @@ class IPS2GPIO_IO extends IPSModule
            			If ($response[4] >= 0) {
 					$ByteMessage = substr($Message, -($response[4]));
 					$ByteResponse = unpack("C*", $ByteMessage);
-					$MessageLen = $ByteResponse[0];
+					$MessageLen = $ByteResponse[1];
+					unset($ByteResponse[1]);
 					$ByteArray = serialize($ByteResponse);
 					$this->SendDebug("Serielle Daten", "Laenge: ".$MessageLen." Array: ".$ByteArray, 0);
 					$Result = serialize($ByteResponse);
