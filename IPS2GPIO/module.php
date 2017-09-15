@@ -828,7 +828,9 @@ class IPS2GPIO_IO extends IPSModule
 						If ($EventNumber == $this->GetBuffer("Serial_Display_RxD")) {
 							// Daten de Displays
 							// SLR 	43 	gpio 	count 	0 	-
-							$this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_Display_RxD"), 50, 0), 16 + 50);
+							$Result = $this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_Display_RxD"), 50, 0), 16 + 50);
+							$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_data", "Value"=> $Result )));
+
 						}
 						
 					}
@@ -1186,11 +1188,8 @@ class IPS2GPIO_IO extends IPSModule
 					$ByteResponse = unpack("C*", $ByteMessage);
 					$MessageLen = $ByteResponse[1];
 					unset($ByteResponse[1]);
-					$ByteArray = serialize($ByteResponse);
-					$this->SendDebug("Serielle Daten", "Laenge: ".$MessageLen." Array: ".$ByteArray, 0);
 					$Result = serialize($ByteResponse);
-					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_data", "Value"=> $Result )));
-					
+					$this->SendDebug("Serielle Daten", "Laenge: ".$MessageLen." Array: ".$Result, 0);
 				}
 		            	else {
            				$this->SendDebug("Serielle Daten", "Fehlermeldung: ".$this->GetErrorText(abs($response[4])), 0);
