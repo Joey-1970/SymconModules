@@ -1184,12 +1184,14 @@ class IPS2GPIO_IO extends IPSModule
 		            	break;
 			case "43":
            			If ($response[4] >= 0) {
-					$ByteMessage = substr($Message, -($response[4]));
-					$ByteResponse = unpack("C*", $ByteMessage);
-					$MessageLen = $ByteResponse[1];
-					unset($ByteResponse[1]);
-					$Result = serialize($ByteResponse);
-					$this->SendDebug("Serielle Daten", "Laenge: ".$MessageLen." Array: ".$Result, 0);
+					$Result = utf8_encode(substr($Message, -($response[4])));
+					
+					//$ByteMessage = substr($Message, -($response[4]));
+					//$ByteResponse = unpack("C*", $ByteMessage);
+					//$MessageLen = $ByteResponse[1];
+					//unset($ByteResponse[1]);
+					//$Result = serialize($ByteResponse);
+					$this->SendDebug("Serielle Daten", "Text: ".$Result, 0);
 				}
 		            	else {
            				$this->SendDebug("Serielle Daten", "Fehlermeldung: ".$this->GetErrorText(abs($response[4])), 0);
