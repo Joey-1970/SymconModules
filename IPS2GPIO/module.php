@@ -732,6 +732,7 @@ class IPS2GPIO_IO extends IPSModule
 	   		break;
 		case "write_bb_bytes_serial":	
 		   	$Command = utf8_decode($data->Command);
+			$this->SendDebug("Display Sendung", "GPIO: ".$data->Pin_TxD." Baud: ".$data->Baud. " Text: ".$Command, 0);
 		   	$Result = $this->CommandClientSocket(pack("L*", 29, $data->Pin_TxD, $data->Baud, (12 + strlen($Command)), 8, 4, 0).$Command, 16);
 			//$Result = $this->CommandClientSocket(pack("L*", 29, (int)$data->Pin_TxD, (int)$data->Baud, (12 + strlen($Command)), 8, 4, 10).pack("C*", $Command), 16);
 			break;
