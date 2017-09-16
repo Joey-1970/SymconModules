@@ -701,11 +701,11 @@ class IPS2GPIO_IO extends IPSModule
 					$PinUsed = array();
 					$PinUsed = unserialize($this->GetBuffer("PinUsed"));
 					// GPIO RxD als Input konfigurieren
-					$this->CommandClientSocket(pack("L*", 0, (int)$data->Pin_RxD, 0, 0), 16);
+					//$this->CommandClientSocket(pack("L*", 0, (int)$data->Pin_RxD, 0, 0), 16);
 					$PinUsed[(int)$data->Pin_RxD] = $data->InstanceID; 
 					$this->SetBuffer("Serial_Display_RxD", (int)$data->Pin_RxD);
 					// GPIO TxD als Output konfigurieren
-					$this->CommandClientSocket(pack("L*", 0, (int)$data->Pin_TxD, 1, 0), 16);
+					//$this->CommandClientSocket(pack("L*", 0, (int)$data->Pin_TxD, 1, 0), 16);
 					$PinUsed[(int)$data->Pin_TxD] = $data->InstanceID; 
 					$this->SendDebug("Display", "Mode der GPIO fuer Seriellen Bus gesetzt", 0);
 					$this->SetBuffer("PinUsed", serialize($PinUsed));
