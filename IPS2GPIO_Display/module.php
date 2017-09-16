@@ -163,7 +163,7 @@
 		$Filter = '((.*"Function":"get_serial".*|.*"Pin":14.*)|(.*"Pin":15.*|.*"Function":"set_serial_data".*))'; 
  		$this->SetReceiveDataFilter($Filter); 
  
-        	If (IPS_GetKernelRunlevel() == 10103) {
+        	If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 			// den Handle für dieses Gerät ermitteln
 			//$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_handle_serial", "Baud" => 9600, "Device" => $this->ReadPropertyString('ConnectionString'), "InstanceID" => $this->InstanceID )));
 			
@@ -491,5 +491,34 @@
 		    	IPS_LogMessage("IPS2GPIO Display","Fehler: Die angegebene Datei ".$Filename." wurde nicht gefunden!");
 		}		
 	}
+	    
+	private function Get_GPIO()
+	{
+		If ($this->HasActiveParent() == true) {
+			$GPIO = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_GPIO")));
+		}
+		else {
+			$AllGPIO = array();
+			$AllGPIO[-1] = "undefiniert";
+			for ($i = 2; $i <= 27; $i++) {
+				$AllGPIO[$i] = "GPIO".(sprintf("%'.02d", $i));
+			}
+			$GPIO = serialize($AllGPIO);
+		}
+	return $GPIO;
+	}
+	    
+	private function HasActiveParent()
+    	{
+		$Instance = @IPS_GetInstance($this->InstanceID);
+		if ($Instance['ConnectionID'] > 0)
+		{
+			$Parent = IPS_GetInstance($Instance['ConnectionID']);
+			if ($Parent['InstanceStatus'] == 102)
+			return true;
+		}
+        return false;
+    	}  
+
 }
 ?>
