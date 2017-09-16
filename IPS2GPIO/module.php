@@ -732,8 +732,8 @@ class IPS2GPIO_IO extends IPSModule
 	   		break;
 		case "write_bb_bytes_serial":	
 		   	$Command = utf8_decode($data->Command);
-		   	//$Result = $this->CommandClientSocket(pack("L*", 29, (int)$data->Pin_TxD, (int)$data->Baud, (12 + strlen($Command)), 8, 4, 10).$Command, 16);
-			$Result = $this->CommandClientSocket(pack("L*", 29, (int)$data->Pin_TxD, (int)$data->Baud, (12 + strlen($Command)), 8, 4, 10).pack("C*", $Command), 16);
+		   	$Result = $this->CommandClientSocket(pack("L*", 29, $data->Pin_TxD, $data->Baud, (12 + strlen($Command)), 8, 4, 0).$Command, 16);
+			//$Result = $this->CommandClientSocket(pack("L*", 29, (int)$data->Pin_TxD, (int)$data->Baud, (12 + strlen($Command)), 8, 4, 10).pack("C*", $Command), 16);
 			break;
 		case "check_bytes_serial":
 		   	//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle")));
