@@ -9,9 +9,9 @@
             	parent::Create();
             	$this->RegisterPropertyBoolean("Open", false);
 	    	$this->RegisterPropertyInteger("Baud", 3);
-            	$this->RegisterPropertyString("ConnectionString", "/dev/ttyAMA0");
-		$this->RegisterPropertyInteger("Pin_RxD", 15);
-		$this->RegisterPropertyInteger("Pin_TxD", 14);
+            	//$this->RegisterPropertyString("ConnectionString", "/dev/ttyAMA0");
+		$this->RegisterPropertyInteger("Pin_RxD", -1);
+		$this->RegisterPropertyInteger("Pin_TxD", -1);
             	$this->RegisterPropertyBoolean("DateTime", true);
             	$this->RegisterPropertyInteger("Brightness", 100);
             	$this->RegisterPropertyInteger("SleepNoSerial", 60);
@@ -33,7 +33,35 @@
 		
 		$arrayElements = array(); 
 		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv"); 
- 		$arrayOptions = array();
+		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number)"); 
+  		
+		$arrayOptions = array();
+		$GPIO = array();
+		$GPIO = unserialize($this->Get_GPIO());
+		If ($this->ReadPropertyInteger("Pin_RxD") >= 0 ) {
+			$GPIO[$this->ReadPropertyInteger("Pin_RxD")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_RxD")));
+		}
+		ksort($GPIO);
+		foreach($GPIO AS $Value => $Label) {
+			$arrayOptions[] = array("label" => $Label, "value" => $Value);
+		}
+		$arrayElements[] = array("type" => "Select", "name" => "Pin_RxD", "caption" => "GPIO-Nr. RxD", "options" => $arrayOptions );
+		
+		$arrayOptions = array();
+		$GPIO = array();
+		$GPIO = unserialize($this->Get_GPIO());
+		If ($this->ReadPropertyInteger("Pin_TxD") >= 0 ) {
+			$GPIO[$this->ReadPropertyInteger("Pin_TxD")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_TxD")));
+		}
+		ksort($GPIO);
+		foreach($GPIO AS $Value => $Label) {
+			$arrayOptions[] = array("label" => $Label, "value" => $Value);
+		}
+		$arrayElements[] = array("type" => "Select", "name" => "Pin_TxD", "caption" => "GPIO-Nr. TxD", "options" => $arrayOptions );
+
+		
+		
+		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "2400", "value" => 1);
 		$arrayOptions[] = array("label" => "4800", "value" => 2);
 		$arrayOptions[] = array("label" => "9600", "value" => 3);
@@ -42,8 +70,8 @@
 		$arrayOptions[] = array("label" => "57600", "value" => 6);
 		$arrayOptions[] = array("label" => "115200", "value" => 7);
 		$arrayElements[] = array("type" => "Select", "name" => "Baud", "caption" => "Baud", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "label" => "Connection String der seriellen Schnittstelle (z.B. /dev/serial0):");
-		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "ConnectionString", "caption" => "Connection String");
+		//$arrayElements[] = array("type" => "Label", "label" => "Connection String der seriellen Schnittstelle (z.B. /dev/serial0):");
+		//$arrayElements[] = array("type" => "ValidationTextBox", "name" => "ConnectionString", "caption" => "Connection String");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "DateTime", "caption" => "Datum/Uhrzeit aktualisieren");
 		$arrayElements[] = array("type" => "Label", "label" => "Setzen der Default Display Helligkeit (0-100)");
@@ -166,11 +194,8 @@
         	If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 			// den Handle für dieses Gerät ermitteln
 			//$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_handle_serial", "Baud" => 9600, "Device" => $this->ReadPropertyString('ConnectionString'), "InstanceID" => $this->InstanceID )));
-			
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "open_bb_serial_display", "Baud" => 9600, "Pin_RxD" => $this->ReadPropertyInteger("Pin_RxD"), "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "InstanceID" => $this->InstanceID )));
-
-			
-			If (($Result == true) AND ($this->ReadPropertyBoolean("Open") == true)) {
+			If (($this->ReadPropertyInteger("Pin_RxD") >= 0) AND ($this->ReadPropertyInteger("Pin_TxD") >= 0) AND ($this->ReadPropertyBoolean("Open") == true) ) {
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "open_bb_serial_display", "Baud" => 9600, "Pin_RxD" => $this->ReadPropertyInteger("Pin_RxD"), "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "InstanceID" => $this->InstanceID )));
 				$this->Setup();
 				$this->SetStatus(102);
 			}
