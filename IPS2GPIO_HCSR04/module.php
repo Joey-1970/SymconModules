@@ -44,6 +44,7 @@
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_I", "caption" => "GPIO-Nr. Echo", "options" => $arrayOptions );
 		
+		$arrayOptions = array();
 		$GPIO = array();
 		$GPIO = unserialize($this->Get_GPIO());
 		If ($this->ReadPropertyInteger("Pin_O") >= 0 ) {
@@ -54,15 +55,7 @@
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_O", "caption" => "GPIO-Nr. Trigger", "options" => $arrayOptions );
-
-		/*
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "ungesetzt", "value" => -1);
-		for ($i = 0; $i <= 27; $i++) {
-			$arrayOptions[] = array("label" => $i, "value" => $i);
-		}
-		*/		
-		
+	
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, 1 sek -> Minimum)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
