@@ -198,6 +198,9 @@ class IPS2GPIO_IO extends IPSModule
 				// Hardware und Softwareversion feststellen
 				$this->CommandClientSocket(pack("L*", 17, 0, 0, 0).pack("L*", 26, 0, 0, 0), 32);
 				
+				// Alle Waveforms löschen
+				$this->CommandClientSocket(pack("L*", 27, 0, 0, 0), 16);
+				
 				// I2C-Handle zurücksetzen
 				$this->ResetI2CHandle(0);
 				
@@ -206,7 +209,7 @@ class IPS2GPIO_IO extends IPSModule
 				
 				// MUX einrichten
 				If ($this->ReadPropertyInteger("MUX") > 0) {
-					$MUX_Handle = $Handle = $this->CommandClientSocket(pack("L*", 54, 1, 112, 4, 0), 16);
+					$MUX_Handle = $this->CommandClientSocket(pack("L*", 54, 1, 112, 4, 0), 16);
 					$this->SetBuffer("MUX_Handle", $MUX_Handle);
 					$this->SendDebug("MUX Handle", $MUX_Handle, 0);
 					If ($MUX_Handle >= 0) {
@@ -1133,6 +1136,10 @@ class IPS2GPIO_IO extends IPSModule
            			else {
            				IPS_LogMessage("IPS2GPIO PIGPIO Software Version","Fehler: ".$this->GetErrorText(abs($response[4])));
            			}
+		            	break;
+			case "27":
+           			//IPS_LogMessage("IPS2GPIO Notify","gestoppt");
+				$this->SendDebug("Waveforms", "geloescht", 0);
 		            	break;
 			case "29":
            			If ($response[4] >= 0) {
