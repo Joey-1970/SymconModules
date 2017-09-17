@@ -704,11 +704,11 @@ class IPS2GPIO_IO extends IPSModule
 					$PinUsed = array();
 					$PinUsed = unserialize($this->GetBuffer("PinUsed"));
 					// GPIO RxD als Input konfigurieren
-					//$this->CommandClientSocket(pack("L*", 0, (int)$data->Pin_RxD, 0, 0), 16);
+					$this->CommandClientSocket(pack("L*", 0, (int)$data->Pin_RxD, 0, 0), 16);
 					$PinUsed[(int)$data->Pin_RxD] = $data->InstanceID; 
 					$this->SetBuffer("Serial_Display_RxD", (int)$data->Pin_RxD);
 					// GPIO TxD als Output konfigurieren
-					//$this->CommandClientSocket(pack("L*", 0, (int)$data->Pin_TxD, 1, 0), 16);
+					$this->CommandClientSocket(pack("L*", 0, (int)$data->Pin_TxD, 1, 0), 16);
 					$PinUsed[(int)$data->Pin_TxD] = $data->InstanceID; 
 					$this->SendDebug("Display", "Mode der GPIO fuer Seriellen Bus gesetzt", 0);
 					$this->SetBuffer("PinUsed", serialize($PinUsed));
@@ -737,7 +737,18 @@ class IPS2GPIO_IO extends IPSModule
 		   	$Command = utf8_decode($data->Command);
 			$this->SendDebug("Display Sendung", "GPIO: ".$data->Pin_TxD." Baud: ".$data->Baud. " Text: ".$Command, 0);
 		   	$Result = $this->CommandClientSocket(pack("L*", 29, $data->Pin_TxD, $data->Baud, (12 + strlen($Command)), 8, 4, 0).$Command, 16);
-			//$Result = $this->CommandClientSocket(pack("L*", 29, (int)$data->Pin_TxD, (int)$data->Baud, (12 + strlen($Command)), 8, 4, 10).pack("C*", $Command), 16);
+			// WVCRE 	49 	0 	0 	0
+			If ($Result > 0] {
+				$WaveID = $this->CommandClientSocket(pack("L*", 49, 0, 0, 0), 16);
+				If ($WaveID >= 0) {
+					// WVTX 	51 	wave_id 	0 	0
+					$Result = $this->CommandClientSocket(pack("L*", 51, $WaveID, 0, 0), 16);
+					If ($Result >= 0) {
+						// WVDEL 	50 	wave_id 	0 	0
+						$this->CommandClientSocket(pack("L*", 50, $WaveID, 0, 0), 16);
+					}
+				}
+			}
 			break;
 		case "check_bytes_serial":
 		   	//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle")));
@@ -1207,6 +1218,33 @@ class IPS2GPIO_IO extends IPSModule
 					IPS_LogMessage("IPS2GPIO Serielle Daten", "Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
            			}
 				break; 
+			case "49":
+           			If ($response[4] >= 0) {
+           				$Result = $response[4];
+           			}
+           			else {
+           				$this->SendDebug("Waveform", "erstellt, Fehlermeldung: ".$this->GetErrorText(abs($response[4])), 0);
+					IPS_LogMessage("IPS2GPIO Waveform", "erstellt, Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
+           			}
+		            	break;
+			case "50":
+           			If ($response[4] >= 0) {
+           				$Result = $response[4];
+           			}
+           			else {
+           				$this->SendDebug("Waveform", "geloescht, Fehlermeldung: ".$this->GetErrorText(abs($response[4])), 0);
+					IPS_LogMessage("IPS2GPIO Waveform", "geloescht, Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
+           			}
+		            	break;
+			case "51":
+           			If ($response[4] >= 0) {
+           				$Result = $response[4];
+           			}
+           			else {
+           				$this->SendDebug("Waveform", "gesendet, Fehlermeldung: ".$this->GetErrorText(abs($response[4])), 0);
+					IPS_LogMessage("IPS2GPIO Waveform", "gesendet, Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
+           			}
+		            	break;
 			case "54":
 		        	If ($response[4] >= 0 ) {
            				If ($this->GetBuffer("I2CSearch") == 0) {
