@@ -738,7 +738,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SendDebug("Display Sendung", "GPIO: ".$data->Pin_TxD." Baud: ".$data->Baud. " Text: ".$Command, 0);
 		   	$Result = $this->CommandClientSocket(pack("L*", 29, $data->Pin_TxD, $data->Baud, (12 + strlen($Command)), 8, 4, 0).$Command, 16);
 			// WVCRE 	49 	0 	0 	0
-			If ($Result > 0] {
+			If ($Result > 0) {
 				$WaveID = $this->CommandClientSocket(pack("L*", 49, 0, 0, 0), 16);
 				If ($WaveID >= 0) {
 					// WVTX 	51 	wave_id 	0 	0
