@@ -203,10 +203,7 @@ class IPS2GPIO_IO extends IPSModule
 				
 				// I2C-Handle zurücksetzen
 				$this->ResetI2CHandle(0);
-				
-				// Serial-Handle zurücksetzen
-				$this->ResetSerialHandle();
-				
+							
 				// Notify Starten
 				$this->SetBuffer("NotifyCounter", 0);
 				$Handle = $this->ClientSocket(pack("L*", 99, 0, 0, 0));
@@ -1472,6 +1469,7 @@ class IPS2GPIO_IO extends IPSModule
 		        case "99":
            			If ($response[4] >= 0 ) {
            				//$this->SendDebug("Handle", $response[4], 0);
+					$this->SetBuffer("Handle", $response[4]);
          			}
            			else {
            				$this->ClientSocket(pack("L*", 99, 0, 0, 0));		
