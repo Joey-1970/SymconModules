@@ -90,10 +90,6 @@
 		$arrayElements[] = array("type" => "Select", "name" => "CmdRet", "caption" => "Return der Kommandos", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Steuerung eines Nextion Enhanced Displays");
-		$arrayElements[] = array("type" => "Label", "label" => "Hinweise:");
-		$arrayElements[] = array("type" => "Label", "label" => "- die UART-Nutzung muss in der Raspberry Pi-Konfiguration freigegeben werden (sudo raspi-config -> Advanced Options -> Serial Enable = false)");
-		$arrayElements[] = array("type" => "Label", "label" => "- die korrekte Nutzung der GPIO ist zwingend erforderlich (GPIO-Nr. 14/15)");
-		$arrayElements[] = array("type" => "Label", "label" => "- auf den korrekten Anschluss von RX/TX achten");	
 		
 		$arrayActions = array();
 		If ($this->ReadPropertyBoolean("Open") == true) {
