@@ -180,8 +180,9 @@
 		$this->SetBuffer("FileName", "");
 		$this->SetBuffer("FileSize", 0);
 		
-		//ReceiveData-Filter setzen 		    
-		$Filter = '((.*"Function":"get_serial".*|.*"Pin":14.*)|(.*"Pin":15.*|.*"Function":"set_serial_data".*))'; 
+		//ReceiveData-Filter setzen 
+		$Filter = '((.*"Function":"get_serial".*|.*"Pin":".$this->ReadPropertyInteger("Pin_RxD").".*)|(.*"Pin":".$this->ReadPropertyInteger("Pin_TxD").".*|.*"Function":"set_serial_data".*))'; 
+		//$Filter = '((.*"Function":"get_serial".*|.*"Pin":14.*)|(.*"Pin":15.*|.*"Function":"set_serial_data".*))'; 
  		$this->SetReceiveDataFilter($Filter); 
  
         	If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
@@ -285,7 +286,7 @@
 			        }
 			   	break;
 			 case "status":
-			   	If (($data->Pin == 14) OR ($data->Pin == 15)) {
+			   	If (($data->Pin == $this->ReadPropertyInteger("Pin_RxD")) OR ($data->Pin == $this->ReadPropertyInteger("Pin_TxD"))) {
 			   		$this->SetStatus($data->Status);
 			   	}
 			   	break;
