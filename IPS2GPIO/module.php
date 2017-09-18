@@ -737,7 +737,7 @@ class IPS2GPIO_IO extends IPSModule
 	   		break;
 		case "write_bb_bytes_serial":	
 		   	$Command = utf8_decode($data->Command);
-			$this->SendDebug("Display Sendung", "GPIO: ".$data->Pin_TxD." Baud: ".$data->Baud. " Text: ".$Command, 0);
+			$this->SendDebug("Serielle Sendung", "GPIO: ".$data->Pin_TxD." Baud: ".$data->Baud. " Text: ".$Command, 0);
 		   	$Result = $this->CommandClientSocket(pack("L*", 29, $data->Pin_TxD, $data->Baud, (12 + strlen($Command)), 8, 4, 0).$Command, 16);
 			// WVCRE 	49 	0 	0 	0
 			If ($Result > 0) {
@@ -752,6 +752,44 @@ class IPS2GPIO_IO extends IPSModule
 				}
 			}
 			break;
+		case "open_bb_serial_gps":
+	   		If ($this->GetBuffer("ModuleReady") == 1) {
+				If ($this->GetBuffer("Serial_Display_Configured") == 0) {
+					$PinUsed = array();
+					$PinUsed = unserialize($this->GetBuffer("PinUsed"));
+					// GPIO RxD als Input konfigurieren
+					$this->CommandClientSocket(pack("L*", 0, (int)$data->Pin_RxD, 0, 0), 16);
+					$PinUsed[(int)$data->Pin_RxD] = $data->InstanceID; 
+					$this->SetBuffer("Serial_Display_RxD", (int)$data->Pin_RxD);
+					// GPIO TxD als Output konfigurieren
+					$this->CommandClientSocket(pack("L*", 0, (int)$data->Pin_TxD, 1, 0), 16);
+					$PinUsed[(int)$data->Pin_TxD] = $data->InstanceID; 
+					$this->SendDebug("GPIO", "Mode der GPIO fuer Seriellen Bus gesetzt", 0);
+					$this->SetBuffer("PinUsed", serialize($PinUsed));
+					
+					// SLRC u - Close GPIO for bit bang serial data	
+					$this->CommandClientSocket(pack("L*", 44, (int)$data->Pin_RxD, 0, 0), 16);
+					
+					//SLRO u b db - Open GPIO for bit bang serial data
+					$this->CommandClientSocket(pack("L*", 42, (int)$data->Pin_RxD, $data->Baud, 4, 8), 16);
+					// Event setzen für den seriellen Anschluss
+					$Handle = $this->GetBuffer("Handle");
+					If ($Handle >= 0) {
+						$this->CommandClientSocket(pack("L*", 115, $Handle, pow(2, (int)$data->Pin_RxD), 0), 16);
+					}
+					$this->SetBuffer("Serial_Display_Configured", 1);
+				}
+				
+				// Messages einrichten
+				$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
+				$this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
+				$Result = true;
+			}
+			else {
+				$Result = false;
+			}
+	   		break;	
+			
 		case "check_bytes_serial":
 		   	//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle")));
 		   	$this->CommandClientSocket(pack("L*", 82, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
