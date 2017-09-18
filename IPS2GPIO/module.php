@@ -207,6 +207,12 @@ class IPS2GPIO_IO extends IPSModule
 				// Serial-Handle zurücksetzen
 				$this->ResetSerialHandle();
 				
+				// Notify Starten
+				$this->SetBuffer("NotifyCounter", 0);
+				$Handle = $this->ClientSocket(pack("L*", 99, 0, 0, 0));
+				$this->SetBuffer("Handle", $Handle);
+				$this->SendDebug("Handle", (int)$Handle, 0);
+				
 				// MUX einrichten
 				If ($this->ReadPropertyInteger("MUX") > 0) {
 					$MUX_Handle = $this->CommandClientSocket(pack("L*", 54, 1, 112, 4, 0), 16);
@@ -220,12 +226,6 @@ class IPS2GPIO_IO extends IPSModule
 			
 				$I2C_DeviceHandle = array();
 				$this->SetBuffer("I2C_Handle", serialize($I2C_DeviceHandle));
-				
-				// Notify Starten
-				$this->SetBuffer("NotifyCounter", 0);
-				$Handle = $this->ClientSocket(pack("L*", 99, 0, 0, 0));
-				$this->SetBuffer("Handle", $Handle);
-				$this->SendDebug("Handle", (int)$Handle, 0);
 				
 				// Vorbereitung beendet
 				$this->SendDebug("ApplyChanges", "Beende Vorbereitung", 0);
