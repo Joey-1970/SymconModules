@@ -9,7 +9,6 @@
             	parent::Create();
             	$this->RegisterPropertyBoolean("Open", false);
 	    	$this->RegisterPropertyInteger("Baud", 3);
-            	//$this->RegisterPropertyString("ConnectionString", "/dev/ttyAMA0");
 		$this->RegisterPropertyInteger("Pin_RxD", -1);
 		$this->RegisterPropertyInteger("Pin_TxD", -1);
             	$this->RegisterPropertyBoolean("DateTime", true);
@@ -70,8 +69,6 @@
 		$arrayOptions[] = array("label" => "57600", "value" => 6);
 		$arrayOptions[] = array("label" => "115200", "value" => 7);
 		$arrayElements[] = array("type" => "Select", "name" => "Baud", "caption" => "Baud", "options" => $arrayOptions );
-		//$arrayElements[] = array("type" => "Label", "label" => "Connection String der seriellen Schnittstelle (z.B. /dev/serial0):");
-		//$arrayElements[] = array("type" => "ValidationTextBox", "name" => "ConnectionString", "caption" => "Connection String");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "DateTime", "caption" => "Datum/Uhrzeit aktualisieren");
 		$arrayElements[] = array("type" => "Label", "label" => "Setzen der Default Display Helligkeit (0-100)");
@@ -242,7 +239,7 @@
 			        	SetValueInteger($this->GetIDForIdent("FirmwareVersion"), $Messages[3]);
 			        	SetValueInteger($this->GetIDForIdent("MCU_Code"), $Messages[4]);
 			        	SetValueString($this->GetIDForIdent("SerialNumber"), $Messages[5]);
-			        	//SetValueString($this->GetIDForIdent("FlashSize"), $Messages[6]);
+			        	SetValueString($this->GetIDForIdent("FlashSize"), $Messages[6]);
 			        }
 			        else {
 				        $ByteResponse = unpack("H*", $ByteMessage);
