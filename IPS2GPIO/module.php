@@ -713,8 +713,10 @@ class IPS2GPIO_IO extends IPSModule
 					$this->SendDebug("Display", "Mode der GPIO fuer Seriellen Bus gesetzt", 0);
 					$this->SetBuffer("PinUsed", serialize($PinUsed));
 					
+					// SLRC u - Close GPIO for bit bang serial data	
+					$this->CommandClientSocket(pack("L*", 44, (int)$data->Pin_RxD, 0, 0), 16);
+					
 					//SLRO u b db - Open GPIO for bit bang serial data
-					//SLRO 	42 	gpio 	baud 	4 	uint32_t databits
 					$this->CommandClientSocket(pack("L*", 42, (int)$data->Pin_RxD, $data->Baud, 4, 8), 16);
 					// Event setzen für den seriellen Anschluss
 					$Handle = $this->GetBuffer("Handle");
@@ -1217,7 +1219,17 @@ class IPS2GPIO_IO extends IPSModule
            				$this->SendDebug("Serielle Daten", "Fehlermeldung: ".$this->GetErrorText(abs($response[4])), 0);
 					IPS_LogMessage("IPS2GPIO Serielle Daten", "Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
            			}
-				break; 
+				break;
+			case "44":
+           			If ($response[4] >= 0) {
+           				$Result = true;
+           			}
+           			else {
+           				$Result = false;
+					// $this->SendDebug("Serial Bit Bang", "Fehlermeldung: ".$this->GetErrorText(abs($response[4])), 0);
+					//IPS_LogMessage("IPS2GPIO","Serial Bit Bang mit Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
+           			}
+		            	break;
 			case "49":
            			If ($response[4] >= 0) {
            				$Result = $response[4];
