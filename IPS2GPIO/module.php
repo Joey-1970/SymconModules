@@ -890,16 +890,20 @@ class IPS2GPIO_IO extends IPSModule
 							// Daten GPS	-
 							$Result = $this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_GPS_RxD"), 500, 0), 16 + 500);
 							// Neue Daten an die bestehende Daten anhängen
-							$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").$Result);
+							If (strlen($this->GetBuffer("Serial_GPS_Data")) < 1000) {
+								$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").$Result);
+							}
 							$subject = $this->GetBuffer("Serial_GPS_Data");
 							//$this->SendDebug("Datenanalyse","Serial_GPS_Data merge ".$subject, 0);
 							$replace = "";
 							// unvollständigen Datensatzanfang löschen
-							$pattern = '/([^(<CR><LF>)]*)(<CR><LF>)/'; 
+							//$pattern = '/([^(<CR><LF>)]*)(<CR><LF>)/'; 
+							$pattern = '/([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/'; 
 							$subject = preg_replace($pattern, $replace, $subject, 1);
 							$this->SendDebug("Datenanalyse","Serial_GPS_Data del ".$subject, 0);
 							// komplette Datensätze suchen
-							$pattern = '/(\$GPVTG|\$GPGGA|\$GPGSA|\$GPGSV|\$GPTXT|\$GPRMC|\$GPGLL)([^(<CR><LF>)]*)(<CR><LF>)/'; 
+							//$pattern = '/(\$GPVTG|\$GPGGA|\$GPGSA|\$GPGSV|\$GPTXT|\$GPRMC|\$GPGLL)([^(<CR><LF>)]*)(<CR><LF>)/'; 
+							$pattern = '/(\$GPVTG|\$GPGGA|\$GPGSA|\$GPGSV|\$GPTXT|\$GPRMC|\$GPGLL)([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/'; 
 							preg_match_all($pattern, $subject, $treffer);
 
 							// Relevantes Ergebnis herausfiltern
