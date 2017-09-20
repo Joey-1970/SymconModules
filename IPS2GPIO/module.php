@@ -899,7 +899,7 @@ class IPS2GPIO_IO extends IPSModule
 							$subject = preg_replace($pattern, $replace, $subject, 1);
 				
 							// komplette Datensätze suchen
-							$pattern = '/(\$GPVTG|\$GPGGA|\$GPGSA|\$GPGSV)([^(<CR><LF>)]*)(<CR><LF>)/'; 
+							$pattern = '/(\$GPVTG|\$GPGGA|\$GPGSA|\$GPGSV|\$GPTXT|\$GPRMC|\$GPGLL)([^(<CR><LF>)]*)(<CR><LF>)/'; 
 							preg_match_all($pattern, $subject, $treffer);
 
 							// Relevantes Ergebnis herausfiltern
