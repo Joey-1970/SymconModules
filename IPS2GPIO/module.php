@@ -158,6 +158,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("Serial_Display_RxD", -1);
 			$this->SetBuffer("Serial_GPS_Configured", 0);
 			$this->SetBuffer("Serial_GPS_RxD", -1);
+			$this->SetBuffer("Serial_GPS_Data", "");
 			$this->SetBuffer("1Wire_Configured", 0);
 			$this->SetBuffer("SerialNotify", 0);
 			$this->SetBuffer("SerialScriptID", -1);
@@ -887,15 +888,33 @@ class IPS2GPIO_IO extends IPSModule
 						}
 						elseIf ($EventNumber == $this->GetBuffer("Serial_GPS_RxD")) {
 							// Daten GPS	-
-							$Result = $this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_GPS_RxD"), 250, 0), 16 + 250);
-							/*
-							$zeichenkette = '16,N,01023.67976,E,1.362,,190917,,,A*73<CR><LF>$GPVTG,,T,,M,1.362,N,2.523,K,A*23<CR><LF>$GPGGA,035931.00,5321.54516,N,01023.67976,E,1,06,1.78,1.4,M,44.8,M,,*5B<CR><LF>$GPGSA,A,3,32,12,24,29,14,25,,,,,,,3.43,1.78,2.93*0D<CR><LF>$GPGSV,3,1,11,02,36,098,17,03,04,350,,06,26,051';
-							$suchmuster = '/(\$GPVTG|\$GPGGA|\$GPGSA|\$GPGSV)([^(<CR><LF>)]*)(<CR><LF>)/';  
-							preg_match_all($suchmuster, $zeichenkette, $treffer);
-							print_r($treffer);
-							*/
-							//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_data", "Value"=> utf8_encode($Result) )));
+							$Result = $this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_GPS_RxD"), 500, 0), 16 + 500);
+							// Neue Daten an die bestehende Daten anhängen
+							$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").$Result);
+							$subject = $this->GetBuffer("Serial_GPS_Data");
+							$this->SetBuffer("Serial_GPS_Data merge", $subject);
+							$replace = "";
+							// unvollständigen Datensatzanfang löschen
+							$pattern = '/([^(<CR><LF>)]*)(<CR><LF>)/'; 
+							$subject = preg_replace($pattern, $replace, $subject, 1);
+				
+							// komplette Datensätze suchen
+							$pattern = '/(\$GPVTG|\$GPGGA|\$GPGSA|\$GPGSV)([^(<CR><LF>)]*)(<CR><LF>)/'; 
+							preg_match_all($pattern, $subject, $treffer);
 
+							// Relevantes Ergebnis herausfiltern
+							$Sendung = array();
+							$Sendung = $treffer[0];
+
+							foreach($Sendung AS $GPS_Data) {
+							   	$GPS_Data =  str_replace("<CR><LF>", $replace, $GPS_Data);
+								$this->SendDebug("Datenanalyse", "GPS-Daten: ".$GPS_Data , 0);
+							   	//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_data", "Value"=> utf8_encode($Result) )));
+							}
+
+							// Herauslöschen der gesendeten Datensätze
+							$subject = preg_replace($pattern, $replace, $subject);
+							$this->SetBuffer("Serial_GPS_Data Rest", $subject);
 						}											
 					}
 					else {
@@ -1253,7 +1272,7 @@ class IPS2GPIO_IO extends IPSModule
 			case "43":
            			If ($response[4] >= 0) {
 					$Result = utf8_encode(substr($Message, -($response[4])));
-					$this->SendDebug("Serielle Daten", "Text: ".$Result, 0);
+					//$this->SendDebug("Serielle Daten", "Text: ".$Result, 0);
 				}
 		            	else {
            				$this->SendDebug("Serielle Daten", "Fehlermeldung: ".$this->GetErrorText(abs($response[4])), 0);
@@ -1300,13 +1319,8 @@ class IPS2GPIO_IO extends IPSModule
 			case "54":
 		        	If ($response[4] >= 0 ) {
            				If ($this->GetBuffer("I2CSearch") == 0) {
-						//IPS_LogMessage("IPS2GPIO I2C Handle",$response[4]." für Device ".$response[3]);
-						//$I2C_DeviceHandle = unserialize($this->GetBuffer("I2C_Handle"));
 						// Hier wird der ermittelte Handle der DiviceAdresse/Bus hinzugefügt
 						$I2C_DeviceHandle[($response[2] << 7) + $response[3]] = $response[4];
-
-						//$I2C_DeviceHandle[$response[3]] = $response[4];
-						//$this->SetBuffer("I2C_Handle", serialize($I2C_DeviceHandle));
 					}
            			}
            			else {
