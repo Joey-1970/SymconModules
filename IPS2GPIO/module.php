@@ -888,6 +888,12 @@ class IPS2GPIO_IO extends IPSModule
 						elseIf ($EventNumber == $this->GetBuffer("Serial_GPS_RxD")) {
 							// Daten GPS	-
 							$Result = $this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_GPS_RxD"), 250, 0), 16 + 250);
+							/*
+							$zeichenkette = '16,N,01023.67976,E,1.362,,190917,,,A*73<CR><LF>$GPVTG,,T,,M,1.362,N,2.523,K,A*23<CR><LF>$GPGGA,035931.00,5321.54516,N,01023.67976,E,1,06,1.78,1.4,M,44.8,M,,*5B<CR><LF>$GPGSA,A,3,32,12,24,29,14,25,,,,,,,3.43,1.78,2.93*0D<CR><LF>$GPGSV,3,1,11,02,36,098,17,03,04,350,,06,26,051';
+							$suchmuster = '/(\$GPVTG|\$GPGGA|\$GPGSA|\$GPGSV)([^(<CR><LF>)]*)(<CR><LF>)/';  
+							preg_match_all($suchmuster, $zeichenkette, $treffer);
+							print_r($treffer);
+							*/
 							//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_data", "Value"=> utf8_encode($Result) )));
 
 						}											
