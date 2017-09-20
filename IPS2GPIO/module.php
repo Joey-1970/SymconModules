@@ -892,12 +892,12 @@ class IPS2GPIO_IO extends IPSModule
 							// Neue Daten an die bestehende Daten anhängen
 							$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").$Result);
 							$subject = $this->GetBuffer("Serial_GPS_Data");
-							$this->SendDebug("Datenanalyse","Serial_GPS_Data merge ".$subject, 0);
+							//$this->SendDebug("Datenanalyse","Serial_GPS_Data merge ".$subject, 0);
 							$replace = "";
 							// unvollständigen Datensatzanfang löschen
 							$pattern = '/([^(<CR><LF>)]*)(<CR><LF>)/'; 
 							$subject = preg_replace($pattern, $replace, $subject, 1);
-				
+							$this->SendDebug("Datenanalyse","Serial_GPS_Data del ".$subject, 0);
 							// komplette Datensätze suchen
 							$pattern = '/(\$GPVTG|\$GPGGA|\$GPGSA|\$GPGSV|\$GPTXT|\$GPRMC|\$GPGLL)([^(<CR><LF>)]*)(<CR><LF>)/'; 
 							preg_match_all($pattern, $subject, $treffer);
@@ -914,7 +914,7 @@ class IPS2GPIO_IO extends IPSModule
 
 							// Herauslöschen der gesendeten Datensätze
 							$subject = preg_replace($pattern, $replace, $subject);
-							$this->SendDebug("Datenanalyse","Serial_GPS_Data Rest ".$subject, 0);
+							//$this->SendDebug("Datenanalyse","Serial_GPS_Data Rest ".$subject, 0);
 						}											
 					}
 					else {
