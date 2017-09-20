@@ -112,7 +112,21 @@
 	public function ReceiveData($JSONString) 
 	{
 	    	// Empfangene Daten vom Gateway/Splitter
-	    	$data = json_decode($JSONString);
+	    	/*
+		http://chris.cnie.de/avr/neo-6.html
+		•RMC (Recommended Minimum data) Uhrzeit, Status, Längengrad, Breitengrad, Geschwindigkeit in Knoten, Kurs, Datum und ein Modusfeld. Die Uhrzeit ist in UTC (GMT) in der Form HHMMSS.SS, also Stunden, Minuten und Sekunden mit zwei Nachkommastellen für die Sekunden. Die Postion wird in DDMM.MMMMM {N|S} bzw. DDDMM.MMMMM {E|W} angegeben; also Grad, Minuten und fünf Nachkommastellen der Winkelminuten. Der Längengrad kann maximal bis 90 Grad gehen und wird deshalb zweistellig angegeben; der Breitengrad bis 180 Grad und deshalb immer dreistellig. Das Statusfeld hat den Wert A, wenn die Werte gültig sind und den Wert V bei einer Warnung des Empfängers. Das Datum wird DDMMYY, also Tag Monat und Jahr angegeben. Im Modusfeld wird die Art des Fixes angegeben. N steht für keinen erfolgreichen FIX und A für einen erfolgreichen. 
+		•VTG (Course over ground and Ground speed) Kurs, Status, Geschwindigkeit in Knoten, Geschwindigkeit in Kilometer pro Stunde und ein Modusfeld. Das Statusfeld ist leer, wenn kein Kurs bestimmt werden konnte (kein FIX) und sonst T wie true. Im Modusfeld wird die Art des Fixes angegeben. N steht für keinen erfolgreichen FIX und A für einen erfolgreichen. 
+		•GGA (Global positioning system fix data) Uhrzeit, Längengrad, Breitengrad, Status, Anzahl genutzter Satelliten, horizontale Genauigkeit (HDOP, Horizontal Dilution of Precision), Höhe über dem Mehresspiegel in Metern und die "Geoid Separation" in Metern. 
+		•GSA (GNSS DOP and Active Satellites) Modus, Status und Liste der zum Fix genutzten Satelliten. Im Feld Modus wird zwischen M für manuell und A für automatisch unterschieden. Dabei geht es um die Unterscheidung zwischen 2D- und 3D-Fix. Im Feld Status ist dann die Art des Fixes ersichtlich: 1.kein Fix
+		2.2D- Fix
+		3.3D- Fix
+
+		•GSV (GNSS Satellites in View) Je maximal vier Satelliten mit ihren Daten pro Meldung. Jede Meldung beginnt mit der Gesamtzahl der GSV-Meldungen und der laufenden Nummer der Meldung. 
+		•GLL (Latitude and longitude, with time of position fix and status) Längengrad, Breitengrad, Uhrzeit, Status und Modus. Die Inhalte entsprechen den jeweiligen Feldern der RMC-Meldung. 
+		*/
+		
+		
+		$data = json_decode($JSONString);
 	 	switch ($data->Function) {
 			 case "get_serial":
 			   	$this->ApplyChanges();
