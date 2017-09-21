@@ -84,7 +84,7 @@
 		
 
 		//ReceiveData-Filter setzen 		    
-		$Filter = '((.*"Function":"get_serial".*|.*"Pin":".$this->ReadPropertyInteger("Pin_RxD").".*)|(.*"Pin":".$this->ReadPropertyInteger("Pin_TxD").".*|.*"Function":"set_serial_data".*))'; 
+		$Filter = '((.*"Function":"get_serial".*|.*"Pin":".$this->ReadPropertyInteger("Pin_RxD").".*)|(.*"Pin":".$this->ReadPropertyInteger("Pin_TxD").".*|.*"Function":"set_serial_gps_data".*))'; 
  		$this->SetReceiveDataFilter($Filter); 
  
         	If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
@@ -131,9 +131,14 @@
 			 case "get_serial":
 			   	$this->ApplyChanges();
 				break;
-			 case "set_serial_data":
-			   	$ByteMessage = utf8_decode($data->Value);
-			        //IPS_LogMessage("IPS2GPIO Display", $ByteMessage);	
+			 case "set_serial_gps_data":
+			   	$Sendung = array();
+				$Sendung = unserialize($data->Value);
+				foreach($Sendung AS $GPS_Data) {
+					$GPS_Data = preg_replace("/[[:cntrl:]]/i", "", $GPS_Data);
+					$this->SendDebug("Datenanalyse", "GPS-Daten: ".$GPS_Data , 0);
+				}
+
 			       
 			   	break;
 			 case "status":
