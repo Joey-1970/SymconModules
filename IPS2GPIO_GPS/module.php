@@ -140,42 +140,42 @@
 					$GPS_Data_Array = array();
 					$GPS_Data_Array = explode(",", $GPS_Data);
 					switch ($GPS_Data_Array[0]) {
-						case "$GPVTG":
+						case '$GPVTG':
 							// $GPVTG,cogt,T,cogm,M,sog,N,kph,K,mode*cs
 							$this->SendDebug("Datenanalyse", "GPVTG" , 0);
 							break;
-						case "$GPGGA":
+						case '$GPGGA':
 							// $GPGGA,hhmmss.ss,Latitude,N,Longitude,E,FS,NoSV,HDOP,msl,m,Altref,m,DiffAge,DiffStation*cs
 							$this->SendDebug("Datenanalyse", "GPGGA" , 0);
 							break;
-						case "$GPGSA":
+						case '$GPGSA':
 							// $GPGSA,Smode,FS{,sv},PDOP,HDOP,VDOP*cs
 							$this->SendDebug("Datenanalyse", "GPGSA" , 0);
 							break;
-						case "$GPGSV":
+						case '$GPGSV':
 							// $GPGSV,NoMsg,MsgNo,NoSv,{,sv,elv,az,cno}*cs
 							$this->SendDebug("Datenanalyse", "GPGSV" , 0);
 							break;
-						case "$GPTXT":
+						case '$GPTXT':
 							$this->SendDebug("Datenanalyse", "GPTXT" , 0);
 							break;
-						case "$GPRMC":
+						case '$GPRMC':
 							// $GPRMC,hhmmss,status,latitude,N,longitude,E,spd,cog,ddmmyy,mv,mvE,mode*cs
 							$this->SendDebug("Datenanalyse", "GPRMC" , 0);
 							break;
-						case "$GPGLL":
+						case '$GPGLL':
 							// $GPGLL,Latitude,N,Longitude,E,hhmmss.ss,Valid,Mode*cs
 							$this->SendDebug("Datenanalyse", "GPGLL" , 0);
 							break;
-						case "$GPZDA":
+						case '$GPZDA':
 							// $GPZDA,hhmmss.ss,day,month,year,ltzh,ltzn*cs
 							$this->SendDebug("Datenanalyse", "GPZDA" , 0);
 							break;
-						case "$GPGST":
+						case '$GPGST':
 							// $GPGST,hhmmss.ss,range_rms,std_major,std_minor,hdg,std_lat,std_long,std_alt*cs
 							$this->SendDebug("Datenanalyse", "GPGST" , 0);
 							break;
-						case "$GPGRS":
+						case '$GPGRS':
 							// $GPGRS,hhmmss.ss, mode {,residual}*cs
 							$this->SendDebug("Datenanalyse", "GPGRS" , 0);
 							break;
