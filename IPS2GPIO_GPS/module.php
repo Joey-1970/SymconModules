@@ -81,6 +81,13 @@
 	      	parent::ApplyChanges();
 	   
 		//Status-Variablen anlegen
+		$this->RegisterVariableFloat("Latitude", "Längengrad", "", 10);
+		$this->DisableAction("Latitude");
+		IPS_SetHidden($this->GetIDForIdent("Latitude"), false);
+		
+		$this->RegisterVariableFloat("Longitude", "Breitengrad", "", 10);
+		$this->DisableAction("Longitude");
+		IPS_SetHidden($this->GetIDForIdent("Longitude"), false);
 		
 
 		//ReceiveData-Filter setzen 		    
@@ -114,7 +121,14 @@
 	    	// Empfangene Daten vom Gateway/Splitter
 	    	/*
 		http://chris.cnie.de/avr/neo-6.html
-		•RMC (Recommended Minimum data) Uhrzeit, Status, Längengrad, Breitengrad, Geschwindigkeit in Knoten, Kurs, Datum und ein Modusfeld. Die Uhrzeit ist in UTC (GMT) in der Form HHMMSS.SS, also Stunden, Minuten und Sekunden mit zwei Nachkommastellen für die Sekunden. Die Postion wird in DDMM.MMMMM {N|S} bzw. DDDMM.MMMMM {E|W} angegeben; also Grad, Minuten und fünf Nachkommastellen der Winkelminuten. Der Längengrad kann maximal bis 90 Grad gehen und wird deshalb zweistellig angegeben; der Breitengrad bis 180 Grad und deshalb immer dreistellig. Das Statusfeld hat den Wert A, wenn die Werte gültig sind und den Wert V bei einer Warnung des Empfängers. Das Datum wird DDMMYY, also Tag Monat und Jahr angegeben. Im Modusfeld wird die Art des Fixes angegeben. N steht für keinen erfolgreichen FIX und A für einen erfolgreichen. 
+		•RMC (Recommended Minimum data) Uhrzeit, Status, Längengrad, Breitengrad, Geschwindigkeit in Knoten, Kurs, 
+		Datum und ein Modusfeld. Die Uhrzeit ist in UTC (GMT) in der Form HHMMSS.SS, also Stunden, Minuten und Sekunden 
+		mit zwei Nachkommastellen für die Sekunden. Die Postion wird in DDMM.MMMMM {N|S} bzw. DDDMM.MMMMM {E|W} 
+		angegeben; also Grad, Minuten und fünf Nachkommastellen der Winkelminuten. Der Längengrad kann maximal bis 
+		90 Grad gehen und wird deshalb zweistellig angegeben; der Breitengrad bis 180 Grad und deshalb immer dreistellig. 
+		Das Statusfeld hat den Wert A, wenn die Werte gültig sind und den Wert V bei einer Warnung des Empfängers. 
+		Das Datum wird DDMMYY, also Tag Monat und Jahr angegeben. Im Modusfeld wird die Art des Fixes angegeben. 
+		N steht für keinen erfolgreichen FIX und A für einen erfolgreichen. 
 		•VTG (Course over ground and Ground speed) Kurs, Status, Geschwindigkeit in Knoten, Geschwindigkeit in Kilometer pro Stunde und ein Modusfeld. Das Statusfeld ist leer, wenn kein Kurs bestimmt werden konnte (kein FIX) und sonst T wie true. Im Modusfeld wird die Art des Fixes angegeben. N steht für keinen erfolgreichen FIX und A für einen erfolgreichen. 
 		•GGA (Global positioning system fix data) Uhrzeit, Längengrad, Breitengrad, Status, Anzahl genutzter Satelliten, horizontale Genauigkeit (HDOP, Horizontal Dilution of Precision), Höhe über dem Mehresspiegel in Metern und die "Geoid Separation" in Metern. 
 		•GSA (GNSS DOP and Active Satellites) Modus, Status und Liste der zum Fix genutzten Satelliten. Im Feld Modus wird zwischen M für manuell und A für automatisch unterschieden. Dabei geht es um die Unterscheidung zwischen 2D- und 3D-Fix. Im Feld Status ist dann die Art des Fixes ersichtlich: 1.kein Fix
@@ -162,6 +176,9 @@
 						case '$GPRMC':
 							// $GPRMC,hhmmss,status,latitude,N,longitude,E,spd,cog,ddmmyy,mv,mvE,mode*cs
 							$this->SendDebug("Datenanalyse", "GPRMC" , 0);
+							// GPS-Daten: $GPRMC,174952.00,A,5321.54883,N,01023.67784,E,1.443,,210917,,,A*7F
+							SetValueFloat($this->GetIDForIdent("Latitude"), ((float)$GPS_Data_Array[3] / 100));
+							SetValueFloat($this->GetIDForIdent("Longitude"), ((float)$GPS_Data_Array[5] / 100));
 							break;
 						case '$GPGLL':
 							// $GPGLL,Latitude,N,Longitude,E,hhmmss.ss,Valid,Mode*cs
