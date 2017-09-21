@@ -137,6 +137,32 @@
 				foreach($Sendung AS $GPS_Data) {
 					$GPS_Data = preg_replace("/[[:cntrl:]]/i", "", $GPS_Data);
 					$this->SendDebug("Datenanalyse", "GPS-Daten: ".$GPS_Data , 0);
+					$GPS_Data_Array = array();
+					$GPS_Data_Array = explode(",", $GPS_Data);
+					switch ($GPS_Data_Array[0]) { //|\$|\$|\$|\$)
+						case "$GPVTG":
+							$this->SendDebug("Datenanalyse", "GPVTG" , 0);
+							break;
+						case "$GPGGA":
+							$this->SendDebug("Datenanalyse", "GPGGA" , 0);
+							break;
+						case "$GPGSA":
+							$this->SendDebug("Datenanalyse", "GPGSA" , 0);
+							break;
+						case "$GPGSV":
+							$this->SendDebug("Datenanalyse", "GPGSV" , 0);
+							break;
+						case "$GPTXT":
+							$this->SendDebug("Datenanalyse", "GPTXT" , 0);
+							break;
+						case "$GPRMC":
+							$this->SendDebug("Datenanalyse", "GPRMC" , 0);
+							break;
+						case "$GPGLL":
+							$this->SendDebug("Datenanalyse", "GPGLL" , 0);
+							break;
+					}
+
 				}
 
 			       
