@@ -890,34 +890,36 @@ class IPS2GPIO_IO extends IPSModule
 							// Daten GPS	-
 							$Result = $this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_GPS_RxD"), 1000, 0), 16 + 1000);
 							// Neue Daten an die bestehende Daten anhängen
-							If (strlen($this->GetBuffer("Serial_GPS_Data")) < 1000) {
+							If (strlen($this->GetBuffer("Serial_GPS_Data")) < 2000) {
 								$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").$Result);
 							}
+							else {
+								$this->SendDebug("Datenanalyse","Serial_GPS_Data > 2000: ".$subject, 0);
+							}
 							$subject = $this->GetBuffer("Serial_GPS_Data");
-							//$this->SendDebug("Datenanalyse","Serial_GPS_Data merge ".$subject, 0);
+
 							$replace = "";
 							// unvollständigen Datensatzanfang löschen
 							$pattern = '/([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/'; 
 							$subject = preg_replace($pattern, $replace, $subject, 1);
-							//$this->SendDebug("Datenanalyse","Serial_GPS_Data del ".$subject, 0);
+
 							// komplette Datensätze suchen
 							$pattern = '/(\$GPVTG|\$GPGGA|\$GPGSA|\$GPGSV|\$GPTXT|\$GPRMC|\$GPGLL)([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/'; 
 							preg_match_all($pattern, $subject, $treffer);
 
 							// Relevantes Ergebnis herausfiltern
-							$Sendung = array();
-							$Sendung = $treffer[0];
-
-							foreach($Sendung AS $GPS_Data) {
-								$GPS_Data = preg_replace("/[[:cntrl:]]/i", "", $GPS_Data);
-							   	//$GPS_Data =  str_replace(array("\r", "\n", "\t"), $replace, $GPS_Data);
-								$this->SendDebug("Datenanalyse", "GPS-Daten: ".$GPS_Data , 0);
-							   	//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_data", "Value"=> utf8_encode($Result) )));
-							}
+							$GPS_Data = array();
+							$GPS_Data = $treffer[0];
+							
+							$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_gps_data", "Value"=> serialize($GPS_Data) )));
 
 							// Herauslöschen der gesendeten Datensätze
 							$subject = preg_replace($pattern, $replace, $subject);
 							//$this->SendDebug("Datenanalyse","Serial_GPS_Data Rest ".$subject, 0);
+							$this->SetBuffer("Serial_GPS_Data", $subject);
+							If (strlen($subject) > 500) {
+								$this->SendDebug("Datenanalyse","Serial_GPS_Data > 500: ".$subject, 0);
+							}
 						}											
 					}
 					else {
