@@ -137,6 +137,8 @@
 
 		•GSV (GNSS Satellites in View) Je maximal vier Satelliten mit ihren Daten pro Meldung. Jede Meldung beginnt mit der Gesamtzahl der GSV-Meldungen und der laufenden Nummer der Meldung. 
 		•GLL (Latitude and longitude, with time of position fix and status) Längengrad, Breitengrad, Uhrzeit, Status und Modus. Die Inhalte entsprechen den jeweiligen Feldern der RMC-Meldung. 
+		
+		http://www.kowoma.de/gps/zusatzerklaerungen/NMEA.htm
 		*/
 		
 		
@@ -210,7 +212,11 @@
 	 	}
  	}
 	// Beginn der Funktionen
-	
+	public function Send(String $Message)
+	{
+		$Message = utf8_encode($Message."\r\n");
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytes_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => $Message)));
+	}
 	
 	
 	
