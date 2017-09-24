@@ -112,7 +112,7 @@
 		// TUN_CAP Byte 0x08 [3:0] Default = 0
 		$arrayElements[] = array("type" => "Label", "label" => "Interner Kondensator (pF) Default = 0pF"); 
 		$arrayOptions = array();
-		for ($i = 0; $i <= 10; $i++) {
+		for ($i = 0; $i <= 15; $i++) {
 			$arrayOptions[] = array("label" => ($i * 8)."pF", "value" => $i);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "TunCap", "caption" => "Größe", "options" => $arrayOptions );
