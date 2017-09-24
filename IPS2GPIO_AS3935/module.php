@@ -118,7 +118,7 @@
 		$arrayElements[] = array("type" => "Select", "name" => "TunCap", "caption" => "Größe", "options" => $arrayOptions );
 		
 		// MIN_NUM_LIGH Byte 0x02 [5:4] Default = 0
-		$arrayElements[] = array("type" => "Label", "label" => "Minimale Anzahl der Detektionen in den letzten 15 Minuten bevor ein Interrupt ausgelöst wird. Default = 0"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Minimale Anzahl der Detektionen in den letzten 15 Minuten bevor ein Interrupt ausgelöst wird. Default = 1"); 
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "1", "value" => 0);
 		$arrayOptions[] = array("label" => "5", "value" => 1);
