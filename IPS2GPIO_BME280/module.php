@@ -21,6 +21,9 @@
  	    	$this->RegisterPropertyInteger("Mode", 3);
  	    	$this->RegisterPropertyInteger("SB_T", 5);
  	    	$this->RegisterPropertyInteger("IIR_Filter", 0);
+		$this->RegisterPropertyInteger("Altitude", 0);
+		$this->RegisterPropertyInteger("Temperature_ID", 0);
+		$this->RegisterPropertyInteger("Humidity_ID", 0);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GBME_Measurement($_IPS["TARGET"]);');
         }
 	
@@ -53,6 +56,12 @@
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, 1 sek -> Minimum)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Korrektur des Luftdrucks nach Hohenangabe");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Altitude", "caption" => "Höhe über NN");
+		$arrayElements[] = array("type" => "Label", "label" => "Optionale Angabe von Quellen");
+		$arrayElements[] = array("type" => "SelectVariable", "name" => "Temperature_ID", "caption" => "Temperatur (extern)");
+		$arrayElements[] = array("type" => "SelectVariable", "name" => "Humidity_ID", "caption" => "Luftfeuchtigkeit (extern)");
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingTemp", "caption" => "Logging Temperatur aktivieren");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingHum", "caption" => "Logging Luftfeuchtigkeit aktivieren");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingPres", "caption" => "Logging Luftdruck aktivieren");
@@ -154,6 +163,10 @@
 		$this->DisableAction("Pressure");
 		IPS_SetHidden($this->GetIDForIdent("Pressure"), false);
 		
+		$this->RegisterVariableFloat("PressureRel", "Pressure (rel)", "~AirPressure.F", 25);
+		$this->DisableAction("PressureRel");
+		IPS_SetHidden($this->GetIDForIdent("PressureRel"), false);
+		
 		$this->RegisterVariableFloat("Humidity", "Humidity (rel)", "~Humidity.F", 30);
 		$this->DisableAction("Humidity");
 		IPS_SetHidden($this->GetIDForIdent("Humidity"), false);
@@ -253,6 +266,7 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Measurement", "Ausfuehrung", 0);
 			// Messwerte aktualisieren
+			$CalibrateData = array();
 			$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
 			$this->SendDebug("Measurement", "CalibrateData: ".count($CalibrateData), 0);
 			If (count($CalibrateData) == 32)  {
@@ -298,6 +312,7 @@
 				}
 
 				// Messwerte aufbereiten
+				$MeasurementData = array();
 				$MeasurementData = unserialize($this->GetBuffer("MeasurementData"));
 				$this->SendDebug("Measurement", "MeasurementData: ".count($MeasurementData), 0);
 				If (count($MeasurementData) == 8) {
@@ -379,7 +394,39 @@
 
 					// Absolute Feuchtigkeit
 					SetValueFloat($this->GetIDForIdent("HumidityAbs"), round($af, 2));
-
+					
+					// Relativen Luftdruck
+					$Altitude = $this->ReadPropertyInteger("Altitude");
+					If ($this->ReadPropertyInteger("Temperature_ID") > 0) {
+						// Wert der Variablen zur Berechnung nutzen
+						$Temperature = GetValueInteger($this->ReadPropertyInteger("Temperature_ID"));
+					}
+					else {
+						// Wert dieses BME280 verwenden
+						$Temperature = $Temp;
+					}
+					If ($this->ReadPropertyInteger("Humidity_ID") > 0) {
+						// Wert der Variablen zur Berechnung nutzen
+						$Humidity = GetValueInteger($this->ReadPropertyInteger("Humidity_ID"));
+					}
+					else {
+						// Wert dieses BME280 verwenden
+						$Humidity = $Hum;
+					}
+					$g_n = 9.80665; // Erdbeschleunigung (m/s^2)
+					$gam = 0.0065; // Temperaturabnahme in K pro geopotentiellen Metern (K/gpm)
+					$R = 287.06; // Gaskonstante für trockene Luft (R = R_0 / M)
+					$M = 0.0289644; // Molare Masse trockener Luft (J/kgK)
+					$R_0 = 8.314472; // allgemeine Gaskonstante (J/molK)
+					$T_0 = 273.15; // Umrechnung von °C in K
+					$C = 0.11; // DWD-Beiwert für die Berücksichtigung der Luftfeuchte
+					$E_0 = 6.11213; // (hPa)
+					$f_rel = $Humidity / 100; // relative Luftfeuchte (0-1.0)
+					// momentaner Stationsdampfdruck (hPa)
+					$e_d = $f_rel * $E_0 * exp((17.5043 * $Temperature) / (241.2 + $Temperature));
+        				$PressureRel = $Pressure * exp(($g_n * $Altitude) / ($R * ($Temperature + $T_0 + $C * $e_d + (($gam * $Altitude) / 2))));
+					SetValueFloat($this->GetIDForIdent("PressureRel"), round($PressureRel / 100, 2));
+					
 					// Luftdruck Trends
 					If ($this->ReadPropertyBoolean("LoggingPres") == true) {
 						SetValueFloat($this->GetIDForIdent("PressureTrend1h"), $this->PressureTrend(1));
