@@ -532,7 +532,7 @@
 				return;
 			}
 			else {
-				If (is_array($Result) == true) {
+				If (is_array(unserialize($Result)) == true) {
 					$this->SetBuffer("MeasurementData", $Result);
 				}
 			}
