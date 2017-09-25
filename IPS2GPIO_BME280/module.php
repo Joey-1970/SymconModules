@@ -532,8 +532,9 @@
 				return;
 			}
 			else {
-				
-				$this->SetBuffer("MeasurementData", $Result);
+				If (is_array($Result) == true) {
+					$this->SetBuffer("MeasurementData", $Result);
+				}
 			}
 		}	
 	}
