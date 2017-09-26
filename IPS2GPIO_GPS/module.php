@@ -216,7 +216,7 @@
 							$this->SendDebug("Datenanalyse", "GPRMC" , 0);
 							// GPS-Daten: $GPRMC,174952.00,A,5321.54883,N,01023.67784,E,1.443,,210917,,,A*7F
 							$Status = array("A" => "gültig", "V" => "ungültig");
-							SetValueString($this->GetIDForIdent("MeasurementQuality"), $Status[$GPS_Data_Array[2]]);
+							SetValueString($this->GetIDForIdent("Status"), $Status[$GPS_Data_Array[2]]);
 							
 							break;
 						case '$GPGLL':
