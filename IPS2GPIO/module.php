@@ -899,9 +899,14 @@ class IPS2GPIO_IO extends IPSModule
 							$subject = $this->GetBuffer("Serial_GPS_Data");
 
 							$replace = "";
-							// unvollständigen Datensatzanfang löschen
-							$pattern = '/([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/'; 
-							$subject = preg_replace($pattern, $replace, $subject, 1);
+							// unvollständigen Datensatzanfang löschen, vollständiger Datensatz beginnt mit $GPRMC
+							$pattern = '$GPRMC';
+							$postion = strpos($subject, $pattern);
+							If ($postion > 0) {
+								$subject =  substr_replace ($subject , $replace , 0, $postion);
+							}
+							//$pattern = '/([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/'; 
+							//$subject = preg_replace($pattern, $replace, $subject, 1);
 
 							// komplette Datensätze suchen
 							//$pattern = '/(\$GPVTG|\$GPGGA|\$GPGSA|\$GPGSV|\$GPTXT|\$GPRMC|\$GPGLL)([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/';
