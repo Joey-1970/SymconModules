@@ -8,7 +8,6 @@
             	// Diese Zeile nicht löschen.
             	parent::Create();
             	$this->RegisterPropertyBoolean("Open", false);
-	    	$this->RegisterPropertyInteger("Baud", 3);
 		$this->RegisterPropertyInteger("Pin_RxD", -1);
 		$this->RegisterPropertyInteger("Pin_TxD", -1);
             	
@@ -50,19 +49,7 @@
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_TxD", "caption" => "GPIO-Nr. TxD", "options" => $arrayOptions );
-		
-		
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "2400", "value" => 1);
-		$arrayOptions[] = array("label" => "4800", "value" => 2);
-		$arrayOptions[] = array("label" => "9600", "value" => 3);
-		$arrayOptions[] = array("label" => "19200", "value" => 4);
-		$arrayOptions[] = array("label" => "38400", "value" => 5);
-		$arrayOptions[] = array("label" => "57600", "value" => 6);
-		$arrayOptions[] = array("label" => "115200", "value" => 7);
-		$arrayElements[] = array("type" => "Select", "name" => "Baud", "caption" => "Baud", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		
+				
 		
 		$arrayActions = array();
 		If ($this->ReadPropertyBoolean("Open") == true) {
@@ -90,13 +77,17 @@
 		$this->DisableAction("Longitude");
 		IPS_SetHidden($this->GetIDForIdent("Longitude"), false);
 		
-		//$this->RegisterVariableFloat("Longitude", "Längengrad", "", 10);
-		//$this->DisableAction("Longitude");
-		//IPS_SetHidden($this->GetIDForIdent("Longitude"), false);
+		$this->RegisterVariableString("LongitudeLocal", "Längengrad Lokalität", "", 20);
+		$this->DisableAction("LongitudeLocal");
+		IPS_SetHidden($this->GetIDForIdent("LongitudeLocal"), false);
 		
 		$this->RegisterVariableFloat("Latitude", "Breitengrad", "", 30);
 		$this->DisableAction("Latitude");
 		IPS_SetHidden($this->GetIDForIdent("Latitude"), false);
+		
+		$this->RegisterVariableString("LatitudeLocal", "Breitengrad Lokalität", "", 40);
+		$this->DisableAction("LatitudeLocal");
+		IPS_SetHidden($this->GetIDForIdent("LatitudeLocal"), false);
 		
 		$this->RegisterVariableString("MeasurementQuality", "Qualität der Messung", "", 50);
 		$this->DisableAction("MeasurementQuality");
@@ -190,8 +181,10 @@
 							SetValueInteger($this->GetIDForIdent("Timestamp"), $UnixTime);
 							SetValueFloat($this->GetIDForIdent("Latitude"), ((float)$GPS_Data_Array[2] / 100));
 							// N
+							SetValueString($this->GetIDForIdent("LatitudeLocal"), $GPS_Data_Array[3]);
 							SetValueFloat($this->GetIDForIdent("Longitude"), ((float)$GPS_Data_Array[4] / 100));
 							// E
+							SetValueString($this->GetIDForIdent("LongitudeLocal"), $GPS_Data_Array[5]);
 							$MeasurementQuality = array(0 => "ungültig", 1 => "GPS", 2 => "DGPS", 6 => "geschätzt" );
 							SetValueString($this->GetIDForIdent("MeasurementQuality"), $MeasurementQuality[(float)$GPS_Data_Array[6]]);
 							SetValueInteger($this->GetIDForIdent("Satellites"), (int)$GPS_Data_Array[7]);
