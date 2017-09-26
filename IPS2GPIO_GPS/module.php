@@ -81,13 +81,34 @@
 	      	parent::ApplyChanges();
 	   
 		//Status-Variablen anlegen
-		$this->RegisterVariableFloat("Latitude", "Längengrad", "", 10);
+		
+		$this->RegisterVariableInteger("Timestamp", "Zeitstempel", "~UnixTimestampTime", 10);
+		$this->DisableAction("Timestamp");
+		IPS_SetHidden($this->GetIDForIdent("Timestamp"), false);
+		
+		$this->RegisterVariableFloat("Longitude", "Längengrad", "", 10);
+		$this->DisableAction("Longitude");
+		IPS_SetHidden($this->GetIDForIdent("Longitude"), false);
+		
+		//$this->RegisterVariableFloat("Longitude", "Längengrad", "", 10);
+		//$this->DisableAction("Longitude");
+		//IPS_SetHidden($this->GetIDForIdent("Longitude"), false);
+		
+		$this->RegisterVariableFloat("Latitude", "Breitengrad", "", 30);
 		$this->DisableAction("Latitude");
 		IPS_SetHidden($this->GetIDForIdent("Latitude"), false);
 		
-		$this->RegisterVariableFloat("Longitude", "Breitengrad", "", 10);
-		$this->DisableAction("Longitude");
-		IPS_SetHidden($this->GetIDForIdent("Longitude"), false);
+		$this->RegisterVariableString("MeasurementQuality", "Qualität der Messung", "", 50);
+		$this->DisableAction("MeasurementQuality");
+		IPS_SetHidden($this->GetIDForIdent("MeasurementQuality"), false);
+		
+		$this->RegisterVariableInteger("Satellites", "Anzahl Satelliten", "", 60);
+		$this->DisableAction("Satellites");
+		IPS_SetHidden($this->GetIDForIdent("Satellites"), false);
+		
+		$this->RegisterVariableFloat("Precision", "Genauigkeit", "", 70);
+		$this->DisableAction("Precision");
+		IPS_SetHidden($this->GetIDForIdent("Precision"), false);
 		
 
 		//ReceiveData-Filter setzen 		    
@@ -163,6 +184,19 @@
 						case '$GPGGA':
 							// $GPGGA,hhmmss.ss,Latitude,N,Longitude,E,FS,NoSV,HDOP,msl,m,Altref,m,DiffAge,DiffStation*cs
 							$this->SendDebug("Datenanalyse", "GPGGA" , 0);
+							// GPS-Daten: $GPGGA,040322.00,5321.54268,N,01023.67622,E,1, 06,1.76,5.7,M,44.8,M,,*58
+							$GPSTime = (float)$GPS_Data_Array[1];
+							$UnixTime = strtotime(gmdate('H:i:s', $GPSTime));
+							SetValueInteger($this->GetIDForIdent("Timestamp"), $UnixTime);
+							SetValueFloat($this->GetIDForIdent("Latitude"), ((float)$GPS_Data_Array[2] / 100));
+							// N
+							SetValueFloat($this->GetIDForIdent("Longitude"), ((float)$GPS_Data_Array[4] / 100));
+							// E
+							$MeasurementQuality = array(0 => "ungültig", 1 => "GPS", 2 => "DGPS", 6 => "geschätzt" );
+							SetValueString($this->GetIDForIdent("MeasurementQuality"), $MeasurementQuality[(float)$GPS_Data_Array[6]]);
+							SetValueInteger($this->GetIDForIdent("Satellites"), (int)$GPS_Data_Array[7]);
+							SetValueFloat($this->GetIDForIdent("Precision"), (float)$GPS_Data_Array[8]);
+							
 							break;
 						case '$GPGSA':
 							// $GPGSA,Smode,FS{,sv},PDOP,HDOP,VDOP*cs
@@ -179,8 +213,7 @@
 							// $GPRMC,hhmmss,status,latitude,N,longitude,E,spd,cog,ddmmyy,mv,mvE,mode*cs
 							$this->SendDebug("Datenanalyse", "GPRMC" , 0);
 							// GPS-Daten: $GPRMC,174952.00,A,5321.54883,N,01023.67784,E,1.443,,210917,,,A*7F
-							SetValueFloat($this->GetIDForIdent("Latitude"), ((float)$GPS_Data_Array[3] / 100));
-							SetValueFloat($this->GetIDForIdent("Longitude"), ((float)$GPS_Data_Array[5] / 100));
+							
 							break;
 						case '$GPGLL':
 							// $GPGLL,Latitude,N,Longitude,E,hhmmss.ss,Valid,Mode*cs
