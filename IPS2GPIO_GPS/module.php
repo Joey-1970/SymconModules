@@ -187,8 +187,8 @@
 							$this->SendDebug("Datenanalyse", "GPGGA" , 0);
 							// GPS-Daten: $GPGGA,040322.00,5321.54268,N,01023.67622,E,1, 06,1.76,5.7,M,44.8,M,,*58
 							$GPSTime = (float)$GPS_Data_Array[1];
-							$this->SendDebug("Datenanalyse", "GPSTIME: ".$GPSTime." GMDATE: ".gmdate('H:i:s', $GPSTime) , 0);
-							$UnixTime = strtotime(gmdate('H:i:s', $GPSTime));
+							//$this->SendDebug("Datenanalyse", "GPSTIME: ".$GPSTime." GMDATE: ".gmdate('H:i:s', $GPSTime) , 0);
+							$UnixTime = strtotime($GPSTime);
 							SetValueInteger($this->GetIDForIdent("Timestamp"), $UnixTime);
 							SetValueFloat($this->GetIDForIdent("Latitude"), ((float)$GPS_Data_Array[2] / 100));
 							$Local = array("N" => "Nord", "S" => "Süd", "E" => "Ost", "W" => "West");
