@@ -73,31 +73,31 @@
 		$this->DisableAction("Timestamp");
 		IPS_SetHidden($this->GetIDForIdent("Timestamp"), false);
 		
-		$this->RegisterVariableFloat("Longitude", "Längengrad", "", 10);
-		$this->DisableAction("Longitude");
-		IPS_SetHidden($this->GetIDForIdent("Longitude"), false);
-		
-		$this->RegisterVariableString("LongitudeLocal", "Längengrad Lokalität", "", 20);
-		$this->DisableAction("LongitudeLocal");
-		IPS_SetHidden($this->GetIDForIdent("LongitudeLocal"), false);
-		
-		$this->RegisterVariableFloat("Latitude", "Breitengrad", "", 30);
+		$this->RegisterVariableFloat("Latitude", "Breitengrad", "", 20);
 		$this->DisableAction("Latitude");
 		IPS_SetHidden($this->GetIDForIdent("Latitude"), false);
 		
-		$this->RegisterVariableString("LatitudeLocal", "Breitengrad Lokalität", "", 40);
+		$this->RegisterVariableString("LatitudeLocal", "Breitengrad Lokalität", "", 30);
 		$this->DisableAction("LatitudeLocal");
 		IPS_SetHidden($this->GetIDForIdent("LatitudeLocal"), false);
 		
-		$this->RegisterVariableString("MeasurementQuality", "Qualität der Messung", "", 50);
+		$this->RegisterVariableFloat("Longitude", "Längengrad", "", 40);
+		$this->DisableAction("Longitude");
+		IPS_SetHidden($this->GetIDForIdent("Longitude"), false);
+		
+		$this->RegisterVariableString("LongitudeLocal", "Längengrad Lokalität", "", 50);
+		$this->DisableAction("LongitudeLocal");
+		IPS_SetHidden($this->GetIDForIdent("LongitudeLocal"), false);
+		
+		$this->RegisterVariableString("MeasurementQuality", "Qualität der Messung", "", 60);
 		$this->DisableAction("MeasurementQuality");
 		IPS_SetHidden($this->GetIDForIdent("MeasurementQuality"), false);
 		
-		$this->RegisterVariableInteger("Satellites", "Anzahl Satelliten", "", 60);
+		$this->RegisterVariableInteger("Satellites", "Anzahl Satelliten", "", 70);
 		$this->DisableAction("Satellites");
 		IPS_SetHidden($this->GetIDForIdent("Satellites"), false);
 		
-		$this->RegisterVariableFloat("Precision", "Genauigkeit", "", 70);
+		$this->RegisterVariableFloat("Precision", "Genauigkeit", "", 80);
 		$this->DisableAction("Precision");
 		IPS_SetHidden($this->GetIDForIdent("Precision"), false);
 		
