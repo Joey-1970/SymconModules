@@ -900,29 +900,31 @@ class IPS2GPIO_IO extends IPSModule
 							$replace = "";
 							// unvollständigen Datensatzanfang löschen, vollständiger Datensatz beginnt mit $GPRMC
 							$pattern = '$GPRMC';
-							$postion = strpos($subject, $pattern);
-							If ($postion > 0) {
+							$PositionStart = strpos($subject, $pattern);
+							If ($PositionStart > 0) {
 							    	// wenn $GPRMC gefunden wird, alles vor $GPRMC löschen
-								$subject =  substr_replace ($subject , $replace , 0, $postion);
+								$subject =  substr_replace ($subject , $replace , 0, $PositionStart);
+								// Prüfen ob das Ende des Datensatzes vorhanden ist
+								$PostionEnd = strpos($subject, $pattern, 40);
+								If ($PostionEnd > 0) {
+									// es wurde das Ende des Datensatzes gefunden, alles was dahinter ist an den Altbestand hängen
+									$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").substr($subject, $PostionEnd));
+									// der vollständige Datensatz sollte nun in $subject sein
+									$subject = substr_replace ($subject, $replace, $PostionEnd);
+
+								}
+								elseif ($PostionEnd === false) {
+									// es wurde kein vollständiger Datensatz gefunden
+									$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").$subject);
+								}
 							}
-							elseif ($postion === false) {
+							elseif ($PositionStart === false) {
 							    	// wenn $GPRMC nicht gefunden wird keine Datenauswertung
 								
 							}
 							
 
-							$postion = strpos($subject, $pattern, 40);
-							If ($postion > 0) {
-							    	// es wurde das Ende des Datensatzes gefunden, alles was dahinter ist an den Altbestand hängen
-								$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").substr($subject, $postion));
-							    	// der vollständige Datensatz sollte nun in $subject sein
-							    	$subject = substr_replace ($subject, $replace, $postion);
-
-							}
-							elseif ($postion === false) {
-							    	// es wurde kein vollständiger Datensatz gefunden
-								$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").$subject);
-							}
+							
 							
 							
 							
