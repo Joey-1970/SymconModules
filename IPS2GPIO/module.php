@@ -897,14 +897,35 @@ class IPS2GPIO_IO extends IPSModule
 								$this->SendDebug("Datenanalyse","Serial_GPS_Data > 2000: ".$subject, 0);
 							}
 							$subject = $this->GetBuffer("Serial_GPS_Data");
-
 							$replace = "";
 							// unvollständigen Datensatzanfang löschen, vollständiger Datensatz beginnt mit $GPRMC
 							$pattern = '$GPRMC';
 							$postion = strpos($subject, $pattern);
 							If ($postion > 0) {
+							    	// wenn $GPRMC gefunden wird, alles vor $GPRMC löschen
 								$subject =  substr_replace ($subject , $replace , 0, $postion);
 							}
+							elseif ($postion === false) {
+							    	// wenn $GPRMC nicht gefunden wird keine Datenauswertung
+								
+							}
+
+							$postion = strpos($subject, $pattern, 40);
+
+							If ($postion > 0) {
+							    	// es wurde das Ende des Datensatzes gefunden, alles was dahinter ist an den Altbestand hängen
+								$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").substr($subject, $postion));
+							    	// der vollständige Datensatz sollte nun in $subject sein
+							    	$subject = substr_replace ($subject, $replace, $postion);
+
+							}
+							elseif ($postion === false) {
+							    	// es wurde kein vollständiger Datensatz gefunden
+								$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").$subject);
+							}
+							
+							
+							
 							//$pattern = '/([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/'; 
 							//$subject = preg_replace($pattern, $replace, $subject, 1);
 
