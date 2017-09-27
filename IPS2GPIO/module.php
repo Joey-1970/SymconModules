@@ -894,8 +894,8 @@ class IPS2GPIO_IO extends IPSModule
 								$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").$Result);
 							}
 							else {
-								$this->SendDebug("Datenanalyse","Serial_GPS_Data > 2000: ".$subject, 0);
-								$this->SetBuffer("Serial_GPS_Data", "");
+								$this->SendDebug("Datenanalyse","Serial_GPS_Data > 2000: ".$this->GetBuffer("Serial_GPS_Data"), 0);
+								$this->SetBuffer("Serial_GPS_Data", $Result);
 							}
 							$subject = $this->GetBuffer("Serial_GPS_Data");
 							$replace = "";
