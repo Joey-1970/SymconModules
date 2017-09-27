@@ -170,6 +170,7 @@
 			 case "set_serial_gps_data":
 			   	$Sendung = array();
 				$Sendung = unserialize($data->Value);
+				$this->SendDebug("Datenanalyse", "Neuer Datensatz:" , 0);
 				foreach($Sendung AS $GPS_Data) {
 					$GPS_Data = preg_replace("/[[:cntrl:]]/i", "", $GPS_Data);
 					$this->SendDebug("Datenanalyse", "GPS-Daten: ".$GPS_Data , 0);
