@@ -909,9 +909,9 @@ class IPS2GPIO_IO extends IPSModule
 							    	// wenn $GPRMC nicht gefunden wird keine Datenauswertung
 								
 							}
+							
 
 							$postion = strpos($subject, $pattern, 40);
-
 							If ($postion > 0) {
 							    	// es wurde das Ende des Datensatzes gefunden, alles was dahinter ist an den Altbestand hängen
 								$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").substr($subject, $postion));
@@ -930,7 +930,6 @@ class IPS2GPIO_IO extends IPSModule
 							//$subject = preg_replace($pattern, $replace, $subject, 1);
 
 							// komplette Datensätze suchen
-							//$pattern = '/(\$GPVTG|\$GPGGA|\$GPGSA|\$GPGSV|\$GPTXT|\$GPRMC|\$GPGLL)([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/';
 							$pattern = '/(\$GPRMC|\$GPVTG|\$GPGGA|\$GPGSA|\$GPGSV|\$GPGLL|\$GPTXT)([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/'; 
 							preg_match_all($pattern, $subject, $treffer);
 
