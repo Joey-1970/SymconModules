@@ -178,16 +178,15 @@
 					switch ($GPS_Data_Array[0]) {
 						case '$GPVTG':
 							// $GPVTG,cogt,T,cogm,M,sog,N,kph,K,mode*cs
-							$this->SendDebug("Datenanalyse", "GPVTG" , 0);
+							//$this->SendDebug("Datenanalyse", "GPVTG" , 0);
 							// GPS-Daten: $GPVTG,,T,,M,0.779,N,1.443,K,A*28
 							
 							break;
 						case '$GPGGA':
 							// $GPGGA,hhmmss.ss,Latitude,N,Longitude,E,FS,NoSV,HDOP,msl,m,Altref,m,DiffAge,DiffStation*cs
-							$this->SendDebug("Datenanalyse", "GPGGA" , 0);
+							//$this->SendDebug("Datenanalyse", "GPGGA" , 0);
 							// GPS-Daten: $GPGGA,040322.00,5321.54268,N,01023.67622,E,1, 06,1.76,5.7,M,44.8,M,,*58
 							$GPSTime = (float)$GPS_Data_Array[1];
-							//$this->SendDebug("Datenanalyse", "GPSTIME: ".$GPSTime." GMDATE: ".gmdate('H:i:s', $GPSTime) , 0);
 							$UnixTime = strtotime($GPSTime);
 							SetValueInteger($this->GetIDForIdent("Timestamp"), $UnixTime);
 							SetValueFloat($this->GetIDForIdent("Latitude"), ((float)$GPS_Data_Array[2] / 100));
@@ -203,18 +202,18 @@
 							break;
 						case '$GPGSA':
 							// $GPGSA,Smode,FS{,sv},PDOP,HDOP,VDOP*cs
-							$this->SendDebug("Datenanalyse", "GPGSA" , 0);
+							//$this->SendDebug("Datenanalyse", "GPGSA" , 0);
 							break;
 						case '$GPGSV':
 							// $GPGSV,NoMsg,MsgNo,NoSv,{,sv,elv,az,cno}*cs
-							$this->SendDebug("Datenanalyse", "GPGSV" , 0);
+							//$this->SendDebug("Datenanalyse", "GPGSV" , 0);
 							break;
 						case '$GPTXT':
-							$this->SendDebug("Datenanalyse", "GPTXT" , 0);
+							//$this->SendDebug("Datenanalyse", "GPTXT" , 0);
 							break;
 						case '$GPRMC':
 							// $GPRMC,hhmmss,status,latitude,N,longitude,E,spd,cog,ddmmyy,mv,mvE,mode*cs
-							$this->SendDebug("Datenanalyse", "GPRMC" , 0);
+							//$this->SendDebug("Datenanalyse", "GPRMC" , 0);
 							// GPS-Daten: $GPRMC,174952.00,A,5321.54883,N,01023.67784,E,1.443,,210917,,,A*7F
 							$Status = array("A" => "gültig", "V" => "ungültig");
 							SetValueString($this->GetIDForIdent("Status"), $Status[$GPS_Data_Array[2]]);
@@ -222,19 +221,19 @@
 							break;
 						case '$GPGLL':
 							// $GPGLL,Latitude,N,Longitude,E,hhmmss.ss,Valid,Mode*cs
-							$this->SendDebug("Datenanalyse", "GPGLL" , 0);
+							//$this->SendDebug("Datenanalyse", "GPGLL" , 0);
 							break;
 						case '$GPZDA':
 							// $GPZDA,hhmmss.ss,day,month,year,ltzh,ltzn*cs
-							$this->SendDebug("Datenanalyse", "GPZDA" , 0);
+							//$this->SendDebug("Datenanalyse", "GPZDA" , 0);
 							break;
 						case '$GPGST':
 							// $GPGST,hhmmss.ss,range_rms,std_major,std_minor,hdg,std_lat,std_long,std_alt*cs
-							$this->SendDebug("Datenanalyse", "GPGST" , 0);
+							//$this->SendDebug("Datenanalyse", "GPGST" , 0);
 							break;
 						case '$GPGRS':
 							// $GPGRS,hhmmss.ss, mode {,residual}*cs
-							$this->SendDebug("Datenanalyse", "GPGRS" , 0);
+							//$this->SendDebug("Datenanalyse", "GPGRS" , 0);
 							break;
 					}
 
