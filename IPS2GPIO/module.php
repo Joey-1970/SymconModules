@@ -911,6 +911,24 @@ class IPS2GPIO_IO extends IPSModule
 									$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").substr($subject, $PostionEnd));
 									// der vollständige Datensatz sollte nun in $subject sein
 									$subject = substr_replace ($subject, $replace, $PostionEnd);
+									
+									// komplette Datensätze suchen
+									$pattern = '/(\$GPRMC|\$GPVTG|\$GPGGA|\$GPGSA|\$GPGSV|\$GPGLL|\$GPTXT)([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/'; 
+									preg_match_all($pattern, $subject, $treffer);
+
+									// Relevantes Ergebnis herausfiltern
+									$GPS_Data = array();
+									$GPS_Data = $treffer[0];
+
+									$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_gps_data", "Value"=> serialize($GPS_Data) )));
+
+									// Herauslöschen der gesendeten Datensätze
+									$subject = preg_replace($pattern, $replace, $subject);
+									//$this->SendDebug("Datenanalyse","Serial_GPS_Data Rest ".$subject, 0);
+									$this->SetBuffer("Serial_GPS_Data", $subject);
+									If (strlen($subject) > 200) {
+										$this->SendDebug("Datenanalyse","Serial_GPS_Data > 200: ".$subject, 0);
+									}
 
 								}
 								elseif ($PostionEnd === false) {
@@ -931,23 +949,7 @@ class IPS2GPIO_IO extends IPSModule
 							//$pattern = '/([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/'; 
 							//$subject = preg_replace($pattern, $replace, $subject, 1);
 
-							// komplette Datensätze suchen
-							$pattern = '/(\$GPRMC|\$GPVTG|\$GPGGA|\$GPGSA|\$GPGSV|\$GPGLL|\$GPTXT)([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/'; 
-							preg_match_all($pattern, $subject, $treffer);
-
-							// Relevantes Ergebnis herausfiltern
-							$GPS_Data = array();
-							$GPS_Data = $treffer[0];
 							
-							$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_gps_data", "Value"=> serialize($GPS_Data) )));
-
-							// Herauslöschen der gesendeten Datensätze
-							$subject = preg_replace($pattern, $replace, $subject);
-							//$this->SendDebug("Datenanalyse","Serial_GPS_Data Rest ".$subject, 0);
-							$this->SetBuffer("Serial_GPS_Data", $subject);
-							If (strlen($subject) > 500) {
-								$this->SendDebug("Datenanalyse","Serial_GPS_Data > 500: ".$subject, 0);
-							}
 						}											
 					}
 					else {
