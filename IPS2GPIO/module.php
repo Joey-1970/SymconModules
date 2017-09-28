@@ -836,16 +836,11 @@ class IPS2GPIO_IO extends IPSModule
 	}
 	
 	public function ReceiveData($JSONString) {
- 	    	$CmdPossible = array(19, 21, 76, 81, 99, 115, 116);
- 	    	$RDlen = array(16, 32);	
  	    	// Empfangene Daten vom I/O
 	    	$Data = json_decode($JSONString);
 	    	$Message = utf8_decode($Data->Buffer);
 	    	$MessageLen = strlen($Message);
 	    	$MessageArray = unpack("L*", $Message);
-		$Command = $MessageArray[1];
-		$SerialRead = false;
-	    	
 		
 		 // Analyse der eingegangenen Daten
 		 for ($i = 1; $i <= Count($MessageArray); $i++) {
@@ -942,52 +937,16 @@ class IPS2GPIO_IO extends IPSModule
 							    	// wenn $GPRMC nicht gefunden wird keine Datenauswertung
 								
 							}
-							
-							//$pattern = '/([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/'; 
-							//$subject = preg_replace($pattern, $replace, $subject, 1);
-
 						}											
 					}
 					else {
 						$PinNotify = array();
 						$PinNotify = unserialize($this->GetBuffer("PinNotify"));
-						//$this->SendDebug("Datenanalyse", "PinNotify: ".$this->GetBuffer("PinNotify"), 0);
-						// Werte durchlaufen
-						//If ($this->GetBuffer("Serial_Configured") == 0) {
-							for ($j = 0; $j < Count($PinNotify); $j++) {
-								$Bitvalue = boolval($Level & (1<<$PinNotify[$j]));
-								$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit ".$PinNotify[$j]." Wert: ".(int)$Bitvalue, 0);
-								$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $Tick)));
-							}
-						//}
-						/*
-						else {
-							for ($j = 0; $j < Count($PinNotify); $j++) {
-								If ($PinNotify[$j] <> 15) {
-									$Bitvalue = boolval($Level & (1<<$PinNotify[$j]));
-									$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit ".$PinNotify[$j]." Wert: ".(int)$Bitvalue, 0);
-									$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $Tick)));
-								}
-								
-								else {
-									If ($SerialRead == false) {
-										// Wert von Pin 15
-										
-										$Bitvalue_15 = boolval($Level & pow(2, 15));
-										$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit 15 (RS232): ".(int)$Bitvalue_15, 0);	
-										$SerialRead = true;
-										IPS_Sleep(100);
-										$Data = $this->CommandClientSocket(pack("L*", 82, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
-										If ($Data > 0) {
-											$this->CommandClientSocket(pack("L*", 80, $this->GetBuffer("Serial_Handle"), $Data, 0), 16 + $Data);
-										}
-										
-									}
-								}
-								
-							}
+						for ($j = 0; $j < Count($PinNotify); $j++) {
+							$Bitvalue = boolval($Level & (1<<$PinNotify[$j]));
+							$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit ".$PinNotify[$j]." Wert: ".(int)$Bitvalue, 0);
+							$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $Tick)));
 						}
-						*/
 					}
 					$this->SetBuffer("NotifyCounter", $SeqNo + 1);
 					$i = $i + 2;
