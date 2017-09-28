@@ -961,6 +961,7 @@ class IPS2GPIO_IO extends IPSModule
 					}
 					else {
 						$this->SendDebug("Datenanalyse", "Undefinertes Event!", 0);
+						$i = $i + 2;
 					}
 				}
 			}
