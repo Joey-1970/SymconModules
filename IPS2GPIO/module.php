@@ -847,7 +847,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SendDebug("Datenanalyse", "i: ".$i." Laenge: ".$MessageLen." SeqNo: ".($MessageArray[$i] & 65535)." Counter: ".$this->GetBuffer("NotifyCounter"), 0);
 			 
 			//If (($MessageLen == 12) OR (($MessageArray[$i] & 65535) == $this->GetBuffer("NotifyCounter"))) {
-			If (($MessageLen == 12) OR (($MessageArray[$i + 1]) > 31)) {
+			If (($MessageLen == 12) OR (($MessageArray[$i] >> 16) > 31)) {
 				// Struktur:
 				// H seqno: starts at 0 each time the handle is opened and then increments by one for each report.
 				// H flags: three flags are defined, PI_NTFY_FLAGS_WDOG, PI_NTFY_FLAGS_ALIVE, and PI_NTFY_FLAGS_EVENT. 
