@@ -851,7 +851,8 @@ class IPS2GPIO_IO extends IPSModule
 		 for ($i = 1; $i <= Count($MessageArray); $i++) {
 			$this->SendDebug("Datenanalyse", "i: ".$i." Laenge: ".$MessageLen." SeqNo: ".($MessageArray[$i] & 65535)." Counter: ".$this->GetBuffer("NotifyCounter"), 0);
 			 
-			If (($MessageLen == 12) OR (($MessageArray[$i] & 65535) == $this->GetBuffer("NotifyCounter"))) {
+			//If (($MessageLen == 12) OR (($MessageArray[$i] & 65535) == $this->GetBuffer("NotifyCounter"))) {
+			If (($MessageLen == 12) OR (($MessageArray[$i + 1]) > 31)) {
 				// Struktur:
 				// H seqno: starts at 0 each time the handle is opened and then increments by one for each report.
 				// H flags: three flags are defined, PI_NTFY_FLAGS_WDOG, PI_NTFY_FLAGS_ALIVE, and PI_NTFY_FLAGS_EVENT. 
@@ -942,15 +943,9 @@ class IPS2GPIO_IO extends IPSModule
 								
 							}
 							
-
-							
-							
-							
-							
 							//$pattern = '/([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/'; 
 							//$subject = preg_replace($pattern, $replace, $subject, 1);
 
-							
 						}											
 					}
 					else {
@@ -1000,9 +995,14 @@ class IPS2GPIO_IO extends IPSModule
 			}
 			else {
 				if (array_key_exists($i + 3, $MessageArray)) {
-					$this->SendDebug("Datenanalyse", "Kommando: ".$MessageArray[$i], 0);
-					$this->ClientResponse(pack("L*", $MessageArray[$i], $MessageArray[$i + 1], $MessageArray[$i + 2], $MessageArray[$i + 3]));
-					$i = $i + 3;
+					If ($MessageArray[$i] == 99) {
+						$this->SendDebug("Datenanalyse", "Kommando: ".$MessageArray[$i], 0);
+						$this->ClientResponse(pack("L*", $MessageArray[$i], $MessageArray[$i + 1], $MessageArray[$i + 2], $MessageArray[$i + 3]));
+						$i = $i + 3;
+					}
+					else {
+						$this->SendDebug("Datenanalyse", "Undefinertes Event!", 0);
+					}
 				}
 			}
 		 }
@@ -1065,7 +1065,7 @@ class IPS2GPIO_IO extends IPSModule
 					IPS_LogMessage("IPS2GPIO Socket", "Fehler beim Verbindungsaufbau ".$errno." ".$errstr);
 					$this->SendDebug("CommandClientSocket", "Fehler beim Verbindungsaufbau ".$errno." ".$errstr, 0);
 					// Testballon an IPS-ClientSocket
-					$this->ClientSocket(pack("L*", 17, 0, 0, 0));						
+					$this->ClientSocket(pack("L*", 99, 0, 0, 0));						
 					$this->SetStatus(201);
 					return $Result;
 				}
