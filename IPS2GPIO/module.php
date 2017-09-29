@@ -1032,6 +1032,9 @@ class IPS2GPIO_IO extends IPSModule
 					// Daten GPS	-
 					$Result = $this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_GPS_RxD"), 1000, 0), 16 + 1000);
 					// Neue Daten an die bestehende Daten anhängen
+					
+					// $this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_gps_data", "Value"=> $Result )));
+					
 					If (strlen($this->GetBuffer("Serial_GPS_Data")) < 2000) {
 						$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").$Result);
 					}
