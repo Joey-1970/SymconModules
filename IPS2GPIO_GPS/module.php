@@ -166,83 +166,53 @@
 		
 		$data = json_decode($JSONString);
 	 	switch ($data->Function) {
-			 case "get_serial":
+			case "get_serial":
 			   	$this->ApplyChanges();
 				break;
-			 case "set_serial_gps_data":
-			   	$Sendung = array();
-				$Sendung = unserialize($data->Value);
-				$this->SendDebug("Datenanalyse", "Neuer Datensatz:" , 0);
-				foreach($Sendung AS $GPS_Data) {
-					$GPS_Data = preg_replace("/[[:cntrl:]]/i", "", $GPS_Data);
-					$this->SendDebug("Datenanalyse", "GPS-Daten: ".$GPS_Data , 0);
-					$GPS_Data_Array = array();
-					$GPS_Data_Array = explode(",", $GPS_Data);
-					switch ($GPS_Data_Array[0]) {
-						case '$GPVTG':
-							// $GPVTG,cogt,T,cogm,M,sog,N,kph,K,mode*cs
-							//$this->SendDebug("Datenanalyse", "GPVTG" , 0);
-							// GPS-Daten: $GPVTG,,T,,M,0.779,N,1.443,K,A*28
-							
-							break;
-						case '$GPGGA':
-							// $GPGGA,hhmmss.ss,Latitude,N,Longitude,E,FS,NoSV,HDOP,msl,m,Altref,m,DiffAge,DiffStation*cs
-							//$this->SendDebug("Datenanalyse", "GPGGA" , 0);
-							// GPS-Daten: $GPGGA,040322.00,5321.54268,N,01023.67622,E,1, 06,1.76,5.7,M,44.8,M,,*58
-							$GPSTime = (float)$GPS_Data_Array[1];
-							$UnixTime = strtotime($GPSTime);
-							SetValueInteger($this->GetIDForIdent("Timestamp"), $UnixTime);
-							SetValueFloat($this->GetIDForIdent("Latitude"), ((float)$GPS_Data_Array[2] / 100));
-							$Local = array("N" => "Nord", "S" => "Süd", "E" => "Ost", "W" => "West");
-							SetValueString($this->GetIDForIdent("LatitudeLocal"), $Local[$GPS_Data_Array[3]]);
-							SetValueFloat($this->GetIDForIdent("Longitude"), ((float)$GPS_Data_Array[4] / 100));
-							SetValueString($this->GetIDForIdent("LongitudeLocal"), $Local[$GPS_Data_Array[5]]);
-							$MeasurementQuality = array(0 => "ungültig", 1 => "GPS", 2 => "DGPS", 6 => "geschätzt" );
-							SetValueString($this->GetIDForIdent("MeasurementQuality"), $MeasurementQuality[(float)$GPS_Data_Array[6]]);
-							SetValueInteger($this->GetIDForIdent("Satellites"), (int)$GPS_Data_Array[7]);
-							SetValueFloat($this->GetIDForIdent("Precision"), (float)$GPS_Data_Array[8]);
-							SetValueFloat($this->GetIDForIdent("Height"), (float)$GPS_Data_Array[9]);
-							break;
-						case '$GPGSA':
-							// $GPGSA,Smode,FS{,sv},PDOP,HDOP,VDOP*cs
-							//$this->SendDebug("Datenanalyse", "GPGSA" , 0);
-							break;
-						case '$GPGSV':
-							// $GPGSV,NoMsg,MsgNo,NoSv,{,sv,elv,az,cno}*cs
-							//$this->SendDebug("Datenanalyse", "GPGSV" , 0);
-							break;
-						case '$GPTXT':
-							//$this->SendDebug("Datenanalyse", "GPTXT" , 0);
-							break;
-						case '$GPRMC':
-							// $GPRMC,hhmmss,status,latitude,N,longitude,E,spd,cog,ddmmyy,mv,mvE,mode*cs
-							//$this->SendDebug("Datenanalyse", "GPRMC" , 0);
-							// GPS-Daten: $GPRMC,174952.00,A,5321.54883,N,01023.67784,E,1.443,,210917,,,A*7F
-							$Status = array("A" => "gültig", "V" => "ungültig");
-							SetValueString($this->GetIDForIdent("Status"), $Status[$GPS_Data_Array[2]]);
-							
-							break;
-						case '$GPGLL':
-							// $GPGLL,Latitude,N,Longitude,E,hhmmss.ss,Valid,Mode*cs
-							//$this->SendDebug("Datenanalyse", "GPGLL" , 0);
-							break;
-						case '$GPZDA':
-							// $GPZDA,hhmmss.ss,day,month,year,ltzh,ltzn*cs
-							//$this->SendDebug("Datenanalyse", "GPZDA" , 0);
-							break;
-						case '$GPGST':
-							// $GPGST,hhmmss.ss,range_rms,std_major,std_minor,hdg,std_lat,std_long,std_alt*cs
-							//$this->SendDebug("Datenanalyse", "GPGST" , 0);
-							break;
-						case '$GPGRS':
-							// $GPGRS,hhmmss.ss, mode {,residual}*cs
-							//$this->SendDebug("Datenanalyse", "GPGRS" , 0);
-							break;
-					}
-
+			case "set_serial_gps_data":
+				If (strlen($this->GetBuffer("Serial_GPS_Data")) < 2000) {
+					$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").utf8_decode($data->Value));
 				}
-
-			       
+				else {
+					$this->SendDebug("Datenanalyse","Serial_GPS_Data > 2000: ".$this->GetBuffer("Serial_GPS_Data"), 0);
+					$this->SetBuffer("Serial_GPS_Data", utf8_decode($data->Value));
+				}
+				$subject = $this->GetBuffer("Serial_GPS_Data");
+				$replace = "";
+				// unvollständigen Datensatzanfang löschen, vollständiger Datensatz beginnt mit $GPRMC
+				$pattern = '$GPRMC';
+				$PositionStart = strpos($subject, $pattern);
+				If ($PositionStart > 0) {
+					// wenn $GPRMC gefunden wird, alles vor $GPRMC löschen
+					$subject =  substr_replace ($subject , $replace , 0, $PositionStart);
+					// Prüfen ob das Ende des Datensatzes vorhanden ist
+					$PostionEnd = strpos($subject, $pattern, 40);
+					If ($PostionEnd > 0) {
+						// es wurde das Ende des Datensatzes gefunden, alles was dahinter ist an den Altbestand hängen
+						$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").substr($subject, $PostionEnd));
+						// der vollständige Datensatz sollte nun in $subject sein
+						$subject = substr_replace ($subject, $replace, $PostionEnd);
+						// komplette Datensätze suchen
+						$pattern = '/(\$GPRMC|\$GPVTG|\$GPGGA|\$GPGSA|\$GPGSV|\$GPGLL|\$GPTXT)([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/'; 
+						preg_match_all($pattern, $subject, $treffer);
+						// Relevantes Ergebnis herausfiltern
+						$GPS_Data = array();
+						$GPS_Data = $treffer[0];
+						$this->SetResult(serialize($GPS_Data));
+						// Herauslöschen der gesendeten Datensätze
+						$subject = preg_replace($pattern, $replace, $subject);
+						//$this->SendDebug("Datenanalyse","Serial_GPS_Data Rest ".$subject, 0);
+						$this->SetBuffer("Serial_GPS_Data", $subject);
+						If (strlen($subject) > 200) {
+							$this->SendDebug("Datenanalyse","Serial_GPS_Data > 200: ".$subject, 0);
+						}
+					}
+					elseif ($PostionEnd === false) {
+						// es wurde kein vollständiger Datensatz gefunden
+						$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").$subject);
+					}
+				}
+	
 			   	break;
 			 case "status":
 			   	If (($data->Pin == $this->ReadPropertyInteger("Pin_RxD")) OR ($data->Pin == $this->ReadPropertyInteger("Pin_TxD"))) {
@@ -252,6 +222,81 @@
 	 	}
  	}
 	// Beginn der Funktionen
+	private function SetResult(String $Data)
+	{
+		$Sendung = array();
+		$Sendung = unserialize($Data);
+		$this->SendDebug("Datenanalyse", "Neuer Datensatz:" , 0);
+		foreach($Sendung AS $GPS_Data) {
+			$GPS_Data = preg_replace("/[[:cntrl:]]/i", "", $GPS_Data);
+			$this->SendDebug("Datenanalyse", "GPS-Daten: ".$GPS_Data , 0);
+			$GPS_Data_Array = array();
+			$GPS_Data_Array = explode(",", $GPS_Data);
+			switch ($GPS_Data_Array[0]) {
+				case '$GPVTG':
+					// $GPVTG,cogt,T,cogm,M,sog,N,kph,K,mode*cs
+					//$this->SendDebug("Datenanalyse", "GPVTG" , 0);
+					// GPS-Daten: $GPVTG,,T,,M,0.779,N,1.443,K,A*28
+
+					break;
+				case '$GPGGA':
+					// $GPGGA,hhmmss.ss,Latitude,N,Longitude,E,FS,NoSV,HDOP,msl,m,Altref,m,DiffAge,DiffStation*cs
+					//$this->SendDebug("Datenanalyse", "GPGGA" , 0);
+					// GPS-Daten: $GPGGA,040322.00,5321.54268,N,01023.67622,E,1, 06,1.76,5.7,M,44.8,M,,*58
+					$GPSTime = (float)$GPS_Data_Array[1];
+					$UnixTime = strtotime($GPSTime);
+					SetValueInteger($this->GetIDForIdent("Timestamp"), $UnixTime);
+					SetValueFloat($this->GetIDForIdent("Latitude"), ((float)$GPS_Data_Array[2] / 100));
+					$Local = array("N" => "Nord", "S" => "Süd", "E" => "Ost", "W" => "West");
+					SetValueString($this->GetIDForIdent("LatitudeLocal"), $Local[$GPS_Data_Array[3]]);
+					SetValueFloat($this->GetIDForIdent("Longitude"), ((float)$GPS_Data_Array[4] / 100));
+					SetValueString($this->GetIDForIdent("LongitudeLocal"), $Local[$GPS_Data_Array[5]]);
+					$MeasurementQuality = array(0 => "ungültig", 1 => "GPS", 2 => "DGPS", 6 => "geschätzt" );
+					SetValueString($this->GetIDForIdent("MeasurementQuality"), $MeasurementQuality[(float)$GPS_Data_Array[6]]);
+					SetValueInteger($this->GetIDForIdent("Satellites"), (int)$GPS_Data_Array[7]);
+					SetValueFloat($this->GetIDForIdent("Precision"), (float)$GPS_Data_Array[8]);
+					SetValueFloat($this->GetIDForIdent("Height"), (float)$GPS_Data_Array[9]);
+					break;
+				case '$GPGSA':
+					// $GPGSA,Smode,FS{,sv},PDOP,HDOP,VDOP*cs
+					//$this->SendDebug("Datenanalyse", "GPGSA" , 0);
+					break;
+				case '$GPGSV':
+					// $GPGSV,NoMsg,MsgNo,NoSv,{,sv,elv,az,cno}*cs
+					//$this->SendDebug("Datenanalyse", "GPGSV" , 0);
+					break;
+				case '$GPTXT':
+					//$this->SendDebug("Datenanalyse", "GPTXT" , 0);
+					break;
+				case '$GPRMC':
+					// $GPRMC,hhmmss,status,latitude,N,longitude,E,spd,cog,ddmmyy,mv,mvE,mode*cs
+					//$this->SendDebug("Datenanalyse", "GPRMC" , 0);
+					// GPS-Daten: $GPRMC,174952.00,A,5321.54883,N,01023.67784,E,1.443,,210917,,,A*7F
+					$Status = array("A" => "gültig", "V" => "ungültig");
+					SetValueString($this->GetIDForIdent("Status"), $Status[$GPS_Data_Array[2]]);
+
+					break;
+				case '$GPGLL':
+					// $GPGLL,Latitude,N,Longitude,E,hhmmss.ss,Valid,Mode*cs
+					//$this->SendDebug("Datenanalyse", "GPGLL" , 0);
+					break;
+				case '$GPZDA':
+					// $GPZDA,hhmmss.ss,day,month,year,ltzh,ltzn*cs
+					//$this->SendDebug("Datenanalyse", "GPZDA" , 0);
+					break;
+				case '$GPGST':
+					// $GPGST,hhmmss.ss,range_rms,std_major,std_minor,hdg,std_lat,std_long,std_alt*cs
+					//$this->SendDebug("Datenanalyse", "GPGST" , 0);
+					break;
+				case '$GPGRS':
+					// $GPGRS,hhmmss.ss, mode {,residual}*cs
+					//$this->SendDebug("Datenanalyse", "GPGRS" , 0);
+					break;
+			}
+
+		}
+	}
+	    
 	public function Send(String $Message)
 	{
 		$Message = utf8_encode($Message."\r\n");
