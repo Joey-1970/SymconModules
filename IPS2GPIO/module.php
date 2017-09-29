@@ -1011,7 +1011,6 @@ class IPS2GPIO_IO extends IPSModule
 				}
 			}
 			elseif ($KeepAlive == 1) {
-				// es handelt sich um ein Event
 				$this->SendDebug("Datenanalyse", "KeepAlive", 0);
 				SetValueInteger($this->GetIDForIdent("LastKeepAlive"), time() );
 				$i = $i + 2;
@@ -1031,57 +1030,7 @@ class IPS2GPIO_IO extends IPSModule
 				elseIf ($EventNumber == $this->GetBuffer("Serial_GPS_RxD")) {
 					// Daten GPS	-
 					$Result = $this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_GPS_RxD"), 1000, 0), 16 + 1000);
-					// Neue Daten an die bestehende Daten anhängen
-					
-					// $this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_gps_data", "Value"=> $Result )));
-					
-					If (strlen($this->GetBuffer("Serial_GPS_Data")) < 2000) {
-						$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").$Result);
-					}
-					else {
-						$this->SendDebug("Datenanalyse","Serial_GPS_Data > 2000: ".$this->GetBuffer("Serial_GPS_Data"), 0);
-						$this->SetBuffer("Serial_GPS_Data", $Result);
-					}
-					$subject = $this->GetBuffer("Serial_GPS_Data");
-					$replace = "";
-					// unvollständigen Datensatzanfang löschen, vollständiger Datensatz beginnt mit $GPRMC
-					$pattern = '$GPRMC';
-					$PositionStart = strpos($subject, $pattern);
-					If ($PositionStart > 0) {
-						// wenn $GPRMC gefunden wird, alles vor $GPRMC löschen
-						$subject =  substr_replace ($subject , $replace , 0, $PositionStart);
-						// Prüfen ob das Ende des Datensatzes vorhanden ist
-						$PostionEnd = strpos($subject, $pattern, 40);
-						If ($PostionEnd > 0) {
-							// es wurde das Ende des Datensatzes gefunden, alles was dahinter ist an den Altbestand hängen
-							$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").substr($subject, $PostionEnd));
-							// der vollständige Datensatz sollte nun in $subject sein
-							$subject = substr_replace ($subject, $replace, $PostionEnd);
-
-							// komplette Datensätze suchen
-							$pattern = '/(\$GPRMC|\$GPVTG|\$GPGGA|\$GPGSA|\$GPGSV|\$GPGLL|\$GPTXT)([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/'; 
-							preg_match_all($pattern, $subject, $treffer);
-
-							// Relevantes Ergebnis herausfiltern
-							$GPS_Data = array();
-							$GPS_Data = $treffer[0];
-
-							$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_gps_data", "Value"=> serialize($GPS_Data) )));
-
-							// Herauslöschen der gesendeten Datensätze
-							$subject = preg_replace($pattern, $replace, $subject);
-							//$this->SendDebug("Datenanalyse","Serial_GPS_Data Rest ".$subject, 0);
-							$this->SetBuffer("Serial_GPS_Data", $subject);
-							If (strlen($subject) > 200) {
-								$this->SendDebug("Datenanalyse","Serial_GPS_Data > 200: ".$subject, 0);
-							}
-
-						}
-						elseif ($PostionEnd === false) {
-							// es wurde kein vollständiger Datensatz gefunden
-							$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").$subject);
-						}
-					}
+					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_gps_data", "Value"=> utf8_encode($Result) )));		
 				}
 				$i = $i + 2;
 			}
