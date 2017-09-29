@@ -109,6 +109,8 @@
 		$this->RegisterVariableString("Status", "Status der Bestimmung", "", 100);
 		$this->DisableAction("Status");
 		IPS_SetHidden($this->GetIDForIdent("Status"), false);
+		
+		$this->SetBuffer("Serial_GPS_Data", "");
 
 		//ReceiveData-Filter setzen 		    
 		$Filter = '((.*"Function":"get_serial".*|.*"Pin":".$this->ReadPropertyInteger("Pin_RxD").".*)|(.*"Pin":".$this->ReadPropertyInteger("Pin_TxD").".*|.*"Function":"set_serial_gps_data".*))'; 
