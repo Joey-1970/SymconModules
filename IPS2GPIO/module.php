@@ -1003,7 +1003,7 @@ class IPS2GPIO_IO extends IPSModule
 			If ($Command == 99) {
 				// es handelt sich um ein Kommando
 				if (array_key_exists($i + 3, $MessageArray)) {
-					If ($MessageArray[$i] == 99) {
+					If (($MessageArray[$i] == 99) AND ($MessageArray[$i + 1] == 0) AND ($MessageArray[$i + 2] == 0)) {
 						$this->SendDebug("Datenanalyse", "Kommando: ".$MessageArray[$i], 0);
 						$this->ClientResponse(pack("L*", $MessageArray[$i], $MessageArray[$i + 1], $MessageArray[$i + 2], $MessageArray[$i + 3]));
 						$i = $i + 3;
