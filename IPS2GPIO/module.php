@@ -967,7 +967,135 @@ class IPS2GPIO_IO extends IPSModule
 			}
 		 }
 	 }
- 
+	/*
+	public function ReceiveData($JSONString) {
+		// Empfangene Daten vom I/O
+	    	$Data = json_decode($JSONString);
+	    	$Message = utf8_decode($Data->Buffer);
+	    	$MessageLen = strlen($Message);
+	    	$MessageArray = unpack("L*", $Message);
+		$this->SendDebug("Datenanalyse", "Laenge: ".$MessageLen." Anzahl: ".Count($MessageArray), 0);
+		
+		// Analyse der eingegangenen Daten
+		for ($i = 1; $i <= Count($MessageArray); $i++) {
+			$this->SendDebug("Datenanalyse", "Datensatz ".$i." von ".Count($MessageArray), 0);
+			// Struktur:
+			// H seqno: starts at 0 each time the handle is opened and then increments by one for each report.
+			// H flags: three flags are defined, PI_NTFY_FLAGS_WDOG, PI_NTFY_FLAGS_ALIVE, and PI_NTFY_FLAGS_EVENT. 
+				//If bit 5 is set (PI_NTFY_FLAGS_WDOG) then bits 0-4 of the flags indicate a GPIO which has had a watchdog timeout. 
+				//If bit 6 is set (PI_NTFY_FLAGS_ALIVE) this indicates a keep alive signal on the pipe/socket and is sent once a minute in the absence of other notification activity. 
+				//If bit 7 is set (PI_NTFY_FLAGS_EVENT) then bits 0-4 of the flags indicate an event which has been triggered. 
+			// I tick: the number of microseconds since system boot. It wraps around after 1h12m. 
+			// I level: indicates the level of each GPIO. If bit 1<<x is set then GPIO x is high. 
+			$Command = $MessageArray[$i];
+			$SeqNo = $MessageArray[$i] & 65535;
+			$Flags = $MessageArray[$i] >> 16;
+			$Event = (int)boolval($Flags & 128);
+			$EventNumber = $Flags & 31;
+			$KeepAlive = (int)boolval($Flags & 64);
+			$WatchDog = (int)boolval($Flags & 32);
+			$WatchDogNumber = $Flags & 31;
+			$Tick = $MessageArray[$i + 1];
+			$Level = $MessageArray[$i + 2];
+			
+			
+			// Prüfen ob es sich um ein Kommando handelt
+			If ($Command == 99) {
+				// es handelt sich um ein Kommando
+				if (array_key_exists($i + 3, $MessageArray)) {
+					If ($MessageArray[$i] == 99) {
+						$this->SendDebug("Datenanalyse", "Kommando: ".$MessageArray[$i], 0);
+						$this->ClientResponse(pack("L*", $MessageArray[$i], $MessageArray[$i + 1], $MessageArray[$i + 2], $MessageArray[$i + 3]));
+						$i = $i + 3;
+					}
+				}
+			}
+			elseif ($KeepAlive == 1) {
+				// es handelt sich um ein Event
+				$this->SendDebug("Datenanalyse", "KeepAlive", 0);
+				SetValueInteger($this->GetIDForIdent("LastKeepAlive"), time() );
+				$i = $i + 2;
+			}
+			elseif ($WatchDog == 1) {
+				$this->SendDebug("Datenanalyse", "WatchDog-Nummer: ".$WatchDogNumber, 0);
+				$i = $i + 2;
+			}
+			elseif ($Event == 1) {
+				$this->SendDebug("Datenanalyse", "Event-Nummer: ".$EventNumber, 0);
+				If ($EventNumber == $this->GetBuffer("Serial_Display_RxD")) {
+					// Daten des Displays	-
+					$Result = $this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_Display_RxD"), 100, 0), 16 + 100);
+					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_data", "Value"=> utf8_encode($Result) )));
+
+				}
+				elseIf ($EventNumber == $this->GetBuffer("Serial_GPS_RxD")) {
+					// Daten GPS	-
+					$Result = $this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_GPS_RxD"), 1000, 0), 16 + 1000);
+					// Neue Daten an die bestehende Daten anhängen
+					If (strlen($this->GetBuffer("Serial_GPS_Data")) < 2000) {
+						$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").$Result);
+					}
+					else {
+						$this->SendDebug("Datenanalyse","Serial_GPS_Data > 2000: ".$this->GetBuffer("Serial_GPS_Data"), 0);
+						$this->SetBuffer("Serial_GPS_Data", $Result);
+					}
+					$subject = $this->GetBuffer("Serial_GPS_Data");
+					$replace = "";
+					// unvollständigen Datensatzanfang löschen, vollständiger Datensatz beginnt mit $GPRMC
+					$pattern = '$GPRMC';
+					$PositionStart = strpos($subject, $pattern);
+					If ($PositionStart > 0) {
+						// wenn $GPRMC gefunden wird, alles vor $GPRMC löschen
+						$subject =  substr_replace ($subject , $replace , 0, $PositionStart);
+						// Prüfen ob das Ende des Datensatzes vorhanden ist
+						$PostionEnd = strpos($subject, $pattern, 40);
+						If ($PostionEnd > 0) {
+							// es wurde das Ende des Datensatzes gefunden, alles was dahinter ist an den Altbestand hängen
+							$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").substr($subject, $PostionEnd));
+							// der vollständige Datensatz sollte nun in $subject sein
+							$subject = substr_replace ($subject, $replace, $PostionEnd);
+
+							// komplette Datensätze suchen
+							$pattern = '/(\$GPRMC|\$GPVTG|\$GPGGA|\$GPGSA|\$GPGSV|\$GPGLL|\$GPTXT)([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/'; 
+							preg_match_all($pattern, $subject, $treffer);
+
+							// Relevantes Ergebnis herausfiltern
+							$GPS_Data = array();
+							$GPS_Data = $treffer[0];
+
+							$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_gps_data", "Value"=> serialize($GPS_Data) )));
+
+							// Herauslöschen der gesendeten Datensätze
+							$subject = preg_replace($pattern, $replace, $subject);
+							//$this->SendDebug("Datenanalyse","Serial_GPS_Data Rest ".$subject, 0);
+							$this->SetBuffer("Serial_GPS_Data", $subject);
+							If (strlen($subject) > 200) {
+								$this->SendDebug("Datenanalyse","Serial_GPS_Data > 200: ".$subject, 0);
+							}
+
+						}
+						elseif ($PostionEnd === false) {
+							// es wurde kein vollständiger Datensatz gefunden
+							$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").$subject);
+						}
+					}
+				}
+				$i = $i + 2;
+			}
+			else {
+				$PinNotify = array();
+				$PinNotify = unserialize($this->GetBuffer("PinNotify"));
+				for ($j = 0; $j < Count($PinNotify); $j++) {
+					$Bitvalue = boolval($Level & (1<<$PinNotify[$j]));
+					$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit ".$PinNotify[$j]." Wert: ".(int)$Bitvalue, 0);
+					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $Tick)));
+				}
+				$i = $i + 2;
+			}		
+		 }
+	 }
+	*/
+	
 	public function RequestAction($Ident, $Value) 
 	{
 		    switch($Ident) {
