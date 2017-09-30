@@ -834,7 +834,7 @@ class IPS2GPIO_IO extends IPSModule
 		}
 	return $Result;
 	}
-	
+	/*
 	public function ReceiveData($JSONString) {
  	    	// Empfangene Daten vom I/O
 	    	$Data = json_decode($JSONString);
@@ -967,7 +967,7 @@ class IPS2GPIO_IO extends IPSModule
 			}
 		 }
 	 }
-	/*
+	*/
 	public function ReceiveData($JSONString) {
 		// Empfangene Daten vom I/O
 	    	$Data = json_decode($JSONString);
@@ -1046,7 +1046,7 @@ class IPS2GPIO_IO extends IPSModule
 			}		
 		 }
 	 }
-	*/
+	
 	
 	public function RequestAction($Ident, $Value) 
 	{
