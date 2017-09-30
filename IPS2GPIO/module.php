@@ -974,6 +974,7 @@ class IPS2GPIO_IO extends IPSModule
 	    	$Message = utf8_decode($Data->Buffer);
 	    	$MessageLen = strlen($Message);
 	    	$MessageArray = unpack("L*", $Message);
+		$GPSDataRead = false;
 		$this->SendDebug("Datenanalyse", "Laenge: ".$MessageLen." Anzahl: ".Count($MessageArray), 0);
 		
 		// Analyse der eingegangenen Daten
@@ -1029,8 +1030,11 @@ class IPS2GPIO_IO extends IPSModule
 				}
 				elseIf ($EventNumber == $this->GetBuffer("Serial_GPS_RxD")) {
 					// Daten GPS	-
-					$Result = $this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_GPS_RxD"), 1000, 0), 16 + 1000);
-					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_gps_data", "Value"=> utf8_encode($Result) )));		
+					If ($GPSDataRead == false) {
+						$Result = $this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_GPS_RxD"), 1000, 0), 16 + 1000);
+						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_gps_data", "Value"=> utf8_encode($Result) )));
+						$GPSDataRead = true;
+					}
 				}
 				$i = $i + 2;
 			}
