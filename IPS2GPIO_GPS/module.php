@@ -186,7 +186,8 @@
 					// wenn $GPRMC gefunden wird, alles vor $GPRMC löschen
 					$subject =  substr_replace ($subject , $replace , 0, $PositionStart);
 					// Prüfen ob das Ende des Datensatzes vorhanden ist
-					$PostionEnd = strpos($subject, $pattern, 40);
+					//$PostionEnd = strpos($subject, $pattern, 40);
+					$PostionEnd = strrpos ($subject, $pattern);
 					If ($PostionEnd > 0) {
 						// es wurde das Ende des Datensatzes gefunden, alles was dahinter ist an den Altbestand hängen
 						$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").substr($subject, $PostionEnd));
