@@ -38,7 +38,7 @@
 		
 		for ($i = 0; $i <= 4; $i++) {
 		    	$arrayElements[] = array("type" => "ValidationTextBox", "name" => "MAC".$i, "caption" => "MAC-Adresse ".($i + 1)); 
-			$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingMAC.".$i, "caption" => "Logging aktivieren"); 
+			$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingMAC".$i, "caption" => "Logging aktivieren"); 
 		}	
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, 30 sek -> Minimum)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
