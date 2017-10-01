@@ -182,7 +182,7 @@
 				// unvollständigen Datensatzanfang löschen, vollständiger Datensatz beginnt mit $GPRMC
 				$pattern = '$GPRMC';
 				$PositionStart = strpos($subject, $pattern);
-				If ($PositionStart > 0) {
+				If ($PositionStart >= 0) {
 					// wenn $GPRMC gefunden wird, alles vor $GPRMC löschen
 					$subject =  substr_replace ($subject , $replace , 0, $PositionStart);
 					// Prüfen ob das Ende des Datensatzes vorhanden ist
