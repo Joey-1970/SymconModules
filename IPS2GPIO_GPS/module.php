@@ -249,11 +249,17 @@
 					SetValueInteger($this->GetIDForIdent("Timestamp"), $UnixTime);
 					SetValueFloat($this->GetIDForIdent("Latitude"), ((float)$GPS_Data_Array[2] / 100));
 					$Local = array("N" => "Nord", "S" => "Süd", "E" => "Ost", "W" => "West");
-					SetValueString($this->GetIDForIdent("LatitudeLocal"), $Local[$GPS_Data_Array[3]]);
+					If (array_key_exists ($GPS_Data_Array[3], $Local) {
+						SetValueString($this->GetIDForIdent("LatitudeLocal"), $Local[$GPS_Data_Array[3]]);
+					}
 					SetValueFloat($this->GetIDForIdent("Longitude"), ((float)$GPS_Data_Array[4] / 100));
-					SetValueString($this->GetIDForIdent("LongitudeLocal"), $Local[$GPS_Data_Array[5]]);
+					If (array_key_exists ($GPS_Data_Array[5], $Local) {
+						SetValueString($this->GetIDForIdent("LongitudeLocal"), $Local[$GPS_Data_Array[5]]);
+					}
 					$MeasurementQuality = array(0 => "ungültig", 1 => "GPS", 2 => "DGPS", 6 => "geschätzt" );
-					SetValueString($this->GetIDForIdent("MeasurementQuality"), $MeasurementQuality[(float)$GPS_Data_Array[6]]);
+					If (array_key_exists ($GPS_Data_Array[6], $MeasurementQuality) {
+						SetValueString($this->GetIDForIdent("MeasurementQuality"), $MeasurementQuality[(int)$GPS_Data_Array[6]]);
+					}
 					SetValueInteger($this->GetIDForIdent("Satellites"), (int)$GPS_Data_Array[7]);
 					SetValueFloat($this->GetIDForIdent("Precision"), (float)$GPS_Data_Array[8]);
 					SetValueFloat($this->GetIDForIdent("Height"), (float)$GPS_Data_Array[9]);
