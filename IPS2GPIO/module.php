@@ -1037,7 +1037,7 @@ class IPS2GPIO_IO extends IPSModule
 						$pattern = '/(\$GPVTG|\$GPGSA|\$GPGSV|\$GPGLL|\$GPTXT)([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/'; 
 						$Result = preg_replace($pattern, "", $Result);
 						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_gps_data", "Value"=> utf8_encode($Result) )));
-						$GPSDataRead = true;
+						$GPSDataRead = false;
 					}
 				}
 				$i = $i + 2;
