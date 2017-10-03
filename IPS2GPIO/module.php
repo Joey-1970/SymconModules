@@ -1031,11 +1031,11 @@ class IPS2GPIO_IO extends IPSModule
 				elseIf ($EventNumber == $this->GetBuffer("Serial_GPS_RxD")) {
 					// Daten GPS	-
 					If ($GPSDataRead == false) {
-						$Result = $this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_GPS_RxD"), 1500, 0), 16 + 1500);
+						$Result = $this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_GPS_RxD"), 8192, 0), 16 + 8192);
 						$this->SendDebug("Datenanalyse", "GPS-Daten: ".strlen($Result), 0);
 						// unbenötige Datensätze herauslöschen
-						$pattern = '/(\$GPVTG|\$GPGSA|\$GPGSV|\$GPGLL|\$GPTXT)([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/'; 
-						$Result = preg_replace($pattern, "", $Result);
+						//$pattern = '/(\$GPVTG|\$GPGSA|\$GPGSV|\$GPGLL|\$GPTXT)([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/'; 
+						//$Result = preg_replace($pattern, "", $Result);
 						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_gps_data", "Value"=> utf8_encode($Result) )));
 						$GPSDataRead = true;
 					}
