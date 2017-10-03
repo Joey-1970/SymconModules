@@ -1017,7 +1017,7 @@ class IPS2GPIO_IO extends IPSModule
 				$i = $i + 2;
 			}
 			elseif ($WatchDog == 1) {
-				$this->SendDebug("Datenanalyse", "WatchDog-Nummer: ".$WatchDogNumber, 0);
+				$this->SendDebug("Datenanalyse", "WatchDog-Nummer: ".$WatchDogNumber." - SeqNo: ".$SeqNo, 0);
 				$i = $i + 2;
 			}
 			elseif ($Event == 1) {
