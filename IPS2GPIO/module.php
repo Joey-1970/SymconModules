@@ -1012,7 +1012,7 @@ class IPS2GPIO_IO extends IPSModule
 				}
 			}
 			elseif ($KeepAlive == 1) {
-				$this->SendDebug("Datenanalyse", "KeepAlive", 0);
+				$this->SendDebug("Datenanalyse", "KeepAlive - SeqNo: ".$SeqNo, 0);
 				SetValueInteger($this->GetIDForIdent("LastKeepAlive"), time() );
 				$i = $i + 2;
 			}
@@ -1021,7 +1021,7 @@ class IPS2GPIO_IO extends IPSModule
 				$i = $i + 2;
 			}
 			elseif ($Event == 1) {
-				$this->SendDebug("Datenanalyse", "Event-Nummer: ".$EventNumber, 0);
+				$this->SendDebug("Datenanalyse", "Event-Nummer: ".$EventNumber." - SeqNo: ".$SeqNo, 0);
 				If ($EventNumber == $this->GetBuffer("Serial_Display_RxD")) {
 					// Daten des Displays	-
 					$Result = $this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_Display_RxD"), 100, 0), 16 + 100);
@@ -1046,7 +1046,7 @@ class IPS2GPIO_IO extends IPSModule
 				$PinNotify = unserialize($this->GetBuffer("PinNotify"));
 				for ($j = 0; $j < Count($PinNotify); $j++) {
 					$Bitvalue = boolval($Level & (1<<$PinNotify[$j]));
-					$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit ".$PinNotify[$j]." Wert: ".(int)$Bitvalue, 0);
+					$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit ".$PinNotify[$j]." Wert: ".(int)$Bitvalue." - SeqNo: ".$SeqNo, 0);
 					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $Tick)));
 				}
 				$i = $i + 2;
