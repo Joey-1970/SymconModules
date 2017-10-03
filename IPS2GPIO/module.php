@@ -1031,7 +1031,7 @@ class IPS2GPIO_IO extends IPSModule
 				elseIf ($EventNumber == $this->GetBuffer("Serial_GPS_RxD")) {
 					// Daten GPS	-
 					If ($GPSDataRead == false) {
-						$Result = $this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_GPS_RxD"), 1000, 0), 16 + 1000);
+						$Result = $this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_GPS_RxD"), 2000, 0), 16 + 2000);
 						$this->SendDebug("Datenanalyse", "GPS-Daten: ".strlen($Result), 0);
 						// unbenötige Datensätze herauslöschen
 						$pattern = '/(\$GPVTG|\$GPGSA|\$GPGSV|\$GPGLL|\$GPTXT)([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/'; 
