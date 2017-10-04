@@ -1024,19 +1024,16 @@ class IPS2GPIO_IO extends IPSModule
 				$this->SendDebug("Datenanalyse", "Event-Nummer: ".$EventNumber." - SeqNo: ".$SeqNo, 0);
 				If ($EventNumber == $this->GetBuffer("Serial_Display_RxD")) {
 					// Daten des Displays	-
-					$Result = $this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_Display_RxD"), 100, 0), 16 + 100);
-					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_data", "Value"=> utf8_encode($Result) )));
+					$this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_Display_RxD"), 8192, 0), 16 + 8192);
+					//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_data", "Value"=> utf8_encode($Result) )));
 
 				}
 				elseIf ($EventNumber == $this->GetBuffer("Serial_GPS_RxD")) {
 					// Daten GPS	-
 					If ($GPSDataRead == false) {
-						$Result = $this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_GPS_RxD"), 8192, 0), 16 + 8192);
-						$this->SendDebug("Datenanalyse", "GPS-Daten: ".strlen($Result), 0);
-						// unbenötige Datensätze herauslöschen
-						//$pattern = '/(\$GPVTG|\$GPGSA|\$GPGSV|\$GPGLL|\$GPTXT)([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/'; 
-						//$Result = preg_replace($pattern, "", $Result);
-						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_gps_data", "Value"=> utf8_encode($Result) )));
+						$this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_GPS_RxD"), 8192, 0), 16 + 8192);
+						//$this->SendDebug("Datenanalyse", "GPS-Daten: ".strlen($Result), 0);
+						//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_gps_data", "Value"=> utf8_encode($Result) )));
 						$GPSDataRead = true;
 					}
 				}
@@ -1358,6 +1355,14 @@ class IPS2GPIO_IO extends IPSModule
 			case "43":
            			If ($response[4] >= 0) {
 					$Result = utf8_encode(substr($Message, -($response[4])));
+					$this->SendDebug("SLR", "Serielle-Daten: ".strlen($Result), 0);
+					If ($response[2] == $this->GetBuffer("Serial_GPS_RxD")) {
+						
+						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_gps_data", "Value"=> utf8_encode($Result) )));
+					}
+					elseif ($response[2] == $this->GetBuffer("Serial_Display_RxD")) {
+						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_data", "Value"=> utf8_encode($Result) )));
+					}
 					//$this->SendDebug("Serielle Daten", "Text: ".$Result, 0);
 				}
 		            	else {
