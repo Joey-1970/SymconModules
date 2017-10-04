@@ -1095,7 +1095,7 @@ class IPS2GPIO_IO extends IPSModule
 					return;
 				}
 				// Timeout setzen
-				socket_set_option($this->Socket, SOL_SOCKET, SO_RCVTIMEO, array("sec"=>2, "usec"=>0));
+				socket_set_option($this->Socket, SOL_SOCKET, SO_RCVTIMEO, array("sec"=>1, "usec"=>0));
 				// Verbindung aufbauen
 				if(!(socket_connect($this->Socket, $this->ReadPropertyString("IPAddress"), 8888))) {
 					$errorcode = socket_last_error();
