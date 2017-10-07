@@ -12,6 +12,7 @@ class IPS2GPIO_IO extends IPSModule
 	{
 		if ($this->Socket) {
 		    	socket_close($this->Socket);
+			$this->SendDebug("CommandClientSocket", "Socket wurde geloescht", 0);
 		}
 	} 
 
@@ -1103,6 +1104,7 @@ class IPS2GPIO_IO extends IPSModule
 					//$this->SendDebug("CommandClientSocket", "Fehler beim Erstellen ".$errorcode." ".$errormsg, 0);
 					return;
 				}
+				$this->SendDebug("CommandClientSocket", "Socket wurde erzeugt", 0);
 				// Timeout setzen
 				socket_set_option($this->Socket, SOL_SOCKET, SO_RCVTIMEO, array("sec"=>0, "usec"=>150000));
 				// Verbindung aufbauen
