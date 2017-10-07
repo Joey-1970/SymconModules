@@ -1127,7 +1127,7 @@ class IPS2GPIO_IO extends IPSModule
 			//Now receive reply from server
 			$MessageCommand = unpack("L*", $message);
 			If ($MessageCommand <> 43) {
-				if(socket_recv ($this->Socket, $buf, $ResponseLen, MSG_WAITALL ) === FALSE) {
+				if(socket_recv ($this->Socket, $buf, $ResponseLen, MSG_WAITALL ) === 0) {
 					$errorcode = socket_last_error();
 					$errormsg = socket_strerror($errorcode);
 					IPS_LogMessage("IPS2GPIO Socket", "Fehler beim Empfangen ".$errorcode." ".$errormsg);
@@ -1137,7 +1137,7 @@ class IPS2GPIO_IO extends IPSModule
 				}
 			}
 			elseIf ($MessageCommand == 43) {
-				if(socket_recv ($this->Socket, $buf, (16 + 1024), MSG_DONTWAIT ) === FALSE) {
+				if(socket_recv ($this->Socket, $buf, (16 + 1024), MSG_DONTWAIT ) === 0) {
 					$errorcode = socket_last_error();
 					$errormsg = socket_strerror($errorcode);
 					IPS_LogMessage("IPS2GPIO Socket", "Fehler beim Empfangen ".$errorcode." ".$errormsg);
