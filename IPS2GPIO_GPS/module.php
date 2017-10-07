@@ -110,6 +110,18 @@
 		$this->DisableAction("Status");
 		IPS_SetHidden($this->GetIDForIdent("Status"), false);
 		
+		$this->RegisterVariableFloat("CogT", "Kurs (wahr)", "", 110);
+		$this->DisableAction("CogT");
+		IPS_SetHidden($this->GetIDForIdent("CogT"), false);
+		
+		$this->RegisterVariableFloat("CogM", "Kurs (magnetisch)", "", 120);
+		$this->DisableAction("CogM");
+		IPS_SetHidden($this->GetIDForIdent("CogM"), false);
+		
+		$this->RegisterVariableFloat("Kph", "Geschwindigkeit", "", 130);
+		$this->DisableAction("Kph");
+		IPS_SetHidden($this->GetIDForIdent("Kph"), false);
+		
 		$this->SetBuffer("Serial_GPS_Data", "");
 
 		//ReceiveData-Filter setzen 		    
@@ -187,7 +199,7 @@
 					$subject =  substr_replace ($subject , $replace , 0, $PositionStart);
 				}
 				// komplette Datensätze suchen
-				$pattern = '/(\$GPRMC|\$GPGGA)([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/'; 
+				$pattern = '/(\$GPRMC|\$GPGGA|\$GPVTG)([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/'; 
 				preg_match_all($pattern, $subject, $treffer);
 				// Relevantes Ergebnis herausfiltern
 				$GPS_Data = array();
@@ -224,7 +236,10 @@
 					// $GPVTG,cogt,T,cogm,M,sog,N,kph,K,mode*cs
 					//$this->SendDebug("Datenanalyse", "GPVTG" , 0);
 					// GPS-Daten: $GPVTG,,T,,M,0.779,N,1.443,K,A*28
-
+					//$GPVTG,cogt,T,cogm,M,sog,N,kph,K,mode*cs
+					SetValueFloat($this->GetIDForIdent("CogT"), (float)$GPS_Data_Array[1]);
+					SetValueFloat($this->GetIDForIdent("CogM"), (float)$GPS_Data_Array[3]);
+					SetValueFloat($this->GetIDForIdent("Kph"), (float)$GPS_Data_Array[7]);
 					break;
 				case '$GPGGA':
 					// $GPGGA,hhmmss.ss,Latitude,N,Longitude,E,FS,NoSV,HDOP,msl,m,Altref,m,DiffAge,DiffStation*cs
