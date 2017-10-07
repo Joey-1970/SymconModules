@@ -10,8 +10,9 @@ class IPS2GPIO_IO extends IPSModule
 	
 	public function __destruct()
 	{
-		if ($this->Socket)
+		if ($this->Socket) {
 		    	socket_close($this->Socket);
+		}
 	} 
 
 	public function Create() 
@@ -979,7 +980,10 @@ class IPS2GPIO_IO extends IPSModule
 		
 		// Analyse der eingegangenen Daten
 		for ($i = 1; $i <= Count($MessageArray); $i++) {
-			$this->SendDebug("Datenanalyse", "Datensatz ".$i." von ".Count($MessageArray), 0);
+			//$this->SendDebug("Datenanalyse", "Datensatz ".$i." von ".Count($MessageArray), 0);
+			
+			
+			
 			// Struktur:
 			// H seqno: starts at 0 each time the handle is opened and then increments by one for each report.
 			// H flags: three flags are defined, PI_NTFY_FLAGS_WDOG, PI_NTFY_FLAGS_ALIVE, and PI_NTFY_FLAGS_EVENT. 
@@ -999,6 +1003,11 @@ class IPS2GPIO_IO extends IPSModule
 			$Tick = $MessageArray[$i + 1];
 			$Level = $MessageArray[$i + 2];
 			
+			If ($SeqNo > 10000) {
+				if ($this->Socket) {
+					socket_close($this->Socket);
+				}
+			}
 			
 			// Prüfen ob es sich um ein Kommando handelt
 			If ($Command == 99) {
