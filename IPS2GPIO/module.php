@@ -1132,17 +1132,17 @@ class IPS2GPIO_IO extends IPSModule
 					$errormsg = socket_strerror($errorcode);
 					IPS_LogMessage("IPS2GPIO Socket", "Fehler beim Empfangen ".$errorcode." ".$errormsg);
 					$this->SendDebug("CommandClientSocket", "Fehler beim Empfangen ".$errorcode." ".$errormsg, 0);
-					socket_close($this->Socket);
+					//socket_close($this->Socket);
 					return;
 				}
 			}
-			else {
-				if(socket_recv ($this->Socket, $buf, $ResponseLen, MSG_DONTWAIT ) === FALSE) {
+			elseIf ($MessageCommand == 43) {
+				if(socket_recv ($this->Socket, $buf, (16 + 1024), MSG_DONTWAIT ) === FALSE) {
 					$errorcode = socket_last_error();
 					$errormsg = socket_strerror($errorcode);
 					IPS_LogMessage("IPS2GPIO Socket", "Fehler beim Empfangen ".$errorcode." ".$errormsg);
 					$this->SendDebug("CommandClientSocket", "Fehler beim Empfangen ".$errorcode." ".$errormsg, 0);
-					socket_close($this->Socket);
+					//socket_close($this->Socket);
 					return;
 				}
 			}
