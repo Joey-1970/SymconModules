@@ -1087,7 +1087,7 @@ class IPS2GPIO_IO extends IPSModule
 			if (!$this->Socket)
 			{
 				// Socket erstellen
-				if(!($this->Socket = socket_create(AF_INET, SOCK_STREAM, 0))) {
+				if(!($this->Socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP))) {
 					$errorcode = socket_last_error();
 					$errormsg = socket_strerror($errorcode);
 					//IPS_LogMessage("GeCoS_IO Socket", "Fehler beim Erstellen ".$errorcode." ".$errormsg);
@@ -1095,7 +1095,7 @@ class IPS2GPIO_IO extends IPSModule
 					return;
 				}
 				// Timeout setzen
-				socket_set_option($this->Socket, SOL_SOCKET, SO_RCVTIMEO, array("sec"=>0, "usec"=>300000));
+				socket_set_option($this->Socket, SOL_SOCKET, SO_RCVTIMEO, array("sec"=>0, "usec"=>150000));
 				// Verbindung aufbauen
 				if(!(socket_connect($this->Socket, $this->ReadPropertyString("IPAddress"), 8888))) {
 					$errorcode = socket_last_error();
