@@ -1004,12 +1004,6 @@ class IPS2GPIO_IO extends IPSModule
 			$Tick = $MessageArray[$i + 1];
 			$Level = $MessageArray[$i + 2];
 			
-			If ($SeqNo > 10000) {
-				if ($this->Socket) {
-					socket_close($this->Socket);
-				}
-			}
-			
 			// Prüfen ob es sich um ein Kommando handelt
 			If ($Command == 99) {
 				// es handelt sich um ein Kommando
@@ -1144,7 +1138,7 @@ class IPS2GPIO_IO extends IPSModule
 				//Now receive reply from server
 				$MessageCommand = unpack("L*", $message);
 				If ($MessageCommand <> 43) {
-					if(socket_recv ($this->Socket, $buf, $ResponseLen, MSG_WAITALL ) === 0) {
+					if(socket_recv ($this->Socket, $buf, $ResponseLen, MSG_WAITALL ) === false) {
 						$errorcode = socket_last_error();
 						$errormsg = socket_strerror($errorcode);
 						IPS_LogMessage("IPS2GPIO Socket", "Fehler beim Empfangen ".$errorcode." ".$errormsg);
@@ -1155,7 +1149,7 @@ class IPS2GPIO_IO extends IPSModule
 					}
 				}
 				elseIf ($MessageCommand == 43) {
-					if(socket_recv ($this->Socket, $buf, (16 + 1024), MSG_DONTWAIT ) === 0) {
+					if(socket_recv ($this->Socket, $buf, (16 + 1024), MSG_DONTWAIT ) === false) {
 						$errorcode = socket_last_error();
 						$errormsg = socket_strerror($errorcode);
 						IPS_LogMessage("IPS2GPIO Socket", "Fehler beim Empfangen ".$errorcode." ".$errormsg);
