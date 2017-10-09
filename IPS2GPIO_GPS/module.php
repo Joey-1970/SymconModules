@@ -66,9 +66,11 @@
         {
 	        // Diese Zeile nicht löschen
 	      	parent::ApplyChanges();
+		
+		// Profil anlegen
+		$this->RegisterProfileFloat("IPS2GPIO.m", "Distance", "", " m", -10000, +10000, 0.1, 1);
 	   
 		//Status-Variablen anlegen
-		
 		$this->RegisterVariableInteger("Timestamp", "Zeitstempel", "~UnixTimestampTime", 10);
 		$this->DisableAction("Timestamp");
 		IPS_SetHidden($this->GetIDForIdent("Timestamp"), false);
@@ -101,8 +103,7 @@
 		$this->DisableAction("Precision");
 		IPS_SetHidden($this->GetIDForIdent("Precision"), false);
 		
-		// Profil Meter
-		$this->RegisterVariableFloat("Height", "Höhe über NN", "", 90);
+		$this->RegisterVariableFloat("Height", "Höhe über NN", "IPS2GPIO.m", 90);
 		$this->DisableAction("Height");
 		IPS_SetHidden($this->GetIDForIdent("Height"), false);
 		
@@ -110,15 +111,15 @@
 		$this->DisableAction("Status");
 		IPS_SetHidden($this->GetIDForIdent("Status"), false);
 		
-		$this->RegisterVariableFloat("CogT", "Kurs (wahr)", "", 110);
+		$this->RegisterVariableFloat("CogT", "Kurs (wahr)", "~WindDirection.F", 110);
 		$this->DisableAction("CogT");
 		IPS_SetHidden($this->GetIDForIdent("CogT"), false);
 		
-		$this->RegisterVariableFloat("CogM", "Kurs (magnetisch)", "", 120);
+		$this->RegisterVariableFloat("CogM", "Kurs (magnetisch)", "~WindDirection.F", 120);
 		$this->DisableAction("CogM");
 		IPS_SetHidden($this->GetIDForIdent("CogM"), false);
 		
-		$this->RegisterVariableFloat("Kph", "Geschwindigkeit", "", 130);
+		$this->RegisterVariableFloat("Kph", "Geschwindigkeit", "~WindDirection.kmh", 130);
 		$this->DisableAction("Kph");
 		IPS_SetHidden($this->GetIDForIdent("Kph"), false);
 		
@@ -331,6 +332,24 @@
 		$this->Send('$PMTK104*37');
 	}    
 	    
+	private function RegisterProfileFloat($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits)
+	{
+	        if (!IPS_VariableProfileExists($Name))
+	        {
+	            IPS_CreateVariableProfile($Name, 2);
+	        }
+	        else
+	        {
+	            $profile = IPS_GetVariableProfile($Name);
+	            if ($profile['ProfileType'] != 2)
+	                throw new Exception("Variable profile type does not match for profile " . $Name);
+	        }
+	        IPS_SetVariableProfileIcon($Name, $Icon);
+	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
+	        IPS_SetVariableProfileDigits($Name, $Digits);
+	}
+	
 	private function Get_GPIO()
 	{
 		If ($this->HasActiveParent() == true) {
