@@ -119,7 +119,7 @@
 		$this->DisableAction("CogM");
 		IPS_SetHidden($this->GetIDForIdent("CogM"), false);
 		
-		$this->RegisterVariableFloat("Kph", "Geschwindigkeit", "~WindDirection.kmh", 130);
+		$this->RegisterVariableFloat("Kph", "Geschwindigkeit", "~WindSpeed.kmh", 130);
 		$this->DisableAction("Kph");
 		IPS_SetHidden($this->GetIDForIdent("Kph"), false);
 		
