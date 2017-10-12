@@ -255,7 +255,7 @@
 					}
 					elseIf (($data->Value == 1) AND ($this->ReadPropertyBoolean("Open") == true)) {
 						$this->SendDebug("Notify", "Wert: ".(int)$data->Value, 0);
-						$this->Read_Status();
+						//$this->Read_Status();
 					}
 			   	}
 			   	break;    
