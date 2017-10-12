@@ -11,6 +11,7 @@
  	    	$this->RegisterPropertyBoolean("Open", false);
 		$this->RegisterPropertyInteger("DeviceAddress", 32);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
+		$this->RegisterPropertyInteger("Pin", -1);
  	    	$this->RegisterPropertyBoolean("P0", false);
  	    	$this->RegisterPropertyBoolean("P1", false);
  	    	$this->RegisterPropertyBoolean("P2", false);
@@ -62,6 +63,22 @@
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "Device Bus", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für den Interrupt (optional)"); 
+		
+		$arrayOptions = array();
+		$GPIO = array();
+		$GPIO = unserialize($this->Get_GPIO());
+		If ($this->ReadPropertyInteger("Pin") >= 0 ) {
+			$GPIO[$this->ReadPropertyInteger("Pin")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin")));
+		}
+		ksort($GPIO);
+		foreach($GPIO AS $Value => $Label) {
+			$arrayOptions[] = array("label" => $Label, "value" => $Value);
+		}
+		
+		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
+		
 		$arrayElements[] = array("type" => "Label", "label" => "Definition der Ein- und Ausgänge (aktiviert => Eingang)");
 		for ($i = 0; $i <= 7; $i++) {
 			$arrayElements[] = array("type" => "CheckBox", "name" => "P".$i, "caption" => "P".$i);
@@ -101,8 +118,11 @@
 	    		IPS_LogMessage("IPS2GPIO PCF8574","I2C-Device Adresse in einem nicht definierten Bereich!");  
 	    	}
 	    	//Status-Variablen anlegen
-		$this->RegisterVariableBoolean("P0", "P0", "~Switch", 10);
+		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 5);
+		$this->DisableAction("LastInterrupt");
+		IPS_SetHidden($this->GetIDForIdent("LastInterrupt"), false);
 		
+		$this->RegisterVariableBoolean("P0", "P0", "~Switch", 10);
           	IPS_SetHidden($this->GetIDForIdent("P0"), false);
 		
 		$this->RegisterVariableBoolean("P1", "P1", "~Switch", 20);
@@ -128,6 +148,7 @@
           	
           	$this->RegisterVariableInteger("Value", "Value", "", 90);
           	IPS_SetHidden($this->GetIDForIdent("Value"), false);
+		
 		
 		$SetTimer = false;
 		for ($i = 0; $i <= 7; $i++) {
@@ -155,6 +176,11 @@
 			$this->SetReceiveDataFilter($Filter);
 					
 			If ($this->ReadPropertyBoolean("Open") == true) {
+				If ($this->ReadPropertyInteger("Pin") >= 0) {
+					$ResultPin = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+										  "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 5, "Resistance" => 0)));	
+				}
+				
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 				If ($Result == true) {
 					If ($SetTimer == true) {
@@ -219,13 +245,26 @@
 	    	// Empfangene Daten vom Gateway/Splitter
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
-			   case "get_used_i2c":
+			case "notify":
+			   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
+					If (($data->Value == 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+						$this->SendDebug("Notify", "Wert: ".(int)$data->Value, 0);
+						SetValueInteger($this->GetIDForIdent("LastInterrupt"), time() );
+						$this->Read_Status();
+					}
+					elseIf (($data->Value == 1) AND ($this->ReadPropertyBoolean("Open") == true)) {
+						$this->SendDebug("Notify", "Wert: ".(int)$data->Value, 0);
+						$this->Read_Status();
+					}
+			   	}
+			   	break;    
+			case "get_used_i2c":
 			   	If ($this->ReadPropertyBoolean("Open") == true) {
 					//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 					$this->ApplyChanges();
 				}
 				break;
-			   case "status":
+			case "status":
 			   	If ($data->HardwareRev <= 3) {
 				   	If (($data->Pin == 0) OR ($data->Pin == 1)) {
 				   		$this->SetStatus($data->Status);		
@@ -237,18 +276,6 @@
 				   	}
 				}
 			   	break;
-			  /*
-			case "set_i2c_data":
-			  	If ($data->DeviceIdent == $this->GetBuffer("DeviceIdent")) {
-			  		// Daten der Messung
-			  		SetValueInteger($this->GetIDForIdent("Value"), $data->Value);
-			  		$result = str_pad (decbin($data->Value), 8, '0', STR_PAD_LEFT );
-			  		for ($i = 0; $i <= 7; $i++) {
-						SetValueBoolean($this->GetIDForIdent("P".$i), substr ($result , 7-$i, 1));
-			  		}
-			  	}
-			  	break;
-				*/
 	 	}
  	}
 	
@@ -359,6 +386,22 @@
 			$I2C_Ports = serialize($DevicePorts);
 		}
 	return $I2C_Ports;
+	}
+	    
+	private function Get_GPIO()
+	{
+		If ($this->HasActiveParent() == true) {
+			$GPIO = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_GPIO")));
+		}
+		else {
+			$AllGPIO = array();
+			$AllGPIO[-1] = "undefiniert";
+			for ($i = 2; $i <= 27; $i++) {
+				$AllGPIO[$i] = "GPIO".(sprintf("%'.02d", $i));
+			}
+			$GPIO = serialize($AllGPIO);
+		}
+	return $GPIO;
 	}
 	    
 	private function HasActiveParent()
