@@ -1053,7 +1053,10 @@ class IPS2GPIO_IO extends IPSModule
 				}
 				$i = $i + 2;
 			}		
-		 }
+		}
+		If ($SeqNo > 7000) {
+			$this->PIGPIOD_Restart();
+		}
 	 }
 	
 	
