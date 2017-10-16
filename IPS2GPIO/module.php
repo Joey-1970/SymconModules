@@ -1289,6 +1289,7 @@ class IPS2GPIO_IO extends IPSModule
 						IPS_LogMessage("IPS2GPIO Socket", "Fehler beim Empfangen ".$errorcode." ".$errormsg);
 						$this->SendDebug("CommandClientSocket", "Fehler beim Empfangen ".$errorcode." ".$errormsg, 0);
 						IPS_SemaphoreLeave("ClientSocket");
+						$this->PIGPIOD_Restart();
 						//socket_close($this->Socket);
 						return;
 					}
@@ -1300,6 +1301,7 @@ class IPS2GPIO_IO extends IPSModule
 						IPS_LogMessage("IPS2GPIO Socket", "Fehler beim Empfangen ".$errorcode." ".$errormsg);
 						$this->SendDebug("CommandClientSocket", "Fehler beim Empfangen ".$errorcode." ".$errormsg, 0);
 						IPS_SemaphoreLeave("ClientSocket");
+						$this->PIGPIOD_Restart();
 						//socket_close($this->Socket);
 						return;
 					}
