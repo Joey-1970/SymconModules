@@ -167,9 +167,18 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("Default_I2C_Bus", 1);
 			$this->SetBuffer("Default_Serial_Bus", 0);
 			$this->SetBuffer("MUX_Handle", -1);
+			$this->SetBuffer("OW_Handle", -1);
 			$this->SetBuffer("NotifyCounter", -1);
 			$PinNotify = array();
 			$this->SetBuffer("PinNotify", serialize($PinNotify));
+			
+			$this->SetBuffer("owLastDevice", 0);
+			$this->SetBuffer("owLastDiscrepancy", 0);
+			$this->SetBuffer("owTripletDirection", 1);
+			$this->SetBuffer("owTripletFirstBit", 0);
+			$this->SetBuffer("owTripletSecondBit", 0);
+			$this->SetBuffer("owDeviceAddress_0", 0);
+			$this->SetBuffer("owDeviceAddress_1", 0);
 			
 			$ParentID = $this->GetParentID();
 		        // Änderung an den untergeordneten Instanzen
@@ -832,144 +841,265 @@ class IPS2GPIO_IO extends IPSModule
 			//IPS_LogMessage("IPS2GPIO 1-Wire-Data", $Result );
 			//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_1wire_data", "InstanceID" => $data->InstanceID, "Result"=>$Result )));
 			break;
+		// 1-Wire
+		case "get_OWDevices":
+			 If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+				$j = 0;
+				$OWDeviceArray = array();
+				$this->OWSearchStart();
+				$OWDeviceArray = unserialize($this->GetBuffer("OWDeviceArray"));
+				$DeviceSerialArray = array();
+				If (count($OWDeviceArray ,COUNT_RECURSIVE) >= 4) {
+					for ($i = 0; $i < Count($OWDeviceArray); $i++) {
+						$DeviceSerial = $OWDeviceArray[$i][1];
+						$FamilyCode = substr($DeviceSerial, -2);
+						If (($FamilyCode == $data->FamilyCode) AND ($OWDeviceArray[$i][2] == 0)) {
+							$DeviceSerialArray[$j][0] = $DeviceSerial; // DeviceAdresse
+							$DeviceSerialArray[$j][1] = $OWDeviceArray[$i][5]; // Erster Teil der Adresse
+							$DeviceSerialArray[$j][2] = $OWDeviceArray[$i][6]; // Zweiter Teil der Adresse
+							$j = $j + 1;
+						}
+					}
+				}
+				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_OWDevices", "InstanceID" => $data->InstanceID, "Result"=>serialize($DeviceSerialArray) ))); 
+				$Result = true;
+			}
+			else {
+				$Result = false;
+			}
+			 break;
+		case "set_OWDevices":
+			If ($this->GetBuffer("ModuleReady") == 1) {
+				// die genutzten Device Adressen anlegen
+				$OWInstanceArray[$data->InstanceID]["DeviceSerial"] = $data->DeviceSerial;
+				$OWDeviceArray = array();
+				$OWDeviceArray = unserialize($this->GetBuffer("OWDeviceArray"));
+				If (count($OWDeviceArray , COUNT_RECURSIVE) >= 4) {
+					for ($i = 0; $i < Count($OWDeviceArray); $i++) {
+						If ($OWDeviceArray[$i][1] == $data->DeviceSerial) {
+							$OWInstanceArray[$data->InstanceID]["Address_0"] = $OWDeviceArray[$i][5];
+							$OWInstanceArray[$data->InstanceID]["Address_1"] = $OWDeviceArray[$i][6];
+						}
+					}
+				}
+				else {
+					$OWInstanceArray[$data->InstanceID]["Address_0"] = 0;
+					$OWInstanceArray[$data->InstanceID]["Address_1"] = 0;	
+				}
+				 $OWInstanceArray[$data->InstanceID]["Status"] = "Angemeldet";
+				 $this->SetBuffer("OWInstanceArray", serialize($OWInstanceArray));
+				 // Messages einrichten
+				 $this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden
+				 $this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt
+			}
+			break;
+		case "get_DS18S20Temperature":
+			If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+				 if (IPS_SemaphoreEnter("OW", 3000))
+				 {
+					$this->SetBuffer("owDeviceAddress_0", $data->DeviceAddress_0);
+					$this->SetBuffer("owDeviceAddress_1", $data->DeviceAddress_1);
+					if ($this->OWVerify()) {
+						if ($this->OWReset()) { //Reset was successful
+							$this->OWSelect();
+							$this->OWWriteByte(0x44); //start conversion
+							IPS_Sleep($data->Time); //Wait for conversion
+							$this->SetBuffer("owDeviceAddress_0", $data->DeviceAddress_0);
+							$this->SetBuffer("owDeviceAddress_1", $data->DeviceAddress_1);
+							if ($this->OWReset()) { //Reset was successful
+								$this->OWSelect();
+								$this->OWWriteByte(0xBE); //Read Scratchpad
+								$Celsius = $this->OWRead_18S20_Temperature();
+								$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_DS18S20Temperature", "InstanceID" => $data->InstanceID, "Result"=>$Celsius )));
+							}
+						}
+					}
+					else {
+						$this->SendDebug("get_DS18S20Temperature", "OWVerify: Device wurde nicht gefunden!", 0);
+						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "InstanceID" => $data->InstanceID, "Status" => 201)));
+					}
+					IPS_SemaphoreLeave("OW");
+				}
+				else {
+					$this->SendDebug("DS18S20Temperature", "Semaphore Abbruch", 0);
+				}
+			}
+			break;
+		 case "get_DS18B20Temperature":
+			If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+				if (IPS_SemaphoreEnter("OW", 3000))
+				{
+					$this->SetBuffer("owDeviceAddress_0", $data->DeviceAddress_0);
+					$this->SetBuffer("owDeviceAddress_1", $data->DeviceAddress_1);
+					if ($this->OWVerify()) {
+						if ($this->OWReset()) { //Reset was successful
+							$this->OWSelect();
+							$this->OWWriteByte(0x44); //start conversion
+							IPS_Sleep($data->Time); //Wait for conversion
+							$this->SetBuffer("owDeviceAddress_0", $data->DeviceAddress_0);
+							$this->SetBuffer("owDeviceAddress_1", $data->DeviceAddress_1);
+							if ($this->OWReset()) { //Reset was successful
+								$this->OWSelect();
+								$this->OWWriteByte(0xBE); //Read Scratchpad
+								$Celsius = $this->OWRead_18B20_Temperature(); 
+								$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_DS18B20Temperature", "InstanceID" => $data->InstanceID, "Result"=>$Celsius )));
+							}
+						}
+					}
+					else {
+						$this->SendDebug("get_DS18B20Temperature", "OWVerify: Device wurde nicht gefunden!", 0);
+						$this->SendDataToChildren(json_encode(Array("DataID" => "{573FFA75-2A0C-48AC-BF45-FCB01D6BF910}", "Function"=>"status", "InstanceID" => $data->InstanceID, "Status" => 201)));
+					}
+					IPS_SemaphoreLeave("OW");
+				}
+				else {
+					$this->SendDebug("DS18B20Temperature", "Semaphore Abbruch", 0);
+				}
+			}
+			break;
+		case "set_DS18B20Setup":
+			If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+				if (IPS_SemaphoreEnter("OW", 3000))
+				{
+					$this->SetBuffer("owDeviceAddress_0", $data->DeviceAddress_0);
+					$this->SetBuffer("owDeviceAddress_1", $data->DeviceAddress_1);
+					 if ($this->OWReset()) { //Reset was successful
+						$this->OWSelect();
+						$this->OWWriteByte(78); 
+						$this->OWWriteByte(0); 
+						$this->OWWriteByte(0); 
+						$this->OWWriteByte($data->Resolution); 
+					}
+					IPS_SemaphoreLeave("OW");
+				}
+				else {
+					$this->SendDebug("DS18B20Setup", "Semaphore Abbruch", 0);
+				}
+			}
+			break;
+		case "get_DS2413State":
+			If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+				if (IPS_SemaphoreEnter("OW", 2000))
+				{
+					$this->SetBuffer("owDeviceAddress_0", $data->DeviceAddress_0);
+					$this->SetBuffer("owDeviceAddress_1", $data->DeviceAddress_1);
+					if ($this->OWVerify()) {
+						if ($this->OWReset()) { //Reset was successful
+							$this->OWSelect();
+							$this->OWWriteByte(0xF5); //PIO ACCESS READ
+							$Result = $this->OWRead_2413_State();	
+							$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_DS2413State", "InstanceID" => $data->InstanceID, "Result"=>$Result )));
+						}
+					}
+					else {
+						$this->SendDebug("get_DS2413State", "OWVerify: Device wurde nicht gefunden!", 0);
+						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "InstanceID" => $data->InstanceID, "Status" => 201)));
+					}
+					IPS_SemaphoreLeave("OW");
+				}
+				else {
+					$this->SendDebug("DS2413State", "Semaphore Abbruch", 0);
+				}
+			}
+			break;
+		case "set_DS2413Setup":
+			If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+				if (IPS_SemaphoreEnter("OW", 3000))
+				{
+					$this->SetBuffer("owDeviceAddress_0", $data->DeviceAddress_0);
+					$this->SetBuffer("owDeviceAddress_1", $data->DeviceAddress_1);
+					 if ($this->OWReset()) { //Reset was successful
+						$this->OWSelect();
+						$this->OWWriteByte(0x5A); //PIO ACCESS WRITE
+						$Value = $data->Setup;
+						$this->OWWriteByte($Value); 
+						$this->OWWriteByte($Value ^ 0xFF); 
+					 }
+					IPS_SemaphoreLeave("OW");
+				}
+				else {
+					$this->SendDebug("DS2413Setup", "Semaphore Abbruch", 0);
+				}
+			}
+			break;
+		case "get_DS2438Measurement":
+			If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+				if (IPS_SemaphoreEnter("OW", 3000))
+				{
+					$this->SetBuffer("owDeviceAddress_0", $data->DeviceAddress_0);
+					$this->SetBuffer("owDeviceAddress_1", $data->DeviceAddress_1);
+					if ($this->OWVerify()) {
+						// Erster Schritt: VDD ermitteln
+						if ($this->OWReset()) { //Reset was successful
+							$this->OWSelect();
+							$this->OWWriteByte(0x4E);
+							$this->OWWriteByte(0x00);
+							$this->OWWriteByte(0x07);
+							if ($this->OWReset()) { //Reset was successful
+								$this->OWSelect();
+								$this->OWWriteByte(0xB4); //start A/D V conversion
+								IPS_Sleep(10); //Wait for conversion
+								if ($this->OWReset()) { //Reset was successful
+									$this->OWSelect();
+									$this->OWWriteByte(0xB8); //Recall memory
+									$this->OWWriteByte(0x00); //Recall memory
+									IPS_Sleep(10); 
+									if ($this->OWReset()) { //Reset was successful
+										$this->OWSelect();
+										$this->OWWriteByte(0xBE); //Read Scratchpad
+										$this->OWWriteByte(0x00); //Read Scratchpad
+										list($Celsius, $Voltage_VAD, $Current) = $this->OWRead_2438();
+									}
+								}
+							}	
+						}
+						if ($this->OWReset()) { //Reset was successful
+							$this->OWSelect();
+							$this->OWWriteByte(0x4E);
+							$this->OWWriteByte(0x00);
+							$this->OWWriteByte(0x0F);
+							if ($this->OWReset()) { //Reset was successful
+								$this->OWSelect();
+								$this->OWWriteByte(0x44); //start C° conversion
+								IPS_Sleep(10); //Wait for conversion
+								if ($this->OWReset()) { //Reset was successful
+									$this->OWSelect();
+									$this->OWWriteByte(0xB4); //start A/D V conversion
+									IPS_Sleep(10); //Wait for conversion
+									if ($this->OWReset()) { //Reset was successful
+										$this->OWSelect();
+										$this->OWWriteByte(0xB8); //Recall memory
+										$this->OWWriteByte(0x00); //Recall memory
+										IPS_Sleep(10); 
+										if ($this->OWReset()) { //Reset was successful
+											$this->OWSelect();
+											$this->OWWriteByte(0xBE); //Read Scratchpad
+											$this->OWWriteByte(0x00); //Read Scratchpad
+											list($Celsius, $Voltage_VDD, $Current) = $this->OWRead_2438();
+											$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", 
+												"Function"=>"set_DS2438", "InstanceID" => $data->InstanceID, "Temperature"=>$Celsius, "Voltage_VDD"=>$Voltage_VDD , "Voltage_VAD"=>$Voltage_VAD, "Current"=>$Current )));
+										}
+									}
+								}
+							}
+						}
+					}
+					else {
+						$this->SendDebug("get_DS2438Measurement", "OWVerify: Device wurde nicht gefunden!", 0);
+						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"status", "InstanceID" => $data->InstanceID, "Status" => 201)));
+					}
+					IPS_SemaphoreLeave("OW");
+				}
+				else {
+					$this->SendDebug("DS2438Measurement", "Semaphore Abbruch", 0);
+				}
+			}
+			break;
 		
 		}
 	return $Result;
 	}
-	/*
-	public function ReceiveData($JSONString) {
- 	    	// Empfangene Daten vom I/O
-	    	$Data = json_decode($JSONString);
-	    	$Message = utf8_decode($Data->Buffer);
-	    	$MessageLen = strlen($Message);
-	    	$MessageArray = unpack("L*", $Message);
-		
-		 // Analyse der eingegangenen Daten
-		 for ($i = 1; $i <= Count($MessageArray); $i++) {
-			$this->SendDebug("Datenanalyse", "i: ".$i." Laenge: ".$MessageLen." SeqNo: ".($MessageArray[$i] & 65535)." Counter: ".$this->GetBuffer("NotifyCounter"), 0);
-			 
-			//If (($MessageLen == 12) OR (($MessageArray[$i] & 65535) == $this->GetBuffer("NotifyCounter"))) {
-			If (($MessageLen == 12) OR (($MessageArray[$i] >> 16) > 31)) {
-				// Struktur:
-				// H seqno: starts at 0 each time the handle is opened and then increments by one for each report.
-				// H flags: three flags are defined, PI_NTFY_FLAGS_WDOG, PI_NTFY_FLAGS_ALIVE, and PI_NTFY_FLAGS_EVENT. 
-					//If bit 5 is set (PI_NTFY_FLAGS_WDOG) then bits 0-4 of the flags indicate a GPIO which has had a watchdog timeout. 
-					//If bit 6 is set (PI_NTFY_FLAGS_ALIVE) this indicates a keep alive signal on the pipe/socket and is sent once a minute in the absence of other notification activity. 
-					//If bit 7 is set (PI_NTFY_FLAGS_EVENT) then bits 0-4 of the flags indicate an event which has been triggered. 
-				// I tick: the number of microseconds since system boot. It wraps around after 1h12m. 
-				// I level: indicates the level of each GPIO. If bit 1<<x is set then GPIO x is high. 
-				if (array_key_exists($i + 2, $MessageArray)) {
-					$SeqNo = $MessageArray[$i] & 65535;
-					$Flags = $MessageArray[$i] >> 16;
-					$Event = (int)boolval($Flags & 128);
-					$EventNumber = $Flags & 31;
-					$KeepAlive = (int)boolval($Flags & 64);
-					$WatchDog = (int)boolval($Flags & 32);
-					$WatchDogNumber = $Flags & 31;
-					$Tick = $MessageArray[$i + 1];
-					$Level = $MessageArray[$i + 2];
-					If ($KeepAlive == 1) {
-						// es handelt sich um ein Event
-						$this->SendDebug("Datenanalyse", "KeepAlive", 0);
-						SetValueInteger($this->GetIDForIdent("LastKeepAlive"), time() );
-					}
-					elseif ($WatchDog == 1) {
-						$this->SendDebug("Datenanalyse", "WatchDog-Nummer: ".$WatchDogNumber, 0);
-					}
-					elseif ($Event == 1) {
-						$this->SendDebug("Datenanalyse", "Event-Nummer: ".$EventNumber, 0);
-						If ($EventNumber == $this->GetBuffer("Serial_Display_RxD")) {
-							// Daten des Displays	-
-							$Result = $this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_Display_RxD"), 100, 0), 16 + 100);
-							$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_data", "Value"=> utf8_encode($Result) )));
 
-						}
-						elseIf ($EventNumber == $this->GetBuffer("Serial_GPS_RxD")) {
-							// Daten GPS	-
-							$Result = $this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_GPS_RxD"), 1000, 0), 16 + 1000);
-							// Neue Daten an die bestehende Daten anhängen
-							If (strlen($this->GetBuffer("Serial_GPS_Data")) < 2000) {
-								$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").$Result);
-							}
-							else {
-								$this->SendDebug("Datenanalyse","Serial_GPS_Data > 2000: ".$this->GetBuffer("Serial_GPS_Data"), 0);
-								$this->SetBuffer("Serial_GPS_Data", $Result);
-							}
-							$subject = $this->GetBuffer("Serial_GPS_Data");
-							$replace = "";
-							// unvollständigen Datensatzanfang löschen, vollständiger Datensatz beginnt mit $GPRMC
-							$pattern = '$GPRMC';
-							$PositionStart = strpos($subject, $pattern);
-							If ($PositionStart > 0) {
-							    	// wenn $GPRMC gefunden wird, alles vor $GPRMC löschen
-								$subject =  substr_replace ($subject , $replace , 0, $PositionStart);
-								// Prüfen ob das Ende des Datensatzes vorhanden ist
-								$PostionEnd = strpos($subject, $pattern, 40);
-								If ($PostionEnd > 0) {
-									// es wurde das Ende des Datensatzes gefunden, alles was dahinter ist an den Altbestand hängen
-									$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").substr($subject, $PostionEnd));
-									// der vollständige Datensatz sollte nun in $subject sein
-									$subject = substr_replace ($subject, $replace, $PostionEnd);
-									
-									// komplette Datensätze suchen
-									$pattern = '/(\$GPRMC|\$GPVTG|\$GPGGA|\$GPGSA|\$GPGSV|\$GPGLL|\$GPTXT)([^(\r\n|\n|\r)]*)(\r\n|\n|\r)/'; 
-									preg_match_all($pattern, $subject, $treffer);
-
-									// Relevantes Ergebnis herausfiltern
-									$GPS_Data = array();
-									$GPS_Data = $treffer[0];
-
-									$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_gps_data", "Value"=> serialize($GPS_Data) )));
-
-									// Herauslöschen der gesendeten Datensätze
-									$subject = preg_replace($pattern, $replace, $subject);
-									//$this->SendDebug("Datenanalyse","Serial_GPS_Data Rest ".$subject, 0);
-									$this->SetBuffer("Serial_GPS_Data", $subject);
-									If (strlen($subject) > 200) {
-										$this->SendDebug("Datenanalyse","Serial_GPS_Data > 200: ".$subject, 0);
-									}
-
-								}
-								elseif ($PostionEnd === false) {
-									// es wurde kein vollständiger Datensatz gefunden
-									$this->SetBuffer("Serial_GPS_Data", $this->GetBuffer("Serial_GPS_Data").$subject);
-								}
-							}
-							elseif ($PositionStart === false) {
-							    	// wenn $GPRMC nicht gefunden wird keine Datenauswertung
-								
-							}
-						}											
-					}
-					else {
-						$PinNotify = array();
-						$PinNotify = unserialize($this->GetBuffer("PinNotify"));
-						for ($j = 0; $j < Count($PinNotify); $j++) {
-							$Bitvalue = boolval($Level & (1<<$PinNotify[$j]));
-							$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit ".$PinNotify[$j]." Wert: ".(int)$Bitvalue, 0);
-							$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $Tick)));
-						}
-					}
-					$this->SetBuffer("NotifyCounter", $SeqNo + 1);
-					$i = $i + 2;
-				}
-			}
-			else {
-				if (array_key_exists($i + 3, $MessageArray)) {
-					If ($MessageArray[$i] == 99) {
-						$this->SendDebug("Datenanalyse", "Kommando: ".$MessageArray[$i], 0);
-						$this->ClientResponse(pack("L*", $MessageArray[$i], $MessageArray[$i + 1], $MessageArray[$i + 2], $MessageArray[$i + 3]));
-						$i = $i + 3;
-					}
-					else {
-						$this->SendDebug("Datenanalyse", "Undefinertes Event!", 0);
-						$i = $i + 2;
-					}
-				}
-			}
-		 }
-	 }
-	*/
 	public function ReceiveData($JSONString) {
 		// Empfangene Daten vom I/O
 	    	$Data = json_decode($JSONString);
