@@ -1,6 +1,6 @@
 <?
     // Klassendefinition
-    class GeCoS_DS18B20 extends IPSModule 
+    class IPS2GPIO_DS18B20 extends IPSModule 
     {
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
@@ -8,14 +8,14 @@
             	// Diese Zeile nicht löschen.
             	parent::Create();
  	    	$this->RegisterPropertyBoolean("Open", false);
-		$this->ConnectParent("{5F50D0FC-0DBB-4364-B0A3-C900040C5C35}");
+		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
  	    	$this->RegisterPropertyString("DeviceSerial", "");
 		$this->RegisterPropertyString("DeviceAddress", "Sensorauswahl");
 		$this->RegisterPropertyInteger("DeviceAddress_0", 0);
 		$this->RegisterPropertyInteger("DeviceAddress_1", 0);
 		$this->RegisterPropertyInteger("Resolution", 0);
 		$this->RegisterPropertyInteger("Messzyklus", 60);
-		$this->RegisterTimer("Messzyklus", 0, 'GeCoSDS18B20_Measurement($_IPS["TARGET"]);');
+		$this->RegisterTimer("Messzyklus", 0, 'I2G18B20_Measurement($_IPS["TARGET"]);');
         }
  	
 	public function GetConfigurationForm() 
@@ -70,9 +70,7 @@
 			$arrayElements[] = array("type" => "Select", "name" => "Resolution", "caption" => "Präzision", "options" => $arrayOptions );
 		}
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		$arrayElements[] = array("type" => "Button", "label" => "Herstellerinformationen", "onClick" => "echo 'https://www.gedad.de/projekte/projekte-f%C3%BCr-privat/gedad-control/'");
-	
+			
 		$arrayActions = array();
 		$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
 		
