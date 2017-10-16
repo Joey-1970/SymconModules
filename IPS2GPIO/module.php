@@ -27,6 +27,7 @@ class IPS2GPIO_IO extends IPSModule
 	    	$this->RegisterPropertyString("User", "User");
 	    	$this->RegisterPropertyString("Password", "Passwort");
 		$this->RegisterPropertyInteger("MUX", 0);
+		$this->RegisterPropertyInteger("OW", 0);
 		$this->RegisterPropertyInteger("I2C0", 0);
 		$this->RegisterPropertyString("Raspi_Config", "");
 		$this->RegisterPropertyString("I2C_Devices", "");
@@ -68,7 +69,11 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayOptions[] = array("label" => "Nein", "value" => 0);
 		$arrayOptions[] = array("label" => "Ja", "value" => 1);
 		$arrayElements[] = array("type" => "Select", "name" => "I2C0", "caption" => "I²C 0", "options" => $arrayOptions );
-		//$arrayElements[] = array("type" => "CheckBox", "name" => "I2C0", "caption" => "I²C-Schnittstelle 0");
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "Kein DS2482", "value" => 0);
+		$arrayOptions[] = array("label" => "DS2482 Adr. 24/0x18", "value" => 1);
+		$arrayElements[] = array("type" => "Select", "name" => "OW", "caption" => "1-Wire Auswahl", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Analyse der Raspberry Pi Konfiguration:");
 		$arraySort = array();
@@ -233,6 +238,13 @@ class IPS2GPIO_IO extends IPSModule
 						// MUX setzen
 						$this->SetMUX(0);
 					}
+				}
+				
+				// OW einrichten
+				If ($this->ReadPropertyInteger("OW") > 0) {
+					$MUX_Handle = $this->CommandClientSocket(pack("L*", 54, 1, 24, 4, 0), 16);
+					$this->SetBuffer("OW_Handle", $OW_Handle);
+					$this->SendDebug("OW Handle", $OW_Handle, 0);
 				}
 			
 				$I2C_DeviceHandle = array();
@@ -2205,6 +2217,9 @@ class IPS2GPIO_IO extends IPSModule
 			$SearchArray[] = $i;
 			$DeviceName[] = "AS3935";
 		}
+		// DS2482
+		$SearchArray[] = 24;
+		$DeviceName[] = "DS2482";
 		// PCF8574
 		for ($i = 32; $i <= 34; $i++) {
 			$SearchArray[] = $i;
