@@ -2359,5 +2359,682 @@ class IPS2GPIO_IO extends IPSModule
 		}
 	return $HardwareText;
 	}
+	
+	private function GetOWHardware(string $FamilyCode)
+	{
+		$OWHardware = array("10" => "DS18S20 Temperatur", "12" => "DS2406 Switch", "1D" => "DS2423 Counter" , "28" => "DS18B20 Temperatur", "3A" => "DS2413 2 Ch. Switch", "29" => "DS2408 8 Ch.Switch", "05" => "DS2405 Switch", "26" => "DS2438 Batt.Monitor");
+		If (array_key_exists($FamilyCode, $OWHardware)) {
+			$OWHardwareText = $OWHardware[$FamilyCode];
+		}
+		else {
+			$OWHardwareText = "Unbekannter 1-Wire-Typ!";
+		}
+		
+	return $OWHardwareText;
+	}
+	
+	private function OWInstanceArraySearch(String $SearchKey, String $SearchValue)
+	{
+		$Result = 0;
+		$OWInstanceArray = Array();
+		$OWInstanceArray = unserialize($this->GetBuffer("OWInstanceArray"));
+		If (count($OWInstanceArray, COUNT_RECURSIVE) >= 4) {
+			foreach ($OWInstanceArray as $Type => $Properties) {
+				foreach ($Properties as $Property => $Value) {
+					If (($Property == $SearchKey) AND ($Value == $SearchValue)) {
+						$Result = $Type;
+					}
+				}
+			}
+		}
+	return $Result;
+	}
+	
+	public function OWSearchStart()
+	{
+		if (IPS_SemaphoreEnter("OW", 3000))
+			{
+			$this->SetBuffer("owLastDevice", 0);
+			$this->SetBuffer("owLastDiscrepancy", 0);
+			$this->SetBuffer("owDeviceAddress_0", 0xFFFFFFFF);
+			$this->SetBuffer("owDeviceAddress_1", 0xFFFFFFFF);
+			$OWDeviceArray = Array();
+			$this->SetBuffer("OWDeviceArray", serialize($OWDeviceArray));
+			$Result = 1;
+			$SearchNumber = 0;
+			while($Result == 1) {
+				$Result = $this->OWSearch($SearchNumber);
+				$SearchNumber++;
+			}
+			IPS_SemaphoreLeave("OW");
+		}
+		else {
+			$this->SendDebug("OWSearchStart", "Semaphore Abbruch", 0);
+		}	
+	}
+	
+	private function DS2482Reset() 
+	{
+    		$this->SendDebug("DS2482Reset", "Function: Resetting DS2482", 0);
+		$Result = $this->CommandClientSocket(pack("L*", 60, $this->GetBuffer("OW_Handle"), 240, 0), 16); //reset DS2482
+		
+		If ($Result < 0) {
+			$this->SendDebug("DS2482Reset", "DS2482 Reset Failed", 0);
+    		}
+	}
+	
+	private function OWSearch(int $SearchNumber)
+	{
+		$this->SendDebug("SearchOWDevices", "Suche gestartet", 0);
+    		$bitNumber = 1;
+    		$lastZero = 0;
+  		$deviceAddress4ByteIndex = 1; //Fill last 4 bytes first, data from onewire comes LSB first.
+     		$deviceAddress4ByteMask = 1;
+ 		
+		if ($this->GetBuffer("owLastDevice")) {
+			$this->SendDebug("SearchOWDevices", "OW Suche beendet", 0);
+			$this->SetBuffer("owLastDevice", 0);
+			$this->SetBuffer("owLastDiscrepancy", 0);
+			$this->SetBuffer("owDeviceAddress_0", 0xFFFFFFFF);
+			$this->SetBuffer("owDeviceAddress_1", 0xFFFFFFFF);
+		}
+		else {
+			if (!$this->OWReset()) { //if there are no parts on 1-wire, return false
+			    	$this->SetBuffer("owLastDiscrepancy", 0);
+			return 0;
+			}
+			$this->OWWriteByte(240); //Issue the Search ROM command
+			do { // loop to do the search
+				if ($bitNumber < $this->GetBuffer("owLastDiscrepancy")) {
+					if ($this->GetBuffer("owDeviceAddress_".$deviceAddress4ByteIndex) & $deviceAddress4ByteMask) {
+						$this->SetBuffer("owTripletDirection", 1);
+					} 
+					else {
+						$this->SetBuffer("owTripletDirection", 0);
+					}
+				} 
+				else if ($bitNumber == $this->GetBuffer("owLastDiscrepancy")) { //if equal to last pick 1, if not pick 0
+					$this->SetBuffer("owTripletDirection", 1);
+				} 
+				else {
+					$this->SetBuffer("owTripletDirection", 0);
+				}
+				if (!$this->OWTriplet()) {
+					return 0;
+				}
+				//if 0 was picked then record its position in lastZero
+				if ($this->GetBuffer("owTripletFirstBit") == 0 && $this->GetBuffer("owTripletSecondBit") == 0 && $this->GetBuffer("owTripletDirection") == 0) {
+					$lastZero = $bitNumber;
+				}
+				 //check for no devices on 1-wire
+				if ($this->GetBuffer("owTripletFirstBit") == 1 && $this->GetBuffer("owTripletSecondBit") == 1) {
+					break;
+				}
+				//set or clear the bit in the SerialNum byte serial_byte_number with mask
+				if ($this->GetBuffer("owTripletDirection") == 1) {
+					$this->SetBuffer("owDeviceAddress_".$deviceAddress4ByteIndex, $this->GetBuffer("owDeviceAddress_".$deviceAddress4ByteIndex) | $deviceAddress4ByteMask);
+					//$this->SendDebug("SearchOWDevices", "owTripletDirection = 1 ".$this->GetBuffer("owDeviceAddress_".$deviceAddress4ByteIndex), 0);
+				} 
+				else {
+					$this->SetBuffer("owDeviceAddress_".$deviceAddress4ByteIndex, $this->GetBuffer("owDeviceAddress_".$deviceAddress4ByteIndex) & (~$deviceAddress4ByteMask));
+					//$this->SendDebug("SearchOWDevices", "owTripletDirection = 0 ".$this->GetBuffer("owDeviceAddress_".$deviceAddress4ByteIndex), 0);
+				}
+				$bitNumber++; //increment the byte counter bit number
+				$deviceAddress4ByteMask = $deviceAddress4ByteMask << 1; //shift the bit mask left
+				if ($deviceAddress4ByteMask == 0) { //if the mask is 0 then go to other address block and reset mask to first bit
+					$deviceAddress4ByteIndex--;
+					$deviceAddress4ByteMask = 1;
+            			}
+        		} while ($deviceAddress4ByteIndex > -1);
+			
+			if ($bitNumber == 65) { //if the search was successful then
+            			$this->SetBuffer("owLastDiscrepancy", $lastZero);
+            			if ($this->GetBuffer("owLastDiscrepancy") == 0) {
+                			$this->SetBuffer("owLastDevice", 1);
+            			} 
+				else {
+                			$this->SetBuffer("owLastDevice", 0);
+            			}
+			    
+				$SerialNumber = sprintf("%X", $this->GetBuffer("owDeviceAddress_0")).sprintf("%X", $this->GetBuffer("owDeviceAddress_1"));
+				$FamilyCode = substr($SerialNumber, -2);
+				$this->SendDebug("SearchOWDevices", "OneWire Device Address = ".$SerialNumber, 0);
+				//$this->SendDebug("SearchOWDevices", "OneWire Device Address = ".$this->GetBuffer("owDeviceAddress_0")." ".$this->GetBuffer("owDeviceAddress_1"), 0);
+				$OWDeviceArray = Array();
+ 				$OWDeviceArray = unserialize($this->GetBuffer("OWDeviceArray"));
+				$OWDeviceArray[$SearchNumber][0] = $this->GetOWHardware($FamilyCode); // Typ
+				$OWDeviceArray[$SearchNumber][1] = $SerialNumber; // Seriennumber
+				$OWDeviceArray[$SearchNumber][2] =  $this->OWInstanceArraySearch("DeviceSerial", $SerialNumber); // Instanz
+				$OWDeviceArray[$SearchNumber][3] = "OK"; // Status
+				If ($OWDeviceArray[$SearchNumber][2] == 0) {
+					// Farbe gelb für nicht registrierte Instanzen
+					$OWDeviceArray[$SearchNumber][4] = "#FFFF00";
+				}
+				else {
+					// Farbe grün für erreichbare und registrierte Instanzen
+					$OWDeviceArray[$SearchNumber][4] = "#00FF00";
+				}
+				$OWDeviceArray[$SearchNumber][5] = $this->GetBuffer("owDeviceAddress_0"); // erster Teil der dezimalen Seriennummer
+				$OWDeviceArray[$SearchNumber][6] = $this->GetBuffer("owDeviceAddress_1"); // zweiter Teil der dezimalen Seriennummer
+				$this->SetBuffer("OWDeviceArray", serialize($OWDeviceArray));
+				
+				if ($this->OWCheckCRC()) {
+					return 1;
+			    	} 
+				else {
+					$this->SendDebug("SearchOWDevices", "OneWire device address CRC check failed", 0);
+					return 1;
+			    	}   
+        		}
+			
+   		}
+ 		$this->SendDebug("SearchOWDevices", "No One-Wire Devices Found, Resetting Search", 0);
+   		$this->SetBuffer("owLastDiscrepancy", 0);
+  		$this->SetBuffer("owLastDevice", 0);
+    	return 0;
+	}			
+			
+	private function OWCheckCRC() 
+	{
+    		$crc = 0;
+     		$j = 0;
+     		$da32bit = $this->GetBuffer("owDeviceAddress_1");
+    		for($j = 0; $j < 4; $j++) { //All four bytes
+			$crc = $this->AddCRC($da32bit & 0xFF, $crc);
+			//server.log(format("CRC = %.2X", crc));
+        		$da32bit = $da32bit >> 8; //Shift right 8 bits
+		}	
+		$da32bit = $this->GetBuffer("owDeviceAddress_0");
+		for($j = 0; $j < 3; $j++) { //only three bytes
+        		$crc = $this->AddCRC($da32bit & 0xFF, $crc);
+        		//server.log(format("CRC = %.2X", crc));
+        		$da32bit = $da32bit >> 8; //Shift right 8 bits
+    		}
+		//$this->SendDebug("OWCheckCRC", "CRC = ".$crc, 0);
+		//$this->SendDebug("OWCheckCRC", "DA  = ".$da32bit, 0);
+    		
+    		if (($da32bit & 0xFF) == $crc) { //last byte of address should match CRC of other 7 bytes
+        		$this->SendDebug("OWCheckCRC", "CRC Passed", 0);
+        		return 1; //match
+    		}
+	return 0; //bad CRC
+	}
+	
+	private function AddCRC($inbyte, $crc) 
+	{
+	    	$j = 0;
+    		for($j = 0; $j < 8; $j++) {
+        		$mix = ($crc ^ $inbyte) & 0x01;
+			//$mix = (pow($crc, $inbyte)) & 0x01;
+        		$crc = $crc >> 1;
+        		if ($mix) {
+				$crc = $crc ^ 0x8C;
+				//$crc = pow($crc, 0x8C);
+			}
+        		$inbyte = $inbyte >> 1;
+    		}
+    	return $crc;
+	}
+	
+	private function OWReset() 
+	{
+    		$this->SendDebug("OWReset", "I2C Reset", 0);
+		// Write Byte to Handle
+		$Result = $this->CommandClientSocket(pack("L*", 60, $this->GetBuffer("OW_Handle"), 180, 0), 16);//1-wire reset
+		
+		If ($Result < 0) {
+			$this->SendDebug("OWReset", "I2C Reset Failed", 0);
+			return 0;
+    		}
+		
+     		$loopcount = 0;
+    		while (true) {
+        		$loopcount++;
+			// Read Byte from Handle
+			$Data = $this->OWStatusRegister();//Read the status register
+        		If ($Data < 0) {
+				$this->SendDebug("OWReset", "I2C Read Status Failed", 0);
+				return 0;
+    			}
+			else {
+				//$this->SendDebug("OWReset", "Read Status Byte: ".$Data, 0);
+            			if ($Data & 0x01) { // 1-Wire Busy bit
+                			//server.log("One-Wire bus is busy");
+                			if ($loopcount > 100) {
+                    				$this->SendDebug("OWReset", "One-Wire busy too long", 0);
+                    				return 0;
+                			}
+                			IPS_Sleep(10);//Wait, try again
+            			} 
+				else {
+					//server.log("One-Wire bus is idle");
+					if ($Data & 0x04) { //Short Detected bit
+						$this->SendDebug("OWReset", "One-Wire Short Detected", 0);
+						return 0;
+					}
+					if ($Data & 0x02) { //Presense-Pulse Detect bit
+						//$this->SendDebug("OWReset", "One-Wire Devices Found", 0);
+						break;
+					} 
+					else {
+						$this->SendDebug("OWReset", "No One-Wire Devices Found", 0);
+						return 0;
+					}
+            			}
+        		}
+    		}
+    	return 1;
+	}
+	
+	private function OWWriteByte($byte) 
+	{
+		//$this->SendDebug("OWWriteByte", "Function: Write Byte to One-Wire", 0);
+    		
+		$Result = $this->CommandClientSocket(pack("LLLLCC", 57, $this->GetBuffer("OW_Handle"), 0, 2, 225, 240), 16); //set read pointer (E1) to the status register (F0)
+		If ($Result < 0) {
+			$this->SendDebug("OWWriteByte", "I2C Write Failed", 0);
+			return -1;
+    		}
+		
+    		$loopcount = 0;
+    		while (true) {
+        		$loopcount++;
+        		$Data = $this->OWStatusRegister();//Read the status register
+			If ($Data < 0) {
+				$this->SendDebug("OWWriteByte", "I2C Read Status Failed", 0);
+				return -1;
+    			} 
+			else {
+            			//$this->SendDebug("OWWriteByte", "Read Status Byte: ".$Data, 0);
+				if ($Data & 0x01) { // 1-Wire Busy bit
+					//server.log("One-Wire bus is busy");
+					if ($loopcount > 100) {
+						$this->SendDebug("OWWriteByte", "One-Wire busy too long", 0);
+						return -1;
+					}
+					IPS_Sleep(10);//Wait, try again
+				} 
+				else {
+					//$this->SendDebug("OWWriteByte", "One-Wire bus is idle", 0);
+					break;
+				}
+        		}
+    		}
+   
+		$Result = $this->CommandClientSocket(pack("LLLLCC", 57, $this->GetBuffer("OW_Handle"), 0, 2, 165, $byte), 16); //set write byte command (A5) and send data (byte)
+		If ($Result < 0) { //Device failed to acknowledge
+        		$this->SendDebug("OWWriteByte", "I2C Write Byte Failed.", 0);
+        		return -1;
+    		}
+    		$loopcount = 0;
+    		while (true) {
+        		$loopcount++;
+ 			$Data = $this->OWStatusRegister();//Read the status register
+			If ($Data < 0) {
+            			$this->SendDebug("OWWriteByte", "I2C Read Status Failed", 0);
+            			return -1;
+        		} 
+			else {
+            			//$this->SendDebug("OWWriteByte", "Read Status Byte: ".$Data, 0);
+            			if ($Data & 0x01) { // 1-Wire Busy bit
+                			$this->SendDebug("OWWriteByte", "One-Wire bus is busy", 0);
+                			if ($loopcount > 100) {
+                    				$this->SendDebug("OWWriteByte", "One-Wire busy for too long", 0);
+                    				return -1;
+                			}
+                			IPS_Sleep(10);//Wait, try again
+            			} 
+				else {
+                			//$this->SendDebug("OWWriteByte", "One-Wire bus is idle", 0);
+                			break;
+            			}
+        		}
+    		}
+    	//$this->SendDebug("OWWriteByte", "One-Wire Write Byte complete", 0);
+    	return 0;
+	}
+	
+	private function OWTriplet() 
+	{
+		//$this->SendDebug("OWTriplet", "Function: OneWire Triplet", 0);
+		if ($this->GetBuffer("owTripletDirection") > 0) {
+			$this->SetBuffer("owTripletDirection", 255);
+		}
+		$Result = $this->CommandClientSocket(pack("LLLLCC", 57, $this->GetBuffer("OW_Handle"), 0, 2, 120, $this->GetBuffer("owTripletDirection")), 16); //send 1-wire triplet and direction
+		If ($Result < 0) { //Device failed to acknowledge message
+        		$this->SendDebug("OWTriplet", "OneWire Triplet Failed", 0);
+        		return 0;
+    		}
+	    	$loopcount = 0;
+		while (true) {
+			$loopcount++;
+			
+			$Data = $this->OWStatusRegister();//Read the status register
+			If ($Data < 0) {
+            			$this->SendDebug("OWTriplet", "I2C Read Status Failed", 0);
+            			return -1; 
+			} 
+			else {		
+		    		//$this->SendDebug("OWTriplet", "Read Status Byte: ".$Data, 0);
+		    		if ($Data & 0x01) { // 1-Wire Busy bit
+					$this->SendDebug("OWTriplet", "One-Wire bus is busy", 0);
+					if ($loopcount > 100) {
+			    			$this->SendDebug("OWTriplet", "One-Wire busy for too long", 0);
+			    			return -1;
+					}
+					IPS_Sleep(10);//Wait, try again
+		    		} 
+				else {
+					//$this->SendDebug("OWTriplet", "One-Wire bus is idle", 0);
+					if ($Data & 0x20) {
+						$this->SetBuffer("owTripletFirstBit", 1);
+					} 
+					else {
+						$this->SetBuffer("owTripletFirstBit", 0);
+					}
+					if ($Data & 0x40) {
+						$this->SetBuffer("owTripletSecondBit", 1);
+					} 
+					else {
+						$this->SetBuffer("owTripletSecondBit", 0);
+					}
+					if ($Data & 0x80) {
+						$this->SetBuffer("owTripletDirection", 1);
+					} 
+					else {
+						$this->SetBuffer("owTripletDirection", 0);
+					}
+				return 1;
+				}
+			}
+		}
+	}
+	
+	private function OWSelect() 
+	{
+    		$this->SendDebug("OWSelect", "Selecting device", 0);
+    		$this->OWWriteByte(85); //Issue the Match ROM command 55Hex
+    		
+    		for($i = 1; $i >= 0; $i--) {
+        		$da32bit = $this->GetBuffer("owDeviceAddress_".$i);
+        		for($j = 0; $j < 4; $j++) {
+            			//server.log(format("Writing byte: %.2X", da32bit & 0xFF));
+            			$this->OWWriteByte($da32bit & 255); //Send lowest byte
+            			$da32bit = $da32bit >> 8; //Shift right 8 bits
+        		}
+    		}
+	}
+	
+	private function OWRead_18B20_Temperature() 
+	{
+    		$data = Array();
+		$celsius = -99;
+    		for($i = 0; $i < 5; $i++) { //we only need 5 of the bytes
+        		$data[$i] = $this->OWReadByte();
+        		//server.log(format("read byte: %.2X", data[i]));
+    		}
+ 
+    		$raw = ($data[1] << 8) | $data[0];
+    		$SignBit = $raw & 0x8000;  // test most significant bit
+    		if ($SignBit) {
+			$raw = ($raw ^ 0xffff) + 1;
+		} // negative, 2's compliment
+		$cfg = $data[4] & 0x60;
+		if ($cfg == 0x60) {
+			$this->SendDebug("OWReadTemperature", "12 bit resolution", 0);
+			//server.log("12 bit resolution"); //750 ms conversion time
+		} 
+		else if ($cfg == 0x40) {
+			$this->SendDebug("OWReadTemperature", "11 bit resolution", 0);
+			//server.log("11 bit resolution"); //375 ms
+			$raw = $raw & 0xFFFE;
+		} 
+		else if ($cfg == 0x20) {
+			$this->SendDebug("OWReadTemperature", "10 bit resolution", 0);
+			//server.log("10 bit resolution"); //187.5 ms
+			$raw = $raw & 0xFFFC;
+		} 
+		else { //if (cfg == 0x00)
+			$this->SendDebug("OWReadTemperature", "9 bit resolution", 0);
+			//server.log("9 bit resolution"); //93.75 ms
+			$raw = $raw & 0xFFF8;
+		}
+		//server.log(format("rawtemp= %.4X", raw));
+		$celsius = $raw / 16.0;
+		if ($SignBit) {
+			$celsius = $celsius * (-1);
+		}
+		//server.log(format("Temperature = %.1f °C", celsius));
+		$SerialNumber = sprintf("%X", $this->GetBuffer("owDeviceAddress_0")).sprintf("%X", $this->GetBuffer("owDeviceAddress_1"));
+		$this->SendDebug("OWRead_18B20_Temperature", "OneWire Device Address = ".$SerialNumber. " Temperatur = ".$celsius, 0);
+	return $celsius;
+	}
+	
+	private function OWRead_18S20_Temperature() 
+	{
+    		$data = Array();
+		$celsius = -99;
+    		for($i = 0; $i < 2; $i++) { //we only need 2 of the bytes
+        		$data[$i] = $this->OWReadByte();
+        		//server.log(format("read byte: %.2X", data[i]));
+    		}
+ 
+    		$raw = ($data[1] << 8) | $data[0];
+    		$SignBit = $raw & 0x8000;  // test most significant bit
+    		if ($SignBit) {
+			$raw = ($raw ^ 0xffff) + 1;
+		} // negative, 2's compliment
+		
+		//server.log(format("rawtemp= %.4X", raw));
+		$celsius = $raw / 2.0;
+		if ($SignBit) {
+			$celsius = $celsius * (-1);
+		}
+		//server.log(format("Temperature = %.1f °C", celsius));
+		$SerialNumber = sprintf("%X", $this->GetBuffer("owDeviceAddress_0")).sprintf("%X", $this->GetBuffer("owDeviceAddress_1"));
+		$this->SendDebug("OWRead_18S20_Temperature", "OneWire Device Address = ".$SerialNumber. " Temperatur = ".$celsius, 0);
+	return $celsius;
+	}
+	
+	private function OWRead_2413_State() 
+	{
+		$result = -99;
+    		$result = $this->OWReadByte();
+		$SerialNumber = sprintf("%X", $this->GetBuffer("owDeviceAddress_0")).sprintf("%X", $this->GetBuffer("owDeviceAddress_1"));
+    		$this->SendDebug("OWRead_2413_State", "OneWire Device Address = ".$SerialNumber. " State = ".$result, 0);
+	return $result;
+	}
+	
+	private function OWReadByte() 
+	{
+    		//See if the 1wire bus is idle
+    		//server.log("Function: Read Byte from One-Wire");
+    		$Result = $this->CommandClientSocket(pack("LLLLCC", 57, $this->GetBuffer("OW_Handle"), 0, 2, 225, 240), 16); //set read pointer (E1) to the status register (F0)
+		If ($Result < 0) { //Device failed to acknowledge
+			$this->SendDebug("OWReadByte", "I2C Write Failed", 0);
+			return -1;
+    		}
+		
+    		$loopcount = 0;
+   		while (true) {
+        		$loopcount++;
+			$Data = $this->OWStatusRegister();//Read the status register
+			If ($Data < 0) {
+				$this->SendDebug("OWReadByte", "I2C Read Status Failed", 0);
+				return -1;
+    			} 
+			else {
+            			//$this->SendDebug("OWReadByte", "Read Status Byte: ".$Data, 0);
+            			if ($Data & 0x01) { // 1-Wire Busy bit
+                			//server.log("One-Wire bus is busy");
+                			if ($loopcount > 100) {
+                    				$this->SendDebug("OWReadByte", "One-Wire busy for too long", 0);
+                    				return -1;
+					}
+					IPS_Sleep(10); //Wait, try again
+				} 
+				else {
+					//server.log("One-Wire bus is idle");
+					break;
+				}
+        		}
+    		}
+   
+    		//Send a read command, then wait for the 1wire bus to finish
+		$Result = $this->CommandClientSocket(pack("L*", 60, $this->GetBuffer("OW_Handle"), 150, 0), 16); //send read byte command (96)
+		If ($Result < 0) {
+			$this->SendDebug("OWReadByte", "I2C Write read-request Failed", 0);
+			return -1;
+		} 
+    
+    		$loopcount = 0;
+    		while (true) {
+        		$loopcount++;
+        		
+			$Data = $this->OWStatusRegister();//Read the status register
+			If ($Data < 0) {
+            			$this->SendDebug("OWReadByte", "I2C Read Status Failed", 0);
+            			return -1; 
+			} 
+			else {
+            			//$this->SendDebug("OWReadByte", "Read Status Byte: ".$Data, 0);
+            			if ($Data[0] & 0x01) { // 1-Wire Busy bit
+                			//server.log("One-Wire bus is busy");
+                			if ($loopcount > 100) {
+                    				$this->SendDebug("OWReadByte", "One-Wire busy for too long", 0);
+                    				return -1;
+                			}
+                			IPS_Sleep(10); //Wait, try again
+            			} 
+				else {
+					//server.log("One-Wire bus is idle");
+					break;
+				}
+        		}
+    		}
+   
+		//Go get the data byte
+		$Result = $this->CommandClientSocket(pack("LLLLCC", 57, $this->GetBuffer("OW_Handle"), 0, 2, 225, 225), 16); //set read pointer (E1) to the read data register (E1)
+		If ($Result < 0) { //Device failed to acknowledge
+			$this->SendDebug("OWReadByte", "I2C Write Failed", 0);
+			return -1;
+		}
+		$Data = $this->CommandClientSocket(pack("L*", 59, $this->GetBuffer("OW_Handle"), 0, 0), 16);//Read the status register
+		If ($Data < 0) {
+			$this->SendDebug("OWReadByte", "I2C Read Status Failed", 0);
+			return -1;
+		} 
+		else {
+			//server.log(format("Read Data Byte = %d", data[0]));
+		}
+    		//server.log("One-Wire Read Byte complete");
+    	return $Data;
+	}
+	
+	private function OWStatusRegister()
+	{
+		$Result = $this->CommandClientSocket(pack("LLLLCC", 57, $this->GetBuffer("OW_Handle"), 0, 2, 225, 240), 16); //set read pointer (E1) to the read status register (F0)
+		If ($Result < 0) { //Device failed to acknowledge
+			$this->SendDebug("OWStatusRegister", "I2C Write Failed", 0);
+			$Result = -1;
+		}
+		else {
+			$Result = $this->CommandClientSocket(pack("L*", 59, $this->GetBuffer("OW_Handle"), 0, 0), 16);//Read the status register
+			//$this->SendDebug("OWStatusRegister", "Read Status Byte: ".$Result, 0);
+		}
+	return $Result;
+	}
+	
+	private function OWVerify()
+	{
+		//--------------------------------------------------------------------------
+		// Verify the device with the ROM number in ROM_NO buffer is present.
+		// Return TRUE  : device verified present
+		//        FALSE : device not present
+		//
+   		// keep a backup copy of the current state
+   		$owDeviceAddress_0_backup = $this->GetBuffer("owDeviceAddress_0");
+		$owDeviceAddress_1_backup = $this->GetBuffer("owDeviceAddress_1");
+   		$ld_backup = $this->GetBuffer("owLastDiscrepancy");
+   		$ldf_backup = $this->GetBuffer("owLastDevice");
+   		// set search to find the same device
+   		$this->SetBuffer("owLastDiscrepancy", 64);
+   		$this->SetBuffer("owLastDevice", 0);
+   		if ($this->OWSearch(0))
+   		{
+      			// check if same device found
+      			$Result = 1;
+      			If (($owDeviceAddress_0_backup <> $this->GetBuffer("owDeviceAddress_0")) AND ($owDeviceAddress_1_backup <> $this->GetBuffer("owDeviceAddress_1"))) { 
+            			$Result = 0;
+            			//break;
+      			}
+   		}
+   		else {
+     			$Result = 0;
+   			// restore the search state 
+   			$this->SetBuffer("owDeviceAddress_0", $owDeviceAddress_0_backup);
+		 	$this->SetBuffer("owDeviceAddress_1", $owDeviceAddress_1_backup);
+   			$this->SetBuffer("owLastDiscrepancy", $ld_backup);
+   		 	$this->SetBuffer("owLastDevice", $ldf_backup);
+		}
+	// return the result of the verify
+	return $Result;
+	}
+	
+	private function OWRead_2438() 
+	{
+    		$data = Array();
+		$Celsius = -99;
+		$Voltage = -99;
+		$Current = -99;
+    		for($i = 0; $i <= 6; $i++) { //we only need 6 of the bytes
+        		$data[$i] = $this->OWReadByte();
+        		//server.log(format("read byte: %.2X", data[i]));
+    		}
+ 
+		// $data[0] = Status
+		// $data[1] = Temperatur LSB
+		// $data[2] = Temperatur MSB
+		// $data[3] = Voltage LSB
+		// $data[4] = Voltage MSB
+		// $data[5] = Current LSB
+		// $data[6] = Current MSB
+		
+		// Temperatur ermitteln
+    		$raw = ($data[2] << 8) | $data[1];
+    		$SignBit = $raw & 0x8000;  // test most significant bit
+    		
+		if ($SignBit) {
+			$raw = ($raw ^ 0xffff) + 1;
+		} // negative, 2's compliment
+		
+		$raw = $raw >> 3; 
+		
+		$Celsius = $raw / 32.0;
+		if ($SignBit) {
+			$Celsius = $Celsius * (-1);
+		}
+		
+		// Spannung ermitteln
+		$raw = ($data[4] << 8) | $data[3];
+		$raw = $raw & 0x3FF;
+		
+		$Voltage = $raw * 0.01;
+		
+		// Strom ermitteln
+		$raw = ($data[6] << 8) | $data[5];
+		$raw = $raw & 0x3FF;
+		$SignBit = $raw & 0x8000;  // test most significant bit
+		
+		$Current = $raw * 0.2441;
+		if ($SignBit) {
+			$Current = $Current * (-1);
+		}
+		//server.log(format("Temperature = %.1f °C", celsius));
+		$SerialNumber = sprintf("%X", $this->GetBuffer("owDeviceAddress_0")).sprintf("%X", $this->GetBuffer("owDeviceAddress_1"));
+		$this->SendDebug("OWRead_2438", "OneWire Device Address = ".$SerialNumber." Temperatur = ".$Celsius." Spannung = ".$Voltage." Strom = ".$Current, 0);
+	return array($Celsius, $Voltage, $Current);
+	}
+	
 }
 ?>
