@@ -90,12 +90,19 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayValues[] = array("ServiceTyp" => "1-Wire-Server", "ServiceStatus" => $ServiceArray["1-Wire-Server"]["Status"], "rowColor" => $ServiceArray["1-Wire-Server"]["Color"]);
 		$arrayElements[] = array("type" => "List", "name" => "Raspi_Config", "caption" => "Konfiguration", "rowCount" => 5, "add" => false, "delete" => false, "sort" => $arraySort, "columns" => $arrayColumns, "values" => $arrayValues);
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");		
+		// Tabelle für die gefundenen I²C-Devices
 		$arrayColumns = array();
 		$arrayColumns[] = array("label" => "Typ", "name" => "DeviceTyp", "width" => "120px", "add" => "");
 		$arrayColumns[] = array("label" => "Adresse", "name" => "DeviceAddress", "width" => "60px", "add" => "");
 		$arrayColumns[] = array("label" => "Bus", "name" => "DeviceBus", "width" => "60px", "add" => "");
 		$arrayColumns[] = array("label" => "Instanz ID", "name" => "InstanceID", "width" => "70px", "add" => "");
 		$arrayColumns[] = array("label" => "Status", "name" => "DeviceStatus", "width" => "auto", "add" => "");		
+		// Tabelle für die gefundenen 1-Wire-Devices
+		$arrayOWColumns = array();
+		$arrayOWColumns[] = array("label" => "Typ", "name" => "DeviceTyp", "width" => "120px", "add" => "");
+		$arrayOWColumns[] = array("label" => "Serien-Nr.", "name" => "DeviceSerial", "width" => "120px", "add" => "");
+		$arrayOWColumns[] = array("label" => "Instanz ID", "name" => "InstanceID", "width" => "70px", "add" => "");
+		$arrayOWColumns[] = array("label" => "Status", "name" => "DeviceStatus", "width" => "auto", "add" => "");
 		
 		If (($this->ConnectionTest()) AND ($this->ReadPropertyBoolean("Open") == true))  {
 			// I²C-Devices einlesen und in das Values-Array kopieren
@@ -110,6 +117,24 @@ class IPS2GPIO_IO extends IPSModule
 			}
 			else {
 				$arrayElements[] = array("type" => "Label", "label" => "Es wurden keine I²C-Devices gefunden.");
+			}
+			
+			If ($this->GetBuffer("OW_Handle") >= 0) {
+				$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+				// 1-Wire-Devices einlesen und in das Values-Array kopieren
+				$OWDeviceArray = array();
+				$this->OWSearchStart();
+				$OWDeviceArray = unserialize($this->GetBuffer("OWDeviceArray"));
+				If (count($OWDeviceArray , COUNT_RECURSIVE) >= 4) {
+					$arrayOWValues = array();
+					for ($i = 0; $i < Count($OWDeviceArray); $i++) {
+						$arrayOWValues[] = array("DeviceTyp" => $OWDeviceArray[$i][0], "DeviceSerial" => $OWDeviceArray[$i][1], "InstanceID" => $OWDeviceArray[$i][2], "DeviceStatus" => $OWDeviceArray[$i][3], "rowColor" => $OWDeviceArray[$i][4]);
+					}
+					$arrayElements[] = array("type" => "List", "name" => "OW_Devices", "caption" => "1-Wire-Devices", "rowCount" => 5, "add" => false, "delete" => false, "sort" => $arraySort, "columns" => $arrayOWColumns, "values" => $arrayOWValues);
+				}
+				else {
+					$arrayElements[] = array("type" => "Label", "label" => "Es wurden keine 1-Wire-Devices gefunden.");
+				}
 			}
 			$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 			$arrayElements[] = array("type" => "Label", "label" => "Führt einen Restart des PIGPIO aus:");
