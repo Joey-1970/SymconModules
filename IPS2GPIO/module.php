@@ -31,6 +31,7 @@ class IPS2GPIO_IO extends IPSModule
 		$this->RegisterPropertyInteger("I2C0", 0);
 		$this->RegisterPropertyString("Raspi_Config", "");
 		$this->RegisterPropertyString("I2C_Devices", "");
+		$this->RegisterPropertyString("OW_Devices", "");
 		$this->RegisterPropertyBoolean("Multiplexer", false);
 	    	$this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
 		$PinNotify = array();
