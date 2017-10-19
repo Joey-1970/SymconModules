@@ -268,7 +268,7 @@ class IPS2GPIO_IO extends IPSModule
 				
 				// OW einrichten
 				If ($this->ReadPropertyInteger("OW") > 0) {
-					$MUX_Handle = $this->CommandClientSocket(pack("L*", 54, 1, 24, 4, 0), 16);
+					$OW_Handle = $this->CommandClientSocket(pack("L*", 54, 1, 24, 4, 0), 16);
 					$this->SetBuffer("OW_Handle", $OW_Handle);
 					$this->SendDebug("OW Handle", $OW_Handle, 0);
 				}
