@@ -335,7 +335,7 @@ class IPS2GPIO_IO extends IPSModule
 					$this->ApplyChanges();
 				}
 				elseif ($Data[0] == 200) {
-					$this->ApplyChanges();
+					$this->ConnectionTest();
 				}
 				break;
 		}
