@@ -33,11 +33,16 @@
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceAddress", "caption" => "Device Adresse", "options" => $arrayOptions );
 		
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "GeCoS I²C-Bus 0", "value" => 4);
-		$arrayOptions[] = array("label" => "GeCoS I²C-Bus 1", "value" => 5);
+				$arrayElements[] = array("type" => "Label", "label" => "I²C-Bus (Default ist 1)");
 		
-		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "GeCoS I²C-Bus", "options" => $arrayOptions );
+		$arrayOptions = array();
+		$DevicePorts = array();
+		$DevicePorts = unserialize($this->Get_I2C_Ports());
+		foreach($DevicePorts AS $Value => $Label) {
+			$arrayOptions[] = array("label" => $Label, "value" => $Value);
+		}
+		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "Device Bus", "options" => $arrayOptions );
+		
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Button", "label" => "Herstellerinformationen", "onClick" => "echo 'https://www.gedad.de/projekte/projekte-f%C3%BCr-privat/gedad-control/'");
 		
@@ -469,6 +474,23 @@
 	{
 		$Hex = hexdec(str_pad(dechex($r), 2,'0', STR_PAD_LEFT).str_pad(dechex($g), 2,'0', STR_PAD_LEFT).str_pad(dechex($b), 2,'0', STR_PAD_LEFT));
 	return $Hex;
+	}
+	    
+	private function Get_I2C_Ports()
+	{
+		If ($this->HasActiveParent() == true) {
+			$I2C_Ports = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_get_ports")));
+		}
+		else {
+			$DevicePorts = array();
+			$DevicePorts[0] = "I²C-Bus 0";
+			$DevicePorts[1] = "I²C-Bus 1";
+			for ($i = 3; $i <= 10; $i++) {
+				$DevicePorts[$i] = "MUX I²C-Bus ".($i -3);
+			}
+			$I2C_Ports = serialize($DevicePorts);
+		}
+	return $I2C_Ports;
 	}
 	    
 	private function HasActiveParent()
