@@ -689,55 +689,50 @@ class IPS2GPIO_IO extends IPSModule
 			break;
 		case "i2c_PCA9685_Write": // Module PWM und RGBW
 			// I2CWB h r bv - smb Write Byte Data: write byte to register  	
-			If ($I2CInstanceArray[$data->InstanceID]["Handle"] >= 0) {
-				$this->SetMUX($I2CInstanceArray[$data->InstanceID]["DeviceBus"]);
-				$Result = $this->CommandClientSocket(pack("L*", 62, $I2CInstanceArray[$data->InstanceID]["Handle"], $data->Register, 4, $data->Value), 16);
+			If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
+				$Result = $this->CommandClientSocket(pack("L*", 62, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 4, $data->Value), 16);
 			}
 			break;
 		case "i2c_PCA9685_Read": // Module PWM und RGBW
 			// I2CRW h r - smb Read Word Data: read word from register
-			If ($I2CInstanceArray[$data->InstanceID]["Handle"] >= 0) {
-				$this->SetMUX($I2CInstanceArray[$data->InstanceID]["DeviceBus"]);
-				$Result = $this->CommandClientSocket(pack("L*", 63, $I2CInstanceArray[$data->InstanceID]["Handle"], $data->Register, 0), 16);
+			If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
+				$Result = $this->CommandClientSocket(pack("L*", 63, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 0), 16);
 			}
 			break;  
 		case "i2c_PCA9685_Read_Group": // Modul RGBW
 			// I2CRW h r - smb Read Word Data: read word from register
-			If ($I2CInstanceArray[$data->InstanceID]["Handle"] >= 0) {
-				$this->SetMUX($I2CInstanceArray[$data->InstanceID]["DeviceBus"]);
+			If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
 				$Color = Array();
-				$Color[] = $this->CommandClientSocket(pack("L*", 63, $I2CInstanceArray[$data->InstanceID]["Handle"], $data->Register, 0), 16);
-				$Color[] = $this->CommandClientSocket(pack("L*", 63, $I2CInstanceArray[$data->InstanceID]["Handle"], $data->Register + 4, 0), 16);
-				$Color[] = $this->CommandClientSocket(pack("L*", 63, $I2CInstanceArray[$data->InstanceID]["Handle"], $data->Register + 8, 0), 16);
+				$Color[] = $this->CommandClientSocket(pack("L*", 63, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 0), 16);
+				$Color[] = $this->CommandClientSocket(pack("L*", 63, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register + 4, 0), 16);
+				$Color[] = $this->CommandClientSocket(pack("L*", 63, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register + 8, 0), 16);
 				$Result = serialize($Color);
 			}
 			break;  
 		case "i2c_write_4_byte":
 			// I2CWB h r bv - smb Write Byte Data: write byte to register  	
-			If ($I2CInstanceArray[$data->InstanceID]["Handle"] >= 0) {
-				$this->SetMUX($I2CInstanceArray[$data->InstanceID]["DeviceBus"]);
-				$this->CommandClientSocket(pack("L*", 62, $I2CInstanceArray[$data->InstanceID]["Handle"], $data->Register, 4, $data->Value_1).
-							   pack("L*", 62, $I2CInstanceArray[$data->InstanceID]["Handle"], $data->Register + 1, 4, $data->Value_2).
-							   pack("L*", 62, $I2CInstanceArray[$data->InstanceID]["Handle"], $data->Register + 2, 4, $data->Value_3).
-							   pack("L*", 62, $I2CInstanceArray[$data->InstanceID]["Handle"], $data->Register + 3, 4, $data->Value_4), 64);
+			If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
+				$this->CommandClientSocket(pack("L*", 62, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 4, $data->Value_1).
+							   pack("L*", 62, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register + 1, 4, $data->Value_2).
+							   pack("L*", 62, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register + 2, 4, $data->Value_3).
+							   pack("L*", 62, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register + 3, 4, $data->Value_4), 64);
 			}
 			break;
 		case "i2c_write_12_byte":
 			// I2CWB h r bv - smb Write Byte Data: write byte to register  	
-			If ($I2CInstanceArray[$data->InstanceID]["Handle"] >= 0) {
-				$this->SetMUX($I2CInstanceArray[$data->InstanceID]["DeviceBus"]);
-				$this->CommandClientSocket(pack("L*", 62, $I2CInstanceArray[$data->InstanceID]["Handle"], $data->Register, 4, $data->Value_1).
-							   pack("L*", 62, $I2CInstanceArray[$data->InstanceID]["Handle"], $data->Register + 1, 4, $data->Value_2).
-							   pack("L*", 62, $I2CInstanceArray[$data->InstanceID]["Handle"], $data->Register + 2, 4, $data->Value_3).
-							   pack("L*", 62, $I2CInstanceArray[$data->InstanceID]["Handle"], $data->Register + 3, 4, $data->Value_4).
-							   pack("L*", 62, $I2CInstanceArray[$data->InstanceID]["Handle"], $data->Register + 4, 4, $data->Value_5).
-							   pack("L*", 62, $I2CInstanceArray[$data->InstanceID]["Handle"], $data->Register + 5, 4, $data->Value_6).
-							   pack("L*", 62, $I2CInstanceArray[$data->InstanceID]["Handle"], $data->Register + 6, 4, $data->Value_7).
-							   pack("L*", 62, $I2CInstanceArray[$data->InstanceID]["Handle"], $data->Register + 7, 4, $data->Value_8).
-							   pack("L*", 62, $I2CInstanceArray[$data->InstanceID]["Handle"], $data->Register + 8, 4, $data->Value_9).
-							   pack("L*", 62, $I2CInstanceArray[$data->InstanceID]["Handle"], $data->Register + 9, 4, $data->Value_10).
-							   pack("L*", 62, $I2CInstanceArray[$data->InstanceID]["Handle"], $data->Register + 10, 4, $data->Value_11).
-							   pack("L*", 62, $I2CInstanceArray[$data->InstanceID]["Handle"], $data->Register + 11, 4, $data->Value_12), 192);
+			If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
+				$this->CommandClientSocket(pack("L*", 62, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 4, $data->Value_1).
+							   pack("L*", 62, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register + 1, 4, $data->Value_2).
+							   pack("L*", 62, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register + 2, 4, $data->Value_3).
+							   pack("L*", 62, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register + 3, 4, $data->Value_4).
+							   pack("L*", 62, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register + 4, 4, $data->Value_5).
+							   pack("L*", 62, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register + 5, 4, $data->Value_6).
+							   pack("L*", 62, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register + 6, 4, $data->Value_7).
+							   pack("L*", 62, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register + 7, 4, $data->Value_8).
+							   pack("L*", 62, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register + 8, 4, $data->Value_9).
+							   pack("L*", 62, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register + 9, 4, $data->Value_10).
+							   pack("L*", 62, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register + 10, 4, $data->Value_11).
+							   pack("L*", 62, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register + 11, 4, $data->Value_12), 192);
 			}
 			break;
 		   
