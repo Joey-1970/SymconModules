@@ -126,9 +126,7 @@
 					$this->SetStatus($data->Status);
 				}
 				break;
-			case "freepin":
-				   // Funktion zum erstellen dynamischer Pulldown-Menüs
-				   break;
+
 		}
  	}
 	// Beginn der Funktionen
@@ -150,23 +148,6 @@
 			}
 			else {
 				SetValueInteger($this->GetIDForIdent("Intensity"), $value);
-			}
-		}
-	}
-	
-	public function Fade_Intensity(Int $Value, Int $Fadetime)
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("Fade_Intensity", "Ausfuehrung", 0);
-			$Value = min(255, max(0, $Value));
-			$ActualValue = GetValueInteger($this->GetIDForIdent("Intensity"));
-			$TargetValue = $Value;
-			
-			If (GetValueBoolean($this->GetIDForIdent("Status")) == true) {
-				$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value)));
-			}
-			else {
-				SetValueInteger($this->GetIDForIdent("Intensity"), $Value);
 			}
 		}
 	}
@@ -217,14 +198,7 @@
 			}
 		}
 	}
-	// Toggelt den Status
-	public function Toggle_Status()
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("Toggle_Status", "Ausfuehrung", 0);
-			$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")));
-		}
-	}
+	
 	
 	private function Get_GPIO()
 	{
