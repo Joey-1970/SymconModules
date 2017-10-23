@@ -114,7 +114,7 @@
 									  "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 				If ($Result == true) {
 					$this->SetStatus(102);
-					$this->SetTimerInterval("Messzyklus", 10 * 1000));
+					$this->SetTimerInterval("Messzyklus", 10 * 1000);
 					$this->Calculate();
 				}
 			}
