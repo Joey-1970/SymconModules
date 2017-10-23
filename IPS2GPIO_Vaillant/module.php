@@ -12,6 +12,9 @@
 		$this->RegisterPropertyInteger("Temperature_ID", 0);
 		$this->RegisterPropertyFloat("Steepness", 1);
 		$this->RegisterPropertyInteger("ParallelShift", 15);
+		$this->RegisterPropertyInteger("MinTemp", 35);
+		$this->RegisterPropertyInteger("MaxTemp", 70);
+		$this->RegisterPropertyInteger("SwitchTemp", 20);
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
 	
@@ -48,6 +51,12 @@
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Steepness", "caption" => "Steilheit");
 		$arrayElements[] = array("type" => "Label", "label" => "Angabe der Parallelverschiebung (K)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "ParallelShift", "caption" => "Parallelverschiebung");
+		$arrayElements[] = array("type" => "Label", "label" => "Angabe der Minimaltemperatur (C°)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "MinTemp", "caption" => "Minimaltemperatur");
+		$arrayElements[] = array("type" => "Label", "label" => "Angabe der Maximaltemperatur (C°)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "MaxTemp", "caption" => "Maximaltemperatur");
+		$arrayElements[] = array("type" => "Label", "label" => "Angabe der Umschalttemperatur Sommer/Winter (C°)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "SwitchTemp", "caption" => "Umschalttemperatur");
 		
 		
 		$arrayActions = array();
@@ -75,9 +84,8 @@
 	        parent::ApplyChanges();
 		//Status-Variablen anlegen
 		$this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
-	        $this->EnableAction("Status");
-	        $this->RegisterVariableInteger("Intensity", "Intensity", "~Intensity.255", 20);
-	        $this->EnableAction("Intensity");
+	        $this->DisableAction("Status");
+	        
            
            	//ReceiveData-Filter setzen
 		$Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*)';
@@ -130,6 +138,37 @@
 		}
  	}
 	// Beginn der Funktionen
+	private function Calculate()
+	{
+		$OutsideTemperature = GetValueFloat($this->ReadPropertyInteger("Temperature_ID"));
+		$SwitchTemp = GetValueInteger($this->GetIDForIdent("SwitchTemp");
+		
+		If ($OutsideTemperature < $SwitchTemp) {
+			SetValueBoolean($this->GetIDForIdent("Status"), false);
+			$Steepness = GetValueFloat($this->GetIDForIdent("Steepness");
+			$MinTemp = GetValueInteger($this->GetIDForIdent("MinTemp");
+			$MaxTemp = GetValueInteger($this->GetIDForIdent("MaxTemp");
+			$ParallelShift = GetValueInteger($this->GetIDForIdent("ParallelShift");
+			
+			/*
+			$Raumsollwert = GetValue(IPS_GetObjectIDByName("Solltemperatur Raum", $id4));
+			$Vorlauftemperatur_Kessel=min(max(round((0.55*$Steilheit*(pow($Raumsollwert,($Aussentemp/(320-$Aussentemp*4))))*((-$Aussentemp+20)*2)+$Raumsollwert+$Korrektur_Kessel)*1)/1,$min),$max);
+			
+			SetValue( (IPS_GetObjectIDByName("Solltemperatur", $id)), $Vorlauftemperatur_Kessel);
+			
+			$Voltage = ((($Vorlauftemperatur_Kessel-40)/10)+11.9);	
+			*/
+		}
+		If ($OutsideTemperature > $SwitchTemp) {			     
+			SetValueBoolean($this->GetIDForIdent("Status"), true);
+			$Voltage = 11.4;
+		}
+
+			
+	}
+	    
+	    
+	    
 	// Dimmt den gewaehlten Pin
 	public function Set_Intensity(Int $value)
 	{
