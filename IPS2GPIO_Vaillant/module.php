@@ -91,10 +91,10 @@
 		$this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
 	        $this->DisableAction("Status");
 		
-		$this->RegisterVariableInteger("SetTemperature", "Soll-Temperatur", "", 20);
+		$this->RegisterVariableInteger("SetTemperature", "Soll-Temperatur", "~Temperature", 20);
 	        $this->DisableAction("SetTemperature");
 	        
-		$this->RegisterVariableInteger("Voltage", "Spannung", "", 30);
+		$this->RegisterVariableInteger("Voltage", "Spannung", "~Volt", 30);
 	        $this->DisableAction("Voltage");
            
            	//ReceiveData-Filter setzen
