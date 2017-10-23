@@ -98,10 +98,10 @@
 		$this->RegisterVariableInteger("Status", "Status", "IPS2GPIO.HeatingStatus", 10);
 	        $this->DisableAction("Status");
 		
-		$this->RegisterVariableInteger("SetTemperature", "Soll-Temperatur", "~Temperature", 20);
+		$this->RegisterVariableFloat("SetTemperature", "Soll-Temperatur", "~Temperature", 20);
 	        $this->DisableAction("SetTemperature");
 	        
-		$this->RegisterVariableInteger("Voltage", "Spannung", "~Volt", 30);
+		$this->RegisterVariableFloat("Voltage", "Spannung", "~Volt", 30);
 	        $this->DisableAction("Voltage");
            
            	//ReceiveData-Filter setzen
@@ -175,7 +175,7 @@
 				SetValueInteger($this->GetIDForIdent("Status"), 1);
 				
 				$SetTemperature = min(max(round((0.55 * $Steepness * (pow($ReferenceTemperature,($OutdoorTemperature / (320 - $OutdoorTemperature * 4))))*((-$OutdoorTemperature + 20) * 2) + $ReferenceTemperature + $ParallelShift) * 1) / 1, $MinTemp), $MaxTemp);
-				SetValueInteger($this->GetIDForIdent("SetTemperature"), $SetTemperature);			
+				SetValueFloat($this->GetIDForIdent("SetTemperature"), $SetTemperature);			
 				$Voltage = ((($Temperature - 40) / 10) +11.9);	
 			}
 			If ($OutsideTemperature > $SwitchTemp) {			     
