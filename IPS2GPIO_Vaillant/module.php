@@ -87,8 +87,15 @@
         {
 	        // Diese Zeile nicht löschen
 	        parent::ApplyChanges();
+		
+		$this->RegisterProfileInteger("IPS2GPIO.HeatingStatus", "Information", "", "", 0, 2, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.HeatingStatus", 0, "unbekannt", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.HeatingStatus", 1, "Winterbetrieb", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.HeatingStatus", 2, "Sommerbetrieb", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.HeatingStatus", 3, "gestört", "Information", -1);
+		
 		//Status-Variablen anlegen
-		$this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
+		$this->RegisterVariableInteger("Status", "Status", "IPS2GPIO.HeatingStatus", 10);
 	        $this->DisableAction("Status");
 		
 		$this->RegisterVariableInteger("SetTemperature", "Soll-Temperatur", "~Temperature", 20);
@@ -108,10 +115,12 @@
 				If ($Result == true) {
 					$this->SetStatus(102);
 					$this->SetTimerInterval("Messzyklus", 10 * 1000));
+					$this->Calculate();
 				}
 			}
 			else {
 				$this->SetTimerInterval("Messzyklus", 0);
+				SetValueInteger($this->GetIDForIdent("Status"), 0);
 				$this->SetStatus(104);
 			}
 		}
@@ -162,14 +171,15 @@
 			$ReferenceTemperature = GetValueFloat($this->ReadPropertyInteger("ReferenceTemperature_ID"));
 			
 			If ($OutsideTemperature < $SwitchTemp) {
-				SetValueBoolean($this->GetIDForIdent("Status"), false);
+				// Winterbetrieb
+				SetValueInteger($this->GetIDForIdent("Status"), 1);
 				
 				$SetTemperature = min(max(round((0.55 * $Steepness * (pow($ReferenceTemperature,($OutdoorTemperature / (320 - $OutdoorTemperature * 4))))*((-$OutdoorTemperature + 20) * 2) + $ReferenceTemperature + $ParallelShift) * 1) / 1, $MinTemp), $MaxTemp);
 				SetValueInteger($this->GetIDForIdent("SetTemperature", $SetTemperature);			
 				$Voltage = ((($Temperature - 40) / 10) +11.9);	
 			}
 			If ($OutsideTemperature > $SwitchTemp) {			     
-				SetValueBoolean($this->GetIDForIdent("Status"), true);
+				SetValueInteger($this->GetIDForIdent("Status"), 2);
 				$Voltage = 11.4;
 			}
 			SetValueFloat($this->GetIDForIdent("Voltage", $Voltage);
@@ -248,6 +258,22 @@
 		}
 	}
 	
+	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
+	{
+	        if (!IPS_VariableProfileExists($Name))
+	        {
+	            IPS_CreateVariableProfile($Name, 1);
+	        }
+	        else
+	        {
+	            $profile = IPS_GetVariableProfile($Name);
+	            if ($profile['ProfileType'] != 1)
+	                throw new Exception("Variable profile type does not match for profile " . $Name);
+	        }
+	        IPS_SetVariableProfileIcon($Name, $Icon);
+	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);        
+	}
 	
 	private function Get_GPIO()
 	{
