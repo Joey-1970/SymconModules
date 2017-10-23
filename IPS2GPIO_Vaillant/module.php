@@ -9,13 +9,16 @@
 		parent::Create();
 		$this->RegisterPropertyBoolean("Open", false);
 		$this->RegisterPropertyInteger("Pin", -1);
-		$this->RegisterPropertyInteger("Temperature_ID", 0);
+		$this->RegisterPropertyInteger("OutdoorTemperature_ID", 0);
+		$this->RegisterPropertyInteger("ReferenceTemperature_ID", 0);
 		$this->RegisterPropertyFloat("Steepness", 1);
 		$this->RegisterPropertyInteger("ParallelShift", 15);
 		$this->RegisterPropertyInteger("MinTemp", 35);
 		$this->RegisterPropertyInteger("MaxTemp", 70);
 		$this->RegisterPropertyInteger("SwitchTemp", 20);
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+		$this->RegisterPropertyInteger("Messzyklus", 60);
+		$this->RegisterTimer("Messzyklus", 0, 'I2GVt_Calculate($_IPS["TARGET"]);');
         }
 	
 	
@@ -46,7 +49,9 @@
 		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		
 		$arrayElements[] = array("type" => "Label", "label" => "Variable der Aussentemperatur");
-		$arrayElements[] = array("type" => "SelectVariable", "name" => "Temperature_ID", "caption" => "Temperatur (extern)");
+		$arrayElements[] = array("type" => "SelectVariable", "name" => "OutdoorTemperature_ID", "caption" => "Temperatur ID Außen");
+		$arrayElements[] = array("type" => "Label", "label" => "Variable der Referenztemperatur");
+		$arrayElements[] = array("type" => "SelectVariable", "name" => "ReferenceTemperature_ID", "caption" => "Temperatur ID Referenz");
 		$arrayElements[] = array("type" => "Label", "label" => "Angabe der Steilheit");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Steepness", "caption" => "Steilheit");
 		$arrayElements[] = array("type" => "Label", "label" => "Angabe der Parallelverschiebung (K)");
@@ -85,6 +90,9 @@
 		//Status-Variablen anlegen
 		$this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
 	        $this->DisableAction("Status");
+		
+		$this->RegisterVariableInteger("SetTemperature", "Soll-Temperatur", "", 10);
+	        $this->DisableAction("SetTemperature");
 	        
            
            	//ReceiveData-Filter setzen
@@ -97,9 +105,11 @@
 									  "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 				If ($Result == true) {
 					$this->SetStatus(102);
+					$this->SetTimerInterval("Messzyklus", 10 * 1000));
 				}
 			}
 			else {
+				$this->SetTimerInterval("Messzyklus", 0);
 				$this->SetStatus(104);
 			}
 		}
@@ -138,9 +148,9 @@
 		}
  	}
 	// Beginn der Funktionen
-	private function Calculate()
+	public function Calculate()
 	{
-		$OutsideTemperature = GetValueFloat($this->ReadPropertyInteger("Temperature_ID"));
+		$OutdoorTemperature = GetValueFloat($this->ReadPropertyInteger("OutdoorTemperature_ID"));
 		$SwitchTemp = GetValueInteger($this->GetIDForIdent("SwitchTemp");
 		
 		If ($OutsideTemperature < $SwitchTemp) {
@@ -149,15 +159,10 @@
 			$MinTemp = GetValueInteger($this->GetIDForIdent("MinTemp");
 			$MaxTemp = GetValueInteger($this->GetIDForIdent("MaxTemp");
 			$ParallelShift = GetValueInteger($this->GetIDForIdent("ParallelShift");
-			
-			/*
-			$Raumsollwert = GetValue(IPS_GetObjectIDByName("Solltemperatur Raum", $id4));
-			$Vorlauftemperatur_Kessel=min(max(round((0.55*$Steilheit*(pow($Raumsollwert,($Aussentemp/(320-$Aussentemp*4))))*((-$Aussentemp+20)*2)+$Raumsollwert+$Korrektur_Kessel)*1)/1,$min),$max);
-			
-			SetValue( (IPS_GetObjectIDByName("Solltemperatur", $id)), $Vorlauftemperatur_Kessel);
-			
-			$Voltage = ((($Vorlauftemperatur_Kessel-40)/10)+11.9);	
-			*/
+			$ReferenceTemperature = GetValueFloat($this->ReadPropertyInteger("ReferenceTemperature_ID"));
+			$SetTemperature = min(max(round((0.55 * $Steepness * (pow($ReferenceTemperature,($OutdoorTemperature / (320 - $OutdoorTemperature * 4))))*((-$OutdoorTemperature + 20) * 2) + $ReferenceTemperature + $ParallelShift) * 1) / 1, $MinTemp), $MaxTemp);
+			SetValueInteger($this->GetIDForIdent("SetTemperature", $SetTemperature);			
+			$Voltage = ((($Temperature - 40) / 10) +11.9);	
 		}
 		If ($OutsideTemperature > $SwitchTemp) {			     
 			SetValueBoolean($this->GetIDForIdent("Status"), true);
