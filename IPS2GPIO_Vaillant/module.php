@@ -5,11 +5,14 @@
         // Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
-		 // Diese Zeile nicht löschen.
-		 parent::Create();
-		 $this->RegisterPropertyBoolean("Open", false);
-		 $this->RegisterPropertyInteger("Pin", -1);
-		 $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+		// Diese Zeile nicht löschen.
+		parent::Create();
+		$this->RegisterPropertyBoolean("Open", false);
+		$this->RegisterPropertyInteger("Pin", -1);
+		$this->RegisterPropertyInteger("Temperature_ID", 0);
+		$this->RegisterPropertyFloat("Steepness", 1);
+		$this->RegisterPropertyInteger("ParallelShift", 15);
+		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
 	
 	
@@ -24,7 +27,7 @@
 		
 		$arrayElements = array(); 
 		$arrayElements[] = array("name" => "Open", "type" => "CheckBox",  "caption" => "Aktiv"); 
- 		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number)"); 
+ 		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für die PWM Steuerung"); 
   		
 		$arrayOptions = array();
 		$GPIO = array();
@@ -39,13 +42,23 @@
 		
 		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		
+		$arrayElements[] = array("type" => "Label", "label" => "Variable der Aussentemperatur");
+		$arrayElements[] = array("type" => "SelectVariable", "name" => "Temperature_ID", "caption" => "Temperatur (extern)");
+		$arrayElements[] = array("type" => "Label", "label" => "Angabe der Steilheit");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Steepness", "caption" => "Steilheit");
+		$arrayElements[] = array("type" => "Label", "label" => "Angabe der Parallelverschiebung (K)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "ParallelShift", "caption" => "Parallelverschiebung");
+		
+		
 		$arrayActions = array();
 		If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+			/*
 			$arrayActions[] = array("type" => "Button", "label" => "On", "onClick" => 'I2GDMR_Set_Status($id, true);');
 			$arrayActions[] = array("type" => "Button", "label" => "Off", "onClick" => 'I2GDMR_Set_Status($id, false);');
 			$arrayActions[] = array("type" => "Button", "label" => "Toggle", "onClick" => 'I2GDMR_Toggle_Status($id);');
 			$arrayActions[] = array("type" => "Label", "label" => "Dimmen");
 			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "Slider", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GDMR_Set_Intensity($id, $Slider);');
+			*/
 		}
 		else {
 			$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
