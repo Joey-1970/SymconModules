@@ -91,9 +91,11 @@
 		$this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
 	        $this->DisableAction("Status");
 		
-		$this->RegisterVariableInteger("SetTemperature", "Soll-Temperatur", "", 10);
+		$this->RegisterVariableInteger("SetTemperature", "Soll-Temperatur", "", 20);
 	        $this->DisableAction("SetTemperature");
 	        
+		$this->RegisterVariableInteger("Voltage", "Spannung", "", 30);
+	        $this->DisableAction("Voltage");
            
            	//ReceiveData-Filter setzen
 		$Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*)';
@@ -168,7 +170,7 @@
 			SetValueBoolean($this->GetIDForIdent("Status"), true);
 			$Voltage = 11.4;
 		}
-
+		SetValueFloat($this->GetIDForIdent("Voltage", $Voltage);
 			
 	}
 	    
