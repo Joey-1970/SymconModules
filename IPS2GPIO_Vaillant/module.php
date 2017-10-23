@@ -170,15 +170,15 @@
 			$ParallelShift = $this->ReadPropertyInteger("ParallelShift");
 			$ReferenceTemperature = GetValueFloat($this->ReadPropertyInteger("ReferenceTemperature_ID"));
 			
-			If ($OutsideTemperature < $SwitchTemp) {
+			If ($OutdoorTemperature < $SwitchTemp) {
 				// Winterbetrieb
 				SetValueInteger($this->GetIDForIdent("Status"), 1);
 				
 				$SetTemperature = min(max(round((0.55 * $Steepness * (pow($ReferenceTemperature,($OutdoorTemperature / (320 - $OutdoorTemperature * 4))))*((-$OutdoorTemperature + 20) * 2) + $ReferenceTemperature + $ParallelShift) * 1) / 1, $MinTemp), $MaxTemp);
 				SetValueFloat($this->GetIDForIdent("SetTemperature"), $SetTemperature);			
-				$Voltage = ((($Temperature - 40) / 10) +11.9);	
+				$Voltage = ((($SetTemperature - 40) / 10) +11.9);	
 			}
-			If ($OutsideTemperature > $SwitchTemp) {			     
+			If ($OutdoorTemperature >= $SwitchTemp) {			     
 				SetValueInteger($this->GetIDForIdent("Status"), 2);
 				$Voltage = 11.4;
 			}
