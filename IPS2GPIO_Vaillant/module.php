@@ -163,11 +163,11 @@
 	{
 		If (($this->ReadPropertyInteger("OutdoorTemperature_ID") > 0) AND ($this->ReadPropertyInteger("ReferenceTemperature_ID") > 0)) {
 			$OutdoorTemperature = GetValueFloat($this->ReadPropertyInteger("OutdoorTemperature_ID"));
-			$SwitchTemp = GetValueInteger($this->GetIDForIdent("SwitchTemp");
-			$Steepness = GetValueFloat($this->GetIDForIdent("Steepness");
-			$MinTemp = GetValueInteger($this->GetIDForIdent("MinTemp");
-			$MaxTemp = GetValueInteger($this->GetIDForIdent("MaxTemp");
-			$ParallelShift = GetValueInteger($this->GetIDForIdent("ParallelShift");
+			$SwitchTemp = GetValueInteger($this->GetIDForIdent("SwitchTemp"));
+			$Steepness = GetValueFloat($this->GetIDForIdent("Steepness"));
+			$MinTemp = GetValueInteger($this->GetIDForIdent("MinTemp"));
+			$MaxTemp = GetValueInteger($this->GetIDForIdent("MaxTemp"));
+			$ParallelShift = GetValueInteger($this->GetIDForIdent("ParallelShift"));
 			$ReferenceTemperature = GetValueFloat($this->ReadPropertyInteger("ReferenceTemperature_ID"));
 			
 			If ($OutsideTemperature < $SwitchTemp) {
@@ -175,14 +175,14 @@
 				SetValueInteger($this->GetIDForIdent("Status"), 1);
 				
 				$SetTemperature = min(max(round((0.55 * $Steepness * (pow($ReferenceTemperature,($OutdoorTemperature / (320 - $OutdoorTemperature * 4))))*((-$OutdoorTemperature + 20) * 2) + $ReferenceTemperature + $ParallelShift) * 1) / 1, $MinTemp), $MaxTemp);
-				SetValueInteger($this->GetIDForIdent("SetTemperature", $SetTemperature);			
+				SetValueInteger($this->GetIDForIdent("SetTemperature"), $SetTemperature);			
 				$Voltage = ((($Temperature - 40) / 10) +11.9);	
 			}
 			If ($OutsideTemperature > $SwitchTemp) {			     
 				SetValueInteger($this->GetIDForIdent("Status"), 2);
 				$Voltage = 11.4;
 			}
-			SetValueFloat($this->GetIDForIdent("Voltage", $Voltage);
+			SetValueFloat($this->GetIDForIdent("Voltage"), $Voltage);
 		}
 			
 	}
