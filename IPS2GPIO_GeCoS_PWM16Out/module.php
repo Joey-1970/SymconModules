@@ -10,7 +10,7 @@
             	// Diese Zeile nicht löschen.
             	parent::Create();
  	    	$this->RegisterPropertyBoolean("Open", false);
-		$this->ConnectParent("{5F50D0FC-0DBB-4364-B0A3-C900040C5C35}");
+		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
  	    	$this->RegisterPropertyInteger("DeviceAddress", 80);
 		$this->RegisterPropertyInteger("DeviceBus", 4);
 		$this->RegisterPropertyInteger("Frequency", 100);
@@ -35,9 +35,12 @@
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceAddress", "caption" => "Device Adresse", "options" => $arrayOptions );
 		
 		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "GeCoS I²C-Bus 0", "value" => 4);
-		$arrayOptions[] = array("label" => "GeCoS I²C-Bus 1", "value" => 5);
-		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "GeCoS I²C-Bus", "options" => $arrayOptions );
+		$DevicePorts = array();
+		$DevicePorts = unserialize($this->Get_I2C_Ports());
+		foreach($DevicePorts AS $Value => $Label) {
+			$arrayOptions[] = array("label" => $Label, "value" => $Value);
+		}
+		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "Device Bus", "options" => $arrayOptions );
 		
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "100", "value" => 100);
@@ -58,7 +61,7 @@
             	// Diese Zeile nicht löschen
             	parent::ApplyChanges();
 		// Profil anlegen
-		$this->RegisterProfileInteger("Intensity.4096", "Intensity", "", " %", 0, 4095, 1);
+		$this->RegisterProfileInteger("IPS2GPIO.Intensity4096", "Intensity", "", " %", 0, 4095, 1);
 		
 		$this->SetBuffer("ErrorCounter", 0);
 				
@@ -66,7 +69,7 @@
 		for ($i = 0; $i <= 15; $i++) {
 			$this->RegisterVariableBoolean("Output_Bln_X".$i, "Ausgang X".$i, "~Switch", ($i + 1) * 10);
 			$this->EnableAction("Output_Bln_X".$i);	
-			$this->RegisterVariableInteger("Output_Int_X".$i, "Ausgang X".$i, "Intensity.4096", (($i + 1) * 10) + 5);
+			$this->RegisterVariableInteger("Output_Int_X".$i, "Ausgang X".$i, "IPS2GPIO.Intensity4096", (($i + 1) * 10) + 5);
 			$this->EnableAction("Output_Int_X".$i);	
 		}
 		
@@ -75,7 +78,7 @@
 				//ReceiveData-Filter setzen
 				$Filter = '((.*"Function":"get_used_i2c".*|.*"InstanceID":'.$this->InstanceID.'.*)|.*"Function":"status".*)';
 				$this->SetReceiveDataFilter($Filter);
-				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{47113C57-29FE-4A60-9D0E-840022883B89}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 				If ($Result == true) {
 					// Setup
 					$this->Setup();
@@ -148,11 +151,9 @@
 		}
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Ausgang setzen
-			$this->SendDataToParent(json_encode(Array("DataID"=> "{47113C57-29FE-4A60-9D0E-840022883B89}", "Function" => "i2c_write_4_byte", "InstanceID" => $this->InstanceID, "Register" => $StartAddress, "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
+			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_4_byte", "InstanceID" => $this->InstanceID, "Register" => $StartAddress, "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
 			// Ausgang abfragen
 			$this->GetOutput($StartAddress + 2);
-			//$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{47113C57-29FE-4A60-9D0E-840022883B89}", "Function" => "i2c_PCA9685_Read", "InstanceID" => $this->InstanceID, "Register" => $StartAddress + 2)));
-			//$this->SetStatusVariables($StartAddress + 2, $Result);
 		}
 	}
 	
@@ -176,11 +177,9 @@
 		}
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Ausgang setzen
-			$this->SendDataToParent(json_encode(Array("DataID"=> "{47113C57-29FE-4A60-9D0E-840022883B89}", "Function" => "i2c_write_4_byte", "InstanceID" => $this->InstanceID, "Register" => $StartAddress, "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
+			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_4_byte", "InstanceID" => $this->InstanceID, "Register" => $StartAddress, "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
 			// Ausgang abfragen
 			$this->GetOutput($StartAddress + 2);
-			//$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{47113C57-29FE-4A60-9D0E-840022883B89}", "Function" => "i2c_PCA9685_Read", "InstanceID" => $this->InstanceID, "Register" => $StartAddress + 2)));
-			//$this->SetStatusVariables($StartAddress + 2, $Result);
 		}
 	}     
 	    
@@ -189,32 +188,30 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Setup", "Ausfuehrung", 0);
 			// Mode 1 in Sleep setzen
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{47113C57-29FE-4A60-9D0E-840022883B89}", "Function" => "i2c_PCA9685_Write", "InstanceID" => $this->InstanceID, "Register" => 0, "Value" => 16)));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write", "InstanceID" => $this->InstanceID, "Register" => 0, "Value" => 16)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Ausfuehrung in Sleep setzen fehlerhaft!", 0);
 			}
 			IPS_Sleep(10);
 			// Prescale einstellen
 			$PreScale = round((25000000 / (4096 * $this->ReadPropertyInteger("Frequency"))) - 1);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{47113C57-29FE-4A60-9D0E-840022883B89}", "Function" => "i2c_PCA9685_Write", "InstanceID" => $this->InstanceID, "Register" => 254, "Value" => $PreScale)));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write", "InstanceID" => $this->InstanceID, "Register" => 254, "Value" => $PreScale)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Prescale setzen fehlerhaft!", 0);
 			}
 			// Mode 1 in Sleep zurücksetzen
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{47113C57-29FE-4A60-9D0E-840022883B89}", "Function" => "i2c_PCA9685_Write", "InstanceID" => $this->InstanceID, "Register" => 0, "Value" => 32)));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write", "InstanceID" => $this->InstanceID, "Register" => 0, "Value" => 32)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Mode 1 setzen fehlerhaft!", 0);
 			}
 			// Mode 2 auf Ausgänge setzen
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{47113C57-29FE-4A60-9D0E-840022883B89}", "Function" => "i2c_PCA9685_Write", "InstanceID" => $this->InstanceID, "Register" => 1, "Value" => 4)));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write", "InstanceID" => $this->InstanceID, "Register" => 1, "Value" => 4)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Mode 2 setzen fehlerhaft!", 0);
 			}
 			// Ausgänge initial einlesen
 			for ($i = 6; $i < 70; $i = $i + 4) {
 				$this->GetOutput($i + 2);
-				//$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{47113C57-29FE-4A60-9D0E-840022883B89}", "Function" => "i2c_PCA9685_Read", "InstanceID" => $this->InstanceID, "Register" => $i + 2)));
-				//$this->SetStatusVariables($i + 2, $Result);
 			}
 		}
 	}
@@ -223,7 +220,7 @@
 	{
 		$this->SendDebug("GetOutput", "Ausfuehrung", 0);
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{47113C57-29FE-4A60-9D0E-840022883B89}", "Function" => "i2c_PCA9685_Read", "InstanceID" => $this->InstanceID, "Register" => $Register)));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Read", "InstanceID" => $this->InstanceID, "Register" => $Register)));
 			if (($Result === NULL) OR ($Result < 0) OR ($Result > 65536)) {// Falls der Splitter einen Fehler hat und 'nichts' zurückgibt.
 				$this->SetBuffer("ErrorCounter", ($this->GetBuffer("ErrorCounter") + 1));
 				$this->SendDebug("GetOutput", "Keine gueltige Antwort: ".$Result, 0);
@@ -281,6 +278,23 @@
 	private function unsetBit($byte, $significance) {
 	    // ein bestimmtes Bit auf 0 setzen
 	    return $byte & ~(1<<$significance);
+	}
+	    
+	private function Get_I2C_Ports()
+	{
+		If ($this->HasActiveParent() == true) {
+			$I2C_Ports = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_get_ports")));
+		}
+		else {
+			$DevicePorts = array();
+			$DevicePorts[0] = "I²C-Bus 0";
+			$DevicePorts[1] = "I²C-Bus 1";
+			for ($i = 3; $i <= 10; $i++) {
+				$DevicePorts[$i] = "MUX I²C-Bus ".($i -3);
+			}
+			$I2C_Ports = serialize($DevicePorts);
+		}
+	return $I2C_Ports;
 	}
 	    
 	private function HasActiveParent()
