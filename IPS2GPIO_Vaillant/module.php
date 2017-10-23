@@ -152,25 +152,28 @@
 	// Beginn der Funktionen
 	public function Calculate()
 	{
-		$OutdoorTemperature = GetValueFloat($this->ReadPropertyInteger("OutdoorTemperature_ID"));
-		$SwitchTemp = GetValueInteger($this->GetIDForIdent("SwitchTemp");
-		
-		If ($OutsideTemperature < $SwitchTemp) {
-			SetValueBoolean($this->GetIDForIdent("Status"), false);
+		If (($this->ReadPropertyInteger("OutdoorTemperature_ID") > 0) AND ($this->ReadPropertyInteger("ReferenceTemperature_ID") > 0)) {
+			$OutdoorTemperature = GetValueFloat($this->ReadPropertyInteger("OutdoorTemperature_ID"));
+			$SwitchTemp = GetValueInteger($this->GetIDForIdent("SwitchTemp");
 			$Steepness = GetValueFloat($this->GetIDForIdent("Steepness");
 			$MinTemp = GetValueInteger($this->GetIDForIdent("MinTemp");
 			$MaxTemp = GetValueInteger($this->GetIDForIdent("MaxTemp");
 			$ParallelShift = GetValueInteger($this->GetIDForIdent("ParallelShift");
 			$ReferenceTemperature = GetValueFloat($this->ReadPropertyInteger("ReferenceTemperature_ID"));
-			$SetTemperature = min(max(round((0.55 * $Steepness * (pow($ReferenceTemperature,($OutdoorTemperature / (320 - $OutdoorTemperature * 4))))*((-$OutdoorTemperature + 20) * 2) + $ReferenceTemperature + $ParallelShift) * 1) / 1, $MinTemp), $MaxTemp);
-			SetValueInteger($this->GetIDForIdent("SetTemperature", $SetTemperature);			
-			$Voltage = ((($Temperature - 40) / 10) +11.9);	
+			
+			If ($OutsideTemperature < $SwitchTemp) {
+				SetValueBoolean($this->GetIDForIdent("Status"), false);
+				
+				$SetTemperature = min(max(round((0.55 * $Steepness * (pow($ReferenceTemperature,($OutdoorTemperature / (320 - $OutdoorTemperature * 4))))*((-$OutdoorTemperature + 20) * 2) + $ReferenceTemperature + $ParallelShift) * 1) / 1, $MinTemp), $MaxTemp);
+				SetValueInteger($this->GetIDForIdent("SetTemperature", $SetTemperature);			
+				$Voltage = ((($Temperature - 40) / 10) +11.9);	
+			}
+			If ($OutsideTemperature > $SwitchTemp) {			     
+				SetValueBoolean($this->GetIDForIdent("Status"), true);
+				$Voltage = 11.4;
+			}
+			SetValueFloat($this->GetIDForIdent("Voltage", $Voltage);
 		}
-		If ($OutsideTemperature > $SwitchTemp) {			     
-			SetValueBoolean($this->GetIDForIdent("Status"), true);
-			$Voltage = 11.4;
-		}
-		SetValueFloat($this->GetIDForIdent("Voltage", $Voltage);
 			
 	}
 	    
