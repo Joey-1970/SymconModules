@@ -2331,6 +2331,11 @@ class IPS2GPIO_IO extends IPSModule
 			$SearchArray[] = $i;
 			$DeviceName[] = "PCF8591";
 		}
+		// GeCoS PWM16Out PCA9685
+		for ($i = 80; $i <= 87; $i++) {
+			$SearchArray[] = $i;
+			$DeviceName[] = "GeCoS PWM16Out";
+		}
 		// GeCoS RGBW PCA9685
 		for ($i = 88; $i <= 90; $i++) {
 			$SearchArray[] = $i;
