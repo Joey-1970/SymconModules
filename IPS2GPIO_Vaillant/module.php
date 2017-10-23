@@ -49,9 +49,9 @@
 		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		
 		$arrayElements[] = array("type" => "Label", "label" => "Variable der Aussentemperatur");
-		$arrayElements[] = array("type" => "SelectVariable", "name" => "OutdoorTemperature_ID", "caption" => "Temperatur ID Außen");
+		$arrayElements[] = array("type" => "SelectVariable", "name" => "OutdoorTemperature_ID", "caption" => "Variablen ID");
 		$arrayElements[] = array("type" => "Label", "label" => "Variable der Referenztemperatur");
-		$arrayElements[] = array("type" => "SelectVariable", "name" => "ReferenceTemperature_ID", "caption" => "Temperatur ID Referenz");
+		$arrayElements[] = array("type" => "SelectVariable", "name" => "ReferenceTemperature_ID", "caption" => "Variablen ID");
 		$arrayElements[] = array("type" => "Label", "label" => "Angabe der Steilheit");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Steepness", "caption" => "Steilheit");
 		$arrayElements[] = array("type" => "Label", "label" => "Angabe der Parallelverschiebung (K)");
@@ -180,6 +180,7 @@
 			}
 			If ($OutdoorTemperature >= $SwitchTemp) {			     
 				SetValueInteger($this->GetIDForIdent("Status"), 2);
+				SetValueFloat($this->GetIDForIdent("SetTemperature"), 0);	
 				$Voltage = 11.4;
 			}
 			SetValueFloat($this->GetIDForIdent("Voltage"), $Voltage);
