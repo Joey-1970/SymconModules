@@ -191,7 +191,7 @@
 			
 			If ($OutdoorTemperature < $SwitchTemp) {
 				// Winterbetrieb
-				If (GetValueFloat($this->GetIDForIdent("Status")) <> 1) {
+				If (GetValueInteger($this->GetIDForIdent("Status")) <> 1) {
 					SetValueInteger($this->GetIDForIdent("Status"), 1);
 				}
 				$SetTemperature = min(max(round((0.55 * $Steepness * (pow($ReferenceTemperature,($OutdoorTemperature / (320 - $OutdoorTemperature * 4))))*((-$OutdoorTemperature + 20) * 2) + $ReferenceTemperature + $ParallelShift) * 1) / 1, $MinTemp), $MaxTemp);
@@ -201,7 +201,7 @@
 				$Voltage = ((($SetTemperature - 40) / 10) +11.9);	
 			}
 			If ($OutdoorTemperature >= $SwitchTemp) {			     
-				If (GetValueFloat($this->GetIDForIdent("Status")) <> 2) {
+				If (GetValueInteger($this->GetIDForIdent("Status")) <> 2) {
 					SetValueInteger($this->GetIDForIdent("Status"), 2);
 				}
 				If (GetValueFloat($this->GetIDForIdent("SetTemperature")) <> 0) {
@@ -230,7 +230,7 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $value)));
 			If (!$Result) {
 				$this->SendDebug("Set_Intensity", "Fehler beim Schreiben des Wertes!", 0);
-				If (GetValueFloat($this->GetIDForIdent("Status")) <> 3) {
+				If (GetValueInteger($this->GetIDForIdent("Status")) <> 3) {
 					SetValueInteger($this->GetIDForIdent("Status"), 3);
 				}
 				return;
