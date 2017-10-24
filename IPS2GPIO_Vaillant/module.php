@@ -184,6 +184,7 @@
 				$Voltage = 11.4;
 			}
 			SetValueFloat($this->GetIDForIdent("Voltage"), $Voltage);
+			$Intensity = intval($Voltage / 15 * 100 * 2.55);
 		}
 			
 	}
