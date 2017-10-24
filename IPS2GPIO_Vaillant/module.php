@@ -17,8 +17,6 @@
 		$this->RegisterPropertyInteger("MaxTemp", 70);
 		$this->RegisterPropertyInteger("SwitchTemp", 20);
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
-		$this->RegisterPropertyInteger("Messzyklus", 60);
-		$this->RegisterTimer("Messzyklus", 0, 'I2GVt_Calculate($_IPS["TARGET"]);');
         }
 	
 	
@@ -123,12 +121,10 @@
 									  "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 				If ($Result == true) {
 					$this->SetStatus(102);
-					$this->SetTimerInterval("Messzyklus", 10 * 1000);
 					$this->Calculate();
 				}
 			}
 			else {
-				$this->SetTimerInterval("Messzyklus", 0);
 				SetValueInteger($this->GetIDForIdent("Status"), 0);
 				$this->SetStatus(104);
 			}
@@ -156,10 +152,12 @@
 				//IPS_LogMessage("IPS2SingleRoomControl", "Temperatur- oder Fensterstatusänderung");
 				// Änderung der Ist-Temperatur, die Temperatur aus dem angegebenen Sensor in das Modul kopieren
 				If ($SenderID == $this->ReadPropertyInteger("OutdoorTemperature_ID")) {
+					$this->SendDebug("ReceiveData", "Ausloeser Aenderung Aussentemperatur", 0);
 					$this->Calculate();
 				}
 				// Änderung des Fensterstatus
 				elseif ($SenderID == $this->ReadPropertyInteger("ReferenceTemperature_ID")) {
+					$this->SendDebug("ReceiveData", "Ausloeser Aenderung Referenztemperatur", 0);
 					$this->Calculate();
 				}
 				break;
@@ -212,6 +210,7 @@
 			SetValueFloat($this->GetIDForIdent("Voltage"), $Voltage);
 			$Intensity = intval($Voltage / 15 * 100 * 2.55);
 			$this->SendDebug("Calculate", "Stellwert: ".$Intensity." Spannung: ".$Voltage."V", 0);
+			$this->Set_Intensity($Intensity);
 		}
 			
 	}
@@ -222,67 +221,15 @@
 	public function Set_Intensity(Int $value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("Set_Intensity", "Ausfuehrung", 0);
 			$value = min(255, max(0, $value));
-			If (GetValueBoolean($this->GetIDForIdent("Status")) == true) {
-				$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $value)));
-				If (!$Result) {
-					$this->SendDebug("Set_Intensity", "Fehler beim Schreiben des Wertes!", 0);
-					return;
-				}
-				else {
-					SetValueInteger($this->GetIDForIdent("Intensity"), $value);
-				}
-			}
-			else {
-				SetValueInteger($this->GetIDForIdent("Intensity"), $value);
-			}
-		}
-	}
-	    
-	// Schaltet den gewaehlten Pin
-	public function Set_Status(Bool $value)
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("Set_Status", "Ausfuehrung", 0);
-			If ($value == true) {
-				$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => GetValueInteger($this->GetIDForIdent("Intensity")))));
-				If (!$Result) {
-					$this->SendDebug("Set_Status", "Fehler beim Schreiben des Wertes!", 0);
-					return; 
-				}
-				else {
-					$this->Get_Status();
-					SetValueBoolean($this->GetIDForIdent("Status"), true);
-				}
-			}
-			else {
-				$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => 0)));
-				If (!$Result) {
-					$this->SendDebug("Set_Status", "Fehler beim Schreiben des Wertes!", 0);
-					return;
-				}
-				else {
-					SetValueBoolean($this->GetIDForIdent("Status"), false);
-				}
-			}
-		}
-	}
-	
-	public function Get_Status()
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("Get_Status", "Ausfuehrung", 0);
 			
-			If (GetValueBoolean($this->GetIDForIdent("Status")) == true) {
-				$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin") )));
-				If ($Result < 0) {
-					$this->SendDebug("Get_Status", "Fehler beim Lesen des Wertes!", 0);
-					return;
-				}
-				else {
-					SetValueInteger($this->GetIDForIdent("Intensity"), $Result);
-				}
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $value)));
+			If (!$Result) {
+				$this->SendDebug("Set_Intensity", "Fehler beim Schreiben des Wertes!", 0);
+				return;
+			}
+			else {
+				$this->SendDebug("Set_Intensity", "Ausfuehrung erfolgreich", 0);
 			}
 		}
 	}
