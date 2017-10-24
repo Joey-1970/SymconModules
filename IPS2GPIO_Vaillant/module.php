@@ -103,7 +103,16 @@
 	        
 		$this->RegisterVariableFloat("Voltage", "Spannung", "~Volt", 30);
 	        $this->DisableAction("Voltage");
-           
+           	
+		// Registrierung für die Änderung der Aussen-Temperatur
+		If ($this->ReadPropertyInteger("OutdoorTemperature_ID") > 0) {
+			$this->RegisterMessage($this->ReadPropertyInteger("OutdoorTemperature_ID"), 10603);
+		}
+		// Registrierung für die Änderung der Referenz-Temperatur
+		If ($this->ReadPropertyInteger("ReferenceTemperature_ID") > 0) {
+			$this->RegisterMessage($this->ReadPropertyInteger("ReferenceTemperature_ID"), 10603);
+		}
+		
            	//ReceiveData-Filter setzen
 		$Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*)';
 		$this->SetReceiveDataFilter($Filter);
@@ -140,6 +149,23 @@
 	    }
 	}
 	
+	public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
+    	{
+		switch ($Message) {
+			case 10603:
+				//IPS_LogMessage("IPS2SingleRoomControl", "Temperatur- oder Fensterstatusänderung");
+				// Änderung der Ist-Temperatur, die Temperatur aus dem angegebenen Sensor in das Modul kopieren
+				If ($SenderID == $this->ReadPropertyInteger("OutdoorTemperature_ID")) {
+					$this->Calculate();
+				}
+				// Änderung des Fensterstatus
+				elseif ($SenderID == $this->ReadPropertyInteger("ReferenceTemperature_ID")) {
+					$this->Calculate();
+				}
+				break;
+		}
+    	}    
+	    
 	public function ReceiveData($JSONString) 
 	{
 		// Empfangene Daten vom Gateway/Splitter
