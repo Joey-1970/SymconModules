@@ -191,18 +191,27 @@
 			
 			If ($OutdoorTemperature < $SwitchTemp) {
 				// Winterbetrieb
-				SetValueInteger($this->GetIDForIdent("Status"), 1);
-				
+				If (GetValueFloat($this->GetIDForIdent("Status")) <> 1) {
+					SetValueInteger($this->GetIDForIdent("Status"), 1);
+				}
 				$SetTemperature = min(max(round((0.55 * $Steepness * (pow($ReferenceTemperature,($OutdoorTemperature / (320 - $OutdoorTemperature * 4))))*((-$OutdoorTemperature + 20) * 2) + $ReferenceTemperature + $ParallelShift) * 1) / 1, $MinTemp), $MaxTemp);
-				SetValueFloat($this->GetIDForIdent("SetTemperature"), $SetTemperature);			
+				If (GetValueFloat($this->GetIDForIdent("SetTemperature")) <> $SetTemperature) {
+					SetValueFloat($this->GetIDForIdent("SetTemperature"), $SetTemperature);
+				}
 				$Voltage = ((($SetTemperature - 40) / 10) +11.9);	
 			}
 			If ($OutdoorTemperature >= $SwitchTemp) {			     
-				SetValueInteger($this->GetIDForIdent("Status"), 2);
-				SetValueFloat($this->GetIDForIdent("SetTemperature"), 0);	
+				If (GetValueFloat($this->GetIDForIdent("Status")) <> 2) {
+					SetValueInteger($this->GetIDForIdent("Status"), 2);
+				}
+				If (GetValueFloat($this->GetIDForIdent("SetTemperature")) <> 0) {
+					SetValueFloat($this->GetIDForIdent("SetTemperature"), 0);
+				}
 				$Voltage = 11.4;
 			}
-			SetValueFloat($this->GetIDForIdent("Voltage"), $Voltage);
+			If (GetValueFloat($this->GetIDForIdent("Voltage")) <> $Voltage) {
+				SetValueFloat($this->GetIDForIdent("Voltage"), $Voltage);
+			}
 			$Intensity = intval($Voltage / 15 * 100 * 2.55);
 			$this->SendDebug("Calculate", "Stellwert: ".$Intensity." Spannung: ".$Voltage."V", 0);
 			$this->Set_Intensity($Intensity);
@@ -221,7 +230,9 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $value)));
 			If (!$Result) {
 				$this->SendDebug("Set_Intensity", "Fehler beim Schreiben des Wertes!", 0);
-				SetValueInteger($this->GetIDForIdent("Status"), 3);
+				If (GetValueFloat($this->GetIDForIdent("Status")) <> 3) {
+					SetValueInteger($this->GetIDForIdent("Status"), 3);
+				}
 				return;
 			}
 			else {
