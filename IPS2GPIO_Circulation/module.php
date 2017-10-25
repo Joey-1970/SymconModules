@@ -123,6 +123,24 @@
 	    	}
 	}
 	
+	public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
+    	{
+		switch ($Message) {
+			case 10603:
+				// Änderung der Vorlauf-Temperatur
+				If ($SenderID == $this->ReadPropertyInteger("OutdoorTemperature_ID")) {
+					$this->SendDebug("ReceiveData", "Ausloeser Aenderung Vorlauf-Temperatur", 0);
+					$this->Calculate();
+				}
+				// Änderung des Fensterstatus
+				elseif ($SenderID == $this->ReadPropertyInteger("ReturnTemperature_ID")) {
+					$this->SendDebug("ReceiveData", "Ausloeser Aenderung Ruecklauf-Temperatur", 0);
+					$this->Calculate();
+				}
+				break;
+		}
+    	}    
+	    
 	public function ReceiveData($JSONString) 
 	{
 	    	// Empfangene Daten vom Gateway/Splitter
@@ -138,14 +156,21 @@
 			   		$this->SetStatus($data->Status);
 			   	}
 			   	break;
-			break;
-			   case "freepin":
-			   	// Funktion zum erstellen dynamischer Pulldown-Menüs
-			   	break;
 	 	}
  	}
-	// Beginn der Funktionen
 	
+	// Beginn der Funktionen
+	public function Calculate()
+	{
+		If (($this->ReadPropertyInteger("FlowTemperature_ID") > 0) AND ($this->ReadPropertyInteger("ReturnTemperature_ID") > 0)) {
+			
+			
+			
+		}
+			
+	}
+	    
+	    
 	// Schaltet den gewaehlten Pin
 	public function Set_Status(Bool $Value)
 	{
