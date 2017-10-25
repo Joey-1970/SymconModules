@@ -9,6 +9,8 @@
             	parent::Create();
             	$this->RegisterPropertyBoolean("Open", false);
 		$this->RegisterPropertyInteger("Pin", -1);
+		$this->RegisterPropertyInteger("FlowTemperature_ID", 0);
+		$this->RegisterPropertyInteger("ReturnTemperature_ID", 0);
 		$this->RegisterPropertyBoolean("Invert", false);
 		$this->RegisterPropertyBoolean("Logging", false);
 		$this->RegisterPropertyInteger("Startoption", 2);
@@ -26,7 +28,7 @@
 		
 		$arrayElements = array(); 
 		$arrayElements[] = array("name" => "Open", "type" => "CheckBox",  "caption" => "Aktiv"); 
- 		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number)"); 
+ 		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für die Ansteuerung der Zirkulationspumpe"); 
   		
 		$arrayOptions = array();
 		$GPIO = array();
@@ -40,6 +42,11 @@
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Variable der Vorlauftemperatur");
+		$arrayElements[] = array("type" => "SelectVariable", "name" => "FlowTemperature_ID", "caption" => "Variablen ID");
+		$arrayElements[] = array("type" => "Label", "label" => "Variable der Rücklauftemperatur");
+		$arrayElements[] = array("type" => "SelectVariable", "name" => "ReturnTemperature_ID", "caption" => "Variablen ID");
+		
 		$arrayElements[] = array("name" => "Invert", "type" => "CheckBox",  "caption" => "Invertiere Anzeige");
 		$arrayElements[] = array("name" => "Logging", "type" => "CheckBox",  "caption" => "Logging aktivieren");
 		$arrayElements[] = array("type" => "Label", "label" => "Status des Ausgangs nach Neustart");
@@ -68,6 +75,15 @@
 		$this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
 		$this->EnableAction("Status");
             	
+		// Registrierung für die Änderung der Vorlauf-Temperatur
+		If ($this->ReadPropertyInteger("FlowTemperature_ID") > 0) {
+			$this->RegisterMessage($this->ReadPropertyInteger("FlowTemperature_ID"), 10603);
+		}
+		// Registrierung für die Änderung der Return-Temperatur
+		If ($this->ReadPropertyInteger("ReturnTemperature_ID") > 0) {
+			$this->RegisterMessage($this->ReadPropertyInteger("ReturnTemperature_ID"), 10603);
+		}
+		
 		// Logging setzen
 		AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Status"), $this->ReadPropertyBoolean("Logging"));
 		IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
