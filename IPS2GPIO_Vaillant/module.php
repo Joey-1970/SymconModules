@@ -50,7 +50,7 @@
 		$arrayElements[] = array("type" => "SelectVariable", "name" => "OutdoorTemperature_ID", "caption" => "Variablen ID");
 		$arrayElements[] = array("type" => "Label", "label" => "Variable der Referenztemperatur");
 		$arrayElements[] = array("type" => "SelectVariable", "name" => "ReferenceTemperature_ID", "caption" => "Variablen ID");
-		$arrayElements[] = array("type" => "Label", "label" => "Angabe der Steilheit");
+		$arrayElements[] = array("type" => "Label", "label" => "Angabe der Steilheit (Typische Werte: 0,1 - 3,5)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Steepness", "caption" => "Steilheit", "digits" => 1);
 		$arrayElements[] = array("type" => "Label", "label" => "Angabe der Parallelverschiebung (K)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "ParallelShift", "caption" => "Parallelverschiebung");
