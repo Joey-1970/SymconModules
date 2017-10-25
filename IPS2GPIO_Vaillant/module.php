@@ -219,9 +219,7 @@
 			
 	}
 	    
-	    
-	    
-	// Dimmt den gewaehlten Pin
+	// PWM auf dem gewaehlten Pin
 	public function Set_Intensity(Int $value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
