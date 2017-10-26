@@ -163,8 +163,22 @@
 	public function Calculate()
 	{
 		If (($this->ReadPropertyInteger("FlowTemperature_ID") > 0) AND ($this->ReadPropertyInteger("ReturnTemperature_ID") > 0)) {
+			/*
+			$Differenz = $_IPS['VALUE'] - $_IPS['OLDVALUE'];
+			$Script = IPS_GetScript($_IPS['SELF']);
+			$Zeit = time() - $Script['ScriptExecuted'] ;
+			If ($Zeit == 0){return;}
+			$Steigung = ($Differenz * 10) / $Zeit;
+			IPS_LogMessage(IPS_GetName($_IPS['SELF']), "Steigung: " . round($Steigung, 2) . " - Temperaturdifferenz: " . $Differenz . "°C - Zeitdifferenz: " . round($Zeit, 2) . "s - Status Zirkulationspumpe: " . GetValueBoolean (37702 /*[Temperaturen\Heizung\Steuerung\Zirkulation\Zirkulation]*/  ) . ".");
+			*/
+				/*
+				If (($Steigung) > 2 And ($Zeit) > 1 And GetValueBoolean (37702 /*[Temperaturen\Heizung\Steuerung\Zirkulation\Zirkulation]*/  ) == false) {
+			   		//FS20_SwitchMode(33085 /*[Temperaturen\Heizung\Steuerung\Zirkulation\FS20 Schalter Zirkulation]*/ , true); //Gerät einschalten
+					//ECHO "Die Zirkulationspumpe wird aufgrund der Warmwasserentnahme eingeschaltet. Die Steigung beträgt " . round($Steigung, 2) . ".";
+				//IPS_LogMessage(IPS_GetName($_IPS['SELF']), "Die Zirkulationspumpe wird aufgrund der Warmwasserentnahme eingeschaltet. Die Steigung beträgt " . round($Steigung, 2) . ".");
+				}
 			
-			
+			*/
 			
 		}
 			
