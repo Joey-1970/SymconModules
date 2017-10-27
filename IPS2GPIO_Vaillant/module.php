@@ -11,6 +11,8 @@
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->RegisterPropertyInteger("OutdoorTemperature_ID", 0);
 		$this->RegisterPropertyInteger("ReferenceTemperature_ID", 0);
+		$this->RegisterPropertyInteger("FlowTemperature_ID", 0);
+		$this->RegisterPropertyInteger("ReturnTemperature_ID", 0);
 		$this->RegisterPropertyFloat("Steepness", 1);
 		$this->RegisterPropertyInteger("ParallelShift", 15);
 		$this->RegisterPropertyInteger("MinTemp", 35);
@@ -50,6 +52,11 @@
 		$arrayElements[] = array("type" => "SelectVariable", "name" => "OutdoorTemperature_ID", "caption" => "Variablen ID");
 		$arrayElements[] = array("type" => "Label", "label" => "Variable der Referenztemperatur");
 		$arrayElements[] = array("type" => "SelectVariable", "name" => "ReferenceTemperature_ID", "caption" => "Variablen ID");
+		$arrayElements[] = array("type" => "Label", "label" => "Variable der Vorlauftemperatur");
+		$arrayElements[] = array("type" => "SelectVariable", "name" => "FlowTemperature_ID", "caption" => "Variablen ID");
+		$arrayElements[] = array("type" => "Label", "label" => "Variable der Rücklauftemperatur");
+		$arrayElements[] = array("type" => "SelectVariable", "name" => "ReturnTemperature_ID", "caption" => "Variablen ID");
+		
 		$arrayElements[] = array("type" => "Label", "label" => "Angabe der Steilheit (Typische Werte: 0,1 - 3,5)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Steepness", "caption" => "Steilheit", "digits" => 1);
 		$arrayElements[] = array("type" => "Label", "label" => "Angabe der Parallelverschiebung (K)");
