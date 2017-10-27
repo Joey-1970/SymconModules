@@ -13,6 +13,7 @@
 		$this->RegisterPropertyInteger("ReturnTemperature_ID", 0);
 		$this->RegisterPropertyInteger("PumpState_ID", 0);
 		$this->RegisterPropertyInteger("Amplification", 10);
+		$this->RegisterPropertyInteger("PitchThreshold", 2);
 		$this->RegisterPropertyBoolean("Invert", false);
 		$this->RegisterPropertyBoolean("Logging", false);
 		$this->RegisterPropertyInteger("Startoption", 2);
@@ -50,9 +51,10 @@
 		$arrayElements[] = array("type" => "SelectVariable", "name" => "ReturnTemperature_ID", "caption" => "Variablen ID");
 		$arrayElements[] = array("type" => "Label", "label" => "Status-Variable der Umwälzpumpe");
 		$arrayElements[] = array("type" => "SelectVariable", "name" => "PumpState_ID", "caption" => "Variablen ID");
-		
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Amplification", "caption" => "Verstärkung Temperaturdifferenz");
-		
+		$arrayElements[] = array("type" => "Label", "label" => "Verstärkungsfaktor der Temperaturdifferenz");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Amplification", "caption" => "Faktor");
+		$arrayElements[] = array("type" => "Label", "label" => "Schwellwert der Steigung");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PitchThreshold", "caption" => "Schwellwert", "digits" => 1);
 		
 		$arrayElements[] = array("name" => "Invert", "type" => "CheckBox",  "caption" => "Invertiere Anzeige");
 		$arrayElements[] = array("name" => "Logging", "type" => "CheckBox",  "caption" => "Logging aktivieren");
@@ -135,14 +137,14 @@
 		switch ($Message) {
 			case 10603:
 				// Änderung der Vorlauf-Temperatur
-				If ($SenderID == $this->ReadPropertyInteger("OutdoorTemperature_ID")) {
+				If ($SenderID == $this->ReadPropertyInteger("FlowTemperature_ID")) {
 					$this->SendDebug("ReceiveData", "Ausloeser Aenderung Vorlauf-Temperatur", 0);
 					$this->Calculate();
 				}
 				// Änderung des Fensterstatus
 				elseif ($SenderID == $this->ReadPropertyInteger("ReturnTemperature_ID")) {
 					$this->SendDebug("ReceiveData", "Ausloeser Aenderung Ruecklauf-Temperatur", 0);
-					$this->Calculate();
+					//$this->Calculate();
 				}
 				break;
 		}
@@ -175,29 +177,17 @@
 			$TimeDiff = time() -  $this->GetBuffer("LastCalculate");
 			$Amplification = $this->ReadPropertyInteger("Amplification");
 			$PumpState = GetValueBoolean($this->ReadPropertyInteger("PumpState_ID"));
+			$PitchThreshold = $this->ReadPropertyFloat("PitchThreshold");
 			
 			If ($TimeDiff > 0) {
 				$Pitch = ($TempDiff * $Amplification) / $TimeDiff;
 				$this->SendDebug("Calculate", "Steigung: ".round($Pitch, 2)." Temperaturdifferenz: ".$TempDiff." °C Zeitdifferenz: ".round($TimeDiff, 2), 0);
-				
-			}
-			
-			/*
-			$Differenz = $_IPS['VALUE'] - $_IPS['OLDVALUE'];
-			$Script = IPS_GetScript($_IPS['SELF']);
-			$Zeit = time() - $Script['ScriptExecuted'] ;
-			If ($Zeit == 0){return;}
-			$Steigung = ($Differenz * 10) / $Zeit;
-			IPS_LogMessage(IPS_GetName($_IPS['SELF']), "Steigung: " . round($Steigung, 2) . " - Temperaturdifferenz: " . $Differenz . "°C - Zeitdifferenz: " . round($Zeit, 2) . "s - Status Zirkulationspumpe: " . GetValueBoolean (37702 /*[Temperaturen\Heizung\Steuerung\Zirkulation\Zirkulation]*/  ) . ".");
-			*/
-				/*
-				If (($Steigung) > 2 And ($Zeit) > 1 And GetValueBoolean (37702 /*[Temperaturen\Heizung\Steuerung\Zirkulation\Zirkulation]*/  ) == false) {
-			   		//FS20_SwitchMode(33085 /*[Temperaturen\Heizung\Steuerung\Zirkulation\FS20 Schalter Zirkulation]*/ , true); //Gerät einschalten
-					//ECHO "Die Zirkulationspumpe wird aufgrund der Warmwasserentnahme eingeschaltet. Die Steigung beträgt " . round($Steigung, 2) . ".";
-				//IPS_LogMessage(IPS_GetName($_IPS['SELF']), "Die Zirkulationspumpe wird aufgrund der Warmwasserentnahme eingeschaltet. Die Steigung beträgt " . round($Steigung, 2) . ".");
+				If (($Pitch > $PitchThreshold) And ($TimeDiff > 1) And ($PumpState == false)) {
+					// Pumpe einschalten
+					
+					$this->SendDebug("Calculate", "Die Zirkulationspumpe wird wegen der Warmwasseranforderung eingeschaltet", 0);
 				}
-			
-			*/
+			}
 			
 			$this->SetBuffer("LastCalculate", time());
 			$this->SetBuffer("LastFlowTemperature", $FlowTemperature);
