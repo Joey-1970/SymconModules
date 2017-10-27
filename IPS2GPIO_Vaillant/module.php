@@ -216,9 +216,7 @@
 				$FlowTemperature = GetValueFloat($this->ReadPropertyInteger("FlowTemperature_ID"));
 				$ReturnTemperature = GetValueFloat($this->ReadPropertyInteger("ReturnTemperature_ID"));
 				$TempDiff = $FlowTemperature - $ReturnTemperature;
-			}
-			else {
-				$TempDiff = 0;
+				$ParallelShift = $ParallelShift + ($TempDiff - $ParallelShift);
 			}
 			
 			If ($OutdoorTemperature < $SwitchTemp) {
