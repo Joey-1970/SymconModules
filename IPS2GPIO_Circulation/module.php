@@ -83,10 +83,21 @@
         {
 		// Diese Zeile nicht löschen
 		parent::ApplyChanges();
+		// Anlegen des Wochenplans
+		$this->RegisterEvent("Wochenplan", "IPS2Cn_Event_".$this->InstanceID, 2, $this->InstanceID, 20);
+		
 		//Status-Variablen anlegen
 		$this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
 		$this->EnableAction("Status");
             	
+		// Anlegen der Daten für den Wochenplan
+		for ($i = 0; $i <= 6; $i++) {
+			IPS_SetEventScheduleGroup($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), $i, pow(2, $i));
+		}
+		
+		$this->RegisterScheduleAction($this->GetIDForIdent("IPS2SRC_Event_".$this->InstanceID), 0, "An", 0xA9F5F2, "IPS2Cn_SetPumpState(\$_IPS['TARGET'], ".$Value.");");
+		
+		
 		// Registrierung für die Änderung der Vorlauf-Temperatur
 		If ($this->ReadPropertyInteger("FlowTemperature_ID") > 0) {
 			$this->RegisterMessage($this->ReadPropertyInteger("FlowTemperature_ID"), 10603);
@@ -199,7 +210,12 @@
 		}
 			
 	}
-	   
+	
+	public function SetPumpState(string $State)
+	{
+		$this->SendDebug("SetPumpState", "Aufruf aus dem Wochenplan", 0);
+	}
+	    
 	private function SwitchOff()
 	{
 		If (($this->ReadPropertyInteger("FlowTemperature_ID") > 0) AND ($this->ReadPropertyInteger("ReturnTemperature_ID"))) {
@@ -254,6 +270,77 @@
 		}
 	}
 	
+	private function GetEventActionID($EventID, $EventType, $Days, $Hour, $Minute)
+	{
+		$EventValue = IPS_GetEvent($EventID);
+		$Result = false;
+		// Prüfen um welche Art von Event es sich handelt
+		If ($EventValue['EventType'] == $EventType) {
+			$ScheduleGroups = $EventValue['ScheduleGroups'];
+			// Anzahl der ScheduleGroups ermitteln	
+			$ScheduleGroupsCount = count($ScheduleGroups);
+			If ($ScheduleGroupsCount > 0) {
+				for ($i = 0; $i <= $ScheduleGroupsCount - 1; $i++) {	
+					If ($ScheduleGroups[$i]['Days'] == $Days) {
+						$ScheduleGroupDay = $ScheduleGroups[$i];
+						$ScheduleGroupsDayCount = count($ScheduleGroupDay['Points']);
+						If ($ScheduleGroupsDayCount == 0) {
+							IPS_LogMessage("IPS2SingleRoomControl", "Keine Schaltpunkte definiert!"); 	
+						}
+						elseif ($ScheduleGroupsDayCount == 1) {
+							$Result = $ScheduleGroupDay['Points'][0]['ActionID'];
+						}
+						elseif ($ScheduleGroupsDayCount > 1) {
+							for ($j = 0; $j <= $ScheduleGroupsDayCount - 1; $j++) {
+								$TimestampScheduleStart = mktime($ScheduleGroupDay['Points'][$j]['Start']['Hour'], $ScheduleGroupDay['Points'][$j]['Start']['Minute'], 0, 0, 0, 0);
+								If ($j < $ScheduleGroupsDayCount - 1) {
+									$TimestampScheduleEnd = mktime($ScheduleGroupDay['Points'][$j + 1]['Start']['Hour'], $ScheduleGroupDay['Points'][$j + 1]['Start']['Minute'], 0, 0, 0, 0);
+								}
+								else {
+									$TimestampScheduleEnd = mktime(24, 0, 0, 0, 0, 0);
+								}
+								$Timestamp = mktime($Hour, $Minute, 0, 0, 0, 0);
+								If (($Timestamp >= $TimestampScheduleStart) AND ($Timestamp < $TimestampScheduleEnd)) {
+									$Result = ($ScheduleGroupDay['Points'][$j]['ActionID']) + 1;
+								} 
+							}
+						}
+					}
+				}
+			}
+			else {
+				IPS_LogMessage("IPS2SingleRoomControl", "Es sind keine Aktionen eingerichtet!");
+			}
+		  }
+	return $Result;
+	}
+	
+	private function RegisterEvent($Name, $Ident, $Typ, $Parent, $Position)
+	{
+		$eid = @$this->GetIDForIdent($Ident);
+		if($eid === false) {
+		    	$eid = 0;
+		} elseif(IPS_GetEvent($eid)['EventType'] <> $Typ) {
+		    	IPS_DeleteEvent($eid);
+		    	$eid = 0;
+		}
+		//we need to create one
+		if ($eid == 0) {
+			$EventID = IPS_CreateEvent($Typ);
+		    	IPS_SetParent($EventID, $Parent);
+		    	IPS_SetIdent($EventID, $Ident);
+		    	IPS_SetName($EventID, $Name);
+		    	IPS_SetPosition($EventID, $Position);
+		    	IPS_SetEventActive($EventID, true);  
+		}
+	}  
+	
+	private function RegisterScheduleAction($EventID, $ActionID, $Name, $Color, $Script)
+	{
+		IPS_SetEventScheduleAction($EventID, $ActionID, $Name, $Color, $Script);
+	}
+	    
+	    
 	private function Get_GPIO()
 	{
 		If ($this->HasActiveParent() == true) {
