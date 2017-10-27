@@ -106,6 +106,10 @@
 		If ($this->ReadPropertyInteger("ReturnTemperature_ID") > 0) {
 			$this->RegisterMessage($this->ReadPropertyInteger("ReturnTemperature_ID"), 10603);
 		}
+		// Registrierung für den Wochenplan
+		//$this->RegisterMessage("IPS2Cn_Event_".$this->InstanceID, 10603);
+	
+		
 		
 		// Logging setzen
 		AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Status"), $this->ReadPropertyBoolean("Logging"));
