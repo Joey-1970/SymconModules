@@ -52,9 +52,9 @@
 		$arrayElements[] = array("type" => "SelectVariable", "name" => "OutdoorTemperature_ID", "caption" => "Variablen ID");
 		$arrayElements[] = array("type" => "Label", "label" => "Variable der Referenztemperatur");
 		$arrayElements[] = array("type" => "SelectVariable", "name" => "ReferenceTemperature_ID", "caption" => "Variablen ID");
-		$arrayElements[] = array("type" => "Label", "label" => "Variable der Vorlauftemperatur");
+		$arrayElements[] = array("type" => "Label", "label" => "Variable der Vorlauftemperatur (optional)");
 		$arrayElements[] = array("type" => "SelectVariable", "name" => "FlowTemperature_ID", "caption" => "Variablen ID");
-		$arrayElements[] = array("type" => "Label", "label" => "Variable der Rücklauftemperatur");
+		$arrayElements[] = array("type" => "Label", "label" => "Variable der Rücklauftemperatur (optional)");
 		$arrayElements[] = array("type" => "SelectVariable", "name" => "ReturnTemperature_ID", "caption" => "Variablen ID");
 		
 		$arrayElements[] = array("type" => "Label", "label" => "Angabe der Steilheit (Typische Werte: 0,1 - 3,5)");
@@ -212,6 +212,14 @@
 			$MaxTemp = $this->ReadPropertyInteger("MaxTemp");
 			$ParallelShift = $this->ReadPropertyInteger("ParallelShift");
 			$ReferenceTemperature = GetValueFloat($this->ReadPropertyInteger("ReferenceTemperature_ID"));
+			If (($this->ReadPropertyInteger("FlowTemperature_ID") > 0) AND ($this->ReadPropertyInteger("ReturnTemperature_ID") > 0)) {
+				$FlowTemperature = GetValueFloat($this->ReadPropertyInteger("FlowTemperature_ID"));
+				$ReturnTemperature = GetValueFloat($this->ReadPropertyInteger("ReturnTemperature_ID"));
+				$TempDiff = $FlowTemperature - $ReturnTemperature;
+			}
+			else {
+				$TempDiff = 0;
+			}
 			
 			If ($OutdoorTemperature < $SwitchTemp) {
 				// Winterbetrieb
