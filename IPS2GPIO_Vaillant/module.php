@@ -111,6 +111,14 @@
 		If ($this->ReadPropertyInteger("ReferenceTemperature_ID") > 0) {
 			$this->RegisterMessage($this->ReadPropertyInteger("ReferenceTemperature_ID"), 10603);
 		}
+		// Registrierung für die Änderung der Vorlauf-Temperatur
+		If ($this->ReadPropertyInteger("FlowTemperature_ID") > 0) {
+			$this->RegisterMessage($this->ReadPropertyInteger("FlowTemperature_ID"), 10603);
+		}
+		// Registrierung für die Änderung der Rücklauf-Temperatur
+		If ($this->ReadPropertyInteger("ReturnTemperature_ID") > 0) {
+			$this->RegisterMessage($this->ReadPropertyInteger("ReturnTemperature_ID"), 10603);
+		}
 		
            	//ReceiveData-Filter setzen
 		$Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*)';
@@ -151,15 +159,24 @@
     	{
 		switch ($Message) {
 			case 10603:
-				//IPS_LogMessage("IPS2SingleRoomControl", "Temperatur- oder Fensterstatusänderung");
-				// Änderung der Ist-Temperatur, die Temperatur aus dem angegebenen Sensor in das Modul kopieren
+				// Änderung der Aussentemperatur
 				If ($SenderID == $this->ReadPropertyInteger("OutdoorTemperature_ID")) {
 					$this->SendDebug("ReceiveData", "Ausloeser Aenderung Aussentemperatur", 0);
 					$this->Calculate();
 				}
-				// Änderung des Fensterstatus
+				// Änderung der Referenztemperatur
 				elseif ($SenderID == $this->ReadPropertyInteger("ReferenceTemperature_ID")) {
 					$this->SendDebug("ReceiveData", "Ausloeser Aenderung Referenztemperatur", 0);
+					$this->Calculate();
+				}
+				// Änderung der Vorlauftemperatur
+				elseif ($SenderID == $this->ReadPropertyInteger("FlowTemperature_ID")) {
+					$this->SendDebug("ReceiveData", "Ausloeser Aenderung Vorlauftemperatur", 0);
+					$this->Calculate();
+				}
+				// Änderung der Rücklauftemperatur
+				elseif ($SenderID == $this->ReadPropertyInteger("ReturnTemperature_ID")) {
+					$this->SendDebug("ReceiveData", "Ausloeser Aenderung Rücklauftemperatur", 0);
 					$this->Calculate();
 				}
 				break;
