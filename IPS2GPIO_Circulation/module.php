@@ -107,7 +107,7 @@
 			$this->RegisterMessage($this->ReadPropertyInteger("ReturnTemperature_ID"), 10603);
 		}
 		// Registrierung für den Wochenplan
-		//$this->RegisterMessage("IPS2Cn_Event_".$this->InstanceID, 10603);
+		$this->RegisterMessage($this->GetIDForIdent("IPS2Cn_Event_".$this->InstanceID), 10803);
 	
 		
 		
@@ -153,6 +153,9 @@
 	public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     	{
 		switch ($Message) {
+			case 10803:
+				$this->SendDebug("ReceiveData", "Ausloeser Wochenplan", 0);
+				break;
 			case 10603:
 				// Änderung der Vorlauf-Temperatur
 				If ($SenderID == $this->ReadPropertyInteger("FlowTemperature_ID")) {
