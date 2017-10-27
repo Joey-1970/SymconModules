@@ -11,9 +11,10 @@
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->RegisterPropertyInteger("FlowTemperature_ID", 0);
 		$this->RegisterPropertyInteger("ReturnTemperature_ID", 0);
-		$this->RegisterPropertyInteger("PumpState_ID", 0);
 		$this->RegisterPropertyInteger("Amplification", 10);
 		$this->RegisterPropertyInteger("PitchThreshold", 2);
+		$this->RegisterPropertyInteger("MinRuntime", 120);
+		$this->RegisterPropertyInteger("ParallelShift", 15);
 		$this->RegisterPropertyBoolean("Invert", false);
 		$this->RegisterPropertyBoolean("Logging", false);
 		$this->RegisterPropertyInteger("Startoption", 2);
@@ -49,12 +50,14 @@
 		$arrayElements[] = array("type" => "SelectVariable", "name" => "FlowTemperature_ID", "caption" => "Variablen ID");
 		$arrayElements[] = array("type" => "Label", "label" => "Variable der Rücklauftemperatur");
 		$arrayElements[] = array("type" => "SelectVariable", "name" => "ReturnTemperature_ID", "caption" => "Variablen ID");
-		$arrayElements[] = array("type" => "Label", "label" => "Status-Variable der Umwälzpumpe");
-		$arrayElements[] = array("type" => "SelectVariable", "name" => "PumpState_ID", "caption" => "Variablen ID");
 		$arrayElements[] = array("type" => "Label", "label" => "Verstärkungsfaktor der Temperaturdifferenz");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Amplification", "caption" => "Faktor");
 		$arrayElements[] = array("type" => "Label", "label" => "Schwellwert der Steigung");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PitchThreshold", "caption" => "Schwellwert", "digits" => 1);
+		$arrayElements[] = array("type" => "Label", "label" => "Minimale Laufzeit der Zirkulationspumpe");
+		$arrayElements[] = array("type" => "IntervalBox", "name" => "MinRuntime", "caption" => "Sekunden");
+		$arrayElements[] = array("type" => "Label", "label" => "Temperaturdifferenz Vor- zu Rücklauf als Abschaltbedingung (K)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "ParallelShift", "caption" => "Temperaturdifferenz");
 		
 		$arrayElements[] = array("name" => "Invert", "type" => "CheckBox",  "caption" => "Invertiere Anzeige");
 		$arrayElements[] = array("name" => "Logging", "type" => "CheckBox",  "caption" => "Logging aktivieren");
@@ -144,7 +147,7 @@
 				// Änderung des Fensterstatus
 				elseif ($SenderID == $this->ReadPropertyInteger("ReturnTemperature_ID")) {
 					$this->SendDebug("ReceiveData", "Ausloeser Aenderung Ruecklauf-Temperatur", 0);
-					//$this->Calculate();
+					$this->SwitchOff();
 				}
 				break;
 		}
@@ -171,12 +174,13 @@
 	// Beginn der Funktionen
 	public function Calculate()
 	{
-		If (($this->ReadPropertyInteger("FlowTemperature_ID") > 0) AND ($this->ReadPropertyInteger("ReturnTemperature_ID") AND ($this->ReadPropertyInteger("PumpState_ID") > 0)) {
+		// Prüfen, ob die Zirkulationspumpe aufgrund einer Warmwasseranforderung eingeschaltet werden soll
+		If (($this->ReadPropertyInteger("FlowTemperature_ID") > 0) AND ($this->ReadPropertyInteger("ReturnTemperature_ID"))) {
 			$FlowTemperature = GetValueFloat($this->ReadPropertyInteger("FlowTemperature_ID"));
 			$TempDiff = $FlowTemperature - $this->GetBuffer("LastFlowTemperature");
 			$TimeDiff = time() -  $this->GetBuffer("LastCalculate");
 			$Amplification = $this->ReadPropertyInteger("Amplification");
-			$PumpState = GetValueBoolean($this->ReadPropertyInteger("PumpState_ID"));
+			$PumpState = GetValueBoolean($this->GetIDForIdent("Status"));
 			$PitchThreshold = $this->ReadPropertyFloat("PitchThreshold");
 			
 			If ($TimeDiff > 0) {
@@ -184,8 +188,9 @@
 				$this->SendDebug("Calculate", "Steigung: ".round($Pitch, 2)." Temperaturdifferenz: ".$TempDiff." °C Zeitdifferenz: ".round($TimeDiff, 2), 0);
 				If (($Pitch > $PitchThreshold) And ($TimeDiff > 1) And ($PumpState == false)) {
 					// Pumpe einschalten
-					
+					$this->Set_Status(true);
 					$this->SendDebug("Calculate", "Die Zirkulationspumpe wird wegen der Warmwasseranforderung eingeschaltet", 0);
+					$this->SetBuffer("LastSwitchOn", time());
 				}
 			}
 			
@@ -194,7 +199,23 @@
 		}
 			
 	}
-	    
+	   
+	private function SwitchOff()
+	{
+		If (($this->ReadPropertyInteger("FlowTemperature_ID") > 0) AND ($this->ReadPropertyInteger("ReturnTemperature_ID"))) {
+			$FlowTemperature = GetValueFloat($this->ReadPropertyInteger("FlowTemperature_ID"));
+			$ReturnTemperature = GetValueFloat($this->ReadPropertyInteger("ReturnTemperature_ID"));
+			$TempDiff = $FlowTemperature - $ReturnTemperature;
+			$TimeDiff = time() -  $this->GetBuffer("LastSwitchOn");
+			$MinRuntime = $this->ReadPropertyInteger("MinRuntime");
+			$ParallelShift = $this->ReadPropertyInteger("ParallelShift");
+			If (($TimeDiff > $MinRuntime) AND (($ReturnTemperature - $ParallelShift) > $FlowTemperature)) {
+				// Pumpe ausschalten
+				$this->Set_Status(false);
+				$this->SendDebug("Calculate", "Die Zirkulationspumpe wird ausgeschaltet da der Schwellwert der Rücklauftemperatur erreicht wurde", 0);
+			}
+		}
+	}
 	    
 	// Schaltet den gewaehlten Pin
 	public function Set_Status(Bool $Value)
@@ -211,15 +232,6 @@
 				SetValueBoolean($this->GetIDForIdent("Status"), ($Value ^ $this->ReadPropertyBoolean("Invert")));
 				$this->Get_Status();
 			}
-		}
-	}
-	
-	// Toggelt den Status
-	public function Toggle_Status()
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("Toggle_Status", "Ausfuehrung", 0);
-			$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")));
 		}
 	}
 	
