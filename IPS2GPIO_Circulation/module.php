@@ -144,7 +144,7 @@
 					$this->SendDebug("ReceiveData", "Ausloeser Aenderung Vorlauf-Temperatur", 0);
 					$this->Calculate();
 				}
-				// Änderung des Fensterstatus
+				//Änderung der Rücklauf-Temperatur
 				elseif ($SenderID == $this->ReadPropertyInteger("ReturnTemperature_ID")) {
 					$this->SendDebug("ReceiveData", "Ausloeser Aenderung Ruecklauf-Temperatur", 0);
 					$this->SwitchOff();
@@ -209,7 +209,9 @@
 			$TimeDiff = time() -  $this->GetBuffer("LastSwitchOn");
 			$MinRuntime = $this->ReadPropertyInteger("MinRuntime");
 			$ParallelShift = $this->ReadPropertyInteger("ParallelShift");
-			If (($TimeDiff > $MinRuntime) AND (($ReturnTemperature - $ParallelShift) > $FlowTemperature)) {
+			$PumpState = GetValueBoolean($this->GetIDForIdent("Status"));
+			
+			If (($TimeDiff > $MinRuntime) AND (($ReturnTemperature - $ParallelShift) > $FlowTemperature) And ($PumpState == true)) {
 				// Pumpe ausschalten
 				$this->Set_Status(false);
 				$this->SendDebug("Calculate", "Die Zirkulationspumpe wird ausgeschaltet da der Schwellwert der Rücklauftemperatur erreicht wurde", 0);
