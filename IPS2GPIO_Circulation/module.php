@@ -11,6 +11,8 @@
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->RegisterPropertyInteger("FlowTemperature_ID", 0);
 		$this->RegisterPropertyInteger("ReturnTemperature_ID", 0);
+		$this->RegisterPropertyInteger("PumpState_ID", 0);
+		$this->RegisterPropertyInteger("Amplification", 10);
 		$this->RegisterPropertyBoolean("Invert", false);
 		$this->RegisterPropertyBoolean("Logging", false);
 		$this->RegisterPropertyInteger("Startoption", 2);
@@ -46,6 +48,11 @@
 		$arrayElements[] = array("type" => "SelectVariable", "name" => "FlowTemperature_ID", "caption" => "Variablen ID");
 		$arrayElements[] = array("type" => "Label", "label" => "Variable der Rücklauftemperatur");
 		$arrayElements[] = array("type" => "SelectVariable", "name" => "ReturnTemperature_ID", "caption" => "Variablen ID");
+		$arrayElements[] = array("type" => "Label", "label" => "Status-Variable der Umwälzpumpe");
+		$arrayElements[] = array("type" => "SelectVariable", "name" => "PumpState_ID", "caption" => "Variablen ID");
+		
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Amplification", "caption" => "Verstärkung Temperaturdifferenz");
+		
 		
 		$arrayElements[] = array("name" => "Invert", "type" => "CheckBox",  "caption" => "Invertiere Anzeige");
 		$arrayElements[] = array("name" => "Logging", "type" => "CheckBox",  "caption" => "Logging aktivieren");
@@ -162,7 +169,19 @@
 	// Beginn der Funktionen
 	public function Calculate()
 	{
-		If (($this->ReadPropertyInteger("FlowTemperature_ID") > 0) AND ($this->ReadPropertyInteger("ReturnTemperature_ID") > 0)) {
+		If (($this->ReadPropertyInteger("FlowTemperature_ID") > 0) AND ($this->ReadPropertyInteger("ReturnTemperature_ID") AND ($this->ReadPropertyInteger("PumpState_ID") > 0)) {
+			$FlowTemperature = GetValueFloat($this->ReadPropertyInteger("FlowTemperature_ID"));
+			$TempDiff = $FlowTemperature - $this->GetBuffer("LastFlowTemperature");
+			$TimeDiff = time() -  $this->GetBuffer("LastCalculate");
+			$Amplification = $this->ReadPropertyInteger("Amplification");
+			$PumpState = GetValueBoolean($this->ReadPropertyInteger("PumpState_ID"));
+			
+			If ($TimeDiff > 0) {
+				$Pitch = ($TempDiff * $Amplification) / $TimeDiff;
+				$this->SendDebug("Calculate", "Steigung: ".round($Pitch, 2)." Temperaturdifferenz: ".$TempDiff." °C Zeitdifferenz: ".round($TimeDiff, 2), 0);
+				
+			}
+			
 			/*
 			$Differenz = $_IPS['VALUE'] - $_IPS['OLDVALUE'];
 			$Script = IPS_GetScript($_IPS['SELF']);
@@ -180,6 +199,8 @@
 			
 			*/
 			
+			$this->SetBuffer("LastCalculate", time());
+			$this->SetBuffer("LastFlowTemperature", $FlowTemperature);
 		}
 			
 	}
