@@ -252,7 +252,6 @@
 	{ 
 		$this->SendDebug("ToggleOutputPinStatus", "Ausfuehrung", 0);
 		$Group = min(4, max(1, $Group));
-		$Status = min(1, max(0, $Status));
 				
 		$ChannelArray = [
 		    "RGB" => 0,
