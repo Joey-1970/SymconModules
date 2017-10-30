@@ -40,6 +40,7 @@ class IPS2GPIO_IO extends IPSModule
 		$this->SetBuffer("PinPossible", serialize($PinPossible));
 		$PinUsed = array();
 		$this->SetBuffer("PinUsed", serialize($PinUsed));
+		$this->RegisterPropertyBoolean("AudioDAC", false);
 	}
   	
 	public function GetConfigurationForm() 
@@ -142,7 +143,10 @@ class IPS2GPIO_IO extends IPSModule
 			$arrayElements[] = array("type" => "Button", "label" => "PIGPIO Restart", "onClick" => 'I2G_PIGPIOD_Restart($id);');
 		}
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-				
+		$arrayElements[] = array("type" => "Label", "label" => "Wird ein Audio Hat wie z.B. Hifiberry parallel verwendet, muss diese Option gewählt werden.");
+		$arrayElements[] = array("type" => "Label", "label" => "Die Nutzung von PWM (Dimmer, RGB, RGBW usw.) kann dann nicht genutzt werden!");
+		$arrayElements[] = array("type" => "CheckBox", "name" => "AudioDAC", "caption" => "Vorhanden");	
+		
 		$arrayActions = array();
 		If ($this->ReadPropertyBoolean("Open") == true) {   
 			$arrayActions[] = array("type" => "Label", "label" => "Aktuell sind keine Testfunktionen definiert");
@@ -1921,7 +1925,12 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SSH_Connect("sudo killall pigpiod");
 			// Wartezeit
 			IPS_Sleep(2000);
-			$this->SSH_Connect("sudo pigpiod -t0");
+			If ($this->ReadPropertyBoolean("AudioDAC") == true) {
+				$this->SSH_Connect("sudo pigpiod -t0");
+			}
+			else {
+				$this->SSH_Connect("sudo pigpiod");
+			}
 			// Wartezeit
 			IPS_Sleep(2000);
 			IPS_SetProperty($this->GetParentID(), "Open", true);
@@ -2055,7 +2064,12 @@ class IPS2GPIO_IO extends IPSModule
 					// Versuchen PIGPIO zu starten
 					IPS_LogMessage("IPS2GPIO Netzanbindung: ","Versuche PIGPIO per SSH zu starten...");
 					$this->SendDebug("Netzanbindung", "Versuche PIGPIO per SSH zu starten...", 0);
-					$this->SSH_Connect("sudo pigpiod -t0");
+					If ($this->ReadPropertyBoolean("AudioDAC") == true) {
+						$this->SSH_Connect("sudo pigpiod -t0");
+					}
+					else {
+						$this->SSH_Connect("sudo pigpiod");
+					}
 					$status = @fsockopen($this->ReadPropertyString("IPAddress"), 8888, $errno, $errstr, 10);
 					if (!$status) {
 						IPS_LogMessage("IPS2GPIO Netzanbindung: ","Port ist geschlossen!");
