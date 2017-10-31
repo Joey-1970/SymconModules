@@ -228,7 +228,7 @@
 				If (GetValueFloat($this->GetIDForIdent("SetTemperature")) <> $SetTemperature) {
 					SetValueFloat($this->GetIDForIdent("SetTemperature"), $SetTemperature);
 				}
-				$Voltage = ((($SetTemperature - 40) / 10) +11.9);	
+				$Voltage = ((($SetTemperature - 40) / 10) + 11.9);	
 			}
 			If ($OutdoorTemperature >= $SwitchTemp) {			     
 				If (GetValueInteger($this->GetIDForIdent("Status")) <> 2) {
