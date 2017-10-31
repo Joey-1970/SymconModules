@@ -102,14 +102,16 @@
 				}
 				break;
 			case "status":
-			   	If ($data->InstanceID == $this->InstanceID) {
-				   	If ($this->ReadPropertyBoolean("Open") == true) {				
-						$this->SetStatus($data->Status);
-					}
-					else {
-						$this->SetStatus(104);
-					}	
+			   	If ($data->HardwareRev <= 3) {
+				   	If (($data->Pin == 0) OR ($data->Pin == 1)) {
+				   		$this->SetStatus($data->Status);		
+				   	}
 			   	}
+				else if ($data->HardwareRev > 3) {
+					If (($data->Pin == 2) OR ($data->Pin == 3)) {
+				   		$this->SetStatus($data->Status);
+				   	}
+				}
 			   	break;
 	 	}
  	}
