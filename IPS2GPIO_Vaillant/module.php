@@ -18,6 +18,9 @@
 		$this->RegisterPropertyInteger("MinTemp", 35);
 		$this->RegisterPropertyInteger("MaxTemp", 70);
 		$this->RegisterPropertyInteger("SwitchTemp", 20);
+		$this->RegisterPropertyFloat("MinVoltage", 11.4);
+		$this->RegisterPropertyInteger("Messzyklus", 600);
+		$this->RegisterTimer("Messzyklus", 0, 'I2GVt_Calculate($_IPS["TARGET"]);');
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
 	
@@ -67,6 +70,13 @@
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "MaxTemp", "caption" => "Maximaltemperatur");
 		$arrayElements[] = array("type" => "Label", "label" => "Angabe der Umschalttemperatur Sommer/Winter (C°)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "SwitchTemp", "caption" => "Umschalttemperatur");
+		$arrayElements[] = array("type" => "Label", "label" => "Spannung Sommerbetreib");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "MinVoltage", "caption" => "Volt", "digits" => 1);
+
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Regelsperre in Sekunden");
+		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
+
 		
 		
 		$arrayActions = array();
@@ -103,21 +113,9 @@
 		$this->RegisterVariableFloat("Voltage", "Spannung", "~Volt", 30);
 	        $this->DisableAction("Voltage");
            	
-		// Registrierung für die Änderung der Aussen-Temperatur
-		If ($this->ReadPropertyInteger("OutdoorTemperature_ID") > 0) {
-			$this->RegisterMessage($this->ReadPropertyInteger("OutdoorTemperature_ID"), 10603);
-		}
 		// Registrierung für die Änderung der Referenz-Temperatur
 		If ($this->ReadPropertyInteger("ReferenceTemperature_ID") > 0) {
 			$this->RegisterMessage($this->ReadPropertyInteger("ReferenceTemperature_ID"), 10603);
-		}
-		// Registrierung für die Änderung der Vorlauf-Temperatur
-		If ($this->ReadPropertyInteger("FlowTemperature_ID") > 0) {
-			$this->RegisterMessage($this->ReadPropertyInteger("FlowTemperature_ID"), 10603);
-		}
-		// Registrierung für die Änderung der Rücklauf-Temperatur
-		If ($this->ReadPropertyInteger("ReturnTemperature_ID") > 0) {
-			$this->RegisterMessage($this->ReadPropertyInteger("ReturnTemperature_ID"), 10603);
 		}
 		
            	//ReceiveData-Filter setzen
@@ -130,11 +128,13 @@
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
 									  "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 				If ($Result == true) {
+					$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
 					$this->SetStatus(102);
 					$this->Calculate();
 				}
 			}
 			else {
+				$this->SetTimerInterval("Messzyklus", 0);
 				SetValueInteger($this->GetIDForIdent("Status"), 0);
 				$this->SetStatus(104);
 			}
@@ -159,24 +159,9 @@
     	{
 		switch ($Message) {
 			case 10603:
-				// Änderung der Aussentemperatur
-				If ($SenderID == $this->ReadPropertyInteger("OutdoorTemperature_ID")) {
-					$this->SendDebug("ReceiveData", "Ausloeser Aenderung Aussentemperatur", 0);
-					$this->Calculate();
-				}
 				// Änderung der Referenztemperatur
-				elseif ($SenderID == $this->ReadPropertyInteger("ReferenceTemperature_ID")) {
+				If ($SenderID == $this->ReadPropertyInteger("ReferenceTemperature_ID")) {
 					$this->SendDebug("ReceiveData", "Ausloeser Aenderung Referenztemperatur", 0);
-					$this->Calculate();
-				}
-				// Änderung der Vorlauftemperatur
-				elseif ($SenderID == $this->ReadPropertyInteger("FlowTemperature_ID")) {
-					$this->SendDebug("ReceiveData", "Ausloeser Aenderung Vorlauftemperatur", 0);
-					$this->Calculate();
-				}
-				// Änderung der Rücklauftemperatur
-				elseif ($SenderID == $this->ReadPropertyInteger("ReturnTemperature_ID")) {
-					$this->SendDebug("ReceiveData", "Ausloeser Aenderung Rücklauftemperatur", 0);
 					$this->Calculate();
 				}
 				break;
@@ -237,7 +222,7 @@
 				If (GetValueFloat($this->GetIDForIdent("SetTemperature")) <> 0) {
 					SetValueFloat($this->GetIDForIdent("SetTemperature"), 0);
 				}
-				$Voltage = 0;
+				$Voltage = $this->ReadPropertyFloat("MinVoltage");
 			}
 			If (GetValueFloat($this->GetIDForIdent("Voltage")) <> $Voltage) {
 				SetValueFloat($this->GetIDForIdent("Voltage"), $Voltage);
