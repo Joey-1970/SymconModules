@@ -95,7 +95,7 @@
 			IPS_SetEventScheduleGroup($this->GetIDForIdent("IPS2Cn_Event_".$this->InstanceID), $i, pow(2, $i));
 		}
 		
-		$this->RegisterScheduleAction($this->GetIDForIdent("IPS2Cn_Event_".$this->InstanceID), 0, "An", 0xA9F5F2, "IPS2Cn_SetPumpState(\$_IPS['TARGET'], ".$Value.");");
+		$this->RegisterScheduleAction($this->GetIDForIdent("IPS2Cn_Event_".$this->InstanceID), 0, "An", 0xA9F5F2, "IPS2Cn_SetPumpState(\$_IPS['TARGET'], 1);");
 		
 		
 		// Registrierung für die Änderung der Vorlauf-Temperatur
