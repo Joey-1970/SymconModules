@@ -237,7 +237,7 @@
 				If (GetValueFloat($this->GetIDForIdent("SetTemperature")) <> 0) {
 					SetValueFloat($this->GetIDForIdent("SetTemperature"), 0);
 				}
-				$Voltage = 11.4;
+				$Voltage = 0;
 			}
 			If (GetValueFloat($this->GetIDForIdent("Voltage")) <> $Voltage) {
 				SetValueFloat($this->GetIDForIdent("Voltage"), $Voltage);
