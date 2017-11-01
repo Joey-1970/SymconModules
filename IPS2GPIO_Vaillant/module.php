@@ -227,7 +227,8 @@
 			If (GetValueFloat($this->GetIDForIdent("Voltage")) <> $Voltage) {
 				SetValueFloat($this->GetIDForIdent("Voltage"), $Voltage);
 			}
-			$Intensity = intval($Voltage / 15 * 100 * 2.55);
+			// Wert invertieren
+			$Intensity = 255 - (intval($Voltage / 15 * 100 * 2.55));
 			$this->SendDebug("Calculate", "Stellwert: ".$Intensity." Spannung: ".$Voltage."V", 0);
 			$this->Set_Intensity($Intensity);
 		}
