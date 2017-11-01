@@ -112,6 +112,13 @@
 	        
 		$this->RegisterVariableFloat("Voltage", "Spannung", "~Volt", 30);
 	        $this->DisableAction("Voltage");
+		
+		$this->RegisterVariableFloat("FlowTemperature", "Vorlauf-Temperatur", "~Temperature", 40);
+	        $this->DisableAction("FlowTemperature");
+		
+		$this->RegisterVariableFloat("ReturnTemperature", "Rücklauf-Temperatur", "~Temperature", 50);
+	        $this->DisableAction("ReturnTemperature");
+		
            	
 		// Registrierung für die Änderung der Referenz-Temperatur
 		If ($this->ReadPropertyInteger("ReferenceTemperature_ID") > 0) {
@@ -213,7 +220,8 @@
 				If (GetValueFloat($this->GetIDForIdent("SetTemperature")) <> $SetTemperature) {
 					SetValueFloat($this->GetIDForIdent("SetTemperature"), $SetTemperature);
 				}
-				$Voltage = ((($SetTemperature - 40) / 10) + 11.9);	
+				$Voltage = ((($SetTemperature - 40) / 10) + 11.9);
+				$Voltage = max($Voltage, $this->ReadPropertyFloat("MinVoltage"));
 			}
 			If ($OutdoorTemperature >= $SwitchTemp) {			     
 				If (GetValueInteger($this->GetIDForIdent("Status")) <> 2) {
@@ -228,7 +236,7 @@
 				SetValueFloat($this->GetIDForIdent("Voltage"), $Voltage);
 			}
 			// Wert invertieren
-			$Intensity = 255 - (intval($Voltage / 15 * 100 * 2.55));
+			$Intensity = 255 - (intval($Voltage / (15 - 2) * 100 * 2.55));
 			$this->SendDebug("Calculate", "Stellwert: ".$Intensity." Spannung: ".$Voltage."V", 0);
 			$this->Set_Intensity($Intensity);
 		}
