@@ -149,6 +149,15 @@
 		// Profil anlegen
 		$this->RegisterProfileFloat("IPS2GPIO.gm3", "Drops", "", " g/m³", 0, 1000, 0.1, 1);
 		
+		$this->RegisterProfileInteger("IPS2GPIO.AirQuality", "Information", "", "", 0, 6, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 0, "unbekannt", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 1, "gut", "Information", 0x58FA58);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 2, "durchschnittlich", "Information", 0xF7FE2E);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 3, "etwas schlecht", "Information", 0xFE9A2E);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 4, "schlecht", "Information", 0xFF0000);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 5, "schlechter", "Information", 0x61380B);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 6, "sehr schlecht", "Information", 0x000000);
+		
 		//Status-Variablen anlegen
              	$this->RegisterVariableFloat("Temperature", "Temperature", "~Temperature", 10);
 		$this->DisableAction("Temperature");
@@ -193,6 +202,11 @@
 		$this->DisableAction("PressureTrend24h");
 		IPS_SetHidden($this->GetIDForIdent("PressureTrend24h"), false);
 		SetValueFloat($this->GetIDForIdent("PressureTrend24h"), 0);
+		
+		$this->RegisterVariableInteger("AirQuality", "AirQuality", "IPS2GPIO.AirQuality", 110);
+		$this->DisableAction("AirQuality");
+		IPS_SetHidden($this->GetIDForIdent("AirQuality"), false);
+		SetValueInteger($this->GetIDForIdent("AirQuality"), 0);
 		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 			// Logging setzen
@@ -555,6 +569,23 @@
 			$I2C_Ports = serialize($DevicePorts);
 		}
 	return $I2C_Ports;
+	}
+	    
+	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
+	{
+	        if (!IPS_VariableProfileExists($Name))
+	        {
+	            IPS_CreateVariableProfile($Name, 1);
+	        }
+	        else
+	        {
+	            $profile = IPS_GetVariableProfile($Name);
+	            if ($profile['ProfileType'] != 1)
+	                throw new Exception("Variable profile type does not match for profile " . $Name);
+	        }
+	        IPS_SetVariableProfileIcon($Name, $Icon);
+	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);        
 	}
 	    
 	private function HasActiveParent()
