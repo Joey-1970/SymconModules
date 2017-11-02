@@ -185,6 +185,32 @@
 			$this->GetOutput($StartAddress + 2);
 		}
 	}     
+	
+	public function ToggleOutputPinStatus(Int $Output)
+	{ 
+		$this->SendDebug("SetOutputPinStatus", "Ausfuehrung", 0);
+		$Output = min(15, max(0, $Output));
+		
+		$ByteArray = array();
+		$StartAddress = ($Output * 4) + 6;
+		$Status = GetValueBoolean($this->GetIDForIdent("Output_Bln_X".$Output));
+		$Value = GetValueInteger($this->GetIDForIdent("Output_Int_X".$Output));
+		$L_Bit = $Value & 255;
+		$H_Bit = $Value >> 8;
+		
+		If (!$Status == true) {
+			$H_Bit = $this->unsetBit($H_Bit, 4);
+		}
+		else {
+			$H_Bit = $this->setBit($H_Bit, 4);
+		}
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			// Ausgang setzen
+			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_4_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
+			// Ausgang abfragen
+			$this->GetOutput($StartAddress + 2);
+		}
+	}         
 	    
 	private function Setup()
 	{
