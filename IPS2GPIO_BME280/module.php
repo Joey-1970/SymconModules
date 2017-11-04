@@ -267,6 +267,10 @@
 			$this->SendDebug("Measurement", "Ausfuehrung", 0);
 			// Messwerte aktualisieren
 			$CalibrateData = array();
+			If (is_array(unserialize($this->GetBuffer("CalibrateData"))) == false) {
+				$this->SendDebug("Measurement", "Kalibrirungsdaten nicht korrekt!", 0);
+				$this->ReadCalibrateData();
+			}
 			$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
 			$this->SendDebug("Measurement", "CalibrateData: ".count($CalibrateData), 0);
 			If (count($CalibrateData) == 32)  {
