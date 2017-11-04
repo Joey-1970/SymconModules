@@ -129,21 +129,25 @@
 		// Registrierung für die Änderung der Aussen-Temperatur
 		If ($this->ReadPropertyInteger("OutdoorTemperature_ID") > 0) {
 			$this->RegisterMessage($this->ReadPropertyInteger("OutdoorTemperature_ID"), 10603);
+			SetValueFloat($this->GetIDForIdent("OutdoorTemperature"), GetValueFloat($this->ReadPropertyInteger("OutdoorTemperature_ID")));
 		}
 		
 		// Registrierung für die Änderung der Referenz-Temperatur
 		If ($this->ReadPropertyInteger("ReferenceTemperature_ID") > 0) {
 			$this->RegisterMessage($this->ReadPropertyInteger("ReferenceTemperature_ID"), 10603);
+			SetValueFloat($this->GetIDForIdent("ReferenceTemperature"), GetValueFloat($this->ReadPropertyInteger("ReferenceTemperature_ID")));
 		}
 		
 		// Registrierung für die Änderung der Vorlauf-Temperatur
 		If ($this->ReadPropertyInteger("FlowTemperature_ID") > 0) {
 			$this->RegisterMessage($this->ReadPropertyInteger("FlowTemperature_ID"), 10603);
+			SetValueFloat($this->GetIDForIdent("FlowTemperature"), GetValueFloat($this->ReadPropertyInteger("FlowTemperature_ID")));
 		}
 		
 		// Registrierung für die Änderung der Rücklauf-Temperatur
 		If ($this->ReadPropertyInteger("ReturnTemperature_ID") > 0) {
 			$this->RegisterMessage($this->ReadPropertyInteger("ReturnTemperature_ID"), 10603);
+			SetValueFloat($this->GetIDForIdent("ReteurnTemperature"), GetValueFloat($this->ReadPropertyInteger("ReturnTemperature_ID")));
 		}
 		
 		
@@ -192,6 +196,7 @@
 				// Änderung der Referenz-Temperatur
 				If ($SenderID == $this->ReadPropertyInteger("ReferenceTemperature_ID")) {
 					$this->SendDebug("ReceiveData", "Ausloeser Aenderung Referenz-Temperatur", 0);
+					SetValueFloat($this->GetIDForIdent("ReferenceTemperature"), GetValueFloat($this->ReadPropertyInteger("ReferenceTemperature_ID")));
 					$this->Calculate();
 				}
 				// Änderung der Aussen-Temperatur
