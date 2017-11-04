@@ -197,17 +197,17 @@
 				// Änderung der Aussen-Temperatur
 				If ($SenderID == $this->ReadPropertyInteger("OutdoorTemperature_ID")) {
 					$this->SendDebug("ReceiveData", "Ausloeser Aenderung Aussen-Temperatur", 0);
-					SetValueFloat($this->GetIDForIdent("OutdoorTemperature"), GetValueFloat($this->ReadPropertyInteger("OutdoorTemperature_ID"));
+					SetValueFloat($this->GetIDForIdent("OutdoorTemperature"), GetValueFloat($this->ReadPropertyInteger("OutdoorTemperature_ID")));
 				}
 				// Änderung der Vorlauf-Temperatur
 				If ($SenderID == $this->ReadPropertyInteger("FlowTemperature_ID")) {
 					$this->SendDebug("ReceiveData", "Ausloeser Aenderung Vorlauf-Temperatur", 0);
-					SetValueFloat($this->GetIDForIdent("FlowTemperature"), GetValueFloat($this->ReadPropertyInteger("FlowTemperature_ID"));
+					SetValueFloat($this->GetIDForIdent("FlowTemperature"), GetValueFloat($this->ReadPropertyInteger("FlowTemperature_ID")));
 				}
 				// Änderung der Rücklauf-Temperatur
 				If ($SenderID == $this->ReadPropertyInteger("ReturnTemperature_ID")) {
 					$this->SendDebug("ReceiveData", "Ausloeser Aenderung Ruecklauf-Temperatur", 0);
-					SetValueFloat($this->GetIDForIdent("ReteurnTemperature"), GetValueFloat($this->ReadPropertyInteger("ReturnTemperature_ID"));
+					SetValueFloat($this->GetIDForIdent("ReteurnTemperature"), GetValueFloat($this->ReadPropertyInteger("ReturnTemperature_ID")));
 				}
 				break;
 		}
