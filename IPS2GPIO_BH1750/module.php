@@ -89,7 +89,7 @@
 	    		IPS_LogMessage("IPS2GPIO BH1750","I2C-Device Adresse in einem nicht definierten Bereich!");  
 	    	}
 	    	// Profil anlegen
-	    	$this->RegisterProfileFloat("IPS2GPIO.lx", "Illuminance", "", " lx", 0, 1000000, 0.1, 2);
+	    	$this->RegisterProfileFloat("IPS2GPIO.lx", "^Bulb", "", " lx", 0, 1000000, 0.1, 2);
 		//Status-Variablen anlegen
 		$this->RegisterVariableFloat("Illuminance", "Illuminance", "IPS2GPIO.lx", 10);
 		$this->DisableAction("Illuminance");
