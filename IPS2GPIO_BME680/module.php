@@ -5,7 +5,8 @@
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
-            	//https://github.com/BoschSensortec/BME680_driver
+            	// https://github.com/BoschSensortec/BME680_driver
+		// https://os.mbed.com/users/yangcq88517/code/BME680/file/85088a918342/BME680.h
 		
 		// Diese Zeile nicht löschen.
             	parent::Create();
