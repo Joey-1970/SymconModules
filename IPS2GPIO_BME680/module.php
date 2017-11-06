@@ -284,6 +284,44 @@
 			$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
 			$this->SendDebug("Measurement", "CalibrateData: ".count($CalibrateData), 0);
 			
+			$par_t1 = (($CalibrateData[34] << 8) | $CalibrateData[33]);
+			$par_t2 = (($CalibrateData[2] << 8) | $CalibrateData[1]);
+			$par_t3 = ($CalibrateData[3]);
+			
+			$par_p1 = (($CalibrateData[6] << 8) | $CalibrateData[5]);
+			$par_p2 = (($CalibrateData[8] << 8) | $CalibrateData[7]);
+			$par_p3 = ($CalibrateData[9]);
+			$par_p4 = (($CalibrateData[12] << 8) | $CalibrateData[11]);
+			$par_p5 = (($CalibrateData[14] << 8) | $CalibrateData[13]);
+			$par_p6 = ($CalibrateData[16]);
+			$par_p7 = ($CalibrateData[15]);
+			$par_p8 = (($CalibrateData[20] << 8) | $CalibrateData[19]);
+			$par_p9 = (($CalibrateData[22] << 8) | $CalibrateData[21]);
+			$par_p10 = ($CalibrateData[23]);
+
+			
+			dev->calib.par_t1 = (uint16_t) (BME680_CONCAT_BYTES(coeff_array[BME680_T1_MSB_REG],
+		        coeff_array[BME680_T1_LSB_REG]));
+		dev->calib.par_t2 = (int16_t) (BME680_CONCAT_BYTES(coeff_array[BME680_T2_MSB_REG],
+		        coeff_array[BME680_T2_LSB_REG]));
+		dev->calib.par_t3 = (int8_t) (coeff_array[BME680_T3_REG]);
+			
+			/*
+			#define BME680_H2_MSB_REG	(25)
+			#define BME680_H2_LSB_REG	(26)
+			#define BME680_H1_LSB_REG	(26)
+			#define BME680_H1_MSB_REG	(27)
+			#define BME680_H3_REG		(28)
+			#define BME680_H4_REG		(29)
+			#define BME680_H5_REG		(30)
+			#define BME680_H6_REG		(31)
+			#define BME680_H7_REG		(32)
+			#define BME680_GH2_LSB_REG	(35)
+			#define BME680_GH2_MSB_REG	(36)
+			#define BME680_GH1_REG		(37)
+			#define BME680_GH3_REG		(38)
+			*/
+			
 			$this->ReadData();
 			$MeasurementData = array();
 			$MeasurementData = unserialize($this->GetBuffer("MeasurementData"));
@@ -363,7 +401,8 @@
 					return;
 				}
 				else {
-					$CalibrateData[$i] = $Result;
+					//$CalibrateData[$i] = $Result;
+					$CalibrateData[] = $Result;
 				}
 			}
 			
@@ -374,7 +413,8 @@
 					return;
 				}
 				else {
-					$CalibrateData[$i] = $Result;
+					//$CalibrateData[$i] = $Result;
+					$CalibrateData[] = $Result;
 				}
 			}
 			$this->SetBuffer("CalibrateData", serialize($CalibrateData));
