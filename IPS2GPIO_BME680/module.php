@@ -276,8 +276,21 @@
 			$MeasurementData = unserialize($this->GetBuffer("MeasurementData"));
 			$this->SendDebug("Measurement", "MeasurementData: ".count($MeasurementData), 0);
 			$this->SendDebug("Measurement", "MeasurementData: ".$this->GetBuffer("MeasurementData"), 0);
-			
-			
+			// Byte 1 (29): eas_status_0
+			// Byte 2 (30): unwichtig
+			// Byte 3 (31): press_msb
+			// Byte 4 (32): press_lsb
+			// Byte 5 (33): press_xlsb
+			// Byte 6 (34): temp_msb
+			// Byte 7 (35): temp_lsb
+			// Byte 8 (36): temp_xlsb
+			// Byte 9 (37): hum_msb
+			// Byte 10 (38): hum_lsb
+			// Byte 11 (39): unwichtig
+			// Byte 12 (40): unwichtig
+			// Byte 13 (41): unwichtig
+			// Byte 14 (42): gas_r_msb
+			// Byte 15 (43): gas_r_msb
 		}
 	}	
 	
