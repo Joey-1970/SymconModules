@@ -470,7 +470,7 @@
 				$this->SendDebug("Setup", "config_reg setzen fehlerhaft!", 0);
 				return;
 			}
-			*/
+		
 		}
 	}
 		
