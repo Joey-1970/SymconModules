@@ -365,8 +365,25 @@
 					$var3 = (($Pressure / 256) * ($Pressure / 256) * ($Pressure / 256) * $par_p10) / 131072;
 					$Pressure = ($Pressure) + (($var1 + $var2 + $var3 + ($par_p7 * 128)) / 16);
 					SetValueFloat($this->GetIDForIdent("Pressure"), round($Pressure / 100, 2));
-
 					
+					// Luftfeuchtigkeit
+					$temp_scaled = (($t_fine * 5) + 128) / 256;
+					$var1 = ($adc_hum - (($par_h1 * 16))) - ((($temp_scaled * $par_h3) / (100)) / 2);
+					$var2 = ($par_h2 * ((($temp_scaled * $par_h4) / (100)) + ((($temp_scaled * (($temp_scaled * $par_h5) / (100))) / 64) / (100)) + (1 * 16384))) / 1024;
+					$var3 = $var1 * $var2;
+					$var4 = $par_h6 * 128;
+					$var4 = (($var4) + (($temp_scaled *$par_h7) / (100))) / 16;
+					$var5 = (($var3 / 16384) * ($var3 / 16384)) / 1024;
+					$var6 = ($var4 * $var5) / 2;
+					$Hum = ((($var3 + $var6) / 1024) * (1000)) / 4096;
+					If ($Hum > 100) {
+						$Hum = 100;
+					}
+					elseif ($Hum < 0) {
+						$Hum = 0;
+					}
+					SetValueFloat($this->GetIDForIdent("Humidity"), round($Hum, 2));
+
 										
 					
 				}
