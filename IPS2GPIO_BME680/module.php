@@ -226,6 +226,8 @@
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 				If ($Result == true) {
 					$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
+					// SoftReset
+					$this->SoftReset();
 					// Parameterdaten zum Baustein senden
 					$this->Setup();
 					// Kalibrierungsdaten einlesen
@@ -454,9 +456,6 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Setup", "Ausfuehrung", 0);
-			
-			
-			/*
 			$osrs_t = $this->ReadPropertyInteger("OSRS_T"); // Oversampling Measure temperature x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
 			$osrs_p = $this->ReadPropertyInteger("OSRS_P"); // Oversampling Measure pressure x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
 			$osrs_h = $this->ReadPropertyInteger("OSRS_H"); // Oversampling Measure humidity x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
@@ -465,19 +464,19 @@
 			$filter = $this->ReadPropertyInteger("IIR_Filter"); // IIR-Filter 0-> off - 2, 4, 8, 16 (dec: 0 (off) - 4)
 			$spi3w_en = 0;
 			$ctrl_meas_reg = (($osrs_t << 5)|($osrs_p << 2)|$mode);
-			$config_reg = (($t_sb << 5)|($filter << 2)|$spi3w_en);
+			$config_reg = (($filter << 2)|$spi3w_en);
 			$ctrl_hum_reg = $osrs_h;
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F2"), "Value" => $ctrl_hum_reg)));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("72"), "Value" => $ctrl_hum_reg)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "ctrl_hum_reg setzen fehlerhaft!", 0);
 				return;
 			}
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F4"), "Value" => $ctrl_meas_reg)));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME2680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("74"), "Value" => $ctrl_meas_reg)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "ctrl_meas_reg setzen fehlerhaft!", 0);
 				return;
 			}
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F5"), "Value" => $config_reg)));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("75"), "Value" => $config_reg)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "config_reg setzen fehlerhaft!", 0);
 				return;
