@@ -21,9 +21,8 @@
  	    	$this->RegisterPropertyInteger("OSRS_T", 1);
  	    	$this->RegisterPropertyInteger("OSRS_H", 1);
  	    	$this->RegisterPropertyInteger("OSRS_P", 1);
- 	    	$this->RegisterPropertyInteger("Mode", 3);
- 	    	$this->RegisterPropertyInteger("SB_T", 5);
- 	    	$this->RegisterPropertyInteger("IIR_Filter", 0);
+		$this->RegisterPropertyInteger("IIR_Filter", 0);
+ 		$this->RegisterPropertyInteger("Mode", 3); 	    	
 		$this->RegisterPropertyInteger("Altitude", 0);
 		$this->RegisterPropertyInteger("Temperature_ID", 0);
 		$this->RegisterPropertyInteger("Humidity_ID", 0);
@@ -113,18 +112,7 @@
 		$arrayOptions[] = array("label" => "8", "value" => 3);
 		$arrayOptions[] = array("label" => "16", "value" => 4);
 		$arrayElements[] = array("type" => "Select", "name" => "IIR_Filter", "caption" => "IIR_Filter", "options" => $arrayOptions );
-        	$arrayElements[] = array("type" => "Label", "label" => "StandBy Zeit (Default: 1000ms)");
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "0.5", "value" => 0);
-		$arrayOptions[] = array("label" => "62.5", "value" => 1);
-		$arrayOptions[] = array("label" => "125", "value" => 2);
-		$arrayOptions[] = array("label" => "250", "value" => 3);
-		$arrayOptions[] = array("label" => "500", "value" => 4);
-		$arrayOptions[] = array("label" => "1000 (Default)", "value" => 5);
-		$arrayOptions[] = array("label" => "10", "value" => 6);
-		$arrayOptions[] = array("label" => "20", "value" => 7);
-		$arrayElements[] = array("type" => "Select", "name" => "SB_T", "caption" => "StandBy Zeit (ms)", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+        	$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Hinweise:");
 		$arrayElements[] = array("type" => "Label", "label" => "- die Device Adresse lautet 118 dez (0x76h) bei SDO an GND");
 		$arrayElements[] = array("type" => "Label", "label" => "- die Device Adresse lautet 119 dez (0x77h) als Default");
@@ -460,7 +448,6 @@
 			$osrs_p = $this->ReadPropertyInteger("OSRS_P"); // Oversampling Measure pressure x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
 			$osrs_h = $this->ReadPropertyInteger("OSRS_H"); // Oversampling Measure humidity x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
 			$mode = $this->ReadPropertyInteger("Mode"); // 0 = Power Off (Sleep Mode), x01 und x10 Force Mode, 11 Normal Mode
-			$t_sb = $this->ReadPropertyInteger("SB_T"); // StandBy Time: dec: 0 (0.5ms) - 5 (1000ms), 6 (10ms), 7 (20ms)
 			$filter = $this->ReadPropertyInteger("IIR_Filter"); // IIR-Filter 0-> off - 2, 4, 8, 16 (dec: 0 (off) - 4)
 			$spi3w_en = 0;
 			$ctrl_meas_reg = (($osrs_t << 5)|($osrs_p << 2)|$mode);
