@@ -299,14 +299,8 @@
 			$par_p9 = (($CalibrateData[22] << 8) | $CalibrateData[21]);
 			$par_p10 = $CalibrateData[23];
 			
-			/*
-			dev->calib.par_h1 = (uint16_t) (((uint16_t) coeff_array[BME680_H1_MSB_REG] << BME680_HUM_REG_SHIFT_VAL)
-						| (coeff_array[BME680_H1_LSB_REG] & BME680_BIT_H1_DATA_MSK));
-					dev->calib.par_h2 = (uint16_t) (((uint16_t) coeff_array[BME680_H2_MSB_REG] << BME680_HUM_REG_SHIFT_VAL)
-			| ((coeff_array[BME680_H2_LSB_REG]) >> BME680_HUM_REG_SHIFT_VAL));
-			*/
-			$par_h1 = (($CalibrateData[27] << 8) | $CalibrateData[26]);
-			$par_h2 = (($CalibrateData[26] << 8) | $CalibrateData[25]);
+			$par_h1 = (($CalibrateData[27] << 4) | $CalibrateData[26] & hexdec("0F"));
+			$par_h2 = (($CalibrateData[26] << 4) | $CalibrateData[25] >> 4);
 			$par_h3 = $CalibrateData[28];
 			$par_h4 = $CalibrateData[29];
 			$par_h5 = $CalibrateData[30];
