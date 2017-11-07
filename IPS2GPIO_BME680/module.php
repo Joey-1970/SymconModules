@@ -312,6 +312,12 @@
 				$par_gh1 = $CalibrateData[37];
 				$par_gh2 = (($CalibrateData[36] << 8) | $CalibrateData[35]);
 				$par_gh3 = $CalibrateData[38];
+				
+				$res_heat_val = $CalibrateData[39];
+				
+				$res_heat_range = ($CalibrateData[41] >> 4) & hexdec("03");
+				
+				$range_switching_error = ($CalibrateData[43] & hexdec("F0")) >> 4;
 
 				// Messwerte aufbereiten
 				$MeasurementData = array();
@@ -402,6 +408,18 @@
 			}
 			
 			for ($i = hexdec("E1"); $i < (hexdec("E1") + 15); $i++) {
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $i)));
+				If ($Result < 0) {
+					$this->SendDebug("ReadCalibrateData", "Fehler beim Einlesen der Kalibrierungsdaten bei Byte ".$i, 0);
+					return;
+				}
+				else {
+					//$CalibrateData[$i] = $Result;
+					$CalibrateData[] = $Result;
+				}
+			}
+			
+			for ($i = hexdec("00"); $i < (hexdec("00") + 5); $i++) {
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $i)));
 				If ($Result < 0) {
 					$this->SendDebug("ReadCalibrateData", "Fehler beim Einlesen der Kalibrierungsdaten bei Byte ".$i, 0);
