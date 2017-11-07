@@ -338,22 +338,18 @@
 					data->status |= buff[14] & BME680_GASM_VALID_MSK;
 					data->status |= buff[14] & BME680_HEAT_STAB_MSK;
 					*/
+					// Temperatur
+					$var1 = ($temp_adc / 8) - ($par_t1 * 2);
+					$var2 = ($var1 * $par_t2) / 2048;
+					$var3 = (($var1 / 2) * ($var1 / 2)) / 4096;
+					$var3 = (($var3) * ($par_t3 * 16)) / 16384;
+					$t_fine = ($var2 + $var3);
+					$Temp = ((($t_fine * 5) + 128) / 256);
+					SetValueFloat($this->GetIDForIdent("Temperature"), round($Temp, 2));
+					
+					
 				}
-				// Byte 1 (29): eas_status_0
-				// Byte 2 (30): unwichtig
-				// Byte 3 (31): press_msb
-				// Byte 4 (32): press_lsb
-				// Byte 5 (33): press_xlsb
-				// Byte 6 (34): temp_msb
-				// Byte 7 (35): temp_lsb
-				// Byte 8 (36): temp_xlsb
-				// Byte 9 (37): hum_msb
-				// Byte 10 (38): hum_lsb
-				// Byte 11 (39): unwichtig
-				// Byte 12 (40): unwichtig
-				// Byte 13 (41): unwichtig
-				// Byte 14 (42): gas_r_msb
-				// Byte 15 (43): gas_r_msb
+				
 			}
 		}
 	}	
