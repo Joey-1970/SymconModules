@@ -339,7 +339,7 @@
 					data->status |= buff[14] & BME680_HEAT_STAB_MSK;
 					*/
 					// Temperatur
-					$var1 = ($temp_adc / 8) - ($par_t1 * 2);
+					$var1 = ($adc_temp / 8) - ($par_t1 * 2);
 					$var2 = ($var1 * $par_t2) / 2048;
 					$var3 = (($var1 / 2) * ($var1 / 2)) / 4096;
 					$var3 = (($var3) * ($par_t3 * 16)) / 16384;
@@ -347,6 +347,27 @@
 					$Temp = ((($t_fine * 5) + 128) / 256);
 					SetValueFloat($this->GetIDForIdent("Temperature"), round($Temp, 2));
 					
+					// Luftdruck
+					$var1 = (($t_fine) / 2) - 64000;
+					$var2 = (($var1 / 4) * ($var1 / 4)) / 2048;
+					$var2 = (($var2) * $par_p6) / 4;
+					$var2 = $var2 + (($var1 * $par_p5) * 2);
+					$var2 = ($var2 / 4) + ($par_p4 * 65536);
+					$var1 = (($var1 / 4) * ($var1 / 4)) / 8192;
+					$var1 = ((($var1) * ($par_p3 * 32)) / 8) + (($par_p2 * $var1) / 2);
+					$var1 = $var1 / 262144;
+					$var1 = ((32768 + $var1) * $par_p1) / 32768;
+					$Pressure = (1048576 - $adc_pres);
+					$Pressure = (($Pressure - ($var2 / 4096)) * (3125));
+					$Pressure = (($Pressure / $var1) * 2);
+					$var1 = ($par_p9 * ((($Pressure / 8) * ($Pressure / 8)) / 8192)) / 4096;
+					$var2 = (($Pressure / 4) * $par_p8) / 8192;
+					$var3 = (($Pressure / 256) * ($Pressure / 256) * ($Pressure / 256) * $par_p10) / 131072;
+					$Pressure = ($Pressure) + (($var1 + $var2 + $var3 + ($par_p7 * 128)) / 16);
+					SetValueFloat($this->GetIDForIdent("Pressure"), round($Pressure / 100, 2));
+
+					
+										
 					
 				}
 				
