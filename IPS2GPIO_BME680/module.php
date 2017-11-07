@@ -283,55 +283,60 @@
 			}
 			$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
 			$this->SendDebug("Measurement", "CalibrateData: ".count($CalibrateData), 0);
-			
-			$par_t1 = (($CalibrateData[34] << 8) | $CalibrateData[33]);
-			$par_t2 = (($CalibrateData[2] << 8) | $CalibrateData[1]);
-			$par_t3 = $CalibrateData[3];
-			
-			$par_p1 = (($CalibrateData[6] << 8) | $CalibrateData[5]);
-			$par_p2 = (($CalibrateData[8] << 8) | $CalibrateData[7]);
-			$par_p3 = $CalibrateData[9];
-			$par_p4 = (($CalibrateData[12] << 8) | $CalibrateData[11]);
-			$par_p5 = (($CalibrateData[14] << 8) | $CalibrateData[13]);
-			$par_p6 = $CalibrateData[16];
-			$par_p7 = ($CalibrateData[15]);
-			$par_p8 = (($CalibrateData[20] << 8) | $CalibrateData[19]);
-			$par_p9 = (($CalibrateData[22] << 8) | $CalibrateData[21]);
-			$par_p10 = $CalibrateData[23];
-			
-			$par_h1 = (($CalibrateData[27] << 4) | $CalibrateData[26] & hexdec("0F"));
-			$par_h2 = (($CalibrateData[26] << 4) | $CalibrateData[25] >> 4);
-			$par_h3 = $CalibrateData[28];
-			$par_h4 = $CalibrateData[29];
-			$par_h5 = $CalibrateData[30];
-			$par_h6 = $CalibrateData[31];
-			$par_h7 = $CalibrateData[32];
+			If (count($CalibrateData) > 5)  {
+				$this->ReadData();
+				// Kalibrierungsdatan aufbereiten
+				$par_t1 = (($CalibrateData[34] << 8) | $CalibrateData[33]);
+				$par_t2 = (($CalibrateData[2] << 8) | $CalibrateData[1]);
+				$par_t3 = $CalibrateData[3];
 
-			$par_gh1 = $CalibrateData[37];
-			$par_gh2 = (($CalibrateData[36] << 8) | $CalibrateData[35]);
-			$par_gh3 = $CalibrateData[38];
-			
-			
-			$this->ReadData();
-			$MeasurementData = array();
-			$MeasurementData = unserialize($this->GetBuffer("MeasurementData"));
-			$this->SendDebug("Measurement", "MeasurementData: ".count($MeasurementData), 0);
-			$this->SendDebug("Measurement", "MeasurementData: ".$this->GetBuffer("MeasurementData"), 0);
-			// Byte 1 (29): eas_status_0
-			// Byte 2 (30): unwichtig
-			// Byte 3 (31): press_msb
-			// Byte 4 (32): press_lsb
-			// Byte 5 (33): press_xlsb
-			// Byte 6 (34): temp_msb
-			// Byte 7 (35): temp_lsb
-			// Byte 8 (36): temp_xlsb
-			// Byte 9 (37): hum_msb
-			// Byte 10 (38): hum_lsb
-			// Byte 11 (39): unwichtig
-			// Byte 12 (40): unwichtig
-			// Byte 13 (41): unwichtig
-			// Byte 14 (42): gas_r_msb
-			// Byte 15 (43): gas_r_msb
+				$par_p1 = (($CalibrateData[6] << 8) | $CalibrateData[5]);
+				$par_p2 = (($CalibrateData[8] << 8) | $CalibrateData[7]);
+				$par_p3 = $CalibrateData[9];
+				$par_p4 = (($CalibrateData[12] << 8) | $CalibrateData[11]);
+				$par_p5 = (($CalibrateData[14] << 8) | $CalibrateData[13]);
+				$par_p6 = $CalibrateData[16];
+				$par_p7 = ($CalibrateData[15]);
+				$par_p8 = (($CalibrateData[20] << 8) | $CalibrateData[19]);
+				$par_p9 = (($CalibrateData[22] << 8) | $CalibrateData[21]);
+				$par_p10 = $CalibrateData[23];
+
+				$par_h1 = (($CalibrateData[27] << 4) | $CalibrateData[26] & hexdec("0F"));
+				$par_h2 = (($CalibrateData[26] << 4) | $CalibrateData[25] >> 4);
+				$par_h3 = $CalibrateData[28];
+				$par_h4 = $CalibrateData[29];
+				$par_h5 = $CalibrateData[30];
+				$par_h6 = $CalibrateData[31];
+				$par_h7 = $CalibrateData[32];
+
+				$par_gh1 = $CalibrateData[37];
+				$par_gh2 = (($CalibrateData[36] << 8) | $CalibrateData[35]);
+				$par_gh3 = $CalibrateData[38];
+
+				// Messwerte aufbereiten
+				$MeasurementData = array();
+				$MeasurementData = unserialize($this->GetBuffer("MeasurementData"));
+				$this->SendDebug("Measurement", "MeasurementData: ".count($MeasurementData), 0);
+				$this->SendDebug("Measurement", "MeasurementData: ".$this->GetBuffer("MeasurementData"), 0);
+				If (count($MeasurementData) > 5) {
+					
+				}
+				// Byte 1 (29): eas_status_0
+				// Byte 2 (30): unwichtig
+				// Byte 3 (31): press_msb
+				// Byte 4 (32): press_lsb
+				// Byte 5 (33): press_xlsb
+				// Byte 6 (34): temp_msb
+				// Byte 7 (35): temp_lsb
+				// Byte 8 (36): temp_xlsb
+				// Byte 9 (37): hum_msb
+				// Byte 10 (38): hum_lsb
+				// Byte 11 (39): unwichtig
+				// Byte 12 (40): unwichtig
+				// Byte 13 (41): unwichtig
+				// Byte 14 (42): gas_r_msb
+				// Byte 15 (43): gas_r_msb
+			}
 		}
 	}	
 	
