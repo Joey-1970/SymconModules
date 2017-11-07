@@ -325,7 +325,19 @@
 				$this->SendDebug("Measurement", "MeasurementData: ".count($MeasurementData), 0);
 				$this->SendDebug("Measurement", "MeasurementData: ".$this->GetBuffer("MeasurementData"), 0);
 				If (count($MeasurementData) > 5) {
+					$status = $MeasurementData[1] & hexdec("80");
+					$gas_status = $MeasurementData[1] & hexdec("0F");
+					$maes_index = $MeasurementData[2];
 					
+					$adc_pres = ($MeasurementData[3] * 4096) | ($MeasurementData[4] * 16) | ($MeasurementData[5] / 16);
+					$adc_temp = ($MeasurementData[6] * 4096) | ($MeasurementData[7] * 16) | ($MeasurementData[8] / 16);
+					$adc_hum = ($MeasurementData[9] * 256) | $MeasurementData[10];
+					$adc_gas_res = ($MeasurementData[14] * 4) | ($MeasurementData[15] / 64);
+					$gas_range = $MeasurementData[15] & hexdec("0F");
+					/*
+					data->status |= buff[14] & BME680_GASM_VALID_MSK;
+					data->status |= buff[14] & BME680_HEAT_STAB_MSK;
+					*/
 				}
 				// Byte 1 (29): eas_status_0
 				// Byte 2 (30): unwichtig
