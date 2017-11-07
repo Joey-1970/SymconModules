@@ -440,7 +440,7 @@
 			// Liest die Messdaten ein
 			$this->SendDebug("ReadData", "Ausfuehrung", 0);
 			
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_read_block", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("1D"), "Count" => 14)));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_read_block", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("1D"), "Count" => 15)));
 			If ($Result < 0) {
 				$MeasurementData = array();
 				$this->SetBuffer("MeasurementData", serialize($MeasurementData));
