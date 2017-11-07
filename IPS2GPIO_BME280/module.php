@@ -215,6 +215,8 @@
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 				If ($Result == true) {
 					$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
+					// SoftReset
+					$this->SoftReset();
 					// Parameterdaten zum Baustein senden
 					$this->Setup();
 					// Kalibrierungsdaten einlesen
@@ -543,6 +545,19 @@
 		}	
 	}
 	
+	private function SoftReset()
+	{
+		$reg_addr = hexdec("E0");
+		$soft_rst_cmd = hexdec("B6");
+		
+		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $reg_addr, "Value" => $soft_rst_cmd)));
+		If (!$Result) {
+			$this->SendDebug("Setup", "SoftReset fehlerhaft!", 0);
+			return;
+		}
+		IPS_Sleep(5);                      
+	}    
+	    
 	private function PressureTrend(int $interval)
 	{
 		$Result = 0;
