@@ -153,7 +153,11 @@
 		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 6, "sehr schlecht", "Information", 0x000000);
 		
 		//Status-Variablen anlegen
-             	$this->RegisterVariableFloat("Temperature", "Temperature", "~Temperature", 10);
+             	$this->RegisterVariableInteger("ChipID", "Chip ID", "", 5);
+		$this->DisableAction("ChipID");
+		IPS_SetHidden($this->GetIDForIdent("ChipID"), false);
+		
+		$this->RegisterVariableFloat("Temperature", "Temperature", "~Temperature", 10);
 		$this->DisableAction("Temperature");
 		IPS_SetHidden($this->GetIDForIdent("Temperature"), false);
 		
@@ -490,6 +494,15 @@
 				$this->SendDebug("Setup", "config_reg setzen fehlerhaft!", 0);
 				return;
 			}
+			// Lesen der ChipID
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("D0"))));
+				If ($Result < 0) {
+					$this->SendDebug("Setup", "Fehler beim Einlesen der Chip ID", 0);
+					return;
+				}
+				else {
+					SetValueInteger($this->GetIDForIdent("ChipID"), $Result);
+				}
 		
 		}
 	}
@@ -543,6 +556,8 @@
 				}
 			}
 			$this->SetBuffer("CalibrateData", serialize($CalibrateData));
+			
+			
 		}
 	}
 	    
