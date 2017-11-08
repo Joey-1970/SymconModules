@@ -141,6 +141,7 @@
 	    	
 		// Profil anlegen
 		$this->RegisterProfileFloat("IPS2GPIO.gm3", "Drops", "", " g/m³", 0, 1000, 0.1, 1);
+		$this->RegisterProfileFloat("IPS2GPIO.ohm", "Electricity", "", " Ohm", 0, 100000, 0.1, 1);
 		
 		$this->RegisterProfileInteger("IPS2GPIO.AirQuality", "Information", "", "", 0, 6, 1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 0, "unbekannt", "Information", -1);
