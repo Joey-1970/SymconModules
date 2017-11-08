@@ -441,14 +441,21 @@
 						SetValueFloat($this->GetIDForIdent("PressureTrend24h"), $this->PressureTrend(24));
 					}
 					
+					// Look up table for the possible gas range values
+					$lookupTable1 = array(2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2126008810, 2147483647, 2130303777,2147483647, 
+							      2147483647, 2143188679, 2136746228, 2147483647, 2126008810, 2147483647, 2147483647);
+					// Look up table for the possible gas range values
+					$lookupTable2 = array(4096000000, 2048000000, 1024000000, 512000000, 255744255, 127110228, 64000000, 32258064, 16016016, 
+							      8000000, 4000000, 2000000, 1000000, 500000, 250000, 125000);
+
+					
 					// Gas Widerstand
-					/*
-					$var1 = ((1340 + (5 * $range_switching_error)) * (lookupTable1[gas_range])) / 65536;
+					$var1 = ((1340 + (5 * $range_switching_error)) * ($lookupTable1[$gas_range])) / 65536;
 					$var2 = ((($adc_gas_res * 32768) - (16777216)) + $var1);
-					$var3 = ((lookupTable2[gas_range] * $var1) / 512);
+					$var3 = (($lookupTable2[$gas_range] * $var1) / 512);
 					$calc_gas_res = (($var3 + ($var2 / 2)) / $var2);
 					SetValueFloat($this->GetIDForIdent("GasResistance"), $calc_gas_res);
-					*/
+
 				}
 				
 			}
