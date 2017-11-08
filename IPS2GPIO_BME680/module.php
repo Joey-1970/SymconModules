@@ -284,7 +284,7 @@
 			}
 			$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
 			$this->SendDebug("Measurement", "CalibrateData: ".count($CalibrateData), 0);
-			$this->SendDebug("Measurement", "MeasurementData: ".$this->GetBuffer("CalibrateData"), 0);
+			$this->SendDebug("Measurement", "CalibrateData: ".$this->GetBuffer("CalibrateData"), 0);
 			If (count($CalibrateData) == 46)  {
 				$this->ReadData();
 				// Kalibrierungsdatan aufbereiten
