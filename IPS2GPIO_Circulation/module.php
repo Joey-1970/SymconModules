@@ -69,7 +69,8 @@
 		$arrayElements[] = array("type" => "Select", "name" => "Startoption", "caption" => "Startoption", "options" => $arrayOptions );
 		$arrayActions = array();
 		If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-			$arrayActions[] = array("type" => "Button", "label" => "Toggle Output", "onClick" => 'I2GOUT_Toggle_Status($id);');
+			$arrayActions[] = array("type" => "Button", "label" => "On", "onClick" => 'IPS2Cn_Set_Status($id, true);');
+			$arrayActions[] = array("type" => "Button", "label" => "Off", "onClick" => 'IPS2Cn_Set_Status($id, false);');
 		}
 		else {
 			$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
