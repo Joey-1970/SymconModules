@@ -284,7 +284,8 @@
 			}
 			$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
 			$this->SendDebug("Measurement", "CalibrateData: ".count($CalibrateData), 0);
-			If (count($CalibrateData) > 5)  {
+			$this->SendDebug("Measurement", "MeasurementData: ".$this->GetBuffer("CalibrateData"), 0);
+			If (count($CalibrateData) == 46)  {
 				$this->ReadData();
 				// Kalibrierungsdatan aufbereiten
 				$par_t1 = (($CalibrateData[34] << 8) | $CalibrateData[33]);
@@ -325,7 +326,7 @@
 				$MeasurementData = unserialize($this->GetBuffer("MeasurementData"));
 				$this->SendDebug("Measurement", "MeasurementData: ".count($MeasurementData), 0);
 				$this->SendDebug("Measurement", "MeasurementData: ".$this->GetBuffer("MeasurementData"), 0);
-				If (count($MeasurementData) > 5) {
+				If (count($MeasurementData) == 15) {
 					$status = $MeasurementData[1] & hexdec("80");
 					$gas_status = $MeasurementData[1] & hexdec("0F");
 					$maes_index = $MeasurementData[2];
