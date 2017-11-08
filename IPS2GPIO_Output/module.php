@@ -51,6 +51,8 @@
 
 		$arrayActions = array();
 		If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+			$arrayActions[] = array("type" => "Button", "label" => "On", "onClick" => 'I2GOUT_Set_Status($id, true);');
+			$arrayActions[] = array("type" => "Button", "label" => "Off", "onClick" => 'I2GOUT_Set_Status($id, false);');
 			$arrayActions[] = array("type" => "Button", "label" => "Toggle Output", "onClick" => 'I2GOUT_Toggle_Status($id);');
 		}
 		else {
