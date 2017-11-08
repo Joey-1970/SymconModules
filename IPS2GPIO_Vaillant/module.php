@@ -81,7 +81,8 @@
 		
 		$arrayActions = array();
 		If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-
+			$arrayActions[] = array("type" => "Label", "label" => "Steuerung der Vorlauftemperatur (Achtung: Werte von ~2 V bis ~15V sind möglich!)");
+			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "Slider", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GVt_Set_Intensity($id, $Slider);');
 		}
 		else {
 			$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
