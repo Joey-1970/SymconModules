@@ -202,6 +202,10 @@
 		IPS_SetHidden($this->GetIDForIdent("AirQuality"), false);
 		SetValueInteger($this->GetIDForIdent("AirQuality"), 0);
 		
+		$this->RegisterVariableFloat("GasResistance", "Gas Resistance", "IPS2GPIO.ohm", 120);
+		$this->DisableAction("GasResistance");
+		IPS_SetHidden($this->GetIDForIdent("GasResistance"), false);
+		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 			// Logging setzen
 			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Temperature"), $this->ReadPropertyBoolean("LoggingTemp"));
@@ -435,8 +439,16 @@
 						SetValueFloat($this->GetIDForIdent("PressureTrend3h"), $this->PressureTrend(3));
 						SetValueFloat($this->GetIDForIdent("PressureTrend12h"), $this->PressureTrend(12));
 						SetValueFloat($this->GetIDForIdent("PressureTrend24h"), $this->PressureTrend(24));
-					}				
+					}
 					
+					// Gas Widerstand
+					/*
+					$var1 = ((1340 + (5 * $range_switching_error)) * (lookupTable1[gas_range])) / 65536;
+					$var2 = ((($adc_gas_res * 32768) - (16777216)) + $var1);
+					$var3 = ((lookupTable2[gas_range] * $var1) / 512);
+					$calc_gas_res = (($var3 + ($var2 / 2)) / $var2);
+					SetValueFloat($this->GetIDForIdent("GasResistance"), $calc_gas_res);
+					*/
 				}
 				
 			}
