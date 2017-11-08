@@ -122,7 +122,6 @@
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
 			case "status":
-			   	/*
 				If ($data->InstanceID == $this->InstanceID) {
 				   	If ($this->ReadPropertyBoolean("Open") == true) {				
 						$this->SetStatus($data->Status);
@@ -131,7 +130,6 @@
 						$this->SetStatus(104);
 					}	
 			   	}
-				*/
 			   	break;
 			case "get_start_trigger":
 			   	$this->ApplyChanges();
