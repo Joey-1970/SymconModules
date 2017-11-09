@@ -359,7 +359,7 @@
 						$this->SendDebug("Measurement", "Flag GASM_VALID_R:".($MeasurementData[15] & hexdec("20")), 0);
 						$this->SendDebug("Measurement", "Flag HEAT_STAB_R:".($MeasurementData[15] & hexdec("10")), 0);
 						$this->SendDebug("Measurement", "Keine auswertbaren Daten!", 0);
-						return;
+						//return;
 					}
 					
 					// Temperatur
