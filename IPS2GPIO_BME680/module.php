@@ -341,7 +341,7 @@
 				$this->SendDebug("Measurement", "MeasurementData: ".count($MeasurementData), 0);
 				$this->SendDebug("Measurement", "MeasurementData: ".$this->GetBuffer("MeasurementData"), 0);
 				If (count($MeasurementData) == 15) {
-					$status = $MeasurementData[1] & hexdec("80");
+					$status = $MeasurementData[1] & hexdec("80"); // Flag New_Data_0
 					$gas_status = $MeasurementData[1] & hexdec("0F");
 					$maes_index = $MeasurementData[2];
 					
@@ -350,10 +350,15 @@
 					$adc_hum = ($MeasurementData[9] * 256) | $MeasurementData[10];
 					$adc_gas_res = ($MeasurementData[14] * 4) | ($MeasurementData[15] / 64);
 					$gas_range = $MeasurementData[15] & hexdec("0F");
-					/*
-					data->status |= buff[14] & BME680_GASM_VALID_MSK;
-					data->status |= buff[14] & BME680_HEAT_STAB_MSK;
-					*/
+					
+					$status = $status | ($MeasurementData[15] & hexdec("20")); // Flag GASM_VALID_R
+					$status = $status | ($MeasurementData[15] & hexdec("10")); // Flag HEAT_STAB_R
+					
+					If (!$status) {
+						$this->SendDebug("Measurement", "Keine auswertbaren Daten!", 0);
+						return;
+					}
+					
 					// Temperatur
 					$var1 = ($adc_temp / 8) - ($par_t1 * 2);
 					$var2 = ($var1 * $par_t2) / 2048;
