@@ -117,7 +117,7 @@
 		$arrayElements[] = array("type" => "Select", "name" => "IIR_Filter", "caption" => "IIR_Filter", "options" => $arrayOptions );
         	
 		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "0 (aus)", "value" => 0);
+		$arrayOptions[] = array("label" => "0", "value" => 0);
 		$arrayOptions[] = array("label" => "1", "value" => 1);
 		$arrayOptions[] = array("label" => "2", "value" => 2);
 		$arrayOptions[] = array("label" => "3", "value" => 3);
@@ -496,7 +496,7 @@
 			$osrs_t = $this->ReadPropertyInteger("OSRS_T"); // Oversampling Measure temperature x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
 			$osrs_p = $this->ReadPropertyInteger("OSRS_P"); // Oversampling Measure pressure x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
 			$osrs_h = $this->ReadPropertyInteger("OSRS_H"); // Oversampling Measure humidity x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
-			$mode = $this->ReadPropertyInteger("Mode"); // 0 = Power Off (Sleep Mode), x01 und x10 Force Mode, 11 Normal Mode
+			$mode = $this->ReadPropertyInteger("Mode"); // 0 = Power Off (Sleep Mode), x01 und x10 Force Mode
 			$filter = $this->ReadPropertyInteger("IIR_Filter"); // IIR-Filter 0-> off - 2, 4, 8, 16 (dec: 0 (off) - 4)
 			$HeaterProfileSetpoint = $this->ReadPropertyInteger("HeaterProfileSetpoint");
 			$run_gas = 1;
