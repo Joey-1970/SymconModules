@@ -26,6 +26,7 @@
 		$this->RegisterPropertyInteger("Altitude", 0);
 		$this->RegisterPropertyInteger("Temperature_ID", 0);
 		$this->RegisterPropertyInteger("Humidity_ID", 0);
+		$this->RegisterPropertyInteger("HeaterProfileSetpoint", 0);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GBME680_Measurement($_IPS["TARGET"]);');
         }
 	
@@ -114,7 +115,20 @@
 		$arrayOptions[] = array("label" => "63", "value" => 6);
 		$arrayOptions[] = array("label" => "127", "value" => 7);
 		$arrayElements[] = array("type" => "Select", "name" => "IIR_Filter", "caption" => "IIR_Filter", "options" => $arrayOptions );
-        	$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+        	
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "0 (aus)", "value" => 0);
+		$arrayOptions[] = array("label" => "1", "value" => 1);
+		$arrayOptions[] = array("label" => "2", "value" => 2);
+		$arrayOptions[] = array("label" => "3", "value" => 3);
+		$arrayOptions[] = array("label" => "4", "value" => 4);
+		$arrayOptions[] = array("label" => "5", "value" => 5);
+		$arrayOptions[] = array("label" => "6", "value" => 6);
+		$arrayOptions[] = array("label" => "7", "value" => 7);
+		$arrayOptions[] = array("label" => "8", "value" => 8);
+		$arrayOptions[] = array("label" => "9", "value" => 9);
+		$arrayElements[] = array("type" => "Select", "name" => "HeaterProfileSetpoint", "caption" => "Heater Profile Setpoint", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Hinweise:");
 		$arrayElements[] = array("type" => "Label", "label" => "- die Device Adresse lautet 118 dez (0x76h) bei SDO an GND");
 		$arrayElements[] = array("type" => "Label", "label" => "- die Device Adresse lautet 119 dez (0x77h) als Default");
@@ -476,10 +490,16 @@
 			$osrs_h = $this->ReadPropertyInteger("OSRS_H"); // Oversampling Measure humidity x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
 			$mode = $this->ReadPropertyInteger("Mode"); // 0 = Power Off (Sleep Mode), x01 und x10 Force Mode, 11 Normal Mode
 			$filter = $this->ReadPropertyInteger("IIR_Filter"); // IIR-Filter 0-> off - 2, 4, 8, 16 (dec: 0 (off) - 4)
+			$HeaterProfileSetpoint = $this->ReadPropertyInteger("HeaterProfileSetpoint");
+			$run_gas = 1;
+			
 			$spi3w_en = 0;
 			$ctrl_meas_reg = (($osrs_t << 5)|($osrs_p << 2)|$mode);
 			$config_reg = (($filter << 2)|$spi3w_en);
 			$ctrl_hum_reg = $osrs_h;
+			$crtl_gas_0 = hexdec("00"); // Heater enable - Heater disable = hexdec("08")
+			$crtl_gas_1 = ($run_gas << 4)|$HeaterProfileSetpoint);
+			
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("72"), "Value" => $ctrl_hum_reg)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "ctrl_hum_reg setzen fehlerhaft!", 0);
@@ -495,6 +515,18 @@
 				$this->SendDebug("Setup", "config_reg setzen fehlerhaft!", 0);
 				return;
 			}
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME2680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("70"), "Value" => $crtl_gas_0)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "crtl_gas_0 setzen fehlerhaft!", 0);
+				return;
+			}
+			
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("71"), "Value" => $crtl_gas_1)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "crtl_gas_1 setzen fehlerhaft!", 0);
+				return;
+			}
+			
 			// Lesen der ChipID
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("D0"))));
 				If ($Result < 0) {
