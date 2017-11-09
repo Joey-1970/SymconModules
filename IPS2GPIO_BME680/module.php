@@ -544,7 +544,28 @@
 		
 		}
 	}
-		
+
+	/*
+	private function set_gas_config()
+	{
+		If ($this->ReadPropertyInteger("Mode") == 1) {
+			$reg_addr[0] = hexdec("5A");
+			$reg_data[0] = $this->calc_heater_res(dev->gas_sett.heatr_temp, dev);
+			$reg_addr[1] = hexdec("64");
+			$reg_data[1] = $this->calc_heater_dur(dev->gas_sett.heatr_dur);
+			dev->gas_sett.nb_conv = 0;
+		}
+		else {
+			$Result = 1;
+		}
+		$this->bme680_set_regs(reg_addr, reg_data, 2, dev);
+	
+	}
+	*/    
+	  
+
+	    
+	    
 	private function ReadCalibrateData()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
