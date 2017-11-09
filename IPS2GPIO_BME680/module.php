@@ -534,7 +534,18 @@
 				$this->SendDebug("Setup", "crtl_gas_1 setzen fehlerhaft!", 0);
 				return;
 			}
-			
+			// ********************************
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("64"), "Value" => hexdec("59") )));
+			If (!$Result) {
+				$this->SendDebug("Setup", "gas_wait_0 setzen fehlerhaft!", 0);
+				return;
+			}
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("5A"), "Value" => hexdec("59") )));
+			If (!$Result) {
+				$this->SendDebug("Setup", "res_heat_0 setzen fehlerhaft!", 0);
+				return;
+			}
+			// **********************************
 			// Lesen der ChipID
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("D0"))));
 				If ($Result < 0) {
