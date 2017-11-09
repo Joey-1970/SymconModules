@@ -355,7 +355,7 @@
 					$status = $status | ($MeasurementData[15] & hexdec("10")); // Flag HEAT_STAB_R
 					
 					If (!$status) {
-						$this->SendDebug("Measurement", "New Data Flag:".$MeasurementData[1] & hexdec("80"), 0);
+						$this->SendDebug("Measurement", "New Data Flag: ".($MeasurementData[1] & hexdec("80")), 0);
 						$this->SendDebug("Measurement", "Flag GASM_VALID_R:".($MeasurementData[15] & hexdec("20")), 0);
 						$this->SendDebug("Measurement", "Flag HEAT_STAB_R:".($MeasurementData[15] & hexdec("10")), 0);
 						$this->SendDebug("Measurement", "Keine auswertbaren Daten!", 0);
