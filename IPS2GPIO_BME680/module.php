@@ -503,7 +503,7 @@
 			$config_reg = (($filter << 2)|$spi3w_en);
 			$ctrl_hum_reg = $osrs_h;
 			$crtl_gas_0 = hexdec("00"); // Heater enable - Heater disable = hexdec("08")
-			$crtl_gas_1 = ($run_gas << 4)|$HeaterProfileSetpoint);
+			$crtl_gas_1 = ($run_gas << 4)|$HeaterProfileSetpoint;
 			
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("72"), "Value" => $ctrl_hum_reg)));
 			If (!$Result) {
