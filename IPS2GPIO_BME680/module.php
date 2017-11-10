@@ -655,7 +655,7 @@
 		}	
 	}
 /*	    
-	private function calc_temperature($temp_adc)
+	private function calc_temperature($adc_temp)
 	{
 		$CalibrateData = array();
 		$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
@@ -676,7 +676,7 @@
 	return $Temp;
 	}
 	
-	private function calc_pressure($pres_adc)
+	private function calc_pressure($adc_pres)
 	{
 		$CalibrateData = array();
 		$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
@@ -691,6 +691,7 @@
 		$par_p8 = (($CalibrateData[20] << 8) | $CalibrateData[19]);
 		$par_p9 = (($CalibrateData[22] << 8) | $CalibrateData[21]);
 		$par_p10 = $CalibrateData[23];
+		$t_fine = $this->GetBuffer("t_fine"));
 		
 		// Luftdruck
 		$var1 = (($t_fine) / 2) - 64000;
@@ -710,27 +711,43 @@
 		$var3 = (($Pressure / 256) * ($Pressure / 256) * ($Pressure / 256) * $par_p10) / 131072;
 		$Pressure = ($Pressure) + (($var1 + $var2 + $var3 + ($par_p7 * 128)) / 16);
 		SetValueFloat($this->GetIDForIdent("Pressure"), round($Pressure / 100, 2));
-		
-		var1 = (((int32_t) dev->calib.t_fine) / 2) - 64000;
-		var2 = ((var1 / 4) * (var1 / 4)) / 2048;
-		var2 = ((var2) * (int32_t) dev->calib.par_p6) / 4;
-		var2 = var2 + ((var1 * (int32_t) dev->calib.par_p5) * 2);
-		var2 = (var2 / 4) + ((int32_t) dev->calib.par_p4 * 65536);
-		var1 = ((var1 / 4) * (var1 / 4)) / 8192;
-		var1 = (((var1) * ((int32_t) dev->calib.par_p3 * 32)) / 8) + (((int32_t) dev->calib.par_p2 * var1) / 2);
-		var1 = var1 / 262144;
-		var1 = ((32768 + var1) * (int32_t) dev->calib.par_p1) / 32768;
-		calc_pres = (int32_t) (1048576 - pres_adc);
-		calc_pres = (int32_t) ((calc_pres - (var2 / 4096)) * (3125));
-		calc_pres = ((calc_pres / var1) * 2);
-		var1 = ((int32_t) dev->calib.par_p9 * (int32_t) (((calc_pres / 8) * (calc_pres / 8)) / 8192)) / 4096;
-		var2 = ((int32_t) (calc_pres / 4) * (int32_t) dev->calib.par_p8) / 8192;
-		var3 = ((int32_t) (calc_pres / 256) * (int32_t) (calc_pres / 256) * (int32_t) (calc_pres / 256)
-			* (int32_t) dev->calib.par_p10) / 131072;
-		calc_pres = (int32_t) (calc_pres) + ((var1 + var2 + var3 + ((int32_t) dev->calib.par_p7 * 128)) / 16);
-
-		return (uint32_t) calc_pres;
+	return $Pressure;
 	}
+	
+	private function calc_humidity($hum_adc)
+	{
+		$CalibrateData = array();
+		$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
+		// Kalibrierungsdatan aufbereiten
+		$par_h1 = (($CalibrateData[27] << 4) | $CalibrateData[26] & hexdec("0F"));
+		$par_h2 = (($CalibrateData[26] << 4) | $CalibrateData[25] >> 4);
+		$par_h3 = $CalibrateData[28];
+		$par_h4 = $CalibrateData[29];
+		$par_h5 = $CalibrateData[30];
+		$par_h6 = $CalibrateData[31];
+		$par_h7 = $CalibrateData[32];
+		$t_fine = $this->GetBuffer("t_fine"));
+		
+		// Luftfeuchtigkeit
+		$temp_scaled = (($t_fine * 5) + 128) / 256;
+		$var1 = ($adc_hum - (($par_h1 * 16))) - ((($temp_scaled * $par_h3) / (100)) / 2);
+		$var2 = ($par_h2 * ((($temp_scaled * $par_h4) / (100)) + ((($temp_scaled * (($temp_scaled * $par_h5) / (100))) / 64) / (100)) + (1 * 16384))) / 1024;
+		$var3 = $var1 * $var2;
+		$var4 = $par_h6 * 128;
+		$var4 = (($var4) + (($temp_scaled *$par_h7) / (100))) / 16;
+		$var5 = (($var3 / 16384) * ($var3 / 16384)) / 1024;
+		$var6 = ($var4 * $var5) / 2;
+		$Hum = ((($var3 + $var6) / 1024) * (1000)) / 4096;
+		If ($Hum > 100) {
+			$Hum = 100;
+		}
+		elseif ($Hum < 0) {
+			$Hum = 0;
+		}
+		SetValueFloat($this->GetIDForIdent("Humidity"), round($Hum, 2));
+	return $Hum;
+	}
+	
 	
 	private function read_field_data()
 	{
