@@ -958,9 +958,13 @@
 					}
 					IPS_Sleep(10);
 				}
+				else {
+					$this->SendDebug("bme680_set_sensor_mode", "Sleep-Mode erfolgreich gesetzt!", 0);
+					break;
+				}
 			}
 			$tries--;
-		} while (($pow_mode != 0) OR ($tries > 0));
+		} while ($tries);
 
 	return $Result;
 	}
