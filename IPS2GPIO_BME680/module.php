@@ -655,7 +655,25 @@
 		}	
 	}
 /*	    
-	private function ReadData()
+	private function calc_temperature($temp_adc)
+	{
+		int64_t var1;
+		int64_t var2;
+		int64_t var3;
+		int16_t calc_temp;
+
+		var1 = ((int32_t) temp_adc / 8) - ((int32_t) dev->calib.par_t1 * 2);
+		var2 = (var1 * (int32_t) dev->calib.par_t2) / 2048;
+		var3 = ((var1 / 2) * (var1 / 2)) / 4096;
+		var3 = ((var3) * ((int32_t) dev->calib.par_t3 * 16)) / 16384;
+		dev->calib.t_fine = (int32_t) (var2 + var3);
+		calc_temp = (int16_t) (((dev->calib.t_fine * 5) + 128) / 256);
+
+		return calc_temp;
+	}
+	
+	
+	private function read_field_data()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Liest die Messdaten ein
