@@ -937,6 +937,7 @@
 	{
 		$this->SendDebug("bme680_set_sensor_mode", "Ausfuehrung", 0);
 		$pow_mode = 0;
+		$tries = 10;
 
 		/* Call recursively until in sleep */
 		do {
@@ -958,7 +959,8 @@
 					IPS_Sleep(10);
 				}
 			}
-		} while ($pow_mode != 0);
+			$tries--;
+		} while (($pow_mode != 0) OR ($tries > 0));
 
 	return $Result;
 	}
