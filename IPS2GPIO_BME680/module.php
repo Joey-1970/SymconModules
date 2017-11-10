@@ -507,22 +507,25 @@
 			$run_gas = 1;
 			
 			$spi3w_en = 0;
-			$ctrl_meas_reg = (($osrs_t << 5)|($osrs_p << 2)|$mode);
+			$ctrl_meas_reg_start = (($osrs_t << 5)|($osrs_p << 2)|0);
+			$ctrl_meas_reg_end = (($osrs_t << 5)|($osrs_p << 2)|$mode);
 			$config_reg = (($filter << 2)|$spi3w_en);
 			$ctrl_hum_reg = $osrs_h;
 			$crtl_gas_0 = hexdec("00"); // Heater enable - Heater disable = hexdec("08")
 			$crtl_gas_1 = ($run_gas << 4)|$HeaterProfileSetpoint;
+			
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME2680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("74"), "Value" => $ctrl_meas_reg_start)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "ctrl_meas_reg_start setzen fehlerhaft!", 0);
+				return;
+			}
 			
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("72"), "Value" => $ctrl_hum_reg)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "ctrl_hum_reg setzen fehlerhaft!", 0);
 				return;
 			}
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME2680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("74"), "Value" => $ctrl_meas_reg)));
-			If (!$Result) {
-				$this->SendDebug("Setup", "ctrl_meas_reg setzen fehlerhaft!", 0);
-				return;
-			}
+			
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("75"), "Value" => $config_reg)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "config_reg setzen fehlerhaft!", 0);
@@ -550,7 +553,15 @@
 				$this->SendDebug("Setup", "res_heat_0 setzen fehlerhaft!", 0);
 				return;
 			}
+			
+			
 			// **********************************
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME2680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("74"), "Value" => $ctrl_meas_reg_end)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "ctrl_meas_reg_end setzen fehlerhaft!", 0);
+				return;
+			}
+			
 			// Lesen der ChipID
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("D0"))));
 				If ($Result < 0) {
@@ -924,6 +935,11 @@
 		}
 	}
 				
+
+	    
+	    
+	    
+	    
 	private function SoftReset()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
