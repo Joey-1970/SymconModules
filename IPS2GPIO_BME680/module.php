@@ -668,7 +668,7 @@
 		
 			if ($this->GetBuffer("status") & hexdec("E1")) {
 				$this->SetBuffer("new_fields", 1);
-			{
+			}
 			else {
 				$this->SetBuffer("new_fields", 0);
 			}
