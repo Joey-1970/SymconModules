@@ -291,7 +291,7 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Measurement", "Ausfuehrung", 0);
 			
-			$this->read_field_data();
+			$this->bme680_get_sensor_data();
 			
 			return;
 			
@@ -660,6 +660,21 @@
 		}	
 	}
 	    
+	private function bme680_get_sensor_data()
+	{
+		
+		/* Reading the sensor data in forced mode only */
+		$Result = $this->read_field_data();
+		
+			if ($this->GetBuffer("status") & hexdec("E1")) {
+				$this->SetBuffer("new_fields", 1);
+			{
+			else {
+				$this->SetBuffer("new_fields", 0);
+			}
+		return $Result;
+	}
+	    
 	private function calc_temperature($adc_temp)
 	{
 		$this->SendDebug("calc_temperature", "Ausfuehrung", 0);
@@ -815,12 +830,14 @@
 
 						$status = $status | ($MeasurementData[15] & hexdec("20")); // Flag GASM_VALID_R
 						$status = $status | ($MeasurementData[15] & hexdec("10")); // Flag HEAT_STAB_R
+						$this->SetBuffer("status", $status);
 						
 						if ($status & hexdec("80")) {
 							$this->SetBuffer("Temperature", $this->calc_temperature($adc_temp));
 							$this->SetBuffer("Pressure", $this->calc_pressure($adc_pres));
 							$this->SetBuffer("Humidity", $this->calc_humidity($adc_hum));
 							$this->SetBuffer("GasResistance", $this->calc_gas_resistance($adc_gas_res, $gas_range));
+							$this->more_informations();
 							break;
 						} else {
 							IPS_Sleep(10);
@@ -833,13 +850,80 @@
 			} while ($tries);  
 			
 			If (!$tries) {
-				$Result = 2;
+				$Result == 2;
 			}
 
 		return $Result;
 		}	
 	}
 	
+	private function more_informations($Temp, $Hum)
+	{
+		$Temp = $this->GetBuffer("Temperature");
+		$Hum = $this->GetBuffer("Humidity");
+		$Pressure = $this->GetBuffer("Pressure");
+		
+		// Berechnung von Taupunkt und absoluter Luftfeuchtigkeit
+		if ($Temp < 0) {
+			$a = 7.6; 
+			$b = 240.7;
+		}  
+		elseif ($Temp >= 0) {
+			$a = 7.5;
+			$b = 237.3;
+		}
+		$sdd = 6.1078 * pow(10.0, (($a * $Temp) / ($b + $Temp)));
+		$dd = $Hum/100.0 * $sdd;
+		$v = log10($dd/6.1078);
+		$td = $b * $v / ($a - $v);
+		$af = pow(10,5) * 18.016 / 8314.3 * $dd / ($Temp + 273.15);
+
+		// Taupunkttemperatur
+		SetValueFloat($this->GetIDForIdent("DewPointTemperature"), round($td, 2));
+		// Absolute Feuchtigkeit
+		SetValueFloat($this->GetIDForIdent("HumidityAbs"), round($af, 2));
+
+		// Relativen Luftdruck
+		$Altitude = $this->ReadPropertyInteger("Altitude");
+		If ($this->ReadPropertyInteger("Temperature_ID") > 0) {
+			// Wert der Variablen zur Berechnung nutzen
+			$Temperature = GetValueInteger($this->ReadPropertyInteger("Temperature_ID"));
+		}
+		else {
+			// Wert dieses BME280 verwenden
+			$Temperature = $Temp;
+		}
+		If ($this->ReadPropertyInteger("Humidity_ID") > 0) {
+			// Wert der Variablen zur Berechnung nutzen
+			$Humidity = GetValueInteger($this->ReadPropertyInteger("Humidity_ID"));
+		}
+		else {
+			// Wert dieses BME280 verwenden
+			$Humidity = $Hum;
+		}
+		$g_n = 9.80665; // Erdbeschleunigung (m/s^2)
+		$gam = 0.0065; // Temperaturabnahme in K pro geopotentiellen Metern (K/gpm)
+		$R = 287.06; // Gaskonstante für trockene Luft (R = R_0 / M)
+		$M = 0.0289644; // Molare Masse trockener Luft (J/kgK)
+		$R_0 = 8.314472; // allgemeine Gaskonstante (J/molK)
+		$T_0 = 273.15; // Umrechnung von °C in K
+		$C = 0.11; // DWD-Beiwert für die Berücksichtigung der Luftfeuchte
+		$E_0 = 6.11213; // (hPa)
+		$f_rel = $Humidity / 100; // relative Luftfeuchte (0-1.0)
+		// momentaner Stationsdampfdruck (hPa)
+		$e_d = $f_rel * $E_0 * exp((17.5043 * $Temperature) / (241.2 + $Temperature));
+		$PressureRel = $Pressure * exp(($g_n * $Altitude) / ($R * ($Temperature + $T_0 + $C * $e_d + (($gam * $Altitude) / 2))));
+		SetValueFloat($this->GetIDForIdent("PressureRel"), round($PressureRel / 100, 2));
+
+		// Luftdruck Trends
+		If ($this->ReadPropertyBoolean("LoggingPres") == true) {
+			SetValueFloat($this->GetIDForIdent("PressureTrend1h"), $this->PressureTrend(1));
+			SetValueFloat($this->GetIDForIdent("PressureTrend3h"), $this->PressureTrend(3));
+			SetValueFloat($this->GetIDForIdent("PressureTrend12h"), $this->PressureTrend(12));
+			SetValueFloat($this->GetIDForIdent("PressureTrend24h"), $this->PressureTrend(24));
+		}
+	}
+				
 	private function SoftReset()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
