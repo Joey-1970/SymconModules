@@ -816,7 +816,7 @@
 							$this->SetBuffer("Temperature", $this->calc_temperature($adc_temp));
 							$this->SetBuffer("Pressure", $this->calc_pressure($adc_pres));
 							$this->SetBuffer("Humidity", $this->calc_humidity($adc_hum));
-							$this->SetBuffer("GasResistance"), $this->calc_gas_resistance($adc_gas_res, $gas_range));
+							$this->SetBuffer("GasResistance", $this->calc_gas_resistance($adc_gas_res, $gas_range));
 							break;
 						} else {
 							IPS_Sleep(10);
