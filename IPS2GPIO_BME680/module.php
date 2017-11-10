@@ -949,7 +949,7 @@
 				$pow_mode = ($Result & hexdec("03"));
 				// Put to sleep before changing mode
 				if ($pow_mode != 0) {
-					$tmp_pow_mode = $Result & (~(hexdec("03")); /* Set to sleep */
+					$tmp_pow_mode = $Result & (~(hexdec("03"))); /* Set to sleep */
 					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME2680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("74"), "Value" => $tmp_pow_mode)));
 					If (!$Result) {
 						$this->SendDebug("bme680_set_sensor_mode", "ctrl_meas_reg setzen fehlerhaft!", 0);
