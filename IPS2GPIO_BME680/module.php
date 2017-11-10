@@ -801,7 +801,7 @@
 					If (is_array(unserialize($Result)) == true) {
 						$MeasurementData = array();
 						$MeasurementData = unserialize($Result);
-						$this->SendDebug("Measurement", "MeasurementData: ".$this->GetBuffer("MeasurementData"), 0);
+						$this->SendDebug("Measurement", "MeasurementData: ".$Result, 0);
 						
 						$status = $MeasurementData[1] & hexdec("80"); // Flag New_Data_0
 						$gas_status = $MeasurementData[1] & hexdec("0F");
