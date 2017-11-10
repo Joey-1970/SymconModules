@@ -755,7 +755,7 @@
 	
 	private function calc_gas_resistance($adc_gas_res, $gas_range)
 	{
-		$this->SendDebug("calc_gas_resistance8", "Ausfuehrung", 0);
+		$this->SendDebug("calc_gas_resistance", "Ausfuehrung", 0);
 		$CalibrateData = array();
 		$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
 		// Kalibrierungsdatan aufbereiten
@@ -775,8 +775,8 @@
 		$var1 = ((1340 + (5 * $range_switching_error)) * ($lookupTable1[$gas_range])) / 65536;
 		$var2 = ((($adc_gas_res * 32768) - (16777216)) + $var1);
 		$var3 = (($lookupTable2[$gas_range] * $var1) / 512);
-		$GasResistant = (($var3 + ($var2 / 2)) / $var2);
-		SetValueFloat($this->GetIDForIdent("GasResistance"), $GasResistant);
+		$GasResistance = (($var3 + ($var2 / 2)) / $var2);
+		SetValueFloat($this->GetIDForIdent("GasResistance"), $GasResistance);
 	return $GasResistant;
 	}
 	
@@ -790,8 +790,8 @@
 			    	$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_read_block", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("1D"), "Count" => 15)));
 				If ($Result < 0) {
 					$MeasurementData = array();
-					$this->SetBuffer("MeasurementData", serialize($MeasurementData));
-					$this->SendDebug("ReadData", "Fehler bei der Datenermittung", 0);
+					$this->SetBuffer("read_field_data", serialize($MeasurementData));
+					$this->SendDebug("read_field_data", "Fehler bei der Datenermittung", 0);
 					return;
 				}
 				else {
@@ -815,7 +815,7 @@
 						if ($status & hexdec("80")) {
 							$this->SetBuffer("Temperature", $this->calc_temperature($adc_temp));
 							$this->SetBuffer("Pressure", $this->calc_pressure($adc_pres));
-							$this->SetBuffer("Humidity",$this->calc_humidity($adc_hum));
+							$this->SetBuffer("Humidity", $this->calc_humidity($adc_hum));
 							$this->SetBuffer("GasResistance"), $this->calc_gas_resistance($adc_gas_res, $gas_range));
 							break;
 						} else {
