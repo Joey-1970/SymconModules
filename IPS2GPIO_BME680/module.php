@@ -654,6 +654,60 @@
 			}
 		}	
 	}
+	    
+	private function ReadData()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			// Liest die Messdaten ein
+			$this->SendDebug("ReadData", "Ausfuehrung", 0);
+			$tries = 10;
+			do {
+			    	$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_read_block", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("1D"), "Count" => 15)));
+				If ($Result < 0) {
+					$MeasurementData = array();
+					$this->SetBuffer("MeasurementData", serialize($MeasurementData));
+					$this->SendDebug("ReadData", "Fehler bei der Datenermittung", 0);
+					return;
+				}
+				else {
+					If (is_array(unserialize($Result)) == true) {
+						$MeasurementData = array();
+						$MeasurementData = unserialize($Result);
+						
+						$status = $MeasurementData[1] & hexdec("80"); // Flag New_Data_0
+						$gas_status = $MeasurementData[1] & hexdec("0F");
+						$maes_index = $MeasurementData[2];
+
+						$adc_pres = ($MeasurementData[3] * 4096) | ($MeasurementData[4] * 16) | ($MeasurementData[5] / 16);
+						$adc_temp = ($MeasurementData[6] * 4096) | ($MeasurementData[7] * 16) | ($MeasurementData[8] / 16);
+						$adc_hum = ($MeasurementData[9] * 256) | $MeasurementData[10];
+						$adc_gas_res = ($MeasurementData[14] * 4) | ($MeasurementData[15] / 64);
+						$gas_range = $MeasurementData[15] & hexdec("0F");
+
+						$status = $status | ($MeasurementData[15] & hexdec("20")); // Flag GASM_VALID_R
+						$status = $status | ($MeasurementData[15] & hexdec("10")); // Flag HEAT_STAB_R
+						
+						if ($status & hexdec("80")) {
+							$this->temperature = calc_temperature(adc_temp, dev);
+							data->pressure = calc_pressure(adc_pres, dev);
+							data->humidity = calc_humidity(adc_hum, dev);
+							data->gas_resistance = calc_gas_resistance(adc_gas_res, gas_range, dev);
+							break;
+						} else {
+							IPS_Sleep(10);
+						}
+						
+						$this->SetBuffer("MeasurementData", $Result);
+					}
+				}
+				$tries--;
+			} while ($tries);  
+			
+			
+			
+			
+		}	
+	}
 	
 	private function SoftReset()
 	{
