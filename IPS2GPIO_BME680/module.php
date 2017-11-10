@@ -290,6 +290,11 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Measurement", "Ausfuehrung", 0);
+			
+			$this->read_field_data;
+			
+			return;
+			
 			// Messwerte aktualisieren
 			$CalibrateData = array();
 			If (is_array(unserialize($this->GetBuffer("CalibrateData"))) == false) {
@@ -654,7 +659,7 @@
 			}
 		}	
 	}
-/*	    
+	    
 	private function calc_temperature($adc_temp)
 	{
 		$CalibrateData = array();
@@ -816,7 +821,7 @@
 							IPS_Sleep(10);
 						}
 						
-						$this->SetBuffer("MeasurementData", $Result);
+						//$this->SetBuffer("MeasurementData", $Result);
 					}
 				}
 				$tries--;
@@ -829,7 +834,7 @@
 		return $Result;
 		}	
 	}
-*/	
+	
 	private function SoftReset()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
