@@ -936,7 +936,11 @@
 	private function bme680_set_sensor_mode()
 	{
 		$this->SendDebug("bme680_set_sensor_mode", "Ausfuehrung", 0);
+		$osrs_t = $this->ReadPropertyInteger("OSRS_T"); // Oversampling Measure temperature x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
+		$osrs_p = $this->ReadPropertyInteger("OSRS_P"); // Oversampling Measure pressure x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
 		$pow_mode = 0;
+		$ctrl_meas_reg = (($osrs_t << 5)|($osrs_p << 2)|$pow_mode);
+		
 		$tries = 10;
 
 		/* Call recursively until in sleep */
@@ -950,8 +954,7 @@
 				$pow_mode = ($Result & hexdec("03"));
 				// Put to sleep before changing mode
 				if ($pow_mode != 0) {
-					$tmp_pow_mode = $Result & (~(hexdec("03"))); /* Set to sleep */
-					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME2680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("74"), "Value" => $tmp_pow_mode)));
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME2680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("74"), "Value" => $ctrl_meas_reg)));
 					If (!$Result) {
 						$this->SendDebug("bme680_set_sensor_mode", "ctrl_meas_reg setzen fehlerhaft!", 0);
 						return $Result;
