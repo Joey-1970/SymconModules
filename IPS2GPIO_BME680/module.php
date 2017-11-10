@@ -725,7 +725,7 @@
 		$t_fine = $this->GetBuffer("t_fine");
 		
 		// Luftdruck
-		$var1 = (($t_fine) / 2) - 64000;
+		$var1 = ($t_fine / 2) - 64000;
 		$var2 = (($var1 / 4) * ($var1 / 4)) / 2048;
 		$var2 = (($var2) * $par_p6) / 4;
 		$var2 = $var2 + (($var1 * $par_p5) * 2);
@@ -761,7 +761,7 @@
 		$t_fine = $this->GetBuffer("t_fine");
 		
 		// Luftfeuchtigkeit
-		$temp_scaled = (($t_fine * 5) + 128) / 256;
+		$temp_scaled = ($t_fine * 5 + 128) / 256;
 		$var1 = ($adc_hum - (($par_h1 * 16))) - ((($temp_scaled * $par_h3) / (100)) / 2);
 		$var2 = ($par_h2 * ((($temp_scaled * $par_h4) / (100)) + ((($temp_scaled * (($temp_scaled * $par_h5) / (100))) / 64) / (100)) + (1 * 16384))) / 1024;
 		$var3 = $var1 * $var2;
@@ -804,7 +804,7 @@
 		$var3 = (($lookupTable2[$gas_range] * $var1) / 512);
 		$GasResistance = (($var3 + ($var2 / 2)) / $var2);
 		SetValueFloat($this->GetIDForIdent("GasResistance"), $GasResistance);
-	return $GasResistant;
+	return $GasResistance;
 	}
 	
 	private function read_field_data()
@@ -866,7 +866,7 @@
 		}	
 	}
 	
-	private function more_informations($Temp, $Hum)
+	private function more_informations()
 	{
 		$Temp = $this->GetBuffer("Temperature");
 		$Hum = $this->GetBuffer("Humidity");
