@@ -704,15 +704,6 @@
 		$this->SendDebug("calc_temperature", "t_fine: ".$t_fine, 0);
 		$Temp = ((($t_fine * 5) + 128) / 256);
 		SetValueFloat($this->GetIDForIdent("Temperature"), round($Temp, 2));
-		
-		var1 = ((int32_t) temp_adc / 8) - ((int32_t) dev->calib.par_t1 * 2);
-	var2 = (var1 * (int32_t) dev->calib.par_t2) / 2048;
-	var3 = ((var1 / 2) * (var1 / 2)) / 4096;
-	var3 = ((var3) * ((int32_t) dev->calib.par_t3 * 16)) / 16384;
-	dev->calib.t_fine = (int32_t) (var2 + var3);
-	calc_temp = (int16_t) (((dev->calib.t_fine * 5) + 128) / 256);
-
-		
 	return $Temp;
 	}
 	
