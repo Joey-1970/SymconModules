@@ -948,7 +948,8 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("D0"))));
 			If ($Result < 0) {
 				$this->SendDebug("bme680_set_sensor_mode", "Fehler beim Einlesen der Mode-Settings", 0);
-				return $Result;
+				$Result = -1;
+				break;
 			}
 			else {
 				$pow_mode = ($Result & hexdec("03"));
@@ -957,17 +958,20 @@
 					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME2680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("74"), "Value" => $ctrl_meas_reg)));
 					If (!$Result) {
 						$this->SendDebug("bme680_set_sensor_mode", "ctrl_meas_reg setzen fehlerhaft!", 0);
-						return $Result;
+						$Result = -1;
+						break;
 					}
 					IPS_Sleep(10);
 				}
 				else {
 					$this->SendDebug("bme680_set_sensor_mode", "Sleep-Mode erfolgreich gesetzt!", 0);
+					$Result = 1;
 					break;
 				}
 			}
 			$tries--;
 		} while ($tries);
+		$this->SendDebug("bme680_set_sensor_mode", "Mode Einstellung: ".$Result, 0);
 
 	return $Result;
 	}
