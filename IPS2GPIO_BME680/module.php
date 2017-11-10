@@ -507,18 +507,16 @@
 			$run_gas = 1;
 			
 			$spi3w_en = 0;
-			$ctrl_meas_reg_start = (($osrs_t << 5)|($osrs_p << 2)|0);
+			//$ctrl_meas_reg_start = (($osrs_t << 5)|($osrs_p << 2)|0);
 			$ctrl_meas_reg_end = (($osrs_t << 5)|($osrs_p << 2)|$mode);
 			$config_reg = (($filter << 2)|$spi3w_en);
 			$ctrl_hum_reg = $osrs_h;
 			$crtl_gas_0 = hexdec("00"); // Heater enable - Heater disable = hexdec("08")
 			$crtl_gas_1 = ($run_gas << 4)|$HeaterProfileSetpoint;
 			
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME2680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("74"), "Value" => $ctrl_meas_reg_start)));
-			If (!$Result) {
-				$this->SendDebug("Setup", "ctrl_meas_reg_start setzen fehlerhaft!", 0);
-				return;
-			}
+			$this->bme680_set_sensor_mode();
+			
+			
 			
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("72"), "Value" => $ctrl_hum_reg)));
 			If (!$Result) {
@@ -935,7 +933,35 @@
 		}
 	}
 				
+	private function bme680_set_sensor_mode()
+	{
+		$this->SendDebug("bme680_set_sensor_mode", "Ausfuehrung", 0);
+		$pow_mode = 0;
 
+		/* Call recursively until in sleep */
+		do {
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("D0"))));
+			If ($Result < 0) {
+				$this->SendDebug("bme680_set_sensor_mode", "Fehler beim Einlesen der Mode-Settings", 0);
+				return $Result;
+			}
+			else {
+				$pow_mode = ($Result & hexdec("03"));
+				// Put to sleep before changing mode
+				if ($pow_mode != 0) {
+					$tmp_pow_mode = $Result & (~(hexdec("03")); /* Set to sleep */
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME2680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("74"), "Value" => $tmp_pow_mode)));
+					If (!$Result) {
+						$this->SendDebug("bme680_set_sensor_mode", "ctrl_meas_reg setzen fehlerhaft!", 0);
+						return $Result;
+					}
+					IPS_Sleep(10);
+				}
+			}
+		} while ($pow_mode != 0);
+
+	return $Result;
+	}
 	    
 	    
 	    
