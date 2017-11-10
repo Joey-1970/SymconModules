@@ -756,6 +756,7 @@
 		$par_gh1 = $CalibrateData[37];
 		$par_gh2 = (($CalibrateData[36] << 8) | $CalibrateData[35]);
 		$par_gh3 = $CalibrateData[38];
+		$range_switching_error = ($CalibrateData[43] & hexdec("F0")) >> 4;
 		
 		// Look up table for the possible gas range values
 		$lookupTable1 = array(2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2126008810, 2147483647, 2130303777,2147483647, 
