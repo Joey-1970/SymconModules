@@ -966,7 +966,7 @@
 				}
 				else {
 					$this->SendDebug("bme680_set_sensor_mode", "Sleep-Mode erfolgreich gesetzt!", 0);
-					$Result = 1;
+					$Result = 0;
 					break;
 				}
 			}
