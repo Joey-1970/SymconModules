@@ -662,6 +662,7 @@
 	    
 	private function calc_temperature($adc_temp)
 	{
+		$this->SendDebug("calc_temperature", "Ausfuehrung", 0);
 		$CalibrateData = array();
 		$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
 		// Kalibrierungsdatan aufbereiten
@@ -683,6 +684,7 @@
 	
 	private function calc_pressure($adc_pres)
 	{
+		$this->SendDebug("calc_pressure", "Ausfuehrung", 0);
 		$CalibrateData = array();
 		$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
 		// Kalibrierungsdatan aufbereiten
@@ -721,6 +723,7 @@
 	
 	private function calc_humidity($adc_hum)
 	{
+		$this->SendDebug("calc_humidity", "Ausfuehrung", 0);
 		$CalibrateData = array();
 		$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
 		// Kalibrierungsdatan aufbereiten
@@ -798,6 +801,7 @@
 					If (is_array(unserialize($Result)) == true) {
 						$MeasurementData = array();
 						$MeasurementData = unserialize($Result);
+						$this->SendDebug("Measurement", "MeasurementData: ".$this->GetBuffer("MeasurementData"), 0);
 						
 						$status = $MeasurementData[1] & hexdec("80"); // Flag New_Data_0
 						$gas_status = $MeasurementData[1] & hexdec("0F");
