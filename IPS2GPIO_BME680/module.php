@@ -291,7 +291,7 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Measurement", "Ausfuehrung", 0);
 			
-			$this->read_field_data;
+			$this->read_field_data();
 			
 			return;
 			
