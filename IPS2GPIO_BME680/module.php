@@ -676,6 +676,61 @@
 	return $Temp;
 	}
 	
+	private function calc_pressure($pres_adc)
+	{
+		$CalibrateData = array();
+		$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
+		// Kalibrierungsdatan aufbereiten
+		$par_p1 = (($CalibrateData[6] << 8) | $CalibrateData[5]);
+		$par_p2 = (($CalibrateData[8] << 8) | $CalibrateData[7]);
+		$par_p3 = $CalibrateData[9];
+		$par_p4 = (($CalibrateData[12] << 8) | $CalibrateData[11]);
+		$par_p5 = (($CalibrateData[14] << 8) | $CalibrateData[13]);
+		$par_p6 = $CalibrateData[16];
+		$par_p7 = ($CalibrateData[15]);
+		$par_p8 = (($CalibrateData[20] << 8) | $CalibrateData[19]);
+		$par_p9 = (($CalibrateData[22] << 8) | $CalibrateData[21]);
+		$par_p10 = $CalibrateData[23];
+		
+		// Luftdruck
+		$var1 = (($t_fine) / 2) - 64000;
+		$var2 = (($var1 / 4) * ($var1 / 4)) / 2048;
+		$var2 = (($var2) * $par_p6) / 4;
+		$var2 = $var2 + (($var1 * $par_p5) * 2);
+		$var2 = ($var2 / 4) + ($par_p4 * 65536);
+		$var1 = (($var1 / 4) * ($var1 / 4)) / 8192;
+		$var1 = ((($var1) * ($par_p3 * 32)) / 8) + (($par_p2 * $var1) / 2);
+		$var1 = $var1 / 262144;
+		$var1 = ((32768 + $var1) * $par_p1) / 32768;
+		$Pressure = (1048576 - $adc_pres);
+		$Pressure = (($Pressure - ($var2 / 4096)) * (3125));
+		$Pressure = (($Pressure / $var1) * 2);
+		$var1 = ($par_p9 * ((($Pressure / 8) * ($Pressure / 8)) / 8192)) / 4096;
+		$var2 = (($Pressure / 4) * $par_p8) / 8192;
+		$var3 = (($Pressure / 256) * ($Pressure / 256) * ($Pressure / 256) * $par_p10) / 131072;
+		$Pressure = ($Pressure) + (($var1 + $var2 + $var3 + ($par_p7 * 128)) / 16);
+		SetValueFloat($this->GetIDForIdent("Pressure"), round($Pressure / 100, 2));
+		
+		var1 = (((int32_t) dev->calib.t_fine) / 2) - 64000;
+		var2 = ((var1 / 4) * (var1 / 4)) / 2048;
+		var2 = ((var2) * (int32_t) dev->calib.par_p6) / 4;
+		var2 = var2 + ((var1 * (int32_t) dev->calib.par_p5) * 2);
+		var2 = (var2 / 4) + ((int32_t) dev->calib.par_p4 * 65536);
+		var1 = ((var1 / 4) * (var1 / 4)) / 8192;
+		var1 = (((var1) * ((int32_t) dev->calib.par_p3 * 32)) / 8) + (((int32_t) dev->calib.par_p2 * var1) / 2);
+		var1 = var1 / 262144;
+		var1 = ((32768 + var1) * (int32_t) dev->calib.par_p1) / 32768;
+		calc_pres = (int32_t) (1048576 - pres_adc);
+		calc_pres = (int32_t) ((calc_pres - (var2 / 4096)) * (3125));
+		calc_pres = ((calc_pres / var1) * 2);
+		var1 = ((int32_t) dev->calib.par_p9 * (int32_t) (((calc_pres / 8) * (calc_pres / 8)) / 8192)) / 4096;
+		var2 = ((int32_t) (calc_pres / 4) * (int32_t) dev->calib.par_p8) / 8192;
+		var3 = ((int32_t) (calc_pres / 256) * (int32_t) (calc_pres / 256) * (int32_t) (calc_pres / 256)
+			* (int32_t) dev->calib.par_p10) / 131072;
+		calc_pres = (int32_t) (calc_pres) + ((var1 + var2 + var3 + ((int32_t) dev->calib.par_p7 * 128)) / 16);
+
+		return (uint32_t) calc_pres;
+	}
 	
 	private function read_field_data()
 	{
