@@ -657,19 +657,23 @@
 /*	    
 	private function calc_temperature($temp_adc)
 	{
-		int64_t var1;
-		int64_t var2;
-		int64_t var3;
-		int16_t calc_temp;
-
-		var1 = ((int32_t) temp_adc / 8) - ((int32_t) dev->calib.par_t1 * 2);
-		var2 = (var1 * (int32_t) dev->calib.par_t2) / 2048;
-		var3 = ((var1 / 2) * (var1 / 2)) / 4096;
-		var3 = ((var3) * ((int32_t) dev->calib.par_t3 * 16)) / 16384;
-		dev->calib.t_fine = (int32_t) (var2 + var3);
-		calc_temp = (int16_t) (((dev->calib.t_fine * 5) + 128) / 256);
-
-		return calc_temp;
+		$CalibrateData = array();
+		$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
+		// Kalibrierungsdatan aufbereiten
+		$par_t1 = (($CalibrateData[34] << 8) | $CalibrateData[33]);
+		$par_t2 = (($CalibrateData[2] << 8) | $CalibrateData[1]);
+		$par_t3 = $CalibrateData[3];
+		
+		// Temperatur
+		$var1 = ($adc_temp / 8) - ($par_t1 * 2);
+		$var2 = ($var1 * $par_t2) / 2048;
+		$var3 = (($var1 / 2) * ($var1 / 2)) / 4096;
+		$var3 = (($var3) * ($par_t3 * 16)) / 16384;
+		$t_fine = ($var2 + $var3);
+		$this->SetBuffer("t_fine"), $t_fine);
+		$Temp = ((($t_fine * 5) + 128) / 256);
+		SetValueFloat($this->GetIDForIdent("Temperature"), round($Temp, 2));
+	return $Temp;
 	}
 	
 	
