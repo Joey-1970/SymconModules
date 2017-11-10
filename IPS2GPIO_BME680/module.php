@@ -755,6 +755,7 @@
 	
 	private function calc_gas_resistance($adc_gas_res, $gas_range)
 	{
+		$this->SendDebug("calc_gas_resistance8", "Ausfuehrung", 0);
 		$CalibrateData = array();
 		$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
 		// Kalibrierungsdatan aufbereiten
@@ -783,7 +784,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Liest die Messdaten ein
-			$this->SendDebug("ReadData", "Ausfuehrung", 0);
+			$this->SendDebug("read_field_data", "Ausfuehrung", 0);
 			$tries = 10;
 			do {
 			    	$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_read_block", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("1D"), "Count" => 15)));
