@@ -675,7 +675,7 @@
 		$var3 = (($var1 / 2) * ($var1 / 2)) / 4096;
 		$var3 = (($var3) * ($par_t3 * 16)) / 16384;
 		$t_fine = ($var2 + $var3);
-		$this->SetBuffer("t_fine"), $t_fine);
+		$this->SetBuffer("t_fine", $t_fine);
 		$Temp = ((($t_fine * 5) + 128) / 256);
 		SetValueFloat($this->GetIDForIdent("Temperature"), round($Temp, 2));
 	return $Temp;
@@ -696,7 +696,7 @@
 		$par_p8 = (($CalibrateData[20] << 8) | $CalibrateData[19]);
 		$par_p9 = (($CalibrateData[22] << 8) | $CalibrateData[21]);
 		$par_p10 = $CalibrateData[23];
-		$t_fine = $this->GetBuffer("t_fine"));
+		$t_fine = $this->GetBuffer("t_fine");
 		
 		// Luftdruck
 		$var1 = (($t_fine) / 2) - 64000;
@@ -731,7 +731,7 @@
 		$par_h5 = $CalibrateData[30];
 		$par_h6 = $CalibrateData[31];
 		$par_h7 = $CalibrateData[32];
-		$t_fine = $this->GetBuffer("t_fine"));
+		$t_fine = $this->GetBuffer("t_fine");
 		
 		// Luftfeuchtigkeit
 		$temp_scaled = (($t_fine * 5) + 128) / 256;
