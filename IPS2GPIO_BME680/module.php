@@ -654,7 +654,7 @@
 			}
 		}	
 	}
-	    
+/*	    
 	private function ReadData()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
@@ -688,10 +688,10 @@
 						$status = $status | ($MeasurementData[15] & hexdec("10")); // Flag HEAT_STAB_R
 						
 						if ($status & hexdec("80")) {
-							$this->temperature = calc_temperature(adc_temp, dev);
-							data->pressure = calc_pressure(adc_pres, dev);
-							data->humidity = calc_humidity(adc_hum, dev);
-							data->gas_resistance = calc_gas_resistance(adc_gas_res, gas_range, dev);
+							$this->SetBuffer("Temperature", $this->calc_temperature($adc_temp));
+							$this->SetBuffer("Pressure", $this->calc_pressure($adc_pres));
+							$this->SetBuffer("Humidity",$this->calc_humidity($adc_hum));
+							$this->SetBuffer("GasResistance"), $this->calc_gas_resistance($adc_gas_res, $gas_range));
 							break;
 						} else {
 							IPS_Sleep(10);
@@ -703,12 +703,14 @@
 				$tries--;
 			} while ($tries);  
 			
-			
-			
-			
+			If (!$tries) {
+				$Result = 2;
+			}
+
+		return $Result;
 		}	
 	}
-	
+*/	
 	private function SoftReset()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
