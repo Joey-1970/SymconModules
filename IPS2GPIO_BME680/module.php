@@ -725,35 +725,23 @@
 		$par_p10 = $CalibrateData[23];
 		$t_fine = floatval($this->GetBuffer("t_fine"));
 		
-		 /* read pressure calibration
-    par_P1 = (cali[DIG_P1_MSB_REG] << 8) | cali[DIG_P1_LSB_REG];
-    par_P2 = (cali[DIG_P2_MSB_REG] << 8) | cali[DIG_P2_LSB_REG];
-    par_P3 = cali[DIG_P3_REG];
-    par_P4 = (cali[DIG_P4_MSB_REG] << 8) | cali[DIG_P4_LSB_REG];
-    par_P5 = (cali[DIG_P5_MSB_REG] << 8) | cali[DIG_P5_LSB_REG];
-    par_P6 = cali[DIG_P6_REG];
-    par_P7 = cali[DIG_P7_REG];
-    par_P8 = (cali[DIG_P8_MSB_REG] << 8) | cali[DIG_P8_LSB_REG];
-    par_P9 = (cali[DIG_P9_MSB_REG] << 8) | cali[DIG_P9_LSB_REG];
-    par_P10 = cali[DIG_P10_REG];
-		*/
 		// Luftdruck
 		$var1 = ($t_fine / 2) - 64000;
 		$var2 = (($var1 / 4) * ($var1 / 4)) / 2048;
-		$var2 = (($var2) * $par_p6) / 4;
-		$var2 = $var2 + (($var1 * $par_p5) * 2);
+		$var2 = $var2 * $par_p6 / 4;
+		$var2 = $var2 + ($var1 * $par_p5 * 2);
 		$var2 = ($var2 / 4) + ($par_p4 * 65536);
-		$var1 = (($var1 / 4) * ($var1 / 4)) / 8192;
-		$var1 = ((($var1) * ($par_p3 * 32)) / 8) + (($par_p2 * $var1) / 2);
+		$var1 = ($var1 / 4 * $var1 / 4) / 8192;
+		$var1 = ($var1 * $par_p3 * 32 / 8) + ($par_p2 * $var1 / 2);
 		$var1 = $var1 / 262144;
 		$var1 = ((32768 + $var1) * $par_p1) / 32768;
 		$Pressure = (1048576 - $adc_pres);
-		$Pressure = (($Pressure - ($var2 / 4096)) * 3125);
-		$Pressure = (($Pressure / $var1) * 2);
-		$var1 = ($par_p9 * ((($Pressure / 8) * ($Pressure / 8)) / 8192)) / 4096;
-		$var2 = (($Pressure / 4) * $par_p8) / 8192;
-		$var3 = (($Pressure / 256) * ($Pressure / 256) * ($Pressure / 256) * $par_p10) / 131072;
-		$Pressure = ($Pressure) + (($var1 + $var2 + $var3 + ($par_p7 * 128)) / 16);
+		$Pressure = ($Pressure - ($var2 / 4096)) * 3125;
+		$Pressure = $Pressure / $var1 * 2;
+		$var1 = $par_p9 * ($Pressure / 8) * ($Pressure / 8) / 8192 / 4096;
+		$var2 = ($Pressure / 4) * $par_p8 / 8192;
+		$var3 = ($Pressure / 256) * ($Pressure / 256) * ($Pressure / 256) * $par_p10 / 131072;
+		$Pressure = $Pressure + (($var1 + $var2 + $var3 + ($par_p7 * 128)) / 16);
 		SetValueFloat($this->GetIDForIdent("Pressure"), round($Pressure / 100, 2));
 	return $Pressure;
 	}
@@ -783,8 +771,8 @@
 		$var5 = (($var3 / 16384) * ($var3 / 16384)) / 1024;
 		$var6 = ($var4 * $var5) / 2;
 		$Hum = ((($var3 + $var6) / 1024) * (1000)) / 4096;
-		If ($Hum > 100) {
-			$Hum = 100;
+		If ($Hum > 100000) {
+			$Hum = 100000;
 		}
 		elseif ($Hum < 0) {
 			$Hum = 0;
@@ -882,9 +870,9 @@
 	
 	private function more_informations()
 	{
-		$Temp = floatval($this->GetBuffer("Temperature"));
+		$Temp = floatval($this->GetBuffer("Temperature") / 100);
 		$Hum = $this->GetBuffer("Humidity");
-		$Pressure = floatval($this->GetBuffer("Pressure"));
+		$Pressure = floatval($this->GetBuffer("Pressure") / 100);
 		
 		// Berechnung von Taupunkt und absoluter Luftfeuchtigkeit
 		if ($Temp < 0) {
