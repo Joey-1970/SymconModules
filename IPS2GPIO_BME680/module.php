@@ -872,7 +872,7 @@
 	{
 		$Temp = floatval($this->GetBuffer("Temperature") / 100);
 		$Hum = $this->GetBuffer("Humidity");
-		$Pressure = floatval($this->GetBuffer("Pressure") / 100);
+		$Pressure = floatval($this->GetBuffer("Pressure") / 1000);
 		
 		// Berechnung von Taupunkt und absoluter Luftfeuchtigkeit
 		if ($Temp < 0) {
