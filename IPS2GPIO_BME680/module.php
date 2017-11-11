@@ -746,6 +746,7 @@
     		$var3 = (($pressure_comp >> 8) * ($pressure_comp >> 8) * ($pressure_comp >> 8) * $par_p10) >> 17;
  
     		$pressure_comp = ($pressure_comp) + (($var1 + $var2 + $var3 + ($par_p7 << 7)) >> 4);
+		$Pressure = $pressure_comp;
 		/*
 		// Luftdruck
 		$var1 = ($t_fine / 2) - 64000;
@@ -765,7 +766,7 @@
 		$var3 = ($Pressure / 256) * ($Pressure / 256) * ($Pressure / 256) * $par_p10 / 131072;
 		$Pressure = $Pressure + (($var1 + $var2 + $var3 + ($par_p7 * 128)) / 16);
 		*/
-		SetValueFloat($this->GetIDForIdent("Pressure"), round($pressure_comp / 100, 2));
+		SetValueFloat($this->GetIDForIdent("Pressure"), round($Pressure / 100, 2));
 	return $Pressure;
 	}
 	
@@ -856,6 +857,7 @@
 						$maes_index = $MeasurementData[2];
 
 						$adc_pres = ($MeasurementData[3] * 4096) | ($MeasurementData[4] * 16) | ($MeasurementData[5] / 16);
+						$this->SendDebug("read_field_data", "Roh-Druckwert : ".$adc_pres, 0);
 						$adc_temp = ($MeasurementData[6] * 4096) | ($MeasurementData[7] * 16) | ($MeasurementData[8] / 16);
 						$this->SendDebug("read_field_data", "Roh-Temperaturwert : ".$adc_temp, 0);
 						$adc_hum = ($MeasurementData[9] * 256) | $MeasurementData[10];
