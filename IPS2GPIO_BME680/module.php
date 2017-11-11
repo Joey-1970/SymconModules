@@ -699,7 +699,7 @@
 		$var2 = ($var1 * $par_t2) / 2048;
 		$var3 = (($var1 / 2) * ($var1 / 2)) / 4096;
 		$var3 = (($var3) * ($par_t3 * 16)) / 16384;
-		$t_fine = ($var2 + $var3);
+		$t_fine = intval($var2 + $var3);
 		$this->SetBuffer("t_fine", $t_fine);
 		$this->SendDebug("calc_temperature", "t_fine: ".$t_fine, 0);
 		$Temp = (($t_fine * 5) + 128) / 256;
@@ -723,7 +723,7 @@
 		$par_p8 = (($CalibrateData[20] << 8) | $CalibrateData[19]);
 		$par_p9 = (($CalibrateData[22] << 8) | $CalibrateData[21]);
 		$par_p10 = $CalibrateData[23];
-		$t_fine = floatval($this->GetBuffer("t_fine"));
+		$t_fine = intval($this->GetBuffer("t_fine"));
 		
 		// Luftdruck
 		$var1 = ($t_fine / 2) - 64000;
