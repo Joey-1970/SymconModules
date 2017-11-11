@@ -290,7 +290,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Measurement", "Ausfuehrung", 0);
-			
+			$this->Setup();
 			$this->bme680_get_sensor_data();
 			
 			return;
