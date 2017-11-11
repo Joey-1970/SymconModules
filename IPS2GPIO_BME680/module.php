@@ -694,7 +694,14 @@
 		$par_t2 = (($CalibrateData[2] << 8) | $CalibrateData[1]);
 		$par_t3 = $CalibrateData[3];
 		
+		$var1 = ($adc_temp >> 3) - ($par_t1 << 1);
+    		$var2 = ($var1 * $par_t2) >> 11;
+    		$var3 = (((($var1 >> 1) * ($var1 >> 1)) >> 12) * ($par_t3 << 4)) >> 14;
+    		$t_fine = $var2 + $var3;
+    		$Temp = (($t_fine * 5) + 128) >> 8;
+		
 		// Temperatur
+		/*
 		$var1 = ($adc_temp / 8) - ($par_t1 * 2);
 		$var2 = ($var1 * $par_t2) / 2048;
 		$var3 = (($var1 / 2) * ($var1 / 2)) / 4096;
@@ -703,6 +710,7 @@
 		$this->SetBuffer("t_fine", $t_fine);
 		$this->SendDebug("calc_temperature", "t_fine: ".$t_fine, 0);
 		$Temp = (($t_fine * 5) + 128) / 256;
+		*/
 		SetValueFloat($this->GetIDForIdent("Temperature"), round($Temp, 2));
 	return $Temp;
 	}
