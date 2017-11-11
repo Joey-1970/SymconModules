@@ -746,7 +746,7 @@
     		$var3 = (($pressure_comp >> 8) * ($pressure_comp >> 8) * ($pressure_comp >> 8) * $par_p10) >> 17;
  
     		$pressure_comp = ($pressure_comp) + (($var1 + $var2 + $var3 + ($par_p7 << 7)) >> 4);
-		$pressure = ($pressure_comp >> 1);
+		$Pressure = ($pressure_comp >> 1);
 		//$Pressure = $pressure_comp;
 		/*
 		// Luftdruck
