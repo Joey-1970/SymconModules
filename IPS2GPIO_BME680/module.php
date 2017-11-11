@@ -699,7 +699,6 @@
     		$var3 = (((($var1 >> 1) * ($var1 >> 1)) >> 12) * ($par_t3 << 4)) >> 14;
     		$t_fine = $var2 + $var3;
     		$Temp = (($t_fine * 5) + 128) >> 8;
-		$Temp =((($t_fine - 122880) * 25) + 128) >> 8;
 		
 		// Temperatur
 		/*
@@ -712,7 +711,7 @@
 		$this->SendDebug("calc_temperature", "t_fine: ".$t_fine, 0);
 		$Temp = (($t_fine * 5) + 128) / 256;
 		*/
-		SetValueFloat($this->GetIDForIdent("Temperature"), round($Temp, 2));
+		SetValueFloat($this->GetIDForIdent("Temperature"), round($Temp / 100, 2));
 	return $Temp;
 	}
 	
@@ -786,7 +785,7 @@
 		elseif ($Hum < 0) {
 			$Hum = 0;
 		}
-		SetValueFloat($this->GetIDForIdent("Humidity"), round($Hum, 2));
+		SetValueFloat($this->GetIDForIdent("Humidity"), round($Hum / 1000, 2));
 	return $Hum;
 	}
 	
