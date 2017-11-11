@@ -694,14 +694,7 @@
 		$par_t2 = (($CalibrateData[2] << 8) | $CalibrateData[1]);
 		$par_t3 = $CalibrateData[3];
 		
-		$var1 = ($adc_temp >> 3) - ($par_t1 << 1);
-    		$var2 = ($var1 * $par_t2) >> 11;
-    		$var3 = (((($var1 >> 1) * ($var1 >> 1)) >> 12) * ($par_t3 << 4)) >> 14;
-    		$t_fine = $var2 + $var3;
-    		$Temp = (($t_fine * 5) + 128) >> 8;
-		
 		// Temperatur
-		/*
 		$var1 = ($adc_temp / 8) - ($par_t1 * 2);
 		$var2 = ($var1 * $par_t2) / 2048;
 		$var3 = (($var1 / 2) * ($var1 / 2)) / 4096;
@@ -710,7 +703,6 @@
 		$this->SetBuffer("t_fine", $t_fine);
 		$this->SendDebug("calc_temperature", "t_fine: ".$t_fine, 0);
 		$Temp = (($t_fine * 5) + 128) / 256;
-		*/
 		SetValueFloat($this->GetIDForIdent("Temperature"), round($Temp / 100, 2));
 	return $Temp;
 	}
@@ -733,6 +725,18 @@
 		$par_p10 = $CalibrateData[23];
 		$t_fine = floatval($this->GetBuffer("t_fine"));
 		
+		 /* read pressure calibration
+    par_P1 = (cali[DIG_P1_MSB_REG] << 8) | cali[DIG_P1_LSB_REG];
+    par_P2 = (cali[DIG_P2_MSB_REG] << 8) | cali[DIG_P2_LSB_REG];
+    par_P3 = cali[DIG_P3_REG];
+    par_P4 = (cali[DIG_P4_MSB_REG] << 8) | cali[DIG_P4_LSB_REG];
+    par_P5 = (cali[DIG_P5_MSB_REG] << 8) | cali[DIG_P5_LSB_REG];
+    par_P6 = cali[DIG_P6_REG];
+    par_P7 = cali[DIG_P7_REG];
+    par_P8 = (cali[DIG_P8_MSB_REG] << 8) | cali[DIG_P8_LSB_REG];
+    par_P9 = (cali[DIG_P9_MSB_REG] << 8) | cali[DIG_P9_LSB_REG];
+    par_P10 = cali[DIG_P10_REG];
+		*/
 		// Luftdruck
 		$var1 = ($t_fine / 2) - 64000;
 		$var2 = (($var1 / 4) * ($var1 / 4)) / 2048;
@@ -744,7 +748,7 @@
 		$var1 = $var1 / 262144;
 		$var1 = ((32768 + $var1) * $par_p1) / 32768;
 		$Pressure = (1048576 - $adc_pres);
-		$Pressure = (($Pressure - ($var2 / 4096)) * (3125));
+		$Pressure = (($Pressure - ($var2 / 4096)) * 3125);
 		$Pressure = (($Pressure / $var1) * 2);
 		$var1 = ($par_p9 * ((($Pressure / 8) * ($Pressure / 8)) / 8192)) / 4096;
 		$var2 = (($Pressure / 4) * $par_p8) / 8192;
