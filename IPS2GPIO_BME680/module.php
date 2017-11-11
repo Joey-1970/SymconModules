@@ -870,8 +870,8 @@
 	
 	private function more_informations()
 	{
-		$Temp = floatval($this->GetBuffer("Temperature") / 100);
-		$Hum = $this->GetBuffer("Humidity") / 1000;
+		$Temp = intval($this->GetBuffer("Temperature")) / 100;
+		$Hum = intval($this->GetBuffer("Humidity")) / 1000;
 		$Pressure = floatval($this->GetBuffer("Pressure"));
 		
 		// Berechnung von Taupunkt und absoluter Luftfeuchtigkeit
