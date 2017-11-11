@@ -759,7 +759,7 @@
 		$par_h5 = $CalibrateData[30];
 		$par_h6 = $CalibrateData[31];
 		$par_h7 = $CalibrateData[32];
-		$t_fine = floatval($this->GetBuffer("t_fine"));
+		$t_fine = intval($this->GetBuffer("t_fine"));
 		
 		// Luftfeuchtigkeit
 		$temp_scaled = ($t_fine * 5 + 128) / 256;
