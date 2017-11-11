@@ -725,6 +725,28 @@
 		$par_p10 = $CalibrateData[23];
 		$t_fine = intval($this->GetBuffer("t_fine"));
 		
+		$var1 = (($t_fine) >> 1) - 64000;
+   		$var2 = (((($var1 >> 2) * ($var1 >> 2)) >> 11) * $par_p6) >> 2;
+    		$var2 = $var2 + (($var1 * $par_p5) << 1);
+    		$var2 = ($var2 >> 2) + ($par_p4 << 16);
+    		$var1 = ((((($var1 >> 2) * ($var1 >> 2)) >> 13) * ($par_p3 << 5)) >> 3) + (($par_p2 * $var1) >> 1);
+    		$var1 = $var1 >> 18;
+    		$var1 = ((32768 + $var1) * $par_p1) >> 15;
+    		$pressure_comp = 1048576 - $adc_pres;
+    		$pressure_comp = (($pressure_comp - ($var2 >> 12)) * (3125));
+		$var4 = (1 << 31);
+		If ($pressure_comp >= $var4) {
+			$pressure_comp = (($pressure_comp / $var1) << 1);
+		}
+		else {
+			$pressure_comp = (($pressure_comp << 1) / $var1);
+		}
+    		$var1 = ($par_p9 * ((($pressure_comp >> 3) * ($pressure_comp >> 3)) >> 13)) >> 12;
+    		$var2 = (($pressure_comp >> 2) * $par_p8) >> 13;
+    		$var3 = (($pressure_comp >> 8) * ($pressure_comp >> 8) * ($pressure_comp >> 8) * $par_p10) >> 17;
+ 
+    		$pressure_comp = ($pressure_comp) + (($var1 + $var2 + $var3 + ($par_p7 << 7)) >> 4);
+		/*
 		// Luftdruck
 		$var1 = ($t_fine / 2) - 64000;
 		$var2 = (($var1 / 4) * ($var1 / 4)) / 2048;
@@ -742,7 +764,8 @@
 		$var2 = ($Pressure / 4) * $par_p8 / 8192;
 		$var3 = ($Pressure / 256) * ($Pressure / 256) * ($Pressure / 256) * $par_p10 / 131072;
 		$Pressure = $Pressure + (($var1 + $var2 + $var3 + ($par_p7 * 128)) / 16);
-		SetValueFloat($this->GetIDForIdent("Pressure"), round($Pressure / 100, 2));
+		*/
+		SetValueFloat($this->GetIDForIdent("Pressure"), round($pressure_comp / 100, 2));
 	return $Pressure;
 	}
 	
