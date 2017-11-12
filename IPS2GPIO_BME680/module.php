@@ -724,6 +724,7 @@
 		$par_p9 = (($CalibrateData[22] << 8) | $CalibrateData[21]);
 		$par_p10 = $CalibrateData[23];
 		$t_fine = intval($this->GetBuffer("t_fine"));
+		$this->SendDebug("calc_pressure", "Werte:".$par_p1.", ".$par_p2.", ".$par_p3.", ".$par_p4.", ".$par_p5.", ".$par_p6.", ".$par_p7.", ".$par_p8.", ".$par_p9.", ".$par_p10, 0);
 		
 		$var1 = (($t_fine) >> 1) - 64000;
    		$var2 = (((($var1 >> 2) * ($var1 >> 2)) >> 11) * $par_p6) >> 2;
