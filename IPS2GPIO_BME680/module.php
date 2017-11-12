@@ -695,14 +695,14 @@
 		$par_t3 = $CalibrateData[3];
 		
 		// Temperatur
-		$var1 = ($adc_temp / 8) - ($par_t1 * 2);
-		$var2 = ($var1 * $par_t2) / 2048;
-		$var3 = (($var1 / 2) * ($var1 / 2)) / 4096;
-		$var3 = (($var3) * ($par_t3 * 16)) / 16384;
+		$var1 = intval(($adc_temp / 8) - ($par_t1 * 2));
+		$var2 = intval(($var1 * $par_t2) / 2048);
+		$var3 = intval((($var1 / 2) * ($var1 / 2)) / 4096);
+		$var3 = intval((($var3) * ($par_t3 * 16)) / 16384);
 		$t_fine = intval($var2 + $var3);
 		$this->SetBuffer("t_fine", $t_fine);
-		$this->SendDebug("calc_temperature", "t_fine: ".$t_fine, 0);
-		$Temp = (($t_fine * 5) + 128) / 256;
+		//$this->SendDebug("calc_temperature", "t_fine: ".$t_fine, 0);
+		$Temp = intval((($t_fine * 5) + 128) / 256);
 		SetValueFloat($this->GetIDForIdent("Temperature"), round($Temp / 100, 2));
 	return $Temp;
 	}
@@ -726,15 +726,15 @@
 		$t_fine = intval($this->GetBuffer("t_fine"));
 		$this->SendDebug("calc_pressure", "Werte:".$par_p1.", ".$par_p2.", ".$par_p3.", ".$par_p4.", ".$par_p5.", ".$par_p6.", ".$par_p7.", ".$par_p8.", ".$par_p9.", ".$par_p10, 0);
 		
-		$var1 = (($t_fine) >> 1) - 64000;
-   		$var2 = (((($var1 >> 2) * ($var1 >> 2)) >> 11) * $par_p6) >> 2;
-    		$var2 = $var2 + (($var1 * $par_p5) << 1);
-    		$var2 = ($var2 >> 2) + ($par_p4 << 16);
-    		$var1 = ((((($var1 >> 2) * ($var1 >> 2)) >> 13) * ($par_p3 << 5)) >> 3) + (($par_p2 * $var1) >> 1);
-    		$var1 = $var1 >> 18;
-    		$var1 = ((32768 + $var1) * $par_p1) >> 15;
-    		$pressure_comp = 1048576 - $adc_pres;
-    		$pressure_comp = (($pressure_comp - ($var2 >> 12)) * (3125));
+		$var1 = intval((($t_fine) >> 1) - 64000);
+   		$var2 = intval((((($var1 >> 2) * ($var1 >> 2)) >> 11) * $par_p6) >> 2);
+    		$var2 = intval($var2 + (($var1 * $par_p5) << 1));
+    		$var2 = intval(($var2 >> 2) + ($par_p4 << 16));
+    		$var1 = intval(((((($var1 >> 2) * ($var1 >> 2)) >> 13) * ($par_p3 << 5)) >> 3) + (($par_p2 * $var1) >> 1));
+    		$var1 = intval($var1 >> 18);
+    		$var1 = intval(((32768 + $var1) * $par_p1) >> 15);
+    		$pressure_comp = intval(1048576 - $adc_pres);
+    		$pressure_comp = intval((($pressure_comp - ($var2 >> 12)) * (3125)));
 		$var4 = (1 << 31);
 		If ($pressure_comp >= $var4) {
 			$pressure_comp = (($pressure_comp / $var1) << 1);
@@ -742,11 +742,11 @@
 		else {
 			$pressure_comp = (($pressure_comp << 1) / $var1);
 		}
-    		$var1 = ($par_p9 * ((($pressure_comp >> 3) * ($pressure_comp >> 3)) >> 13)) >> 12;
-    		$var2 = (($pressure_comp >> 2) * $par_p8) >> 13;
-    		$var3 = (($pressure_comp >> 8) * ($pressure_comp >> 8) * ($pressure_comp >> 8) * $par_p10) >> 17;
+    		$var1 = intval(($par_p9 * ((($pressure_comp >> 3) * ($pressure_comp >> 3)) >> 13)) >> 12);
+    		$var2 = intval((($pressure_comp >> 2) * $par_p8) >> 13);
+    		$var3 = intval((($pressure_comp >> 8) * ($pressure_comp >> 8) * ($pressure_comp >> 8) * $par_p10) >> 17);
  
-    		$pressure_comp = ($pressure_comp) + (($var1 + $var2 + $var3 + ($par_p7 << 7)) >> 4);
+    		$pressure_comp = intval(($pressure_comp) + (($var1 + $var2 + $var3 + ($par_p7 << 7)) >> 4));
 		$Pressure = ($pressure_comp >> 1);
 		//$Pressure = $pressure_comp;
 		/*
