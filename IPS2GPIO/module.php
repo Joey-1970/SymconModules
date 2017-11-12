@@ -40,6 +40,8 @@ class IPS2GPIO_IO extends IPSModule
 		$this->SetBuffer("PinPossible", serialize($PinPossible));
 		$PinUsed = array();
 		$this->SetBuffer("PinUsed", serialize($PinUsed));
+		$OWDeviceArray = array();
+		$this->SetBuffer("OWDeviceArray", serialize($OWDeviceArray));
 		$this->RegisterPropertyBoolean("AudioDAC", false);
 	}
   	
