@@ -148,7 +148,7 @@
 		// Registrierung für die Änderung der Rücklauf-Temperatur
 		If ($this->ReadPropertyInteger("ReturnTemperature_ID") > 0) {
 			$this->RegisterMessage($this->ReadPropertyInteger("ReturnTemperature_ID"), 10603);
-			SetValueFloat($this->GetIDForIdent("ReteurnTemperature"), GetValueFloat($this->ReadPropertyInteger("ReturnTemperature_ID")));
+			SetValueFloat($this->GetIDForIdent("ReturnTemperature"), GetValueFloat($this->ReadPropertyInteger("ReturnTemperature_ID")));
 		}
 		
 		
@@ -213,7 +213,7 @@
 				// Änderung der Rücklauf-Temperatur
 				If ($SenderID == $this->ReadPropertyInteger("ReturnTemperature_ID")) {
 					$this->SendDebug("ReceiveData", "Ausloeser Aenderung Ruecklauf-Temperatur", 0);
-					SetValueFloat($this->GetIDForIdent("ReteurnTemperature"), GetValueFloat($this->ReadPropertyInteger("ReturnTemperature_ID")));
+					SetValueFloat($this->GetIDForIdent("ReturnTemperature"), GetValueFloat($this->ReadPropertyInteger("ReturnTemperature_ID")));
 				}
 				break;
 		}
