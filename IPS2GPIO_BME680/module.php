@@ -789,14 +789,14 @@
 		
 		// Luftfeuchtigkeit
 		$temp_scaled = ($t_fine * 5 + 128) / 256;
-		$var1 = ($adc_hum - (($par_h1 * 16))) - ((($temp_scaled * $par_h3) / (100)) / 2);
-		$var2 = ($par_h2 * ((($temp_scaled * $par_h4) / (100)) + ((($temp_scaled * (($temp_scaled * $par_h5) / (100))) / 64) / (100)) + (1 * 16384))) / 1024;
-		$var3 = $var1 * $var2;
-		$var4 = $par_h6 * 128;
-		$var4 = (($var4) + (($temp_scaled *$par_h7) / (100))) / 16;
-		$var5 = (($var3 / 16384) * ($var3 / 16384)) / 1024;
-		$var6 = ($var4 * $var5) / 2;
-		$Hum = ((($var3 + $var6) / 1024) * (1000)) / 4096;
+		$var1 = intval(($adc_hum - (($par_h1 * 16))) - ((($temp_scaled * $par_h3) / (100)) / 2));
+		$var2 = intval(($par_h2 * ((($temp_scaled * $par_h4) / (100)) + ((($temp_scaled * (($temp_scaled * $par_h5) / (100))) / 64) / (100)) + (1 * 16384))) / 1024);
+		$var3 = intval($var1 * $var2);
+		$var4 = intval($par_h6 * 128);
+		$var4 = intval((($var4) + (($temp_scaled *$par_h7) / (100))) / 16);
+		$var5 = intval((($var3 / 16384) * ($var3 / 16384)) / 1024);
+		$var6 = intval(($var4 * $var5) / 2);
+		$Hum = intval(((($var3 + $var6) / 1024) * (1000)) / 4096);
 		If ($Hum > 100000) {
 			$Hum = 100000;
 		}
