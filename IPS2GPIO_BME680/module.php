@@ -602,19 +602,13 @@
 		}
 
 		// Selecting heater control for the sensor
-		if (desired_settings & BME680_HCNTRL_SEL) {
-			rslt = boundary_check(&dev->gas_sett.heatr_ctrl, BME680_ENABLE_HEATER, BME680_DISABLE_HEATER, dev);
-			reg_addr = BME680_CONF_HEAT_CTRL_ADDR;
-
-			if (rslt == BME680_OK)
-				rslt = bme680_get_regs(reg_addr, &data, 1, dev);
-			data = BME680_SET_BITS_POS_0(data, BME680_HCTRL, dev->gas_sett.heatr_ctrl);
-
-			reg_array[count] = reg_addr; // Append configuration
-			data_array[count] = data;
-			count++;
+		$heatr_ctrl = 0;
+		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("70"), "Value" => $heatr_ctrl)));
+		If (!$Result) {
+			$this->SendDebug("Setup", "heatr_ctrl setzen fehlerhaft!", 0);
+			return;
 		}
-
+		
 		// Selecting heater T,P oversampling for the sensor
 		$osrs_t = $this->ReadPropertyInteger("OSRS_T"); // Oversampling Measure temperature x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
 		$osrs_p = $this->ReadPropertyInteger("OSRS_P"); // Oversampling Measure pressure x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
@@ -635,6 +629,8 @@
 		}
 
 		// Selecting the runGas and NB conversion settings for the sensor
+		
+		
 		if (desired_settings & (BME680_RUN_GAS_SEL | BME680_NBCONV_SEL)) {
 			rslt = boundary_check(&dev->gas_sett.run_gas, BME680_RUN_GAS_DISABLE, BME680_RUN_GAS_ENABLE, dev);
 			if (rslt == BME680_OK)
@@ -654,12 +650,6 @@
 			data_array[count] = data;
 			count++;
 		}
-
-		if (rslt == BME680_OK)
-			rslt = bme680_set_regs(reg_array, data_array, count, dev);
-
-		// Restore previous intended power mode
-		dev->power_mode = intended_power_mode;
 		
 
 	return $Result;
