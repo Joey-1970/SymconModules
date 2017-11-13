@@ -716,7 +716,7 @@
 			$durval = ($HeaterDur + ($factor * 64));
 		}
 
-		return durval;
+		return $durval;
 	}
 		    
 	    
