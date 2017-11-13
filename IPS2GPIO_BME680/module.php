@@ -814,8 +814,8 @@
 		$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
 		// Kalibrierungsdatan aufbereiten
 		$par_t1 = (($CalibrateData[34] << 8) | $CalibrateData[33]);
-		$par_t2 = (($CalibrateData[2] << 8) | $CalibrateData[1]);
-		$par_t3 = $CalibrateData[3];
+		$par_t2 = $this->bin16dec(($CalibrateData[2] << 8) | $CalibrateData[1]);
+		$par_t3 = $this->bin8dec($CalibrateData[3]);
 		
 		// Temperatur
 		$var1 = intval(($adc_temp / 8) - ($par_t1 * 2));
@@ -837,14 +837,14 @@
 		$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
 		// Kalibrierungsdatan aufbereiten
 		$par_p1 = (($CalibrateData[6] << 8) | $CalibrateData[5]);
-		$par_p2 = (($CalibrateData[8] << 8) | $CalibrateData[7]);
-		$par_p3 = $CalibrateData[9];
-		$par_p4 = (($CalibrateData[12] << 8) | $CalibrateData[11]);
-		$par_p5 = (($CalibrateData[14] << 8) | $CalibrateData[13]);
-		$par_p6 = $CalibrateData[16];
-		$par_p7 = ($CalibrateData[15]);
-		$par_p8 = (($CalibrateData[20] << 8) | $CalibrateData[19]);
-		$par_p9 = (($CalibrateData[22] << 8) | $CalibrateData[21]);
+		$par_p2 = $this->bin16dec(($CalibrateData[8] << 8) | $CalibrateData[7]);
+		$par_p3 = $this->bin8dec($CalibrateData[9]);
+		$par_p4 = $this->bin16dec(($CalibrateData[12] << 8) | $CalibrateData[11]);
+		$par_p5 = $this->bin16dec(($CalibrateData[14] << 8) | $CalibrateData[13]);
+		$par_p6 = $this->bin8dec($CalibrateData[16]);
+		$par_p7 = $this->bin8dec($CalibrateData[15]);
+		$par_p8 = $this->bin16dec(($CalibrateData[20] << 8) | $CalibrateData[19]);
+		$par_p9 = $this->bin16dec(($CalibrateData[22] << 8) | $CalibrateData[21]);
 		$par_p10 = $CalibrateData[23];
 		$t_fine = intval($this->GetBuffer("t_fine"));
 		$this->SendDebug("calc_pressure", "Werte:".$par_p1.", ".$par_p2.", ".$par_p3.", ".$par_p4.", ".$par_p5.", ".$par_p6.", ".$par_p7.", ".$par_p8.", ".$par_p9.", ".$par_p10, 0);
@@ -925,11 +925,11 @@
 		// Kalibrierungsdatan aufbereiten
 		$par_h1 = (($CalibrateData[27] << 4) | $CalibrateData[26] & hexdec("0F"));
 		$par_h2 = (($CalibrateData[26] << 4) | $CalibrateData[25] >> 4);
-		$par_h3 = $CalibrateData[28];
-		$par_h4 = $CalibrateData[29];
-		$par_h5 = $CalibrateData[30];
+		$par_h3 = $this->bin8dec($CalibrateData[28]);
+		$par_h4 = $this->bin8dec($CalibrateData[29]);
+		$par_h5 = $this->bin8dec($CalibrateData[30]);
 		$par_h6 = $CalibrateData[31];
-		$par_h7 = $CalibrateData[32];
+		$par_h7 = $this->bin8dec($CalibrateData[32]);
 		$t_fine = intval($this->GetBuffer("t_fine"));
 		
 		// Luftfeuchtigkeit
@@ -958,9 +958,9 @@
 		$CalibrateData = array();
 		$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
 		// Kalibrierungsdatan aufbereiten
-		$par_gh1 = $CalibrateData[37];
-		$par_gh2 = (($CalibrateData[36] << 8) | $CalibrateData[35]);
-		$par_gh3 = $CalibrateData[38];
+		$par_gh1 = $this->bin8dec($CalibrateData[37]);
+		$par_gh2 = $this->bin16dec(($CalibrateData[36] << 8) | $CalibrateData[35]);
+		$par_gh3 = $this->bin8dec($CalibrateData[38]);
 		$range_switching_error = ($CalibrateData[43] & hexdec("F0")) >> 4;
 		
 		// Look up table for the possible gas range values
@@ -979,6 +979,28 @@
 	return $GasResistance;
 	}
 	
+	private function bin16dec($dec) 
+	{
+	    	// converts 16bit binary number string to integer using two's complement
+	    	$BinString = decbin($dec);
+		$DecNumber = bindec($BinString) & 0xFFFF; // only use bottom 16 bits
+	    	If (0x8000 & $DecNumber) {
+			$DecNumber = - (0x010000 - $DecNumber);
+	    	}
+	return $DecNumber;
+	}  
+	    
+	private function bin8dec($dec) 
+	{
+	    	// converts 16bit binary number string to integer using two's complement
+	    	$BinString = decbin($dec);
+		$DecNumber = bindec($BinString) & 0xFF; // only use bottom 16 bits
+	    	If (0x80 & $DecNumber) {
+			$DecNumber = - (0x0100 - $DecNumber);
+	    	}
+	return $DecNumber;
+	}    
+	    
 	private function read_field_data()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
