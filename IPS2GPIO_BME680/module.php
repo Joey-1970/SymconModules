@@ -28,6 +28,8 @@
 		$this->RegisterPropertyInteger("Humidity_ID", 0);
 		$this->RegisterPropertyBoolean("GasMeasurement", true);
 		$this->RegisterPropertyInteger("HeaterProfileSetpoint", 0);
+		$this->RegisterPropertyInteger("HeaterTemp", 320);
+		$this->RegisterPropertyInteger("HeaterDur", 150);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GBME680_Measurement($_IPS["TARGET"]);');
         }
 	
@@ -665,12 +667,15 @@
 	
 	private function set_gas_config()
 	{
+		$HeaterTemp = $this->ReadPropertyInteger("HeaterTemp");
+		$HeaterDur = $this->ReadPropertyInteger("HeaterDur");
+		
 		If ($this->ReadPropertyInteger("Mode") == 1) {
 			$reg_addr[0] = hexdec("5A");
-			$reg_data[0] = $this->calc_heater_res(dev->gas_sett.heatr_temp, dev);
+			$reg_data[0] = $this->calc_heater_res($HeaterTemp);
 			$reg_addr[1] = hexdec("64");
-			$reg_data[1] = $this->calc_heater_dur(dev->gas_sett.heatr_dur);
-			dev->gas_sett.nb_conv = 0;
+			$reg_data[1] = $this->calc_heater_dur($HeaterDur);
+			$this->SetBuffer("nb_conv", 0);
 		}
 		else {
 			$Result = 1;
@@ -678,6 +683,22 @@
 		$this->bme680_set_regs(reg_addr, reg_data, 2, dev);
 	
 	}
+	
+	private function calc_heater_res($HeaterTemp)
+	{
+		$HeaterTemp = min(400, max(200, $Value));
+
+		$var1 = ((dev->amb_temp * dev->calib.par_gh3) / 1000) * 256;
+		var2 = (dev->calib.par_gh1 + 784) * (((((dev->calib.par_gh2 + 154009) * temp * 5) / 100) + 3276800) / 10);
+		var3 = var1 + (var2 / 2);
+		var4 = (var3 / (dev->calib.res_heat_range + 4));
+		var5 = (131 * dev->calib.res_heat_val) + 65536;
+		heatr_res_x100 = (int32_t) (((var4 / var5) - 250) * 34);
+		heatr_res = (uint8_t) ((heatr_res_x100 + 50) / 100);
+
+		return heatr_res;
+	}
+	
 	*/    
 	  
 
