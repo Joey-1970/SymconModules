@@ -891,7 +891,7 @@
 		$var1 = ($par_p9 * ((($calc_pres / 8) * ($calc_pres / 8)) / 8192)) / 4096;
 		$var2 = (($calc_pres / 4) * $par_p8) / 8192;
 		$var3 = (($calc_pres / 256) * ($calc_pres / 256) * ($calc_pres / 256) * $par_p10) / 131072;
-		$calc_pres = ($calc_pres) + (($var1 + $var2 + $var3 + ($par_p7 * 128)) / 16);
+		$calc_pres = intval(($calc_pres) + (($var1 + $var2 + $var3 + ($par_p7 * 128)) / 16));
 		
 		/*
 		// Luftdruck
@@ -914,7 +914,7 @@
 		*/
 		
 		SetValueFloat($this->GetIDForIdent("Pressure"), round($calc_pres / 100, 2));
-	return $Pressure;
+	return $calc_pres;
 	}
 	
 	private function calc_humidity($adc_hum)
