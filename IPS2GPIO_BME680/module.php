@@ -574,6 +574,120 @@
 	}
 
 	/*
+	
+	private function bme680_set_sensor_settings()
+	{
+		int8_t rslt;
+		uint8_t reg_addr;
+		uint8_t data = 0;
+		uint8_t count = 0;
+		uint8_t reg_array[BME680_REG_BUFFER_LENGTH] = { 0 };
+		uint8_t data_array[BME680_REG_BUFFER_LENGTH] = { 0 };
+		uint8_t intended_power_mode = dev->power_mode; // Save intended power mode
+
+		
+
+		if (desired_settings & BME680_GAS_MEAS_SEL)
+			rslt = set_gas_config(dev);
+
+		dev->power_mode = BME680_SLEEP_MODE;
+		if (rslt == BME680_OK)
+			rslt = bme680_set_sensor_mode(dev);
+
+		// Selecting the filter
+		if (desired_settings & BME680_FILTER_SEL) {
+			rslt = boundary_check(&dev->tph_sett.filter, BME680_FILTER_SIZE_0, BME680_FILTER_SIZE_127, dev);
+			reg_addr = BME680_CONF_ODR_FILT_ADDR;
+
+			if (rslt == BME680_OK)
+				rslt = bme680_get_regs(reg_addr, &data, 1, dev);
+
+			if (desired_settings & BME680_FILTER_SEL)
+				data = BME680_SET_BITS(data, BME680_FILTER, dev->tph_sett.filter);
+
+			reg_array[count] = reg_addr; // Append configuration
+			data_array[count] = data;
+			count++;
+		}
+
+		// Selecting heater control for the sensor
+		if (desired_settings & BME680_HCNTRL_SEL) {
+			rslt = boundary_check(&dev->gas_sett.heatr_ctrl, BME680_ENABLE_HEATER, BME680_DISABLE_HEATER, dev);
+			reg_addr = BME680_CONF_HEAT_CTRL_ADDR;
+
+			if (rslt == BME680_OK)
+				rslt = bme680_get_regs(reg_addr, &data, 1, dev);
+			data = BME680_SET_BITS_POS_0(data, BME680_HCTRL, dev->gas_sett.heatr_ctrl);
+
+			reg_array[count] = reg_addr; // Append configuration
+			data_array[count] = data;
+			count++;
+		}
+
+		// Selecting heater T,P oversampling for the sensor
+		if (desired_settings & (BME680_OST_SEL | BME680_OSP_SEL)) {
+			rslt = boundary_check(&dev->tph_sett.os_temp, BME680_OS_NONE, BME680_OS_16X, dev);
+			reg_addr = BME680_CONF_T_P_MODE_ADDR;
+
+			if (rslt == BME680_OK)
+				rslt = bme680_get_regs(reg_addr, &data, 1, dev);
+
+			if (desired_settings & BME680_OST_SEL)
+				data = BME680_SET_BITS(data, BME680_OST, dev->tph_sett.os_temp);
+
+			if (desired_settings & BME680_OSP_SEL)
+				data = BME680_SET_BITS(data, BME680_OSP, dev->tph_sett.os_pres);
+
+			reg_array[count] = reg_addr;
+			data_array[count] = data;
+			count++;
+		}
+
+		// Selecting humidity oversampling for the sensor
+		if (desired_settings & BME680_OSH_SEL) {
+			rslt = boundary_check(&dev->tph_sett.os_hum, BME680_OS_NONE, BME680_OS_16X, dev);
+			reg_addr = BME680_CONF_OS_H_ADDR;
+
+			if (rslt == BME680_OK)
+				rslt = bme680_get_regs(reg_addr, &data, 1, dev);
+			data = BME680_SET_BITS_POS_0(data, BME680_OSH, dev->tph_sett.os_hum);
+
+			reg_array[count] = reg_addr; // Append configuration
+			data_array[count] = data;
+			count++;
+		}
+
+		// Selecting the runGas and NB conversion settings for the sensor
+		if (desired_settings & (BME680_RUN_GAS_SEL | BME680_NBCONV_SEL)) {
+			rslt = boundary_check(&dev->gas_sett.run_gas, BME680_RUN_GAS_DISABLE, BME680_RUN_GAS_ENABLE, dev);
+			if (rslt == BME680_OK)
+				rslt = boundary_check(&dev->gas_sett.nb_conv, BME680_NBCONV_MIN, BME680_NBCONV_MAX, dev);
+			reg_addr = BME680_CONF_ODR_RUN_GAS_NBC_ADDR;
+
+			if (rslt == BME680_OK)
+				rslt = bme680_get_regs(reg_addr, &data, 1, dev);
+
+			if (desired_settings & BME680_RUN_GAS_SEL)
+				data = BME680_SET_BITS(data, BME680_RUN_GAS, dev->gas_sett.run_gas);
+
+			if (desired_settings & BME680_NBCONV_SEL)
+				data = BME680_SET_BITS_POS_0(data, BME680_NBCONV, dev->gas_sett.nb_conv);
+
+			reg_array[count] = reg_addr; // Append configuration
+			data_array[count] = data;
+			count++;
+		}
+
+		if (rslt == BME680_OK)
+			rslt = bme680_set_regs(reg_array, data_array, count, dev);
+
+		// Restore previous intended power mode
+		dev->power_mode = intended_power_mode;
+		
+
+	return $Result;
+	}
+	
 	private function set_gas_config()
 	{
 		If ($this->ReadPropertyInteger("Mode") == 1) {
