@@ -584,7 +584,7 @@
 		// Gas-Messung konfigurieren
 		$GasMeasurement = $this->ReadPropertyBoolean("GasMeasurement");
 		If ($GasMeasurement == true) {
-			$Result = $this->set_gas_config();
+			$nb_conv = $this->set_gas_config();
 		}
 		
 		// Sensor in den Schlafmodus setzen
@@ -629,28 +629,12 @@
 		}
 
 		// Selecting the runGas and NB conversion settings for the sensor
-		
-		$ctrl_gas_1 = 0;
+		$run_gas = 1;
+		$ctrl_gas_1 = ($run_gas << 4) | $nb_conv;
 		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("71"), "Value" => $ctrl_gas_1)));
 		If (!$Result) {
 			$this->SendDebug("Setup", "ctrl_hum_reg setzen fehlerhaft!", 0);
 			return;
-		}
-		
-		
-		
-			if (rslt == BME680_OK)
-				rslt = bme680_get_regs(reg_addr, &data, 1, dev);
-
-			if (desired_settings & BME680_RUN_GAS_SEL)
-				data = BME680_SET_BITS(data, BME680_RUN_GAS, dev->gas_sett.run_gas);
-
-			if (desired_settings & BME680_NBCONV_SEL)
-				data = BME680_SET_BITS_POS_0(data, BME680_NBCONV, dev->gas_sett.nb_conv);
-
-			reg_array[count] = reg_addr; // Append configuration
-			data_array[count] = data;
-			count++;
 		}
 		
 
@@ -663,11 +647,14 @@
 		$HeaterTemp = $this->ReadPropertyInteger("HeaterTemp");
 		$HeaterDur = $this->ReadPropertyInteger("HeaterDur");
 		
+		$nb_conv = 0;
+		
 		If ($this->ReadPropertyInteger("Mode") == 1) {
 			$reg_addr[0] = hexdec("5A");
 			$reg_data[0] = $this->calc_heater_res($HeaterTemp);
 			$reg_addr[1] = hexdec("64");
 			$reg_data[1] = $this->calc_heater_dur($HeaterDur);
+			$nb_conv = 0;
 			$this->SetBuffer("nb_conv", 0);
 		}
 		else {
@@ -685,7 +672,7 @@
 			return;
 		}
 		
-	
+	return $nb_conv;
 	}
 	
 	private function calc_heater_res($HeaterTemp)
