@@ -26,6 +26,7 @@
 		$this->RegisterPropertyInteger("Altitude", 0);
 		$this->RegisterPropertyInteger("Temperature_ID", 0);
 		$this->RegisterPropertyInteger("Humidity_ID", 0);
+		$this->RegisterPropertyBoolean("GasMeasurement", true);
 		$this->RegisterPropertyInteger("HeaterProfileSetpoint", 0);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GBME680_Measurement($_IPS["TARGET"]);');
         }
@@ -577,37 +578,25 @@
 	
 	private function bme680_set_sensor_settings()
 	{
-		int8_t rslt;
-		uint8_t reg_addr;
-		uint8_t data = 0;
-		uint8_t count = 0;
-		uint8_t reg_array[BME680_REG_BUFFER_LENGTH] = { 0 };
-		uint8_t data_array[BME680_REG_BUFFER_LENGTH] = { 0 };
-		uint8_t intended_power_mode = dev->power_mode; // Save intended power mode
-
 		
+		// Gas-Messung konfigurieren
+		$GasMeasurement = $this->ReadPropertyBoolean("GasMeasurement");
+		If ($GasMeasurement == true) {
+			$Result = $this->set_gas_config();
+		}
+		
+		// Sensor in den Schlafmodus setzen
+		$this->bme680_set_sensor_mode();
 
-		if (desired_settings & BME680_GAS_MEAS_SEL)
-			rslt = set_gas_config(dev);
-
-		dev->power_mode = BME680_SLEEP_MODE;
-		if (rslt == BME680_OK)
-			rslt = bme680_set_sensor_mode(dev);
 
 		// Selecting the filter
-		if (desired_settings & BME680_FILTER_SEL) {
-			rslt = boundary_check(&dev->tph_sett.filter, BME680_FILTER_SIZE_0, BME680_FILTER_SIZE_127, dev);
-			reg_addr = BME680_CONF_ODR_FILT_ADDR;
-
-			if (rslt == BME680_OK)
-				rslt = bme680_get_regs(reg_addr, &data, 1, dev);
-
-			if (desired_settings & BME680_FILTER_SEL)
-				data = BME680_SET_BITS(data, BME680_FILTER, dev->tph_sett.filter);
-
-			reg_array[count] = reg_addr; // Append configuration
-			data_array[count] = data;
-			count++;
+		$filter = $this->ReadPropertyInteger("IIR_Filter");
+		$spi3w_en = 0;
+		$config_reg = (($filter << 2)|$spi3w_en);
+		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("75"), "Value" => $config_reg)));
+		If (!$Result) {
+			$this->SendDebug("Setup", "config_reg setzen fehlerhaft!", 0);
+			return;
 		}
 
 		// Selecting heater control for the sensor
@@ -625,36 +614,22 @@
 		}
 
 		// Selecting heater T,P oversampling for the sensor
-		if (desired_settings & (BME680_OST_SEL | BME680_OSP_SEL)) {
-			rslt = boundary_check(&dev->tph_sett.os_temp, BME680_OS_NONE, BME680_OS_16X, dev);
-			reg_addr = BME680_CONF_T_P_MODE_ADDR;
-
-			if (rslt == BME680_OK)
-				rslt = bme680_get_regs(reg_addr, &data, 1, dev);
-
-			if (desired_settings & BME680_OST_SEL)
-				data = BME680_SET_BITS(data, BME680_OST, dev->tph_sett.os_temp);
-
-			if (desired_settings & BME680_OSP_SEL)
-				data = BME680_SET_BITS(data, BME680_OSP, dev->tph_sett.os_pres);
-
-			reg_array[count] = reg_addr;
-			data_array[count] = data;
-			count++;
+		$osrs_t = $this->ReadPropertyInteger("OSRS_T"); // Oversampling Measure temperature x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
+		$osrs_p = $this->ReadPropertyInteger("OSRS_P"); // Oversampling Measure pressure x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
+		$ctrl_meas_reg = (($osrs_t << 5)|($osrs_p << 2)|0);
+		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("74"), "Value" => $ctrl_meas_reg)));
+		If (!$Result) {
+			$this->SendDebug("Setup", "ctrl_meas_reg_end setzen fehlerhaft!", 0);
+			return;
 		}
 
 		// Selecting humidity oversampling for the sensor
-		if (desired_settings & BME680_OSH_SEL) {
-			rslt = boundary_check(&dev->tph_sett.os_hum, BME680_OS_NONE, BME680_OS_16X, dev);
-			reg_addr = BME680_CONF_OS_H_ADDR;
-
-			if (rslt == BME680_OK)
-				rslt = bme680_get_regs(reg_addr, &data, 1, dev);
-			data = BME680_SET_BITS_POS_0(data, BME680_OSH, dev->tph_sett.os_hum);
-
-			reg_array[count] = reg_addr; // Append configuration
-			data_array[count] = data;
-			count++;
+		$osrs_h = $this->ReadPropertyInteger("OSRS_H"); // Oversampling Measure humidity x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
+		$ctrl_hum_reg = $osrs_h;
+		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("72"), "Value" => $ctrl_hum_reg)));
+		If (!$Result) {
+			$this->SendDebug("Setup", "ctrl_hum_reg setzen fehlerhaft!", 0);
+			return;
 		}
 
 		// Selecting the runGas and NB conversion settings for the sensor
