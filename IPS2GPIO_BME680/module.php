@@ -630,13 +630,15 @@
 
 		// Selecting the runGas and NB conversion settings for the sensor
 		
+		$ctrl_gas_1 = 0;
+		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("71"), "Value" => $ctrl_gas_1)));
+		If (!$Result) {
+			$this->SendDebug("Setup", "ctrl_hum_reg setzen fehlerhaft!", 0);
+			return;
+		}
 		
-		if (desired_settings & (BME680_RUN_GAS_SEL | BME680_NBCONV_SEL)) {
-			rslt = boundary_check(&dev->gas_sett.run_gas, BME680_RUN_GAS_DISABLE, BME680_RUN_GAS_ENABLE, dev);
-			if (rslt == BME680_OK)
-				rslt = boundary_check(&dev->gas_sett.nb_conv, BME680_NBCONV_MIN, BME680_NBCONV_MAX, dev);
-			reg_addr = BME680_CONF_ODR_RUN_GAS_NBC_ADDR;
-
+		
+		
 			if (rslt == BME680_OK)
 				rslt = bme680_get_regs(reg_addr, &data, 1, dev);
 
