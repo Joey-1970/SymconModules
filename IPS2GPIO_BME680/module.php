@@ -849,6 +849,7 @@
 		$t_fine = intval($this->GetBuffer("t_fine"));
 		$this->SendDebug("calc_pressure", "Werte:".$par_p1.", ".$par_p2.", ".$par_p3.", ".$par_p4.", ".$par_p5.", ".$par_p6.", ".$par_p7.", ".$par_p8.", ".$par_p9.", ".$par_p10, 0);
 		
+		/*
 		$var1 = intval((($t_fine) >> 1) - 64000);
    		$var2 = intval((((($var1 >> 2) * ($var1 >> 2)) >> 11) * $par_p6) >> 2);
     		$var2 = intval($var2 + (($var1 * $par_p5) << 1));
@@ -872,7 +873,7 @@
     		$pressure_comp = intval(($pressure_comp) + (($var1 + $var2 + $var3 + ($par_p7 << 7)) >> 4));
 		$Pressure = ($pressure_comp >> 1);
 		//$Pressure = $pressure_comp;
-		/*
+		*/
 		// Luftdruck
 		$var1 = ($t_fine / 2) - 64000;
 		$var2 = (($var1 / 4) * ($var1 / 4)) / 2048;
@@ -890,7 +891,7 @@
 		$var2 = ($Pressure / 4) * $par_p8 / 8192;
 		$var3 = ($Pressure / 256) * ($Pressure / 256) * ($Pressure / 256) * $par_p10 / 131072;
 		$Pressure = $Pressure + (($var1 + $var2 + $var3 + ($par_p7 * 128)) / 16);
-		*/
+		
 		SetValueFloat($this->GetIDForIdent("Pressure"), round($Pressure / 100, 2));
 	return $Pressure;
 	}
