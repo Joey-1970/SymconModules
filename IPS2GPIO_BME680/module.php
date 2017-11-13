@@ -245,7 +245,7 @@
 					// SoftReset
 					$this->SoftReset();
 					// Parameterdaten zum Baustein senden
-					$this->Setup();
+					//$this->Setup();
 					// Kalibrierungsdaten einlesen
 					$this->ReadCalibrateData();
 					// Erste Messdaten einlesen
@@ -293,7 +293,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Measurement", "Ausfuehrung", 0);
-			$this->Setup();
+			$this->bme680_set_sensor_settings();
 			$this->bme680_get_sensor_data();
 			
 			return;
@@ -576,7 +576,7 @@
 		}
 	}
 
-	/*
+
 	
 	private function bme680_set_sensor_settings()
 	{
@@ -717,12 +717,7 @@
 
 		return durval;
 	}
-	
-	
-	*/    
-	  
-
-	    
+		    
 	    
 	private function ReadCalibrateData()
 	{
@@ -744,7 +739,6 @@
 					return;
 				}
 				else {
-					//$CalibrateData[$i] = $Result;
 					$CalibrateData[] = $Result;
 				}
 			}
@@ -756,7 +750,6 @@
 					return;
 				}
 				else {
-					//$CalibrateData[$i] = $Result;
 					$CalibrateData[] = $Result;
 				}
 			}
@@ -768,7 +761,6 @@
 					return;
 				}
 				else {
-					//$CalibrateData[$i] = $Result;
 					$CalibrateData[] = $Result;
 				}
 			}
