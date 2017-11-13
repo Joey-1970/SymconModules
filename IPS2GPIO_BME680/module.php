@@ -612,7 +612,7 @@
 		// Selecting heater T,P oversampling for the sensor
 		$osrs_t = $this->ReadPropertyInteger("OSRS_T"); // Oversampling Measure temperature x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
 		$osrs_p = $this->ReadPropertyInteger("OSRS_P"); // Oversampling Measure pressure x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
-		$ctrl_meas_reg = (($osrs_t << 5)|($osrs_p << 2)|0);
+		$ctrl_meas_reg = (($osrs_t << 5)|($osrs_p << 2)|1);
 		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("74"), "Value" => $ctrl_meas_reg)));
 		If (!$Result) {
 			$this->SendDebug("Setup", "ctrl_meas_reg setzen fehlerhaft!", 0);
