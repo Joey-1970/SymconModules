@@ -686,7 +686,7 @@
 		$res_heat_range = ($CalibrateData[41] >> 4) & hexdec("03");
 		$res_heat_val = $CalibrateData[39];
 		
-		$HeaterTemp = min(400, max(200, $Value));
+		$HeaterTemp = min(400, max(200, $HeaterTemp));
 		$amb_temp = GetValueFloat($this->GetIDForIdent("Temperature"));
 
 		$var1 = (($amb_temp * $par_gh3) / 1000) * 256;
@@ -704,6 +704,7 @@
 	{
 		$this->SendDebug("calc_heater_dur", "Ausfuehrung", 0);
 		$factor = 0;
+		$durval = 0;
 	
 		if ($HeaterDur >= 0xfc0) {
 			$durval = 0xff; // Max duration
