@@ -621,7 +621,7 @@
 		$ctrl_meas_reg = (($osrs_t << 5)|($osrs_p << 2)|0);
 		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("74"), "Value" => $ctrl_meas_reg)));
 		If (!$Result) {
-			$this->SendDebug("Setup", "ctrl_meas_reg_end setzen fehlerhaft!", 0);
+			$this->SendDebug("Setup", "ctrl_meas_reg setzen fehlerhaft!", 0);
 			return;
 		}
 
@@ -667,6 +667,7 @@
 	
 	private function set_gas_config()
 	{
+		$this->SendDebug("set_gas_config", "Ausfuehrung", 0);
 		$HeaterTemp = $this->ReadPropertyInteger("HeaterTemp");
 		$HeaterDur = $this->ReadPropertyInteger("HeaterDur");
 		
@@ -680,24 +681,64 @@
 		else {
 			$Result = 1;
 		}
-		$this->bme680_set_regs(reg_addr, reg_data, 2, dev);
+		
+		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $reg_addr[0], "Value" => $reg_data[0])));
+		If (!$Result) {
+			$this->SendDebug("Setup", "res_heat_0 setzen fehlerhaft!", 0);
+			return;
+		}
+		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $reg_addr[1], "Value" => $reg_data[1])));
+		If (!$Result) {
+			$this->SendDebug("Setup", "gas_wait_0 setzen fehlerhaft!", 0);
+			return;
+		}
+		
 	
 	}
 	
 	private function calc_heater_res($HeaterTemp)
 	{
+		$this->SendDebug("calc_heater_res", "Ausfuehrung", 0);
+		$CalibrateData = array();
+		$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
+		$par_gh1 = $CalibrateData[37];
+		$par_gh2 = (($CalibrateData[36] << 8) | $CalibrateData[35]);
+		$par_gh3 = $CalibrateData[38];
+		$res_heat_range = ($CalibrateData[41] >> 4) & hexdec("03");
+		$res_heat_val = $CalibrateData[39];
+		
 		$HeaterTemp = min(400, max(200, $Value));
+		$amb_temp = GetValueFloat($this->GetIDForIdent("Temperature"));
 
-		$var1 = ((dev->amb_temp * dev->calib.par_gh3) / 1000) * 256;
-		var2 = (dev->calib.par_gh1 + 784) * (((((dev->calib.par_gh2 + 154009) * temp * 5) / 100) + 3276800) / 10);
-		var3 = var1 + (var2 / 2);
-		var4 = (var3 / (dev->calib.res_heat_range + 4));
-		var5 = (131 * dev->calib.res_heat_val) + 65536;
-		heatr_res_x100 = (int32_t) (((var4 / var5) - 250) * 34);
-		heatr_res = (uint8_t) ((heatr_res_x100 + 50) / 100);
+		$var1 = (($amb_temp * $par_gh3) / 1000) * 256;
+		$var2 = ($par_gh1 + 784) * ((((($par_gh2 + 154009) * $HeaterTemp * 5) / 100) + 3276800) / 10);
+		$var3 = $var1 + ($var2 / 2);
+		$var4 = ($var3 / ($res_heat_range + 4));
+		$var5 = (131 * $res_heat_val) + 65536;
+		$heatr_res_x100 = ((($var4 / $var5) - 250) * 34);
+		$heatr_res = intval(($heatr_res_x100 + 50) / 100);
 
-		return heatr_res;
+	return $heatr_res;
 	}
+	
+	private function calc_heater_dur($HeaterDur)
+	{
+		$this->SendDebug("calc_heater_dur", "Ausfuehrung", 0);
+		$factor = 0;
+	
+		if ($HeaterDur >= 0xfc0) {
+			$durval = 0xff; // Max duration
+		} else {
+			while ($HeaterDur > 0x3F) {
+				$HeaterDur = $HeaterDur / 4;
+				$factor++;
+			}
+			$durval = ($HeaterDur + ($factor * 64));
+		}
+
+		return durval;
+	}
+	
 	
 	*/    
 	  
