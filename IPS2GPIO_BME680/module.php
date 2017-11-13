@@ -245,7 +245,7 @@
 					// SoftReset
 					$this->SoftReset();
 					// Parameterdaten zum Baustein senden
-					//$this->Setup();
+					$this->Setup();
 					// Kalibrierungsdaten einlesen
 					$this->ReadCalibrateData();
 					// Erste Messdaten einlesen
