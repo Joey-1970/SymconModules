@@ -580,7 +580,7 @@
 	
 	private function bme680_set_sensor_settings()
 	{
-		
+		$this->SendDebug("bme680_set_sensor_settings", "Ausfuehrung", 0);
 		// Gas-Messung konfigurieren
 		$GasMeasurement = $this->ReadPropertyBoolean("GasMeasurement");
 		If ($GasMeasurement == true) {
