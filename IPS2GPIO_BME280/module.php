@@ -505,6 +505,9 @@
 				}
 				else {
 					SetValueInteger($this->GetIDForIdent("ChipID"), $Result);
+					If ($Result <> 96) {
+						$this->SendDebug("Setup", "Laut Chip ID ist es kein BME280!", 0);
+					}
 				}
 		}
 	}
