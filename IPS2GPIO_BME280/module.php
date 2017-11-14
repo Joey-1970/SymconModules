@@ -5,7 +5,9 @@
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
-            	// Diese Zeile nicht löschen.
+            	// https://github.com/BoschSensortec/BME280_driver
+		
+		// Diese Zeile nicht löschen.
             	parent::Create();
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
  	    	$this->RegisterPropertyBoolean("Open", false);
