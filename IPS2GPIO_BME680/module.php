@@ -584,7 +584,7 @@
 		$var6 = intval(($var4 * $var5) / 2);
 		$Hum = intval(((($var3 + $var6) / 1024) * (1000)) / 4096);
 		
-		$$Hum = min(100000, max(0, $Hum));
+		$Hum = min(100000, max(0, $Hum));
 		SetValueFloat($this->GetIDForIdent("Humidity"), round($Hum / 1000, 2));
 	return $Hum;
 	}
