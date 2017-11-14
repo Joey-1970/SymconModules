@@ -354,19 +354,19 @@
 					
 
 					$var1 = ($FineCalibrate / 2) - 64000;
-					$var2 = $var1 * $var1 * ($dig_P5) / 32768;
-					$var2 = $var2 + $var1 * ($dig_P4) * 2;
-					$var2 = ($var2 / 4) + (($dig_P3) * 65536);
-					$var3 = ($dig_P2) * $var1 * $var1 / 524288;
-					$var1 = ($var3 + ($dig_P1) * $var1) / 524288;
-					$var1 = (1 + $var1 / 32768.0) * ($dig_P0);
+					$var2 = $var1 * $var1 * ($Dig_P[5]) / 32768;
+					$var2 = $var2 + $var1 * ($Dig_P[4]) * 2;
+					$var2 = ($var2 / 4) + (($Dig_P[3]) * 65536);
+					$var3 = ($Dig_P[2]) * $var1 * $var1 / 524288;
+					$var1 = ($var3 + ($Dig_P[1]) * $var1) / 524288;
+					$var1 = (1 + $var1 / 32768.0) * ($Dig_P[0]);
 					// avoid exception caused by division by zero
 					if ($var1) {
 						$pressure = 1048576 - $Pres_raw;
 						$pressure = ($pressure - ($var2 / 4096)) * 6250 / $var1;
-						$var1 = ($dig_P8) * $pressure * $pressure / 2147483648;
-						$var2 = $pressure * ($dig_P7) / 32768;
-						$pressure = $pressure + ($var1 + $var2 + ($dig_P6)) / 16;
+						$var1 = ($Dig_P[8]) * $pressure * $pressure / 2147483648;
+						$var2 = $pressure * ($Dig_P[7]) / 32768;
+						$pressure = $pressure + ($var1 + $var2 + ($Dig_P[6])) / 16;
 						$pressure = min(110000, max(30000, $pressure));
 					} else { /* Invalid case */
 						$pressure = 30000;
