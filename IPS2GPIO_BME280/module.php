@@ -362,17 +362,16 @@
 					$var1 = (1 + $var1 / 32768.0) * ($Dig_P[0]);
 					// avoid exception caused by division by zero
 					if ($var1) {
-						$pressure = 1048576 - $Pres_raw;
-						$pressure = ($pressure - ($var2 / 4096)) * 6250 / $var1;
-						$var1 = ($Dig_P[8]) * $pressure * $pressure / 2147483648;
-						$var2 = $pressure * ($Dig_P[7]) / 32768;
-						$pressure = $pressure + ($var1 + $var2 + ($Dig_P[6])) / 16;
-						$pressure = min(110000, max(30000, $pressure));
+						$Pressure = 1048576 - $Pres_raw;
+						$Pressure = ($pressure - ($var2 / 4096)) * 6250 / $var1;
+						$var1 = ($Dig_P[8]) * $Pressure * $Pressure / 2147483648;
+						$var2 = $Pressure * ($Dig_P[7]) / 32768;
+						$Pressure = $Pressure + ($var1 + $var2 + ($Dig_P[6])) / 16;
+						$Pressure = min(110000, max(30000, $Pressure));
 					} else { /* Invalid case */
-						$pressure = 30000;
+						$Pressure = 30000;
 					}
-					$Pressure = $pressure;
-					SetValueFloat($this->GetIDForIdent("Pressure"), round($pressure / 100, 2));
+					SetValueFloat($this->GetIDForIdent("Pressure"), round($Pressure / 100, 2));
 
 				
 					
@@ -405,6 +404,18 @@
 					*/
 				
 					// Luftfeuchtigkeit
+					$var1 = $FineCalibrate - 76800.0;
+					$var2 = (($Dig_H[3]) * 64.0 + (($Dig_H[4]) / 16384) * $var1);
+					$var3 = $Hum_raw - $var2;
+					$var4 = ($Dig_H[1]) / 65536.0;
+					$var5 = (1 + (($Dig_H[2]) / 67108864) * $var1);
+					$var6 = 1 + (($Dig_H[5]) / 67108864) * $var1 * $var5;
+					$var6 = $var3 * $var4 * ($var5 * $var6);
+					$Hum = $var6 * (1 - ($Dig_H[0]) * $var6 / 524288);
+					$Hum = min(100, max(0, $Hum));
+					
+					
+					/*
 					$Hum = $FineCalibrate - 76800;
 					If ($Hum <> 0) {
 						$Hum = ($Hum_raw - ($Dig_H[3] * 64 + $Dig_H[4] / 16384 * $Hum)) * ($Dig_H[1]  / 65536 * (1 + $Dig_H[5] / 67108864 * $Hum * (1 + $Dig_H[2] / 67108864 * $Hum)));
@@ -419,7 +430,7 @@
 					elseif ($Hum < 0) {
 						$Hum = 0;
 					}
-
+					*/
 					SetValueFloat($this->GetIDForIdent("Humidity"), round($Hum, 2));
 
 					// Berechnung von Taupunkt und absoluter Luftfeuchtigkeit
