@@ -117,13 +117,10 @@
 		$arrayOptions[] = array("label" => "63", "value" => 6);
 		$arrayOptions[] = array("label" => "127", "value" => 7);
 		$arrayElements[] = array("type" => "Select", "name" => "IIR_Filter", "caption" => "IIR_Filter", "options" => $arrayOptions );
-        	
 		$arrayElements[] = array("type" => "Label", "label" => "Gas Messungtemperatur (200 °C- 400 °C)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "HeaterTemp", "caption" => "Temp. °C");
 		$arrayElements[] = array("type" => "Label", "label" => "Gas Messungdauer (0 - 4032ms)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "HeaterDur", "caption" => "ms");
-		
-		
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Hinweise:");
 		$arrayElements[] = array("type" => "Label", "label" => "- die Device Adresse lautet 118 dez (0x76h) bei SDO an GND");
@@ -449,8 +446,7 @@
 
 		return $durval;
 	}
-		    
-	    
+		       
 	private function ReadCalibrateData()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
@@ -500,44 +496,7 @@
 			$this->SendDebug("ReadCalibrateData", "CalibrateData : ".serialize($CalibrateData), 0);
 		}
 	}
-	/* 
-	private function ReadData()
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			// Liest die Messdaten ein
-			$this->SendDebug("ReadData", "Ausfuehrung", 0);
-			
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_read_block", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("1D"), "Count" => 15)));
-			If ($Result < 0) {
-				$MeasurementData = array();
-				$this->SetBuffer("MeasurementData", serialize($MeasurementData));
-				$this->SendDebug("ReadData", "Fehler bei der Datenermittung", 0);
-				return;
-			}
-			else {
-				If (is_array(unserialize($Result)) == true) {
-					$this->SetBuffer("MeasurementData", $Result);
-				}
-			}
-		}	
-	}
-	*/   
-	/*
-	private function bme680_get_sensor_data()
-	{
-		
-		// Reading the sensor data in forced mode only
-		$Result = $this->read_field_data();
-		
-			if ($this->GetBuffer("status") & hexdec("E1")) {
-				$this->SetBuffer("new_fields", 1);
-			}
-			else {
-				$this->SetBuffer("new_fields", 0);
-			}
-		return $Result;
-	}
-	*/    
+	
 	private function calc_temperature($adc_temp)
 	{
 		$this->SendDebug("calc_temperature", "Ausfuehrung", 0);
@@ -555,7 +514,6 @@
 		$var3 = intval((($var3) * ($par_t3 * 16)) / 16384);
 		$t_fine = intval($var2 + $var3);
 		$this->SetBuffer("t_fine", $t_fine);
-		//$this->SendDebug("calc_temperature", "t_fine: ".$t_fine, 0);
 		$Temp = intval((($t_fine * 5) + 128) / 256);
 		SetValueFloat($this->GetIDForIdent("Temperature"), round($Temp / 100, 2));
 	return $Temp;
@@ -625,12 +583,8 @@
 		$var5 = intval((($var3 / 16384) * ($var3 / 16384)) / 1024);
 		$var6 = intval(($var4 * $var5) / 2);
 		$Hum = intval(((($var3 + $var6) / 1024) * (1000)) / 4096);
-		If ($Hum > 100000) {
-			$Hum = 100000;
-		}
-		elseif ($Hum < 0) {
-			$Hum = 0;
-		}
+		
+		$$Hum = min(100000, max(0, $Hum));
 		SetValueFloat($this->GetIDForIdent("Humidity"), round($Hum / 1000, 2));
 	return $Hum;
 	}
@@ -689,7 +643,7 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Liest die Messdaten ein
 			$this->SendDebug("read_field_data", "Ausfuehrung", 0);
-			$tries = 10;
+			$tries = 5;
 			do {
 			    	$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_read_block", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("1D"), "Count" => 15)));
 				If ($Result < 0) {
@@ -709,9 +663,7 @@
 						$maes_index = $MeasurementData[2];
 
 						$adc_pres = ($MeasurementData[3] * 4096) | ($MeasurementData[4] * 16) | ($MeasurementData[5] / 16);
-						$this->SendDebug("read_field_data", "Roh-Druckwert : ".$adc_pres, 0);
 						$adc_temp = ($MeasurementData[6] * 4096) | ($MeasurementData[7] * 16) | ($MeasurementData[8] / 16);
-						$this->SendDebug("read_field_data", "Roh-Temperaturwert : ".$adc_temp, 0);
 						$adc_hum = ($MeasurementData[9] * 256) | $MeasurementData[10];
 						$adc_gas_res = ($MeasurementData[14] * 4) | ($MeasurementData[15] / 64);
 						$gas_range = $MeasurementData[15] & hexdec("0F");
@@ -730,8 +682,6 @@
 						} else {
 							IPS_Sleep(10);
 						}
-						
-						//$this->SetBuffer("MeasurementData", $Result);
 					}
 				}
 				$tries--;
@@ -854,10 +804,7 @@
 
 	return $Result;
 	}
-	    
-	    
-	    
-	    
+	        
 	private function SoftReset()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
