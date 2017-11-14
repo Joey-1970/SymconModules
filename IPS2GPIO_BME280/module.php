@@ -363,7 +363,7 @@
 					// avoid exception caused by division by zero
 					if ($var1) {
 						$Pressure = 1048576 - $Pres_raw;
-						$Pressure = ($pressure - ($var2 / 4096)) * 6250 / $var1;
+						$Pressure = ($Pressure - ($var2 / 4096)) * 6250 / $var1;
 						$var1 = ($Dig_P[8]) * $Pressure * $Pressure / 2147483648;
 						$var2 = $Pressure * ($Dig_P[7]) / 32768;
 						$Pressure = $Pressure + ($var1 + $var2 + ($Dig_P[6])) / 16;
@@ -404,7 +404,7 @@
 					*/
 				
 					// Luftfeuchtigkeit
-					/*
+					
 					$var1 = $FineCalibrate - 76800.0;
 					$var2 = (($Dig_H[3]) * 64.0 + (($Dig_H[4]) / 16384) * $var1);
 					$var3 = $Hum_raw - $var2;
@@ -415,7 +415,7 @@
 					$Hum = $var6 * (1 - ($Dig_H[0]) * $var6 / 524288);
 					$Hum = min(100, max(0, $Hum));
 					
-					*/
+					/*
 					
 					$Hum = $FineCalibrate - 76800;
 					If ($Hum <> 0) {
@@ -431,7 +431,7 @@
 					elseif ($Hum < 0) {
 						$Hum = 0;
 					}
-					
+					*/
 					SetValueFloat($this->GetIDForIdent("Humidity"), round($Hum, 2));
 
 					// Berechnung von Taupunkt und absoluter Luftfeuchtigkeit
