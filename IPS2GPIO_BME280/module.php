@@ -308,7 +308,7 @@
 				$Dig_P[6] = (($CalibrateData[155] << 8) | $CalibrateData[154]);
 				$Dig_P[7] = (($CalibrateData[157] << 8) | $CalibrateData[156]);
 				$Dig_P[8] = (($CalibrateData[159] << 8) | $CalibrateData[158]);
-
+			
 				$Dig_H[0] = $CalibrateData[161];
 				$Dig_H[1] = $this->bin16dec(($CalibrateData[226] << 8) | $CalibrateData[225]);
 				$Dig_H[2] = $CalibrateData[227];
@@ -404,6 +404,7 @@
 					*/
 				
 					// Luftfeuchtigkeit
+					/*
 					$var1 = $FineCalibrate - 76800.0;
 					$var2 = (($Dig_H[3]) * 64.0 + (($Dig_H[4]) / 16384) * $var1);
 					$var3 = $Hum_raw - $var2;
@@ -414,8 +415,8 @@
 					$Hum = $var6 * (1 - ($Dig_H[0]) * $var6 / 524288);
 					$Hum = min(100, max(0, $Hum));
 					
+					*/
 					
-					/*
 					$Hum = $FineCalibrate - 76800;
 					If ($Hum <> 0) {
 						$Hum = ($Hum_raw - ($Dig_H[3] * 64 + $Dig_H[4] / 16384 * $Hum)) * ($Dig_H[1]  / 65536 * (1 + $Dig_H[5] / 67108864 * $Hum * (1 + $Dig_H[2] / 67108864 * $Hum)));
@@ -430,7 +431,7 @@
 					elseif ($Hum < 0) {
 						$Hum = 0;
 					}
-					*/
+					
 					SetValueFloat($this->GetIDForIdent("Humidity"), round($Hum, 2));
 
 					// Berechnung von Taupunkt und absoluter Luftfeuchtigkeit
