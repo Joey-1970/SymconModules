@@ -371,6 +371,7 @@
 					} else { /* Invalid case */
 						$pressure = 30000;
 					}
+					$Pressure = $pressure;
 					SetValueFloat($this->GetIDForIdent("Pressure"), round($pressure / 100, 2));
 
 				
