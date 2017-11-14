@@ -312,8 +312,8 @@
 				$Dig_H[0] = $CalibrateData[161];
 				$Dig_H[1] = $this->bin16dec(($CalibrateData[226] << 8) | $CalibrateData[225]);
 				$Dig_H[2] = $CalibrateData[227];
-				$Dig_H[3] = $this->bin16dec(($CalibrateData[228] << 4) | (hexdec("0F") & $CalibrateData[229]));
-				$Dig_H[4] = $this->bin16dec(($CalibrateData[230] << 4) | (($CalibrateData[229] >> 4) & hexdec("0F")));
+				$Dig_H[3] = $this->bin16dec(($CalibrateData[228] * 16) | (hexdec("0F") & $CalibrateData[229]));
+				$Dig_H[4] = $this->bin16dec(($CalibrateData[230] * 16) | (($CalibrateData[229] >> 4)));
 				$Dig_H[5] = $this->bin8dec($CalibrateData[231]);
 
 				for ($i = 1; $i <= 2; $i++) {
