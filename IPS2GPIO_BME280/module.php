@@ -285,25 +285,25 @@
 				$this->ReadData();
 				// Kalibrierungsdatan aufbereiten
 				$Dig_T[0] = (($CalibrateData[137] << 8) | $CalibrateData[136]);
-				$Dig_T[1] = (($CalibrateData[139] << 8) | $CalibrateData[138]);
-				$Dig_T[2] = (($CalibrateData[141] << 8) | $CalibrateData[140]);
+				$Dig_T[1] = $this->bin16dec(($CalibrateData[139] << 8) | $CalibrateData[138]);
+				$Dig_T[2] = $this->bin16dec(($CalibrateData[141] << 8) | $CalibrateData[140]);
 
 				$Dig_P[0] = (($CalibrateData[143] << 8) | $CalibrateData[142]);
-				$Dig_P[1] = (($CalibrateData[145] << 8) | $CalibrateData[144]);
-				$Dig_P[2] = (($CalibrateData[147] << 8) | $CalibrateData[146]);
-				$Dig_P[3] = (($CalibrateData[149] << 8) | $CalibrateData[148]);
-				$Dig_P[4] = (($CalibrateData[151] << 8) | $CalibrateData[150]);
-				$Dig_P[5] = (($CalibrateData[153] << 8) | $CalibrateData[152]);
-				$Dig_P[6] = (($CalibrateData[155] << 8) | $CalibrateData[154]);
-				$Dig_P[7] = (($CalibrateData[157] << 8) | $CalibrateData[156]);
-				$Dig_P[8] = (($CalibrateData[159] << 8) | $CalibrateData[158]);
+				$Dig_P[1] = $this->bin16dec(($CalibrateData[145] << 8) | $CalibrateData[144]);
+				$Dig_P[2] = $this->bin16dec(($CalibrateData[147] << 8) | $CalibrateData[146]);
+				$Dig_P[3] = $this->bin16dec(($CalibrateData[149] << 8) | $CalibrateData[148]);
+				$Dig_P[4] = $this->bin16dec(($CalibrateData[151] << 8) | $CalibrateData[150]);
+				$Dig_P[5] = $this->bin16dec(($CalibrateData[153] << 8) | $CalibrateData[152]);
+				$Dig_P[6] = $this->bin16dec(($CalibrateData[155] << 8) | $CalibrateData[154]);
+				$Dig_P[7] = $this->bin16dec(($CalibrateData[157] << 8) | $CalibrateData[156]);
+				$Dig_P[8] = $this->bin16dec(($CalibrateData[159] << 8) | $CalibrateData[158]);
 
 				$Dig_H[0] = $CalibrateData[161];
-				$Dig_H[1] = (($CalibrateData[226] << 8) | $CalibrateData[225]);
+				$Dig_H[1] = $this->bin16dec(($CalibrateData[226] << 8) | $CalibrateData[225]);
 				$Dig_H[2] = $CalibrateData[227];
-				$Dig_H[3] = (($CalibrateData[228] << 4) | (hexdec("0F") & $CalibrateData[229]));
-				$Dig_H[4] = (($CalibrateData[230] << 4) | (($CalibrateData[229] >> 4) & hexdec("0F")));
-				$Dig_H[5] = $CalibrateData[231];
+				$Dig_H[3] = $this->bin16dec(($CalibrateData[228] << 4) | (hexdec("0F") & $CalibrateData[229]));
+				$Dig_H[4] = $this->bin16dec(($CalibrateData[230] << 4) | (($CalibrateData[229] >> 4) & hexdec("0F")));
+				$Dig_H[5] = $this->bin8dec($CalibrateData[231]);
 
 				for ($i = 1; $i <= 2; $i++) {
 					If ($Dig_T[$i] & hexdec("8000")) {
@@ -575,6 +575,28 @@
 			}
 			IPS_Sleep(5); 
 		}
+	}    
+	    
+	private function bin16dec($dec) 
+	{
+	    	// converts 8bit binary number string to integer using two's complement
+	    	$BinString = decbin($dec);
+		$DecNumber = bindec($BinString) & 0xFFFF; // only use bottom 16 bits
+	    	If (0x8000 & $DecNumber) {
+			$DecNumber = - (0x010000 - $DecNumber);
+	    	}
+	return $DecNumber;
+	}  
+	    
+	private function bin8dec($dec) 
+	{
+	    	// converts 16bit binary number string to integer using two's complement
+	    	$BinString = decbin($dec);
+		$DecNumber = bindec($BinString) & 0xFF; // only use bottom 16 bits
+	    	If (0x80 & $DecNumber) {
+			$DecNumber = - (0x0100 - $DecNumber);
+	    	}
+	return $DecNumber;
 	}    
 	    
 	private function PressureTrend(int $interval)
