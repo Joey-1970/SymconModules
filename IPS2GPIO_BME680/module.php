@@ -118,18 +118,12 @@
 		$arrayOptions[] = array("label" => "127", "value" => 7);
 		$arrayElements[] = array("type" => "Select", "name" => "IIR_Filter", "caption" => "IIR_Filter", "options" => $arrayOptions );
         	
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "0", "value" => 0);
-		$arrayOptions[] = array("label" => "1", "value" => 1);
-		$arrayOptions[] = array("label" => "2", "value" => 2);
-		$arrayOptions[] = array("label" => "3", "value" => 3);
-		$arrayOptions[] = array("label" => "4", "value" => 4);
-		$arrayOptions[] = array("label" => "5", "value" => 5);
-		$arrayOptions[] = array("label" => "6", "value" => 6);
-		$arrayOptions[] = array("label" => "7", "value" => 7);
-		$arrayOptions[] = array("label" => "8", "value" => 8);
-		$arrayOptions[] = array("label" => "9", "value" => 9);
-		$arrayElements[] = array("type" => "Select", "name" => "HeaterProfileSetpoint", "caption" => "Heater Profile Setpoint", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Label", "label" => "Gas Messungtemperatur (200 °C- 400 °C)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "HeaterTemp", "caption" => "Temp. °C");
+		$arrayElements[] = array("type" => "Label", "label" => "Gas Messungdauer (0 - 4032ms)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "HeaterDur", "caption" => "ms");
+		
+		
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Hinweise:");
 		$arrayElements[] = array("type" => "Label", "label" => "- die Device Adresse lautet 118 dez (0x76h) bei SDO an GND");
@@ -293,7 +287,9 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Measurement", "Ausfuehrung", 0);
 			$this->bme680_set_sensor_settings();
-			$this->bme680_get_sensor_data();
+			$this->read_field_data();
+			
+			//$this->bme680_get_sensor_data();
 		}
 	}	
 	
@@ -441,11 +437,11 @@
 		$factor = 0;
 		$durval = 0;
 	
-		if ($HeaterDur >= 0xfc0) {
+		if ($HeaterDur >= 0xfc0) { // 0xfc0 = 4032
 			$durval = 0xff; // Max duration
 		} else {
-			while ($HeaterDur > 0x3F) {
-				$HeaterDur = $HeaterDur / 4;
+			while ($HeaterDur > 0x3F) { // 0x3f = 63
+				$HeaterDur = intval($HeaterDur / 4);
 				$factor++;
 			}
 			$durval = ($HeaterDur + ($factor * 64));
@@ -502,10 +498,9 @@
 			}
 			$this->SetBuffer("CalibrateData", serialize($CalibrateData));
 			$this->SendDebug("ReadCalibrateData", "CalibrateData : ".serialize($CalibrateData), 0);
-			
 		}
 	}
-	    
+	/* 
 	private function ReadData()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
@@ -526,11 +521,12 @@
 			}
 		}	
 	}
-	    
+	*/   
+	/*
 	private function bme680_get_sensor_data()
 	{
 		
-		/* Reading the sensor data in forced mode only */
+		// Reading the sensor data in forced mode only
 		$Result = $this->read_field_data();
 		
 			if ($this->GetBuffer("status") & hexdec("E1")) {
@@ -541,7 +537,7 @@
 			}
 		return $Result;
 	}
-	    
+	*/    
 	private function calc_temperature($adc_temp)
 	{
 		$this->SendDebug("calc_temperature", "Ausfuehrung", 0);
