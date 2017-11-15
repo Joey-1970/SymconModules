@@ -296,7 +296,6 @@
 				$Dig_T[2] = $this->bin16dec(($CalibrateData[141] << 8) | $CalibrateData[140]);
 				
 				$Dig_P[0] = (($CalibrateData[143] << 8) | $CalibrateData[142]);
-				/*
 				$Dig_P[1] = $this->bin16dec(($CalibrateData[145] << 8) | $CalibrateData[144]);
 				$Dig_P[2] = $this->bin16dec(($CalibrateData[147] << 8) | $CalibrateData[146]);
 				$Dig_P[3] = $this->bin16dec(($CalibrateData[149] << 8) | $CalibrateData[148]);
@@ -305,8 +304,8 @@
 				$Dig_P[6] = $this->bin16dec(($CalibrateData[155] << 8) | $CalibrateData[154]);
 				$Dig_P[7] = $this->bin16dec(($CalibrateData[157] << 8) | $CalibrateData[156]);
 				$Dig_P[8] = $this->bin16dec(($CalibrateData[159] << 8) | $CalibrateData[158]);
-				*/
 				
+				/*
 				$Dig_P[1] = (($CalibrateData[145] << 8) | $CalibrateData[144]);
 				$Dig_P[2] = (($CalibrateData[147] << 8) | $CalibrateData[146]);
 				$Dig_P[3] = (($CalibrateData[149] << 8) | $CalibrateData[148]);
@@ -315,6 +314,7 @@
 				$Dig_P[6] = (($CalibrateData[155] << 8) | $CalibrateData[154]);
 				$Dig_P[7] = (($CalibrateData[157] << 8) | $CalibrateData[156]);
 				$Dig_P[8] = (($CalibrateData[159] << 8) | $CalibrateData[158]);
+				*/
 			
 				$Dig_H[0] = $CalibrateData[161];
 				$Dig_H[1] = $this->bin16dec(($CalibrateData[226] << 8) | $CalibrateData[225]);
@@ -322,7 +322,8 @@
 				$Dig_H[3] = $this->bin16dec(($CalibrateData[228] * 16) | (hexdec("0F") & $CalibrateData[229]));
 				$Dig_H[4] = $this->bin16dec(($CalibrateData[230] * 16) | (($CalibrateData[229] >> 4)));
 				$Dig_H[5] = $this->bin8dec($CalibrateData[231]);
-
+				
+				/*
 				for ($i = 1; $i <= 2; $i++) {
 					If ($Dig_T[$i] & hexdec("8000")) {
 						$Dig_T[$i] = (-$Dig_T[$i] ^ hexdec("FFFF")) + 1;
@@ -340,7 +341,8 @@
 						$Dig_H[$i] = (-$Dig_H[$i] ^ hexdec("FFFF")) + 1;
 					}
 				}
-
+				*/
+				
 				// Messwerte aufbereiten
 				$MeasurementData = array();
 				$MeasurementData = unserialize($this->GetBuffer("MeasurementData"));
