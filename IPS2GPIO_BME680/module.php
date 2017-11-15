@@ -21,7 +21,7 @@
  	    	$this->RegisterPropertyInteger("OSRS_H", 1);
  	    	$this->RegisterPropertyInteger("OSRS_P", 1);
 		$this->RegisterPropertyInteger("IIR_Filter", 0);
- 		$this->RegisterPropertyInteger("Mode", 0); 	    	
+ 		$this->RegisterPropertyInteger("Mode", 1); 	    	
 		$this->RegisterPropertyInteger("Altitude", 0);
 		$this->RegisterPropertyInteger("Temperature_ID", 0);
 		$this->RegisterPropertyInteger("Humidity_ID", 0);
@@ -101,11 +101,13 @@
 		$arrayOptions[] = array("label" => "x8", "value" => 4);
 		$arrayOptions[] = array("label" => "x16", "value" => 5);
 		$arrayElements[] = array("type" => "Select", "name" => "OSRS_P", "caption" => "Oversampling", "options" => $arrayOptions );
-       		$arrayElements[] = array("type" => "Label", "label" => "Mode (Default: Sleep Mode)");
+       		/*
+		$arrayElements[] = array("type" => "Label", "label" => "Mode (Default: Sleep Mode)");
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "Sleep Mode (Default)", "value" => 0);
 		$arrayOptions[] = array("label" => "Forced Mode", "value" => 1);
 		$arrayElements[] = array("type" => "Select", "name" => "Mode", "caption" => "Mode", "options" => $arrayOptions );
+		*/
       		$arrayElements[] = array("type" => "Label", "label" => "IIR-Filter (Default: 0->aus)");
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "0 (aus)", "value" => 0);
