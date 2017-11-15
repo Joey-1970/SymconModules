@@ -2,7 +2,14 @@
     // Klassendefinition
     class IPS2GPIO_Vaillant extends IPSModule 
     {
-        // Überschreibt die interne IPS_Create($id) Funktion
+        public function Destroy() 
+	{
+		//Never delete this line!
+		parent::Destroy();
+		$this->SetTimerInterval("Messzyklus", 0);
+	}
+	    
+	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
 		// Diese Zeile nicht löschen.
