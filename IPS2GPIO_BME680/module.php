@@ -148,7 +148,8 @@
 	    	
 		// Profil anlegen
 		$this->RegisterProfileFloat("IPS2GPIO.gm3", "Drops", "", " g/m³", 0, 1000, 0.1, 1);
-		$this->RegisterProfileFloat("IPS2GPIO.ohm", "Electricity", "", " Ohm", 0, 100000, 0.1, 1);
+		//$this->RegisterProfileFloat("IPS2GPIO.ohm", "Electricity", "", " Ohm", 0, 100000, 0.1, 1);
+		$this->RegisterProfileInteger("IPS2GPIO.ohm", "Gauge", "", " Ohm", 0, 1000000, 1);
 		
 		$this->RegisterProfileInteger("IPS2GPIO.AirQuality", "Information", "", "", 0, 6, 1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 0, "unbekannt", "Information", -1);
@@ -164,56 +165,56 @@
 		$this->DisableAction("ChipID");
 		IPS_SetHidden($this->GetIDForIdent("ChipID"), false);
 		
-		$this->RegisterVariableFloat("Temperature", "Temperature", "~Temperature", 10);
+		$this->RegisterVariableFloat("Temperature", "Temperatur", "~Temperature", 10);
 		$this->DisableAction("Temperature");
 		IPS_SetHidden($this->GetIDForIdent("Temperature"), false);
 		
-		$this->RegisterVariableFloat("Pressure", "Pressure (abs)", "~AirPressure.F", 20);
+		$this->RegisterVariableFloat("Pressure", "Luftdruck (abs)", "~AirPressure.F", 20);
 		$this->DisableAction("Pressure");
 		IPS_SetHidden($this->GetIDForIdent("Pressure"), false);
 		
-		$this->RegisterVariableFloat("PressureRel", "Pressure (rel)", "~AirPressure.F", 30);
+		$this->RegisterVariableFloat("PressureRel", "Luftdruck (rel)", "~AirPressure.F", 30);
 		$this->DisableAction("PressureRel");
 		IPS_SetHidden($this->GetIDForIdent("PressureRel"), false);
 		
-		$this->RegisterVariableFloat("HumidityAbs", "Humidity (abs)", "IPS2GPIO.gm3", 40);
+		$this->RegisterVariableFloat("HumidityAbs", "Luftfeuchtigkeit (abs)", "IPS2GPIO.gm3", 40);
 		$this->DisableAction("HumidityAbs");
 		IPS_SetHidden($this->GetIDForIdent("HumidityAbs"), false);
 		
-		$this->RegisterVariableFloat("Humidity", "Humidity (rel)", "~Humidity.F", 50);
+		$this->RegisterVariableFloat("Humidity", "Luftfeuchtigkeit (rel)", "~Humidity.F", 50);
 		$this->DisableAction("Humidity");
 		IPS_SetHidden($this->GetIDForIdent("Humidity"), false);
 		
-		$this->RegisterVariableFloat("DewPointTemperature", "Dew Point Temperature", "~Temperature", 60);
+		$this->RegisterVariableFloat("DewPointTemperature", "Taupunkt Temperatur", "~Temperature", 60);
 		$this->DisableAction("DewPointTemperature");
 		IPS_SetHidden($this->GetIDForIdent("DewPointTemperature"), false);
 		
-		$this->RegisterVariableFloat("PressureTrend1h", "Pressure trend 1h", "~AirPressure.F", 70);
+		$this->RegisterVariableFloat("PressureTrend1h", "Luftdruck 1h-Trend", "~AirPressure.F", 70);
 		$this->DisableAction("PressureTrend1h");
 		IPS_SetHidden($this->GetIDForIdent("PressureTrend1h"), false);
 		SetValueFloat($this->GetIDForIdent("PressureTrend1h"), 0);
 		
-		$this->RegisterVariableFloat("PressureTrend3h", "Pressure trend 3h", "~AirPressure.F", 80);
+		$this->RegisterVariableFloat("PressureTrend3h", "Luftdruck 3h-Trend", "~AirPressure.F", 80);
 		$this->DisableAction("PressureTrend3h");
 		IPS_SetHidden($this->GetIDForIdent("PressureTrend3h"), false);
 		SetValueFloat($this->GetIDForIdent("PressureTrend3h"), 0);
 		
-		$this->RegisterVariableFloat("PressureTrend12h", "Pressure trend 12h", "~AirPressure.F", 90);
+		$this->RegisterVariableFloat("PressureTrend12h", "Luftdruck 12h-Trend", "~AirPressure.F", 90);
 		$this->DisableAction("PressureTrend12h");
 		IPS_SetHidden($this->GetIDForIdent("PressureTrend12h"), false);
 		SetValueFloat($this->GetIDForIdent("PressureTrend12h"), 0);
 		
-		$this->RegisterVariableFloat("PressureTrend24h", "Pressure trend 24h", "~AirPressure.F", 100);
+		$this->RegisterVariableFloat("PressureTrend24h", "Luftdruck 24h-Trend", "~AirPressure.F", 100);
 		$this->DisableAction("PressureTrend24h");
 		IPS_SetHidden($this->GetIDForIdent("PressureTrend24h"), false);
 		SetValueFloat($this->GetIDForIdent("PressureTrend24h"), 0);
 		
-		$this->RegisterVariableInteger("AirQuality", "AirQuality", "IPS2GPIO.AirQuality", 110);
+		$this->RegisterVariableInteger("AirQuality", "Luftqualität", "IPS2GPIO.AirQuality", 110);
 		$this->DisableAction("AirQuality");
 		IPS_SetHidden($this->GetIDForIdent("AirQuality"), false);
 		SetValueInteger($this->GetIDForIdent("AirQuality"), 0);
 		
-		$this->RegisterVariableFloat("GasResistance", "Gas Resistance", "IPS2GPIO.ohm", 120);
+		$this->RegisterVariableInteger("GasResistance", "Gas Widerstand", "IPS2GPIO.ohm", 120);
 		$this->DisableAction("GasResistance");
 		IPS_SetHidden($this->GetIDForIdent("GasResistance"), false);
 		
@@ -615,7 +616,7 @@
 		$var2 = ((($adc_gas_res * 32768) - (16777216)) + $var1);
 		$var3 = (($lookupTable2[$gas_range] * $var1) / 512);
 		$GasResistance = (($var3 + ($var2 / 2)) / $var2);
-		SetValueFloat($this->GetIDForIdent("GasResistance"), $GasResistance);
+		SetValueInteger($this->GetIDForIdent("GasResistance"), intval($GasResistance));
 	return $GasResistance;
 	}
 	
