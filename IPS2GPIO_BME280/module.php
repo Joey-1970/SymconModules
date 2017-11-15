@@ -180,11 +180,11 @@
 		$this->DisableAction("PressureRel");
 		IPS_SetHidden($this->GetIDForIdent("PressureRel"), false);
 		
-		$this->RegisterVariableFloat("HumidityAbs", "Humidity (abs)", "IPS2GPIO.gm3", 40);
+		$this->RegisterVariableFloat("HumidityAbs", "Luftfeuchtigkeit (abs)", "IPS2GPIO.gm3", 40);
 		$this->DisableAction("HumidityAbs");
 		IPS_SetHidden($this->GetIDForIdent("HumidityAbs"), false);
 		
-		$this->RegisterVariableFloat("Humidity", "Humidity (rel)", "~Humidity.F", 50);
+		$this->RegisterVariableFloat("Humidity", "Luftfeuchtigkeit (rel)", "~Humidity.F", 50);
 		$this->DisableAction("Humidity");
 		IPS_SetHidden($this->GetIDForIdent("Humidity"), false);
 		
@@ -192,7 +192,7 @@
 		$this->DisableAction("DewPointTemperature");
 		IPS_SetHidden($this->GetIDForIdent("DewPointTemperature"), false);
 		
-		$this->RegisterVariableFloat("PressureTrend1h", "Luftdruck trend 1h", "~AirPressure.F", 70);
+		$this->RegisterVariableFloat("PressureTrend1h", "Luftdruck 1h-Trend", "~AirPressure.F", 70);
 		$this->DisableAction("PressureTrend1h");
 		IPS_SetHidden($this->GetIDForIdent("PressureTrend1h"), false);
 		SetValueFloat($this->GetIDForIdent("PressureTrend1h"), 0);
