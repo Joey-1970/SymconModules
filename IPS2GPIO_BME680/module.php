@@ -148,7 +148,6 @@
 	    	
 		// Profil anlegen
 		$this->RegisterProfileFloat("IPS2GPIO.gm3", "Drops", "", " g/m³", 0, 1000, 0.1, 1);
-		//$this->RegisterProfileFloat("IPS2GPIO.ohm", "Electricity", "", " Ohm", 0, 100000, 0.1, 1);
 		$this->RegisterProfileInteger("IPS2GPIO.ohm", "Gauge", "", " Ohm", 0, 1000000, 1);
 		
 		$this->RegisterProfileInteger("IPS2GPIO.AirQuality", "Information", "", "", 0, 6, 1);
@@ -381,17 +380,12 @@
 		
 		$nb_conv = 0;
 		
-		If ($this->ReadPropertyInteger("Mode") == 1) {
-			$reg_addr[0] = hexdec("5A");
-			$reg_data[0] = $this->calc_heater_res($HeaterTemp);
-			$reg_addr[1] = hexdec("64");
-			$reg_data[1] = $this->calc_heater_dur($HeaterDur);
-			$nb_conv = 0;
-			$this->SetBuffer("nb_conv", 0);
-		}
-		else {
-			$Result = 1;
-		}
+		$reg_addr[0] = hexdec("5A");
+		$reg_data[0] = $this->calc_heater_res($HeaterTemp);
+		$reg_addr[1] = hexdec("64");
+		$reg_data[1] = $this->calc_heater_dur($HeaterDur);
+		$nb_conv = 0;
+		$this->SetBuffer("nb_conv", 0);
 		
 		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $reg_addr[0], "Value" => $reg_data[0])));
 		If (!$Result) {
