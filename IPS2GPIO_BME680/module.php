@@ -24,6 +24,7 @@
  	    	$this->RegisterPropertyBoolean("LoggingTemp", false);
  	    	$this->RegisterPropertyBoolean("LoggingHum", false);
  	    	$this->RegisterPropertyBoolean("LoggingPres", false);
+		$this->RegisterPropertyBoolean("LoggingGas", false);
  	    	$this->RegisterPropertyInteger("OSRS_T", 1);
  	    	$this->RegisterPropertyInteger("OSRS_H", 1);
  	    	$this->RegisterPropertyInteger("OSRS_P", 1);
@@ -77,6 +78,7 @@
 		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingTemp", "caption" => "Logging Temperatur aktivieren");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingHum", "caption" => "Logging Luftfeuchtigkeit aktivieren");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingPres", "caption" => "Logging Luftdruck aktivieren");
+		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingGas", "caption" => "Logging Gas aktivieren");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "An den folgenden Werten muss in der Regel nichts verändert werden");
 		
@@ -108,13 +110,6 @@
 		$arrayOptions[] = array("label" => "x8", "value" => 4);
 		$arrayOptions[] = array("label" => "x16", "value" => 5);
 		$arrayElements[] = array("type" => "Select", "name" => "OSRS_P", "caption" => "Oversampling", "options" => $arrayOptions );
-       		/*
-		$arrayElements[] = array("type" => "Label", "label" => "Mode (Default: Sleep Mode)");
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "Sleep Mode (Default)", "value" => 0);
-		$arrayOptions[] = array("label" => "Forced Mode", "value" => 1);
-		$arrayElements[] = array("type" => "Select", "name" => "Mode", "caption" => "Mode", "options" => $arrayOptions );
-		*/
       		$arrayElements[] = array("type" => "Label", "label" => "IIR-Filter (Default: 0->aus)");
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "0 (aus)", "value" => 0);
@@ -231,6 +226,7 @@
 			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Temperature"), $this->ReadPropertyBoolean("LoggingTemp"));
 			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Pressure"), $this->ReadPropertyBoolean("LoggingPres"));
 			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Humidity"), $this->ReadPropertyBoolean("LoggingHum"));
+			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("GasResistance"), $this->ReadPropertyBoolean("LoggingGas"));
 			IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
 			//ReceiveData-Filter setzen
 			$this->SetBuffer("DeviceIdent", (($this->ReadPropertyInteger("DeviceBus") << 7) + $this->ReadPropertyInteger("DeviceAddress")));
