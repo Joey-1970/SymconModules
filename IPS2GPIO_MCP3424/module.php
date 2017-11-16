@@ -395,7 +395,7 @@
 			$DevicePorts[0] = "I²C-Bus 0";
 			$DevicePorts[1] = "I²C-Bus 1";
 			for ($i = 3; $i <= 10; $i++) {
-				$DevicePorts[$i] = "MUX I²C-Bus ".($i -3);
+				$DevicePorts[$i] = "MUX I²C-Bus ".($i - 3);
 			}
 			$I2C_Ports = serialize($DevicePorts);
 		}
