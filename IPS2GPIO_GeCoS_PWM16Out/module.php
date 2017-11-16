@@ -83,6 +83,7 @@
 				If ($Result == true) {
 					// Setup
 					$this->Setup();
+					$this->SetStatus(102);
 				}
 			}
 			else {
