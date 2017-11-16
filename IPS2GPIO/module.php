@@ -2122,6 +2122,11 @@ class IPS2GPIO_IO extends IPSModule
 	return $result;
 	}
 	
+	private function GetI2CBus($DeviceIdent)
+	{
+		
+	}
+	
 	private function SetMUX($Port)
 	{
 		// PCA9542
