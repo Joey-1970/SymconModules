@@ -380,7 +380,7 @@ class IPS2GPIO_IO extends IPSModule
 		    	If ($data->Pin >= 0) {
 		    		//$this->SendDebug("get_value", "Pin: ".$data->Pin, 0);
 		    		$Result = $this->CommandClientSocket(pack("L*", 3, $data->Pin, 0, 0), 16);
-		    	}
+ 		    	}
 		        break;
 		case "set_value":
 		    	// Schaltet den Pin
@@ -552,6 +552,11 @@ class IPS2GPIO_IO extends IPSModule
 				$this->SetBuffer("I2C_Handle", serialize($I2C_DeviceHandle));	
 				// Testweise lesen
 				If ($Handle >= 0) {
+					// MUX auf den entsprechende Bus umschalten
+					If (intval($data->DeviceBus) > 3) {
+						$this->SetMUX($this->GetMUXPort($data->DeviceBus)); 
+					}
+					
 					$Result = $this->CommandClientSocket(pack("L*", 59, $Handle, 0, 0), 16);
 					If ($Result >= 0) {
 						$this->SendDebug("Set Used I2C", "Test-Lesen auf Device-Adresse ".$data->DeviceAddress." Bus ".($data->DeviceBus)." erfolgreich!", 0);
@@ -2144,6 +2149,23 @@ class IPS2GPIO_IO extends IPSModule
 			$this->CommandClientSocket(pack("L*", 60, $MUX_Handle, $Port, 0), 16);
 		}
 	return;
+	}
+	
+	private function GetMUXPort($DevicePort)
+	{
+		$MUX = $this->ReadPropertyIntger("MUX");
+		$Port = 1;
+		If ($MUX == 1) {
+			// TCA9548a Adr. 112/0x70
+			$Port = $Port - 3;
+			$Port = pow(2, $Port);
+		}
+		elseif ($MUX == 2) {
+			// PCA9542 Adr. 112/0x70
+			$Port = $DevicePort + 1;
+		}
+		
+	Return $Port;	
 	}
 	
 	private function GetI2C_DeviceHandle(Int $DeviceAddress)
