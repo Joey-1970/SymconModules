@@ -553,10 +553,8 @@ class IPS2GPIO_IO extends IPSModule
 				// Testweise lesen
 				If ($Handle >= 0) {
 					// MUX auf den entsprechende Bus umschalten
-					If (intval($data->DeviceBus) > 3) {
-						$this->SetMUX($this->GetMUXPort($data->DeviceBus)); 
-					}
-					
+					$this->SetMUX(intval($data->DeviceBus)); 
+
 					$Result = $this->CommandClientSocket(pack("L*", 59, $Handle, 0, 0), 16);
 					If ($Result >= 0) {
 						$this->SendDebug("Set Used I2C", "Test-Lesen auf Device-Adresse ".$data->DeviceAddress." Bus ".($data->DeviceBus)." erfolgreich!", 0);
@@ -2142,11 +2140,13 @@ class IPS2GPIO_IO extends IPSModule
 		
 		$this->SetBuffer("MUX_Channel", $Port);
 		$MUX_Handle = $this->GetBuffer("MUX_Handle");
-		If ($Port == 1) {
+		If (($Port == 0) OR ($Port == 1)) {
+			// Ausschalten des MUX
 			$this->CommandClientSocket(pack("L*", 60, $MUX_Handle, 0, 0), 16);
 		}
 		else {
-			$this->CommandClientSocket(pack("L*", 60, $MUX_Handle, $Port, 0), 16);
+			// Den MUX auf den richtigen Kanal setzen
+			$this->CommandClientSocket(pack("L*", 60, $MUX_Handle, $this->GetMUXPort($Port), 0), 16);
 		}
 	return;
 	}
@@ -2154,7 +2154,7 @@ class IPS2GPIO_IO extends IPSModule
 	private function GetMUXPort($DevicePort)
 	{
 		$MUX = $this->ReadPropertyIntger("MUX");
-		$Port = 1;
+		$Port = 0;
 		If ($MUX == 1) {
 			// TCA9548a Adr. 112/0x70
 			$Port = $Port - 3;
