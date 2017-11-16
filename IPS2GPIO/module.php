@@ -553,8 +553,10 @@ class IPS2GPIO_IO extends IPSModule
 				// Testweise lesen
 				If ($Handle >= 0) {
 					// MUX auf den entsprechende Bus umschalten
-					$this->SetMUX(intval($data->DeviceBus)); 
-
+					If (intval($data->DeviceBus) >= 3) {
+						$this->SetMUX(intval($data->DeviceBus)); 
+					}
+						
 					$Result = $this->CommandClientSocket(pack("L*", 59, $Handle, 0, 0), 16);
 					If ($Result >= 0) {
 						$this->SendDebug("Set Used I2C", "Test-Lesen auf Device-Adresse ".$data->DeviceAddress." Bus ".($data->DeviceBus)." erfolgreich!", 0);
