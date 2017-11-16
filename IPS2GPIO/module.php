@@ -2143,7 +2143,6 @@ class IPS2GPIO_IO extends IPSModule
 		$this->SetBuffer("MUX_Channel", $Port);
 		$MUX_Handle = $this->GetBuffer("MUX_Handle");
 		If ($MUX_Handle >= 0) {
-			
 			If (($Port == 0) OR ($Port == 1)) {
 				// Ausschalten des MUX
 				$this->CommandClientSocket(pack("L*", 60, $MUX_Handle, 0, 0), 16);
@@ -2154,7 +2153,7 @@ class IPS2GPIO_IO extends IPSModule
 				$this->CommandClientSocket(pack("L*", 60, $MUX_Handle, $this->GetMUXPort($Port), 0), 16);
 				$this->SendDebug("SetMUX", "MUX gesetzt auf Kanal: ".($Port - 2), 0);
 			}
-			
+		}	
 		else {
 			$this->SendDebug("SetMUX", "MUX konnte nicht gesetzt werden!", 0);
 		}
