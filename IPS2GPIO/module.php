@@ -578,13 +578,13 @@ class IPS2GPIO_IO extends IPSModule
 			If ($this->ReadPropertyInteger("MUX") == 1) {
 				// TCA9548a
 				for ($i = 3; $i <= 10; $i++) {
-					$DevicePorts[$i] = "MUX I²C-Bus ".($i -3);
+					$DevicePorts[$i] = "MUX I²C-Bus ".($i - 3);
 				}
 			}
 			elseif ($this->ReadPropertyInteger("MUX") == 2) {
 				// PCA9542
 				for ($i = 3; $i <= 4; $i++) {
-					$DevicePorts[$i] = "MUX I²C-Bus ".($i -3);
+					$DevicePorts[$i] = "MUX I²C-Bus ".($i - 3);
 				}
 			}
 		   	$Result = serialize($DevicePorts);
