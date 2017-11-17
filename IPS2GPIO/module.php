@@ -2189,7 +2189,7 @@ class IPS2GPIO_IO extends IPSModule
 			else {
 				// Den MUX auf den richtigen Kanal setzen
 				$this->CommandClientSocket(pack("L*", 60, $MUX_Handle, $this->GetMUXPort($Port), 0), 16);
-				$this->SendDebug("SetMUX", "MUX gesetzt auf Kanal: ".($Port - 2), 0);
+				$this->SendDebug("SetMUX", "MUX gesetzt auf Kanal: ".($Port - 3), 0);
 			}
 		}	
 		else {
@@ -2204,8 +2204,8 @@ class IPS2GPIO_IO extends IPSModule
 		$Port = 0;
 		If ($MUX == 1) {
 			// TCA9548a Adr. 112/0x70
-			$Port = $Port - 3;
-			$Port = pow(2, $Port);
+			$DevicePort = $DevicePort - 3;
+			$Port = pow(2, $DevicePort);
 		}
 		elseif ($MUX == 2) {
 			// PCA9542 Adr. 112/0x70
