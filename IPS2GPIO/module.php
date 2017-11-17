@@ -43,7 +43,7 @@ class IPS2GPIO_IO extends IPSModule
 		$OWDeviceArray = array();
 		$this->SetBuffer("OWDeviceArray", serialize($OWDeviceArray));
 		$I2C_HandleData = array();
-		$this->GetBuffer("I2C_Handle", serialize($I2C_HandleData));
+		$this->SetBuffer("I2C_Handle", serialize($I2C_HandleData));
 		$this->RegisterPropertyBoolean("AudioDAC", false);
 	}
   	
