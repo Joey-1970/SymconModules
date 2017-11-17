@@ -304,17 +304,6 @@
 				$Dig_P[6] = $this->bin16dec(($CalibrateData[155] << 8) | $CalibrateData[154]);
 				$Dig_P[7] = $this->bin16dec(($CalibrateData[157] << 8) | $CalibrateData[156]);
 				$Dig_P[8] = $this->bin16dec(($CalibrateData[159] << 8) | $CalibrateData[158]);
-				
-				/*
-				$Dig_P[1] = (($CalibrateData[145] << 8) | $CalibrateData[144]);
-				$Dig_P[2] = (($CalibrateData[147] << 8) | $CalibrateData[146]);
-				$Dig_P[3] = (($CalibrateData[149] << 8) | $CalibrateData[148]);
-				$Dig_P[4] = (($CalibrateData[151] << 8) | $CalibrateData[150]);
-				$Dig_P[5] = (($CalibrateData[153] << 8) | $CalibrateData[152]);
-				$Dig_P[6] = (($CalibrateData[155] << 8) | $CalibrateData[154]);
-				$Dig_P[7] = (($CalibrateData[157] << 8) | $CalibrateData[156]);
-				$Dig_P[8] = (($CalibrateData[159] << 8) | $CalibrateData[158]);
-				*/
 			
 				$Dig_H[0] = $CalibrateData[161];
 				$Dig_H[1] = $this->bin16dec(($CalibrateData[226] << 8) | $CalibrateData[225]);
@@ -322,26 +311,6 @@
 				$Dig_H[3] = $this->bin16dec(($CalibrateData[228] * 16) | (hexdec("0F") & $CalibrateData[229]));
 				$Dig_H[4] = $this->bin16dec(($CalibrateData[230] * 16) | (($CalibrateData[229] >> 4)));
 				$Dig_H[5] = $this->bin8dec($CalibrateData[231]);
-				
-				/*
-				for ($i = 1; $i <= 2; $i++) {
-					If ($Dig_T[$i] & hexdec("8000")) {
-						$Dig_T[$i] = (-$Dig_T[$i] ^ hexdec("FFFF")) + 1;
-					}
-				}
-			
-				for ($i = 1; $i <= 8; $i++) {
-					If ($Dig_P[$i] & hexdec("8000")) {
-						$Dig_P[$i] = (-$Dig_P[$i] ^ hexdec("FFFF")) + 1;
-					}
-				}
-
-				for ($i = 0; $i <= 5; $i++) {
-					If ($Dig_H[$i] & hexdec("8000")) {
-						$Dig_H[$i] = (-$Dig_H[$i] ^ hexdec("FFFF")) + 1;
-					}
-				}
-				*/
 				
 				// Messwerte aufbereiten
 				$MeasurementData = array();
@@ -355,13 +324,15 @@
 					$FineCalibrate = 0;
 
 					// Temperatur
+					$Temp = 0;
 					$V1 = ($Temp_raw / 16384 - $Dig_T[0] / 1024) * $Dig_T[1];
 					$V2 = ($Temp_raw / 131072 - $Dig_T[0] / 8192) * ($Temp_raw / 131072 - $Dig_T[0] / 8192) * $Dig_T[2];
 					$FineCalibrate = $V1 + $V2;
 					$Temp = $FineCalibrate / 5120;
 					SetValueFloat($this->GetIDForIdent("Temperature"), round($Temp, 2));
 					
-
+					// Luftdruck
+					$Pressure = 0;
 					$var1 = ($FineCalibrate / 2) - 64000;
 					$var2 = $var1 * $var1 * ($Dig_P[5]) / 32768;
 					$var2 = $var2 + $var1 * ($Dig_P[4]) * 2;
@@ -381,36 +352,6 @@
 						$Pressure = 30000;
 					}
 					SetValueFloat($this->GetIDForIdent("Pressure"), round($Pressure / 100, 2));
-
-				
-					
-					/*
-					// Luftdruck
-					$Pressure = 0;
-					$V1 = ($FineCalibrate / 2) - 64000;
-					$V2 = ((($V1 / 4) * ($V1 / 4)) / 2048) * $Dig_P[5];
-					$V2 = $V2 + (($V1 * $Dig_P[4]) * 2);
-					$V2 = ($V2 / 4) + ($Dig_P[3] * 65536);
-					$V1 = ((($Dig_P[2] * ((($V1 / 4) * ($V1 / 4)) / 8192)) / 8) + (($Dig_P[1] * $V1) / 2)) / 262144;
-					$V1 = ((32768 + $V1) * $Dig_P[0]) / 32768;
-
-					If ($V1 == 0) {
-						SetValueFloat($this->GetIDForIdent("Pressure"), "0");
-					}
-					$Pressure = ((1048576 - $Pres_raw) - ($V2 / 4096)) * 3125;
-
-					If ($Pressure < hexdec("80000000")) {
-						$Pressure = ($Pressure * 2) / $V1;
-					}
-					else {
-						$Pressure = ($Pressure / $V1) * 2;
-					}
-					$V1 = ($Dig_P[8] * ((($Pressure / 8) * ($Pressure / 8)) / 8192)) / 4096;
-					$V2 = (($Pressure / 4) * $Dig_P[7]) / 8192;
-					$Pressure = $Pressure + (($V1 + $V2 + $Dig_P[6]) / 16);
-
-					SetValueFloat($this->GetIDForIdent("Pressure"), round($Pressure / 100, 2));
-					*/
 				
 					// Luftfeuchtigkeit
 					
@@ -423,24 +364,6 @@
 					$var6 = $var3 * $var4 * ($var5 * $var6);
 					$Hum = $var6 * (1 - ($Dig_H[0]) * $var6 / 524288);
 					$Hum = min(100, max(0, $Hum));
-					
-					/*
-					
-					$Hum = $FineCalibrate - 76800;
-					If ($Hum <> 0) {
-						$Hum = ($Hum_raw - ($Dig_H[3] * 64 + $Dig_H[4] / 16384 * $Hum)) * ($Dig_H[1]  / 65536 * (1 + $Dig_H[5] / 67108864 * $Hum * (1 + $Dig_H[2] / 67108864 * $Hum)));
-					}
-					else {
-						SetValueFloat($this->GetIDForIdent("Humidity"), 0);
-					}
-					$Hum = $Hum * (1 - $Dig_H[0] * $Hum / 524288);
-					If ($Hum > 100) {
-						$Hum = 100;
-					}
-					elseif ($Hum < 0) {
-						$Hum = 0;
-					}
-					*/
 					SetValueFloat($this->GetIDForIdent("Humidity"), round($Hum, 2));
 
 					// Berechnung von Taupunkt und absoluter Luftfeuchtigkeit
