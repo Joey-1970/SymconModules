@@ -2478,7 +2478,7 @@ class IPS2GPIO_IO extends IPSModule
 
 					If ($Result >= 0) {
 						$this->SendDebug("SearchI2CDevices", "Device gefunden auf Bus: ".$j." Adresse: ".$SearchArray[$i]." Ergebnis des Test-Lesen: ".$Result, 0);
-						$DeviceArray[$k][0] = $DeviceName[$i];
+						$DeviceArray[$k][0] = $this->I2CDeviceSpecification($DeviceName[$i], $Handle, $SearchArray[$i]);
 						$DeviceArray[$k][1] = $SearchArray[$i];
 						$DeviceArray[$k][2] = $j;
 						$DeviceArray[$k][3] = 0;
@@ -2498,6 +2498,29 @@ class IPS2GPIO_IO extends IPSModule
 		}
 		$this->SetBuffer("I2CSearch", 0);
 	return serialize($DeviceArray);
+	}
+	
+	privat function I2CDeviceSpecification($DefaultDeviceName, $Handle, $DeviceAddress)
+	{
+		
+		If (($DeviceAddress == 118) OR ($DeviceAddress == 119)) {
+			// BME280/680
+			// Lesen der ChipID
+			$Result = $this->CommandClientSocket(pack("L*", 61, $Handle, hexdec("D0"), 0), 16);
+			If ($Result < 0) {
+				$this->SendDebug("I2CDeviceSpecification", "Fehler beim Einlesen der BME Chip ID", 0);
+				$DeviceName = $DefaultDeviceName;
+			}
+			else {
+				If ($Result == 96) {
+					$DeviceName = "BME280";
+				}
+				elseif ($Result == 97) {
+					$DeviceName = "BME680";
+				}
+			}
+		}
+	Return $DeviceName;
 	}
 	
   	private function GetErrorText(Int $ErrorNumber)
