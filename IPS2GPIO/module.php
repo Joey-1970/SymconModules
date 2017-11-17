@@ -2200,7 +2200,7 @@ class IPS2GPIO_IO extends IPSModule
 	
 	private function GetMUXPort($DevicePort)
 	{
-		$MUX = $this->ReadPropertyIntger("MUX");
+		$MUX = $this->ReadPropertyInteger("MUX");
 		$Port = 0;
 		If ($MUX == 1) {
 			// TCA9548a Adr. 112/0x70
