@@ -290,8 +290,6 @@
 			$this->SendDebug("Measurement", "Ausfuehrung", 0);
 			$this->bme680_set_sensor_settings();
 			$this->read_field_data();
-			
-			//$this->bme680_get_sensor_data();
 		}
 	}	
 	
@@ -372,8 +370,6 @@
 			$this->SendDebug("Setup", "ctrl_hum_reg setzen fehlerhaft!", 0);
 			return;
 		}
-		
-
 	return $Result;
 	}
 	
