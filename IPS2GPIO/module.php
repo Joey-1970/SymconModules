@@ -2504,14 +2504,13 @@ class IPS2GPIO_IO extends IPSModule
 	
 	private function I2CDeviceSpecification($DefaultDeviceName, $Handle, $DeviceAddress)
 	{
-		
+		$DeviceName = $DefaultDeviceName;
 		If (($DeviceAddress == 118) OR ($DeviceAddress == 119)) {
 			// BME280/680
 			// Lesen der ChipID
 			$Result = $this->CommandClientSocket(pack("L*", 61, $Handle, hexdec("D0"), 0), 16);
 			If ($Result < 0) {
 				$this->SendDebug("I2CDeviceSpecification", "Fehler beim Einlesen der BME Chip ID", 0);
-				$DeviceName = $DefaultDeviceName;
 			}
 			else {
 				If ($Result == 96) {
