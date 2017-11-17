@@ -2500,7 +2500,7 @@ class IPS2GPIO_IO extends IPSModule
 	return serialize($DeviceArray);
 	}
 	
-	privat function I2CDeviceSpecification($DefaultDeviceName, $Handle, $DeviceAddress)
+	private function I2CDeviceSpecification($DefaultDeviceName, $Handle, $DeviceAddress)
 	{
 		
 		If (($DeviceAddress == 118) OR ($DeviceAddress == 119)) {
