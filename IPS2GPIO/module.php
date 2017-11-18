@@ -2189,8 +2189,8 @@ class IPS2GPIO_IO extends IPSModule
 			else {
 				// Den MUX auf den richtigen Kanal setzen
 				$this->SendDebug("SetMUX", "MUX-Umschaltung mit Wert: ".$this->GetMUXPort($Port), 0);
-				//$this->CommandClientSocket(pack("L*", 60, $MUX_Handle, $this->GetMUXPort($Port), 0), 16);
-				$this->SendDebug("SetMUX", "MUX gesetzt auf Kanal: ".($Port - 3), 0);
+				$Result = $this->CommandClientSocket(pack("L*", 60, $MUX_Handle, $this->GetMUXPort($Port), 0), 16);
+				$this->SendDebug("SetMUX", "MUX gesetzt auf Kanal: ".($Port - 3)." Meldung: ".$Result, 0);
 			}
 		}	
 		else {
