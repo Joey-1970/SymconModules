@@ -546,8 +546,10 @@ class IPS2GPIO_IO extends IPSModule
 				// Messages einrichten
 				$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
 				$this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
+				
 				// Handle ermitteln
-				$Handle = $this->CommandClientSocket(pack("L*", 54, $data->DeviceBus, $data->DeviceAddress, 4, 0), 16);	
+				$DeviceBus = min(1, intval($data->DeviceBus));
+				$Handle = $this->CommandClientSocket(pack("L*", 54, $DeviceBus, intval($data->DeviceAddress), 4, 0), 16);	
 				$this->SendDebug("Set Used I2C", "Handle fuer Device-Adresse ".$data->DeviceAddress." an Bus ".($data->DeviceBus).": ".$Handle, 0);
 				$I2C_DeviceHandle[($data->DeviceBus << 7) + $data->DeviceAddress] = $Handle;
 				// genutzte Device-Ident mit Handle sichern
