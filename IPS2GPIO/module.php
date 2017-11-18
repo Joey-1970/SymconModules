@@ -2184,6 +2184,8 @@ class IPS2GPIO_IO extends IPSModule
 		If (intval($this->GetBuffer("MUX_Channel")) <> $Port) {
 			$this->SetBuffer("MUX_Channel", $Port);
 			$MUX_Handle = $this->GetBuffer("MUX_Handle");
+			$MUX = $this->ReadPropertyInteger("MUX");
+			
 			If ($MUX_Handle >= 0) {
 				If (($Port == 0) OR ($Port == 1)) {
 					// Ausschalten des MUX
@@ -2191,11 +2193,20 @@ class IPS2GPIO_IO extends IPSModule
 					$this->SendDebug("SetMUX", "MUX ausgeschaltet", 0);
 				}
 				else {
-					
+					$DevicePort = 0;
+					If ($MUX == 1) {
+						// TCA9548a Adr. 112/0x70
+						$DevicePort = $Port - 3;
+						$DevicePort = pow(2, $DevicePort);
+					}
+					elseif ($MUX == 2) {
+						// PCA9542 Adr. 112/0x70
+						$DevicePort = $DevicePort + 1;
+					}
 					// Den MUX auf den richtigen Kanal setzen
-					$this->SendDebug("SetMUX", "MUX-Umschaltung mit Wert: ".$this->GetMUXPort($Port), 0);
-					$Result = $this->CommandClientSocket(pack("L*", 60, $MUX_Handle, $this->GetMUXPort($Port), 0), 16);
-					$this->SendDebug("SetMUX", "MUX gesetzt auf Kanal: ".($Port - 3)." Meldung: ".$Result, 0);
+					$this->SendDebug("SetMUX", "MUX-Umschaltung mit Wert: ".$DevicePort, 0);
+					$Result = $this->CommandClientSocket(pack("L*", 60, $MUX_Handle, $DevicePort, 0), 16);
+					//$this->SendDebug("SetMUX", "MUX gesetzt auf Kanal: ".($Port - 3)." Meldung: ".$Result, 0);
 				}
 			}	
 			else {
@@ -2204,7 +2215,7 @@ class IPS2GPIO_IO extends IPSModule
 		}
 	return;
 	}
-	
+	/*
 	private function GetMUXPort($DevicePort)
 	{
 		$MUX = $this->ReadPropertyInteger("MUX");
@@ -2221,7 +2232,7 @@ class IPS2GPIO_IO extends IPSModule
 		
 	Return $Port;	
 	}
-	
+	*/
 	private function GetI2C_DeviceHandle(Int $DeviceAddress)
 	{
 		// Gibt für ein Device den verknüpften Handle aus
