@@ -2179,24 +2179,27 @@ class IPS2GPIO_IO extends IPSModule
 		// 32 = Channel 5 enable
 		// 64 = Channel 6 enable
 		// 128 = Channel 7 enable
-		$this->SendDebug("SetMUX", "MUX-Umschaltung fuer DeviceBus: ".$Port, 0);
-		$this->SetBuffer("MUX_Channel", $Port);
-		$MUX_Handle = $this->GetBuffer("MUX_Handle");
-		If ($MUX_Handle >= 0) {
-			If (($Port == 0) OR ($Port == 1)) {
-				// Ausschalten des MUX
-				$this->CommandClientSocket(pack("L*", 60, $MUX_Handle, 0, 0), 16);
-				$this->SendDebug("SetMUX", "MUX ausgeschaltet", 0);
-			}
+		
+		If (intval($this->GetBuffer("MUX_Channel")) <> $Port) {
+			$this->SetBuffer("MUX_Channel", $Port);
+			$MUX_Handle = $this->GetBuffer("MUX_Handle");
+			If ($MUX_Handle >= 0) {
+				If (($Port == 0) OR ($Port == 1)) {
+					// Ausschalten des MUX
+					$this->CommandClientSocket(pack("L*", 60, $MUX_Handle, 0, 0), 16);
+					$this->SendDebug("SetMUX", "MUX ausgeschaltet", 0);
+				}
+				else {
+					
+					// Den MUX auf den richtigen Kanal setzen
+					$this->SendDebug("SetMUX", "MUX-Umschaltung mit Wert: ".$this->GetMUXPort($Port), 0);
+					$Result = $this->CommandClientSocket(pack("L*", 60, $MUX_Handle, $this->GetMUXPort($Port), 0), 16);
+					$this->SendDebug("SetMUX", "MUX gesetzt auf Kanal: ".($Port - 3)." Meldung: ".$Result, 0);
+				}
+			}	
 			else {
-				// Den MUX auf den richtigen Kanal setzen
-				$this->SendDebug("SetMUX", "MUX-Umschaltung mit Wert: ".$this->GetMUXPort($Port), 0);
-				$Result = $this->CommandClientSocket(pack("L*", 60, $MUX_Handle, $this->GetMUXPort($Port), 0), 16);
-				$this->SendDebug("SetMUX", "MUX gesetzt auf Kanal: ".($Port - 3)." Meldung: ".$Result, 0);
+				$this->SendDebug("SetMUX", "MUX konnte nicht gesetzt werden!", 0);
 			}
-		}	
-		else {
-			$this->SendDebug("SetMUX", "MUX konnte nicht gesetzt werden!", 0);
 		}
 	return;
 	}
