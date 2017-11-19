@@ -2215,24 +2215,7 @@ class IPS2GPIO_IO extends IPSModule
 		}
 	return;
 	}
-	/*
-	private function GetMUXPort($DevicePort)
-	{
-		$MUX = $this->ReadPropertyInteger("MUX");
-		$Port = 0;
-		If ($MUX == 1) {
-			// TCA9548a Adr. 112/0x70
-			$DevicePort = $DevicePort - 3;
-			$Port = pow(2, $DevicePort);
-		}
-		elseif ($MUX == 2) {
-			// PCA9542 Adr. 112/0x70
-			$Port = $DevicePort + 1;
-		}
-		
-	Return $Port;	
-	}
-	*/
+
 	private function GetI2C_DeviceHandle(Int $DeviceAddress)
 	{
 		// Gibt für ein Device den verknüpften Handle aus
@@ -2492,9 +2475,20 @@ class IPS2GPIO_IO extends IPSModule
 			// in allen anderen Fällen
 			$I2CSearchStart = 1;
 		}
+		$MUX = $this->ReadPropertyInteger("MUX");
+		If ($MUX == 1) {
+			// TCA9548a Adr. 112/0x70
+			$I2CSearchEnd = 10;
+		}
+		elseif ($MUX == 2) {
+			// PCA9542 Adr. 112/0x70
+			$I2CSearchEnd = 5;
+		}
+		else {
+			$I2CSearchEnd = 1;
+		}
 		
-		
-		for ($j = $I2CSearchStart; $j <= 1; $j++) {
+		for ($j = $I2CSearchStart; $j <= $I2CSearchEnd; $j++) {
 
 			for ($i = 0; $i < count($SearchArray); $i++) {
 				
@@ -2504,6 +2498,10 @@ class IPS2GPIO_IO extends IPSModule
 				//$this->SendDebug("SearchI2CDevices", "Device prüfen auf Bus: ".$j." Adresse: ".$i, 0);
 
 				if ($Handle >= 0) {
+					// MUX auf den entsprechende Bus umschalten
+					If ($j >= 3) {
+						$this->SetMUX($j); 
+					}
 					// Testweise lesen
 					$Result = $this->CommandClientSocket(pack("L*", 59, $Handle, 0, 0), 16);
 					//$this->SendDebug("SearchI2CDevices", "Device lesen auf Bus: ".$j." Adresse: ".$i, 0);
