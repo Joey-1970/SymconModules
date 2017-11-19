@@ -2489,7 +2489,11 @@ class IPS2GPIO_IO extends IPSModule
 		}
 		
 		for ($j = $I2CSearchStart; $j <= $I2CSearchEnd; $j++) {
-
+			// es gibt keinen DeviceBus 2
+			If ($j == 2) {
+				$j++;
+			}
+			
 			for ($i = 0; $i < count($SearchArray); $i++) {
 				
 				// Handle ermitteln
