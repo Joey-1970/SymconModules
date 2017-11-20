@@ -2407,6 +2407,14 @@ class IPS2GPIO_IO extends IPSModule
 		$DeviceArray = Array();
 		$DeviceName = Array();
 		$SearchArray = Array();
+		$DevicePorts = array();
+		$DevicePorts[0] = "I²C-Bus 0";
+		$DevicePorts[1] = "I²C-Bus 1";
+		for ($i = 3; $i <= 10; $i++) {
+			$DevicePorts[$i] = "MUX I²C-Bus ".($i - 3);
+		}
+		
+		
 		$k = 0;
 		// AS3935
 		for ($i = 3; $i <= 4; $i++) {
@@ -2520,7 +2528,7 @@ class IPS2GPIO_IO extends IPSModule
 						$this->SendDebug("SearchI2CDevices", "Device gefunden auf Bus: ".$j." Adresse: ".$SearchArray[$i]." Ergebnis des Test-Lesen: ".$Result, 0);
 						$DeviceArray[$k][0] = $this->I2CDeviceSpecification($DeviceName[$i], $Handle, $SearchArray[$i]);
 						$DeviceArray[$k][1] = $SearchArray[$i];
-						$DeviceArray[$k][2] = $j;
+						$DeviceArray[$k][2] = $DevicePorts[$j];
 						$DeviceArray[$k][3] = 0;
 						$DeviceArray[$k][4] = "OK";
 						// Farbe gelb für erreichbare aber nicht registrierte Instanzen
