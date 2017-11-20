@@ -2552,42 +2552,35 @@ class IPS2GPIO_IO extends IPSModule
 
 	private function SearchSpecialI2CDevices(Int $DeviceAddress)
 	{
-		$DeviceArray = Array();
+		$ResponseText = "";
 		$DeviceName = Array();
-		$SearchArray = Array();
 		
 		// DS2482
-		$SearchArray[] = 24;
-		$DeviceName[] = "DS2482";
+		$DeviceName[24] = "DS2482";
 		// MUX
-		$SearchArray[] = 112;
-		$DeviceName[] = "MUX";
+		$DeviceName[112] = "MUX";
 				
-		$k = 0;
-		
 		$this->SetBuffer("I2CSearch", 1);
 		
 		
+		// Handle ermitteln
+		$Handle = $this->CommandClientSocket(pack("L*", 54, 1, $DeviceAddress, 4, 0), 16);
+		//$this->SendDebug("SearchI2CDevices", "Device prüfen auf Bus: ".$j." Adresse: ".$i, 0);
 
-		for ($i = 0; $i < count($SearchArray); $i++) {
-			// Handle ermitteln
-			$Handle = $this->CommandClientSocket(pack("L*", 54, 1, $SearchArray[$i], 4, 0), 16);
-			//$this->SendDebug("SearchI2CDevices", "Device prüfen auf Bus: ".$j." Adresse: ".$i, 0);
+		if ($Handle >= 0) {
+			// Testweise lesen
+			$Result = $this->CommandClientSocket(pack("L*", 59, $Handle, 0, 0), 16);
 
-			if ($Handle >= 0) {
-				// Testweise lesen
-				$Result = $this->CommandClientSocket(pack("L*", 59, $Handle, 0, 0), 16);
-
-				If ($Result >= 0) {
-					$this->SendDebug("SearchSpecialI2CDevices", "Device gefunden auf Bus: ".$j." Adresse: ".$SearchArray[$i]." Ergebnis des Test-Lesen: ".$Result, 0);
-					
-					$k = $k + 1;
-					//IPS_LogMessage("GeCoS_IO I2C-Suche","Ergebnis: ".$DeviceName[$i]." DeviceAddresse: ".$SearchArray[$i]." an Bus: ".($j - 4));
-				}
-				// Handle löschen
-				$Result = $this->CommandClientSocket(pack("L*", 55, $Handle, 0, 0), 16);
+			If ($Result >= 0) {
+				$this->SendDebug("SearchSpecialI2CDevices", "Device gefunden auf Bus: ".$j." Adresse: ".$SearchArray[$i]." Ergebnis des Test-Lesen: ".$Result, 0);
+				$ResponseText = "Ein ".$DeviceName[$DeviceAddress]." ist auf Bus 1 vorhanden.";
+				//IPS_LogMessage("GeCoS_IO I2C-Suche","Ergebnis: ".$DeviceName[$i]." DeviceAddresse: ".$SearchArray[$i]." an Bus: ".($j - 4));
 			}
-
+			else {
+				$ResponseText = "Ein ".$DeviceName[$DeviceAddress]." ist auf Bus 1 nicht vorhanden.";
+			}
+			// Handle löschen
+			$Result = $this->CommandClientSocket(pack("L*", 55, $Handle, 0, 0), 16);
 		}
 
 		$this->SetBuffer("I2CSearch", 0);
