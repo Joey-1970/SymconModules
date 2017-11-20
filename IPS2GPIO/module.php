@@ -2533,7 +2533,7 @@ class IPS2GPIO_IO extends IPSModule
 						$DeviceArray[$k][4] = "OK";
 						// Farbe gelb für erreichbare aber nicht registrierte Instanzen
 						$DeviceArray[$k][5] = "#FFFF00";
-						$k = $k++;
+						$k = $k + 1;
 						//IPS_LogMessage("GeCoS_IO I2C-Suche","Ergebnis: ".$DeviceName[$i]." DeviceAddresse: ".$SearchArray[$i]." an Bus: ".($j - 4));
 					}
 					// Handle löschen
