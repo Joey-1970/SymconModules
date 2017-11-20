@@ -2396,14 +2396,12 @@ class IPS2GPIO_IO extends IPSModule
 		$DeviceArray = Array();
 		$DeviceName = Array();
 		$SearchArray = Array();
+		$k = 0;
 		// AS3935
 		for ($i = 3; $i <= 4; $i++) {
 			$SearchArray[] = $i;
 			$DeviceName[] = "AS3935";
 		}
-		// DS2482
-		$SearchArray[] = 24;
-		$DeviceName[] = "DS2482";
 		// PCF8574
 		for ($i = 32; $i <= 34; $i++) {
 			$SearchArray[] = $i;
@@ -2455,17 +2453,14 @@ class IPS2GPIO_IO extends IPSModule
 			$SearchArray[] = $i;
 			$DeviceName[] = "MCP3424";
 		}
-		// MUX
-		$SearchArray[] = 112;
-		$DeviceName[] = "MUX";
 		// BME280+BME680
 		for ($i = 118; $i <= 119; $i++) {
 			$SearchArray[] = $i;
 			$DeviceName[] = "BME280/680";
 		}					
-		$k = 0;
-		
+		// Start der Suche markieren
 		$this->SetBuffer("I2CSearch", 1);
+		
 		// Start der Suche bestimmen
 		If ($this->ReadPropertyInteger("I2C0") == 1) {
 			// Wenn der Bus 0 genutzt wird
@@ -2519,8 +2514,7 @@ class IPS2GPIO_IO extends IPSModule
 						$DeviceArray[$k][4] = "OK";
 						// Farbe gelb für erreichbare aber nicht registrierte Instanzen
 						$DeviceArray[$k][5] = "#FFFF00";
-						$k = $k + 1;
-						//$this->SendDebug("SearchI2CDevices", "Ergebnis: ".$DeviceName[$i]." DeviceAddresse: ".$SearchArray[$i]." an Bus: ".($j - 4), 0);
+						$k = $k++;
 						//IPS_LogMessage("GeCoS_IO I2C-Suche","Ergebnis: ".$DeviceName[$i]." DeviceAddresse: ".$SearchArray[$i]." an Bus: ".($j - 4));
 					}
 					// Handle löschen
@@ -2534,7 +2528,7 @@ class IPS2GPIO_IO extends IPSModule
 	return serialize($DeviceArray);
 	}
 	
-	private function I2CDeviceSpecification($DefaultDeviceName, $Handle, $DeviceAddress)
+	private function I2CDeviceSpecification($DefaultDeviceName, Int $Handle, Int $DeviceAddress)
 	{
 		$DeviceName = $DefaultDeviceName;
 		If (($DeviceAddress == 118) OR ($DeviceAddress == 119)) {
@@ -2554,6 +2548,50 @@ class IPS2GPIO_IO extends IPSModule
 			}
 		}
 	Return $DeviceName;
+	}
+
+	private function SearchSpecialI2CDevices(Int $DeviceAddress)
+	{
+		$DeviceArray = Array();
+		$DeviceName = Array();
+		$SearchArray = Array();
+		
+		// DS2482
+		$SearchArray[] = 24;
+		$DeviceName[] = "DS2482";
+		// MUX
+		$SearchArray[] = 112;
+		$DeviceName[] = "MUX";
+				
+		$k = 0;
+		
+		$this->SetBuffer("I2CSearch", 1);
+		
+		
+
+		for ($i = 0; $i < count($SearchArray); $i++) {
+			// Handle ermitteln
+			$Handle = $this->CommandClientSocket(pack("L*", 54, 1, $SearchArray[$i], 4, 0), 16);
+			//$this->SendDebug("SearchI2CDevices", "Device prüfen auf Bus: ".$j." Adresse: ".$i, 0);
+
+			if ($Handle >= 0) {
+				// Testweise lesen
+				$Result = $this->CommandClientSocket(pack("L*", 59, $Handle, 0, 0), 16);
+
+				If ($Result >= 0) {
+					$this->SendDebug("SearchSpecialI2CDevices", "Device gefunden auf Bus: ".$j." Adresse: ".$SearchArray[$i]." Ergebnis des Test-Lesen: ".$Result, 0);
+					
+					$k = $k + 1;
+					//IPS_LogMessage("GeCoS_IO I2C-Suche","Ergebnis: ".$DeviceName[$i]." DeviceAddresse: ".$SearchArray[$i]." an Bus: ".($j - 4));
+				}
+				// Handle löschen
+				$Result = $this->CommandClientSocket(pack("L*", 55, $Handle, 0, 0), 16);
+			}
+
+		}
+
+		$this->SetBuffer("I2CSearch", 0);
+	return serialize($DeviceArray);
 	}
 	
   	private function GetErrorText(Int $ErrorNumber)
