@@ -65,21 +65,32 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayElements[] = array("type" => "PasswordTextBox", "name" => "Password", "caption" => "Password");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Detaillierung der genutzten I²C-Schnittstelle:");
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "Kein MUX", "value" => 0);
-		$arrayOptions[] = array("label" => "TCA9548a Adr. 112/0x70", "value" => 1);
-		$arrayOptions[] = array("label" => "PCA9542 Adr. 112/0x70", "value" => 2);
-		$arrayElements[] = array("type" => "Select", "name" => "MUX", "caption" => "MUX-Auswahl", "options" => $arrayOptions );
+		
+		If (($this->ConnectionTest()) AND ($this->SearchSpecialI2CDevices(112) == true))  {
+			$arrayOptions = array();
+			$arrayOptions[] = array("label" => "Kein MUX", "value" => 0);
+			$arrayOptions[] = array("label" => "TCA9548a Adr. 112/0x70", "value" => 1);
+			$arrayOptions[] = array("label" => "PCA9542 Adr. 112/0x70", "value" => 2);
+			$arrayElements[] = array("type" => "Select", "name" => "MUX", "caption" => "MUX-Auswahl", "options" => $arrayOptions );
+		}
+		else {
+			$arrayElements[] = array("type" => "Label", "label" => "Es wurde kein MUX gefunden.");
+		}
 		$arrayOptions = array();
 		$arrayElements[] = array("type" => "Label", "label" => "Nutzung der I²C-Schnittstelle 0:");
 		$arrayOptions[] = array("label" => "Nein", "value" => 0);
 		$arrayOptions[] = array("label" => "Ja", "value" => 1);
 		$arrayElements[] = array("type" => "Select", "name" => "I2C0", "caption" => "I²C 0", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "Kein DS2482", "value" => 0);
-		$arrayOptions[] = array("label" => "DS2482 Adr. 24/0x18", "value" => 1);
-		$arrayElements[] = array("type" => "Select", "name" => "OW", "caption" => "1-Wire Auswahl", "options" => $arrayOptions );
+		If (($this->ConnectionTest()) AND ($this->SearchSpecialI2CDevices(24) == true))  {
+			$arrayOptions = array();
+			$arrayOptions[] = array("label" => "Kein DS2482", "value" => 0);
+			$arrayOptions[] = array("label" => "DS2482 Adr. 24/0x18", "value" => 1);
+			$arrayElements[] = array("type" => "Select", "name" => "OW", "caption" => "1-Wire Auswahl", "options" => $arrayOptions );
+		}
+		else {
+			$arrayElements[] = array("type" => "Label", "label" => "Es wurde kein DS2482 gefunden.");
+		}
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Analyse der Raspberry Pi Konfiguration:");
 		$arraySort = array();
@@ -2552,16 +2563,8 @@ class IPS2GPIO_IO extends IPSModule
 
 	private function SearchSpecialI2CDevices(Int $DeviceAddress)
 	{
-		$ResponseText = "";
-		$DeviceName = Array();
-		
-		// DS2482
-		$DeviceName[24] = "DS2482";
-		// MUX
-		$DeviceName[112] = "MUX";
-				
+		$Response = false;		
 		$this->SetBuffer("I2CSearch", 1);
-		
 		
 		// Handle ermitteln
 		$Handle = $this->CommandClientSocket(pack("L*", 54, 1, $DeviceAddress, 4, 0), 16);
@@ -2572,19 +2575,17 @@ class IPS2GPIO_IO extends IPSModule
 			$Result = $this->CommandClientSocket(pack("L*", 59, $Handle, 0, 0), 16);
 
 			If ($Result >= 0) {
-				$this->SendDebug("SearchSpecialI2CDevices", "Device gefunden auf Bus: ".$j." Adresse: ".$SearchArray[$i]." Ergebnis des Test-Lesen: ".$Result, 0);
-				$ResponseText = "Ein ".$DeviceName[$DeviceAddress]." ist auf Bus 1 vorhanden.";
-				//IPS_LogMessage("GeCoS_IO I2C-Suche","Ergebnis: ".$DeviceName[$i]." DeviceAddresse: ".$SearchArray[$i]." an Bus: ".($j - 4));
+				$this->SendDebug("SearchSpecialI2CDevices", "Device gefunden auf Bus: 1 Adresse: ".$DeviceAddress." Ergebnis des Test-Lesen: ".$Result, 0);
+				$Response = true;
 			}
 			else {
-				$ResponseText = "Ein ".$DeviceName[$DeviceAddress]." ist auf Bus 1 nicht vorhanden.";
+				$Response = false;
 			}
 			// Handle löschen
 			$Result = $this->CommandClientSocket(pack("L*", 55, $Handle, 0, 0), 16);
 		}
-
 		$this->SetBuffer("I2CSearch", 0);
-	return serialize($DeviceArray);
+	return $Response;
 	}
 	
   	private function GetErrorText(Int $ErrorNumber)
