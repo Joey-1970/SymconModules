@@ -523,6 +523,12 @@ class IPS2GPIO_IO extends IPSModule
 		// I2C Kommunikation
 		case "set_used_i2c":
 			If ($this->GetBuffer("ModuleReady") == 1) {
+				$DevicePorts = array();
+				$DevicePorts[0] = "I²C-Bus 0";
+				$DevicePorts[1] = "I²C-Bus 1";
+				for ($i = 3; $i <= 10; $i++) {
+					$DevicePorts[$i] = "MUX I²C-Bus ".($i - 3);
+				}
 				// Konfiguration für I²C Bus 0 - GPIO 28/29 an P5
 				If (($this->GetBuffer("I2C_0_Configured") == 0) AND (intval($data->DeviceBus) == 0)) {
 					$PinUsed = array();
@@ -562,7 +568,7 @@ class IPS2GPIO_IO extends IPSModule
 				// Handle ermitteln
 				$DeviceBus = min(1, intval($data->DeviceBus));
 				$Handle = $this->CommandClientSocket(pack("L*", 54, $DeviceBus, intval($data->DeviceAddress), 4, 0), 16);	
-				$this->SendDebug("Set Used I2C", "Handle fuer Device-Adresse ".$data->DeviceAddress." an Bus ".($data->DeviceBus).": ".$Handle, 0);
+				$this->SendDebug("Set Used I2C", "Handle fuer Device-Adresse ".$data->DeviceAddress." an Bus ".$DevicePorts[intval($data->DeviceBus)].": ".$Handle, 0);
 				$I2C_DeviceHandle[($data->DeviceBus << 7) + $data->DeviceAddress] = $Handle;
 				// genutzte Device-Ident mit Handle sichern
 				$this->SetBuffer("I2C_Handle", serialize($I2C_DeviceHandle));	
