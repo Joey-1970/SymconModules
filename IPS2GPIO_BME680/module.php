@@ -38,6 +38,8 @@
 		$this->RegisterPropertyInteger("HeaterTemp", 320);
 		$this->RegisterPropertyInteger("HeaterDur", 150);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GBME680_Measurement($_IPS["TARGET"]);');
+		$CalibrateData = array();
+		$this->SetBuffer("CalibrateData", serialize($CalibrateData));
         }
 	
 	public function GetConfigurationForm() 
