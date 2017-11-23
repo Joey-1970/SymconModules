@@ -34,6 +34,10 @@
 		$this->RegisterPropertyInteger("Temperature_ID", 0);
 		$this->RegisterPropertyInteger("Humidity_ID", 0);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GBME_Measurement($_IPS["TARGET"]);');
+		$CalibrateData = array();
+		$this->SetBuffer("CalibrateData", serialize($CalibrateData));
+		$MeasurementData = array();
+		$this->SetBuffer("MeasurementData", serialize($MeasurementData));
         }
 	
 	public function GetConfigurationForm() 
