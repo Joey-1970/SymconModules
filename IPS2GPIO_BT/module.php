@@ -152,14 +152,15 @@
 			
 			If (is_array(unserialize($Result)) ) { 
 				$ResultArray = unserialize($Result);
-				$this->SetBuffer("Summary", false);
+				$this->SetBuffer("Summary", 0);
 				for ($i = 0; $i < Count($ResultArray); $i++) {
 					//IPS_LogMessage("IPS2GPIO BT-Connect", $ResultArray[key($ResultArray)] );
 					If (trim($ResultArray[key($ResultArray)]) <> trim("Device is not available.")) {
 						SetValueString($this->GetIDForIdent("MAC".key($ResultArray)."Name"), trim($ResultArray[key($ResultArray)]));
+						$this->SendDebug("Measurement", "Antwort -".trim($ResultArray[key($ResultArray)])."-", 0);
 						if (strlen(trim($ResultArray[key($ResultArray)])) > 0) {
 							SetValueBoolean($this->GetIDForIdent("MAC".key($ResultArray)."Connect"), true);
-							$this->SetBuffer("Summary", true);
+							$this->SetBuffer("Summary", 1);
 						}
 						else {
 							SetValueBoolean($this->GetIDForIdent("MAC".key($ResultArray)."Connect"), false);
@@ -172,7 +173,7 @@
 					}
 
 				}
-				If (GetValueBoolean($this->GetIDForIdent("Summary")) <> $this->GetBuffer("Summary")) {
+				If (GetValueBoolean($this->GetIDForIdent("Summary")) <> boolval($this->GetBuffer("Summary"))) {
 					SetValueBoolean($this->GetIDForIdent("Summary"), $this->GetBuffer("Summary"));
 				}
 			}
