@@ -155,9 +155,9 @@
 				$this->SetBuffer("Summary", false);
 				for ($i = 0; $i < Count($ResultArray); $i++) {
 					//IPS_LogMessage("IPS2GPIO BT-Connect", $ResultArray[key($ResultArray)] );
-					If ($ResultArray[key($ResultArray)] <> trim("Device is not available.")) {
-						SetValueString($this->GetIDForIdent("MAC".key($ResultArray)."Name"), $ResultArray[key($ResultArray)]);
-						if (strlen($ResultArray[key($ResultArray)]) > 0) {
+					If (trim($ResultArray[key($ResultArray)]) <> trim("Device is not available.")) {
+						SetValueString($this->GetIDForIdent("MAC".key($ResultArray)."Name"), trim($ResultArray[key($ResultArray)]));
+						if (strlen(trim($ResultArray[key($ResultArray)])) > 0) {
 							SetValueBoolean($this->GetIDForIdent("MAC".key($ResultArray)."Connect"), true);
 							$this->SetBuffer("Summary", true);
 						}
