@@ -12,6 +12,7 @@
  	    	$this->RegisterPropertyInteger("DeviceAddress", 3);
 		$this->RegisterPropertyInteger("DeviceBus", 1);	
 		$this->RegisterPropertyInteger("Pin", -1);
+		$this->SetBuffer("PreviousPin", -1);
 		$this->RegisterPropertyInteger("MinNumLigh", 0);
 		$this->RegisterPropertyInteger("NoiseFloorLevel", 2);
 		$this->RegisterPropertyInteger("MaskDisturber", 0);
@@ -149,6 +150,10 @@
         {
             	// Diese Zeile nicht löschen
             	parent::ApplyChanges();
+		
+		If (intval($this->GetBuffer("PreviousPin")) <> $this->ReadPropertyInteger("Pin")) {
+			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin"), 0);
+		}
 		// Device Adresse prüfen
 	    	If (($this->ReadPropertyInteger("DeviceAddress") < 0) OR ($this->ReadPropertyInteger("DeviceAddress") > 128)) {
 	    		IPS_LogMessage("IPS2GPIO MCP3424","I2C-Device Adresse in einem nicht definierten Bereich!");  
@@ -192,8 +197,8 @@
 				$ResultI2C = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 								
 				$ResultPin = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
-									  "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 5, "Resistance" => 0)));
-				
+									  "Pin" => $this->ReadPropertyInteger("Pin"), "PreviousPin" => $this->GetBuffer("PreviousPin"), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 5, "Resistance" => 0)));
+				$this->SetBuffer("PreviousPin", $this->ReadPropertyInteger("Pin"));
 				If (($ResultI2C == true) AND ($ResultPin == true)) {
 					// Erste Messdaten einlesen
 					$this->Setup();
