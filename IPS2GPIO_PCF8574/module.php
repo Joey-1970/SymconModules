@@ -19,6 +19,7 @@
 		$this->RegisterPropertyInteger("DeviceAddress", 32);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
 		$this->RegisterPropertyInteger("Pin", -1);
+		$this->SetBuffer("PreviousPin", -1);
  	    	$this->RegisterPropertyBoolean("P0", false);
  	    	$this->RegisterPropertyBoolean("P1", false);
  	    	$this->RegisterPropertyBoolean("P2", false);
@@ -119,6 +120,9 @@
         {
             	// Diese Zeile nicht löschen
             	parent::ApplyChanges();
+		If (intval($this->GetBuffer("PreviousPin")) <> $this->ReadPropertyInteger("Pin")) {
+			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin"), 0);
+		}
  
 		// Device Adresse prüfen
 	    	If (($this->ReadPropertyInteger("DeviceAddress") < 0) OR ($this->ReadPropertyInteger("DeviceAddress") > 128)) {
@@ -186,9 +190,9 @@
 			If ($this->ReadPropertyBoolean("Open") == true) {
 				If ($this->ReadPropertyInteger("Pin") >= 0) {
 					$ResultPin = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
-										  "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 5, "Resistance" => 0)));	
+										  "Pin" => $this->ReadPropertyInteger("Pin"), "PreviousPin" => $this->GetBuffer("PreviousPin"), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 5, "Resistance" => 0)));	
 				}
-				
+				$this->SetBuffer("PreviousPin", $this->ReadPropertyInteger("Pin"));
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 				If ($Result == true) {
 					If ($SetTimer == true) {
