@@ -17,8 +17,10 @@
             	$this->RegisterPropertyBoolean("Open", false);
 		// Pin Echo
 		$this->RegisterPropertyInteger("Pin_I", -1);
+		$this->SetBuffer("PreviousPin_I", -1);
 		// Pin Trigger
 		$this->RegisterPropertyInteger("Pin_O", -1);
+		$this->SetBuffer("PreviousPin_O", -1);
 		$this->RegisterPropertyInteger("PUL", 0);
 		$this->RegisterPropertyInteger("Messzyklus", 5);
 		$this->RegisterPropertyBoolean("Logging", false);
@@ -95,8 +97,12 @@
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
         {
-	            // Diese Zeile nicht löschen
-	            parent::ApplyChanges();
+	        // Diese Zeile nicht löschen
+	        parent::ApplyChanges();
+		If (intval($this->GetBuffer("PreviousPin_I")) <> $this->ReadPropertyInteger("Pin_I")) OR (intval($this->GetBuffer("PreviousPin_O")) <> $this->ReadPropertyInteger("Pin_O")){
+			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_I")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_I"), 0);
+			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_O")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_O"), 0);
+		}
 
 		    // Profil anlegen
 		    $this->RegisterProfileFloat("IPS2GPIO.cm", "Distance", "", " cm", 0, 1000, 0.1, 1);
@@ -115,11 +121,13 @@
 			
 		    If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 				If (($this->ReadPropertyInteger("Pin_I") >= 0) AND ($this->ReadPropertyInteger("Pin_O") >= 0) AND ($this->ReadPropertyBoolean("Open") == true) ) {
-					  $Result_I = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
-										    "Pin" => $this->ReadPropertyInteger("Pin_I"), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 0, "Resistance" => $this->ReadPropertyInteger("PUL"))));
-					  $Result_O = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
-										    "Pin" => $this->ReadPropertyInteger("Pin_O"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
-					  $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_O"), "Value" => 0)));
+					$Result_I = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+										    "Pin" => $this->ReadPropertyInteger("Pin_I"), "PreviousPin" => $this->GetBuffer("PreviousPin_I"), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 0, "Resistance" => $this->ReadPropertyInteger("PUL"))));
+					$Result_O = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+										    "Pin" => $this->ReadPropertyInteger("Pin_O"), "PreviousPin" => $this->GetBuffer("PreviousPin_O"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+					$this->SetBuffer("PreviousPin_I", $this->ReadPropertyInteger("Pin_I"));
+					$this->SetBuffer("PreviousPin_O", $this->ReadPropertyInteger("Pin_O"));
+					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_O"), "Value" => 0)));
 
 					If (($Result_I == true) AND ($Result_O == true)) {   
 						$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
