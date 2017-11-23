@@ -5,11 +5,12 @@
         // Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
-		 // Diese Zeile nicht löschen.
-		 parent::Create();
-		 $this->RegisterPropertyBoolean("Open", false);
-		 $this->RegisterPropertyInteger("Pin", -1);
-		 $this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+		// Diese Zeile nicht löschen.
+		parent::Create();
+		$this->RegisterPropertyBoolean("Open", false);
+		$this->RegisterPropertyInteger("Pin", -1);
+		$this->SetBuffer("PreviousPin", -1);
+		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
 	
 	
@@ -60,6 +61,8 @@
         {
 	        // Diese Zeile nicht löschen
 	        parent::ApplyChanges();
+		
+		$this->SendDebug("ApplyChanges", "Vorheriger Pin: ".$this->GetBuffer("PreviousPin")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin"), 0);
 
 		//Status-Variablen anlegen
 		$this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
@@ -75,6 +78,7 @@
 			If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
 									  "Pin" => $this->ReadPropertyInteger("Pin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+				$this->SetBuffer("PreviousPin", $this->ReadPropertyInteger("Pin"));
 				If ($Result == true) {
 					$this->SetStatus(102);
 				}
