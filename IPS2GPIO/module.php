@@ -524,10 +524,10 @@ class IPS2GPIO_IO extends IPSModule
 		case "set_used_i2c":
 			If ($this->GetBuffer("ModuleReady") == 1) {
 				$DevicePorts = array();
-				$DevicePorts[0] = "I²C-Bus 0";
-				$DevicePorts[1] = "I²C-Bus 1";
+				$DevicePorts[0] = "I2C-Bus 0";
+				$DevicePorts[1] = "I2C-Bus 1";
 				for ($i = 3; $i <= 10; $i++) {
-					$DevicePorts[$i] = "MUX I²C-Bus ".($i - 3);
+					$DevicePorts[$i] = "MUX I2C-Bus ".($i - 3);
 				}
 				// Konfiguration für I²C Bus 0 - GPIO 28/29 an P5
 				If (($this->GetBuffer("I2C_0_Configured") == 0) AND (intval($data->DeviceBus) == 0)) {
@@ -2184,10 +2184,10 @@ class IPS2GPIO_IO extends IPSModule
 	{
 		$Success = false;
 		$DevicePorts = array();
-		$DevicePorts[0] = "I²C-Bus 0";
-		$DevicePorts[1] = "I²C-Bus 1";
+		$DevicePorts[0] = "I2C-Bus 0";
+		$DevicePorts[1] = "I2C-Bus 1";
 		for ($i = 3; $i <= 10; $i++) {
-			$DevicePorts[$i] = "MUX I²C-Bus ".($i - 3);
+			$DevicePorts[$i] = "MUX I2C-Bus ".($i - 3);
 		}
 		// PCA9542
 		// 0 = No Channel selected
