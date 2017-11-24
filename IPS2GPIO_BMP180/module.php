@@ -238,32 +238,18 @@
 					$Pres_raw = 0;
 					
 					// Temperatur
+					$Temp = 0;
 					$X1 = ($Temp_raw - $AC6) * $AC5 / pow(2, 15);
 					$X2 = $MC * pow(2, 11) / ($X1 + $MD);
-					
-					
+					$B5 = $X1 + $X2;
+					$Temp = ($B5 + 8) / pow(2, 4);
 					SetValueFloat($this->GetIDForIdent("Temperature"), round($Temp, 2));
 					
 					// Luftdruck
-					$Pressure = 0;
-					$var1 = ($FineCalibrate / 2) - 64000;
-					$var2 = $var1 * $var1 * ($Dig_P[5]) / 32768;
-					$var2 = $var2 + $var1 * ($Dig_P[4]) * 2;
-					$var2 = ($var2 / 4) + (($Dig_P[3]) * 65536);
-					$var3 = ($Dig_P[2]) * $var1 * $var1 / 524288;
-					$var1 = ($var3 + ($Dig_P[1]) * $var1) / 524288;
-					$var1 = (1 + $var1 / 32768.0) * ($Dig_P[0]);
-					// avoid exception caused by division by zero
-					if ($var1) {
-						$Pressure = 1048576 - $Pres_raw;
-						$Pressure = ($Pressure - ($var2 / 4096)) * 6250 / $var1;
-						$var1 = ($Dig_P[8]) * $Pressure * $Pressure / 2147483648;
-						$var2 = $Pressure * ($Dig_P[7]) / 32768;
-						$Pressure = $Pressure + ($var1 + $var2 + ($Dig_P[6])) / 16;
-						$Pressure = min(110000, max(30000, $Pressure));
-					} else { /* Invalid case */
-						$Pressure = 30000;
-					}
+					$B6 = $B5 - 4000;
+					$X1 = ($B2 * ($B6 * $B6 / pow(2, 12) )) / pow(2, 11);
+					$X2 = $AC2 * $B6 / pow(2, 11);
+					
 					SetValueFloat($this->GetIDForIdent("Pressure"), round($Pressure / 100, 2));
 					
 					// Luftdruck Trends
