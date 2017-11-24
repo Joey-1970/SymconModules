@@ -730,7 +730,25 @@ class IPS2GPIO_IO extends IPSModule
 				$this->SetI2CBus(intval($data->DeviceIdent));
 		   		$Result = $this->CommandClientSocket(pack("L*", 63, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 0), 16);
 		   	}
-		   	break; 
+		   	break;
+		case "i2c_BMP180_write":
+		   	If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
+				$this->SetI2CBus(intval($data->DeviceIdent));
+		   		$Result = $this->CommandClientSocket(pack("L*", 62, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 4, $data->Value), 16);
+		   	}
+		   	break;
+		case "i2c_BMP180_read":
+		   	If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
+				$this->SetI2CBus(intval($data->DeviceIdent));
+		   		$Result = $this->CommandClientSocket(pack("L*", 61, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 0), 16);
+		   	}
+		   	break;
+		case "i2c_BMP180_read_block":
+		   	If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
+				$this->SetI2CBus(intval($data->DeviceIdent));
+		   		$Result = $this->CommandClientSocket(pack("L*", 67, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 4, $data->Count), 16 + ($data->Count));
+		   	}
+			break;
 		case "i2c_BME280_write":
 		   	If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
 				$this->SetI2CBus(intval($data->DeviceIdent));
@@ -2517,10 +2535,12 @@ class IPS2GPIO_IO extends IPSModule
 			$DeviceName[] = "MCP3424";
 		}
 		// BME280+BME680
-		for ($i = 118; $i <= 119; $i++) {
-			$SearchArray[] = $i;
-			$DeviceName[] = "BME280/680";
-		}					
+		$SearchArray[] = 118;
+		$DeviceName[] = "BME280/680";
+		// BME280+BME680+BmP180
+		$SearchArray[] = 119;
+		$DeviceName[] = "BME280/680/BMP180";
+						
 		// Start der Suche markieren
 		$this->SetBuffer("I2CSearch", 1);
 		
@@ -2607,6 +2627,9 @@ class IPS2GPIO_IO extends IPSModule
 				}
 				elseif ($Result == 97) {
 					$DeviceName = "BME680";
+				}
+				elseif ($Result == 85) {
+					$DeviceName = "BMP180";
 				}
 			}
 		}
