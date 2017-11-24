@@ -2368,7 +2368,7 @@ class IPS2GPIO_IO extends IPSModule
 			if ($login == false)
 			{
 			    	$this->SendDebug("CheckConfig", "Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert nicht!", 0);
-				IPS_LogMessage("IPS2GPIO_IO CheckConfig","Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert nicht!");
+				IPS_LogMessage("IPS2GPIO CheckConfig","Angegebene IP ".$this->ReadPropertyString("IPAddress")." reagiert nicht!");
 			    	$Result = "";
 				return serialize($arrayCheckConfig);
 			}
@@ -2378,7 +2378,7 @@ class IPS2GPIO_IO extends IPSModule
 			// Prüfen, ob die Datei existiert
 			if (!$sftp->file_exists($PathConfig)) {
 				$this->SendDebug("CheckConfig", $PathConfig." nicht gefunden!", 0);
-				IPS_LogMessage("IPS2GPIO_IO CheckConfig", $PathConfig." nicht gefunden!");
+				IPS_LogMessage("IPS2GPIO CheckConfig", $PathConfig." nicht gefunden!");
 			}
 			else {
 				$FileContentConfig = $sftp->get($PathConfig);
@@ -2390,7 +2390,7 @@ class IPS2GPIO_IO extends IPSModule
 					$arrayCheckConfig["I2C"]["Color"] = "#00FF00";
 				} else {
 					$this->SendDebug("CheckConfig", "I2C ist deaktiviert!", 0);
-					IPS_LogMessage("IPS2GPIO_IO CheckConfig", "I2C ist deaktiviert!");
+					IPS_LogMessage("IPS2GPIO CheckConfig", "I2C ist deaktiviert!");
 					$arrayCheckConfig["I2C"]["Status"] = "deaktiviert";
 					$arrayCheckConfig["I2C"]["Color"] = "#FF0000";
 				}
@@ -2402,21 +2402,21 @@ class IPS2GPIO_IO extends IPSModule
 					$arrayCheckConfig["1-Wire-Server"]["Color"] = "#00FF00";			
 				} else {
 					$this->SendDebug("CheckConfig", "1-Wire-Server ist deaktiviert!", 0);
-					IPS_LogMessage("IPS2GPIO_IO CheckConfig", "1-Wire-Server ist deaktiviert!");
+					IPS_LogMessage("IPS2GPIO CheckConfig", "1-Wire-Server ist deaktiviert!");
 					$arrayCheckConfig["1-Wire-Server"]["Status"] = "deaktiviert";
 					$arrayCheckConfig["1-Wire-Server"]["Color"] = "#FF0000";
 				}
 				// Prüfen ob die serielle Schnittstelle aktiviert ist
 				$Pattern = "/(?:\r\n|\n|\r)(\s*)(enable_uart)(=(on|true|yes|1))(\s*)($:\r\n|\n|\r)/";
 				if (preg_match($Pattern, $FileContentConfig)) {
-					$this->SendDebug("CheckConfig", "Serielle Schnittstelle ist aktiviert", 0);
+					$this->SendDebug("CheckConfig", "Serielle Schnittstelle ist aktiviert!", 0);
+					IPS_LogMessage("IPS2GPIO CheckConfig", "Serielle Schnittstelle ist aktiviert!");
 					$arrayCheckConfig["Serielle Schnittstelle"]["Status"] = "aktiviert";
-					$arrayCheckConfig["Serielle Schnittstelle"]["Color"] = "#00FF00";			
+					$arrayCheckConfig["Serielle Schnittstelle"]["Color"] = "#FF0000";			
 				} else {
 					$this->SendDebug("CheckConfig", "Serielle Schnittstelle ist deaktiviert!", 0);
-					IPS_LogMessage("IPS2GPIO_IO CheckConfig", "Serielle Schnittstelle ist deaktiviert!");
 					$arrayCheckConfig["Serielle Schnittstelle"]["Status"] = "deaktiviert";
-					$arrayCheckConfig["Serielle Schnittstelle"]["Color"] = "#FF0000";
+					$arrayCheckConfig["Serielle Schnittstelle"]["Color"] = "#00FF00";
 				}
 				
 			}
@@ -2426,7 +2426,7 @@ class IPS2GPIO_IO extends IPSModule
 			// Prüfen, ob die Datei existiert
 			if (!$sftp->file_exists($PathCmdline)) {
 				$this->SendDebug("CheckConfig", $PathCmdline." nicht gefunden!", 0);
-				IPS_LogMessage("GeCoS_IO CheckConfig", $PathCmdline." nicht gefunden!");
+				IPS_LogMessage("IPS2GPIO CheckConfig", $PathCmdline." nicht gefunden!");
 			}
 			else {
 				$FileContentCmdline = $sftp->get($PathCmdline);
@@ -2438,7 +2438,7 @@ class IPS2GPIO_IO extends IPSModule
 					$arrayCheckConfig["Shell Zugriff"]["Color"] = "#00FF00";
 				} else {
 					$this->SendDebug("CheckConfig", "Shell-Zugriff auf serieller Schnittstelle ist aktiviert!", 0);
-					IPS_LogMessage("GeCoS_IO CheckConfig", "Shell-Zugriff auf serieller Schnittstelle ist aktiviert!");
+					IPS_LogMessage("IPS2GPIO CheckConfig", "Shell-Zugriff auf serieller Schnittstelle ist aktiviert!");
 					$arrayCheckConfig["Shell Zugriff"]["Status"] = "aktiviert";
 					$arrayCheckConfig["Shell Zugriff"]["Color"] = "#FF0000";
 				}
@@ -2454,7 +2454,7 @@ class IPS2GPIO_IO extends IPSModule
 			}
 			else {
 				$this->SendDebug("CheckConfig", "PIGPIO-Server ist deaktiviert!", 0);
-				IPS_LogMessage("GeCoS_IO CheckConfig", "PIGPIO-Server ist deaktiviert!");
+				IPS_LogMessage("IPS2GPIO CheckConfig", "PIGPIO-Server ist deaktiviert!");
 				$arrayCheckConfig["PIGPIO Server"]["Status"] = "deaktiviert";
 				$arrayCheckConfig["PIGPIO Server"]["Color"] = "#FF0000";
 			}
