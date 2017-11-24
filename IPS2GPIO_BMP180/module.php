@@ -232,10 +232,10 @@
 				$this->SendDebug("Measurement", "MeasurementData: ".count($MeasurementData), 0);
 				If (count($MeasurementData) == 8) {
 					// Roh-Temperatur einlesen
-					$Temp_raw = 0;
+					$Temp_raw = $this->ReadTemperatureData();
 					
 					// Roh-Luftdruck einlesen
-					$Pres_raw = 0;
+					$Pres_raw = $this->ReadPressureData();
 					
 					// Temperatur
 					$Temp = 0;
@@ -246,6 +246,7 @@
 					SetValueFloat($this->GetIDForIdent("Temperature"), round($Temp, 2));
 					
 					// Luftdruck
+					$Pressure = 0;
 					$osrs_p = $this->ReadPropertyInteger("OSRS_P");
 					$B6 = $B5 - 4000;
 					$X1 = ($B2 * ($B6 * $B6 / pow(2, 12) )) / pow(2, 11);
@@ -290,28 +291,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Setup", "Ausfuehrung", 0);
-			/*
 			
-			$osrs_p = $this->ReadPropertyInteger("OSRS_P"); // Oversampling Measure pressure x1, x2, x4, x8 (dec: 0 (off), 1, 2, 3)
-			$ctrl_meas_reg = (($osrs_t << 5)|($osrs_p << 2)|$mode);
-			$config_reg = (($t_sb << 5)|($filter << 2)|$spi3w_en);
-			$ctrl_hum_reg = $osrs_h;
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F2"), "Value" => $ctrl_hum_reg)));
-			If (!$Result) {
-				$this->SendDebug("Setup", "ctrl_hum_reg setzen fehlerhaft!", 0);
-				return;
-			}
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F4"), "Value" => $ctrl_meas_reg)));
-			If (!$Result) {
-				$this->SendDebug("Setup", "ctrl_meas_reg setzen fehlerhaft!", 0);
-				return;
-			}
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F5"), "Value" => $config_reg)));
-			If (!$Result) {
-				$this->SendDebug("Setup", "config_reg setzen fehlerhaft!", 0);
-				return;
-			}
-			*/
 			// Lesen der ChipID
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("D0"))));
 				If ($Result < 0) {
@@ -354,7 +334,7 @@
 			$this->SendDebug("ReadTemperaturData", "Ausfuehrung", 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F4"), "Value" => hexdec("2E"))));
 			If (!$Result) {
-				$this->SendDebug("Setup", "Abfrage der Roh-Temperatur fehlerhaft", 0);
+				$this->SendDebug("ReadTemperatureData", "Abfrage der Roh-Temperatur fehlerhaft", 0);
 				return 0;
 			}
 			IPS_Sleep(5);
@@ -366,13 +346,44 @@
 			else {
 				If (is_array(unserialize($Result)) == true) {
 					$this->SendDebug("ReadTemperaturData", "Ergebnis: ".$Result, 0);
-					//$Temp_raw =  ($CalibrateData[2] << 8) | $CalibrateData[1];
-					//return $Temp_raw;
+					$MeasurementData = array();
+					$MeasurementData = unserialize($Result);
+					$Temp_raw =  ($MeasurementData[2] << 8) | $MeasurementData[1];
+					return $Temp_raw;
 				}
 			}
 		}	
 	}
 	
+	private function ReadPressureData()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			// Liest die Messdaten ein
+			$osrs_p = $this->ReadPropertyInteger("OSRS_P");
+			$this->SendDebug("ReadTemperaturData", "Ausfuehrung", 0);
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F4"), "Value" => (hexdec("34") << $osrs_p) )));
+			If (!$Result) {
+				$this->SendDebug("ReadPressureData", "Abfrage des Roh-Luftdrucks fehlerhaft", 0);
+				return 0;
+			}
+			IPS_Sleep(5);
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BMP180_read_block", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F6"), "Count" => 3)));
+			If ($Result < 0) {
+				$this->SendDebug("ReadPressureData", "Fehler bei der Datenermittung", 0);
+				return 0;
+			}
+			else {
+				If (is_array(unserialize($Result)) == true) {
+					$this->SendDebug("ReadPressureData", "Ergebnis: ".$Result, 0);
+					$MeasurementData = array();
+					$MeasurementData = unserialize($Result);
+					$Pres_raw = ($MeasurementData[3] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[1];
+					return $Pres_raw;
+				}
+			}
+		}	
+	}			       
+					       
 	private function SoftReset()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
