@@ -12,7 +12,7 @@
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
-            	// https://github.com/BoschSensortec/BME280_driver
+            	// https://github.com/BoschSensortec/BMP180_driver
 		
 		// Diese Zeile nicht löschen.
             	parent::Create();
@@ -209,29 +209,20 @@
 			}
 			$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
 			$this->SendDebug("Measurement", "CalibrateData: ".count($CalibrateData), 0);
-			If (count($CalibrateData) == 32)  {
+			If (count($CalibrateData) == 22)  {
 				$this->ReadData();
 				// Kalibrierungsdatan aufbereiten
-				$Dig_T[0] = (($CalibrateData[137] << 8) | $CalibrateData[136]);
-				$Dig_T[1] = $this->bin16dec(($CalibrateData[139] << 8) | $CalibrateData[138]);
-				$Dig_T[2] = $this->bin16dec(($CalibrateData[141] << 8) | $CalibrateData[140]);
+				$AC1 =  $this->bin16dec(($CalibrateData[170] << 8) | $CalibrateData[171]);
+				$AC2 =  $this->bin16dec(($CalibrateData[172] << 8) | $CalibrateData[173]);
+				$AC3 =  $this->bin16dec(($CalibrateData[174] << 8) | $CalibrateData[175]);
+				$AC4 =  ($CalibrateData[176] << 8) | $CalibrateData[177];
+				$AC5 =  ($CalibrateData[178] << 8) | $CalibrateData[179];
+				$AC6 =  ($CalibrateData[180] << 8) | $CalibrateData[181];
 				
-				$Dig_P[0] = (($CalibrateData[143] << 8) | $CalibrateData[142]);
-				$Dig_P[1] = $this->bin16dec(($CalibrateData[145] << 8) | $CalibrateData[144]);
-				$Dig_P[2] = $this->bin16dec(($CalibrateData[147] << 8) | $CalibrateData[146]);
-				$Dig_P[3] = $this->bin16dec(($CalibrateData[149] << 8) | $CalibrateData[148]);
-				$Dig_P[4] = $this->bin16dec(($CalibrateData[151] << 8) | $CalibrateData[150]);
-				$Dig_P[5] = $this->bin16dec(($CalibrateData[153] << 8) | $CalibrateData[152]);
-				$Dig_P[6] = $this->bin16dec(($CalibrateData[155] << 8) | $CalibrateData[154]);
-				$Dig_P[7] = $this->bin16dec(($CalibrateData[157] << 8) | $CalibrateData[156]);
-				$Dig_P[8] = $this->bin16dec(($CalibrateData[159] << 8) | $CalibrateData[158]);
-			
-				$Dig_H[0] = $CalibrateData[161];
-				$Dig_H[1] = $this->bin16dec(($CalibrateData[226] << 8) | $CalibrateData[225]);
-				$Dig_H[2] = $CalibrateData[227];
-				$Dig_H[3] = $this->bin16dec(($CalibrateData[228] * 16) | (hexdec("0F") & $CalibrateData[229]));
-				$Dig_H[4] = $this->bin16dec(($CalibrateData[230] * 16) | (($CalibrateData[229] >> 4)));
-				$Dig_H[5] = $this->bin8dec($CalibrateData[231]);
+				$B1 =  $this->bin16dec(($CalibrateData[182] << 8) | $CalibrateData[183]);
+				$B2 =  $this->bin16dec(($CalibrateData[184] << 8) | $CalibrateData[185]);
+				
+				
 				
 				// Messwerte aufbereiten
 				$MeasurementData = array();
