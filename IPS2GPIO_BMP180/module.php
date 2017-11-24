@@ -347,22 +347,27 @@
 		}
 	}
 	
-	private function ReadData()
+	private function ReadTemperatureData()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Liest die Messdaten ein
-			$this->SendDebug("ReadData", "Ausfuehrung", 0);
-			
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BMP180_read_block", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F6"), "Count" => 3)));
+			$this->SendDebug("ReadTemperaturData", "Ausfuehrung", 0);
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F4"), "Value" => hexdec("2E"))));
+			If (!$Result) {
+				$this->SendDebug("Setup", "Abfrage der Roh-Temperatur fehlerhaft", 0);
+				return 0;
+			}
+			IPS_Sleep(5);
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BMP180_read_block", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F6"), "Count" => 2)));
 			If ($Result < 0) {
-				$MeasurementData = array();
-				$this->SetBuffer("MeasurementData", serialize($MeasurementData));
-				$this->SendDebug("ReadData", "Fehler bei der Datenermittung", 0);
-				return;
+				$this->SendDebug("ReadTemperatureData", "Fehler bei der Datenermittung", 0);
+				return 0;
 			}
 			else {
 				If (is_array(unserialize($Result)) == true) {
-					$this->SetBuffer("MeasurementData", $Result);
+					$this->SendDebug("ReadTemperaturData", "Ergebnis: ".$Result, 0);
+					//$Temp_raw =  ($CalibrateData[2] << 8) | $CalibrateData[1];
+					//return $Temp_raw;
 				}
 			}
 		}	
