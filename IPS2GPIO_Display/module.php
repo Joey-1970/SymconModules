@@ -10,7 +10,9 @@
             	$this->RegisterPropertyBoolean("Open", false);
 	    	$this->RegisterPropertyInteger("Baud", 3);
 		$this->RegisterPropertyInteger("Pin_RxD", -1);
+		$this->SetBuffer("PreviousPin_RxD", -1);
 		$this->RegisterPropertyInteger("Pin_TxD", -1);
+		$this->SetBuffer("PreviousPin_TxD", -1);
             	$this->RegisterPropertyBoolean("DateTime", true);
             	$this->RegisterPropertyInteger("Brightness", 100);
             	$this->RegisterPropertyInteger("SleepNoSerial", 60);
@@ -103,6 +105,10 @@
         {
 	        // Diese Zeile nicht löschen
 	      	parent::ApplyChanges();
+		If (intval($this->GetBuffer("PreviousPin_RxD")) <> $this->ReadPropertyInteger("Pin_RxD")) OR (intval($this->GetBuffer("PreviousPin_TxD")) <> $this->ReadPropertyInteger("Pin_TxD")){
+			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_RxD")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_RxD"), 0);
+			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_TxD")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_TxD"), 0);
+		}
 	   
 		//Status-Variablen anlegen
 		$this->RegisterVariableInteger("Brightness", "Brightness", "~Intensity.100", 10);
@@ -190,6 +196,8 @@
 			//$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_handle_serial", "Baud" => 9600, "Device" => $this->ReadPropertyString('ConnectionString'), "InstanceID" => $this->InstanceID )));
 			If (($this->ReadPropertyInteger("Pin_RxD") >= 0) AND ($this->ReadPropertyInteger("Pin_TxD") >= 0) AND ($this->ReadPropertyBoolean("Open") == true) ) {
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "open_bb_serial_display", "Baud" => 9600, "Pin_RxD" => $this->ReadPropertyInteger("Pin_RxD"), "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "InstanceID" => $this->InstanceID )));
+				$this->SetBuffer("PreviousPin_RxD", $this->ReadPropertyInteger("Pin_RxD"));
+				$this->SetBuffer("PreviousPin_TxD", $this->ReadPropertyInteger("Pin_TxD"));
 				$this->Setup();
 				$this->SetStatus(102);
 			}
