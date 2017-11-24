@@ -337,6 +337,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Setup", "Ausfuehrung", 0);
+			/*
 			$osrs_t = $this->ReadPropertyInteger("OSRS_T"); // Oversampling Measure temperature x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
 			$osrs_p = $this->ReadPropertyInteger("OSRS_P"); // Oversampling Measure pressure x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
 			$osrs_h = $this->ReadPropertyInteger("OSRS_H"); // Oversampling Measure humidity x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
@@ -362,6 +363,7 @@
 				$this->SendDebug("Setup", "config_reg setzen fehlerhaft!", 0);
 				return;
 			}
+			*/
 			// Lesen der ChipID
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("D0"))));
 				If ($Result < 0) {
@@ -370,8 +372,8 @@
 				}
 				else {
 					SetValueInteger($this->GetIDForIdent("ChipID"), $Result);
-					If ($Result <> 96) {
-						$this->SendDebug("Setup", "Laut Chip ID ist es kein BME280!", 0);
+					If ($Result <> 85) {
+						$this->SendDebug("Setup", "Laut Chip ID ist es kein BMP180!", 0);
 					}
 				}
 		}
@@ -383,26 +385,8 @@
 			// Kalibrierungsdaten neu einlesen
 			$this->SendDebug("ReadCalibrateData", "Ausfuehrung", 0);
 			$CalibrateData = array();
-			for ($i = hexdec("88"); $i < (hexdec("88") + 24); $i++) {
-				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $i)));
-				If ($Result < 0) {
-					$this->SendDebug("ReadCalibrateData", "Fehler beim Einlesen der Kalibrierungsdaten bei Byte ".$i, 0);
-					return;
-				}
-				else {
-					$CalibrateData[$i] = $Result;
-				}
-			}
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("A1"))));
-			If ($Result < 0) {
-				$this->SendDebug("ReadCalibrateData", "Fehler beim Einlesen der Kalibrierungsdaten bei Byte 161", 0);
-				return;
-			}
-			else {
-				$CalibrateData[161] = $Result;
-			}
-			for ($i = hexdec("E1"); $i < (hexdec("E1") + 7); $i++) {
-				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $i)));
+			for ($i = hexdec("AA"); $i < (hexdec("AA") + 21); $i++) {
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BMP180_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $i)));
 				If ($Result < 0) {
 					$this->SendDebug("ReadCalibrateData", "Fehler beim Einlesen der Kalibrierungsdaten bei Byte ".$i, 0);
 					return;
@@ -443,7 +427,7 @@
 			$this->SendDebug("SoftReset", "Ausfuehrung", 0);
 			$reg_addr = hexdec("E0");
 			$soft_rst_cmd = hexdec("B6");
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $reg_addr, "Value" => $soft_rst_cmd)));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BMP180_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $reg_addr, "Value" => $soft_rst_cmd)));
 			If (!$Result) {
 				$this->SendDebug("SoftReset", "SoftReset fehlerhaft!", 0);
 				return;
