@@ -348,7 +348,19 @@ class IPS2GPIO_IO extends IPSModule
 				IPS_LogMessage("IPS2GPIO MessageSink", "Instanz ".$SenderID." wurde verbunden");
 				break;
 			case 11102:
-				IPS_LogMessage("IPS2GPIO MessageSink", "Instanz  ".$SenderID." wurde getrennt");
+				$this->SendDebug("MessageSink", "Instanz  ".$SenderID." wurde getrennt", 0);
+				//IPS_LogMessage("IPS2GPIO MessageSink", "Instanz  ".$SenderID." wurde getrennt");
+				// Prüfung für die Pin-Belegung
+				$PinUsed = array();
+				$PinUsed = unserialize($this->GetBuffer("PinUsed"));
+				foreach($PinUsed as $Pin => $InstanceID ){
+					If ($InstanceID == $SenderID) {
+						unset($PinUsed[$Pin]);
+						$this->SendDebug("MessageSink", "Pin ".$Pin." wurde freigegeben", 0);
+				    	}
+				}
+				$this->SetBuffer("PinUsed", serialize($PinUsed));
+				
 				break;	
 			case 10505:
 				If ($Data[0] == 102) {
