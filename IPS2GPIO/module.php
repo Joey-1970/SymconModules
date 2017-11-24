@@ -456,7 +456,12 @@ class IPS2GPIO_IO extends IPSModule
 							}	
 						}
 					}
+					// Genutzten Pin dem Array hinzufügen
 					$PinUsed[intval($data->Pin)] = $data->InstanceID;
+					// Prüfen ob ein Wechsel des Pins stattgefunden hat
+					If ((intval($data->Pin) <> intval($data->PreviousPin)) AND (intval($data->PreviousPin) > -1)) {
+						unset($PinUsed[intval($data->PreviousPin)]);
+					}
 					$this->SetBuffer("PinUsed", serialize($PinUsed));
 					// Messages einrichten
 					$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
