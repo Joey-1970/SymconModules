@@ -210,7 +210,6 @@
 			$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
 			$this->SendDebug("Measurement", "CalibrateData: ".count($CalibrateData), 0);
 			If (count($CalibrateData) == 22)  {
-				$this->ReadData();
 				// Kalibrierungsdatan aufbereiten
 				$AC1 =  $this->bin16dec(($CalibrateData[170] << 8) | $CalibrateData[171]);
 				$AC2 =  $this->bin16dec(($CalibrateData[172] << 8) | $CalibrateData[173]);
@@ -222,6 +221,9 @@
 				$B1 =  $this->bin16dec(($CalibrateData[182] << 8) | $CalibrateData[183]);
 				$B2 =  $this->bin16dec(($CalibrateData[184] << 8) | $CalibrateData[185]);
 				
+				$MB =  $this->bin16dec(($CalibrateData[186] << 8) | $CalibrateData[187]);
+				$MC =  $this->bin16dec(($CalibrateData[188] << 8) | $CalibrateData[189]);
+				$MD =  $this->bin16dec(($CalibrateData[190] << 8) | $CalibrateData[191]);
 				
 				
 				// Messwerte aufbereiten
@@ -229,16 +231,17 @@
 				$MeasurementData = unserialize($this->GetBuffer("MeasurementData"));
 				$this->SendDebug("Measurement", "MeasurementData: ".count($MeasurementData), 0);
 				If (count($MeasurementData) == 8) {
-					$Pres_raw = (($MeasurementData[1] << 12) | ($MeasurementData[2] << 4) | ($MeasurementData[3] >> 4));
-					$Temp_raw = (($MeasurementData[4] << 12) | ($MeasurementData[5] << 4) | ($MeasurementData[6] >> 4));
-					$Hum_raw =  (($MeasurementData[7] << 8) | $MeasurementData[8]);
-					$FineCalibrate = 0;
+					// Roh-Temperatur einlesen
+					$Temp_raw = 0;
+					
+					// Roh-Luftdruck einlesen
+					$Pres_raw = 0;
+					
 					// Temperatur
-					$Temp = 0;
-					$V1 = ($Temp_raw / 16384 - $Dig_T[0] / 1024) * $Dig_T[1];
-					$V2 = ($Temp_raw / 131072 - $Dig_T[0] / 8192) * ($Temp_raw / 131072 - $Dig_T[0] / 8192) * $Dig_T[2];
-					$FineCalibrate = $V1 + $V2;
-					$Temp = $FineCalibrate / 5120;
+					$X1 = ($Temp_raw - $AC6) * $AC5 / pow(2, 15);
+					$X2 = $MC * pow(2, 11) / ($X1 + $MD);
+					
+					
 					SetValueFloat($this->GetIDForIdent("Temperature"), round($Temp, 2));
 					
 					// Luftdruck
