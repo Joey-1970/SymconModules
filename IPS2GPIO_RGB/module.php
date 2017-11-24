@@ -9,8 +9,11 @@
             	parent::Create();
             	$this->RegisterPropertyBoolean("Open", false);
 		$this->RegisterPropertyInteger("Pin_R", -1);
+		$this->SetBuffer("PreviousPin_R", -1);
             	$this->RegisterPropertyInteger("Pin_G", -1);
+		$this->SetBuffer("PreviousPin_G", -1);
             	$this->RegisterPropertyInteger("Pin_B", -1);
+		$this->SetBuffer("PreviousPin_B", -1);
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 	}
 	    
@@ -87,6 +90,11 @@
         {
       		// Diese Zeile nicht löschen
       		parent::ApplyChanges();
+		If ((intval($this->GetBuffer("PreviousPin_R")) <> $this->ReadPropertyInteger("Pin_R")) OR (intval($this->GetBuffer("PreviousPin_G")) <> $this->ReadPropertyInteger("Pin_G")) OR (intval($this->GetBuffer("PreviousPin_B")) <> $this->ReadPropertyInteger("Pin_B"))) {
+			$this->SendDebug("ApplyChanges", "Pin-Wechsel R - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_R")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_R"), 0);
+			$this->SendDebug("ApplyChanges", "Pin-Wechsel G - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_G")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_G"), 0);
+			$this->SendDebug("ApplyChanges", "Pin-Wechsel B - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_B")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_B"), 0);
+		}
   	   
 	        //Status-Variablen anlegen
 	        $this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
@@ -106,9 +114,12 @@
 		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
 			If (($this->ReadPropertyInteger("Pin_R") >= 0) AND ($this->ReadPropertyInteger("Pin_G") >= 0) AND ($this->ReadPropertyInteger("Pin_B") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_R"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
-				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_G"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
-				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_B"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_R"), "PreviousPin" => $this->GetBuffer("PreviousPin_R"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_G"), "PreviousPin" => $this->GetBuffer("PreviousPin_G"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", "Pin" => $this->ReadPropertyInteger("Pin_B"), "PreviousPin" => $this->GetBuffer("PreviousPin_B"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+				$this->SetBuffer("PreviousPin_R", $this->ReadPropertyInteger("Pin_R"));
+				$this->SetBuffer("PreviousPin_G", $this->ReadPropertyInteger("Pin_G"));
+				$this->SetBuffer("PreviousPin_B", $this->ReadPropertyInteger("Pin_B"));
 				$this->SetStatus(102);
 			}
 			else {
