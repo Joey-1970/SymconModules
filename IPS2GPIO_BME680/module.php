@@ -310,7 +310,6 @@
 					$this->SendDebug("Setup", "Laut Chip ID ist es kein BME680!", 0);
 				}
 			}
-			$this->bme680_set_sensor_settings();
 		}
 	}
 	
