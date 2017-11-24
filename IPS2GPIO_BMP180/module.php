@@ -23,7 +23,7 @@
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
  	    	$this->RegisterPropertyBoolean("LoggingTemp", false);
  	    	$this->RegisterPropertyBoolean("LoggingPres", false);
- 	    	$this->RegisterPropertyInteger("OSRS_P", 1);
+ 	    	$this->RegisterPropertyInteger("OSRS_P", 0);
 		$this->RegisterPropertyInteger("Altitude", 0);
 		$this->RegisterPropertyInteger("Temperature_ID", 0);
 		$this->RegisterPropertyInteger("Humidity_ID", 0);
@@ -366,7 +366,8 @@
 				$this->SendDebug("ReadPressureData", "Abfrage des Roh-Luftdrucks fehlerhaft", 0);
 				return 0;
 			}
-			IPS_Sleep(5);
+			$WaitTime = array(5, 8, 14, 26);
+			IPS_Sleep($WaitTime[$osrs_p]);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BMP180_read_block", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F6"), "Count" => 3)));
 			If ($Result < 0) {
 				$this->SendDebug("ReadPressureData", "Fehler bei der Datenermittung", 0);
