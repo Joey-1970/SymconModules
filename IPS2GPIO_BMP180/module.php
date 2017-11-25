@@ -344,7 +344,7 @@
 					$this->SendDebug("ReadTemperaturData", "Ergebnis: ".$Result, 0);
 					$MeasurementData = array();
 					$MeasurementData = unserialize($Result);
-					$Temp_raw =  ($MeasurementData[2] << 8) | $MeasurementData[1];
+					$Temp_raw =  ($MeasurementData[1] << 8) | $MeasurementData[2];
 					return $Temp_raw;
 				}
 			}
@@ -374,7 +374,7 @@
 					$this->SendDebug("ReadPressureData", "Ergebnis: ".$Result, 0);
 					$MeasurementData = array();
 					$MeasurementData = unserialize($Result);
-					$Pres_raw = ($MeasurementData[3] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[1];
+					$Pres_raw = ($MeasurementData[1] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[3];
 					return $Pres_raw;
 				}
 			}
