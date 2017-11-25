@@ -227,56 +227,52 @@
 				
 				
 				// Messwerte aufbereiten
-				$MeasurementData = array();
-				$MeasurementData = unserialize($this->GetBuffer("MeasurementData"));
-				$this->SendDebug("Measurement", "MeasurementData: ".count($MeasurementData), 0);
-				If (count($MeasurementData) == 8) {
-					// Roh-Temperatur einlesen
-					$Temp_raw = $this->ReadTemperatureData();
-					
-					// Roh-Luftdruck einlesen
-					$Pres_raw = $this->ReadPressureData();
-					
-					// Temperatur
-					$Temp = 0;
-					$X1 = ($Temp_raw - $AC6) * $AC5 / pow(2, 15);
-					$X2 = $MC * pow(2, 11) / ($X1 + $MD);
-					$B5 = $X1 + $X2;
-					$Temp = ($B5 + 8) / pow(2, 4);
-					SetValueFloat($this->GetIDForIdent("Temperature"), round($Temp, 2));
-					
-					// Luftdruck
-					$Pressure = 0;
-					$osrs_p = $this->ReadPropertyInteger("OSRS_P");
-					$B6 = $B5 - 4000;
-					$X1 = ($B2 * ($B6 * $B6 / pow(2, 12) )) / pow(2, 11);
-					$X2 = $AC2 * $B6 / pow(2, 11);
-					$X3 = $X1 + $X2;
-					$B3 = ((($AC1 * 4 + $X3) << $osrs_p) + 2) / 4;
-					$X1 = $AC3 * $B6 / pow(2, 13);
-					$X2 = ($B1 * ($B6 * $B6 / pow(2, 12) )) / pow(2, 15);
-					$X3 = (($X1 + $X2) + 2) / pow(2, 2);
-					$B4 = $AC4 * abs($X3 + 32768) / pow(2, 15);
-					$B7 = (abs($Pres_raw - $B3)) * (50000 >> $osrs_p);
-					If ($B7 < hexdec("80000000")) {
-						$p = ($B7 * 2) / $B4;
-					}
-					else {
-						$p = ($B7 / $B4) * 2;
-					}
-					$X1 = ($p / pow(2, 8)) * ($p / pow(2, 8));
-					$X1 = ($X1 * 3038) / pow(2, 15);
-					$X2 = (-7357 * $p) / pow(2, 15);
-					$Pressure = $p + ($X1 + $X2 + 3791) / pow(2, 4);
-					SetValueFloat($this->GetIDForIdent("Pressure"), round($Pressure / 100, 2));
-					
-					// Luftdruck Trends
-					If ($this->ReadPropertyBoolean("LoggingPres") == true) {
-						SetValueFloat($this->GetIDForIdent("PressureTrend1h"), $this->PressureTrend(1));
-						SetValueFloat($this->GetIDForIdent("PressureTrend3h"), $this->PressureTrend(3));
-						SetValueFloat($this->GetIDForIdent("PressureTrend12h"), $this->PressureTrend(12));
-						SetValueFloat($this->GetIDForIdent("PressureTrend24h"), $this->PressureTrend(24));
-					}
+				
+				// Roh-Temperatur einlesen
+				$Temp_raw = $this->ReadTemperatureData();
+
+				// Roh-Luftdruck einlesen
+				$Pres_raw = $this->ReadPressureData();
+
+				// Temperatur
+				$Temp = 0;
+				$X1 = ($Temp_raw - $AC6) * $AC5 / pow(2, 15);
+				$X2 = $MC * pow(2, 11) / ($X1 + $MD);
+				$B5 = $X1 + $X2;
+				$Temp = ($B5 + 8) / pow(2, 4);
+				SetValueFloat($this->GetIDForIdent("Temperature"), round($Temp, 2));
+
+				// Luftdruck
+				$Pressure = 0;
+				$osrs_p = $this->ReadPropertyInteger("OSRS_P");
+				$B6 = $B5 - 4000;
+				$X1 = ($B2 * ($B6 * $B6 / pow(2, 12) )) / pow(2, 11);
+				$X2 = $AC2 * $B6 / pow(2, 11);
+				$X3 = $X1 + $X2;
+				$B3 = ((($AC1 * 4 + $X3) << $osrs_p) + 2) / 4;
+				$X1 = $AC3 * $B6 / pow(2, 13);
+				$X2 = ($B1 * ($B6 * $B6 / pow(2, 12) )) / pow(2, 15);
+				$X3 = (($X1 + $X2) + 2) / pow(2, 2);
+				$B4 = $AC4 * abs($X3 + 32768) / pow(2, 15);
+				$B7 = (abs($Pres_raw - $B3)) * (50000 >> $osrs_p);
+				If ($B7 < hexdec("80000000")) {
+					$p = ($B7 * 2) / $B4;
+				}
+				else {
+					$p = ($B7 / $B4) * 2;
+				}
+				$X1 = ($p / pow(2, 8)) * ($p / pow(2, 8));
+				$X1 = ($X1 * 3038) / pow(2, 15);
+				$X2 = (-7357 * $p) / pow(2, 15);
+				$Pressure = $p + ($X1 + $X2 + 3791) / pow(2, 4);
+				SetValueFloat($this->GetIDForIdent("Pressure"), round($Pressure / 100, 2));
+
+				// Luftdruck Trends
+				If ($this->ReadPropertyBoolean("LoggingPres") == true) {
+					SetValueFloat($this->GetIDForIdent("PressureTrend1h"), $this->PressureTrend(1));
+					SetValueFloat($this->GetIDForIdent("PressureTrend3h"), $this->PressureTrend(3));
+					SetValueFloat($this->GetIDForIdent("PressureTrend12h"), $this->PressureTrend(12));
+					SetValueFloat($this->GetIDForIdent("PressureTrend24h"), $this->PressureTrend(24));
 				}
 				
 			}
