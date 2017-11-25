@@ -309,7 +309,7 @@
 			// Kalibrierungsdaten neu einlesen
 			$this->SendDebug("ReadCalibrateData", "Ausfuehrung", 0);
 			$CalibrateData = array();
-			for ($i = hexdec("AA"); $i < (hexdec("AA") + 21); $i++) {
+			for ($i = hexdec("AA"); $i < (hexdec("AA") + 22); $i++) {
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BMP180_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $i)));
 				If ($Result < 0) {
 					$this->SendDebug("ReadCalibrateData", "Fehler beim Einlesen der Kalibrierungsdaten bei Byte ".$i, 0);
