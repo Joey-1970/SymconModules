@@ -209,7 +209,7 @@
 			}
 			$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
 			$this->SendDebug("Measurement", "CalibrateData: ".count($CalibrateData), 0);
-			If (count($CalibrateData) == 22)  {
+			If (count($CalibrateData) > 10)  {
 				// Kalibrierungsdatan aufbereiten
 				$AC1 =  $this->bin16dec(($CalibrateData[170] << 8) | $CalibrateData[171]);
 				$AC2 =  $this->bin16dec(($CalibrateData[172] << 8) | $CalibrateData[173]);
