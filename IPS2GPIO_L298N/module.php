@@ -95,7 +95,10 @@
         {
 		// Diese Zeile nicht löschen
 		parent::ApplyChanges();
-		If (intval($this->GetBuffer("PreviousPin")) <> $this->ReadPropertyInteger("Pin")) {
+		If ((intval($this->GetBuffer("PreviousPin_1L")) <> $this->ReadPropertyInteger("Pin_1L")) OR
+			(intval($this->GetBuffer("PreviousPin_1R")) <> $this->ReadPropertyInteger("Pin_1R")) OR
+			(intval($this->GetBuffer("PreviousPin_2L")) <> $this->ReadPropertyInteger("Pin_2L")) OR
+			(intval($this->GetBuffer("PreviousPin_2R")) <> $this->ReadPropertyInteger("Pin_2R"))) {
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_1L")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_1L"), 0);
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_1R")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_1R"), 0);
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_2L")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_2L"), 0);
