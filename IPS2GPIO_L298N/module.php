@@ -114,6 +114,12 @@
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_2L")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_2L"), 0);
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_2R")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_2R"), 0);
 		}
+		
+		$this->RegisterProfileInteger("IPS2GPIO.MotorStatus", "Information", "", "", 0, 2, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorStatus", 0, "unbekannt", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorStatus", 1, "Linkslauf", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorStatus", 2, "Stop", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorStatus", 3, "Rechtslauf", "Information", -1);
 
 		//Status-Variablen anlegen
 		$this->RegisterVariableBoolean("Motor_1L", "Motor 1 Links", "~Switch", 10);
@@ -122,13 +128,17 @@
 		$this->EnableAction("Motor_1S");
 		$this->RegisterVariableBoolean("Motor_1R", "Motor 1 Rechts", "~Switch", 30);
 		$this->EnableAction("Motor_1R");
+		$this->RegisterVariableInteger("Status_1", "Motorstatus 1", "IPS2GPIO.MotorStatus", 40);
+	        $this->DisableAction("Status_1");
 		
-		$this->RegisterVariableBoolean("Motor_2L", "Motor 2 Links", "~Switch", 40);
+		$this->RegisterVariableBoolean("Motor_2L", "Motor 2 Links", "~Switch", 50);
 		$this->EnableAction("Motor_2L");
-		$this->RegisterVariableBoolean("Motor_2S", "Motor 2 Stop", "~Switch", 50);
+		$this->RegisterVariableBoolean("Motor_2S", "Motor 2 Stop", "~Switch", 60);
 		$this->EnableAction("Motor_2S");
-		$this->RegisterVariableBoolean("Motor_2R", "Motor 2 Rechts", "~Switch", 60);
+		$this->RegisterVariableBoolean("Motor_2R", "Motor 2 Rechts", "~Switch", 70);
 		$this->EnableAction("Motor_2R");
+		$this->RegisterVariableInteger("Status_2", "Motorstatus 2", "IPS2GPIO.MotorStatus", 80);
+	        $this->DisableAction("Status_2");
             	
              	//ReceiveData-Filter setzen
                 $Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*)';
@@ -239,6 +249,23 @@
 		}
 	}
 	
+	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
+	{
+	        if (!IPS_VariableProfileExists($Name))
+	        {
+	            IPS_CreateVariableProfile($Name, 1);
+	        }
+	        else
+	        {
+	            $profile = IPS_GetVariableProfile($Name);
+	            if ($profile['ProfileType'] != 1)
+	                throw new Exception("Variable profile type does not match for profile " . $Name);
+	        }
+	        IPS_SetVariableProfileIcon($Name, $Icon);
+	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);        
+	}
+	    
 	private function Get_GPIO()
 	{
 		If ($this->HasActiveParent() == true) {
