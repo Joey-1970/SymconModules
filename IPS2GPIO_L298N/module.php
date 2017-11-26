@@ -133,11 +133,13 @@
 		SetValueInteger($this->GetIDForIdent("Motor_1"), 1);
 		$this->RegisterVariableInteger("Status_1", "Motorstatus 1", "IPS2GPIO.MotorStatus", 20);
 	        $this->DisableAction("Status_1");
+		SetValueInteger($this->GetIDForIdent("Status_1"), 2);
 		$this->RegisterVariableInteger("Motor_2", "Motor 2", "IPS2GPIO.MotorStart", 30);
 		$this->EnableAction("Motor_2");
 		SetValueInteger($this->GetIDForIdent("Motor_2"), 1);
 		$this->RegisterVariableInteger("Status_2", "Motorstatus 2", "IPS2GPIO.MotorStatus", 40);
 	        $this->DisableAction("Status_2");
+		SetValueInteger($this->GetIDForIdent("Status_2"), 2);
             	
              	//ReceiveData-Filter setzen
                 $Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_1L").'.*)';
@@ -175,11 +177,16 @@
 	public function RequestAction($Ident, $Value) 
 	{
   		switch($Ident) {
-	        case "Status":
-	            If ($this->ReadPropertyBoolean("Open") == true) {
-		    	$this->Set_Status($Value);
-		    }
-	            break;
+	        case "Motor_1":
+	            	If ($this->ReadPropertyBoolean("Open") == true) {
+		    		//$this->Set_Status($Value);
+		    	}
+	            	break;
+		case "Motor_2":
+	            	If ($this->ReadPropertyBoolean("Open") == true) {
+		    		//$this->Set_Status($Value);
+		    	}
+	            	break;
 	        default:
 	            throw new Exception("Invalid Ident");
 	    	}
