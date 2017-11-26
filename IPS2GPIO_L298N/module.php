@@ -45,6 +45,9 @@
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_1L", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		
+		$arrayOptions = array();
+		$GPIO = array();
+		$GPIO = unserialize($this->Get_GPIO());
 		$arrayElements[] = array("type" => "Label", "label" => "Motor Ausgang 1, Rechtslauf"); 
 		If ($this->ReadPropertyInteger("Pin_1R") >= 0 ) {
 			$GPIO[$this->ReadPropertyInteger("Pin_1R")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_1R")));
@@ -55,6 +58,9 @@
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_1R", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		
+		$arrayOptions = array();
+		$GPIO = array();
+		$GPIO = unserialize($this->Get_GPIO());
 		$arrayElements[] = array("type" => "Label", "label" => "Motor Ausgang 2, Linkslauf"); 
 		If ($this->ReadPropertyInteger("Pin_2L") >= 0 ) {
 			$GPIO[$this->ReadPropertyInteger("Pin_2L")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_2L")));
@@ -64,6 +70,10 @@
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_2L", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
+		
+		$arrayOptions = array();
+		$GPIO = array();
+		$GPIO = unserialize($this->Get_GPIO());
 		$arrayElements[] = array("type" => "Label", "label" => "Motor Ausgang 2, Rechtslauf"); 
 		If ($this->ReadPropertyInteger("Pin_2R") >= 0 ) {
 			$GPIO[$this->ReadPropertyInteger("Pin_2R")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_2R")));
