@@ -35,6 +35,7 @@
 		$arrayOptions = array();
 		$GPIO = array();
 		$GPIO = unserialize($this->Get_GPIO());
+		$arrayElements[] = array("type" => "Label", "label" => "Motor Ausgang 1, Linkslauf"); 
 		If ($this->ReadPropertyInteger("Pin_1L") >= 0 ) {
 			$GPIO[$this->ReadPropertyInteger("Pin_1L")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_1L")));
 		}
@@ -42,22 +43,45 @@
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
-		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
-		$arrayElements[] = array("name" => "Invert", "type" => "CheckBox",  "caption" => "Invertiere Anzeige");
-		$arrayElements[] = array("name" => "Logging", "type" => "CheckBox",  "caption" => "Logging aktivieren");
-		$arrayElements[] = array("type" => "Label", "label" => "Status des Ausgangs nach Neustart");
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "Aus", "value" => 0);
-		$arrayOptions[] = array("label" => "An", "value" => 1);
-		$arrayOptions[] = array("label" => "undefiniert", "value" => 2);
-		$arrayElements[] = array("type" => "Select", "name" => "Startoption", "caption" => "Startoption", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Select", "name" => "Pin_1L", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
+		
+		$arrayElements[] = array("type" => "Label", "label" => "Motor Ausgang 1, Rechtslauf"); 
+		If ($this->ReadPropertyInteger("Pin_1R") >= 0 ) {
+			$GPIO[$this->ReadPropertyInteger("Pin_1R")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_1R")));
+		}
+		ksort($GPIO);
+		foreach($GPIO AS $Value => $Label) {
+			$arrayOptions[] = array("label" => $Label, "value" => $Value);
+		}
+		$arrayElements[] = array("type" => "Select", "name" => "Pin_1R", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
+		
+		$arrayElements[] = array("type" => "Label", "label" => "Motor Ausgang 2, Linkslauf"); 
+		If ($this->ReadPropertyInteger("Pin_2L") >= 0 ) {
+			$GPIO[$this->ReadPropertyInteger("Pin_2L")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_2L")));
+		}
+		ksort($GPIO);
+		foreach($GPIO AS $Value => $Label) {
+			$arrayOptions[] = array("label" => $Label, "value" => $Value);
+		}
+		$arrayElements[] = array("type" => "Select", "name" => "Pin_2L", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Label", "label" => "Motor Ausgang 2, Rechtslauf"); 
+		If ($this->ReadPropertyInteger("Pin_2R") >= 0 ) {
+			$GPIO[$this->ReadPropertyInteger("Pin_2R")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_2R")));
+		}
+		ksort($GPIO);
+		foreach($GPIO AS $Value => $Label) {
+			$arrayOptions[] = array("label" => $Label, "value" => $Value);
+		}
+		$arrayElements[] = array("type" => "Select", "name" => "Pin_2R", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 
+		
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
+		
 		$arrayActions = array();
 		If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-			$arrayActions[] = array("type" => "Button", "label" => "On", "onClick" => 'I2GOUT_Set_Status($id, true);');
-			$arrayActions[] = array("type" => "Button", "label" => "Off", "onClick" => 'I2GOUT_Set_Status($id, false);');
-			$arrayActions[] = array("type" => "Button", "label" => "Toggle Output", "onClick" => 'I2GOUT_Toggle_Status($id);');
+			//$arrayActions[] = array("type" => "Button", "label" => "On", "onClick" => 'I2GOUT_Set_Status($id, true);');
+			//$arrayActions[] = array("type" => "Button", "label" => "Off", "onClick" => 'I2GOUT_Set_Status($id, false);');
+			//$arrayActions[] = array("type" => "Button", "label" => "Toggle Output", "onClick" => 'I2GOUT_Toggle_Status($id);');
 		}
 		else {
 			$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
@@ -72,7 +96,10 @@
 		// Diese Zeile nicht löschen
 		parent::ApplyChanges();
 		If (intval($this->GetBuffer("PreviousPin")) <> $this->ReadPropertyInteger("Pin")) {
-			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin"), 0);
+			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_1L")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_1L"), 0);
+			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_1R")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_1R"), 0);
+			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_2L")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_2L"), 0);
+			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_2R")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_2R"), 0);
 		}
 
 		//Status-Variablen anlegen
@@ -93,13 +120,8 @@
 									  "Pin" => $this->ReadPropertyInteger("Pin"), "PreviousPin" => $this->GetBuffer("PreviousPin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 				$this->SetBuffer("PreviousPin", $this->ReadPropertyInteger("Pin"));
 				If ($Result == true) {
-					$this->Get_Status();
-					If ($this->ReadPropertyInteger("Startoption") == 0) {
-						$this->Set_Status(false);
-					}
-					elseif ($this->ReadPropertyInteger("Startoption") == 1) {
-						$this->Set_Status(true);
-					}
+					//$this->Get_Status();
+					
 					$this->SetStatus(102);
 				}
 			}
