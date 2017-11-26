@@ -126,7 +126,7 @@
 		$this->EnableAction("Motor_1");
 		SetValueInteger($this->GetIDForIdent("Motor_1"), 1);
 		
-		$this->RegisterVariableInteger("Motor_2", "Motor 2", "IPS2GPIO.MotorStart", 30);
+		$this->RegisterVariableInteger("Motor_2", "Motor 2", "IPS2GPIO.MotorStart", 20);
 		$this->EnableAction("Motor_2");
 		SetValueInteger($this->GetIDForIdent("Motor_2"), 1);
 		
