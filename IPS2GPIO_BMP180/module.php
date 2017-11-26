@@ -24,14 +24,9 @@
  	    	$this->RegisterPropertyBoolean("LoggingTemp", false);
  	    	$this->RegisterPropertyBoolean("LoggingPres", false);
  	    	$this->RegisterPropertyInteger("OSRS_P", 0);
-		$this->RegisterPropertyInteger("Altitude", 0);
-		$this->RegisterPropertyInteger("Temperature_ID", 0);
-		$this->RegisterPropertyInteger("Humidity_ID", 0);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GBMP180_Measurement($_IPS["TARGET"]);');
 		$CalibrateData = array();
 		$this->SetBuffer("CalibrateData", serialize($CalibrateData));
-		$MeasurementData = array();
-		$this->SetBuffer("MeasurementData", serialize($MeasurementData));
         }
 	
 	public function GetConfigurationForm() 
@@ -62,12 +57,6 @@
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, 1 sek -> Minimum)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
-		$arrayElements[] = array("type" => "Label", "label" => "Korrektur des Luftdrucks nach Hohenangabe");
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Altitude", "caption" => "Höhe über NN (m)");
-		$arrayElements[] = array("type" => "Label", "label" => "Optionale Angabe von Quellen");
-		$arrayElements[] = array("type" => "SelectVariable", "name" => "Temperature_ID", "caption" => "Temperatur (extern)");
-		$arrayElements[] = array("type" => "SelectVariable", "name" => "Humidity_ID", "caption" => "Luftfeuchtigkeit (extern)");
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingTemp", "caption" => "Logging Temperatur aktivieren");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingPres", "caption" => "Logging Luftdruck aktivieren");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");	
@@ -139,7 +128,6 @@
 			// Logging setzen
 			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Temperature"), $this->ReadPropertyBoolean("LoggingTemp"));
 			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Pressure"), $this->ReadPropertyBoolean("LoggingPres"));
-
 			IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
 			//ReceiveData-Filter setzen
 			$this->SetBuffer("DeviceIdent", (($this->ReadPropertyInteger("DeviceBus") << 7) + $this->ReadPropertyInteger("DeviceAddress")));
@@ -409,18 +397,7 @@
 	    	}
 	return $DecNumber;
 	}  
-	    
-	private function bin8dec($dec) 
-	{
-	    	// converts 16bit binary number string to integer using two's complement
-	    	$BinString = decbin($dec);
-		$DecNumber = bindec($BinString) & 0xFF; // only use bottom 16 bits
-	    	If (0x80 & $DecNumber) {
-			$DecNumber = - (0x0100 - $DecNumber);
-	    	}
-	return $DecNumber;
-	}    
-	    
+	        
 	private function PressureTrend(int $interval)
 	{
 		$Result = 0;
