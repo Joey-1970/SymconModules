@@ -357,7 +357,7 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Liest die Messdaten ein
 			$osrs_p = $this->ReadPropertyInteger("OSRS_P");
-			$this->SendDebug("ReadTemperaturData", "Ausfuehrung", 0);
+			$this->SendDebug("ReadPressureData", "Ausfuehrung", 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F4"), "Value" => (hexdec("34") << $osrs_p) )));
 			If (!$Result) {
 				$this->SendDebug("ReadPressureData", "Abfrage des Roh-Luftdrucks fehlerhaft", 0);
@@ -375,7 +375,7 @@
 					$this->SendDebug("ReadPressureData", "Ergebnis: ".$Result, 0);
 					$MeasurementData = array();
 					$MeasurementData = unserialize($Result);
-					$Pres_raw = ($MeasurementData[1] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[3];
+					$Pres_raw = (($MeasurementData[1] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[3]) >> (8 - $osrs_p);
 					$this->SendDebug("ReadPressureData", "Roh-Luftdruck: ".$Pres_raw, 0);
 					return $Pres_raw;
 				}
