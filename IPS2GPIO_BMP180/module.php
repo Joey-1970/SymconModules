@@ -240,7 +240,7 @@
 				$X2 = $MC * pow(2, 11) / ($X1 + $MD);
 				$B5 = $X1 + $X2;
 				$Temp = ($B5 + 8) / pow(2, 4);
-				SetValueFloat($this->GetIDForIdent("Temperature"), round($Temp, 2));
+				SetValueFloat($this->GetIDForIdent("Temperature"), round(($Temp / 10), 2));
 
 				// Luftdruck
 				$Pressure = 0;
@@ -345,6 +345,7 @@
 					$MeasurementData = array();
 					$MeasurementData = unserialize($Result);
 					$Temp_raw =  ($MeasurementData[1] << 8) | $MeasurementData[2];
+					$this->SendDebug("ReadTemperatureData", "Roh-Temperatur: ".$Temp_raw, 0);
 					return $Temp_raw;
 				}
 			}
@@ -375,6 +376,7 @@
 					$MeasurementData = array();
 					$MeasurementData = unserialize($Result);
 					$Pres_raw = ($MeasurementData[1] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[3];
+					$this->SendDebug("ReadPressureData", "Roh-Luftdruck: ".$Pres_raw, 0);
 					return $Pres_raw;
 				}
 			}
