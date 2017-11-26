@@ -8,11 +8,14 @@
             	// Diese Zeile nicht löschen.
             	parent::Create();
             	$this->RegisterPropertyBoolean("Open", false);
-		$this->RegisterPropertyInteger("Pin", -1);
-		$this->SetBuffer("PreviousPin", -1);
-		$this->RegisterPropertyBoolean("Invert", false);
-		$this->RegisterPropertyBoolean("Logging", false);
-		$this->RegisterPropertyInteger("Startoption", 2);
+		$this->RegisterPropertyInteger("Pin_1L", -1);
+		$this->SetBuffer("PreviousPin_1L", -1);
+		$this->RegisterPropertyInteger("Pin_1R", -1);
+		$this->SetBuffer("PreviousPin_1R", -1);
+		$this->RegisterPropertyInteger("Pin_2L", -1);
+		$this->SetBuffer("PreviousPin_2L", -1);
+		$this->RegisterPropertyInteger("Pin_2R", -1);
+		$this->SetBuffer("PreviousPin_2R", -1);
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
 	
@@ -32,8 +35,8 @@
 		$arrayOptions = array();
 		$GPIO = array();
 		$GPIO = unserialize($this->Get_GPIO());
-		If ($this->ReadPropertyInteger("Pin") >= 0 ) {
-			$GPIO[$this->ReadPropertyInteger("Pin")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin")));
+		If ($this->ReadPropertyInteger("Pin_1L") >= 0 ) {
+			$GPIO[$this->ReadPropertyInteger("Pin_1L")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_1L")));
 		}
 		ksort($GPIO);
 		foreach($GPIO AS $Value => $Label) {
