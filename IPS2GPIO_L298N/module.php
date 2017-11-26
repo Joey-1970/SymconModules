@@ -115,13 +115,7 @@
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_2L")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_2L"), 0);
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_2R")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_2R"), 0);
 		}
-		
-		$this->RegisterProfileInteger("IPS2GPIO.MotorStatus", "Information", "", "", 0, 3, 1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorStatus", 0, "unbekannt", "Information", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorStatus", 1, "Linkslauf", "Information", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorStatus", 2, "Stop", "Information", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorStatus", 3, "Rechtslauf", "Information", -1);
-		
+				
 		$this->RegisterProfileInteger("IPS2GPIO.MotorStart", "Information", "", "", 0, 2, 0);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorStart", 0, "<=", "Information", 0x00FF00);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorStart", 1, "Stop", "Information", 0xFF0000);
@@ -131,15 +125,11 @@
 		$this->RegisterVariableInteger("Motor_1", "Motor 1", "IPS2GPIO.MotorStart", 10);
 		$this->EnableAction("Motor_1");
 		SetValueInteger($this->GetIDForIdent("Motor_1"), 1);
-		$this->RegisterVariableInteger("Status_1", "Motorstatus 1", "IPS2GPIO.MotorStatus", 20);
-	        $this->DisableAction("Status_1");
-		SetValueInteger($this->GetIDForIdent("Status_1"), 2);
+		
 		$this->RegisterVariableInteger("Motor_2", "Motor 2", "IPS2GPIO.MotorStart", 30);
 		$this->EnableAction("Motor_2");
 		SetValueInteger($this->GetIDForIdent("Motor_2"), 1);
-		$this->RegisterVariableInteger("Status_2", "Motorstatus 2", "IPS2GPIO.MotorStatus", 40);
-	        $this->DisableAction("Status_2");
-		SetValueInteger($this->GetIDForIdent("Status_2"), 2);
+		
             	
              	//ReceiveData-Filter setzen
                 $Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_1L").'.*)';
