@@ -126,20 +126,20 @@
 		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorStart", 0, "Start", "Information", 1);
 
 		//Status-Variablen anlegen
-		$this->RegisterVariableBoolean("Motor_1L", "Motor 1 Links", "IPS2GPIO.MotorStart", 10);
+		$this->RegisterVariableInteger("Motor_1L", "Motor 1 Links", "IPS2GPIO.MotorStart", 10);
 		$this->EnableAction("Motor_1L");
-		$this->RegisterVariableBoolean("Motor_1S", "Motor 1 Stop", "IPS2GPIO.MotorStart", 20);
+		$this->RegisterVariableInteger("Motor_1S", "Motor 1 Stop", "IPS2GPIO.MotorStart", 20);
 		$this->EnableAction("Motor_1S");
-		$this->RegisterVariableBoolean("Motor_1R", "Motor 1 Rechts", "IPS2GPIO.MotorStart", 30);
+		$this->RegisterVariableInteger("Motor_1R", "Motor 1 Rechts", "IPS2GPIO.MotorStart", 30);
 		$this->EnableAction("Motor_1R");
 		$this->RegisterVariableInteger("Status_1", "Motorstatus 1", "IPS2GPIO.MotorStatus", 40);
 	        $this->DisableAction("Status_1");
 		
-		$this->RegisterVariableBoolean("Motor_2L", "Motor 2 Links", "IPS2GPIO.MotorStart", 50);
+		$this->RegisterVariableInteger("Motor_2L", "Motor 2 Links", "IPS2GPIO.MotorStart", 50);
 		$this->EnableAction("Motor_2L");
-		$this->RegisterVariableBoolean("Motor_2S", "Motor 2 Stop", "IPS2GPIO.MotorStart", 60);
+		$this->RegisterVariableInteger("Motor_2S", "Motor 2 Stop", "IPS2GPIO.MotorStart", 60);
 		$this->EnableAction("Motor_2S");
-		$this->RegisterVariableBoolean("Motor_2R", "Motor 2 Rechts", "IPS2GPIO.MotorStart", 70);
+		$this->RegisterVariableInteger("Motor_2R", "Motor 2 Rechts", "IPS2GPIO.MotorStart", 70);
 		$this->EnableAction("Motor_2R");
 		$this->RegisterVariableInteger("Status_2", "Motorstatus 2", "IPS2GPIO.MotorStatus", 80);
 	        $this->DisableAction("Status_2");
