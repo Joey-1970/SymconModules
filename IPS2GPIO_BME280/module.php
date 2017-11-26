@@ -285,7 +285,6 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Measurement", "Ausfuehrung", 0);
 			// Messwerte aktualisieren
-			$this->ReadCalibrateData();
 			$CalibrateData = array();
 			If (is_array(unserialize($this->GetBuffer("CalibrateData"))) == false) {
 				$this->SendDebug("Measurement", "Kalibrirungsdaten nicht korrekt!", 0);
