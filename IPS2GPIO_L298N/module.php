@@ -106,13 +106,20 @@
 		}
 
 		//Status-Variablen anlegen
-		$this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
-		$this->EnableAction("Status");
+		$this->RegisterVariableBoolean("Motor_1L", "Motor 1 Links", "~Switch", 10);
+		$this->EnableAction("Motor_1L");
+		$this->RegisterVariableBoolean("Motor_1S", "Motor 1 Stop", "~Switch", 20);
+		$this->EnableAction("Motor_1S");
+		$this->RegisterVariableBoolean("Motor_1R", "Motor 1 Rechts", "~Switch", 30);
+		$this->EnableAction("Motor_1R");
+		
+		$this->RegisterVariableBoolean("Motor_2L", "Motor 2 Links", "~Switch", 40);
+		$this->EnableAction("Motor_2L");
+		$this->RegisterVariableBoolean("Motor_2S", "Motor 2 Stop", "~Switch", 50);
+		$this->EnableAction("Motor_2S");
+		$this->RegisterVariableBoolean("Motor_2R", "Motor 2 Rechts", "~Switch", 60);
+		$this->EnableAction("Motor_2R");
             	
-		// Logging setzen
-		AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Status"), $this->ReadPropertyBoolean("Logging"));
-		IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
-
              	//ReceiveData-Filter setzen
                 $Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*)';
 		$this->SetReceiveDataFilter($Filter);
@@ -120,8 +127,19 @@
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
 			If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
-									  "Pin" => $this->ReadPropertyInteger("Pin"), "PreviousPin" => $this->GetBuffer("PreviousPin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
-				$this->SetBuffer("PreviousPin", $this->ReadPropertyInteger("Pin"));
+									  "Pin" => $this->ReadPropertyInteger("Pin_1L"), "PreviousPin" => $this->GetBuffer("PreviousPin_1L"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+				$this->SetBuffer("PreviousPin_1L", $this->ReadPropertyInteger("Pin_1L"));
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+									  "Pin" => $this->ReadPropertyInteger("Pin_1R"), "PreviousPin" => $this->GetBuffer("PreviousPin_1R"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+				$this->SetBuffer("PreviousPin_1R", $this->ReadPropertyInteger("Pin_1R"));
+				
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+									  "Pin" => $this->ReadPropertyInteger("Pin_2L"), "PreviousPin" => $this->GetBuffer("PreviousPin_2L"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+				$this->SetBuffer("PreviousPin_2L", $this->ReadPropertyInteger("Pin_2L"));
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+									  "Pin" => $this->ReadPropertyInteger("Pin_2R"), "PreviousPin" => $this->GetBuffer("PreviousPin_2R"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+				$this->SetBuffer("PreviousPin_2R", $this->ReadPropertyInteger("Pin_2R"));
+				
 				If ($Result == true) {
 					//$this->Get_Status();
 					
