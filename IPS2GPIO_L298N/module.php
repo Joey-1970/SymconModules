@@ -122,7 +122,7 @@
 		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorStatus", 2, "Stop", "Information", -1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorStatus", 3, "Rechtslauf", "Information", -1);
 		
-		$this->RegisterProfileInteger("IPS2GPIO.MotorStart", "Information", "", "", 0, 1, 1);
+		$this->RegisterProfileInteger("IPS2GPIO.MotorStart", "Information", "", "", 0, 1, 0);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorStart", 0, "...", "Information", 1);
 
 		//Status-Variablen anlegen
