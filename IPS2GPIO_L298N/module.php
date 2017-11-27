@@ -116,17 +116,17 @@
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_2R")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_2R"), 0);
 		}
 				
-		$this->RegisterProfileInteger("IPS2GPIO.MotorStart", "Information", "", "", 0, 2, 0);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorStart", 0, "<=", "Information", 0x00FF00);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorStart", 1, "Stop", "Information", 0xFF0000);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorStart", 2, "=>", "Information", 0x00FF00);
+		$this->RegisterProfileInteger("IPS2GPIO.MotorControl", "Information", "", "", 0, 2, 0);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorControl", 0, "<=", "HollowArrowLeft", 0x00FF00);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorControl", 1, "Stop", "Cross", 0xFF0000);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorControl", 2, "=>", "HollowArrowRight", 0x00FF00);
 
 		//Status-Variablen anlegen
-		$this->RegisterVariableInteger("Motor_1", "Motor 1", "IPS2GPIO.MotorStart", 10);
+		$this->RegisterVariableInteger("Motor_1", "Motor 1", "IPS2GPIO.MotorControl", 10);
 		$this->EnableAction("Motor_1");
 		SetValueInteger($this->GetIDForIdent("Motor_1"), 1);
 		
-		$this->RegisterVariableInteger("Motor_2", "Motor 2", "IPS2GPIO.MotorStart", 20);
+		$this->RegisterVariableInteger("Motor_2", "Motor 2", "IPS2GPIO.MotorControl", 20);
 		$this->EnableAction("Motor_2");
 		SetValueInteger($this->GetIDForIdent("Motor_2"), 1);
 		
@@ -169,7 +169,8 @@
   		switch($Ident) {
 	        case "Motor_1":
 	            	If ($this->ReadPropertyBoolean("Open") == true) {
-		    		//$this->Set_Status($Value);
+		    		If ($Value == 0) {
+					$this->
 		    	}
 	            	break;
 		case "Motor_2":
@@ -203,53 +204,38 @@
 	// Beginn der Funktionen
 	
 	// Schaltet den gewaehlten Pin
-	public function MotorStop(Int $Motor, Int $Value)
+	public function MotorControl(Int $Motor, Int $Value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("MotorStop", "Ausfuehrung", 0);
+			$this->SendDebug("MotorControl", "Ausfuehrung", 0);
 			$Pin_L = $this->ReadPropertyInteger("Pin_".$Motor."L");
 			$Pin_R = $this->ReadPropertyInteger("Pin_".$Motor."R");
 			
-			$Result_L = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_L"), "Value" => 0 )));
-			$Result_R = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_R"), "Value" => 0 )));
-			
+			If ($Value == 0) {
+				$Result_R = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_R"), "Value" => 0 )));
+				$Result_L = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_L"), "Value" => 1 )));
+			}
+			elseIf ($Value == 1) {
+				$Result_L = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_L"), "Value" => 0 )));
+				$Result_R = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_R"), "Value" => 0 )));
+			}
+			elseIf ($Value == 2) {
+				$Result_L = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_L"), "Value" => 0 )));
+				$Result_R = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_R"), "Value" => 1 )));
+			}
+				
+				
 			IF ((!$Result_L) OR (!$Result_R)) {
-				$this->SendDebug("MotorStop", "Fehler beim Setzen des Status!", 0);
+				$this->SendDebug("MotorControl", "Fehler beim Setzen des Status!", 0);
 				return;
 			}
 			else {
-				SetValueInteger($this->GetIDForIdent("Motor_".$Motor), 1);
-				$this->Get_Status();
+				SetValueInteger($this->GetIDForIdent("Motor_".$Motor), $Value);
+				//$this->Get_Status();
 			}
 		}
 	}    
-	    
-	    
-	public function Set_Status(Bool $Value)
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("Set_Status", "Ausfuehrung", 0);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => ($Value ^ $this->ReadPropertyBoolean("Invert")) )));
-			$this->SendDebug("Set_Status", "Ergebnis: ".(int)$Result, 0);
-			IF (!$Result) {
-				$this->SendDebug("Set_Status", "Fehler beim Setzen des Status!", 0);
-				return;
-			}
-			else {
-				SetValueBoolean($this->GetIDForIdent("Status"), ($Value ^ $this->ReadPropertyBoolean("Invert")));
-				$this->Get_Status();
-			}
-		}
-	}
 	
-	// Toggelt den Status
-	public function Toggle_Status()
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("Toggle_Status", "Ausfuehrung", 0);
-			$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")));
-		}
-	}
 	
 	// Ermittelt den Status
 	public function Get_Status()
