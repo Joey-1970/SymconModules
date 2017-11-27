@@ -200,9 +200,9 @@
 				}
 				break;
 			   case "status":
-			   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
-			   		$this->SetStatus($data->Status);
-			   	}
+			   	If (($data->Pin == $this->ReadPropertyInteger("Pin_1L")) OR ($data->Pin == $this->ReadPropertyInteger("Pin_1R")) OR ($data->Pin == $this->ReadPropertyInteger("Pin_2L")) OR ($data->Pin == $this->ReadPropertyInteger("Pin_2R")) ) {
+					$this->SetStatus($data->Status);
+				}
 			   	break;
 	 	}
  	}
