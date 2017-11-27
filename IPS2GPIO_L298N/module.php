@@ -138,7 +138,7 @@
 		
             	
              	//ReceiveData-Filter setzen
-		$Filter = '((.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_L1").'.*)|(.*"Pin":'.$this->ReadPropertyInteger("Pin_R1").'.*|.*"Pin":'.$this->ReadPropertyInteger("Pin_L2").'.*)|(.*"Pin":'.$this->ReadPropertyInteger("Pin_R2").'.*))';
+		$Filter = '((.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_1L").'.*)|(.*"Pin":'.$this->ReadPropertyInteger("Pin_1R").'.*|.*"Pin":'.$this->ReadPropertyInteger("Pin_2L").'.*)|(.*"Pin":'.$this->ReadPropertyInteger("Pin_2R").'.*))';
 		$this->SetReceiveDataFilter($Filter);
 
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
