@@ -169,13 +169,12 @@
   		switch($Ident) {
 	        case "Motor_1":
 	            	If ($this->ReadPropertyBoolean("Open") == true) {
-		    		If ($Value == 0) {
-					$this->
+				$this->MotorControl(1, $Value);
 		    	}
 	            	break;
 		case "Motor_2":
 	            	If ($this->ReadPropertyBoolean("Open") == true) {
-		    		//$this->Set_Status($Value);
+		    		$this->MotorControl(2, $Value);
 		    	}
 	            	break;
 	        default:
