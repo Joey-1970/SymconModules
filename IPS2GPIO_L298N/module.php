@@ -16,6 +16,10 @@
 		$this->SetBuffer("PreviousPin_2L", -1);
 		$this->RegisterPropertyInteger("Pin_2R", -1);
 		$this->SetBuffer("PreviousPin_2R", -1);
+		$this->RegisterPropertyInteger("RunningTime_1", 0);
+		$this->RegisterTimer("RunningTime_1", 0, 'I2GL298N_MotorControl($_IPS["TARGET"], 1, 1);');
+		$this->RegisterPropertyInteger("RunningTime_2", 0);
+		$this->RegisterTimer("RunningTime_2", 0, 'I2GL298N_MotorControl($_IPS["TARGET"], 2, 1);');
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
 	
@@ -83,10 +87,12 @@
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_2R", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
-
-		
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
-		
+		$arrayElements[] = array("type" => "Label", "label" => "Motor 1: Maximale Laufzeit in Sekunden (0 = aus)");
+		$arrayElements[] = array("type" => "IntervalBox", "name" => "RunningTime_1", "caption" => "Sekunden");
+		$arrayElements[] = array("type" => "Label", "label" => "Motor 2: Maximale Laufzeit in Sekunden (0 = aus)");
+		$arrayElements[] = array("type" => "IntervalBox", "name" => "RunningTime_2", "caption" => "Sekunden");
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayActions = array();
 		If ((($this->ReadPropertyInteger("Pin_1L") >= 0) AND ($this->ReadPropertyInteger("Pin_1R") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) OR
 				(($this->ReadPropertyInteger("Pin_2L") >= 0) AND ($this->ReadPropertyInteger("Pin_2R") >= 0) AND ($this->ReadPropertyBoolean("Open") == true))) {
@@ -212,14 +218,20 @@
 			
 			If (($Pin_L >= 0) and ($Pin_R >= 0)) {
 				If ($Value == 0) {
+					// Linkslauf
+					$this->SetTimerInterval("RunningTime_".$Motor, ($this->ReadPropertyInteger("RunningTime_".$Motor) * 1000));
 					$Result_R = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $Pin_R, "Value" => 0 )));
 					$Result_L = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $Pin_L, "Value" => 1 )));
 				}
 				elseIf ($Value == 1) {
+					// Stop
+					$this->SetTimerInterval("RunningTime_".$Motor, 0);
 					$Result_L = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $Pin_L, "Value" => 0 )));
 					$Result_R = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $Pin_R, "Value" => 0 )));
 				}
 				elseIf ($Value == 2) {
+					// Rechtslauf
+					$this->SetTimerInterval("RunningTime_".$Motor, ($this->ReadPropertyInteger("RunningTime_".$Motor) * 1000));
 					$Result_L = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $Pin_L, "Value" => 0 )));
 					$Result_R = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $Pin_R, "Value" => 1 )));
 				}
