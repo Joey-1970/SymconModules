@@ -211,27 +211,29 @@
 			$Pin_L = $this->ReadPropertyInteger("Pin_".$Motor."L");
 			$Pin_R = $this->ReadPropertyInteger("Pin_".$Motor."R");
 			
-			If ($Value == 0) {
-				$Result_R = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_R"), "Value" => 0 )));
-				$Result_L = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_L"), "Value" => 1 )));
-			}
-			elseIf ($Value == 1) {
-				$Result_L = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_L"), "Value" => 0 )));
-				$Result_R = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_R"), "Value" => 0 )));
-			}
-			elseIf ($Value == 2) {
-				$Result_L = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_L"), "Value" => 0 )));
-				$Result_R = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_R"), "Value" => 1 )));
-			}
-				
-				
-			IF ((!$Result_L) OR (!$Result_R)) {
-				$this->SendDebug("MotorControl", "Fehler beim Setzen des Status!", 0);
-				return;
-			}
-			else {
-				SetValueInteger($this->GetIDForIdent("Motor_".$Motor), $Value);
-				//$this->Get_Status();
+			If (($Pin_L >= 0) and ($Pin_R >= 0)) {
+				If ($Value == 0) {
+					$Result_R = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_R"), "Value" => 0 )));
+					$Result_L = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_L"), "Value" => 1 )));
+				}
+				elseIf ($Value == 1) {
+					$Result_L = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_L"), "Value" => 0 )));
+					$Result_R = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_R"), "Value" => 0 )));
+				}
+				elseIf ($Value == 2) {
+					$Result_L = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_L"), "Value" => 0 )));
+					$Result_R = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_R"), "Value" => 1 )));
+				}
+
+
+				IF ((!$Result_L) OR (!$Result_R)) {
+					$this->SendDebug("MotorControl", "Fehler beim Setzen des Status!", 0);
+					return;
+				}
+				else {
+					SetValueInteger($this->GetIDForIdent("Motor_".$Motor), $Value);
+					//$this->Get_Status();
+				}
 			}
 		}
 	}    
