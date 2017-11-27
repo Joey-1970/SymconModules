@@ -203,6 +203,28 @@
 	// Beginn der Funktionen
 	
 	// Schaltet den gewaehlten Pin
+	public function MotorStop(Int $Motor, Int $Value)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("MotorStop", "Ausfuehrung", 0);
+			$Pin_L = $this->ReadPropertyInteger("Pin_".$Motor."L");
+			$Pin_R = $this->ReadPropertyInteger("Pin_".$Motor."R");
+			
+			$Result_L = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_L"), "Value" => 0 )));
+			$Result_R = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_R"), "Value" => 0 )));
+			
+			IF ((!$Result_L) OR (!$Result_R)) {
+				$this->SendDebug("MotorStop", "Fehler beim Setzen des Status!", 0);
+				return;
+			}
+			else {
+				SetValueInteger($this->GetIDForIdent("Motor_".$Motor), 1);
+				$this->Get_Status();
+			}
+		}
+	}    
+	    
+	    
 	public function Set_Status(Bool $Value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
