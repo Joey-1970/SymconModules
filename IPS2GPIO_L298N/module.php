@@ -251,18 +251,24 @@
 	
 	
 	// Ermittelt den Status
-	public function Get_Status()
+	public function Get_Status(Int $Motor)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Get_Status", "Ausfuehrung", 0);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_value", "Pin" => $this->ReadPropertyInteger("Pin") )));
-			If ($Result < 0) {
-				$this->SendDebug("Set_Status", "Fehler beim Lesen des Status!", 0);
-				return;
-			}
-			else {
-				$this->SendDebug("Get_Status", "Ergebnis: ".(int)$Result, 0);
-				SetValueBoolean($this->GetIDForIdent("Status"), ($Result ^ $this->ReadPropertyBoolean("Invert")));
+			$Pin_L = $this->ReadPropertyInteger("Pin_".$Motor."L");
+			$Pin_R = $this->ReadPropertyInteger("Pin_".$Motor."R");
+			
+			If (($Pin_L >= 0) and ($Pin_R >= 0)) {
+				$Result_L = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_value", "Pin" => $this->ReadPropertyInteger("Pin_L") )));
+				$Result_R = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_value", "Pin" => $this->ReadPropertyInteger("Pin_R") )));
+				If ($Result < 0) {
+					$this->SendDebug("Set_Status", "Fehler beim Lesen des Status!", 0);
+					return;
+				}
+				else {
+					$this->SendDebug("Get_Status", "Ergebnis: ".(int)$Result, 0);
+					SetValueBoolean($this->GetIDForIdent("Status"), ($Result ^ $this->ReadPropertyBoolean("Invert")));
+				}
 			}
 		}
 	}
