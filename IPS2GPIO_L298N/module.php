@@ -159,7 +159,8 @@
 				$this->SetBuffer("PreviousPin_2R", $this->ReadPropertyInteger("Pin_2R"));
 				
 				If ($Result == true) {
-					//$this->Get_Status();
+					$this->Get_Status(1);
+					$this->Get_Status(2);
 					
 					$this->SetStatus(102);
 				}
@@ -245,7 +246,7 @@
 				}
 				else {
 					SetValueInteger($this->GetIDForIdent("Motor_".$Motor), $Value);
-					//$this->Get_Status();
+					$this->Get_Status($Motor);
 				}
 			}
 		}
