@@ -82,9 +82,9 @@
 
 		$arrayActions = array();
 		If (($this->ReadPropertyInteger("Pin_R") >= 0) AND ($this->ReadPropertyInteger("Pin_G") >= 0) AND ($this->ReadPropertyInteger("Pin_B") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-			$arrayActions[] = array("type" => "Button", "label" => "On", "onClick" => 'I2GRGB_Set_Status($id, true);');
-			$arrayActions[] = array("type" => "Button", "label" => "Off", "onClick" => 'I2GRGB_Set_Status($id, false);');
-			$arrayActions[] = array("type" => "Button", "label" => "Toggle", "onClick" => 'I2GRGB_Toggle_Status($id);');
+			$arrayActions[] = array("type" => "Button", "label" => "On", "onClick" => 'I2GRGBW_Set_Status($id, true);');
+			$arrayActions[] = array("type" => "Button", "label" => "Off", "onClick" => 'I2GRGBW_Set_Status($id, false);');
+			$arrayActions[] = array("type" => "Button", "label" => "Toggle", "onClick" => 'I2GRGBW_Toggle_Status($id);');
 			$arrayActions[] = array("type" => "Label", "label" => "Rot");
 			$arrayActions[] = array("type" => "HorizontalSlider", "name" => "SliderR", "minimum" => 0,  "maximum" => 255, "onChange" => 'I2GRGBW_Set_RGB($id, $SliderR, $SliderG, $SliderB);');
 			$arrayActions[] = array("type" => "Label", "label" => "Grün");
