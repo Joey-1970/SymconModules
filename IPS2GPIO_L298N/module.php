@@ -223,18 +223,21 @@
 			If (($Pin_L >= 0) and ($Pin_R >= 0)) {
 				If ($Value == 0) {
 					// Linkslauf
+					$this->SendDebug("MotorControl", "Linkslauf setzen", 0);
 					$this->SetTimerInterval("RunningTime_".$Motor, ($this->ReadPropertyInteger("RunningTime_".$Motor) * 1000));
 					$Result_R = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $Pin_R, "Value" => 0 )));
 					$Result_L = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $Pin_L, "Value" => 1 )));
 				}
 				elseIf ($Value == 1) {
 					// Stop
+					$this->SendDebug("MotorControl", "Stoppen", 0);
 					$this->SetTimerInterval("RunningTime_".$Motor, 0);
 					$Result_L = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $Pin_L, "Value" => 0 )));
 					$Result_R = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $Pin_R, "Value" => 0 )));
 				}
 				elseIf ($Value == 2) {
 					// Rechtslauf
+					$this->SendDebug("MotorControl", "Rechtslauf setzen", 0);
 					$this->SetTimerInterval("RunningTime_".$Motor, ($this->ReadPropertyInteger("RunningTime_".$Motor) * 1000));
 					$Result_L = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $Pin_L, "Value" => 0 )));
 					$Result_R = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $Pin_R, "Value" => 1 )));
