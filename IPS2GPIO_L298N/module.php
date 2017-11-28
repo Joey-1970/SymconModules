@@ -263,8 +263,8 @@
 			$Pin_R = $this->ReadPropertyInteger("Pin_".$Motor."R");
 			
 			If (($Pin_L >= 0) and ($Pin_R >= 0)) {
-				$Result_L = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_value", "Pin" => $this->ReadPropertyInteger("Pin_L") )));
-				$Result_R = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_value", "Pin" => $this->ReadPropertyInteger("Pin_R") )));
+				$Result_L = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_value", "Pin" => $Pin_L )));
+				$Result_R = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_value", "Pin" => $Pin_R )));
 				IF (($Result_L < 0) OR ($Result_R < 0)) {
 					$this->SendDebug("Get_Status", "Fehler beim Lesen des Status!", 0);
 					return;
