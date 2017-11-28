@@ -144,6 +144,7 @@
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
 			If ((($this->ReadPropertyInteger("Pin_1L") >= 0) AND ($this->ReadPropertyInteger("Pin_1R") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) OR
 				(($this->ReadPropertyInteger("Pin_2L") >= 0) AND ($this->ReadPropertyInteger("Pin_2R") >= 0) AND ($this->ReadPropertyBoolean("Open") == true))) {
+				
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
 									  "Pin" => $this->ReadPropertyInteger("Pin_1L"), "PreviousPin" => $this->GetBuffer("PreviousPin_1L"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 				$this->SetBuffer("PreviousPin_1L", $this->ReadPropertyInteger("Pin_1L"));
