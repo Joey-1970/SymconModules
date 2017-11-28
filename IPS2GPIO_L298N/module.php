@@ -214,7 +214,7 @@
 	public function MotorControl(Int $Motor, Int $Value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("MotorControl", "Ausfuehrung", 0);
+			$this->SendDebug("MotorControl", "Ausfuehrung Motor: ".$Motor." Wert: ".$Value, 0);
 			$Value = min(1, max(0, $Value));
 			$Motor = min(2, max(1, $Motor));
 			$Pin_L = $this->ReadPropertyInteger("Pin_".$Motor."L");
