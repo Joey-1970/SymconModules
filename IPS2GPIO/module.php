@@ -1545,7 +1545,7 @@ class IPS2GPIO_IO extends IPSModule
 		        	}
 		        	break;
 			case "3":
-		        	If ($response[4] == 0) {
+		        	If ($response[4] >= 0) {
 		        		//IPS_LogMessage("IPS2GPIO Read", "Pin: ".$response[2]." Wert: ".$response[3]." erfolgreich gesendet");
 		        		//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"result", "Pin" => $response[2], "Value"=> $response[3])));
 		        	}
