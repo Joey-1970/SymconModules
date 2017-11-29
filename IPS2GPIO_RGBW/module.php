@@ -122,7 +122,7 @@
            	$this->RegisterVariableInteger("Intensity_B", "Intensity Blau", "~Intensity.255", 40);
            	$this->EnableAction("Intensity_B");
 		$this->RegisterVariableInteger("Intensity_W", "Intensity Weiß", "~Intensity.255", 50);
-           	$this->EnableAction("Intensity_B");
+           	$this->EnableAction("Intensity_W");
            	$this->RegisterVariableInteger("Color", "Farbe", "~HexColor", 60);
            	$this->EnableAction("Color");
            	
