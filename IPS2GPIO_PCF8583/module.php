@@ -2,6 +2,13 @@
     // Klassendefinition
     class IPS2GPIO_PCF8583 extends IPSModule 
     {
+	public function Destroy() 
+	{
+		//Never delete this line!
+		parent::Destroy();
+		$this->SetTimerInterval("Messzyklus", 0);
+	}
+	    
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
@@ -13,7 +20,8 @@
 		$this->RegisterPropertyInteger("DeviceBus", 1);	
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->SetBuffer("PreviousPin", -1);
-		
+		$this->RegisterPropertyInteger("Messzyklus", 60);
+		$this->RegisterTimer("Messzyklus", 0, 'I2GPCF8583_Measurement($_IPS["TARGET"]);');	
         }
  	
 	public function GetConfigurationForm() 
@@ -57,6 +65,9 @@
 		}
 		
 		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus)");
+		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
+		
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		
 		$arrayActions = array();
@@ -86,15 +97,17 @@
 		$this->DisableAction("LastInterrupt");
 		IPS_SetHidden($this->GetIDForIdent("LastInterrupt"), false);
 		
-			
-		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {					
-			//ReceiveData-Filter setzen
-			$this->SetBuffer("DeviceIdent", (($this->ReadPropertyInteger("DeviceBus") << 7) + $this->ReadPropertyInteger("DeviceAddress")));
-			$Filter = '((.*"Function":"get_used_i2c".*|.*"DeviceIdent":'.$this->GetBuffer("DeviceIdent").'.*)|(.*"Function":"status".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*))';
-			//$this->SendDebug("IPS2GPIO", $Filter, 0);
-			$this->SetReceiveDataFilter($Filter);
+		$this->RegisterVariableInteger("CounterValue", "Zählwert", "", 20);
+		$this->DisableAction("CounterValue");
+		IPS_SetHidden($this->GetIDForIdent("CounterValue"), false);
+		
+		//ReceiveData-Filter setzen
+		$this->SetBuffer("DeviceIdent", (($this->ReadPropertyInteger("DeviceBus") << 7) + $this->ReadPropertyInteger("DeviceAddress")));
+		$Filter = '((.*"Function":"get_used_i2c".*|.*"DeviceIdent":'.$this->GetBuffer("DeviceIdent").'.*)|(.*"Function":"status".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*))';
+		$this->SetReceiveDataFilter($Filter);
 		
 			
+		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {					
 			If ($this->ReadPropertyBoolean("Open") == true) {
 				If ($this->ReadPropertyInteger("Pin") >= 0) {
 					$ResultPin = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
@@ -109,12 +122,15 @@
 								
 				
 				If (($ResultI2C == true) AND ($ResultPin == true)) {
+					$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
 					// Erste Messdaten einlesen
+					
 					//$this->Setup();
 					$this->SetStatus(102);
 				}
 			}
 			else {
+				$this->SetTimerInterval("Messzyklus", 0);
 				$this->SetStatus(104);
 			}	
 		}
@@ -171,6 +187,12 @@
 		}
 	}    
 	
+	public function Measurement()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			
+		}
+	}    
 	
 
 	    
