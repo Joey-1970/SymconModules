@@ -107,7 +107,7 @@
 		$this->SetBuffer("OWDeviceArray", serialize($OWDeviceArray));
 		
 		//ReceiveData-Filter setzen
-		$Filter = '(.*"Function":"status".*|.*"InstanceID":'.$this->InstanceID.'.*)';
+		$Filter = '((.*"Function":"status".*|.*"InstanceID":'.$this->InstanceID.'.*)|.*"Function":"get_start_trigger".*)';
 		$this->SetReceiveDataFilter($Filter);
 		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {			
