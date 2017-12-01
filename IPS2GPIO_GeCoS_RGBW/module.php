@@ -441,7 +441,7 @@
 		$Channel = ($Register - 8) - (($Group - 1) * 16);
 		
 		$this->SendDebug("SetStatusVariables", "Gruppe: ".$Group." Kanal: ".$ChannelArray[$Channel], 0);
-		$this->SendDebug("SetStatusVariables", "Itensitaet: ".$Intensity." Status: ".(int)$Status, 0);
+		$this->SendDebug("SetStatusVariables", "Intensitaet: ".$Intensity." Status: ".(int)$Status, 0);
 		
 		
 		If ($Intensity <> GetValueInteger($this->GetIDForIdent("Intensity_".$ChannelArray[$Channel]."_".$Group))) {
