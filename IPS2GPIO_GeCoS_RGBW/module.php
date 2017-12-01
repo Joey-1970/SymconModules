@@ -378,6 +378,7 @@
 					$this->SendDebug("Setup", "Lesen der Konfiguration erfolgreich, keine Erneuerung notwendig.", 0);
 				}
 				else {
+					$this->SendDebug("Setup", "Mode: ".$Result_Mode." PreScale: ".$Result_PreScale, 0);
 					// Mode 1 in Sleep setzen
 					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 0, "Value" => 16)));
 					If (!$Result) {
