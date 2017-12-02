@@ -846,7 +846,7 @@
 					//hum_score = ((-0.25/(100-hum_reference)*current_humidity)+0.416666)*100;
     				}
   			}
-			$this->SendDebug("AirQuality", "HumScore: ".$HumScore." Humidity: ".$Humidity, 0);
+			$this->SendDebug("AirQuality", "HumScore: ".$HumScore, 0);
   
 			//Calculate gas contribution to IAQ index
 			$gas_lower_limit = 50000;   // Bad air quality limit
@@ -856,7 +856,7 @@
 
 			//Combine results for the final IAQ index value (0-100% where 100% is good quality air)
 			$air_quality_score = abs($HumScore + $GasScore);
-			$this->SendDebug("AirQuality", "air_quality_score: ".$air_quality_score, 0);
+			//$this->SendDebug("AirQuality", "air_quality_score: ".$air_quality_score, 0);
 			$air_quality_score = (100 - $air_quality_score) * 5;
 			$this->SendDebug("AirQuality", "air_quality_score: ".$air_quality_score, 0);
 			// Umrechnung für die Air-Qualität-Anzeige
