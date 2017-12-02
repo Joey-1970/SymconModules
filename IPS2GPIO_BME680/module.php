@@ -617,18 +617,7 @@
 		$var3 = (($lookupTable2[$gas_range] * $var1) / 512);
 		$GasResistance = (($var3 + ($var2 / 2)) / $var2);
 		SetValueInteger($this->GetIDForIdent("GasResistance"), intval($GasResistance));
-		// Umrechnung Gas-Widerstand in PPM
 		
-		$ppm = 0; // Aktuell kein anderer Kenntisstand...
-		
-		// Umrechnung für die Air-Qualität-Anzeige
-		$ppm = max(0, min(500, $ppm));
-		$IAQ_Index = array(50, 100, 150, 200, 300, 500);
-		$i = 0;
-		while ($ppm > $IAQ_Index[$i]) {
-		    $i++;  
-		}
-		SetValueInteger($this->GetIDForIdent("AirQuality"), ($i + 1));
 	return $GasResistance;
 	}
 	
@@ -693,6 +682,7 @@
 							$this->SetBuffer("Humidity", $this->calc_humidity($adc_hum));
 							$this->SetBuffer("GasResistance", $this->calc_gas_resistance($adc_gas_res, $gas_range));
 							$this->more_informations();
+							$this->AirQuality($this->GetBuffer("GasResistance"), $this->GetBuffer("Humidity"));
 							break;
 						} else {
 							IPS_Sleep(10);
@@ -824,6 +814,8 @@
 	{
 		$CalibrateCounter = intval($this->GetBuffer("CalibrateCounter"));
 		$CalibrateValue = intval($this->GetBuffer("CalibrateValue"));
+		$HumReference = 40;
+		
 		If ($CalibrateCounter == 0) {
 			// erstes Messergebnis nicht mit einbeziehen
 			$AirQuality = -1;
@@ -844,26 +836,31 @@
   			else {
   				//sub-optimal
    				if ($Humidity < 38) {
-      					$HumScore = 0.25 / hum_reference * $Humidity * 100;
+      					$HumScore = 0.25 / $HumReference * $Humidity * 100;
 				}
     				else {
-   					$HumScore = ((-0.25 / (100-hum_reference) * $Humidity) + 0.416666) * 100;
+   					$HumScore = ((-0.25 / (100 - $HumReference) * $Humidity) + 0.416666) * 100;
     				}
   			}
   
 			//Calculate gas contribution to IAQ index
 			$gas_lower_limit = 50000;   // Bad air quality limit
 			$gas_upper_limit = 500000;  // Good air quality limit 
-			$GasScore = (0.75 / ($gas_upper_limit - $gas_lower_limit) * gas_reference - ($gas_lower_limit * (0.75 / ($gas_upper_limit - $gas_lower_limit)))) * 100;
+			$GasScore = (0.75 / ($gas_upper_limit - $gas_lower_limit) * $CalibrateValue - ($gas_lower_limit * (0.75 / ($gas_upper_limit - $gas_lower_limit)))) * 100;
 
 			//Combine results for the final IAQ index value (0-100% where 100% is good quality air)
 			$air_quality_score = $HumScore + $GasScore;
-	
+			$this->SendDebug("AirQuality", "air_quality_score: ".$air_quality_score, 0);
+			// Umrechnung für die Air-Qualität-Anzeige
+			$air_quality_score = max(0, min(500, $air_quality_score));
+			$IAQ_Index = array(50, 100, 150, 200, 300, 500);
+			$i = 0;
+			while ($ppm > $IAQ_Index[$i]) {
+			    $i++;  
+			}
+			SetValueInteger($this->GetIDForIdent("AirQuality"), ($i + 1));
+
 		}
-		
-		
-		
-		
 	}
 	    
 	private function SoftReset()
