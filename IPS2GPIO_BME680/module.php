@@ -815,6 +815,7 @@
 		$CalibrateCounter = intval($this->GetBuffer("CalibrateCounter"));
 		$CalibrateValue = intval($this->GetBuffer("CalibrateValue"));
 		$HumReference = 40;
+		$this->SendDebug("AirQuality", "CalibrateCounter: ".$CalibrateCounter, 0);
 		
 		If ($CalibrateCounter == 0) {
 			// erstes Messergebnis nicht mit einbeziehen
