@@ -848,9 +848,13 @@
 			$gas_lower_limit = 50000;   // Bad air quality limit
 			$gas_upper_limit = 500000;  // Good air quality limit 
 			$GasScore = (0.75 / ($gas_upper_limit - $gas_lower_limit) * $CalibrateValue - ($gas_lower_limit * (0.75 / ($gas_upper_limit - $gas_lower_limit)))) * 100;
+			 gas_score = (0.75/(gas_upper_limit-gas_lower_limit)*gas_reference -(gas_lower_limit*(0.75/(gas_upper_limit-gas_lower_limit))))*100;
+
 
 			//Combine results for the final IAQ index value (0-100% where 100% is good quality air)
-			$air_quality_score = $HumScore + $GasScore;
+			$air_quality_score = $HumScore / 100 + $GasScore / 100;
+			$this->SendDebug("AirQuality", "air_quality_score: ".$air_quality_score, 0);
+			$air_quality_score = (100 - $air_quality_score) * 5;
 			$this->SendDebug("AirQuality", "air_quality_score: ".$air_quality_score, 0);
 			// Umrechnung für die Air-Qualität-Anzeige
 			$air_quality_score = max(0, min(500, $air_quality_score));
