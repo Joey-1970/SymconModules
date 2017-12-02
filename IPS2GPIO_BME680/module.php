@@ -682,7 +682,7 @@
 							$this->SetBuffer("Humidity", $this->calc_humidity($adc_hum));
 							$this->SetBuffer("GasResistance", $this->calc_gas_resistance($adc_gas_res, $gas_range));
 							$this->more_informations();
-							$this->AirQuality($this->GetBuffer("GasResistance"), $this->GetBuffer("Humidity"));
+							$this->AirQuality(intval($this->GetBuffer("GasResistance")), floatval($this->GetBuffer("Humidity")));
 							break;
 						} else {
 							IPS_Sleep(10);
