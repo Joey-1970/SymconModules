@@ -157,7 +157,7 @@
 		$this->RegisterProfileInteger("IPS2GPIO.ohm", "Gauge", "", " Ohm", 0, 1000000, 1);
 		
 		$this->RegisterProfileInteger("IPS2GPIO.AirQuality", "Information", "", "", 0, 6, 1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 0, "unbekannt", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 0, "Kalibrierung", "Information", -1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 1, "gut", "Information", 0x58FA58);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 2, "durchschnittlich", "Information", 0xF7FE2E);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 3, "etwas schlecht", "Information", 0xFE9A2E);
@@ -222,6 +222,10 @@
 		$this->RegisterVariableInteger("GasResistance", "Gas Widerstand", "IPS2GPIO.ohm", 120);
 		$this->DisableAction("GasResistance");
 		IPS_SetHidden($this->GetIDForIdent("GasResistance"), false);
+		
+		$this->SetBuffer("CalibrateCounter", 0);
+		$this->SetBuffer("CalibrateValue", 0);
+		
 		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 			// Logging setzen
@@ -815,7 +819,53 @@
 
 	return $Result;
 	}
-	        
+	
+	private function AirQuality(int $GasResistance, float $Humidity)
+	{
+		$CalibrateCounter = intval($this->GetBuffer("CalibrateCounter"));
+		$CalibrateValue = intval($this->GetBuffer("CalibrateValue"));
+		If ($CalibrateCounter == 0) {
+			// erstes Messergebnis nicht mit einbeziehen
+			$AirQuality = -1;
+			$this->SetBuffer("CalibrateCounter", $CalibrateCounter++);
+		}
+		elseif (($CalibrateCounter > 0) AND ($CalibrateCounter <= 10)) {
+			// hier den Mittelwert bilden
+			$CalibrateValue = ($GasResistance + $CalibrateValue) / 2;
+			$this->SetBuffer("CalibrateValue", $CalibrateValue);
+			$AirQuality = -1;
+			$this->SetBuffer("CalibrateCounter", $CalibrateCounter++);
+		}
+		elseif ($CalibrateCounter > 10) {
+			// jetzt die Berechnung durchführen
+			if (($Humidity >= 38) AND ($Humidity <= 42)) {
+    				$HumScore = 0.25 * 100; // Humidity +/-5% around optimum 
+			}
+  			else {
+  				//sub-optimal
+   				if ($Humidity < 38) {
+      					$HumScore = 0.25 / hum_reference * $Humidity * 100;
+				}
+    				else {
+   					$HumScore = ((-0.25 / (100-hum_reference) * $Humidity) + 0.416666) * 100;
+    				}
+  			}
+  
+			//Calculate gas contribution to IAQ index
+			$gas_lower_limit = 50000;   // Bad air quality limit
+			$gas_upper_limit = 500000;  // Good air quality limit 
+			$GasScore = (0.75 / ($gas_upper_limit - $gas_lower_limit) * gas_reference - ($gas_lower_limit * (0.75 / ($gas_upper_limit - $gas_lower_limit)))) * 100;
+
+			//Combine results for the final IAQ index value (0-100% where 100% is good quality air)
+			$air_quality_score = $HumScore + $GasScore;
+	
+		}
+		
+		
+		
+		
+	}
+	    
 	private function SoftReset()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
