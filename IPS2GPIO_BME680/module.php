@@ -861,7 +861,7 @@
 			$air_quality_score = max(0, min(500, $air_quality_score));
 			$IAQ_Index = array(50, 100, 150, 200, 300, 500);
 			$i = 0;
-			while ($ppm > $IAQ_Index[$i]) {
+			while ($air_quality_score > $IAQ_Index[$i]) {
 			    $i++;  
 			}
 			SetValueInteger($this->GetIDForIdent("AirQuality"), ($i + 1));
