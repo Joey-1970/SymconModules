@@ -830,6 +830,8 @@
 			$this->SetBuffer("CalibrateCounter", ($CalibrateCounter + 1));
 		}
 		elseif ($CalibrateCounter > 10) {
+			$CalibrateValue = ($GasResistance + $CalibrateValue) / 2;
+			$this->SetBuffer("CalibrateValue", $CalibrateValue);
 			// jetzt die Berechnung durchführen
 			if (($Humidity >= 38) AND ($Humidity <= 42)) {
     				$HumScore = 0.25 * 100; // Humidity +/-5% around optimum 
