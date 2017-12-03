@@ -822,7 +822,14 @@
 			$AirQuality = -1;
 			$this->SetBuffer("CalibrateCounter", ($CalibrateCounter + 1));
 		}
-		elseif (($CalibrateCounter > 0) AND ($CalibrateCounter <= 10)) {
+		elseif ($CalibrateCounter == 1) {
+			// hier den Mittelwert bilden
+			$CalibrateValue = $GasResistance;
+			$this->SetBuffer("CalibrateValue", $CalibrateValue);
+			$AirQuality = -1;
+			$this->SetBuffer("CalibrateCounter", ($CalibrateCounter + 1));
+		}
+		elseif (($CalibrateCounter > 1) AND ($CalibrateCounter <= 10)) {
 			// hier den Mittelwert bilden
 			$CalibrateValue = ($GasResistance + $CalibrateValue) / 2;
 			$this->SetBuffer("CalibrateValue", $CalibrateValue);
