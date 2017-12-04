@@ -120,9 +120,6 @@
 					$this->SetStatus($data->Status);
 				}
 				break;
-			case "freepin":
-				   // Funktion zum erstellen dynamischer Pulldown-Menüs
-				   break;
 		}
  	}
 	// Beginn der Funktionen
@@ -164,27 +161,47 @@
 				If  ($TargetValue > $ActualValue) {
 					for ($i = ($ActualValue + $Stepwide) ; $i <= $TargetValue; $i = $i + round($Stepwide, 2)) {
 						$Intensitiy = round($i, 0);
-						$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Intensitiy)));
+						$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Intensitiy)));
+						If (!$Result) {
+							$this->SendDebug("Fade_Intensity", "Fehler beim Schreiben des Wertes!", 0);
+							return;
+						}
 						IPS_Sleep(500);
 					}
 					If ($Intensitiy <> $TargetValue) {
 						$Intensitiy = $TargetValue;
-						$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Intensitiy)));
+						$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Intensitiy)));
+						If (!$Result) {
+							$this->SendDebug("Fade_Intensity", "Fehler beim Schreiben des Wertes!", 0);
+							return;
+						}
 					}
 				}
 				elseif ($TargetValue < $ActualValue) {
 					for ($i = ($ActualValue + $Stepwide) ; $i >= $TargetValue; $i = $i + round($Stepwide, 2)) {
 						$Intensitiy = round($i, 0);
-						$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Intensitiy)));
+						$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Intensitiy)));
+						If (!$Result) {
+							$this->SendDebug("Fade_Intensity", "Fehler beim Schreiben des Wertes!", 0);
+							return;
+						}
 						IPS_Sleep(500);
 					}
 					If ($Intensitiy <> $TargetValue) {
 						$Intensitiy = $TargetValue;
-						$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Intensitiy)));
+						$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Intensitiy)));
+						If (!$Result) {
+							$this->SendDebug("Fade_Intensity", "Fehler beim Schreiben des Wertes!", 0);
+							return;
+						}
 					}
 				}
 				else {
-					     $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $TargetValue)));
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $TargetValue)));
+					If (!$Result) {
+						$this->SendDebug("Fade_Intensity", "Fehler beim Schreiben des Wertes!", 0);
+						return;
+					}
 				}			
 			}
 			else {
