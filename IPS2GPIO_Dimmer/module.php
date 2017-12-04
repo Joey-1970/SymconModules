@@ -157,45 +157,38 @@
 			$ActualValue = GetValueInteger($this->GetIDForIdent("Intensity"));
 			$TargetValue = $Value;
 			$Steps = $Fadetime * 2;
-			
-			$Fadetime = 7;
-			$ActualValue = 254;
-			$TargetValue = 3;
-			$Steps = $Fadetime * 2;
 			$Difference = $TargetValue - $ActualValue;
 			$Stepwide = $Difference / $Steps;
 
-			If  ($TargetValue > $ActualValue) {
-			    for ($i = ($ActualValue + $Stepwide) ; $i <= $TargetValue; $i = $i + round($Stepwide, 2)) {
-				$Intensitiy = round($i, 0);
-				//echo $Intensitiy." ";
-			    }
-			    If ($Intensitiy <> $TargetValue) {
-				$Intensitiy = $TargetValue;
-				//echo $Intensitiy." ";
-			    }
-			}
-			elseif ($TargetValue < $ActualValue) {
-			    for ($i = ($ActualValue + $Stepwide) ; $i >= $TargetValue; $i = $i + round($Stepwide, 2)) {
-				$Intensitiy = round($i, 0);
-				//echo $Intensitiy." ";
-			    }
-			    If ($Intensitiy <> $TargetValue) {
-				$Intensitiy = $TargetValue;
-				//echo $Intensitiy." ";
-			    }
-			}
-			else {
-			     //echo $TargetValue;
-			}
-			
-			
-			
 			If (GetValueBoolean($this->GetIDForIdent("Status")) == true) {
-				$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value)));
+				If  ($TargetValue > $ActualValue) {
+					for ($i = ($ActualValue + $Stepwide) ; $i <= $TargetValue; $i = $i + round($Stepwide, 2)) {
+						$Intensitiy = round($i, 0);
+						$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Intensitiy)));
+						IPS_Sleep(500);
+					}
+					If ($Intensitiy <> $TargetValue) {
+						$Intensitiy = $TargetValue;
+						$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Intensitiy)));
+					}
+				}
+				elseif ($TargetValue < $ActualValue) {
+					for ($i = ($ActualValue + $Stepwide) ; $i >= $TargetValue; $i = $i + round($Stepwide, 2)) {
+						$Intensitiy = round($i, 0);
+						$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Intensitiy)));
+						IPS_Sleep(500);
+					}
+					If ($Intensitiy <> $TargetValue) {
+						$Intensitiy = $TargetValue;
+						$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Intensitiy)));
+					}
+				}
+				else {
+					     $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $TargetValue)));
+				}			
 			}
 			else {
-				SetValueInteger($this->GetIDForIdent("Intensity"), $Value);
+				SetValueInteger($this->GetIDForIdent("Intensity"), $TargetValue);
 			}
 		}
 	}
