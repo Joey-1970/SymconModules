@@ -164,31 +164,29 @@
 			$Steps = $Fadetime * 2;
 			$Difference = $TargetValue - $ActualValue;
 			$Stepwide = $Difference / $Steps;
-			echo $Stepwide." ";
-			//echo $ActualValue + $Stepwide." ";
 
 			If  ($TargetValue > $ActualValue) {
 			    for ($i = ($ActualValue + $Stepwide) ; $i <= $TargetValue; $i = $i + round($Stepwide, 2)) {
 				$Intensitiy = round($i, 0);
-				echo $Intensitiy." ";
+				//echo $Intensitiy." ";
 			    }
 			    If ($Intensitiy <> $TargetValue) {
 				$Intensitiy = $TargetValue;
-				echo $Intensitiy." ";
+				//echo $Intensitiy." ";
 			    }
 			}
 			elseif ($TargetValue < $ActualValue) {
 			    for ($i = ($ActualValue + $Stepwide) ; $i >= $TargetValue; $i = $i + round($Stepwide, 2)) {
-				 $Intensitiy = round($i, 0);
-				echo $Intensitiy." ";
+				$Intensitiy = round($i, 0);
+				//echo $Intensitiy." ";
 			    }
 			    If ($Intensitiy <> $TargetValue) {
 				$Intensitiy = $TargetValue;
-				echo $Intensitiy." ";
+				//echo $Intensitiy." ";
 			    }
 			}
 			else {
-			     echo $TargetValue;
+			     //echo $TargetValue;
 			}
 			
 			
