@@ -166,6 +166,9 @@
 							$this->SendDebug("Fade_Intensity", "Fehler beim Schreiben des Wertes!", 0);
 							return;
 						}
+						else {
+							SetValueInteger($this->GetIDForIdent("Intensity"), $Intensitiy);
+						}
 						IPS_Sleep(500);
 					}
 					If ($Intensitiy <> $TargetValue) {
@@ -174,6 +177,9 @@
 						If (!$Result) {
 							$this->SendDebug("Fade_Intensity", "Fehler beim Schreiben des Wertes!", 0);
 							return;
+						}
+						else {
+							SetValueInteger($this->GetIDForIdent("Intensity"), $Intensitiy);
 						}
 					}
 				}
@@ -185,6 +191,9 @@
 							$this->SendDebug("Fade_Intensity", "Fehler beim Schreiben des Wertes!", 0);
 							return;
 						}
+						else {
+							SetValueInteger($this->GetIDForIdent("Intensity"), $Intensitiy);
+						}
 						IPS_Sleep(500);
 					}
 					If ($Intensitiy <> $TargetValue) {
@@ -194,6 +203,9 @@
 							$this->SendDebug("Fade_Intensity", "Fehler beim Schreiben des Wertes!", 0);
 							return;
 						}
+						else {
+							SetValueInteger($this->GetIDForIdent("Intensity"), $Intensitiy);
+						}
 					}
 				}
 				else {
@@ -201,6 +213,9 @@
 					If (!$Result) {
 						$this->SendDebug("Fade_Intensity", "Fehler beim Schreiben des Wertes!", 0);
 						return;
+					}
+					else {
+						SetValueInteger($this->GetIDForIdent("Intensity"), $TargetValue);
 					}
 				}			
 			}
