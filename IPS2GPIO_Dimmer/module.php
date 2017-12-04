@@ -156,6 +156,9 @@
 			$Value = min(255, max(0, $Value));
 			$ActualValue = GetValueInteger($this->GetIDForIdent("Intensity"));
 			$TargetValue = $Value;
+			$Steps = $Fadetime / 2;
+			
+			
 			
 			If (GetValueBoolean($this->GetIDForIdent("Status")) == true) {
 				$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value)));
