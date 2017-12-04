@@ -149,13 +149,13 @@
 		}
 	}
 	
-	public function Fade_Intensity(Int $Value, Int $Fadetime)
+	public function Fade_Intensity(Int $TargetValue, Int $Fadetime)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Fade_Intensity", "Ausfuehrung", 0);
-			$Value = min(255, max(0, $Value));
+			$TargetValue = min(255, max(0, $TargetValue));
+			$Fadetime = min(30, max(0, $Fadetime));
 			$ActualValue = GetValueInteger($this->GetIDForIdent("Intensity"));
-			$TargetValue = $Value;
 			$Steps = $Fadetime * 2;
 			$Difference = $TargetValue - $ActualValue;
 			$Stepwide = $Difference / $Steps;
