@@ -156,7 +156,40 @@
 			$Value = min(255, max(0, $Value));
 			$ActualValue = GetValueInteger($this->GetIDForIdent("Intensity"));
 			$TargetValue = $Value;
-			$Steps = $Fadetime / 2;
+			$Steps = $Fadetime * 2;
+			
+			$Fadetime = 7;
+			$ActualValue = 254;
+			$TargetValue = 3;
+			$Steps = $Fadetime * 2;
+			$Difference = $TargetValue - $ActualValue;
+			$Stepwide = $Difference / $Steps;
+			echo $Stepwide." ";
+			//echo $ActualValue + $Stepwide." ";
+
+			If  ($TargetValue > $ActualValue) {
+			    for ($i = ($ActualValue + $Stepwide) ; $i <= $TargetValue; $i = $i + round($Stepwide, 2)) {
+				$Intensitiy = round($i, 0);
+				echo $Intensitiy." ";
+			    }
+			    If ($Intensitiy <> $TargetValue) {
+				$Intensitiy = $TargetValue;
+				echo $Intensitiy." ";
+			    }
+			}
+			elseif ($TargetValue < $ActualValue) {
+			    for ($i = ($ActualValue + $Stepwide) ; $i >= $TargetValue; $i = $i + round($Stepwide, 2)) {
+				 $Intensitiy = round($i, 0);
+				echo $Intensitiy." ";
+			    }
+			    If ($Intensitiy <> $TargetValue) {
+				$Intensitiy = $TargetValue;
+				echo $Intensitiy." ";
+			    }
+			}
+			else {
+			     echo $TargetValue;
+			}
 			
 			
 			
