@@ -183,7 +183,9 @@
 	private function Setup()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			// Adresse 00 setzen
 			
+			// Adresse 08 setzen
 		}
 	}    
 	
