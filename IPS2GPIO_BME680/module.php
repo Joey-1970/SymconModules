@@ -448,7 +448,7 @@
 			$durval = ($HeaterDur + ($factor * 64));
 		}
 
-		return $durval;
+		return abs($durval);
 	}
 		       
 	private function ReadCalibrateData()
@@ -590,7 +590,7 @@
 		
 		$Hum = min(100000, max(0, $Hum));
 		SetValueFloat($this->GetIDForIdent("Humidity"), round($Hum / 1000, 2));
-	return $Hum;
+	return abs($Hum);
 	}
 	
 	private function calc_gas_resistance($adc_gas_res, $gas_range)
