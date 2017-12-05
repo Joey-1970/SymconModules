@@ -427,7 +427,7 @@
 		$var4 = ($var3 / ($res_heat_range + 4));
 		$var5 = (131 * $res_heat_val) + 65536;
 		$heatr_res_x100 = ((($var4 / $var5) - 250) * 34);
-		$heatr_res = intval(($heatr_res_x100 + 50) / 100);
+		$heatr_res = abs(($heatr_res_x100 + 50) / 100);
 
 	return $heatr_res;
 	}
@@ -613,9 +613,9 @@
 
 		// Gas Widerstand
 		$var1 = ((1340 + (5 * $range_switching_error)) * ($lookupTable1[$gas_range])) / 65536;
-		$var2 = ((($adc_gas_res * 32768) - (16777216)) + $var1);
+		$var2 = abs(((($adc_gas_res * 32768) - (16777216)) + $var1));
 		$var3 = (($lookupTable2[$gas_range] * $var1) / 512);
-		$GasResistance = (($var3 + ($var2 / 2)) / $var2);
+		$GasResistance = abs((($var3 + ($var2 / 2)) / $var2));
 		SetValueInteger($this->GetIDForIdent("GasResistance"), intval($GasResistance));
 		
 	return $GasResistance;
