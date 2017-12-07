@@ -13,8 +13,14 @@
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
  	    	$this->RegisterPropertyInteger("DeviceAddress", 88);
 		$this->RegisterPropertyInteger("DeviceBus", 1);	
-		$this->RegisterPropertyInteger("FadeIn", 0);
-		$this->RegisterPropertyInteger("FadeOut", 0);
+		$this->RegisterPropertyInteger("FadeIn_1", 0);
+		$this->RegisterPropertyInteger("FadeOut_1", 0);
+		$this->RegisterPropertyInteger("FadeIn_2", 0);
+		$this->RegisterPropertyInteger("FadeOut_2", 0);
+		$this->RegisterPropertyInteger("FadeIn_3", 0);
+		$this->RegisterPropertyInteger("FadeOut_3", 0);
+		$this->RegisterPropertyInteger("FadeIn_4", 0);
+		$this->RegisterPropertyInteger("FadeOut_4", 0);
         }
  	
 	public function GetConfigurationForm() 
@@ -47,8 +53,18 @@
 		
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Optional: Angabe von Fade-In/-Out-Zeit in Sekunden (0 => aus, max. 30 Sek)");
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeIn",  "caption" => "Fade-In-Zeit"); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeOut",  "caption" => "Fade-Out-Zeit");
+		$arrayElements[] = array("type" => "Label", "label" => "Gruppe 1:");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeIn_1",  "caption" => "Fade-In-Zeit"); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeOut_1",  "caption" => "Fade-Out-Zeit");
+		$arrayElements[] = array("type" => "Label", "label" => "Gruppe 2:");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeIn_2",  "caption" => "Fade-In-Zeit"); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeOut_2",  "caption" => "Fade-Out-Zeit");
+		$arrayElements[] = array("type" => "Label", "label" => "Gruppe 3:");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeIn_3",  "caption" => "Fade-In-Zeit"); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeOut_3",  "caption" => "Fade-Out-Zeit");
+		$arrayElements[] = array("type" => "Label", "label" => "Gruppe 4:");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeIn_4",  "caption" => "Fade-In-Zeit"); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeOut_4",  "caption" => "Fade-Out-Zeit");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Button", "label" => "Herstellerinformationen", "onClick" => "echo 'https://www.gedad.de/projekte/projekte-f%C3%BCr-privat/gedad-control/'");
 		
