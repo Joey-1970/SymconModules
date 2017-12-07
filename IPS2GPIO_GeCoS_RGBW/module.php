@@ -53,16 +53,16 @@
 		
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Optional: Angabe von Fade-In/-Out-Zeit in Sekunden (0 => aus, max. 30 Sek)");
-		$arrayElements[] = array("type" => "Label", "label" => "Gruppe 1:");
+		$arrayElements[] = array("type" => "Label", "label" => "Gruppe 1 RGB:");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeIn_1",  "caption" => "Fade-In-Zeit"); 
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeOut_1",  "caption" => "Fade-Out-Zeit");
-		$arrayElements[] = array("type" => "Label", "label" => "Gruppe 2:");
+		$arrayElements[] = array("type" => "Label", "label" => "Gruppe 2 RGB:");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeIn_2",  "caption" => "Fade-In-Zeit"); 
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeOut_2",  "caption" => "Fade-Out-Zeit");
-		$arrayElements[] = array("type" => "Label", "label" => "Gruppe 3:");
+		$arrayElements[] = array("type" => "Label", "label" => "Gruppe 3 RGB:");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeIn_3",  "caption" => "Fade-In-Zeit"); 
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeOut_3",  "caption" => "Fade-Out-Zeit");
-		$arrayElements[] = array("type" => "Label", "label" => "Gruppe 4:");
+		$arrayElements[] = array("type" => "Label", "label" => "Gruppe 4 RGB:");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeIn_4",  "caption" => "Fade-In-Zeit"); 
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeOut_4",  "caption" => "Fade-Out-Zeit");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
