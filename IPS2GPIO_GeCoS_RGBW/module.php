@@ -245,7 +245,7 @@
 			}
 			$FadeOutTime = $this->ReadPropertyInteger("FadeOut_".$Group);
 			If (($FadeOutTime > 0) AND ($Status == false)) {
-				//$this->FadeOut($Group);
+				$this->FadeOut($Group);
 			}
 			$Value_R = GetValueInteger($this->GetIDForIdent("Intensity_R_".$Group));
 			$L_Bit_R = $Value_R & 255;
@@ -346,7 +346,7 @@
 	        
 	private function FadeIn(Int $Group)
 	{
-		// Beim Einschalten Faden
+		// RGB beim Einschalten Faden
 		$this->SendDebug("FadeIn", "Ausfuehrung", 0);
 		$Group = min(4, max(1, $Group));
 		$Fadetime = $this->ReadPropertyInteger("FadeIn_".$Group);
@@ -363,13 +363,11 @@
 			// Umrechnung in HSL
 			list($h, $s, $l) = $this->rgbToHsl($Value_R, $Value_G, $Value_B);
 			// $l muss von 0 auf den Zielwert gebracht werden
-			$Steps = $Fadetime * 2;
+			$Steps = $Fadetime * 4;
 			$Stepwide = $l / $Steps;
 			$StartAddress = (($Group - 1) * 16) + 6;
 			
-			// Fade Out
-			//for ($i = ($l - $Stepwide) ; $i >= (0 + $Stepwide); $i = ($i - round($Stepwide, 2))) {
-			
+			// Fade In			
 			for ($i = (0 + $Stepwide) ; $i <= ($l - $Stepwide); $i = $i + round($Stepwide, 2)) {
 			    	// $i muss jetzt als HSL-Wert wieder in RGB umgerechnet werden
 				list($r, $g, $b) = $this->hslToRgb($h, $s, $i);
@@ -389,12 +387,61 @@
 					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_12_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
 								  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit_R, "Value_4" => $H_Bit_R, "Value_5" => 0, "Value_6" => 0, "Value_7" => $L_Bit_G, "Value_8" => $H_Bit_G, "Value_9" => 0, "Value_10" => 0, "Value_11" => $L_Bit_B, "Value_12" => $H_Bit_B)));
 				}
-				IPS_Sleep(500);
+				IPS_Sleep(250);
 			}
 				
 		}
 	}
-	    
+
+	private function FadeOut(Int $Group)
+	{
+		// RGB beim Ausschalten Faden
+		$this->SendDebug("FadeOut", "Ausfuehrung", 0);
+		$Group = min(4, max(1, $Group));
+		$Fadetime = $this->ReadPropertyInteger("FadeIn_".$Group);
+		$Fadetime = min(30, max(0, $Fadetime));
+		If ($Fadetime > 0) {
+			// Zielwert RGB bestimmen
+			$Value_R = GetValueInteger($this->GetIDForIdent("Intensity_R_".$Group));
+			$Value_G = GetValueInteger($this->GetIDForIdent("Intensity_G_".$Group));
+			$Value_B = GetValueInteger($this->GetIDForIdent("Intensity_B_".$Group));
+			// Werte skalieren
+			$Value_R = 255 / 4095 * $Value_R;
+			$Value_G = 255 / 4095 * $Value_G;
+			$Value_B = 255 / 4095 * $Value_B;
+			// Umrechnung in HSL
+			list($h, $s, $l) = $this->rgbToHsl($Value_R, $Value_G, $Value_B);
+			// $l muss von 0 auf den Zielwert gebracht werden
+			$Steps = $Fadetime * 4;
+			$Stepwide = $l / $Steps;
+			$StartAddress = (($Group - 1) * 16) + 6;
+			
+			// Fade Out
+			for ($i = ($l - $Stepwide) ; $i >= (0 + $Stepwide); $i = ($i - round($Stepwide, 2))) {
+			    	// $i muss jetzt als HSL-Wert wieder in RGB umgerechnet werden
+				list($r, $g, $b) = $this->hslToRgb($h, $s, $i);
+				// Werte skalieren
+				$Value_R = 4095 / 255 * $r;
+				$Value_G = 4095 / 255 * $g;
+				$Value_B = 4095 / 255 * $b;
+				// Bytes bestimmen
+				$L_Bit_R = $Value_R & 255;
+				$H_Bit_R = $Value_R >> 8;
+				$L_Bit_G = $Value_G & 255;
+				$H_Bit_G = $Value_G >> 8;
+				$L_Bit_B = $Value_B & 255;
+				$H_Bit_B = $Value_B >> 8;
+				If ($this->ReadPropertyBoolean("Open") == true) {
+					// Ausgang setzen
+					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_12_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
+								  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit_R, "Value_4" => $H_Bit_R, "Value_5" => 0, "Value_6" => 0, "Value_7" => $L_Bit_G, "Value_8" => $H_Bit_G, "Value_9" => 0, "Value_10" => 0, "Value_11" => $L_Bit_B, "Value_12" => $H_Bit_B)));
+				}
+				IPS_Sleep(250);
+			}
+				
+		}
+	}    
+	
 	public function SetOutputPinColor(Int $Group, Int $Color)
 	{
 		$this->SendDebug("SetOutputPinColor", "Ausfuehrung", 0);
