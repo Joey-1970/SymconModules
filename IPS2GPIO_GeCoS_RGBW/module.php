@@ -361,7 +361,7 @@
 			$Value_G = 255 / 4095 * $Value_G;
 			$Value_B = 255 / 4095 * $Value_B;
 			// Umrechnung in HSL
-			list($h, $s, $l); $this->rgbToHsl(int $Value_R, int $Value_G, int $Value_B);
+			list($h, $s, $l) = $this->rgbToHsl(int $Value_R, int $Value_G, int $Value_B);
 			// $l muss von 0 auf den Zielwert gebracht werden
 			$Steps = $Fadetime * 2;
 			$Stepwide = $l / $Steps;
