@@ -17,6 +17,8 @@
 		$this->RegisterPropertyInteger("Pin_W", -1);
 		$this->SetBuffer("PreviousPin_W", -1);
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+		$this->RegisterPropertyInteger("FadeIn", 0);
+		$this->RegisterPropertyInteger("FadeOut", 0);
 	}
 	    
 	public function GetConfigurationForm() 
@@ -79,6 +81,12 @@
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_W", "caption" => "GPIO-Nr. Weiß", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "Label", "label" => "Optional: Angabe von Fade-In/-Out-Zeit in Sekunden (0 => aus, max. 30 Sek)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeIn",  "caption" => "Fade-In-Zeit"); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeOut",  "caption" => "Fade-Out-Zeit");
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+
 
 		$arrayActions = array();
 		If (($this->ReadPropertyInteger("Pin_R") >= 0) AND ($this->ReadPropertyInteger("Pin_G") >= 0) AND ($this->ReadPropertyInteger("Pin_B") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
