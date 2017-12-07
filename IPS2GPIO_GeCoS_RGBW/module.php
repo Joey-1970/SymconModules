@@ -240,11 +240,11 @@
 		}
 		else {
 			$FadeInTime = $this->ReadPropertyInteger("FadeIn_".$Group);
-			If ($FadeInTime > 0) AND ($Status == true) {
+			If (($FadeInTime > 0) AND ($Status == true)) {
 				$this->FadeIn($Group);
 			}
 			$FadeOutTime = $this->ReadPropertyInteger("FadeOut_".$Group);
-			If ($FadeOutTime > 0) AND ($Status == false) {
+			If (($FadeOutTime > 0) AND ($Status == false)) {
 				//$this->FadeOut($Group);
 			}
 			$Value_R = GetValueInteger($this->GetIDForIdent("Intensity_R_".$Group));
