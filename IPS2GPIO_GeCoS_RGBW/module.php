@@ -82,9 +82,6 @@
 		// Profil anlegen
 		$this->RegisterProfileInteger("IPS2GPIO.Intensity4096", "Intensity", "", " %", 0, 4095, 1);
 		
-		//$Output = array(); 
-		//$this->SetBuffer("Output", serialize($Output));
-		
 		//Status-Variablen anlegen
 		for ($i = 0; $i <= 3; $i++) {
 			$this->RegisterVariableBoolean("Status_RGB_".($i + 1), "Status RGB ".($i + 1), "~Switch", 10 + ($i * 70));
@@ -339,6 +336,33 @@
 		}		
 	}    	    
 	        
+	private function FadeIn(Int $Group)
+	{
+		// Beim Einschalten Faden
+		$this->SendDebug("FadeIn", "Ausfuehrung", 0);
+		$Group = min(4, max(1, $Group));
+		$Fadetime = $this->ReadPropertyInteger("FadeIn_".$Group);
+		If ($Fadetime > 0) {
+			// Zielwert RGB bestimmen
+			$Value_R = GetValueInteger($this->GetIDForIdent("Intensity_R_".$Group));
+			$Value_G = GetValueInteger($this->GetIDForIdent("Intensity_G_".$Group));
+			$Value_B = GetValueInteger($this->GetIDForIdent("Intensity_B_".$Group));
+			// Werte skalieren
+			$Value_R = 255 / 4095 * $Value_R;
+			$Value_G = 255 / 4095 * $Value_G;
+			$Value_B = 255 / 4095 * $Value_B;
+			// Umrechnung in HSL
+			list($h, $s, $l); $this->rgbToHsl(int $Value_R, int $Value_G, int $Value_B);
+			// $l muss von 0 auf den Zielwert gebracht werden
+			$Steps = $Fadetime * 2;
+			$Stepwide = $l / $Steps;
+			for ($i = (0 + $Stepwide) ; $i <= $l; $i = $i + round($Stepwide, 2)) {
+			    	// $i muss jetzt als HSL-Wert wieder in RGB umgerechnet werden
+			
+			}
+				
+		}
+	}
 	    
 	public function SetOutputPinColor(Int $Group, Int $Color)
 	{
@@ -528,11 +552,8 @@
 	return $Hex;
 	}
 	    
-		private function rgbToHsl(int $r, int $g, int $b) 
+	private function rgbToHsl(int $r, int $g, int $b) 
 	{
-		$oldR = $r;
-		$oldG = $g;
-		$oldB = $b;
 		$r = $r / 255;
 		$g = $g / 255;
 		$b = $b / 255;
@@ -540,7 +561,7 @@
 		$min = min($r, $g, $b);
 		$h;
 		$s;
-		$l = ( $max + $min ) / 2;
+		$l = ($max + $min) / 2;
 		$d = $max - $min;
 		if( $d == 0 ){
 			$h = $s = 0; // achromatic
@@ -561,7 +582,7 @@
 				break;
 			}			        	        
 		}
-	return array(round($h, 2), round($s, 2), round($l, 2 ));
+	return array(round($h, 2), round($s, 2), round($l, 2));
 	} 
 	
 	private function hslToRgb($h, $s, $l)
