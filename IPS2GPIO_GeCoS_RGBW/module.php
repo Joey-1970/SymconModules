@@ -366,6 +366,10 @@
 			$Steps = $Fadetime * 2;
 			$Stepwide = $l / $Steps;
 			$StartAddress = (($Group - 1) * 16) + 6;
+			
+			// Fade Out
+			//for ($i = ($l - $Stepwide) ; $i >= (0 + $Stepwide); $i = ($i - round($Stepwide, 2))) {
+			
 			for ($i = (0 + $Stepwide) ; $i <= ($l - $Stepwide); $i = $i + round($Stepwide, 2)) {
 			    	// $i muss jetzt als HSL-Wert wieder in RGB umgerechnet werden
 				list($r, $g, $b) = $this->hslToRgb($h, $s, $i);
