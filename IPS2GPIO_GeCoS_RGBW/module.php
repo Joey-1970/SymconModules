@@ -13,6 +13,8 @@
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
  	    	$this->RegisterPropertyInteger("DeviceAddress", 88);
 		$this->RegisterPropertyInteger("DeviceBus", 1);	
+		$this->RegisterPropertyInteger("FadeIn", 0);
+		$this->RegisterPropertyInteger("FadeOut", 0);
         }
  	
 	public function GetConfigurationForm() 
@@ -43,6 +45,10 @@
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "Device Bus", "options" => $arrayOptions );
 		
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "Label", "label" => "Optional: Angabe von Fade-In/-Out-Zeit in Sekunden (0 => aus, max. 30 Sek)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeIn",  "caption" => "Fade-In-Zeit"); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeOut",  "caption" => "Fade-Out-Zeit");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Button", "label" => "Herstellerinformationen", "onClick" => "echo 'https://www.gedad.de/projekte/projekte-f%C3%BCr-privat/gedad-control/'");
 		
@@ -504,6 +510,82 @@
 	{
 		$Hex = hexdec(str_pad(dechex($r), 2,'0', STR_PAD_LEFT).str_pad(dechex($g), 2,'0', STR_PAD_LEFT).str_pad(dechex($b), 2,'0', STR_PAD_LEFT));
 	return $Hex;
+	}
+	    
+		private function rgbToHsl(int $r, int $g, int $b) 
+	{
+		$oldR = $r;
+		$oldG = $g;
+		$oldB = $b;
+		$r = $r / 255;
+		$g = $g / 255;
+		$b = $b / 255;
+	    	$max = max($r, $g, $b);
+		$min = min($r, $g, $b);
+		$h;
+		$s;
+		$l = ( $max + $min ) / 2;
+		$d = $max - $min;
+		if( $d == 0 ){
+			$h = $s = 0; // achromatic
+		} else {
+			$s = $d / (1 - abs(2 * $l - 1));
+			switch( $max ){
+			    case $r:
+				$h = 60 * fmod((($g - $b) / $d), 6); 
+				if ($b > $g) {
+				    $h += 360;
+				}
+				break;
+			    case $g: 
+				$h = 60 * (($b - $r) / $d + 2); 
+				break;
+			    case $b: 
+				$h = 60 * (($r - $g ) / $d + 4); 
+				break;
+			}			        	        
+		}
+	return array(round($h, 2), round($s, 2), round($l, 2 ));
+	} 
+	
+	private function hslToRgb($h, $s, $l)
+	{
+	    	$r; 
+	    	$g; 
+	    	$b;
+		$c = (1 - abs(2 * $l - 1)) * $s;
+		$x = $c * (1 - abs(fmod(($h / 60), 2) - 1));
+		$m = $l - ($c / 2);
+		if ($h < 60) {
+			$r = $c;
+			$g = $x;
+			$b = 0;
+		} else if ($h < 120) {
+			$r = $x;
+			$g = $c;
+			$b = 0;			
+		} else if ($h < 180) {
+			$r = 0;
+			$g = $c;
+			$b = $x;					
+		} else if ($h < 240) {
+			$r = 0;
+			$g = $x;
+			$b = $c;
+		} else if ($h < 300) {
+			$r = $x;
+			$g = 0;
+			$b = $c;
+		} else {
+			$r = $c;
+			$g = 0;
+			$b = $x;
+		}
+		$r = ($r + $m) * 255;
+		$g = ($g + $m) * 255;
+		$b = ($b + $m ) * 255;
+		
+	return array(floor($r), floor($g), floor($b));
 	}
 	    
 	private function Get_I2C_Ports()
