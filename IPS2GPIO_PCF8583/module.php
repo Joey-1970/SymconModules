@@ -12,7 +12,9 @@
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
-            	// Diese Zeile nicht löschen.
+            	//http://www.raspberry-pi-geek.de/Magazin/2015/02/Der-Uhrenbaustein-PCF8583-am-I-2-C-Bus-des-Raspberry-Pi/(offset)/2
+		
+		// Diese Zeile nicht löschen.
             	parent::Create();
  	    	$this->RegisterPropertyBoolean("Open", false);
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
