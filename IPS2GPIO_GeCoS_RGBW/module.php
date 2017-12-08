@@ -348,7 +348,7 @@
 	private function RGBFadeIn(Int $Group)
 	{
 		// RGB beim Einschalten Faden
-		$this->SendDebug("FadeIn", "Ausfuehrung", 0);
+		$this->SendDebug("RGBFadeIn", "Ausfuehrung", 0);
 		$Group = min(4, max(1, $Group));
 		$Fadetime = $this->ReadPropertyInteger("FadeIn_".$Group);
 		$Fadetime = min(30, max(0, $Fadetime));
@@ -401,7 +401,7 @@
 	private function RGBFadeOut(Int $Group)
 	{
 		// RGB beim Ausschalten Faden
-		$this->SendDebug("FadeOut", "Ausfuehrung", 0);
+		$this->SendDebug("RGBFadeOut", "Ausfuehrung", 0);
 		$Group = min(4, max(1, $Group));
 		$Fadetime = $this->ReadPropertyInteger("FadeIn_".$Group);
 		$Fadetime = min(30, max(0, $Fadetime));
@@ -450,6 +450,52 @@
 				
 		}
 	}    
+	
+	private function WFadeIn(Int $Group)
+	{
+		// W beim Einschalten Faden
+		$this->SendDebug("FadeIn", "Ausfuehrung", 0);
+		$Group = min(4, max(1, $Group));
+		$Fadetime = $this->ReadPropertyInteger("FadeIn_".$Group);
+		$Fadetime = min(30, max(0, $Fadetime));
+		If ($Fadetime > 0) {
+			// Zielwert RGB bestimmen
+			$Value_W = GetValueInteger($this->GetIDForIdent("Intensity_W_".$Group));
+
+			// $l muss von 0 auf den Zielwert gebracht werden
+			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
+			$Steps = $Fadetime * $FadeScalar;
+			$Stepwide = $l / $Steps;
+			$StartAddress = (($Group - 1) * 16) + 6;
+			
+			// Fade In			
+			for ($i = (0 + $Stepwide) ; $i <= ($l - $Stepwide); $i = $i + round($Stepwide, 2)) {
+			    	// $i muss jetzt als HSL-Wert wieder in RGB umgerechnet werden
+				list($r, $g, $b) = $this->hslToRgb($h, $s, $i);
+				// Werte skalieren
+				$Value_R = 4095 / 255 * $r;
+				$Value_G = 4095 / 255 * $g;
+				$Value_B = 4095 / 255 * $b;
+				// Bytes bestimmen
+				$L_Bit_R = $Value_R & 255;
+				$H_Bit_R = $Value_R >> 8;
+				$L_Bit_G = $Value_G & 255;
+				$H_Bit_G = $Value_G >> 8;
+				$L_Bit_B = $Value_B & 255;
+				$H_Bit_B = $Value_B >> 8;
+				If ($this->ReadPropertyBoolean("Open") == true) {
+					// Ausgang setzen
+					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_12_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
+								  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit_R, "Value_4" => $H_Bit_R, "Value_5" => 0, "Value_6" => 0, "Value_7" => $L_Bit_G, "Value_8" => $H_Bit_G, "Value_9" => 0, "Value_10" => 0, "Value_11" => $L_Bit_B, "Value_12" => $H_Bit_B)));
+					If (GetValueBoolean($this->GetIDForIdent("Status_RGB_".$Group)) == false) {
+						SetValueBoolean($this->GetIDForIdent("Status_RGB_".$Group), true);
+					}
+				}
+				IPS_Sleep(intval(1000 / $FadeScalar));
+			}
+				
+		}
+	}
 	
 	public function SetOutputPinColor(Int $Group, Int $Color)
 	{
