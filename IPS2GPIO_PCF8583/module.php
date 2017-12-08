@@ -183,15 +183,46 @@
 	private function Setup()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			// Adresse 00 setzen
-			
-			// Adresse 08 setzen
+			// Kontroll und Status Register an Adresse x00 setzen
+			$CounterMode = 2 << 4;
+			$Bitmask = $CounterMode;
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("00"), "Value" => $Bitmask)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "Setzen der Config fehlerhaft!", 0);
+				return;
+			}
+			else {
+				//$this->Read_Status();
+			}
+			// Alarm Kontrolle an Andresse x08 setzen
+			$Bitmask = 0;
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("08"), "Value" => $Bitmask)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "Setzen der Config fehlerhaft!", 0);
+				return;
+			}
+			else {
+				//$this->Read_Status();
+			}
 		}
 	}    
 	
 	public function Measurement()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("01"), "Count" => 3)));
+			If ($Result < 0) {
+				$this->SendDebug("Measurement", "Fehler bei der Datenermittung", 0);
+				return 0;
+			}
+			else {
+				If (is_array(unserialize($Result)) == true) {
+					$this->SendDebug("Measurement", "Ergebnis: ".$Result, 0);
+					$MeasurementData = array();
+					$MeasurementData = unserialize($Result);
+					
+				}
+			}
 			
 		}
 	}    
