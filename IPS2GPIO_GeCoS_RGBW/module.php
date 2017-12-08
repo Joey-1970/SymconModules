@@ -12,7 +12,8 @@
  	    	$this->RegisterPropertyBoolean("Open", false);
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
  	    	$this->RegisterPropertyInteger("DeviceAddress", 88);
-		$this->RegisterPropertyInteger("DeviceBus", 1);	
+		$this->RegisterPropertyInteger("DeviceBus", 1);
+		$this->RegisterPropertyInteger("FadeScalar", 4);
 		$this->RegisterPropertyInteger("FadeIn_1", 0);
 		$this->RegisterPropertyInteger("FadeOut_1", 0);
 		$this->RegisterPropertyInteger("FadeIn_2", 0);
@@ -241,11 +242,11 @@
 		else {
 			$FadeInTime = $this->ReadPropertyInteger("FadeIn_".$Group);
 			If (($FadeInTime > 0) AND ($Status == true)) {
-				$this->FadeIn($Group);
+				$this->RGBFadeIn($Group);
 			}
 			$FadeOutTime = $this->ReadPropertyInteger("FadeOut_".$Group);
 			If (($FadeOutTime > 0) AND ($Status == false)) {
-				$this->FadeOut($Group);
+				$this->RGBFadeOut($Group);
 			}
 			$Value_R = GetValueInteger($this->GetIDForIdent("Intensity_R_".$Group));
 			$L_Bit_R = $Value_R & 255;
@@ -344,7 +345,7 @@
 		}		
 	}    	    
 	        
-	private function FadeIn(Int $Group)
+	private function RGBFadeIn(Int $Group)
 	{
 		// RGB beim Einschalten Faden
 		$this->SendDebug("FadeIn", "Ausfuehrung", 0);
@@ -363,7 +364,8 @@
 			// Umrechnung in HSL
 			list($h, $s, $l) = $this->rgbToHsl($Value_R, $Value_G, $Value_B);
 			// $l muss von 0 auf den Zielwert gebracht werden
-			$Steps = $Fadetime * 4;
+			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
+			$Steps = $Fadetime * $FadeScalar;
 			$Stepwide = $l / $Steps;
 			$StartAddress = (($Group - 1) * 16) + 6;
 			
@@ -386,14 +388,17 @@
 					// Ausgang setzen
 					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_12_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
 								  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit_R, "Value_4" => $H_Bit_R, "Value_5" => 0, "Value_6" => 0, "Value_7" => $L_Bit_G, "Value_8" => $H_Bit_G, "Value_9" => 0, "Value_10" => 0, "Value_11" => $L_Bit_B, "Value_12" => $H_Bit_B)));
+					If (GetValueBoolean($this->GetIDForIdent("Status_RGB_".$Group)) == false) {
+						SetValueBoolean($this->GetIDForIdent("Status_RGB_".$Group), true);
+					}
 				}
-				IPS_Sleep(250);
+				IPS_Sleep(intval(1000 / $FadeScalar));
 			}
 				
 		}
 	}
 
-	private function FadeOut(Int $Group)
+	private function RGBFadeOut(Int $Group)
 	{
 		// RGB beim Ausschalten Faden
 		$this->SendDebug("FadeOut", "Ausfuehrung", 0);
@@ -412,7 +417,8 @@
 			// Umrechnung in HSL
 			list($h, $s, $l) = $this->rgbToHsl($Value_R, $Value_G, $Value_B);
 			// $l muss von 0 auf den Zielwert gebracht werden
-			$Steps = $Fadetime * 4;
+			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
+			$Steps = $Fadetime * $FadeScalar;
 			$Stepwide = $l / $Steps;
 			$StartAddress = (($Group - 1) * 16) + 6;
 			
@@ -435,8 +441,11 @@
 					// Ausgang setzen
 					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_12_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
 								  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit_R, "Value_4" => $H_Bit_R, "Value_5" => 0, "Value_6" => 0, "Value_7" => $L_Bit_G, "Value_8" => $H_Bit_G, "Value_9" => 0, "Value_10" => 0, "Value_11" => $L_Bit_B, "Value_12" => $H_Bit_B)));
+					If (GetValueBoolean($this->GetIDForIdent("Status_RGB_".$Group)) == true) {
+						SetValueBoolean($this->GetIDForIdent("Status_RGB_".$Group), false);
+					}
 				}
-				IPS_Sleep(250);
+				IPS_Sleep(intval(1000 / $FadeScalar));
 			}
 				
 		}
