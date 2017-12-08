@@ -698,7 +698,7 @@ class IPS2GPIO_IO extends IPSModule
 		case "i2c_PCF8583_read":
 		   	If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
 				$this->SetI2CBus(intval($data->DeviceIdent));
-		   		$Result = $this->CommandClientSocket(pack("L*", 59, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), 0, 0), 16);
+		   		$Result = $this->CommandClientSocket(pack("L*", 67, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 4, $data->Count), 16 + ($data->Count));
 		   	}
 		   	break;	 
 		case "i2c_PCF8583_write":
