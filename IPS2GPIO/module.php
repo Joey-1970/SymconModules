@@ -839,7 +839,7 @@ class IPS2GPIO_IO extends IPSModule
 			// I2CWI h r bvs - smb Write I2C Block Data
 			If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
 				$this->SetI2CBus(intval($data->DeviceIdent));
-				$Result = $this->CommandClientSocket(pack("L*", 68, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 12, 
+				$Result = $this->CommandClientSocket(pack("LLLLC*", 68, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 12, 
 									  $data->Value_1, $data->Value_2, $data->Value_3, $data->Value_4, $data->Value_5, $data->Value_6, 
 									  $data->Value_7, $data->Value_8, $data->Value_9, $data->Value_10, $data->Value_11, $data->Value_12), 16);
 			}
