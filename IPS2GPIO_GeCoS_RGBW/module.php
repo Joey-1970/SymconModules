@@ -476,7 +476,7 @@
 			// Fade In			
 			for ($i = (0 + $Stepwide) ; $i <= ($l - $Stepwide); $i = $i + round($Stepwide, 0)) {
 				// Werte skalieren
-				$Value_W = $i
+				$Value_W = $i;
 				// Bytes bestimmen
 				$L_Bit = $Value_W & 255;
 				$H_Bit = $Value_W >> 8;
@@ -512,7 +512,7 @@
 			// Fade Out			
 			for ($i = ($l - $Stepwide) ; $i >= (0 + $Stepwide); $i = $i - round($Stepwide, 0)) {
 				// Werte skalieren
-				$Value_W = $i
+				$Value_W = $i;
 				// Bytes bestimmen
 				$L_Bit = $Value_W & 255;
 				$H_Bit = $Value_W >> 8;
