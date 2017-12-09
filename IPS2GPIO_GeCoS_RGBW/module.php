@@ -404,7 +404,9 @@
 				//$this->SendDebug("RGBFadeIn", "Endzeit: ".$Endtime, 0);
 				$Delay = intval(($Endtime - $Starttime) * 1000);
 				$this->SendDebug("RGBFadeIn", "Delay: ".$Delay, 0);
-				IPS_Sleep(intval(1000 / $FadeScalar));
+				$DelayMax = intval(1000 / $FadeScalar);
+				$Delaytime = min($DelayMax, max(0, ($DelayMax - $Delay)));   
+				IPS_Sleep($Delaytime);
 			}
 				
 		}
@@ -462,7 +464,9 @@
 				$Endtime = microtime(true);
 				$Delay = intval(($Endtime - $Starttime) * 1000);
 				$this->SendDebug("RGBFadeOut", "Delay: ".$Delay, 0);
-				IPS_Sleep(intval(1000 / $FadeScalar));
+				$DelayMax = intval(1000 / $FadeScalar);
+				$Delaytime = min($DelayMax, max(0, ($DelayMax - $Delay)));   
+				IPS_Sleep($Delaytime);
 			}
 				
 		}
