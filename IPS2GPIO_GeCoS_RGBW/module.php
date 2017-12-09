@@ -13,7 +13,7 @@
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
  	    	$this->RegisterPropertyInteger("DeviceAddress", 88);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
-		$this->RegisterPropertyInteger("FadeScalar", 5);
+		$this->RegisterPropertyInteger("FadeScalar", 4);
 		$this->RegisterPropertyInteger("FadeIn_1", 0);
 		$this->RegisterPropertyInteger("FadeOut_1", 0);
 		$this->RegisterPropertyInteger("FadeIn_2", 0);
