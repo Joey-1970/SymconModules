@@ -835,7 +835,7 @@ class IPS2GPIO_IO extends IPSModule
 				$Result = serialize($Color);
 			}
 			break; 
-		case "i2c_PCA9685_Write_Channel": // Module PWM und RGBW
+		case "i2c_PCA9685_Write_Channel": // Modul RGBW
 			// I2CWI h r bvs - smb Write I2C Block Data
 			If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
 				$this->SetI2CBus(intval($data->DeviceIdent));
@@ -1888,6 +1888,14 @@ class IPS2GPIO_IO extends IPSModule
 		            		IPS_LogMessage("IPS2GPIO I2C Read Block Byte","Handle: ".$response[2]." Register: ".$response[3]." Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
 		            	}
 				break;
+			case "68":
+           			If ($response[4] >= 0) {
+					$Result = true;
+				}
+				else {
+					$Result = false;
+				}
+		            	break;
 		        case "76":
            			If ($response[4] >= 0) {
 					// 
