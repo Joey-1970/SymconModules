@@ -834,6 +834,13 @@ class IPS2GPIO_IO extends IPSModule
 				$Color[] = $this->CommandClientSocket(pack("L*", 63, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register + 8, 0), 16);
 				$Result = serialize($Color);
 			}
+			break; 
+		case "i2c_PCA9685_Write_Channel": // Module PWM und RGBW
+			// I2CWI h r bvs - smb Write I2C Block Data
+			If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
+				$this->SetI2CBus(intval($data->DeviceIdent));
+				$Result = $this->CommandClientSocket(pack("L*", 68, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 0), 16);
+			}
 			break;  
 		case "i2c_write_4_byte":
 			// I2CWB h r bv - smb Write Byte Data: write byte to register  	
