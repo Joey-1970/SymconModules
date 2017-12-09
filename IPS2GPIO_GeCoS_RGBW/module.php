@@ -378,7 +378,7 @@
 			// Fade In			
 			for ($i = (0 + $Stepwide) ; $i <= ($l - $Stepwide); $i = $i + round($Stepwide, 2)) {
 			    	$Starttime = microtime(true);
-				$this->SendDebug("RGBFadeIn", "Startzeit: ".$Starttime, 0);
+				//$this->SendDebug("RGBFadeIn", "Startzeit: ".$Starttime, 0);
 				// $i muss jetzt als HSL-Wert wieder in RGB umgerechnet werden
 				list($r, $g, $b) = $this->hslToRgb($h, $s, $i);
 				// Werte skalieren
@@ -401,7 +401,7 @@
 					}
 				}
 				$Endtime = microtime(true);
-				$this->SendDebug("RGBFadeIn", "Endzeit: ".$Endtime, 0);
+				//$this->SendDebug("RGBFadeIn", "Endzeit: ".$Endtime, 0);
 				$this->SendDebug("RGBFadeIn", "Endzeit - Startzeit: ".($Starttime - $Endtime), 0);
 				IPS_Sleep(intval(1000 / $FadeScalar));
 			}
@@ -436,7 +436,7 @@
 			// Fade Out
 			for ($i = ($l - $Stepwide) ; $i >= (0 + $Stepwide); $i = $i - round($Stepwide, 2)) {
 				$Starttime = microtime(true);
-				$this->SendDebug("RGBFadeOut", "Startzeit: ".$Starttime, 0);
+				//$this->SendDebug("RGBFadeOut", "Startzeit: ".$Starttime, 0);
 			    	// $i muss jetzt als HSL-Wert wieder in RGB umgerechnet werden
 				list($r, $g, $b) = $this->hslToRgb($h, $s, $i);
 				// Werte skalieren
@@ -459,7 +459,7 @@
 					}
 				}
 				$Endtime = microtime(true);
-				$this->SendDebug("RGBFadeOut", "Endzeit: ".$Endtime, 0);
+				//$this->SendDebug("RGBFadeOut", "Endzeit: ".$Endtime, 0);
 				$this->SendDebug("RGBFadeOut", "Endzeit - Startzeit: ".($Starttime - $Endtime), 0);
 				IPS_Sleep(intval(1000 / $FadeScalar));
 			}
