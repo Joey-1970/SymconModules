@@ -33,6 +33,7 @@ class IPS2GPIO_IO extends IPSModule
 		$this->RegisterPropertyString("I2C_Devices", "");
 		$this->RegisterPropertyString("OW_Devices", "");
 		$this->RegisterPropertyBoolean("Multiplexer", false);
+		$this->RegisterPropertyBoolean("AutoRestart", true);
 	    	$this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
 		$PinNotify = array();
 		$this->SetBuffer("PinNotify", serialize($PinNotify));
@@ -160,7 +161,9 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Wird ein Audio Hat wie z.B. Hifiberry parallel verwendet, muss diese Option gewählt werden.");
 		$arrayElements[] = array("type" => "Label", "label" => "Die Nutzung von PWM (Dimmer, RGB, RGBW usw.) ist dann nicht möglich!");
-		$arrayElements[] = array("type" => "CheckBox", "name" => "AudioDAC", "caption" => "Vorhanden");	
+		$arrayElements[] = array("type" => "CheckBox", "name" => "AudioDAC", "caption" => "Vorhanden");
+		$arrayElements[] = array("type" => "Label", "label" => "Führt einen automatischren Restart des PIGPIO aus:");
+		$arrayElements[] = array("type" => "CheckBox", "name" => "AutoRestart", "caption" => "Auto Restart");	
 		
 		$arrayActions = array();
 		If ($this->ReadPropertyBoolean("Open") == true) {   
@@ -367,7 +370,9 @@ class IPS2GPIO_IO extends IPSModule
 					$this->ApplyChanges();
 				}
 				elseif ($Data[0] == 200) {
-					$this->ConnectionTest();
+					If ($this->ReadPropertyBoolean("AutoRestart") == true) {
+						$this->ConnectionTest();
+					}
 				}
 				break;
 		}
