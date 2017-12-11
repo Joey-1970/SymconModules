@@ -209,9 +209,10 @@
 			If (!$Result) {
 				$this->SendDebug("SetOutputPinValue", "Daten setzen fehlerhaft!", 0);
 			}
-			//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_4_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
-			// Ausgang abfragen
-			$this->GetOutput($StartAddress + 2);
+			else {
+				// Ausgang abfragen
+				$this->GetOutput($StartAddress + 2);
+			}
 		}
 	}
 	
@@ -254,8 +255,10 @@
 					If (!$Result) {
 						$this->SendDebug("SetOutputPinStatus", "Daten setzen fehlerhaft!", 0);
 					}					
-					// Ausgang abfragen
-					$this->GetOutput($StartAddress + 2);
+					else {
+						// Ausgang abfragen
+						$this->GetOutput($StartAddress + 2);
+					}
 				}
 			}
 			else {
@@ -291,12 +294,13 @@
 					If (!$Result) {
 						$this->SendDebug("SetOutputPinStatus", "Daten setzen fehlerhaft!", 0);
 					}
-					
-					// Ausgang abfragen
-					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Read_Group", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress + 2)));
-					$RGB = unserialize($Result);
-					for($i = 0; $i < count($RGB); $i++) {
-						$this->SetStatusVariables( ($StartAddress + 2) + ($i * 4), $RGB[$i]);
+					else {
+						// Ausgang abfragen
+						$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Read_Group", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress + 2)));
+						$RGB = unserialize($Result);
+						for($i = 0; $i < count($RGB); $i++) {
+							$this->SetStatusVariables( ($StartAddress + 2) + ($i * 4), $RGB[$i]);
+						}
 					}
 				}
 			}
@@ -334,8 +338,10 @@
 				If (!$Result) {
 					$this->SendDebug("ToggleOutputPinStatus", "Daten setzen fehlerhaft!", 0);
 				}
-				// Ausgang abfragen
-				$this->GetOutput($StartAddress + 2);
+				else {
+					// Ausgang abfragen
+					$this->GetOutput($StartAddress + 2);
+				}
 			}
 		}
 		else {
@@ -367,12 +373,13 @@
 				If (!$Result) {
 					$this->SendDebug("ToggleOutputPinStatus", "Daten setzen fehlerhaft!", 0);
 				}
-				
-				// Ausgang abfragen
-				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Read_Group", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress + 2)));
-				$RGB = unserialize($Result);
-				for($i = 0; $i < count($RGB); $i++) {
-					$this->SetStatusVariables( ($StartAddress + 2) + ($i * 4), $RGB[$i]);
+				else {
+					// Ausgang abfragen
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Read_Group", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress + 2)));
+					$RGB = unserialize($Result);
+					for($i = 0; $i < count($RGB); $i++) {
+						$this->SetStatusVariables( ($StartAddress + 2) + ($i * 4), $RGB[$i]);
+					}
 				}
 			}
 		}		
@@ -426,9 +433,10 @@
 					If (!$Result) {
 						$this->SendDebug("RGBFadeIn", "Daten setzen fehlerhaft!", 0);
 					}
-					
-					If (GetValueBoolean($this->GetIDForIdent("Status_RGB_".$Group)) == false) {
-						SetValueBoolean($this->GetIDForIdent("Status_RGB_".$Group), true);
+					else {
+						If (GetValueBoolean($this->GetIDForIdent("Status_RGB_".$Group)) == false) {
+							SetValueBoolean($this->GetIDForIdent("Status_RGB_".$Group), true);
+						}
 					}
 				}
 				$Endtime = microtime(true);
@@ -491,8 +499,10 @@
 					If (!$Result) {
 						$this->SendDebug("RGBFadeOut", "Daten setzen fehlerhaft!", 0);
 					}
-					If (GetValueBoolean($this->GetIDForIdent("Status_RGB_".$Group)) == true) {
-						SetValueBoolean($this->GetIDForIdent("Status_RGB_".$Group), false);
+					else {
+						If (GetValueBoolean($this->GetIDForIdent("Status_RGB_".$Group)) == true) {
+							SetValueBoolean($this->GetIDForIdent("Status_RGB_".$Group), false);
+						}
 					}
 				}
 				$Endtime = microtime(true);
@@ -536,8 +546,10 @@
 					If (!$Result) {
 						$this->SendDebug("WFadeIn", "Daten setzen fehlerhaft!", 0);
 					}
-					If (GetValueBoolean($this->GetIDForIdent("Status_W_".$Group)) == false) {
-						SetValueBoolean($this->GetIDForIdent("Status_W_".$Group), true);
+					else {
+						If (GetValueBoolean($this->GetIDForIdent("Status_W_".$Group)) == false) {
+							SetValueBoolean($this->GetIDForIdent("Status_W_".$Group), true);
+						}
 					}
 				}
 				IPS_Sleep(intval(1000 / $FadeScalar));
@@ -576,8 +588,10 @@
 					If (!$Result) {
 						$this->SendDebug("WFadeOut", "Daten setzen fehlerhaft!", 0);
 					}
-					If (GetValueBoolean($this->GetIDForIdent("Status_W_".$Group)) == false) {
-						SetValueBoolean($this->GetIDForIdent("Status_W_".$Group), true);
+					else {
+						If (GetValueBoolean($this->GetIDForIdent("Status_W_".$Group)) == false) {
+							SetValueBoolean($this->GetIDForIdent("Status_W_".$Group), true);
+						}
 					}
 				}
 				IPS_Sleep(intval(1000 / $FadeScalar));
@@ -625,12 +639,13 @@
 			If (!$Result) {
 				$this->SendDebug("SetOutputPinColor", "Daten setzen fehlerhaft!", 0);
 			}
-			
-			// Ausgang abfragen
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Read_Group", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress + 2)));
-			$RGB = unserialize($Result);
-			for($i = 0; $i < count($RGB); $i++) {
-				$this->SetStatusVariables( ($StartAddress + 2) + ($i * 4), $RGB[$i]);
+			else {
+				// Ausgang abfragen
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Read_Group", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress + 2)));
+				$RGB = unserialize($Result);
+				for($i = 0; $i < count($RGB); $i++) {
+					$this->SetStatusVariables( ($StartAddress + 2) + ($i * 4), $RGB[$i]);
+				}
 			}
 		}
 	}
