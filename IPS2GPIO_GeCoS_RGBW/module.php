@@ -249,7 +249,11 @@
 				}
 				If ($this->ReadPropertyBoolean("Open") == true) {
 					// Ausgang setzen
-					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_4_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write_Channel_White", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
+										  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
+					If (!$Result) {
+						$this->SendDebug("SetOutputPinStatus", "Daten setzen fehlerhaft!", 0);
+					}					
 					// Ausgang abfragen
 					$this->GetOutput($StartAddress + 2);
 				}
@@ -325,7 +329,11 @@
 			}
 			If ($this->ReadPropertyBoolean("Open") == true) {
 				// Ausgang setzen
-				$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_4_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write_Channel_White", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
+										  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
+				If (!$Result) {
+					$this->SendDebug("ToggleOutputPinStatus", "Daten setzen fehlerhaft!", 0);
+				}
 				// Ausgang abfragen
 				$this->GetOutput($StartAddress + 2);
 			}
@@ -523,7 +531,11 @@
 				$H_Bit = $Value_W >> 8;
 				If ($this->ReadPropertyBoolean("Open") == true) {
 					// Ausgang setzen
-					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_4_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write_Channel_White", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
+										  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
+					If (!$Result) {
+						$this->SendDebug("WFadeIn", "Daten setzen fehlerhaft!", 0);
+					}
 					If (GetValueBoolean($this->GetIDForIdent("Status_W_".$Group)) == false) {
 						SetValueBoolean($this->GetIDForIdent("Status_W_".$Group), true);
 					}
@@ -559,7 +571,11 @@
 				$H_Bit = $Value_W >> 8;
 				If ($this->ReadPropertyBoolean("Open") == true) {
 					// Ausgang setzen
-					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_4_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write_Channel_White", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
+										  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
+					If (!$Result) {
+						$this->SendDebug("WFadeOut", "Daten setzen fehlerhaft!", 0);
+					}
 					If (GetValueBoolean($this->GetIDForIdent("Status_W_".$Group)) == false) {
 						SetValueBoolean($this->GetIDForIdent("Status_W_".$Group), true);
 					}
