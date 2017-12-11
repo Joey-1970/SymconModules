@@ -114,8 +114,8 @@
 				If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
 			   		$this->SendDebug("Notify", "Ausfuehrung", 0);
 					// Trigger kurzzeitig setzen
-			   		If ($data->Value == $this->ReadPropertyBoolean("ActionValue") ) {
-			   			$this->SendDebug("Notify", "Trigger setzen", 0);
+			   		If (intval($data->Value) == $this->ReadPropertyBoolean("ActionValue") ) {
+			   			$this->SendDebug("Notify", "Trigger setzen mit Wert: ".intval($data->Value), 0);
 						SetValueBoolean($this->GetIDForIdent("Trigger"), true);
 			   			If ($this->ReadPropertyInteger("TriggerScript") > 0) {
 			   				$this->SendDebug("Notify", "Triggerskript ausfuehren", 0);
@@ -125,7 +125,7 @@
 			   			SetValueBoolean($this->GetIDForIdent("Trigger"), false);
 			   		}
 			   		// Toggle-Variable
-			   		If ((GetValueBoolean($this->GetIDForIdent("Status")) == false) and ($data->Value == true)) {
+			   		If ((GetValueBoolean($this->GetIDForIdent("Status")) == false) and (intval($data->Value) == true)) {
 			   			$this->SendDebug("Notify", "Toggle setzen", 0);
 						SetValueBoolean($this->GetIDForIdent("Toggle"), !GetValueBoolean($this->GetIDForIdent("Toggle")));
 			   			If ($this->ReadPropertyInteger("ToggleScript") > 0) {
