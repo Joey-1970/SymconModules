@@ -111,21 +111,26 @@
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
 			   case "notify":
-			   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
+				If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
 			   		$this->SendDebug("Notify", "Ausfuehrung", 0);
 					// Trigger kurzzeitig setzen
 			   		If ($data->Value == $this->ReadPropertyBoolean("ActionValue") ) {
-			   			SetValueBoolean($this->GetIDForIdent("Trigger"), true);
+			   			$this->SendDebug("Notify", "Trigger setzen", 0);
+						SetValueBoolean($this->GetIDForIdent("Trigger"), true);
 			   			If ($this->ReadPropertyInteger("TriggerScript") > 0) {
-			   				IPS_RunScript($this->ReadPropertyInteger("TriggerScript"));
+			   				$this->SendDebug("Notify", "Triggerskript ausfuehren", 0);
+							IPS_RunScript($this->ReadPropertyInteger("TriggerScript"));
 			   			}
+						$this->SendDebug("Notify", "Trigger zuruecksetzen", 0);
 			   			SetValueBoolean($this->GetIDForIdent("Trigger"), false);
 			   		}
 			   		// Toggle-Variable
 			   		If ((GetValueBoolean($this->GetIDForIdent("Status")) == false) and ($data->Value == true)) {
-			   			SetValueBoolean($this->GetIDForIdent("Toggle"), !GetValueBoolean($this->GetIDForIdent("Toggle")));
+			   			$this->SendDebug("Notify", "Toggle setzen", 0);
+						SetValueBoolean($this->GetIDForIdent("Toggle"), !GetValueBoolean($this->GetIDForIdent("Toggle")));
 			   			If ($this->ReadPropertyInteger("ToggleScript") > 0) {
-			   				IPS_RunScript($this->ReadPropertyInteger("ToggleScript"));
+			   				$this->SendDebug("Notify", "Toggleskript ausfuehren", 0);
+							IPS_RunScript($this->ReadPropertyInteger("ToggleScript"));
 			   			}
 			   		}
 			   		// Status setzen
