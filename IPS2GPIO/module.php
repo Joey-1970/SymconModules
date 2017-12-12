@@ -265,6 +265,9 @@ class IPS2GPIO_IO extends IPSModule
 	
 			If (($this->ConnectionTest()) AND ($this->ReadPropertyBoolean("Open") == true))  {
 				$this->SendDebug("ApplyChanges", "Starte Vorbereitung", 0);
+				If (GetValueBoolean($this->GetIDForIdent("PigpioStatus")) == false) {
+					SetValueBoolean($this->GetIDForIdent("PigpioStatus"), true);
+				}
 				$this->CheckConfig();
 				// Hardware und Softwareversion feststellen
 				$this->CommandClientSocket(pack("L*", 17, 0, 0, 0).pack("L*", 26, 0, 0, 0), 32);
@@ -376,6 +379,9 @@ class IPS2GPIO_IO extends IPSModule
 				elseif ($Data[0] == 200) {
 					If ($this->ReadPropertyBoolean("AutoRestart") == true) {
 						$this->ConnectionTest();
+					}
+					If (GetValueBoolean($this->GetIDForIdent("PigpioStatus")) == true) {
+						SetValueBoolean($this->GetIDForIdent("PigpioStatus"), false);
 					}
 				}
 				break;
@@ -1384,6 +1390,9 @@ class IPS2GPIO_IO extends IPSModule
 					If (($MessageArray[$i] == 99) AND ($MessageArray[$i + 1] == 0) AND ($MessageArray[$i + 2] == 0)) {
 						$this->SendDebug("Datenanalyse", "Kommando: ".$MessageArray[$i], 0);
 						$this->ClientResponse(pack("L*", $MessageArray[$i], $MessageArray[$i + 1], $MessageArray[$i + 2], $MessageArray[$i + 3]));
+						If (GetValueBoolean($this->GetIDForIdent("PigpioStatus")) == false) {
+							SetValueBoolean($this->GetIDForIdent("PigpioStatus"), true);
+						}
 						$i = $i + 3;
 					}
 				}
@@ -1398,6 +1407,9 @@ class IPS2GPIO_IO extends IPSModule
 			}
 			elseif ($WatchDog == 1) {
 				$this->SendDebug("Datenanalyse", "WatchDog-Nummer: ".$WatchDogNumber." - SeqNo: ".$SeqNo, 0);
+				If (GetValueBoolean($this->GetIDForIdent("PigpioStatus")) == false) {
+					SetValueBoolean($this->GetIDForIdent("PigpioStatus"), true);
+				}
 				$i = $i + 2;
 			}
 			elseif ($Event == 1) {
@@ -1417,6 +1429,9 @@ class IPS2GPIO_IO extends IPSModule
 						$GPSDataRead = true;
 					}
 				}
+				If (GetValueBoolean($this->GetIDForIdent("PigpioStatus")) == false) {
+					SetValueBoolean($this->GetIDForIdent("PigpioStatus"), true);
+				}
 				$i = $i + 2;
 			}
 			else {
@@ -1426,6 +1441,9 @@ class IPS2GPIO_IO extends IPSModule
 					$Bitvalue = boolval($Level & (1<<$PinNotify[$j]));
 					$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit ".$PinNotify[$j]." Wert: ".(int)$Bitvalue." - SeqNo: ".$SeqNo, 0);
 					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $Tick)));
+				}
+				If (GetValueBoolean($this->GetIDForIdent("PigpioStatus")) == false) {
+					SetValueBoolean($this->GetIDForIdent("PigpioStatus"), true);
 				}
 				$i = $i + 2;
 			}		
@@ -2084,6 +2102,9 @@ class IPS2GPIO_IO extends IPSModule
 			IPS_ApplyChanges($this->GetParentID());
 			// PIGPIO beenden und neu starten
 			$this->SSH_Connect("sudo killall pigpiod");
+			If (GetValueBoolean($this->GetIDForIdent("PigpioStatus")) == true) {
+				SetValueBoolean($this->GetIDForIdent("PigpioStatus"), false);
+			}
 			// Wartezeit
 			IPS_Sleep(2000);
 			If ($this->ReadPropertyBoolean("AudioDAC") == true) {
@@ -2222,6 +2243,9 @@ class IPS2GPIO_IO extends IPSModule
 				if (!$status) {
 					IPS_LogMessage("IPS2GPIO Netzanbindung: ","Port ist geschlossen!");
 					$this->SendDebug("Netzanbindung", "Port ist geschlossen!", 0);
+					If (GetValueBoolean($this->GetIDForIdent("PigpioStatus")) == true) {
+						SetValueBoolean($this->GetIDForIdent("PigpioStatus"), false);
+					}
 					// Versuchen PIGPIO zu starten
 					IPS_LogMessage("IPS2GPIO Netzanbindung: ","Versuche PIGPIO per SSH zu starten...");
 					$this->SendDebug("Netzanbindung", "Versuche PIGPIO per SSH zu starten...", 0);
@@ -2235,6 +2259,9 @@ class IPS2GPIO_IO extends IPSModule
 					if (!$status) {
 						IPS_LogMessage("IPS2GPIO Netzanbindung: ","Port ist geschlossen!");
 						$this->SendDebug("Netzanbindung", "Port ist geschlossen!", 0);
+						If (GetValueBoolean($this->GetIDForIdent("PigpioStatus")) == true) {
+							SetValueBoolean($this->GetIDForIdent("PigpioStatus"), false);
+						}
 						$this->SetStatus(104);
 					}
 					else {
@@ -2256,6 +2283,9 @@ class IPS2GPIO_IO extends IPSModule
 		else {
 			IPS_LogMessage("GPIO Netzanbindung: ","IP ".$this->ReadPropertyString("IPAddress")." reagiert nicht!");
 			$this->SendDebug("Netzanbindung", "IP ".$this->ReadPropertyString("IPAddress")." reagiert nicht!", 0);
+			If (GetValueBoolean($this->GetIDForIdent("PigpioStatus")) == true) {
+				SetValueBoolean($this->GetIDForIdent("PigpioStatus"), false);
+			}
 			$this->SetStatus(104);
 		}
 	return $result;
