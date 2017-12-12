@@ -199,7 +199,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->DisableAction("LastKeepAlive");
 			IPS_SetHidden($this->GetIDForIdent("LastKeepAlive"), false);
 			
-			$this->RegisterVariableBoolean("PigpioStatus", "Pigpio Status", "~Switch", 40);
+			$this->RegisterVariableBoolean("PigpioStatus", "Pigpio Status", "~Alert.Reversed", 40);
 			$this->DisableAction("PigpioStatus");
 			IPS_SetHidden($this->GetIDForIdent("PigpioStatus"), false);
 			
