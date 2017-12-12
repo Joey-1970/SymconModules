@@ -199,6 +199,10 @@ class IPS2GPIO_IO extends IPSModule
 			$this->DisableAction("LastKeepAlive");
 			IPS_SetHidden($this->GetIDForIdent("LastKeepAlive"), false);
 			
+			$this->RegisterVariableBoolean("PigpioStatus", "Pigpio Status", "~Switch", 40);
+			$this->DisableAction("PigpioStatus");
+			IPS_SetHidden($this->GetIDForIdent("PigpioStatus"), false);
+			
 			$this->SetBuffer("ModuleReady", 0);
 			$this->SetBuffer("Handle", -1);
 			$this->SetBuffer("HardwareRev", 0);
@@ -1387,6 +1391,9 @@ class IPS2GPIO_IO extends IPSModule
 			elseif ($KeepAlive == 1) {
 				$this->SendDebug("Datenanalyse", "KeepAlive - SeqNo: ".$SeqNo, 0);
 				SetValueInteger($this->GetIDForIdent("LastKeepAlive"), time() );
+				If (GetValueBoolean($this->GetIDForIdent("PigpioStatus")) == false) {
+					SetValueBoolean($this->GetIDForIdent("PigpioStatus"), true);
+				}
 				$i = $i + 2;
 			}
 			elseif ($WatchDog == 1) {
