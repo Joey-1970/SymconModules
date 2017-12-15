@@ -14,14 +14,10 @@
  	    	$this->RegisterPropertyInteger("DeviceAddress", 88);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
 		$this->RegisterPropertyInteger("FadeScalar", 4);
-		$this->RegisterPropertyInteger("FadeIn_1", 0);
-		$this->RegisterPropertyInteger("FadeOut_1", 0);
-		$this->RegisterPropertyInteger("FadeIn_2", 0);
-		$this->RegisterPropertyInteger("FadeOut_2", 0);
-		$this->RegisterPropertyInteger("FadeIn_3", 0);
-		$this->RegisterPropertyInteger("FadeOut_3", 0);
-		$this->RegisterPropertyInteger("FadeIn_4", 0);
-		$this->RegisterPropertyInteger("FadeOut_4", 0);
+		for ($i = 1; $i <= 4; $i++) {
+			$this->RegisterPropertyInteger("FadeIn_".$i, 0);
+			$this->RegisterPropertyInteger("FadeOut_".$i, 0);
+		}
         }
  	
 	public function GetConfigurationForm() 
