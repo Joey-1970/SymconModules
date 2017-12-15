@@ -53,19 +53,12 @@
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "Device Bus", "options" => $arrayOptions );
 		
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		$arrayElements[] = array("type" => "Label", "label" => "Optional: Angabe von Fade-In/-Out-Zeit in Sekunden (0 => aus, max. 30 Sek)");
-		$arrayElements[] = array("type" => "Label", "label" => "Gruppe 1 RGBW:");
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeIn_1",  "caption" => "Fade-In-Zeit"); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeOut_1",  "caption" => "Fade-Out-Zeit");
-		$arrayElements[] = array("type" => "Label", "label" => "Gruppe 2 RGBW:");
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeIn_2",  "caption" => "Fade-In-Zeit"); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeOut_2",  "caption" => "Fade-Out-Zeit");
-		$arrayElements[] = array("type" => "Label", "label" => "Gruppe 3 RGBW:");
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeIn_3",  "caption" => "Fade-In-Zeit"); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeOut_3",  "caption" => "Fade-Out-Zeit");
-		$arrayElements[] = array("type" => "Label", "label" => "Gruppe 4 RGBW:");
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeIn_4",  "caption" => "Fade-In-Zeit"); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeOut_4",  "caption" => "Fade-Out-Zeit");
+		$arrayElements[] = array("type" => "Label", "label" => "Optional: Angabe von Fade-In/-Out-Zeit in Sekunden (0 => aus, max. 10 Sek)");
+		for ($i = 1; $i <= 4; $i++) {
+			$arrayElements[] = array("type" => "Label", "label" => "Gruppe ".$i." RGBW:");
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeIn_".$i,  "caption" => "Fade-In-Zeit"); 
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeOut_".$i,  "caption" => "Fade-Out-Zeit");
+		}
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Button", "label" => "Herstellerinformationen", "onClick" => "echo 'https://www.gedad.de/projekte/projekte-f%C3%BCr-privat/gedad-control/'");
 		
@@ -391,7 +384,7 @@
 		$this->SendDebug("RGBFadeIn", "Ausfuehrung", 0);
 		$Group = min(4, max(1, $Group));
 		$Fadetime = $this->ReadPropertyInteger("FadeIn_".$Group);
-		$Fadetime = min(30, max(0, $Fadetime));
+		$Fadetime = min(10, max(0, $Fadetime));
 		If ($Fadetime > 0) {
 			// Zielwert RGB bestimmen
 			$Value_R = GetValueInteger($this->GetIDForIdent("Intensity_R_".$Group));
@@ -457,7 +450,7 @@
 		$this->SendDebug("RGBFadeOut", "Ausfuehrung", 0);
 		$Group = min(4, max(1, $Group));
 		$Fadetime = $this->ReadPropertyInteger("FadeIn_".$Group);
-		$Fadetime = min(30, max(0, $Fadetime));
+		$Fadetime = min(10, max(0, $Fadetime));
 		If ($Fadetime > 0) {
 			// Zielwert RGB bestimmen
 			$Value_R = GetValueInteger($this->GetIDForIdent("Intensity_R_".$Group));
@@ -522,7 +515,7 @@
 		$this->SendDebug("WFadeIn", "Ausfuehrung", 0);
 		$Group = min(4, max(1, $Group));
 		$Fadetime = $this->ReadPropertyInteger("FadeIn_".$Group);
-		$Fadetime = min(30, max(0, $Fadetime));
+		$Fadetime = min(10, max(0, $Fadetime));
 		If ($Fadetime > 0) {
 			// Zielwert W bestimmen
 			$Value_W = GetValueInteger($this->GetIDForIdent("Intensity_W_".$Group));
@@ -564,7 +557,7 @@
 		$this->SendDebug("WFadeOut", "Ausfuehrung", 0);
 		$Group = min(4, max(1, $Group));
 		$Fadetime = $this->ReadPropertyInteger("FadeOut_".$Group);
-		$Fadetime = min(30, max(0, $Fadetime));
+		$Fadetime = min(10, max(0, $Fadetime));
 		If ($Fadetime > 0) {
 			// Zielwert W bestimmen
 			$Value_W = GetValueInteger($this->GetIDForIdent("Intensity_W_".$Group));
