@@ -15,38 +15,10 @@
 		$this->RegisterPropertyInteger("DeviceBus", 1);
 		$this->RegisterPropertyInteger("Frequency", 100);
 		$this->RegisterPropertyInteger("FadeScalar", 4);
-		$this->RegisterPropertyInteger("FadeIn_1", 0);
-		$this->RegisterPropertyInteger("FadeOut_1", 0);
-		$this->RegisterPropertyInteger("FadeIn_2", 0);
-		$this->RegisterPropertyInteger("FadeOut_2", 0);
-		$this->RegisterPropertyInteger("FadeIn_3", 0);
-		$this->RegisterPropertyInteger("FadeOut_3", 0);
-		$this->RegisterPropertyInteger("FadeIn_4", 0);
-		$this->RegisterPropertyInteger("FadeOut_4", 0);
-		$this->RegisterPropertyInteger("FadeIn_5", 0);
-		$this->RegisterPropertyInteger("FadeOut_5", 0);
-		$this->RegisterPropertyInteger("FadeIn_6", 0);
-		$this->RegisterPropertyInteger("FadeOut_6", 0);
-		$this->RegisterPropertyInteger("FadeIn_7", 0);
-		$this->RegisterPropertyInteger("FadeOut_7", 0);
-		$this->RegisterPropertyInteger("FadeIn_8", 0);
-		$this->RegisterPropertyInteger("FadeOut_8", 0);
-		$this->RegisterPropertyInteger("FadeIn_9", 0);
-		$this->RegisterPropertyInteger("FadeOut_9", 0);
-		$this->RegisterPropertyInteger("FadeIn_10", 0);
-		$this->RegisterPropertyInteger("FadeOut_10", 0);
-		$this->RegisterPropertyInteger("FadeIn_11", 0);
-		$this->RegisterPropertyInteger("FadeOut_11", 0);
-		$this->RegisterPropertyInteger("FadeIn_12", 0);
-		$this->RegisterPropertyInteger("FadeOut_12", 0);
-		$this->RegisterPropertyInteger("FadeIn_13", 0);
-		$this->RegisterPropertyInteger("FadeOut_13", 0);
-		$this->RegisterPropertyInteger("FadeIn_14", 0);
-		$this->RegisterPropertyInteger("FadeOut_14", 0);
-		$this->RegisterPropertyInteger("FadeIn_15", 0);
-		$this->RegisterPropertyInteger("FadeOut_15", 0);
-		$this->RegisterPropertyInteger("FadeIn_16", 0);
-		$this->RegisterPropertyInteger("FadeOut_16", 0);
+		for ($i = 1; $i <= 16; $i++) {
+			$this->RegisterPropertyInteger("FadeIn_".$i, 0);
+			$this->RegisterPropertyInteger("FadeOut_".$i, 0);
+		}
         }
  	
 	public function GetConfigurationForm() 
@@ -80,6 +52,15 @@
 		$arrayOptions[] = array("label" => "200", "value" => 200);
 		$arrayElements[] = array("type" => "Select", "name" => "Frequency", "caption" => "Frequenz (Hz)", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "Label", "label" => "Optional: Angabe von Fade-In/-Out-Zeit in Sekunden (0 => aus, max. 10 Sek)");
+		for ($i = 1; $i <= 16; $i++) {
+			$arrayElements[] = array("type" => "Label", "label" => "Kanal ".$i.":");
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeIn_".$i,  "caption" => "Fade-In-Zeit"); 
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeOut_".$i,  "caption" => "Fade-Out-Zeit");
+		}
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+
+		
 		$arrayElements[] = array("type" => "Button", "label" => "Herstellerinformationen", "onClick" => "echo 'https://www.gedad.de/projekte/projekte-f%C3%BCr-privat/gedad-control/'");
 		
 		$arrayActions = array();
