@@ -15,7 +15,7 @@
 		$this->RegisterPropertyInteger("DeviceBus", 1);
 		$this->RegisterPropertyInteger("Frequency", 100);
 		$this->RegisterPropertyInteger("FadeScalar", 4);
-		for ($i = 1; $i <= 16; $i++) {
+		for ($i = 0; $i <= 15; $i++) {
 			$this->RegisterPropertyInteger("FadeIn_".$i, 0);
 			$this->RegisterPropertyInteger("FadeOut_".$i, 0);
 		}
@@ -53,7 +53,7 @@
 		$arrayElements[] = array("type" => "Select", "name" => "Frequency", "caption" => "Frequenz (Hz)", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Optional: Angabe von Fade-In/-Out-Zeit in Sekunden (0 => aus, max. 10 Sek)");
-		for ($i = 1; $i <= 16; $i++) {
+		for ($i = 0; $i <= 15; $i++) {
 			$arrayElements[] = array("type" => "Label", "label" => "Kanal ".$i.":");
 			$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeIn_".$i,  "caption" => "Fade-In-Zeit"); 
 			$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeOut_".$i,  "caption" => "Fade-Out-Zeit");
@@ -297,6 +297,90 @@
 		}
 	}
 	
+	private function FadeIn(Int $Channel)
+	{
+		// W beim Einschalten Faden
+		$this->SendDebug("WFadeIn", "Ausfuehrung", 0);
+		$Group = min(4, max(1, $Group));
+		$Fadetime = $this->ReadPropertyInteger("FadeIn_".$Group);
+		$Fadetime = min(10, max(0, $Fadetime));
+		If ($Fadetime > 0) {
+			// Zielwert W bestimmen
+			$Value_W = GetValueInteger($this->GetIDForIdent("Intensity_W_".$Group));
+			// $l muss von 0 auf den Zielwert gebracht werden
+			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
+			$Steps = $Fadetime * $FadeScalar;
+			$Stepwide = 4095 / $Steps;
+			$StartAddress = (($Group - 1) * 16) + 18;
+			
+			// Fade In			
+			for ($i = (0 + $Stepwide) ; $i <= ($l - $Stepwide); $i = $i + round($Stepwide, 0)) {
+				// Werte skalieren
+				$Value_W = $i;
+				// Bytes bestimmen
+				$L_Bit = $Value_W & 255;
+				$H_Bit = $Value_W >> 8;
+				If ($this->ReadPropertyBoolean("Open") == true) {
+					// Ausgang setzen
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write_Channel_White", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
+										  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
+					If (!$Result) {
+						$this->SendDebug("WFadeIn", "Daten setzen fehlerhaft!", 0);
+					}
+					else {
+						If (GetValueBoolean($this->GetIDForIdent("Status_W_".$Group)) == false) {
+							SetValueBoolean($this->GetIDForIdent("Status_W_".$Group), true);
+						}
+					}
+				}
+				IPS_Sleep(intval(1000 / $FadeScalar));
+			}
+				
+		}
+	}
+	
+	private function FadeOut(Int $Channel)
+	{
+		// W beim Einschalten Faden
+		$this->SendDebug("FadeOut", "Ausfuehrung", 0);
+		$Group = min(15, max(0, $Channel));
+		$Fadetime = $this->ReadPropertyInteger("FadeOut_".$Channel);
+		$Fadetime = min(10, max(0, $Fadetime));
+		If ($Fadetime > 0) {
+			// Zielwert W bestimmen
+			$Value_W = GetValueInteger($this->GetIDForIdent(("Output_Int_X".$Channel));
+			// $l muss von 0 auf den Zielwert gebracht werden
+			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
+			$Steps = $Fadetime * $FadeScalar;
+			$Stepwide = 4095 / $Steps;
+			$StartAddress = (($Channel - 1) * 16) + 18;
+			
+			// Fade Out			
+			for ($i = ($l - $Stepwide) ; $i >= (0 + $Stepwide); $i = $i - round($Stepwide, 0)) {
+				// Werte skalieren
+				$Value_W = $i;
+				// Bytes bestimmen
+				$L_Bit = $Value_W & 255;
+				$H_Bit = $Value_W >> 8;
+				If ($this->ReadPropertyBoolean("Open") == true) {
+					// Ausgang setzen
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write_Channel_White", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
+										  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
+					If (!$Result) {
+						$this->SendDebug("WFadeOut", "Daten setzen fehlerhaft!", 0);
+					}
+					else {
+						If (GetValueBoolean($this->GetIDForIdent("Output_Bln_X".$Channel)) == false) {
+							SetValueBoolean($this->GetIDForIdent("Output_Bln_X".$Channel), true);
+						}
+					}
+				}
+				IPS_Sleep(intval(1000 / $FadeScalar));
+			}
+				
+		}
+	}
+	    
 	private function SetStatusVariables(Int $Register, Int $Value)
 	{
 		$Intensity = $Value & 4095;
