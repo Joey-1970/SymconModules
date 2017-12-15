@@ -300,18 +300,18 @@
 	private function FadeIn(Int $Channel)
 	{
 		// W beim Einschalten Faden
-		$this->SendDebug("WFadeIn", "Ausfuehrung", 0);
-		$Group = min(4, max(1, $Group));
-		$Fadetime = $this->ReadPropertyInteger("FadeIn_".$Group);
+		$this->SendDebug("FadeIn", "Ausfuehrung", 0);
+		$Group = min(4, max(1, $Channel));
+		$Fadetime = $this->ReadPropertyInteger("FadeIn_".$Channel);
 		$Fadetime = min(10, max(0, $Fadetime));
 		If ($Fadetime > 0) {
 			// Zielwert W bestimmen
-			$Value_W = GetValueInteger($this->GetIDForIdent("Intensity_W_".$Group));
+			$Value_W = GetValueInteger($this->GetIDForIdent("Output_Int_X".$Channel));
 			// $l muss von 0 auf den Zielwert gebracht werden
 			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
 			$Steps = $Fadetime * $FadeScalar;
 			$Stepwide = 4095 / $Steps;
-			$StartAddress = (($Group - 1) * 16) + 18;
+			$StartAddress = ($Channel * 4) + 6;
 			
 			// Fade In			
 			for ($i = (0 + $Stepwide) ; $i <= ($l - $Stepwide); $i = $i + round($Stepwide, 0)) {
@@ -328,8 +328,8 @@
 						$this->SendDebug("WFadeIn", "Daten setzen fehlerhaft!", 0);
 					}
 					else {
-						If (GetValueBoolean($this->GetIDForIdent("Status_W_".$Group)) == false) {
-							SetValueBoolean($this->GetIDForIdent("Status_W_".$Group), true);
+						If (GetValueBoolean($this->GetIDForIdent("Output_Bln_X".$Channel)) == false) {
+							SetValueBoolean($this->GetIDForIdent("Output_Bln_X".$Channel), true);
 						}
 					}
 				}
@@ -348,12 +348,12 @@
 		$Fadetime = min(10, max(0, $Fadetime));
 		If ($Fadetime > 0) {
 			// Zielwert W bestimmen
-			$Value_W = GetValueInteger($this->GetIDForIdent(("Output_Int_X".$Channel));
+			$Value_W = GetValueInteger($this->GetIDForIdent("Output_Int_X".$Channel));
 			// $l muss von 0 auf den Zielwert gebracht werden
 			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
 			$Steps = $Fadetime * $FadeScalar;
 			$Stepwide = 4095 / $Steps;
-			$StartAddress = (($Channel - 1) * 16) + 18;
+			$StartAddress = ($Channel * 4) + 6;
 			
 			// Fade Out			
 			for ($i = ($l - $Stepwide) ; $i >= (0 + $Stepwide); $i = $i - round($Stepwide, 0)) {
