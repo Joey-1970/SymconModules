@@ -204,8 +204,18 @@
 			else {
 				//$this->Read_Status();
 			}
+			
 			// Alarm Kontrolle an Andresse x08 setzen
-			$Bitmask = 0;
+			$Units = 1;
+			If ($this->ReadPropertyInteger("Pin") >= 0) {
+				// Interrupt setzen
+				$Interrupt = 1 << 3;
+			}
+			else {
+				$Interrupt = 0 << 3;
+			}
+			
+			$Bitmask = $Units | $Interrupt;
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("08"), "Value" => $Bitmask)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Setzen der Config fehlerhaft!", 0);
