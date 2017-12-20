@@ -103,6 +103,10 @@
 		$this->DisableAction("CounterValue");
 		IPS_SetHidden($this->GetIDForIdent("CounterValue"), false);
 		
+		$this->RegisterVariableInteger("AlarmValue", "Alarmwert", "", 30);
+		$this->DisableAction("AlarmValue");
+		IPS_SetHidden($this->GetIDForIdent("AlarmValue"), false);
+		
 		//ReceiveData-Filter setzen
 		$this->SetBuffer("DeviceIdent", (($this->ReadPropertyInteger("DeviceBus") << 7) + $this->ReadPropertyInteger("DeviceAddress")));
 		$Filter = '((.*"Function":"get_used_i2c".*|.*"DeviceIdent":'.$this->GetBuffer("DeviceIdent").'.*)|(.*"Function":"status".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*))';
@@ -126,8 +130,7 @@
 				If (($ResultI2C == true) AND ($ResultPin == true)) {
 					$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
 					// Erste Messdaten einlesen
-					
-					//$this->Setup();
+					$this->Setup();
 					$this->SetStatus(102);
 				}
 			}
@@ -230,24 +233,78 @@
 	public function Measurement()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->ReadCounter();
+			$this->ReadAlarm();		
+		}
+	}    
+	
+	private function ReadCounter()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$CounterValue =  0;
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("01"), "Count" => 3)));
 			If ($Result < 0) {
-				$this->SendDebug("Measurement", "Fehler bei der Datenermittung", 0);
+				$this->SendDebug("ReadCounter", "Fehler bei der Datenermittung", 0);
 				return 0;
 			}
 			else {
 				If (is_array(unserialize($Result)) == true) {
-					$this->SendDebug("Measurement", "Ergebnis: ".$Result, 0);
+					$this->SendDebug("ReadCounter", "Ergebnis: ".$Result, 0);
 					$MeasurementData = array();
 					$MeasurementData = unserialize($Result);
-					
+					$CounterValue = (($MeasurementData[3] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[1]);
+					SetValueInteger($this->GetIDForIdent("CounterValue"), $CounterValue );
 				}
 			}
 			
 		}
+	return $CounterValue;
 	}    
 	
-
+	private function ReadAlarm()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$AlarmValue =  0;
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("09"), "Count" => 3)));
+			If ($Result < 0) {
+				$this->SendDebug("ReadAlarm", "Fehler bei der Datenermittung", 0);
+				return 0;
+			}
+			else {
+				If (is_array(unserialize($Result)) == true) {
+					$this->SendDebug("ReadAlarm", "Ergebnis: ".$Result, 0);
+					$MeasurementData = array();
+					$MeasurementData = unserialize($Result);
+					$AlarmValue = (($MeasurementData[3] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[1]);
+					SetValueInteger($this->GetIDForIdent("AlarmValue"), $AlarmValue );
+				}
+			}
+			
+		}
+	return $AlarmValue;
+	}   
+	    
+	private function ReadTimer()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$TimerValue =  0;
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("07"), "Count" => 1)));
+			If ($Result < 0) {
+				$this->SendDebug("ReadTimer", "Fehler bei der Datenermittung", 0);
+				return 0;
+			}
+			else {
+				If (is_array(unserialize($Result)) == true) {
+					$this->SendDebug("ReadTimer", "Ergebnis: ".$Result, 0);
+					$MeasurementData = array();
+					$MeasurementData = unserialize($Result);
+					$TimerValue = $MeasurementData[1];
+				}
+			}
+			
+		}
+	return $TimerValue;
+	}            
 	    
 	private function Get_I2C_Ports()
 	{
