@@ -121,10 +121,18 @@
 	public function RequestAction($Ident, $Value) 
 	{
   		switch($Ident) {
-		
+	        case "Power":
+	            //$this->Set_Status($Value);
+	            break;
+	        case "Input":
+	            //$this->Set_Intensity($Value);
+	            break;
+		case "Volume":
+	            //$this->Set_Intensity($Value);
+	            break;	
 	        default:
 	            throw new Exception("Invalid Ident");
-	    }
+	    	}
 	}
 	
 	public function ReceiveData($JSONString) 
