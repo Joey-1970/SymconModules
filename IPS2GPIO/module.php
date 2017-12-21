@@ -1818,14 +1818,13 @@ class IPS2GPIO_IO extends IPSModule
 					$Result = utf8_encode(substr($Message, -($response[4])));
 					$this->SendDebug("SLR", "Serielle-Daten: ".strlen($Result), 0);
 					If ($response[2] == $this->GetBuffer("Serial_GPS_RxD")) {
-						
 						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_gps_data", "Value"=> utf8_encode($Result) )));
 					}
 					elseif ($response[2] == $this->GetBuffer("Serial_Display_RxD")) {
 						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_data", "Value"=> utf8_encode($Result) )));
 					}
 					elseif ($response[2] == $this->GetBuffer("Serial_PTLB10VE_RxD")) {
-						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_data", "Value"=> utf8_encode($Result) )));
+						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_PTLB10VE_data", "Value"=> utf8_encode($Result) )));
 					}
 					//$this->SendDebug("Serielle Daten", "Text: ".$Result, 0);
 				}
