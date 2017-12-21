@@ -113,9 +113,8 @@
 		
         	If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 			// den Handle für dieses Gerät ermitteln
-			//$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_handle_serial", "Baud" => 9600, "Device" => $this->ReadPropertyString('ConnectionString'), "InstanceID" => $this->InstanceID )));
 			If (($this->ReadPropertyInteger("Pin_RxD") >= 0) AND ($this->ReadPropertyInteger("Pin_TxD") >= 0) AND ($this->ReadPropertyBoolean("Open") == true) ) {
-				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "open_bb_serial_gps", "Baud" => 9600, "Pin_RxD" => $this->ReadPropertyInteger("Pin_RxD"), "PreviousPin_RTxD" => $this->GetBuffer("PreviousPin_RxD"), "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "PreviousPin_TxD" => $this->GetBuffer("PreviousPin_TxD"), "InstanceID" => $this->InstanceID )));
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "open_bb_serial_ptlb10ve", "Baud" => 9600, "Pin_RxD" => $this->ReadPropertyInteger("Pin_RxD"), "PreviousPin_RTxD" => $this->GetBuffer("PreviousPin_RxD"), "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "PreviousPin_TxD" => $this->GetBuffer("PreviousPin_TxD"), "InstanceID" => $this->InstanceID )));
 				$this->SetBuffer("PreviousPin_RxD", $this->ReadPropertyInteger("Pin_RxD"));
 				$this->SetBuffer("PreviousPin_TxD", $this->ReadPropertyInteger("Pin_TxD"));
 				$this->SetTimerInterval("Messzyklus", 5 * 1000));
@@ -131,7 +130,8 @@
 	{
   		switch($Ident) {
 	        case "Power":
-	            	If (GetValueInteger($this->GetIDForIdent("Status") == 0) {
+	            	$this->SendDebug("RequestAction", "Power: Ausfuehrung", 0);
+			If (GetValueInteger($this->GetIDForIdent("Status") == 0) {
 				$this->Send("PON");
 			}
 			elseif (GetValueInteger($this->GetIDForIdent("Status") == 2) {
@@ -139,11 +139,13 @@
 			}
 	            	break;
 	        case "Input":
+			$this->SendDebug("RequestAction", "Input: Ausfuehrung", 0);
 	            	$Input = array("VID", "SVD", "RG1");
 			$this->Send("IIS:".$Input[$Value]);
 			SetValueInteger($this->GetIDForIdent("Input"), $Value);
 	           	break;
 		case "Volume":
+			$this->SendDebug("RequestAction", "Volume: Ausfuehrung", 0);
 	            	$Volume = sprintf('%03s',intval($Value / 4));
 			$this->Send("AVL:".$Volume);
 			SetValueInteger($this->GetIDForIdent("Volume"), $Value);
@@ -157,7 +159,12 @@
 	{
 		$data = json_decode($JSONString);
 	 	switch ($data->Function) {
-			case "get_serial":
+			 case "set_serial_PTLB10VE_data":
+				$ByteMessage = utf8_decode($data->Value);
+				$this->SendDebug("ReceiveData", "Ankommende Daten: ".$ByteMessage, 0);
+				
+				break;
+			 case "get_serial":
 			   	$this->ApplyChanges();
 				break;
 			 case "status":
@@ -171,14 +178,16 @@
 	public function Send(String $Message)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Send", "Ausfuehrung", 0);
 			$Message = utf8_encode(chr(2).$Message.chr(3));
-			//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytes_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => $Message)));
+			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytes_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => $Message)));
 		}
 	}
 	
 	public function GetStatus()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("GetStatus", "Ausfuehrung", 0);
 			$this->Send("Q$S");
 		}
 	}				
