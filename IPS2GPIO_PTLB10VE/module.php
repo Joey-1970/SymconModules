@@ -122,14 +122,16 @@
 	{
   		switch($Ident) {
 	        case "Power":
-	            //$this->Set_Status($Value);
-	            break;
+	            	$this->Send("PON");
+	            	break;
 	        case "Input":
-	            //$this->Set_Intensity($Value);
-	            break;
+	            	$Input = array("VID", "SVD", "RG1");
+			$this->Send("IIS:".$Input[$Value]);
+			SetValueInteger($this->GetIDForIdent("Input"), $value);
+	           	break;
 		case "Volume":
-	            //$this->Set_Intensity($Value);
-	            break;	
+	            	$Volume = $Value
+	            	break;	
 	        default:
 	            throw new Exception("Invalid Ident");
 	    	}
@@ -152,8 +154,8 @@
 	// Beginn der Funktionen
 	public function Send(String $Message)
 	{
-		$Message = utf8_encode($Message."\r\n");
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytes_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => $Message)));
+		$Message = utf8_encode(chr(2).$Message.chr(3));
+		//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytes_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => $Message)));
 	}
 	
 	
