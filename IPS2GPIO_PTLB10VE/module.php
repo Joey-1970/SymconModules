@@ -74,13 +74,34 @@
 		}
 		
 		// Profil anlegen
+		$this->RegisterProfileInteger("IPS2GPIO.PTLB10VEStatus", "Information", "", "", 0, 2, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEStatus", 0, "Bereitschaft", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEStatus", 1, "Lampeneinschaltsteuerung", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEStatus", 2, "Lampe eingeschaltet", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEStatus", 3, "Lampenausschaltsteuerung", "Information", -1);
+		
+		$this->RegisterProfileInteger("IPS2GPIO.PTLB10VEInput", "Information", "", "", 0, 2, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEInput", 0, "Video", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEInput", 1, "S-Video", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEInput", 2, "RGB", "Information", -1);
+		
 	   
 		//Status-Variablen anlegen
-		$this->RegisterVariableFloat("Status", "Status", "~Switch", 10);
-		$this->EnableAction("Status");
+		$this->RegisterVariableInteger("Status", "Status", "IPS2GPIO.PTLB10VEStatus", 10);
+		$this->DisableAction("Status");
 		IPS_SetHidden($this->GetIDForIdent("Status"), false);
 		
+		$this->RegisterVariableBoolean("Power", "Power", "~Switch", 20);
+		$this->EnableAction("Power");
+		IPS_SetHidden($this->GetIDForIdent("Power"), false);
 		
+		$this->RegisterVariableInteger("Input", "Input", "IPS2GPIO.PTLB10VEInput", 30);
+		$this->EnableAction("Input");
+		IPS_SetHidden($this->GetIDForIdent("Input"), false);
+		
+		$this->RegisterVariableInteger("Volume", "Volume", "~Intensity.255", 40);
+	        $this->EnableAction("Volume");
+		IPS_SetHidden($this->GetIDForIdent("Volume"), false);
 		
 		
         	If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
@@ -127,6 +148,25 @@
 		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytes_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => $Message)));
 	}
 	
+	
+	    
+	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
+	{
+	        if (!IPS_VariableProfileExists($Name))
+	        {
+	            IPS_CreateVariableProfile($Name, 1);
+	        }
+	        else
+	        {
+	            $profile = IPS_GetVariableProfile($Name);
+	            if ($profile['ProfileType'] != 1)
+	                throw new Exception("Variable profile type does not match for profile " . $Name);
+	        }
+	        IPS_SetVariableProfileIcon($Name, $Icon);
+	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);        
+	}    
+	    
 	private function Get_GPIO()
 	{
 		If ($this->HasActiveParent() == true) {
