@@ -130,7 +130,8 @@
 			SetValueInteger($this->GetIDForIdent("Input"), $value);
 	           	break;
 		case "Volume":
-	            	$Volume = $Value
+	            	$Volume = sprintf('%03s',intval($Value / 4));
+			$this->Send("AVL:".$Volume);
 	            	break;	
 	        default:
 	            throw new Exception("Invalid Ident");
