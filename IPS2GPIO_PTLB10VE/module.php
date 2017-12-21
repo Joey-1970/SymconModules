@@ -2,6 +2,13 @@
     // Klassendefinition
     class IPS2GPIO_PTLB10VE extends IPSModule 
     {
+	public function Destroy() 
+	{
+		//Never delete this line!
+		parent::Destroy();
+		$this->SetTimerInterval("Messzyklus", 0);
+	}
+	    
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
@@ -12,7 +19,7 @@
 		$this->SetBuffer("PreviousPin_RxD", -1);
 		$this->RegisterPropertyInteger("Pin_TxD", -1);
 		$this->SetBuffer("PreviousPin_TxD", -1);
-            	
+            	$this->RegisterTimer("Messzyklus", 0, 'I2GPTLB10VE_GetStatus($_IPS["TARGET"]);');
             	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
         }
 	public function GetConfigurationForm() 
@@ -111,9 +118,11 @@
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "open_bb_serial_gps", "Baud" => 9600, "Pin_RxD" => $this->ReadPropertyInteger("Pin_RxD"), "PreviousPin_RTxD" => $this->GetBuffer("PreviousPin_RxD"), "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "PreviousPin_TxD" => $this->GetBuffer("PreviousPin_TxD"), "InstanceID" => $this->InstanceID )));
 				$this->SetBuffer("PreviousPin_RxD", $this->ReadPropertyInteger("Pin_RxD"));
 				$this->SetBuffer("PreviousPin_TxD", $this->ReadPropertyInteger("Pin_TxD"));
+				$this->SetTimerInterval("Messzyklus", 5 * 1000));
 				$this->SetStatus(102);
 			}
 			else {
+				$this->SetTimerInterval("Messzyklus", 0));
 				$this->SetStatus(104);
 			}
 		}
@@ -122,16 +131,22 @@
 	{
   		switch($Ident) {
 	        case "Power":
-	            	$this->Send("PON");
+	            	If (GetValueInteger($this->GetIDForIdent("Status") == 0) {
+				$this->Send("PON");
+			}
+			elseif (GetValueInteger($this->GetIDForIdent("Status") == 2) {
+				$this->Send("POF");
+			}
 	            	break;
 	        case "Input":
 	            	$Input = array("VID", "SVD", "RG1");
 			$this->Send("IIS:".$Input[$Value]);
-			SetValueInteger($this->GetIDForIdent("Input"), $value);
+			SetValueInteger($this->GetIDForIdent("Input"), $Value);
 	           	break;
 		case "Volume":
 	            	$Volume = sprintf('%03s',intval($Value / 4));
 			$this->Send("AVL:".$Volume);
+			SetValueInteger($this->GetIDForIdent("Volume"), $Value);
 	            	break;	
 	        default:
 	            throw new Exception("Invalid Ident");
@@ -155,11 +170,18 @@
 	// Beginn der Funktionen
 	public function Send(String $Message)
 	{
-		$Message = utf8_encode(chr(2).$Message.chr(3));
-		//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytes_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => $Message)));
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$Message = utf8_encode(chr(2).$Message.chr(3));
+			//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytes_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => $Message)));
+		}
 	}
 	
-	
+	public function GetStatus()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->Send("Q$S");
+		}
+	}				
 	    
 	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
 	{
