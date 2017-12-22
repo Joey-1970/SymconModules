@@ -121,7 +121,7 @@
 				$this->SetStatus(102);
 			}
 			else {
-				$this->SetTimerInterval("Messzyklus", 0));
+				$this->SetTimerInterval("Messzyklus", 0);
 				$this->SetStatus(104);
 			}
 		}
