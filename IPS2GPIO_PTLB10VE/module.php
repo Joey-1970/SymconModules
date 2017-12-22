@@ -188,7 +188,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("GetStatus", "Ausfuehrung", 0);
-			$this->Send("Q$S");
+			$this->Send('Q$S');
 		}
 	}				
 	    
