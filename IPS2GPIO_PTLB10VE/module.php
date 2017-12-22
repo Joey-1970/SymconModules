@@ -131,10 +131,10 @@
   		switch($Ident) {
 	        case "Power":
 	            	$this->SendDebug("RequestAction", "Power: Ausfuehrung", 0);
-			If (GetValueInteger($this->GetIDForIdent("Status") == 0) {
+			If (GetValueInteger($this->GetIDForIdent("Status")) == 0) {
 				$this->Send("PON");
 			}
-			elseif (GetValueInteger($this->GetIDForIdent("Status") == 2) {
+			elseif (GetValueInteger($this->GetIDForIdent("Status")) == 2) {
 				$this->Send("POF");
 			}
 	            	break;
