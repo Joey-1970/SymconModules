@@ -2150,11 +2150,21 @@ class IPS2GPIO_IO extends IPSModule
 			}
 			// Wartezeit
 			IPS_Sleep(2000);
-			If ($this->ReadPropertyBoolean("AudioDAC") == true) {
-				$this->SSH_Connect("sudo pigpiod -t0");
+			If ($this->ReadPropertyString("User") == "root") {
+				If ($this->ReadPropertyBoolean("AudioDAC") == true) {
+					$this->SSH_Connect("pigpiod -t 0 -s 10");
+				}
+				else {
+					$this->SSH_Connect("pigpiod -s 10");
+				}
 			}
 			else {
-				$this->SSH_Connect("sudo pigpiod");
+				If ($this->ReadPropertyBoolean("AudioDAC") == true) {
+					$this->SSH_Connect("sudo pigpiod -t 0 -s 10");
+				}
+				else {
+					$this->SSH_Connect("sudo pigpiod -s 10");
+				}
 			}
 			// Wartezeit
 			IPS_Sleep(2000);
@@ -2292,11 +2302,21 @@ class IPS2GPIO_IO extends IPSModule
 					// Versuchen PIGPIO zu starten
 					IPS_LogMessage("IPS2GPIO Netzanbindung: ","Versuche PIGPIO per SSH zu starten...");
 					$this->SendDebug("Netzanbindung", "Versuche PIGPIO per SSH zu starten...", 0);
-					If ($this->ReadPropertyBoolean("AudioDAC") == true) {
-						$this->SSH_Connect("sudo pigpiod -t0");
+					If ($this->ReadPropertyString("User") == "root") {
+						If ($this->ReadPropertyBoolean("AudioDAC") == true) {
+							$this->SSH_Connect("pigpiod -t 0 -s 10");
+						}
+						else {
+							$this->SSH_Connect("pigpiod -s 10");
+						}
 					}
 					else {
-						$this->SSH_Connect("sudo pigpiod");
+						If ($this->ReadPropertyBoolean("AudioDAC") == true) {
+							$this->SSH_Connect("sudo pigpiod -t 0 -s 10");
+						}
+						else {
+							$this->SSH_Connect("sudo pigpiod -s 10");
+						}
 					}
 					$status = @fsockopen($this->ReadPropertyString("IPAddress"), 8888, $errno, $errstr, 10);
 					if (!$status) {
