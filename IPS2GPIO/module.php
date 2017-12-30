@@ -1008,6 +1008,11 @@ class IPS2GPIO_IO extends IPSModule
 					If ($Result >= 0) {
 						// WVDEL 	50 	wave_id 	0 	0
 						$this->CommandClientSocket(pack("L*", 50, $WaveID, 0, 0), 16);
+						// Daten gleich abholen
+						If ($this->GetBuffer("Serial_PTLB10VE_TxD") == $data->Pin_TxD) {
+							$this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_PTLB10VE_RxD"), 8192, 0), 16 + 8192);
+						}
+
 					}
 				}
 			}
@@ -1060,6 +1065,7 @@ class IPS2GPIO_IO extends IPSModule
 					$this->SetBuffer("Serial_PTLB10VE_RxD", (int)$data->Pin_RxD);
 					// GPIO TxD als Output konfigurieren
 					$this->CommandClientSocket(pack("L*", 0, (int)$data->Pin_TxD, 1, 0), 16);
+					$this->SetBuffer("Serial_PTLB10VE_TxD", (int)$data->Pin_TxD);
 					$PinUsed[(int)$data->Pin_TxD] = $data->InstanceID; 
 					$this->SendDebug("GPIO", "Mode der GPIO fuer Seriellen Bus gesetzt", 0);
 					$this->SetBuffer("PinUsed", serialize($PinUsed));
