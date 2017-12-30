@@ -1010,6 +1010,7 @@ class IPS2GPIO_IO extends IPSModule
 						$this->CommandClientSocket(pack("L*", 50, $WaveID, 0, 0), 16);
 						// Daten gleich abholen
 						If ($this->GetBuffer("Serial_PTLB10VE_TxD") == $data->Pin_TxD) {
+							IPS_Sleep(50);
 							$this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_PTLB10VE_RxD"), 8192, 0), 16 + 8192);
 						}
 
