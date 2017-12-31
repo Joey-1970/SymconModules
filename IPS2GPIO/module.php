@@ -122,7 +122,7 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayOWColumns[] = array("label" => "Instanz ID", "name" => "InstanceID", "width" => "70px", "add" => "");
 		$arrayOWColumns[] = array("label" => "Status", "name" => "DeviceStatus", "width" => "auto", "add" => "");
 		
-		If (($this->ConnectionTest()) AND ($this->ReadPropertyBoolean("Open") == true))  {
+		If (($this->ConnectionTest()) AND ($this->ReadPropertyBoolean("Open") == true) AND ($this->GetBuffer("I2C_Enabled") == 1)) {
 			// I²C-Devices einlesen und in das Values-Array kopieren
 			$DeviceArray = array();
 			$DeviceArray = unserialize($this->SearchI2CDevices());
@@ -210,6 +210,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("PinPossible", serialize($Typ));
 			$this->SetBuffer("PinI2C", "");
 			$this->SetBuffer("I2CSearch", 0);
+			$this->SetBuffer("I2C_Enabled", 0);
 			$this->SetBuffer("I2C_0_Configured", 0);
 			$this->SetBuffer("I2C_1_Configured", 0);
 			$this->SetBuffer("Serial_Configured", 0);
@@ -285,7 +286,7 @@ class IPS2GPIO_IO extends IPSModule
 				$this->SendDebug("Handle", (int)$Handle, 0);
 				
 				// MUX einrichten
-				If ($this->ReadPropertyInteger("MUX") > 0) {
+				If (($this->ReadPropertyInteger("MUX") > 0) AND ($this->GetBuffer("I2C_Enabled") == 1)) {
 					$MUX_Handle = $this->CommandClientSocket(pack("L*", 54, 1, 112, 4, 0), 16);
 					$this->SetBuffer("MUX_Handle", $MUX_Handle);
 					$this->SendDebug("MUX Handle", $MUX_Handle, 0);
@@ -297,7 +298,7 @@ class IPS2GPIO_IO extends IPSModule
 				}
 				
 				// OW einrichten
-				If ($this->ReadPropertyInteger("OW") > 0) {
+				If (($this->ReadPropertyInteger("OW") > 0) AND ($this->GetBuffer("I2C_Enabled") == 1)) {
 					$OW_Handle = $this->CommandClientSocket(pack("L*", 54, 1, 24, 4, 0), 16);
 					$this->SetBuffer("OW_Handle", $OW_Handle);
 					$this->SendDebug("OW Handle", $OW_Handle, 0);
@@ -2506,6 +2507,7 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayCheckConfig = array();
 		$arrayCheckConfig["I2C"]["Status"] = "unbekannt";
 		$arrayCheckConfig["I2C"]["Color"] = "#FFFF00";
+		$this->SetBuffer("I2C_Enabled", 0);
 		$arrayCheckConfig["Serielle Schnittstelle"]["Status"] = "unbekannt";
 		$arrayCheckConfig["Serielle Schnittstelle"]["Color"] = "#FFFF00";
 		$arrayCheckConfig["Shell Zugriff"]["Status"] = "unbekannt";
@@ -2544,11 +2546,13 @@ class IPS2GPIO_IO extends IPSModule
 					$this->SendDebug("CheckConfig", "I2C ist aktiviert", 0);
 					$arrayCheckConfig["I2C"]["Status"] = "aktiviert";
 					$arrayCheckConfig["I2C"]["Color"] = "#00FF00";
+					$this->SetBuffer("I2C_Enabled", 1);
 				} else {
 					$this->SendDebug("CheckConfig", "I2C ist deaktiviert!", 0);
 					IPS_LogMessage("IPS2GPIO CheckConfig", "I2C ist deaktiviert!");
 					$arrayCheckConfig["I2C"]["Status"] = "deaktiviert";
 					$arrayCheckConfig["I2C"]["Color"] = "#FF0000";
+					$this->SetBuffer("I2C_Enabled", 0);
 				}
 				// Prüfen ob 1-Wie-Server aktiviert ist
 				$Pattern = "/(?:\r\n|\n|\r)(\s*)(dtoverlay)(=(w1-gpio))(\s*)($:\r\n|\n|\r)/";
