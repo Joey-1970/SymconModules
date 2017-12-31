@@ -333,10 +333,18 @@
 						// Array neu durchnummerieren
 						$MemArray = array_merge($MemArray);
 						//IPS_LogMessage("IPS2GPIO RPi", serialize($MemArray));
-						SetValueFloat($this->GetIDForIdent("SD_Card_Total"), intval($MemArray[0]) / 1000);
-						SetValueFloat($this->GetIDForIdent("SD_Card_Used"), intval($MemArray[1]) / 1000);
-						SetValueFloat($this->GetIDForIdent("SD_Card_Available"), intval($MemArray[2]) / 1000);
-						SetValueFloat($this->GetIDForIdent("SD_Card_Used_rel"), intval($MemArray[3]) / 100 );
+						If (count($MemArray) == 4) {
+							SetValueFloat($this->GetIDForIdent("SD_Card_Total"), intval($MemArray[0]) / 1000);
+							SetValueFloat($this->GetIDForIdent("SD_Card_Used"), intval($MemArray[1]) / 1000);
+							SetValueFloat($this->GetIDForIdent("SD_Card_Available"), intval($MemArray[2]) / 1000);
+							SetValueFloat($this->GetIDForIdent("SD_Card_Used_rel"), intval($MemArray[3]) / 100 );
+						}
+						else {
+							SetValueFloat($this->GetIDForIdent("SD_Card_Total"), 0);
+							SetValueFloat($this->GetIDForIdent("SD_Card_Used"), 0);
+							SetValueFloat($this->GetIDForIdent("SD_Card_Available"), 0);
+							SetValueFloat($this->GetIDForIdent("SD_Card_Used_rel"), 0);
+						}	
 						break;
 					case "7":
 						// Uptime
