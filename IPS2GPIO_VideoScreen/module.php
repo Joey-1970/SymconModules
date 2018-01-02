@@ -86,7 +86,7 @@
 		//Status-Variablen anlegen
 		$this->RegisterVariableInteger("Motor", "Leinwand", "IPS2GPIO.MotorControl", 10);
 		$this->EnableAction("Leinwand");
-		SetValueInteger($this->GetIDForIdent("Leinwand"), 1);
+		SetValueInteger($this->GetIDForIdent("Motor"), 1);
 		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 			// Logging setzen
@@ -117,7 +117,7 @@
   		switch($Ident) {
 	        case "Motor":
 	           	If ($this->ReadPropertyBoolean("Open") == true) {
-				//$this->MotorControl(1, $Value);
+				$this->MotorControl($Value);
 		    	}
 	            break;
 	       
@@ -162,56 +162,69 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"))));
 			If ($Result < 0) {
 				$this->SendDebug("Read_Status", "Fehler beim Einlesen der Ausgänge!", 0);
-				return;
+				return -1;
 			}
 			else {
 				// Daten der Messung
-				SetValueInteger($this->GetIDForIdent("Value"), $Result);
-				$Result  = str_pad(decbin($Result), 8, '0', STR_PAD_LEFT );
-				for ($i = 0; $i <= 7; $i++) {
-					SetValueBoolean($this->GetIDForIdent("P".$i), substr($Result, 7-$i, 1));
+				$Result = $Result & 3;
+				If ($Result == 0) {
+					// Stop
+					SetValueInteger($this->GetIDForIdent("Motor"), 1);
 				}
+				elseif ($Result == 1) {
+					// Linkslauf
+					SetValueInteger($this->GetIDForIdent("Motor"), 0);
+				}
+				elseif ($Result == 2) {
+					// Rechtslauf
+					SetValueInteger($this->GetIDForIdent("Motor"), 2);
+				}	
 			}
 		}
+	return $Result;
 	}
 	
 	private function Setup()
 	{
 		If ($this->ReadPropertyInteger("Startoption") == 0) {
 			$Bitmask = 0;
-			for ($i = 0; $i <= 7; $i++) {
-				If ($this->ReadPropertyBoolean("P".$i) == true) {
-					// wenn true dann Eingang		
-					$Bitmask = $Bitmask + pow(2, $i);
-				}		
-			}
 			$this->SetOutput($Bitmask);
-		}
-		elseif ($this->ReadPropertyInteger("Startoption") == 1) {
-			$this->SetOutput(255);
 		}
 	}
 	
-	public function SetPinOutput(Int $Pin, Bool $Value)
+	private function MotorControl(Int $Value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Setzt einen bestimmten Pin auf den vorgegebenen Wert
-			$Pin = min(7, max(0, $Pin));
+			$Pin = min(1, max(0, $Pin));
 			$Value = boolval($Value);
 			// Aktuellen Status abfragen
-			$this->Read_Status();
-			// Bitmaske erstellen
-			$Bitmask = GetValueInteger($this->GetIDForIdent("Value"));
-			If ($Value == true) {
-				$Bitmask = $this->setBit($Bitmask, $Pin);
+			$Status = $this->Read_Status();
+			If (($Status == 0) OR ($Status == 2)) {
+				// Stoppen wenn läuft
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => 0)));
+				If (!$Result) {
+					$this->SendDebug("MotorControl", "Setzen des Ausgangs fehlerhaft!", 0);
+					return;
+				}
 			}
-			else {
-				$Bitmask = $this->unsetBit($Bitmask, $Pin);
+			// Bitmaske erstellen
+			If ($Value == 0) {
+				// Linkslauf
+				$Bitmask = 1;
+			}
+			elseif ($Value == 1){
+				// Stop
+				$Bitmask = 0;
+			}
+			elseif ($Value == 2){
+				// Stop
+				$Bitmask = 2;
 			}
 			$Bitmask = min(255, max(0, $Bitmask));
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $Bitmask)));
 			If (!$Result) {
-				$this->SendDebug("SetPinOutput", "Setzen des Ausgangs fehlerhaft!", 0);
+				$this->SendDebug("MotorControl", "Setzen des Ausgangs fehlerhaft!", 0);
 				return;
 			}
 			else {
@@ -220,7 +233,7 @@
 		}
 	}
 	
-	public function SetOutput(Int $Value)
+	private function SetOutput(Int $Value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Setzt alle Ausgänge
@@ -236,15 +249,23 @@
 		}
 	}
 	
-	private function setBit($byte, $significance) { 
- 		// ein bestimmtes Bit auf 1 setzen
- 		return $byte | 1<<$significance;   
- 	} 
-	private function unsetBit($byte, $significance) {
-	    // ein bestimmtes Bit auf 0 setzen
-	    return $byte & ~(1<<$significance);
+	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
+	{
+	        if (!IPS_VariableProfileExists($Name))
+	        {
+	            IPS_CreateVariableProfile($Name, 1);
+	        }
+	        else
+	        {
+	            $profile = IPS_GetVariableProfile($Name);
+	            if ($profile['ProfileType'] != 1)
+	                throw new Exception("Variable profile type does not match for profile " . $Name);
+	        }
+	        IPS_SetVariableProfileIcon($Name, $Icon);
+	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);        
 	}
-	
+	    
 	private function Get_I2C_Ports()
 	{
 		If ($this->HasActiveParent() == true) {
@@ -261,23 +282,7 @@
 		}
 	return $I2C_Ports;
 	}
-	    
-	private function Get_GPIO()
-	{
-		If ($this->HasActiveParent() == true) {
-			$GPIO = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_GPIO")));
-		}
-		else {
-			$AllGPIO = array();
-			$AllGPIO[-1] = "undefiniert";
-			for ($i = 2; $i <= 27; $i++) {
-				$AllGPIO[$i] = "GPIO".(sprintf("%'.02d", $i));
-			}
-			$GPIO = serialize($AllGPIO);
-		}
-	return $GPIO;
-	}
-	    
+	    	    
 	private function HasActiveParent()
     	{
 		$Instance = @IPS_GetInstance($this->InstanceID);
