@@ -156,6 +156,7 @@
 	public function Read_Status()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Read_Status", "Ausfuehrung", 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"))));
 			If ($Result < 0) {
 				$this->SendDebug("Read_Status", "Fehler beim Einlesen der Ausgänge!", 0);
@@ -183,7 +184,8 @@
 	
 	private function Setup()
 	{
-		If ($this->ReadPropertyInteger("Startoption") == 0) {
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Setup", "Ausfuehrung", 0);
 			$Bitmask = 0;
 			$this->SetOutput($Bitmask);
 		}
@@ -192,6 +194,7 @@
 	private function MotorControl(Int $Value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("MotorControl", "Ausfuehrung", 0);
 			// Setzt einen bestimmten Pin auf den vorgegebenen Wert
 			$Pin = min(1, max(0, $Pin));
 			$Value = boolval($Value);
@@ -233,6 +236,7 @@
 	private function SetOutput(Int $Value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("SetOutput", "Ausfuehrung", 0);
 			// Setzt alle Ausgänge
 			$Value = min(255, max(0, $Value));
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $Value)));
