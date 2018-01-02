@@ -96,10 +96,7 @@
 			If ($this->ReadPropertyBoolean("Open") == true) {
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 				If ($Result == true) {
-					
 					$this->Setup();
-					// Erste Messdaten einlesen
-					$this->Read_Status();
 					$this->SetStatus(102);
 				}
 			}
@@ -168,14 +165,17 @@
 				If ($Result == 0) {
 					// Stop
 					SetValueInteger($this->GetIDForIdent("Motor"), 1);
+					$this->SendDebug("Read_Status", "Stop", 0);
 				}
 				elseif ($Result == 1) {
 					// Linkslauf
 					SetValueInteger($this->GetIDForIdent("Motor"), 0);
+					$this->SendDebug("Read_Status", "Linkslauf", 0);
 				}
 				elseif ($Result == 2) {
 					// Rechtslauf
 					SetValueInteger($this->GetIDForIdent("Motor"), 2);
+					$this->SendDebug("Read_Status", "Rechtslauf", 0);
 				}	
 			}
 		}
@@ -187,7 +187,14 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Setup", "Ausfuehrung", 0);
 			$Bitmask = 0;
-			$this->SetOutput($Bitmask);
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $Bitmask)));
+			If (!$Result) {
+				$this->SendDebug("SetOutput", "Setzen der Ausgaenge fehlerhaft!", 0);
+				return;
+			}
+			else {
+				$this->Read_Status();
+			}
 		}
 	}
 	
@@ -201,6 +208,7 @@
 			$Status = $this->Read_Status();
 			If (($Status == 0) OR ($Status == 2)) {
 				// Stoppen wenn läuft
+				$this->SendDebug("MotorControl", "Stop", 0);
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => 0)));
 				If (!$Result) {
 					$this->SendDebug("MotorControl", "Setzen des Ausgangs fehlerhaft!", 0);
@@ -211,36 +219,22 @@
 			If ($Value == 0) {
 				// Linkslauf
 				$Bitmask = 1;
+				$this->SendDebug("MotorControl", "Linkslauf", 0);
 			}
 			elseif ($Value == 1){
 				// Stop
 				$Bitmask = 0;
+				$this->SendDebug("MotorControl", "Stop", 0);
 			}
 			elseif ($Value == 2){
-				// Stop
+				// Rechtslauf
 				$Bitmask = 2;
+				$this->SendDebug("MotorControl", "Rechtslauf", 0);
 			}
 			$Bitmask = min(255, max(0, $Bitmask));
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $Bitmask)));
 			If (!$Result) {
 				$this->SendDebug("MotorControl", "Setzen des Ausgangs fehlerhaft!", 0);
-				return;
-			}
-			else {
-				$this->Read_Status();
-			}
-		}
-	}
-	
-	private function SetOutput(Int $Value)
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("SetOutput", "Ausfuehrung", 0);
-			// Setzt alle Ausgänge
-			$Value = min(255, max(0, $Value));
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $Value)));
-			If (!$Result) {
-				$this->SendDebug("SetOutput", "Setzen der Ausgaenge fehlerhaft!", 0);
 				return;
 			}
 			else {
