@@ -79,15 +79,15 @@
 	    		IPS_LogMessage("IPS2GPIO PCF8574","I2C-Device Adresse in einem nicht definierten Bereich!");  
 	    	}
 	    	//Status-Variablen anlegen
-		$this->RegisterVariableBoolean("P0", "P0", "~Switch", 10);
-		$this->EnableAction("P0");
-          	IPS_SetHidden($this->GetIDForIdent("P0"), false);
+		$this->RegisterProfileInteger("IPS2GPIO.MotorControl", "Information", "", "", 0, 2, 0);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorControl", 0, "<=", "HollowArrowLeft", 0x00FF00);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorControl", 1, "Stop", "Cross", 0xFF0000);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorControl", 2, "=>", "HollowArrowRight", 0x00FF00);
+		//Status-Variablen anlegen
+		$this->RegisterVariableInteger("Motor", "Leinwand", "IPS2GPIO.MotorControl", 10);
+		$this->EnableAction("Leinwand");
+		SetValueInteger($this->GetIDForIdent("Leinwand"), 1);
 		
-		$this->RegisterVariableBoolean("P1", "P1", "~Switch", 20);
-		$this->EnableAction("P1");
-          	IPS_SetHidden($this->GetIDForIdent("P1"), false);
-		
-
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 			// Logging setzen
 			
@@ -115,12 +115,12 @@
 	public function RequestAction($Ident, $Value) 
 	{
   		switch($Ident) {
-	        case "P0":
-	            $this->SetPinOutput(0, $Value);
+	        case "Motor":
+	           	If ($this->ReadPropertyBoolean("Open") == true) {
+				//$this->MotorControl(1, $Value);
+		    	}
 	            break;
-	        case "P1":
-	            $this->SetPinOutput(1, $Value);
-	            break;
+	       
 	        
 	        default:
 	            throw new Exception("Invalid Ident");
