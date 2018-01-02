@@ -206,7 +206,7 @@
 			$Value = min(2, max(0, $Value));
 			// Aktuellen Status abfragen
 			$Status = $this->Read_Status();
-			If (($Status == 0) OR ($Status == 2)) {
+			If ((($Status == 0) OR ($Status == 2)) AND ($Value <> 1)) {
 				// Stoppen wenn läuft
 				$this->SendDebug("MotorControl", "Stop", 0);
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => 0)));
@@ -214,6 +214,7 @@
 					$this->SendDebug("MotorControl", "Setzen des Ausgangs fehlerhaft!", 0);
 					return;
 				}
+				
 			}
 			// Bitmaske erstellen
 			If ($Value == 0) {
