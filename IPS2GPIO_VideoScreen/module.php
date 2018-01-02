@@ -82,7 +82,7 @@
 		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorControl", 2, "=>", "HollowArrowRight", 0x00FF00);
 		//Status-Variablen anlegen
 		$this->RegisterVariableInteger("Motor", "Leinwand", "IPS2GPIO.MotorControl", 10);
-		$this->EnableAction("Leinwand");
+		$this->EnableAction("Motor");
 		SetValueInteger($this->GetIDForIdent("Motor"), 1);
 		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
