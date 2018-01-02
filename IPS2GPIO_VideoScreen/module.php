@@ -196,8 +196,7 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("MotorControl", "Ausfuehrung", 0);
 			// Setzt einen bestimmten Pin auf den vorgegebenen Wert
-			$Pin = min(1, max(0, $Pin));
-			$Value = boolval($Value);
+			$Value = min(2, max(0, $Value));
 			// Aktuellen Status abfragen
 			$Status = $this->Read_Status();
 			If (($Status == 0) OR ($Status == 2)) {
