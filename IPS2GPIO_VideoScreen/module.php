@@ -206,41 +206,44 @@
 			// Aktuellen Status abfragen
 			$Status = $this->Read_Status();
 			If ($Status >= 0) {
-				If (($Status == 0) AND ($Value == 1)) {
+				// Stopvarianten
+				If (($Status == 3) AND ($Value == 1)) {
 					// Wenn gestoppt wird obwohl im Status Stop
 					$this->SendDebug("MotorControl", "Keine Aktion notwendig", 0);
 				}
-				elseif (($Status <> 0) AND ($Value == 1)) {
+				elseif (($Status <> 3) AND ($Value == 1)) {
 					// Wenn gestoppt werden soll
 					$this->SendDebug("MotorControl", "Stop", 0);
 					$this->Set_Status(3);
 				}
-				elseif (($Status == 1) AND ($Value == 0)) {
+				// Linkslaufvarianten
+				elseif (($Status == 2) AND ($Value == 0)) {
 					// Wenn Linkslauf angefordert wird obwohl im Linkslauf
 					$this->SendDebug("MotorControl", "Keine Aktion notwendig", 0);
 				}
-				elseif (($Status == 0) AND ($Value == 0)) {
+				elseif (($Status == 3) AND ($Value == 0)) {
 					// wenn Linkslauf angefordert wird und aktuell gestoppt
 					$this->SendDebug("MotorControl", "Linkslauf", 0);
 					$this->Set_Status(2);
 				}
-				elseif (($Status == 2) AND ($Value == 0)) {
+				elseif (($Status == 1) AND ($Value == 0)) {
 					// wenn Linkslauf angefordert wird und aktuell Rechtslauf
 					$this->SendDebug("MotorControl", "Linkslauf", 0);
 					$this->Set_Status(3);
 					IPS_Sleep(50);
 					$this->Set_Status(2);
 				}
-				elseif (($Status == 2) AND ($Value == 2)) {
+				// Rechtslaufvarianten
+				elseif (($Status == 1) AND ($Value == 2)) {
 					// Wenn Rechtslauf angefordert wird obwohl im Rehtslauf
 					$this->SendDebug("MotorControl", "Keine Aktion notwendig", 0);
 				}
-				elseif (($Status == 0) AND ($Value == 2)) {
-					// wenn Linkslauf angefordert wird und aktuell gestoppt
+				elseif (($Status == 3) AND ($Value == 2)) {
+					// wenn Rechtslauf angefordert wird und aktuell gestoppt
 					$this->SendDebug("MotorControl", "Rechtslauf", 0);
 					$this->Set_Status(1);
 				}
-				elseif (($Status == 1) AND ($Value == 2)) {
+				elseif (($Status == 2) AND ($Value == 2)) {
 					// wenn Rechtslauf angefordert wird und aktuell Linkslauf
 					$this->SendDebug("MotorControl", "Rechtslauf", 0);
 					$this->Set_Status(3);
