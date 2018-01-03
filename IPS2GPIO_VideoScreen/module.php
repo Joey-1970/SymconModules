@@ -235,7 +235,7 @@
 				}
 				// Rechtslaufvarianten
 				elseif (($Status == 1) AND ($Value == 2)) {
-					// Wenn Rechtslauf angefordert wird obwohl im Rehtslauf
+					// Wenn Rechtslauf angefordert wird obwohl im Rechtslauf
 					$this->SendDebug("MotorControl", "Keine Aktion notwendig", 0);
 				}
 				elseif (($Status == 3) AND ($Value == 2)) {
@@ -256,7 +256,7 @@
 	
 	private function Set_Status(Int $Value)
 	{
-		$Value = min(2, max(0, $Value));
+		$Value = min(3, max(0, $Value));
 		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $Value)));
 		If (!$Result) {
 			$this->SendDebug("MotorControl", "Setzen des Ausgangs fehlerhaft!", 0);
