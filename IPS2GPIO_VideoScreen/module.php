@@ -260,6 +260,7 @@
 		}
 		else {
 			$this->Read_Status();
+			
 		}
 	}
 	    
