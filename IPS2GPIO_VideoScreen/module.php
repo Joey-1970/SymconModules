@@ -162,17 +162,17 @@
 			else {
 				// Daten der Messung
 				$Result = $Result & 3;
-				If ($Result == 0) {
+				If ($Result == 3) {
 					// Stop
 					SetValueInteger($this->GetIDForIdent("Motor"), 1);
 					$this->SendDebug("Read_Status", "Stop", 0);
 				}
-				elseif ($Result == 1) {
+				elseif ($Result == 2) {
 					// Linkslauf
 					SetValueInteger($this->GetIDForIdent("Motor"), 0);
 					$this->SendDebug("Read_Status", "Linkslauf", 0);
 				}
-				elseif ($Result == 2) {
+				elseif ($Result == 1) {
 					// Rechtslauf
 					SetValueInteger($this->GetIDForIdent("Motor"), 2);
 					$this->SendDebug("Read_Status", "Rechtslauf", 0);
@@ -186,7 +186,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Setup", "Ausfuehrung", 0);
-			$Bitmask = 0;
+			$Bitmask = 3;
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $Bitmask)));
 			If (!$Result) {
 				$this->SendDebug("SetOutput", "Setzen der Ausgaenge fehlerhaft!", 0);
@@ -213,7 +213,7 @@
 				elseif (($Status <> 0) AND ($Value == 1)) {
 					// Wenn gestoppt werden soll
 					$this->SendDebug("MotorControl", "Stop", 0);
-					$this->Set_Status(0);
+					$this->Set_Status(3);
 				}
 				elseif (($Status == 1) AND ($Value == 0)) {
 					// Wenn Linkslauf angefordert wird obwohl im Linkslauf
@@ -222,14 +222,14 @@
 				elseif (($Status == 0) AND ($Value == 0)) {
 					// wenn Linkslauf angefordert wird und aktuell gestoppt
 					$this->SendDebug("MotorControl", "Linkslauf", 0);
-					$this->Set_Status(1);
+					$this->Set_Status(2);
 				}
 				elseif (($Status == 2) AND ($Value == 0)) {
 					// wenn Linkslauf angefordert wird und aktuell Rechtslauf
 					$this->SendDebug("MotorControl", "Linkslauf", 0);
-					$this->Set_Status(0);
+					$this->Set_Status(3);
 					IPS_Sleep(50);
-					$this->Set_Status(1);
+					$this->Set_Status(2);
 				}
 				elseif (($Status == 2) AND ($Value == 2)) {
 					// Wenn Rechtslauf angefordert wird obwohl im Rehtslauf
@@ -238,14 +238,14 @@
 				elseif (($Status == 0) AND ($Value == 2)) {
 					// wenn Linkslauf angefordert wird und aktuell gestoppt
 					$this->SendDebug("MotorControl", "Rechtslauf", 0);
-					$this->Set_Status(2);
+					$this->Set_Status(1);
 				}
 				elseif (($Status == 1) AND ($Value == 2)) {
 					// wenn Rechtslauf angefordert wird und aktuell Linkslauf
 					$this->SendDebug("MotorControl", "Rechtslauf", 0);
-					$this->Set_Status(0);
+					$this->Set_Status(3);
 					IPS_Sleep(50);
-					$this->Set_Status(2);
+					$this->Set_Status(1);
 				}
 			}
 		}
