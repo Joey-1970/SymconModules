@@ -202,48 +202,67 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("MotorControl", "Ausfuehrung", 0);
-			// Setzt einen bestimmten Pin auf den vorgegebenen Wert
 			$Value = min(2, max(0, $Value));
 			// Aktuellen Status abfragen
 			$Status = $this->Read_Status();
-			If ((($Status == 0) OR ($Status == 2)) AND ($Value <> 1)) {
-				// Stoppen wenn läuft
-				$this->SendDebug("MotorControl", "Stop", 0);
-				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => 0)));
-				If (!$Result) {
-					$this->SendDebug("MotorControl", "Setzen des Ausgangs fehlerhaft!", 0);
-					return;
+			If ($Status >= 0) {
+				If ($Status == 0) AND ($Value == 1) {
+					// Wenn gestoppt wird obwohl im Status Stop
+					$this->SendDebug("MotorControl", "Keine Aktion notwendig", 0);
 				}
-				
-			}
-			// Bitmaske erstellen
-			If ($Value == 0) {
-				// Linkslauf
-				$Bitmask = 1;
-				$this->SendDebug("MotorControl", "Linkslauf", 0);
-			}
-			elseif ($Value == 1){
-				// Stop
-				$Bitmask = 0;
-				$this->SendDebug("MotorControl", "Stop", 0);
-			}
-			elseif ($Value == 2){
-				// Rechtslauf
-				$Bitmask = 2;
-				$this->SendDebug("MotorControl", "Rechtslauf", 0);
-			}
-			$Bitmask = min(255, max(0, $Bitmask));
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $Bitmask)));
-			If (!$Result) {
-				$this->SendDebug("MotorControl", "Setzen des Ausgangs fehlerhaft!", 0);
-				return;
-			}
-			else {
-				$this->Read_Status();
+				elseif ($Status <> 0) AND ($Value == 1) {
+					// Wenn gestoppt werden soll
+					$this->SendDebug("MotorControl", "Stop", 0);
+					$this->Set_Status(0);
+				}
+				elseif ($Status == 1) AND ($Value == 0) {
+					// Wenn Linkslauf angefordert wird obwohl im Linkslauf
+					$this->SendDebug("MotorControl", "Keine Aktion notwendig", 0);
+				}
+				elseif ($Status == 0) AND ($Value == 0) {
+					// wenn Linkslauf angefordert wird und aktuell gestoppt
+					$this->SendDebug("MotorControl", "Linkslauf", 0);
+					$this->Set_Status(1);
+				}
+				elseif ($Status == 2) AND ($Value == 0) {
+					// wenn Linkslauf angefordert wird und aktuell Rechtslauf
+					$this->SendDebug("MotorControl", "Linkslauf", 0);
+					$this->Set_Status(0);
+					IPS_Sleep(50);
+					$this->Set_Status(1);
+				}
+				elseif ($Status == 2) AND ($Value == 2) {
+					// Wenn Rechtslauf angefordert wird obwohl im Rehtslauf
+					$this->SendDebug("MotorControl", "Keine Aktion notwendig", 0);
+				}
+				elseif ($Status == 0) AND ($Value == 2) {
+					// wenn Linkslauf angefordert wird und aktuell gestoppt
+					$this->SendDebug("MotorControl", "Rechtslauf", 0);
+					$this->Set_Status(2);
+				}
+				elseif ($Status == 1) AND ($Value == 2) {
+					// wenn Rechtslauf angefordert wird und aktuell Linkslauf
+					$this->SendDebug("MotorControl", "Rechtslauf", 0);
+					$this->Set_Status(0);
+					IPS_Sleep(50);
+					$this->Set_Status(2);
+				}
 			}
 		}
 	}
 	
+	private function Set_Status(Int $Value)
+	{
+		$Value = min(2, max(0, $Value));
+		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $Value)));
+		If (!$Result) {
+			$this->SendDebug("MotorControl", "Setzen des Ausgangs fehlerhaft!", 0);
+		}
+		else {
+			$this->Read_Status();
+		}
+	}
+	    
 	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
 	{
 	        if (!IPS_VariableProfileExists($Name))
