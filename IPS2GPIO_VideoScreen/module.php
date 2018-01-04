@@ -6,7 +6,7 @@
 	{
 		//Never delete this line!
 		parent::Destroy();
-
+		$this->SetTimerInterval("RunningTime", 0);
 	}
 	    
 	// Überschreibt die interne IPS_Create($id) Funktion
@@ -18,8 +18,8 @@
  	    	$this->RegisterPropertyBoolean("Open", false);
 		$this->RegisterPropertyInteger("DeviceAddress", 32);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
- 	    	$this->RegisterPropertyBoolean("P0", false);
- 	    	$this->RegisterPropertyBoolean("P1", false);
+		$this->RegisterPropertyInteger("RunningTime", 0);
+		$this->RegisterTimer("RunningTime", 0, 'I2GVS_MotorControl($_IPS["TARGET"], 1);')
 	}
 	
 	public function GetConfigurationForm() 
@@ -51,6 +51,9 @@
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "Device Bus", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("type" => "Label", "label" => "MLaufzeit: Maximale Laufzeit in Sekunden (0 = aus)");
+		$arrayElements[] = array("type" => "IntervalBox", "name" => "RunningTime", "caption" => "Sekunden");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 		
 		$arrayElements[] = array("type" => "Label", "label" => "Hinweise:");
 		$arrayElements[] = array("type" => "Label", "label" => "- die Device Adresse lautet 32 bis 39 dez (0x20h - 0x27h) bei einem PCF8574");
@@ -190,7 +193,7 @@
 		}
 	}
 	
-	private function MotorControl(Int $Value)
+	public function MotorControl(Int $Value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("MotorControl", "Ausfuehrung", 0);
@@ -218,6 +221,7 @@
 					// wenn Linkslauf angefordert wird und aktuell gestoppt
 					$this->SendDebug("MotorControl", "Linkslauf", 0);
 					$this->Set_Status(2);
+					$this->SetTimerInterval("RunningTime", ($this->ReadPropertyInteger("RunningTime") * 1000));
 				}
 				elseif (($Status == 1) AND ($Value == 0)) {
 					// wenn Linkslauf angefordert wird und aktuell Rechtslauf
