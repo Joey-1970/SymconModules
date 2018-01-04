@@ -161,22 +161,30 @@
 			}
 			else {
 				// Daten der Messung
+				$StatusArray = array(1 => 2, 2 => 0, 3 => 1);
+				$StatusTextArray = array(1 => "Rechtslauf", 2 => "Linkslauf", 3 => "Stop");
 				$Result = $Result & 3;
+				If (GetValueInteger($this->GetIDForIdent("Motor")) <> $StatusArray[$Result]) {
+					SetValueInteger($this->GetIDForIdent("Motor"), $StatusArray[$Result]);
+				}
+				$this->SendDebug("Read_Status", $StatusTextArray[$Result], 0);
+				/*
 				If ($Result == 3) {
 					// Stop
-					SetValueInteger($this->GetIDForIdent("Motor"), 1);
+					//SetValueInteger($this->GetIDForIdent("Motor"), 1);
 					$this->SendDebug("Read_Status", "Stop", 0);
 				}
 				elseif ($Result == 2) {
 					// Linkslauf
-					SetValueInteger($this->GetIDForIdent("Motor"), 0);
+					//SetValueInteger($this->GetIDForIdent("Motor"), 0);
 					$this->SendDebug("Read_Status", "Linkslauf", 0);
 				}
 				elseif ($Result == 1) {
 					// Rechtslauf
-					SetValueInteger($this->GetIDForIdent("Motor"), 2);
+					//SetValueInteger($this->GetIDForIdent("Motor"), 2);
 					$this->SendDebug("Read_Status", "Rechtslauf", 0);
 				}	
+				*/
 			}
 		}
 	return $Result;
@@ -262,6 +270,8 @@
 			$this->SendDebug("MotorControl", "Setzen des Ausgangs fehlerhaft!", 0);
 		}
 		else {
+			$StatusArray = array(1 => 2, 2 => 0, 3 => 1);
+			SetValueInteger($this->GetIDForIdent("Motor"), $StatusArray[$Value]);
 			$this->Read_Status();
 			
 		}
