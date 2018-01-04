@@ -19,7 +19,7 @@
 		$this->RegisterPropertyInteger("DeviceAddress", 32);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
 		$this->RegisterPropertyInteger("RunningTime", 0);
-		$this->RegisterTimer("RunningTime", 0, 'I2GVS_MotorControl($_IPS["TARGET"], 1);')
+		$this->RegisterTimer("RunningTime", 0, 'I2GVS_MotorControl($_IPS["TARGET"], 1);');
 	}
 	
 	public function GetConfigurationForm() 
