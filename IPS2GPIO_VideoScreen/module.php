@@ -211,6 +211,7 @@
 					// Wenn gestoppt werden soll
 					$this->SendDebug("MotorControl", "Stop", 0);
 					$this->Set_Status(3);
+					$this->SetTimerInterval("RunningTime", 0);
 				}
 				// Linkslaufvarianten
 				elseif (($Status == 2) AND ($Value == 0)) {
@@ -229,6 +230,7 @@
 					$this->Set_Status(3);
 					IPS_Sleep(50);
 					$this->Set_Status(2);
+					$this->SetTimerInterval("RunningTime", ($this->ReadPropertyInteger("RunningTime") * 1000));
 				}
 				// Rechtslaufvarianten
 				elseif (($Status == 1) AND ($Value == 2)) {
@@ -239,6 +241,7 @@
 					// wenn Rechtslauf angefordert wird und aktuell gestoppt
 					$this->SendDebug("MotorControl", "Rechtslauf", 0);
 					$this->Set_Status(1);
+					$this->SetTimerInterval("RunningTime", ($this->ReadPropertyInteger("RunningTime") * 1000));
 				}
 				elseif (($Status == 2) AND ($Value == 2)) {
 					// wenn Rechtslauf angefordert wird und aktuell Linkslauf
@@ -246,6 +249,7 @@
 					$this->Set_Status(3);
 					IPS_Sleep(50);
 					$this->Set_Status(1);
+					$this->SetTimerInterval("RunningTime", ($this->ReadPropertyInteger("RunningTime") * 1000));
 				}
 			}
 		}
