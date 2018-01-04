@@ -168,23 +168,7 @@
 					SetValueInteger($this->GetIDForIdent("Motor"), $StatusArray[$Result]);
 				}
 				$this->SendDebug("Read_Status", $StatusTextArray[$Result], 0);
-				/*
-				If ($Result == 3) {
-					// Stop
-					//SetValueInteger($this->GetIDForIdent("Motor"), 1);
-					$this->SendDebug("Read_Status", "Stop", 0);
-				}
-				elseif ($Result == 2) {
-					// Linkslauf
-					//SetValueInteger($this->GetIDForIdent("Motor"), 0);
-					$this->SendDebug("Read_Status", "Linkslauf", 0);
-				}
-				elseif ($Result == 1) {
-					// Rechtslauf
-					//SetValueInteger($this->GetIDForIdent("Motor"), 2);
-					$this->SendDebug("Read_Status", "Rechtslauf", 0);
-				}	
-				*/
+				$this->SetBuffer("Status", $Result);
 			}
 		}
 	return $Result;
@@ -212,7 +196,8 @@
 			$this->SendDebug("MotorControl", "Ausfuehrung", 0);
 			$Value = min(2, max(0, $Value));
 			// Aktuellen Status abfragen
-			$Status = $this->Read_Status();
+			//$Status = $this->Read_Status();
+			$Status = intval($this->GetBuffer("Status"));
 			If ($Status >= 0) {
 				// Stopvarianten
 				If (($Status == 3) AND ($Value == 1)) {
