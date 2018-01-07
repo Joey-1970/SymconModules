@@ -2534,17 +2534,21 @@ class IPS2GPIO_IO extends IPSModule
 			}
 			
 			// I²C Schnittstelle
+			$PathConfig = "";
 			// Erster Versuch bei Standardinstallationen
-			$PathConfig = "/boot/config.txt";
-			// Prüfen, ob die Datei existiert
-			if (!$sftp->file_exists($PathConfig)) {
+			if ($sftp->file_exists("/boot/config.txt")) {
+				$PathConfig = "/boot/config.txt";
+			}
+			// Zweiter Versuch für Kodi LibreELEC
+			elseif ($sftp->file_exists("/flash/config.txt")) {
 				$PathConfig = "/flash/config.txt";
-				if (!$sftp->file_exists($PathConfig)) {
-					$this->SendDebug("CheckConfig", $PathConfig." nicht gefunden!", 0);
-					IPS_LogMessage("IPS2GPIO CheckConfig", $PathConfig." nicht gefunden!");
-				}
 			}
 			else {
+				$this->SendDebug("CheckConfig", "config.txt wurde nicht gefunden!", 0);
+				IPS_LogMessage("IPS2GPIO CheckConfig", "config.txt wurde nicht gefunden!");
+			}
+			
+			If ($PathConfig <> "") {
 				$FileContentConfig = $sftp->get($PathConfig);
 				// Prüfen ob I2C aktiviert ist
 				$Pattern = "/(?:\r\n|\n|\r)(\s*)(device_tree_param|dtparam)=([^,]*,)*i2c(_arm)?(=(on|true|yes|1))(\s*)($:\r\n|\n|\r)/";
