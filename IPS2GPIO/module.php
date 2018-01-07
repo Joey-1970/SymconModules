@@ -154,6 +154,8 @@ class IPS2GPIO_IO extends IPSModule
 					$arrayElements[] = array("type" => "Label", "label" => "Es wurden keine 1-Wire-Devices gefunden.");
 				}
 			}
+		}
+		If (($this->ConnectionTest()) AND ($this->ReadPropertyBoolean("Open") == true)) {
 			$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 			$arrayElements[] = array("type" => "Label", "label" => "Führt einen Restart des PIGPIO aus:");
 			$arrayElements[] = array("type" => "Button", "label" => "PIGPIO Restart", "onClick" => 'I2G_PIGPIOD_Restart($id);');
@@ -2532,11 +2534,15 @@ class IPS2GPIO_IO extends IPSModule
 			}
 			
 			// I²C Schnittstelle
+			// Erster Versuch bei Standardinstallationen
 			$PathConfig = "/boot/config.txt";
 			// Prüfen, ob die Datei existiert
 			if (!$sftp->file_exists($PathConfig)) {
-				$this->SendDebug("CheckConfig", $PathConfig." nicht gefunden!", 0);
-				IPS_LogMessage("IPS2GPIO CheckConfig", $PathConfig." nicht gefunden!");
+				$PathConfig = "/flash/config.txt";
+				if (!$sftp->file_exists($PathConfig)) {
+					$this->SendDebug("CheckConfig", $PathConfig." nicht gefunden!", 0);
+					IPS_LogMessage("IPS2GPIO CheckConfig", $PathConfig." nicht gefunden!");
+				}
 			}
 			else {
 				$FileContentConfig = $sftp->get($PathConfig);
