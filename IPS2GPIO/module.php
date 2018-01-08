@@ -280,7 +280,9 @@ class IPS2GPIO_IO extends IPSModule
 				$this->CommandClientSocket(pack("L*", 27, 0, 0, 0), 16);
 				
 				// I2C-Handle zurücksetzen
-				$this->ResetI2CHandle(0);
+				If ($this->GetBuffer("I2C_Enabled") == 1) {
+					$this->ResetI2CHandle(0);
+				}
 							
 				// Notify Starten
 				$this->SetBuffer("NotifyCounter", 0);
