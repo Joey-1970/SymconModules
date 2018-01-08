@@ -2595,13 +2595,21 @@ class IPS2GPIO_IO extends IPSModule
 			}
 			
 			//Serielle Schnittstelle
-			$PathCmdline = "/boot/cmdline.txt";
-			// Prüfen, ob die Datei existiert
-			if (!$sftp->file_exists($PathCmdline)) {
-				$this->SendDebug("CheckConfig", $PathCmdline." nicht gefunden!", 0);
-				IPS_LogMessage("IPS2GPIO CheckConfig", $PathCmdline." nicht gefunden!");
+			$PathCmdline = "";
+			// Erster Versuch bei Standardinstallationen
+			if ($sftp->file_exists("/boot/cmdline.txt")) {
+				$PathCmdline = "/boot/cmdline.txt";
+			}
+			// Zweiter Versuch für Kodi LibreELEC
+			elseif ($sftp->file_exists("/flash/cmdline.txt")) {
+				$PathCmdline = "/flash/cmdlineg.txt";
 			}
 			else {
+				$this->SendDebug("CheckConfig", "cmdline.txt wurde nicht gefunden!", 0);
+				IPS_LogMessage("IPS2GPIO CheckConfig", "cmdline.txt wurde nicht gefunden!");
+			}
+			
+			If ($PathCmdline <> "") {
 				$FileContentCmdline = $sftp->get($PathCmdline);
 				// Prüfen ob die Shell der serielle Schnittstelle aktiviert ist
 				$Pattern = "/console=(serial0|ttyAMA(0|1)|tty(0|1))/";
