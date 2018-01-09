@@ -267,11 +267,11 @@
 			}
 		}
 	}    
-	    
-	private function RGBFadeIn()
+	
+	private function FadeIn()
 	{
-		// RGB beim Einschalten Faden
-		$this->SendDebug("RGBFadeIn", "Ausfuehrung", 0);
+		// RGBW beim Einschalten Faden
+		$this->SendDebug("FadeIn", "Ausfuehrung", 0);
 		$Fadetime = $this->ReadPropertyInteger("FadeIn");
 		$Fadetime = min(10, max(0, $Fadetime));
 		If ($Fadetime > 0) {
@@ -279,6 +279,7 @@
 			$Value_R = GetValueInteger($this->GetIDForIdent("Intensity_R"));
 			$Value_G = GetValueInteger($this->GetIDForIdent("Intensity_G"));
 			$Value_B = GetValueInteger($this->GetIDForIdent("Intensity_B"));
+			$Value_W = GetValueInteger($this->GetIDForIdent("Intensity_W"));
 	
 			// Umrechnung in HSL
 			list($h, $s, $l) = $this->rgbToHsl($Value_R, $Value_G, $Value_B);
@@ -292,29 +293,16 @@
 			    	$Starttime = microtime(true);
 				// $i muss jetzt als HSL-Wert wieder in RGB umgerechnet werden
 				list($R, $G, $B) = $this->hslToRgb($h, $s, $i);
-				
+				$Value_W = $i;
 				
 				If ($this->ReadPropertyBoolean("Open") == true) {
 					// Ausgang setzen
 					$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => $R, "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => $G, "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => $B)));
+					$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin_W"), "Value" => $Value_W)));
 					
 					If (GetValueBoolean($this->GetIDForIdent("Status")) == false) {
 						SetValueBoolean($this->GetIDForIdent("Status"), true);
 					}
-
-					//$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write_Channel_RGBW", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
-										  //"Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit_R, "Value_4" => $H_Bit_R, "Value_5" => 0, "Value_6" => 0, "Value_7" => $L_Bit_G, "Value_8" => $H_Bit_G, "Value_9" => 0, "Value_10" => 0, "Value_11" => $L_Bit_B, "Value_12" => $H_Bit_B)));
-					
-					/*
-					If (!$Result) {
-						$this->SendDebug("RGBFadeIn", "Daten setzen fehlerhaft!", 0);
-					}
-					else {
-						If (GetValueBoolean($this->GetIDForIdent("Status")) == false) {
-							SetValueBoolean($this->GetIDForIdent("Status"), true);
-						}
-					}
-					*/
 				}
 				$Endtime = microtime(true);
 				//$this->SendDebug("RGBFadeIn", "Endzeit: ".$Endtime, 0);
@@ -328,10 +316,10 @@
 		}
 	}
 	
-	private function RGBFadeOut()
+	private function FadeOut()
 	{
-		// RGB beim Ausschalten Faden
-		$this->SendDebug("RGBFadeOut", "Ausfuehrung", 0);
+		// RGBW beim Ausschalten Faden
+		$this->SendDebug("FadeOut", "Ausfuehrung", 0);
 		$Fadetime = $this->ReadPropertyInteger("FadeIn");
 		$Fadetime = min(10, max(0, $Fadetime));
 		If ($Fadetime > 0) {
@@ -339,6 +327,7 @@
 			$Value_R = GetValueInteger($this->GetIDForIdent("Intensity_R"));
 			$Value_G = GetValueInteger($this->GetIDForIdent("Intensity_G"));
 			$Value_B = GetValueInteger($this->GetIDForIdent("Intensity_B"));
+			$Value_W = GetValueInteger($this->GetIDForIdent("Intensity_W"));
 			
 			// Umrechnung in HSL
 			list($h, $s, $l) = $this->rgbToHsl($Value_R, $Value_G, $Value_B);
@@ -353,26 +342,16 @@
 				//$this->SendDebug("RGBFadeOut", "Startzeit: ".$Starttime, 0);
 			    	// $i muss jetzt als HSL-Wert wieder in RGB umgerechnet werden
 				list($R, $G, $B) = $this->hslToRgb($h, $s, $i);
+				$Value_W = $i;
 				
 				If ($this->ReadPropertyBoolean("Open") == true) {
 					// Ausgang setzen
 					$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => $R, "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => $G, "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => $B)));
+					$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin_W"), "Value" => $Value_W)));
 					
 					If (GetValueBoolean($this->GetIDForIdent("Status")) == true) {
 						SetValueBoolean($this->GetIDForIdent("Status"), false);
 					}
-					/*
-					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write_Channel_RGBW", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
-								"Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit_R, "Value_4" => $H_Bit_R, "Value_5" => 0, "Value_6" => 0, "Value_7" => $L_Bit_G, "Value_8" => $H_Bit_G, "Value_9" => 0, "Value_10" => 0, "Value_11" => $L_Bit_B, "Value_12" => $H_Bit_B)));
-					If (!$Result) {
-						$this->SendDebug("RGBFadeOut", "Daten setzen fehlerhaft!", 0);
-					}
-					else {
-						If (GetValueBoolean($this->GetIDForIdent("Status_RGB_".$Group)) == true) {
-							SetValueBoolean($this->GetIDForIdent("Status_RGB_".$Group), false);
-						}
-					}
-					*/
 				}
 				$Endtime = microtime(true);
 				$Delay = intval(($Endtime - $Starttime) * 1000);
@@ -383,97 +362,8 @@
 			}
 				
 		}
-	}    
-	
-	private function WFadeIn()
-	{
-		// W beim Einschalten Faden
-		$this->SendDebug("WFadeIn", "Ausfuehrung", 0);
-		$Fadetime = $this->ReadPropertyInteger("FadeIn");
-		$Fadetime = min(10, max(0, $Fadetime));
-		If ($Fadetime > 0) {
-			// Zielwert W bestimmen
-			$Value_W = GetValueInteger($this->GetIDForIdent("Intensity_W"));
-			// $l muss von 0 auf den Zielwert gebracht werden
-			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
-			$Steps = $Fadetime * $FadeScalar;
-			$Stepwide = 255 / $Steps;
-			
-			// Fade In			
-			for ($i = (0 + $Stepwide) ; $i <= ($l - $Stepwide); $i = $i + round($Stepwide, 0)) {
-				// Werte skalieren
-				$Value_W = $i;
-				
-				If ($this->ReadPropertyBoolean("Open") == true) {
-					// Ausgang setzen
-					$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin_W"), "Value" => $Value_W)));
-					If (GetValueBoolean($this->GetIDForIdent("Status")) == false) {
-						SetValueBoolean($this->GetIDForIdent("Status"), true);
-					}
-					/*
-					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write_Channel_White", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
-										  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
-					If (!$Result) {
-						$this->SendDebug("WFadeIn", "Daten setzen fehlerhaft!", 0);
-					}
-					else {
-						If (GetValueBoolean($this->GetIDForIdent("Status_W_".$Group)) == false) {
-							SetValueBoolean($this->GetIDForIdent("Status_W_".$Group), true);
-						}
-					}
-					*/
-				}
-				IPS_Sleep(intval(1000 / $FadeScalar));
-			}
-				
-		}
-	}
-	
-	private function WFadeOut()
-	{
-		// W beim Einschalten Faden
-		$this->SendDebug("WFadeOut", "Ausfuehrung", 0);
-		$Fadetime = $this->ReadPropertyInteger("FadeOut");
-		$Fadetime = min(10, max(0, $Fadetime));
-		If ($Fadetime > 0) {
-			// Zielwert W bestimmen
-			$Value_W = GetValueInteger($this->GetIDForIdent("Intensity_W"));
-			// $l muss von 0 auf den Zielwert gebracht werden
-			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
-			$Steps = $Fadetime * $FadeScalar;
-			$Stepwide = 255 / $Steps;
-			
-			// Fade Out			
-			for ($i = ($l - $Stepwide) ; $i >= (0 + $Stepwide); $i = $i - round($Stepwide, 0)) {
-				// Werte skalieren
-				$Value_W = $i;
-				
-				If ($this->ReadPropertyBoolean("Open") == true) {
-					// Ausgang setzen
-					$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin_W"), "Value" => $Value_W)));
-					If (GetValueBoolean($this->GetIDForIdent("Status")) == true) {
-						SetValueBoolean($this->GetIDForIdent("Status"), false);
-					}
-					/*
-					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write_Channel_White", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
-										  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
-					If (!$Result) {
-						$this->SendDebug("WFadeOut", "Daten setzen fehlerhaft!", 0);
-					}
-					else {
-						If (GetValueBoolean($this->GetIDForIdent("Status_W_".$Group)) == false) {
-							SetValueBoolean($this->GetIDForIdent("Status_W_".$Group), true);
-						}
-					}
-					*/
-				}
-				IPS_Sleep(intval(1000 / $FadeScalar));
-			}
-				
-		}
-	}
-	    
-	    
+	}  
+	        
 	public function Set_Status(Bool $value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
