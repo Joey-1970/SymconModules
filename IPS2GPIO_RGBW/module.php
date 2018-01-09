@@ -260,7 +260,7 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$value = min(255, max(0, $value));
 			If (GetValueBoolean($this->GetIDForIdent("Status")) == true) {
-				$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin_W"), "Value" => $value)));
+				$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin_W"), "Value" => $value)));
 			}
 			else {
 				SetValueInteger($this->GetIDForIdent("Intensity_W"), $value);
@@ -298,14 +298,14 @@
 				If ($this->ReadPropertyBoolean("Open") == true) {
 					// Ausgang setzen
 					$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => $R, "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => $G, "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => $B)));
-					$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin_W"), "Value" => $Value_W)));
-					
+					$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin_W"), "Value" => $Value_W)));
+					/*
 					If (GetValueBoolean($this->GetIDForIdent("Status")) == false) {
 						SetValueBoolean($this->GetIDForIdent("Status"), true);
 					}
+					*/
 				}
 				$Endtime = microtime(true);
-				//$this->SendDebug("RGBFadeIn", "Endzeit: ".$Endtime, 0);
 				$Delay = intval(($Endtime - $Starttime) * 1000);
 				$this->SendDebug("RGBFadeIn", "Delay: ".$Delay, 0);
 				$DelayMax = intval(1000 / $FadeScalar);
@@ -348,10 +348,11 @@
 					// Ausgang setzen
 					$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => $R, "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => $G, "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => $B)));
 					$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin_W"), "Value" => $Value_W)));
-					
+					/*
 					If (GetValueBoolean($this->GetIDForIdent("Status")) == true) {
 						SetValueBoolean($this->GetIDForIdent("Status"), false);
 					}
+					*/
 				}
 				$Endtime = microtime(true);
 				$Delay = intval(($Endtime - $Starttime) * 1000);
@@ -367,23 +368,23 @@
 	public function Set_Status(Bool $value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			SetValue($this->GetIDForIdent("Status"), $value);
 			$FadeInTime = $this->ReadPropertyInteger("FadeIn");
 			$FadeOutTime = $this->ReadPropertyInteger("FadeOut");
 			If ($value == true) {
 				If ($FadeInTime > 0) {
 					$this->FadeIn();
 				}
-				$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => GetValueInteger($this->GetIDForIdent("Intensity_R")), "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => GetValueInteger($this->GetIDForIdent("Intensity_G")), "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => GetValueInteger($this->GetIDForIdent("Intensity_B")))));
-				$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin_W"), "Value" => GetValueInteger($this->GetIDForIdent("Intensity_W")))));
+				$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => GetValueInteger($this->GetIDForIdent("Intensity_R")), "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => GetValueInteger($this->GetIDForIdent("Intensity_G")), "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => GetValueInteger($this->GetIDForIdent("Intensity_B")))));
+				$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin_W"), "Value" => GetValueInteger($this->GetIDForIdent("Intensity_W")))));
 			}
 			else {
 				If ($FadeOutTime > 0) {
 					$this->FadeOut();
 				}
-				$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => 0, "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => 0, "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => 0)));
-				$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin_W"), "Value" => 0)));
+				$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => 0, "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => 0, "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => 0)));
+				$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin_W"), "Value" => 0)));
 			}
+			SetValueBoolean($this->GetIDForIdent("Status"), $value);
 		}
 	}
 	
