@@ -385,31 +385,32 @@
 		}
 	}    
 	
-	private function WFadeIn(Int $Group)
+	private function WFadeIn()
 	{
 		// W beim Einschalten Faden
 		$this->SendDebug("WFadeIn", "Ausfuehrung", 0);
-		$Group = min(4, max(1, $Group));
-		$Fadetime = $this->ReadPropertyInteger("FadeIn_".$Group);
+		$Fadetime = $this->ReadPropertyInteger("FadeIn");
 		$Fadetime = min(10, max(0, $Fadetime));
 		If ($Fadetime > 0) {
 			// Zielwert W bestimmen
-			$Value_W = GetValueInteger($this->GetIDForIdent("Intensity_W_".$Group));
+			$Value_W = GetValueInteger($this->GetIDForIdent("Intensity_W"));
 			// $l muss von 0 auf den Zielwert gebracht werden
 			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
 			$Steps = $Fadetime * $FadeScalar;
-			$Stepwide = 4095 / $Steps;
-			$StartAddress = (($Group - 1) * 16) + 18;
+			$Stepwide = 255 / $Steps;
 			
 			// Fade In			
 			for ($i = (0 + $Stepwide) ; $i <= ($l - $Stepwide); $i = $i + round($Stepwide, 0)) {
 				// Werte skalieren
 				$Value_W = $i;
-				// Bytes bestimmen
-				$L_Bit = $Value_W & 255;
-				$H_Bit = $Value_W >> 8;
+				
 				If ($this->ReadPropertyBoolean("Open") == true) {
 					// Ausgang setzen
+					$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin_W"), "Value" => $Value_W)));
+					If (GetValueBoolean($this->GetIDForIdent("Status")) == false) {
+						SetValueBoolean($this->GetIDForIdent("Status"), true);
+					}
+					/*
 					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write_Channel_White", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
 										  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
 					If (!$Result) {
@@ -420,6 +421,7 @@
 							SetValueBoolean($this->GetIDForIdent("Status_W_".$Group), true);
 						}
 					}
+					*/
 				}
 				IPS_Sleep(intval(1000 / $FadeScalar));
 			}
@@ -427,31 +429,32 @@
 		}
 	}
 	
-	private function WFadeOut(Int $Group)
+	private function WFadeOut()
 	{
 		// W beim Einschalten Faden
 		$this->SendDebug("WFadeOut", "Ausfuehrung", 0);
-		$Group = min(4, max(1, $Group));
-		$Fadetime = $this->ReadPropertyInteger("FadeOut_".$Group);
+		$Fadetime = $this->ReadPropertyInteger("FadeOut");
 		$Fadetime = min(10, max(0, $Fadetime));
 		If ($Fadetime > 0) {
 			// Zielwert W bestimmen
-			$Value_W = GetValueInteger($this->GetIDForIdent("Intensity_W_".$Group));
+			$Value_W = GetValueInteger($this->GetIDForIdent("Intensity_W"));
 			// $l muss von 0 auf den Zielwert gebracht werden
 			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
 			$Steps = $Fadetime * $FadeScalar;
-			$Stepwide = 4095 / $Steps;
-			$StartAddress = (($Group - 1) * 16) + 18;
+			$Stepwide = 255 / $Steps;
 			
 			// Fade Out			
 			for ($i = ($l - $Stepwide) ; $i >= (0 + $Stepwide); $i = $i - round($Stepwide, 0)) {
 				// Werte skalieren
 				$Value_W = $i;
-				// Bytes bestimmen
-				$L_Bit = $Value_W & 255;
-				$H_Bit = $Value_W >> 8;
+				
 				If ($this->ReadPropertyBoolean("Open") == true) {
 					// Ausgang setzen
+					$this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin_W"), "Value" => $Value_W)));
+					If (GetValueBoolean($this->GetIDForIdent("Status")) == true) {
+						SetValueBoolean($this->GetIDForIdent("Status"), false);
+					}
+					/*
 					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write_Channel_White", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
 										  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
 					If (!$Result) {
@@ -462,6 +465,7 @@
 							SetValueBoolean($this->GetIDForIdent("Status_W_".$Group), true);
 						}
 					}
+					*/
 				}
 				IPS_Sleep(intval(1000 / $FadeScalar));
 			}
