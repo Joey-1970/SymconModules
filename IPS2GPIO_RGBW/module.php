@@ -220,17 +220,19 @@
 			// Funktion zum erstellen dynamischer Pulldown-Menüs
 			break;
 		case "result":
-			If (($data->Pin == $this->ReadPropertyInteger("Pin_R")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
-			   	SetValueInteger($this->GetIDForIdent("Intensity_R"), $data->Value);
-			}
-			ElseIf (($data->Pin == $this->ReadPropertyInteger("Pin_G")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
-			   	SetValueInteger($this->GetIDForIdent("Intensity_G"), $data->Value);
-			}
-			If (($data->Pin == $this->ReadPropertyInteger("Pin_B")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
-			   	SetValueInteger($this->GetIDForIdent("Intensity_B"), $data->Value);
-			}
-			If (($data->Pin == $this->ReadPropertyInteger("Pin_W")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
-				SetValueInteger($this->GetIDForIdent("Intensity_W"), $data->Value);
+			If ($this->GetBuffer("Fade") == 0) {
+				If (($data->Pin == $this->ReadPropertyInteger("Pin_R")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
+					SetValueInteger($this->GetIDForIdent("Intensity_R"), $data->Value);
+				}
+				ElseIf (($data->Pin == $this->ReadPropertyInteger("Pin_G")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
+					SetValueInteger($this->GetIDForIdent("Intensity_G"), $data->Value);
+				}
+				If (($data->Pin == $this->ReadPropertyInteger("Pin_B")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
+					SetValueInteger($this->GetIDForIdent("Intensity_B"), $data->Value);
+				}
+				If (($data->Pin == $this->ReadPropertyInteger("Pin_W")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
+					SetValueInteger($this->GetIDForIdent("Intensity_W"), $data->Value);
+				}
 			}
 			break;
     		}
@@ -272,6 +274,7 @@
 	{
 		// RGBW beim Einschalten Faden
 		$this->SendDebug("FadeIn", "Ausfuehrung", 0);
+		$this->SetBuffer("Fade", 1);
 		$Fadetime = $this->ReadPropertyInteger("FadeIn");
 		$Fadetime = min(10, max(0, $Fadetime));
 		If ($Fadetime > 0) {
@@ -314,12 +317,14 @@
 			}
 				
 		}
+		$this->SetBuffer("Fade", 0);
 	}
 	
 	private function FadeOut()
 	{
 		// RGBW beim Ausschalten Faden
 		$this->SendDebug("FadeOut", "Ausfuehrung", 0);
+		$this->SetBuffer("Fade", 1);
 		$Fadetime = $this->ReadPropertyInteger("FadeIn");
 		$Fadetime = min(10, max(0, $Fadetime));
 		If ($Fadetime > 0) {
@@ -363,6 +368,7 @@
 			}
 				
 		}
+		$this->SetBuffer("Fade", 0);
 	}  
 	        
 	public function Set_Status(Bool $value)
