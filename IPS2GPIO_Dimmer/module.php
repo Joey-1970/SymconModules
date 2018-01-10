@@ -229,8 +229,13 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Set_Status", "Ausfuehrung", 0);
+			$FadeInTime = $this->ReadPropertyInteger("FadeIn");
+			$FadeOutTime = $this->ReadPropertyInteger("FadeOut");
 
 			If ($value == true) {
+				If ($FadeInTime > 0) {
+					$this->FadeIn();
+				}
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => GetValueInteger($this->GetIDForIdent("Intensity")))));
 				If (!$Result) {
 					$this->SendDebug("Set_Status", "Fehler beim Schreiben des Wertes!", 0);
@@ -242,6 +247,9 @@
 				}
 			}
 			else {
+				If ($FadeOutTime > 0) {
+					$this->FadeOut();
+				}
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => 0)));
 				If (!$Result) {
 					$this->SendDebug("Set_Status", "Fehler beim Schreiben des Wertes!", 0);
