@@ -290,9 +290,9 @@
 			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
 			$Steps = $Fadetime * $FadeScalar;
 			$Stepwide = $l / $Steps;
-			$Stepwide_W = $Value_W / $Stepwide;
 			
 			If ($Stepwide > 0) {
+				$Stepwide_W = $Value_W / $Stepwide;
 				// Fade In			
 				for ($i = (0 + $Stepwide) ; $i <= ($l - $Stepwide); $i = $i + round($Stepwide, 2)) {
 					$Starttime = microtime(true);
@@ -341,10 +341,11 @@
 			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
 			$Steps = $Fadetime * $FadeScalar;
 			$Stepwide = $l / $Steps;
-			$Stepwide_W = $Value_W / $Stepwide;
+			
 			
 			If ($Stepwide > 0) {
-			// Fade Out
+				// Fade Out
+				$Stepwide_W = $Value_W / $Stepwide;
 				for ($i = ($l - $Stepwide) ; $i >= (0 + $Stepwide); $i = $i - round($Stepwide, 2)) {
 					$Starttime = microtime(true);
 					//$this->SendDebug("RGBFadeOut", "Startzeit: ".$Starttime, 0);
