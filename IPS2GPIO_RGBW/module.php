@@ -293,12 +293,14 @@
 			
 			If ($Stepwide > 0) {
 				$Stepwide_W = $Value_W / $Steps;
+				$j = 1;
 				// Fade In			
 				for ($i = (0 + $Stepwide) ; $i <= ($l - $Stepwide); $i = $i + round($Stepwide, 2)) {
 					$Starttime = microtime(true);
 					// $i muss jetzt als HSL-Wert wieder in RGB umgerechnet werden
 					list($R, $G, $B) = $this->hslToRgb($h, $s, $i);
-					$Value_W = intval($i * $Stepwide_W);
+					$Value_W = intval($j * $Stepwide_W);
+					$j = $j + 1;
 					$this->SendDebug("FadeIn", "L: ".$i." W: ".$Value_W, 0);
 
 					If ($this->ReadPropertyBoolean("Open") == true) {
@@ -342,13 +344,14 @@
 			If ($Stepwide > 0) {
 				// Fade Out
 				$Stepwide_W = $Value_W / $Steps;
+				$j = $Steps - 1;
 				for ($i = ($l - $Stepwide) ; $i >= (0 + $Stepwide); $i = $i - round($Stepwide, 2)) {
 					$Starttime = microtime(true);
-					//$this->SendDebug("RGBFadeOut", "Startzeit: ".$Starttime, 0);
 					// $i muss jetzt als HSL-Wert wieder in RGB umgerechnet werden
 					list($R, $G, $B) = $this->hslToRgb($h, $s, $i);
-					$Value_W = intval($i * $Stepwide_W);
-					$this->SendDebug("FadeIn", "L: ".$i." W: ".$Value_W, 0);
+					$Value_W = intval($Steps * $Stepwide_W);
+					$j = $j - 1;
+					$this->SendDebug("FadeOut", "L: ".$i." W: ".$Value_W, 0);
 
 					If ($this->ReadPropertyBoolean("Open") == true) {
 						// Ausgang setzen
