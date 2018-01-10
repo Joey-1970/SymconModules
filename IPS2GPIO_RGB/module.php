@@ -299,7 +299,7 @@
 					//$this->SendDebug("RGBFadeOut", "Startzeit: ".$Starttime, 0);
 					// $i muss jetzt als HSL-Wert wieder in RGB umgerechnet werden
 					list($R, $G, $B) = $this->hslToRgb($h, $s, $i);
-					$this->SendDebug("FadeIn", "L: ".$i, 0);
+					$this->SendDebug("FadeOut", "L: ".$i, 0);
 
 					If ($this->ReadPropertyBoolean("Open") == true) {
 						// Ausgang setzen
