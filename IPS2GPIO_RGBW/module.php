@@ -292,7 +292,7 @@
 			$Stepwide = $l / $Steps;
 			
 			If ($Stepwide > 0) {
-				$Stepwide_W = $Value_W / $Stepwide;
+				$Stepwide_W = $Value_W / $Steps;
 				// Fade In			
 				for ($i = (0 + $Stepwide) ; $i <= ($l - $Stepwide); $i = $i + round($Stepwide, 2)) {
 					$Starttime = microtime(true);
@@ -341,7 +341,7 @@
 			
 			If ($Stepwide > 0) {
 				// Fade Out
-				$Stepwide_W = $Value_W / $Stepwide;
+				$Stepwide_W = $Value_W / $Steps;
 				for ($i = ($l - $Stepwide) ; $i >= (0 + $Stepwide); $i = $i - round($Stepwide, 2)) {
 					$Starttime = microtime(true);
 					//$this->SendDebug("RGBFadeOut", "Startzeit: ".$Starttime, 0);
