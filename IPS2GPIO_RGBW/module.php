@@ -298,7 +298,7 @@
 					$Starttime = microtime(true);
 					// $i muss jetzt als HSL-Wert wieder in RGB umgerechnet werden
 					list($R, $G, $B) = $this->hslToRgb($h, $s, $i);
-					$Value_W = $i * $Stepwide;
+					$Value_W = intval($i * $Stepwide_W);
 
 					If ($this->ReadPropertyBoolean("Open") == true) {
 						// Ausgang setzen
@@ -350,7 +350,7 @@
 					//$this->SendDebug("RGBFadeOut", "Startzeit: ".$Starttime, 0);
 					// $i muss jetzt als HSL-Wert wieder in RGB umgerechnet werden
 					list($R, $G, $B) = $this->hslToRgb($h, $s, $i);
-					$Value_W = $i * $Stepwide;
+					$Value_W = intval($i * $Stepwide_W);
 
 					If ($this->ReadPropertyBoolean("Open") == true) {
 						// Ausgang setzen
