@@ -255,6 +255,7 @@
 					$Starttime = microtime(true);
 					// $i muss jetzt als HSL-Wert wieder in RGB umgerechnet werden
 					list($R, $G, $B) = $this->hslToRgb($h, $s, $i);
+					$this->SendDebug("FadeIn", "L: ".$i, 0);
 				
 					If ($this->ReadPropertyBoolean("Open") == true) {
 						// Ausgang setzen
@@ -292,12 +293,13 @@
 			$Stepwide = $l / $Steps;
 			
 			If ($Stepwide > 0) {
-			// Fade Out
+				// Fade Out
 				for ($i = ($l - $Stepwide) ; $i >= (0 + $Stepwide); $i = $i - round($Stepwide, 2)) {
 					$Starttime = microtime(true);
 					//$this->SendDebug("RGBFadeOut", "Startzeit: ".$Starttime, 0);
 					// $i muss jetzt als HSL-Wert wieder in RGB umgerechnet werden
 					list($R, $G, $B) = $this->hslToRgb($h, $s, $i);
+					$this->SendDebug("FadeIn", "L: ".$i, 0);
 
 					If ($this->ReadPropertyBoolean("Open") == true) {
 						// Ausgang setzen
