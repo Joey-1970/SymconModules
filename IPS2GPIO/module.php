@@ -419,7 +419,8 @@ class IPS2GPIO_IO extends IPSModule
 		    	// Setzt die RGB-Farben
 		    	If (($data->Pin_R >= 0) AND ($data->Pin_G >= 0) AND ($data->Pin_B >= 0)) {
 		        	//IPS_LogMessage("IPS2GPIO Set Intensity RGB : ",$data->Pin_R." , ".$data->Value_R." ".$data->Pin_G." , ".$data->Value_G." ".$data->Pin_B." , ".$data->Value_B);  
-		        	$this->CommandClientSocket(pack("LLLL", 5, $data->Pin_R, $data->Value_R, 0).pack("LLLL", 5, $data->Pin_G, $data->Value_G, 0).pack("LLLL", 5, $data->Pin_B, $data->Value_B, 0), 48);
+		        	$Result = $this->CommandClientSocket(pack("LLLL", 5, $data->Pin_R, $data->Value_R, 0).pack("LLLL", 5, $data->Pin_G, $data->Value_G, 0).pack("LLLL", 5, $data->Pin_B, $data->Value_B, 0), 48);
+				$this->SendDebug("set_PWM_dutycycle_RGB", "Ergebnis: ".boolval($Result), 0);
 		    	}
 		        break;
 		case "get_value":
