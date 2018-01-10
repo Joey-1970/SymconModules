@@ -518,7 +518,7 @@
 			// $l muss von 0 auf den Zielwert gebracht werden
 			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
 			$Steps = $Fadetime * $FadeScalar;
-			$Stepwide = 4095 / $Steps;
+			$Stepwide = $Value_W / $Steps;
 			$StartAddress = (($Group - 1) * 16) + 18;
 			
 			// Fade In			
@@ -560,7 +560,7 @@
 			// $l muss von 0 auf den Zielwert gebracht werden
 			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
 			$Steps = $Fadetime * $FadeScalar;
-			$Stepwide = 4095 / $Steps;
+			$Stepwide = $Value_W / $Steps;
 			$StartAddress = (($Group - 1) * 16) + 18;
 			
 			// Fade Out			
