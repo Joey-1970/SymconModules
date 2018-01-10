@@ -349,7 +349,7 @@
 					$Starttime = microtime(true);
 					// $i muss jetzt als HSL-Wert wieder in RGB umgerechnet werden
 					list($R, $G, $B) = $this->hslToRgb($h, $s, $i);
-					$Value_W = intval($Steps * $Stepwide_W);
+					$Value_W = intval($j * $Stepwide_W);
 					$j = $j - 1;
 					$this->SendDebug("FadeOut", "L: ".$i." W: ".$Value_W, 0);
 
