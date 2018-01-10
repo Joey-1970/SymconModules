@@ -11,6 +11,9 @@
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->SetBuffer("PreviousPin", -1);
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+		$this->RegisterPropertyInteger("FadeIn", 0);
+		$this->RegisterPropertyInteger("FadeOut", 0);
+		$this->RegisterPropertyInteger("FadeScalar", 4);
         }
 	
 	
@@ -39,6 +42,11 @@
 		}
 		
 		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "Label", "label" => "Optional: Angabe von Fade-In/-Out-Zeit in Sekunden (0 => aus, max. 10 Sek)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeIn",  "caption" => "Fade-In-Zeit"); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeOut",  "caption" => "Fade-Out-Zeit");
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		
 		$arrayActions = array();
 		If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
@@ -146,84 +154,75 @@
 		}
 	}
 	
-	public function Fade_Intensity(Int $TargetValue, Int $Fadetime)
+	private function FadeIn()
 	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("Fade_Intensity", "Ausfuehrung", 0);
-			$TargetValue = min(255, max(0, $TargetValue));
-			$Fadetime = min(30, max(0, $Fadetime));
-			$ActualValue = GetValueInteger($this->GetIDForIdent("Intensity"));
-			$Steps = $Fadetime * 2;
-			$Difference = $TargetValue - $ActualValue;
-			$Stepwide = $Difference / $Steps;
+		// beim Einschalten Faden
+		$this->SendDebug("FadeIn", "Ausfuehrung", 0);
+		$this->SetBuffer("Fade", 1);
+		$Fadetime = $this->ReadPropertyInteger("FadeIn");
+		$Fadetime = min(10, max(0, $Fadetime));
+		If ($Fadetime > 0) {
+			// Zielwert bestimmen
+			$Value = GetValueInteger($this->GetIDForIdent("Intensity"));
+	
+			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
+			$Steps = $Fadetime * $FadeScalar;
+			$Stepwide = $Value / $Steps;
+			
+			If ($Stepwide > 0) {
+				// Fade In			
+				for ($i = (0 + $Stepwide) ; $i <= ($l - $Stepwide); $i = $i + round($Stepwide, 2)) {
+					$Starttime = microtime(true);
 
-			If (GetValueBoolean($this->GetIDForIdent("Status")) == true) {
-				If  ($TargetValue > $ActualValue) {
-					for ($i = ($ActualValue + $Stepwide) ; $i <= $TargetValue; $i = $i + round($Stepwide, 2)) {
-						$Intensitiy = round($i, 0);
-						$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Intensitiy)));
-						If (!$Result) {
-							$this->SendDebug("Fade_Intensity", "Fehler beim Schreiben des Wertes!", 0);
-							return;
-						}
-						else {
-							SetValueInteger($this->GetIDForIdent("Intensity"), $Intensitiy);
-						}
-						IPS_Sleep(500);
+					If ($this->ReadPropertyBoolean("Open") == true) {
+						// Ausgang setzen
+						$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value)));
 					}
-					If ($Intensitiy <> $TargetValue) {
-						$Intensitiy = $TargetValue;
-						$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Intensitiy)));
-						If (!$Result) {
-							$this->SendDebug("Fade_Intensity", "Fehler beim Schreiben des Wertes!", 0);
-							return;
-						}
-						else {
-							SetValueInteger($this->GetIDForIdent("Intensity"), $Intensitiy);
-						}
-					}
+					$Endtime = microtime(true);
+					$Delay = intval(($Endtime - $Starttime) * 1000);
+					$DelayMax = intval(1000 / $FadeScalar);
+					$Delaytime = min($DelayMax, max(0, ($DelayMax - $Delay)));   
+					IPS_Sleep($Delaytime);
 				}
-				elseif ($TargetValue < $ActualValue) {
-					for ($i = ($ActualValue + $Stepwide) ; $i >= $TargetValue; $i = $i + round($Stepwide, 2)) {
-						$Intensitiy = round($i, 0);
-						$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Intensitiy)));
-						If (!$Result) {
-							$this->SendDebug("Fade_Intensity", "Fehler beim Schreiben des Wertes!", 0);
-							return;
-						}
-						else {
-							SetValueInteger($this->GetIDForIdent("Intensity"), $Intensitiy);
-						}
-						IPS_Sleep(500);
-					}
-					If ($Intensitiy <> $TargetValue) {
-						$Intensitiy = $TargetValue;
-						$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Intensitiy)));
-						If (!$Result) {
-							$this->SendDebug("Fade_Intensity", "Fehler beim Schreiben des Wertes!", 0);
-							return;
-						}
-						else {
-							SetValueInteger($this->GetIDForIdent("Intensity"), $Intensitiy);
-						}
-					}
-				}
-				else {
-					$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $TargetValue)));
-					If (!$Result) {
-						$this->SendDebug("Fade_Intensity", "Fehler beim Schreiben des Wertes!", 0);
-						return;
-					}
-					else {
-						SetValueInteger($this->GetIDForIdent("Intensity"), $TargetValue);
-					}
-				}			
-			}
-			else {
-				SetValueInteger($this->GetIDForIdent("Intensity"), $TargetValue);
-			}
+			}	
 		}
+		$this->SetBuffer("Fade", 0);
 	}
+	
+	private function FadeOut()
+	{
+		// beim Ausschalten Faden
+		$this->SendDebug("FadeOut", "Ausfuehrung", 0);
+		$this->SetBuffer("Fade", 1);
+		$Fadetime = $this->ReadPropertyInteger("FadeIn");
+		$Fadetime = min(10, max(0, $Fadetime));
+		If ($Fadetime > 0) {
+			// Zielwert RGB bestimmen
+			$Value = GetValueInteger($this->GetIDForIdent("Intensity"));
+			
+			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
+			$Steps = $Fadetime * $FadeScalar;
+			$Stepwide = $Value / $Steps;
+			
+			If ($Stepwide > 0) {
+			// Fade Out
+				for ($i = ($l - $Stepwide) ; $i >= (0 + $Stepwide); $i = $i - round($Stepwide, 2)) {
+					$Starttime = microtime(true);
+					
+					If ($this->ReadPropertyBoolean("Open") == true) {
+						// Ausgang setzen
+						$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value)));
+					}
+					$Endtime = microtime(true);
+					$Delay = intval(($Endtime - $Starttime) * 1000);
+					$DelayMax = intval(1000 / $FadeScalar);
+					$Delaytime = min($DelayMax, max(0, ($DelayMax - $Delay)));   
+					IPS_Sleep($Delaytime);
+				}
+			}	
+		}
+		$this->SetBuffer("Fade", 0);
+	}      
 	    
 	// Schaltet den gewaehlten Pin
 	public function Set_Status(Bool $value)
