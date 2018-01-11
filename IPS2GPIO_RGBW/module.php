@@ -243,6 +243,7 @@
 	public function Set_RGB(Int $R, Int $G, Int $B)
 	{
  		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Set_RGB", "Ausfuehrung", 0);
 			$R = min(255, max(0, $R));
 			$G = min(255, max(0, $G));
 			$B = min(255, max(0, $B));
@@ -260,6 +261,7 @@
 	public function Set_White(Int $value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Set_White", "Ausfuehrung", 0);
 			$value = min(255, max(0, $value));
 			If (GetValueBoolean($this->GetIDForIdent("Status")) == true) {
 				$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin_W"), "Value" => $value)));
@@ -372,6 +374,7 @@
 	public function Set_Status(Bool $value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Set_Status", "Ausfuehrung", 0);
 			SetValueBoolean($this->GetIDForIdent("Status"), $value);
 			$FadeInTime = $this->ReadPropertyInteger("FadeIn");
 			$FadeOutTime = $this->ReadPropertyInteger("FadeOut");
@@ -396,6 +399,7 @@
 	public function Toggle_Status()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Toggle_Status", "Ausfuehrung", 0);
 			$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")));
 		}
 	}
