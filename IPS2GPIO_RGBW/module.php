@@ -285,6 +285,7 @@
 			$Value_G = GetValueInteger($this->GetIDForIdent("Intensity_G"));
 			$Value_B = GetValueInteger($this->GetIDForIdent("Intensity_B"));
 			$Value_W = GetValueInteger($this->GetIDForIdent("Intensity_W"));
+			$Value_RGB = $Value_R + $Value_G + $Value_B;
 	
 			// Umrechnung in HSL
 			list($h, $s, $l) = $this->rgbToHsl($Value_R, $Value_G, $Value_B);
@@ -293,6 +294,21 @@
 			$Steps = $Fadetime * $FadeScalar;
 			$Stepwide = $l / $Steps;
 			
+			If (($Value_W == 0) AND ($Value_RGB == 0)) {
+				$this->SendDebug("FadeIn", "RGB und W sind 0 -> keine Aktion", 0);
+			}
+			elseif (($Value_W > 0) AND ($Value_RGB == 0)) {
+				$this->SendDebug("FadeIn", "RGB ist 0 -> W faden", 0);
+				
+			}
+			elseif (($Value_W == 0) AND ($Value_RGB > 0)) {
+				$this->SendDebug("FadeIn", "W ist 0 -> RGB faden", 0);
+				
+			}
+			elseif (($Value_W > 0) AND ($Value_RGB > 0)) {
+				$this->SendDebug("FadeIn", "RGB und W sind > 0 -> RGBW faden", 0);
+				
+			}
 			If ($Stepwide > 0) {
 				$Stepwide_W = $Value_W / $Steps;
 				$j = 1;
@@ -334,6 +350,7 @@
 			$Value_G = GetValueInteger($this->GetIDForIdent("Intensity_G"));
 			$Value_B = GetValueInteger($this->GetIDForIdent("Intensity_B"));
 			$Value_W = GetValueInteger($this->GetIDForIdent("Intensity_W"));
+			$Value_RGB = $Value_R + $Value_G + $Value_B;
 			
 			// Umrechnung in HSL
 			list($h, $s, $l) = $this->rgbToHsl($Value_R, $Value_G, $Value_B);
@@ -342,6 +359,21 @@
 			$Steps = $Fadetime * $FadeScalar;
 			$Stepwide = $l / $Steps;
 			
+			If (($Value_W == 0) AND ($Value_RGB == 0)) {
+				$this->SendDebug("FadeOut", "RGB und W sind 0 -> keine Aktion", 0);
+			}
+			elseif (($Value_W > 0) AND ($Value_RGB == 0)) {
+				$this->SendDebug("FadeOut", "RGB ist 0 -> W faden", 0);
+				
+			}
+			elseif (($Value_W == 0) AND ($Value_RGB > 0)) {
+				$this->SendDebug("FadeOut", "W ist 0 -> RGB faden", 0);
+				
+			}
+			elseif (($Value_W > 0) AND ($Value_RGB > 0)) {
+				$this->SendDebug("FadeOut", "RGB und W sind > 0 -> RGBW faden", 0);
+				
+			}
 			
 			If ($Stepwide > 0) {
 				// Fade Out
