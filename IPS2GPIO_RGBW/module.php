@@ -289,6 +289,7 @@
 			$Value_RGB = $Value_R + $Value_G + $Value_B;
 			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
 			$Steps = $Fadetime * $FadeScalar;
+			$this->SendDebug("FadeIn", "RGB: ".$Value_RGB." W: ".$Value_W, 0);
 			
 			If (($Value_W == 0) AND ($Value_RGB == 0)) {
 				$this->SendDebug("FadeIn", "RGB und W sind 0 -> keine Aktion", 0);
@@ -391,6 +392,7 @@
 			$Value_RGB = $Value_R + $Value_G + $Value_B;
 			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
 			$Steps = $Fadetime * $FadeScalar;
+			$this->SendDebug("FadeOut", "RGB: ".$Value_RGB." W: ".$Value_W, 0);
 			
 			If (($Value_W == 0) AND ($Value_RGB == 0)) {
 				$this->SendDebug("FadeOut", "RGB und W sind 0 -> keine Aktion", 0);
