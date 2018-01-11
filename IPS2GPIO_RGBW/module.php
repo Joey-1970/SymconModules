@@ -314,7 +314,7 @@
 					}
 				}	
 			}
-			elseif (($Value_W <= 3) AND ($Value_RGB > 0)) {
+			elseif (($Value_W <= 3) AND ($Value_RGB > 3)) {
 				$this->SendDebug("FadeIn", "W ist 0 -> RGB faden", 0);
 				// Umrechnung in HSL
 				list($h, $s, $l) = $this->rgbToHsl($Value_R, $Value_G, $Value_B);
@@ -341,7 +341,7 @@
 					IPS_Sleep($Delaytime);
 				}	
 			}
-			elseif (($Value_W > 0) AND ($Value_RGB > 0)) {
+			elseif (($Value_W > 3) AND ($Value_RGB > 3)) {
 				$this->SendDebug("FadeIn", "RGB und W sind > 0 -> RGBW faden", 0);
 				// Umrechnung in HSL
 				list($h, $s, $l) = $this->rgbToHsl($Value_R, $Value_G, $Value_B);
@@ -394,10 +394,10 @@
 			$Steps = $Fadetime * $FadeScalar;
 			$this->SendDebug("FadeOut", "RGB: ".$Value_RGB." W: ".$Value_W, 0);
 			
-			If (($Value_W == 0) AND ($Value_RGB == 0)) {
+			If (($Value_W <= 3) AND ($Value_RGB <= 3)) {
 				$this->SendDebug("FadeOut", "RGB und W sind 0 -> keine Aktion", 0);
 			}
-			elseif (($Value_W > 0) AND ($Value_RGB == 0)) {
+			elseif (($Value_W > 3) AND ($Value_RGB <= 3)) {
 				$this->SendDebug("FadeOut", "RGB ist 0 -> W faden", 0);
 				$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
 				$Steps = $Fadetime * $FadeScalar;
@@ -420,7 +420,7 @@
 					}
 				}	
 			}
-			elseif (($Value_W == 0) AND ($Value_RGB > 0)) {
+			elseif (($Value_W <= 3) AND ($Value_RGB > 3)) {
 				$this->SendDebug("FadeOut", "W ist 0 -> RGB faden", 0);
 				// Umrechnung in HSL
 				list($h, $s, $l) = $this->rgbToHsl($Value_R, $Value_G, $Value_B);
@@ -447,7 +447,7 @@
 					IPS_Sleep($Delaytime);
 				}	
 			}
-			elseif (($Value_W > 0) AND ($Value_RGB > 0)) {
+			elseif (($Value_W > 3) AND ($Value_RGB > 3)) {
 				$this->SendDebug("FadeOut", "RGB und W sind > 0 -> RGBW faden", 0);
 				// Umrechnung in HSL
 				list($h, $s, $l) = $this->rgbToHsl($Value_R, $Value_G, $Value_B);
