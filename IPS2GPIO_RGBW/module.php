@@ -300,7 +300,7 @@
 
 				If ($Stepwide > 0) {
 					// Fade In			
-					for ($i = (0 + $Stepwide) ; $i <= ($l - $Stepwide); $i = $i + round($Stepwide, 2)) {
+					for ($i = (0 + $Stepwide) ; $i <= ($Value_W - $Stepwide); $i = $i + round($Stepwide, 2)) {
 						$Starttime = microtime(true);
 						If ($this->ReadPropertyBoolean("Open") == true) {
 							// Ausgang setzen
@@ -405,7 +405,7 @@
 
 				If ($Stepwide > 0) {
 					// Fade Out
-					for ($i = ($l - $Stepwide) ; $i >= (0 + $Stepwide); $i = $i - round($Stepwide, 2)) {
+					for ($i = ($Value_W - $Stepwide) ; $i >= (0 + $Stepwide); $i = $i - round($Stepwide, 2)) {
 						$Starttime = microtime(true);
 
 						If ($this->ReadPropertyBoolean("Open") == true) {
