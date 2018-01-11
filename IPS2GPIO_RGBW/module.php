@@ -291,10 +291,10 @@
 			$Steps = $Fadetime * $FadeScalar;
 			$this->SendDebug("FadeIn", "RGB: ".$Value_RGB." W: ".$Value_W, 0);
 			
-			If (($Value_W == 0) AND ($Value_RGB == 0)) {
+			If (($Value_W <= 3) AND ($Value_RGB <= 3)) {
 				$this->SendDebug("FadeIn", "RGB und W sind 0 -> keine Aktion", 0);
 			}
-			elseif (($Value_W > 0) AND ($Value_RGB == 0)) {
+			elseif (($Value_W > 0) AND ($Value_RGB <= 3)) {
 				$this->SendDebug("FadeIn", "RGB ist 0 -> W faden", 0);
 				$Stepwide = $Value_W / $Steps;
 
@@ -314,7 +314,7 @@
 					}
 				}	
 			}
-			elseif (($Value_W == 0) AND ($Value_RGB > 0)) {
+			elseif (($Value_W <= 3) AND ($Value_RGB > 0)) {
 				$this->SendDebug("FadeIn", "W ist 0 -> RGB faden", 0);
 				// Umrechnung in HSL
 				list($h, $s, $l) = $this->rgbToHsl($Value_R, $Value_G, $Value_B);
