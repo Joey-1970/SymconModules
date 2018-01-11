@@ -290,12 +290,6 @@
 			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
 			$Steps = $Fadetime * $FadeScalar;
 			
-			// Umrechnung in HSL
-			list($h, $s, $l) = $this->rgbToHsl($Value_R, $Value_G, $Value_B);
-			// $l muss von 0 auf den Zielwert gebracht werden
-			
-			$Stepwide = $l / $Steps;
-			
 			If (($Value_W == 0) AND ($Value_RGB == 0)) {
 				$this->SendDebug("FadeIn", "RGB und W sind 0 -> keine Aktion", 0);
 			}
@@ -326,9 +320,10 @@
 			}
 			elseif (($Value_W > 0) AND ($Value_RGB > 0)) {
 				$this->SendDebug("FadeIn", "RGB und W sind > 0 -> RGBW faden", 0);
-				
-			}
-			If ($Stepwide > 0) {
+				// Umrechnung in HSL
+				list($h, $s, $l) = $this->rgbToHsl($Value_R, $Value_G, $Value_B);
+				// $l muss von 0 auf den Zielwert gebracht werden
+				$Stepwide = $l / $Steps;
 				$Stepwide_W = $Value_W / $Steps;
 				$j = 1;
 				// Fade In			
@@ -351,6 +346,7 @@
 					$Delaytime = min($DelayMax, max(0, ($DelayMax - $Delay)));   
 					IPS_Sleep($Delaytime);
 				}
+				
 			}	
 		}
 		$this->SetBuffer("Fade", 0);
@@ -373,12 +369,6 @@
 			$Value_RGB = $Value_R + $Value_G + $Value_B;
 			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
 			$Steps = $Fadetime * $FadeScalar;
-			
-			// Umrechnung in HSL
-			list($h, $s, $l) = $this->rgbToHsl($Value_R, $Value_G, $Value_B);
-			// $l muss von 0 auf den Zielwert gebracht werden
-			
-			$Stepwide = $l / $Steps;
 			
 			If (($Value_W == 0) AND ($Value_RGB == 0)) {
 				$this->SendDebug("FadeOut", "RGB und W sind 0 -> keine Aktion", 0);
@@ -412,10 +402,10 @@
 			}
 			elseif (($Value_W > 0) AND ($Value_RGB > 0)) {
 				$this->SendDebug("FadeOut", "RGB und W sind > 0 -> RGBW faden", 0);
-				
-			}
-			
-			If ($Stepwide > 0) {
+				// Umrechnung in HSL
+				list($h, $s, $l) = $this->rgbToHsl($Value_R, $Value_G, $Value_B);
+				// $l muss von 0 auf den Zielwert gebracht werden
+				$Stepwide = $l / $Steps;
 				// Fade Out
 				$Stepwide_W = $Value_W / $Steps;
 				$j = $Steps - 1;
@@ -438,7 +428,7 @@
 					$Delaytime = min($DelayMax, max(0, ($DelayMax - $Delay)));   
 					IPS_Sleep($Delaytime);
 				}
-			}	
+			}		
 		}
 		$this->SetBuffer("Fade", 0);
 	}  
