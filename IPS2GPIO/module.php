@@ -404,32 +404,47 @@ class IPS2GPIO_IO extends IPSModule
 		case "set_PWM_dutycycle":
 		    	// Dimmt einen Pin
 		    	If ($data->Pin >= 0) {
-		        	//IPS_LogMessage("IPS2GPIO Set Intensity : ",$data->Pin." , ".$data->Value);
 		        	$Result = $this->CommandClientSocket(pack("L*", 5, $data->Pin, $data->Value, 0), 16);
 		        }
 		        break;
 		case "get_PWM_dutycycle":
 		    	// Dimmt einen Pin
 		    	If ($data->Pin >= 0) {
-		        	//IPS_LogMessage("IPS2GPIO Set Intensity : ",$data->Pin." , ".$data->Value);
 				$Result = $this->CommandClientSocket(pack("L*", 83, $data->Pin, 0, 0), 16);
 		        }
 		        break;
 		case "set_PWM_dutycycle_RGB":
 		    	// Setzt die RGB-Farben
 		    	If (($data->Pin_R >= 0) AND ($data->Pin_G >= 0) AND ($data->Pin_B >= 0)) {
-		        	//IPS_LogMessage("IPS2GPIO Set Intensity RGB : ",$data->Pin_R." , ".$data->Value_R." ".$data->Pin_G." , ".$data->Value_G." ".$data->Pin_B." , ".$data->Value_B);  
 		        	$Result = $this->CommandClientSocket(pack("L*", 5, $data->Pin_R, $data->Value_R, 0).pack("L*", 5, $data->Pin_G, $data->Value_G, 0).pack("L*", 5, $data->Pin_B, $data->Value_B, 0), 48);
-				//$this->SendDebug("set_PWM_dutycycle_RGB", "Ergebnis: ".boolval($Result), 0);
 		    	}
+		        break;
+		case "get_PWM_dutycycle_RGB":
+		    	// Dimmt einen Pin
+		    	If (($data->Pin_R >= 0) AND ($data->Pin_G >= 0) AND ($data->Pin_B >= 0)) {
+				$Color = Array();
+				$Color[] = $this->CommandClientSocket(pack("L*", 83, $data->Pin_R, 0, 0), 16);
+				$Color[] = $this->CommandClientSocket(pack("L*", 83, $data->Pin_G, 0, 0), 16);
+				$Color[] = $this->CommandClientSocket(pack("L*", 83, $data->Pin_B, 0, 0), 16);
+				$Result = serialize($Color);
+		        }
 		        break;
 		case "set_PWM_dutycycle_RGBW":
 		    	// Setzt die RGBW-Farben
 		    	If (($data->Pin_R >= 0) AND ($data->Pin_G >= 0) AND ($data->Pin_B >= 0) AND ($data->Pin_W >= 0)) {
-		        	//IPS_LogMessage("IPS2GPIO Set Intensity RGB : ",$data->Pin_R." , ".$data->Value_R." ".$data->Pin_G." , ".$data->Value_G." ".$data->Pin_B." , ".$data->Value_B);  
 		        	$Result = $this->CommandClientSocket(pack("L*", 5, $data->Pin_R, $data->Value_R, 0).pack("L*", 5, $data->Pin_G, $data->Value_G, 0).pack("L*", 5, $data->Pin_B, $data->Value_B, 0).pack("L*", 5, $data->Pin_W, $data->Value_W, 0), 64);
-				//$this->SendDebug("set_PWM_dutycycle_RGBW", "Ergebnis: ".boolval($Result), 0);
 		    	}
+		        break;
+		case "get_PWM_dutycycle_RGBW":
+		    	// Dimmt einen Pin
+		    	If (($data->Pin_R >= 0) AND ($data->Pin_G >= 0) AND ($data->Pin_B >= 0) AND ($data->Pin_W >= 0)) {
+		        	$Color = Array();
+				$Color[] = $this->CommandClientSocket(pack("L*", 83, $data->Pin_R, 0, 0), 16);
+				$Color[] = $this->CommandClientSocket(pack("L*", 83, $data->Pin_G, 0, 0), 16);
+				$Color[] = $this->CommandClientSocket(pack("L*", 83, $data->Pin_B, 0, 0), 16);
+				$Color[] = $this->CommandClientSocket(pack("L*", 83, $data->Pin_W, 0, 0), 16);
+				$Result = serialize($Color);
+		        }
 		        break;
 		case "get_value":
 		    	// Liest den Pin
@@ -664,14 +679,12 @@ class IPS2GPIO_IO extends IPSModule
 		   	$Result = serialize($DevicePorts);
 		   	break;
 		 case "i2c_read_byte":
-		   	//IPS_LogMessage("IPS2GPIO I2C Read Byte Parameter: ",$data->Handle." , ".$data->Register); 
 		   	If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
 				$this->SetI2CBus(intval($data->DeviceIdent));
 		   		$this->CommandClientSocket(pack("L*", 61, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 0), 16);
 		   	}
 		   	break;
 		 case "i2c_read_bytes":
-		   	//IPS_LogMessage("IPS2GPIO I2C Read Bytes",$this->GetI2C_DeviceHandle($data->DeviceAddress)." , ".$data->Register." , ".$data->Count);  	
 		   	If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
 				$this->SetI2CBus(intval($data->DeviceIdent));
 		   		$this->CommandClientSocket(pack("L*", 56, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Count, 0), 16 + ($data->Count));
@@ -679,7 +692,6 @@ class IPS2GPIO_IO extends IPSModule
 			break;  
 		
 		case "i2c_read_word":
-		   	//IPS_LogMessage("IPS2GPIO I2C Read Word Parameter : ","DeviceAdresse: ".$data->DeviceAddress.", Handle: ".$this->GetI2C_DeviceHandle($data->DeviceAddress)." ,Register: ".$data->Register);
 		   	If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
 				$this->SetI2CBus(intval($data->DeviceIdent));
 		   		$this->CommandClientSocket(pack("L*", 63, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 0), 16);
@@ -707,7 +719,6 @@ class IPS2GPIO_IO extends IPSModule
 		   	break;	
 
 		   case "i2c_write_byte_onhandle":
-		   	//IPS_LogMessage("IPS2GPIO I2C Write Byte Handle: ","DeviceAdresse: ".$data->DeviceAddress.", Handle: ".$this->GetI2C_DeviceHandle($data->DeviceAddress).", Wert: ".$data->Value);  	
 		   	If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
 				$this->SetI2CBus(intval($data->DeviceIdent));
 		   		$this->CommandClientSocket(pack("L*", 60, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Value, 0), 16);
