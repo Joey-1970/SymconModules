@@ -169,6 +169,7 @@
 			$Value = GetValueInteger($this->GetIDForIdent("Intensity"));
 	
 			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
+			$FadeScalar = min(20, max(1, $FadeScalar));
 			$Steps = $Fadetime * $FadeScalar;
 			$Stepwide = $Value / $Steps;
 			
@@ -211,6 +212,7 @@
 			$Value = GetValueInteger($this->GetIDForIdent("Intensity"));
 			
 			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
+			$FadeScalar = min(20, max(1, $FadeScalar));
 			$Steps = $Fadetime * $FadeScalar;
 			$Stepwide = $Value / $Steps;
 			
