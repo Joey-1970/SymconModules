@@ -491,12 +491,19 @@
 				If ($FadeInTime > 0) {
 					$this->FadeIn();
 				}
-				$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGBW", 
-									  "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => GetValueInteger($this->GetIDForIdent("Intensity_R")), 
-									  "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => GetValueInteger($this->GetIDForIdent("Intensity_G")), 
-									  "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => GetValueInteger($this->GetIDForIdent("Intensity_B")),
-									  "Pin_W" => $this->ReadPropertyInteger("Pin_W"), "Value_W" => GetValueInteger($this->GetIDForIdent("Intensity_W")) )));
-
+				$Result = $this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGBW", 
+							  "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => GetValueInteger($this->GetIDForIdent("Intensity_R")), 
+							  "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => GetValueInteger($this->GetIDForIdent("Intensity_G")), 
+							  "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => GetValueInteger($this->GetIDForIdent("Intensity_B")),
+							  "Pin_W" => $this->ReadPropertyInteger("Pin_W"), "Value_W" => GetValueInteger($this->GetIDForIdent("Intensity_W")) )));
+				If (!$Result) {
+					$this->SendDebug("Set_Status", "Fehler beim Schreiben des Wertes!", 0);
+					return; 
+				}
+				else {
+					//$this->Get_Status();
+					//SetValueBoolean($this->GetIDForIdent("Status"), true);
+				}
 				//$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => GetValueInteger($this->GetIDForIdent("Intensity_R")), "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => GetValueInteger($this->GetIDForIdent("Intensity_G")), "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => GetValueInteger($this->GetIDForIdent("Intensity_B")))));
 				//$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin_W"), "Value" => GetValueInteger($this->GetIDForIdent("Intensity_W")))));
 			}
@@ -504,11 +511,19 @@
 				If ($FadeOutTime > 0) {
 					$this->FadeOut();
 				}
-				$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGBW", 
-					  "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => 0, 
-					  "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => 0, 
-					  "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => 0,
-					  "Pin_W" => $this->ReadPropertyInteger("Pin_W"), "Value_W" => 0 )));
+				$Result = $this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGBW", 
+							  "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => 0, 
+							  "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => 0, 
+							  "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => 0,
+							  "Pin_W" => $this->ReadPropertyInteger("Pin_W"), "Value_W" => 0 )));
+				If (!$Result) {
+					$this->SendDebug("Set_Status", "Fehler beim Schreiben des Wertes!", 0);
+					return; 
+				}
+				else {
+					//$this->Get_Status();
+					//SetValueBoolean($this->GetIDForIdent("Status"), true);
+				}
 
 				//$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => 0, "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => 0, "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => 0)));
 				//$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin_W"), "Value" => 0)));
