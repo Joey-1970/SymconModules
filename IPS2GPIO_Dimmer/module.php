@@ -169,7 +169,10 @@
 			$Steps = $Fadetime * $FadeScalar;
 			$Stepwide = $Value / $Steps;
 			
-			If ($Stepwide > 0) {
+			If ($Value <= 3) {
+				$this->SendDebug("FadeIn", "W ist 0 -> keine Aktion", 0);
+			}
+			elseif ($Value > 3) {
 				// Fade In			
 				for ($i = (0 + $Stepwide) ; $i <= ($l - $Stepwide); $i = $i + round($Stepwide, 2)) {
 					$Starttime = microtime(true);
@@ -177,6 +180,10 @@
 					If ($this->ReadPropertyBoolean("Open") == true) {
 						// Ausgang setzen
 						$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value)));
+						If (!$Result) {
+							$this->SendDebug("FadeIn", "Fehler beim Schreiben des Wertes!", 0);
+							return; 
+						}
 					}
 					$Endtime = microtime(true);
 					$Delay = intval(($Endtime - $Starttime) * 1000);
@@ -204,7 +211,10 @@
 			$Steps = $Fadetime * $FadeScalar;
 			$Stepwide = $Value / $Steps;
 			
-			If ($Stepwide > 0) {
+			If ($Value <= 3) {
+				$this->SendDebug("FadeOut", "W ist 0 -> keine Aktion", 0);
+			}
+			elseif ($Value > 3) {
 			// Fade Out
 				for ($i = ($l - $Stepwide) ; $i >= (0 + $Stepwide); $i = $i - round($Stepwide, 2)) {
 					$Starttime = microtime(true);
@@ -212,6 +222,10 @@
 					If ($this->ReadPropertyBoolean("Open") == true) {
 						// Ausgang setzen
 						$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value)));
+						If (!$Result) {
+							$this->SendDebug("FadeOut", "Fehler beim Schreiben des Wertes!", 0);
+							return; 
+						}
 					}
 					$Endtime = microtime(true);
 					$Delay = intval(($Endtime - $Starttime) * 1000);
