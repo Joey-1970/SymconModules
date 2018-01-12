@@ -86,7 +86,7 @@
 		$arrayElements[] = array("type" => "Label", "label" => "Optional: Angabe von Fade-In/-Out-Zeit in Sekunden (0 => aus, max. 10 Sek)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeIn",  "caption" => "Fade-In-Zeit"); 
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeOut",  "caption" => "Fade-Out-Zeit");
-		$arrayElements[] = array("type" => "Label", "label" => "Schritte pro Sekunde: (1 - 10)");
+		$arrayElements[] = array("type" => "Label", "label" => "Schritte pro Sekunde: (1 - 20)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeScalar",  "caption" => "Schritte"); 
 
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
@@ -299,7 +299,7 @@
 		$Fadetime = $this->ReadPropertyInteger("FadeIn");
 		$Fadetime = min(10, max(0, $Fadetime));
 		$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
-		$FadeScalar = min(10, max(1, $FadeScalar));
+		$FadeScalar = min(20, max(1, $FadeScalar));
 		$Steps = $Fadetime * $FadeScalar;
 		
 		If ($Fadetime > 0) {
@@ -417,7 +417,7 @@
 		$Fadetime = $this->ReadPropertyInteger("FadeIn");
 		$Fadetime = min(10, max(0, $Fadetime));
 		$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
-		$FadeScalar = min(10, max(1, $FadeScalar));
+		$FadeScalar = min(20, max(1, $FadeScalar));
 		$Steps = $Fadetime * $FadeScalar;
 		
 		If ($Fadetime > 0) {
