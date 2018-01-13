@@ -650,7 +650,7 @@
 						$this->SendDebug("Get_Status", "Ergebnis: ".$Result, 0);
 						$Color = array();
 						$Color = unserialize($Result);
-						If (count($Color) = 4) {
+						If (count($Color) == 4) {
 							//SetValueInteger($this->GetIDForIdent("Intensity_R"), $Color[0]);
 						}
 					}
