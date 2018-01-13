@@ -518,10 +518,13 @@
 		$this->SetBuffer("Fade", 0);
 	}  
 	        
-	public function Set_Status(Bool $value, Int $FadeTime = $this->ReadPropertyInteger("FadeTime"))
+	public function Set_Status(Bool $value, Int $FadeTime = 999)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Set_Status", "Ausfuehrung", 0);
+			If ($FadeTime = 999) {
+				$FadeTime = $this->ReadPropertyInteger("FadeTime");
+			}
 			$FadeTime = min(10, max(0, $FadeTime));
 			SetValueBoolean($this->GetIDForIdent("Status"), $value);
 			
@@ -565,9 +568,12 @@
 	}
 	
 	// Toggelt den Status
-	public function Toggle_Status(Int $FadeTime = $this->ReadPropertyInteger("FadeTime"))
+	public function Toggle_Status(Int $FadeTime = 999))
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			If ($FadeTime = 999) {
+				$FadeTime = $this->ReadPropertyInteger("FadeTime");
+			}
 			$this->SendDebug("Toggle_Status", "Ausfuehrung", 0);
 			$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")), $FadeTime);
 		}
