@@ -289,13 +289,11 @@
 		}
 	}    
 	
-	private function FadeIn()
+	private function FadeIn(Int $FadeTime)
 	{
 		// RGBW beim Einschalten Faden
 		$this->SendDebug("FadeIn", "Ausfuehrung", 0);
 		$this->SetBuffer("Fade", 1);
-		$Fadetime = $this->ReadPropertyInteger("FadeIn");
-		$Fadetime = min(10, max(0, $Fadetime));
 		$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
 		$FadeScalar = min(16, max(1, $FadeScalar));
 		$Steps = $Fadetime * $FadeScalar;
@@ -308,7 +306,7 @@
 			$Value_W = GetValueInteger($this->GetIDForIdent("Intensity_W"));
 			$Value_RGB = $Value_R + $Value_G + $Value_B;
 			
-			$Steps = $Fadetime * $FadeScalar;
+			$Steps = $FadeTime * $FadeScalar;
 			$this->SendDebug("FadeIn", "RGB: ".$Value_RGB." W: ".$Value_W, 0);
 			
 			If (($Value_W <= 3) AND ($Value_RGB <= 3)) {
@@ -407,16 +405,14 @@
 		$this->SetBuffer("Fade", 0);
 	}
 	
-	private function FadeOut()
+	private function FadeOut(Int $FadeTime)
 	{
 		// RGBW beim Ausschalten Faden
 		$this->SendDebug("FadeOut", "Ausfuehrung", 0);
 		$this->SetBuffer("Fade", 1);
-		$Fadetime = $this->ReadPropertyInteger("FadeIn");
-		$Fadetime = min(10, max(0, $Fadetime));
 		$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
 		$FadeScalar = min(16, max(1, $FadeScalar));
-		$Steps = $Fadetime * $FadeScalar;
+		$Steps = $FadeTime * $FadeScalar;
 		
 		If ($Fadetime > 0) {
 			// Zielwert RGB bestimmen
@@ -528,6 +524,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Set_Status", "Ausfuehrung", 0);
+			$Fadetime = min(10, max(0, $Fadetime));
 			SetValueBoolean($this->GetIDForIdent("Status"), $value);
 			
 			If ($value == true) {
