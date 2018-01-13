@@ -221,6 +221,7 @@
 			// Funktion zum erstellen dynamischer Pulldown-Menüs
 			break;
 		case "result":
+			/*
 			If ($this->GetBuffer("Fade") == 0) {
 				If (($data->Pin == $this->ReadPropertyInteger("Pin_R")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
 					SetValueInteger($this->GetIDForIdent("Intensity_R"), $data->Value);
@@ -235,6 +236,7 @@
 					SetValueInteger($this->GetIDForIdent("Intensity_W"), $data->Value);
 				}
 			}
+			*/
 			break;
     		}
 	}
@@ -255,8 +257,7 @@
 					return; 
 				}
 				else {
-					//$this->Get_Status();
-					//SetValueBoolean($this->GetIDForIdent("Status"), true);
+					$this->Get_Status();
 				}
 			}
 			else {
@@ -279,8 +280,7 @@
 					return; 
 				}
 				else {
-					//$this->Get_Status();
-					//SetValueBoolean($this->GetIDForIdent("Status"), true);
+					$this->Get_Status();
 				}
 			}
 			else {
