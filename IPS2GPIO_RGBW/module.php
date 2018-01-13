@@ -17,8 +17,7 @@
 		$this->RegisterPropertyInteger("Pin_W", -1);
 		$this->SetBuffer("PreviousPin_W", -1);
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
-		$this->RegisterPropertyInteger("FadeIn", 0);
-		$this->RegisterPropertyInteger("FadeOut", 0);
+		$this->RegisterPropertyInteger("FadeTime", 0);
 		$this->RegisterPropertyInteger("FadeScalar", 4);
 	}
 	    
@@ -83,9 +82,8 @@
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_W", "caption" => "GPIO-Nr. Weiß", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		$arrayElements[] = array("type" => "Label", "label" => "Optional: Angabe von Fade-In/-Out-Zeit in Sekunden (0 => aus, max. 10 Sek)");
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeIn",  "caption" => "Fade-In-Zeit"); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeOut",  "caption" => "Fade-Out-Zeit");
+		$arrayElements[] = array("type" => "Label", "label" => "Optional: Angabe der Standard Fade-In/-Out-Zeit in Sekunden (0 => aus, max. 10 Sek)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeTime",  "caption" => "Fade-In-Zeit"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Schritte pro Sekunde: (1 - 16)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeScalar",  "caption" => "Schritte"); 
 
@@ -526,16 +524,15 @@
 		$this->SetBuffer("Fade", 0);
 	}  
 	        
-	public function Set_Status(Bool $value)
+	public function Set_Status(Bool $value, Int $FadeTime = $this->ReadPropertyInteger("FadeTime"))
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Set_Status", "Ausfuehrung", 0);
 			SetValueBoolean($this->GetIDForIdent("Status"), $value);
-			$FadeInTime = $this->ReadPropertyInteger("FadeIn");
-			$FadeOutTime = $this->ReadPropertyInteger("FadeOut");
+			
 			If ($value == true) {
-				If ($FadeInTime > 0) {
-					$this->FadeIn();
+				If ($FadeTime > 0) {
+					$this->FadeIn($FadeTime);
 				}
 				$Result = $this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGBW", 
 							  "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => GetValueInteger($this->GetIDForIdent("Intensity_R")), 
@@ -552,8 +549,8 @@
 				}
 			}
 			else {
-				If ($FadeOutTime > 0) {
-					$this->FadeOut();
+				If ($FadeTime > 0) {
+					$this->FadeOut($FadeTime);
 				}
 				$Result = $this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGBW", 
 							  "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => 0, 
@@ -573,11 +570,11 @@
 	}
 	
 	// Toggelt den Status
-	public function Toggle_Status()
+	public function Toggle_Status(Int $FadeTime = $this->ReadPropertyInteger("FadeTime"))
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Toggle_Status", "Ausfuehrung", 0);
-			$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")));
+			$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")), $FadeTime);
 		}
 	}
 	
