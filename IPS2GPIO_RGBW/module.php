@@ -646,7 +646,7 @@
 					return;
 				}
 				else {
-					If (isarray(unserialize($Result))) {
+					If (is_array(unserialize($Result)) == true) {
 						$this->SendDebug("Get_Status", "Ergebnis: ".$Result, 0);
 						$Color = array();
 						$Color = unserialize($Result);
