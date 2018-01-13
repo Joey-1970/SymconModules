@@ -540,8 +540,7 @@
 					return; 
 				}
 				else {
-					//$this->Get_Status();
-					//SetValueBoolean($this->GetIDForIdent("Status"), true);
+					$this->Get_Status();
 				}
 			}
 			else {
@@ -556,10 +555,6 @@
 				If (!$Result) {
 					$this->SendDebug("Set_Status", "Fehler beim Schreiben des Wertes!", 0);
 					return; 
-				}
-				else {
-					//$this->Get_Status();
-					//SetValueBoolean($this->GetIDForIdent("Status"), true);
 				}
 			}
 		}
@@ -586,8 +581,7 @@
 					return; 
 				}
 				else {
-					//$this->Get_Status();
-					//SetValueBoolean($this->GetIDForIdent("Status"), true);
+					$this->Get_Status();
 				}
 			}
 			else {
@@ -602,10 +596,6 @@
 				If (!$Result) {
 					$this->SendDebug("Set_Status", "Fehler beim Schreiben des Wertes!", 0);
 					return; 
-				}
-				else {
-					//$this->Get_Status();
-					//SetValueBoolean($this->GetIDForIdent("Status"), true);
 				}
 			}
 		}
@@ -651,7 +641,10 @@
 						$Color = array();
 						$Color = unserialize($Result);
 						If (count($Color) == 4) {
-							//SetValueInteger($this->GetIDForIdent("Intensity_R"), $Color[0]);
+							SetValueInteger($this->GetIDForIdent("Intensity_R"), $Color[0]);
+							SetValueInteger($this->GetIDForIdent("Intensity_G"), $Color[1]);
+							SetValueInteger($this->GetIDForIdent("Intensity_B"), $Color[2]);
+							SetValueInteger($this->GetIDForIdent("Intensity_W"), $Color[3]);
 						}
 					}
 				}
