@@ -522,7 +522,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Set_Status", "Ausfuehrung", 0);
-			If ($FadeTime = 999) {
+			If ($FadeTime == 999) {
 				$FadeTime = $this->ReadPropertyInteger("FadeTime");
 			}
 			$FadeTime = min(10, max(0, $FadeTime));
@@ -571,7 +571,7 @@
 	public function Toggle_Status($FadeTime = 999))
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			If ($FadeTime = 999) {
+			If ($FadeTime == 999) {
 				$FadeTime = $this->ReadPropertyInteger("FadeTime");
 			}
 			$this->SendDebug("Toggle_Status", "Ausfuehrung", 0);
