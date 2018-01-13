@@ -168,35 +168,19 @@
 	            break;
 	        case "Intensity_R":
 	            $this->Set_RGB($Value, GetValueInteger($this->GetIDForIdent("Intensity_G")), GetValueInteger($this->GetIDForIdent("Intensity_B")));
-	            //Neuen Wert in die Statusvariable schreiben
-	            //SetValueInteger($this->GetIDForIdent($Ident), $Value);
-	            //SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex(GetValueInteger($this->GetIDForIdent("Intensity_R")), GetValueInteger($this->GetIDForIdent("Intensity_G")), GetValueInteger($this->GetIDForIdent("Intensity_B"))));
 	            break;
 	        case "Intensity_G":
 	            $this->Set_RGB(GetValueInteger($this->GetIDForIdent("Intensity_R")), $Value, GetValueInteger($this->GetIDForIdent("Intensity_B")));
-	            //Neuen Wert in die Statusvariable schreiben
-	            //SetValueInteger($this->GetIDForIdent($Ident), $Value);
-	            //SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex(GetValueInteger($this->GetIDForIdent("Intensity_R")), GetValueInteger($this->GetIDForIdent("Intensity_G")), GetValueInteger($this->GetIDForIdent("Intensity_B"))));
 	            break;
 	        case "Intensity_B":
 	            $this->Set_RGB(GetValueInteger($this->GetIDForIdent("Intensity_R")), GetValueInteger($this->GetIDForIdent("Intensity_G")), $Value);
-	            //Neuen Wert in die Statusvariable schreiben
-	            //SetValueInteger($this->GetIDForIdent($Ident), $Value);
-	            //SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex(GetValueInteger($this->GetIDForIdent("Intensity_R")), GetValueInteger($this->GetIDForIdent("Intensity_G")), GetValueInteger($this->GetIDForIdent("Intensity_B"))));
 	            break;
 		case "Intensity_W":
 	            $this->Set_White($Value);
-	            //Neuen Wert in die Statusvariable schreiben
-	            //SetValueInteger($this->GetIDForIdent($Ident), $Value);
 	            break;
 	        case "Color":
 	            list($r, $g, $b) = $this->Hex2RGB($Value);
 	            $this->Set_RGB($r, $g, $b);
-	            //Neuen Wert in die Statusvariable schreiben
-	            //SetValueInteger($this->GetIDForIdent($Ident), $Value);
-	            //SetValueInteger($this->GetIDForIdent("Intensity_R"), intval($r));
-	            //SetValueInteger($this->GetIDForIdent("Intensity_G"), intval($g));
-	           // SetValueInteger($this->GetIDForIdent("Intensity_B"), intval($b));
 	            break;
 	        default:
 	            throw new Exception("Invalid Ident");
@@ -220,29 +204,11 @@
 		case "freepin":
 			// Funktion zum erstellen dynamischer Pulldown-Menüs
 			break;
-		case "result":
-			/*
-			If ($this->GetBuffer("Fade") == 0) {
-				If (($data->Pin == $this->ReadPropertyInteger("Pin_R")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
-					SetValueInteger($this->GetIDForIdent("Intensity_R"), $data->Value);
-				}
-				ElseIf (($data->Pin == $this->ReadPropertyInteger("Pin_G")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
-					SetValueInteger($this->GetIDForIdent("Intensity_G"), $data->Value);
-				}
-				If (($data->Pin == $this->ReadPropertyInteger("Pin_B")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
-					SetValueInteger($this->GetIDForIdent("Intensity_B"), $data->Value);
-				}
-				If (($data->Pin == $this->ReadPropertyInteger("Pin_W")) AND (GetValueBoolean($this->GetIDForIdent("Status")) == true)){
-					SetValueInteger($this->GetIDForIdent("Intensity_W"), $data->Value);
-				}
-			}
-			*/
-			break;
     		}
 	}
 	
 	// Beginn der Funktionen
-	// Dimmt den gewaehlten Pin
+	// Setz die RGB Farben
 	public function Set_RGB(Int $R, Int $G, Int $B)
 	{
  		If ($this->ReadPropertyBoolean("Open") == true) {
