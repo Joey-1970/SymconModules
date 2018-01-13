@@ -629,6 +629,29 @@
 			$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")), $FadeTime);
 		}
 	}    
+	 
+	public function Get_Status()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Get_Status", "Ausfuehrung", 0);
+			
+			If (GetValueBoolean($this->GetIDForIdent("Status")) == true) {
+				$Result = $this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_PWM_dutycycle_RGBW", 
+							  "Pin_R" => $this->ReadPropertyInteger("Pin_R"), 
+							  "Pin_G" => $this->ReadPropertyInteger("Pin_G"), 
+							  "Pin_B" => $this->ReadPropertyInteger("Pin_B"),
+							  "Pin_W" => $this->ReadPropertyInteger("Pin_W") )));
+				If ($Result < 0) {
+					$this->SendDebug("Get_Status", "Fehler beim Lesen des Wertes!", 0);
+					return;
+				}
+				else {
+					//SetValueInteger($this->GetIDForIdent("Intensity"), $Result);
+				}
+			}
+		}
+	}    
+	    
 	    
 	private function Hex2RGB($Hex)
 	{
