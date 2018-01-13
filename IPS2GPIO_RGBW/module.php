@@ -296,7 +296,7 @@
 		$this->SetBuffer("Fade", 1);
 		$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
 		$FadeScalar = min(16, max(1, $FadeScalar));
-		$Steps = $Fadetime * $FadeScalar;
+		$Steps = $FadeTime * $FadeScalar;
 		
 		// Zielwert RGB bestimmen
 		$Value_R = GetValueInteger($this->GetIDForIdent("Intensity_R"));
