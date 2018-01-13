@@ -83,9 +83,9 @@
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_W", "caption" => "GPIO-Nr. Weiß", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Optional: Angabe der Standard Fade-In/-Out-Zeit in Sekunden (0 => aus, max. 10 Sek)");
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeTime",  "caption" => "Fade-In-Zeit"); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeTime",  "caption" => "Fade Zeit"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Schritte pro Sekunde: (1 - 16)");
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeScalar",  "caption" => "Schritte"); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeScalar",  "caption" => "Fade Schritte"); 
 
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 
