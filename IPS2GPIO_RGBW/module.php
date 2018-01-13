@@ -518,13 +518,11 @@
 		$this->SetBuffer("Fade", 0);
 	}  
 	        
-	public function Set_Status(Bool $value, Int $FadeTime = -1)
+	public function Set_Status(Bool $value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Set_Status", "Ausfuehrung", 0);
-			If ($FadeTime == -1) {
-				$FadeTime = $this->ReadPropertyInteger("FadeTime");
-			}
+			$FadeTime = $this->ReadPropertyInteger("FadeTime");
 			$FadeTime = min(10, max(0, $FadeTime));
 			SetValueBoolean($this->GetIDForIdent("Status"), $value);
 			
@@ -566,19 +564,72 @@
 			}
 		}
 	}
-	
-	// Toggelt den Status
-	public function Toggle_Status(Int $FadeTime = -1)
+
+	public function Set_StatusEx(Bool $value, Int $FadeTime)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			If ($FadeTime == -1) {
-				$FadeTime = $this->ReadPropertyInteger("FadeTime");
+			$this->SendDebug("Set_Status", "Ausfuehrung", 0);
+			$FadeTime = min(10, max(0, $FadeTime));
+			SetValueBoolean($this->GetIDForIdent("Status"), $value);
+			
+			If ($value == true) {
+				If ($FadeTime > 0) {
+					$this->FadeIn($FadeTime);
+				}
+				$Result = $this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGBW", 
+							  "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => GetValueInteger($this->GetIDForIdent("Intensity_R")), 
+							  "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => GetValueInteger($this->GetIDForIdent("Intensity_G")), 
+							  "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => GetValueInteger($this->GetIDForIdent("Intensity_B")),
+							  "Pin_W" => $this->ReadPropertyInteger("Pin_W"), "Value_W" => GetValueInteger($this->GetIDForIdent("Intensity_W")) )));
+				If (!$Result) {
+					$this->SendDebug("Set_Status", "Fehler beim Schreiben des Wertes!", 0);
+					return; 
+				}
+				else {
+					//$this->Get_Status();
+					//SetValueBoolean($this->GetIDForIdent("Status"), true);
+				}
 			}
+			else {
+				If ($FadeTime > 0) {
+					$this->FadeOut($FadeTime);
+				}
+				$Result = $this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGBW", 
+							  "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => 0, 
+							  "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => 0, 
+							  "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => 0,
+							  "Pin_W" => $this->ReadPropertyInteger("Pin_W"), "Value_W" => 0 )));
+				If (!$Result) {
+					$this->SendDebug("Set_Status", "Fehler beim Schreiben des Wertes!", 0);
+					return; 
+				}
+				else {
+					//$this->Get_Status();
+					//SetValueBoolean($this->GetIDForIdent("Status"), true);
+				}
+			}
+		}
+	}    
+	    
+	// Toggelt den Status
+	public function Toggle_Status()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$FadeTime = $this->ReadPropertyInteger("FadeTime");
 			$this->SendDebug("Toggle_Status", "Ausfuehrung", 0);
 			$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")), $FadeTime);
 		}
 	}
 	
+	// Toggelt den Status
+	public function Toggle_StatusEx(Int $FadeTime)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Toggle_Status", "Ausfuehrung", 0);
+			$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")), $FadeTime);
+		}
+	}    
+	    
 	private function Hex2RGB($Hex)
 	{
 		$r = (($Hex >> 16) & 0xFF);
