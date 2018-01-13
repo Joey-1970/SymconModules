@@ -626,7 +626,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Toggle_Status", "Ausfuehrung", 0);
-			$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")), $FadeTime);
+			$this->Set_StatusEx(!GetValueBoolean($this->GetIDForIdent("Status")), $FadeTime);
 		}
 	}    
 	 
