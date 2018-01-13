@@ -518,7 +518,7 @@
 		$this->SetBuffer("Fade", 0);
 	}  
 	        
-	public function Set_Status(Bool $value, $FadeTime = 999)
+	public function Set_Status(Bool $value, Int $FadeTime = 999)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Set_Status", "Ausfuehrung", 0);
@@ -568,7 +568,7 @@
 	}
 	
 	// Toggelt den Status
-	public function Toggle_Status($FadeTime = 999))
+	public function Toggle_Status(Int $FadeTime = 999)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			If ($FadeTime == 999) {
