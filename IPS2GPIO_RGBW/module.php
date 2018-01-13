@@ -169,34 +169,34 @@
 	        case "Intensity_R":
 	            $this->Set_RGB($Value, GetValueInteger($this->GetIDForIdent("Intensity_G")), GetValueInteger($this->GetIDForIdent("Intensity_B")));
 	            //Neuen Wert in die Statusvariable schreiben
-	            SetValueInteger($this->GetIDForIdent($Ident), $Value);
-	            SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex(GetValueInteger($this->GetIDForIdent("Intensity_R")), GetValueInteger($this->GetIDForIdent("Intensity_G")), GetValueInteger($this->GetIDForIdent("Intensity_B"))));
+	            //SetValueInteger($this->GetIDForIdent($Ident), $Value);
+	            //SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex(GetValueInteger($this->GetIDForIdent("Intensity_R")), GetValueInteger($this->GetIDForIdent("Intensity_G")), GetValueInteger($this->GetIDForIdent("Intensity_B"))));
 	            break;
 	        case "Intensity_G":
 	            $this->Set_RGB(GetValueInteger($this->GetIDForIdent("Intensity_R")), $Value, GetValueInteger($this->GetIDForIdent("Intensity_B")));
 	            //Neuen Wert in die Statusvariable schreiben
-	            SetValueInteger($this->GetIDForIdent($Ident), $Value);
-	            SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex(GetValueInteger($this->GetIDForIdent("Intensity_R")), GetValueInteger($this->GetIDForIdent("Intensity_G")), GetValueInteger($this->GetIDForIdent("Intensity_B"))));
+	            //SetValueInteger($this->GetIDForIdent($Ident), $Value);
+	            //SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex(GetValueInteger($this->GetIDForIdent("Intensity_R")), GetValueInteger($this->GetIDForIdent("Intensity_G")), GetValueInteger($this->GetIDForIdent("Intensity_B"))));
 	            break;
 	        case "Intensity_B":
 	            $this->Set_RGB(GetValueInteger($this->GetIDForIdent("Intensity_R")), GetValueInteger($this->GetIDForIdent("Intensity_G")), $Value);
 	            //Neuen Wert in die Statusvariable schreiben
-	            SetValueInteger($this->GetIDForIdent($Ident), $Value);
-	            SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex(GetValueInteger($this->GetIDForIdent("Intensity_R")), GetValueInteger($this->GetIDForIdent("Intensity_G")), GetValueInteger($this->GetIDForIdent("Intensity_B"))));
+	            //SetValueInteger($this->GetIDForIdent($Ident), $Value);
+	            //SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex(GetValueInteger($this->GetIDForIdent("Intensity_R")), GetValueInteger($this->GetIDForIdent("Intensity_G")), GetValueInteger($this->GetIDForIdent("Intensity_B"))));
 	            break;
 		case "Intensity_W":
 	            $this->Set_White($Value);
 	            //Neuen Wert in die Statusvariable schreiben
-	            SetValueInteger($this->GetIDForIdent($Ident), $Value);
+	            //SetValueInteger($this->GetIDForIdent($Ident), $Value);
 	            break;
 	        case "Color":
 	            list($r, $g, $b) = $this->Hex2RGB($Value);
 	            $this->Set_RGB($r, $g, $b);
 	            //Neuen Wert in die Statusvariable schreiben
-	            SetValueInteger($this->GetIDForIdent($Ident), $Value);
-	            SetValueInteger($this->GetIDForIdent("Intensity_R"), intval($r));
-	            SetValueInteger($this->GetIDForIdent("Intensity_G"), intval($g));
-	            SetValueInteger($this->GetIDForIdent("Intensity_B"), intval($b));
+	            //SetValueInteger($this->GetIDForIdent($Ident), $Value);
+	            //SetValueInteger($this->GetIDForIdent("Intensity_R"), intval($r));
+	            //SetValueInteger($this->GetIDForIdent("Intensity_G"), intval($g));
+	           // SetValueInteger($this->GetIDForIdent("Intensity_B"), intval($b));
 	            break;
 	        default:
 	            throw new Exception("Invalid Ident");
@@ -257,13 +257,19 @@
 					return; 
 				}
 				else {
+					SetValueInteger($this->GetIDForIdent("Intensity_R"), $R);
+					SetValueInteger($this->GetIDForIdent("Intensity_G"), $G);
+					SetValueInteger($this->GetIDForIdent("Intensity_B"), $B);
+					SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex($R, $G, $B));
+
 					$this->Get_Status();
 				}
 			}
 			else {
 				SetValueInteger($this->GetIDForIdent("Intensity_R"), $R);
 				SetValueInteger($this->GetIDForIdent("Intensity_G"), $G);
-				SetValueInteger($this->GetIDForIdent("Intensity_B"), $B);	
+				SetValueInteger($this->GetIDForIdent("Intensity_B"), $B);
+				SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex($R, $G, $B));
 			}
 		}
 	}
@@ -280,6 +286,8 @@
 					return; 
 				}
 				else {
+					//Neuen Wert in die Statusvariable schreiben
+	            			SetValueInteger($this->GetIDForIdent("Intensity_W"), $value);
 					$this->Get_Status();
 				}
 			}
