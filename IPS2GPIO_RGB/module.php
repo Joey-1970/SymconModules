@@ -211,93 +211,109 @@
 		}
 	}    
 	    
-	private function FadeIn()
+	private function FadeIn(Int $FadeTime)
 	{
 		// RGBW beim Einschalten Faden
 		$this->SendDebug("FadeIn", "Ausfuehrung", 0);
 		$this->SetBuffer("Fade", 1);
-		$Fadetime = $this->ReadPropertyInteger("FadeIn");
-		$Fadetime = min(10, max(0, $Fadetime));
-		If ($Fadetime > 0) {
-			// Zielwert RGB bestimmen
-			$Value_R = GetValueInteger($this->GetIDForIdent("Intensity_R"));
-			$Value_G = GetValueInteger($this->GetIDForIdent("Intensity_G"));
-			$Value_B = GetValueInteger($this->GetIDForIdent("Intensity_B"));
-	
+		$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
+		$FadeScalar = min(16, max(1, $FadeScalar));
+		$Steps = $FadeTime * $FadeScalar;
+		
+		// Zielwert RGB bestimmen
+		$Value_R = GetValueInteger($this->GetIDForIdent("Intensity_R"));
+		$Value_G = GetValueInteger($this->GetIDForIdent("Intensity_G"));
+		$Value_B = GetValueInteger($this->GetIDForIdent("Intensity_B"));
+		$Value_RGB = $Value_R + $Value_G + $Value_B;
+		$Steps = $FadeTime * $FadeScalar;
+		$this->SendDebug("FadeIn", "RGB: ".$Value_RGB, 0);
+		If ($Value_RGB <= 3) {
+			$this->SendDebug("FadeIn", "RGB ist 0 -> keine Aktion", 0);
+		}
+		elseif ($Value_RGB > 3) {
+			$this->SendDebug("FadeOut", "RGB > 0 -> RGB faden", 0);
 			// Umrechnung in HSL
 			list($h, $s, $l) = $this->rgbToHsl($Value_R, $Value_G, $Value_B);
 			// $l muss von 0 auf den Zielwert gebracht werden
-			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
-			$Steps = $Fadetime * $FadeScalar;
 			$Stepwide = $l / $Steps;
-			
-			If ($Stepwide > 0) {
-				// Fade In			
-				for ($i = (0 + $Stepwide) ; $i <= ($l - $Stepwide); $i = $i + round($Stepwide, 2)) {
-					$Starttime = microtime(true);
-					// $i muss jetzt als HSL-Wert wieder in RGB umgerechnet werden
-					list($R, $G, $B) = $this->hslToRgb($h, $s, $i);
-					$this->SendDebug("FadeIn", "L: ".$i, 0);
-				
-					If ($this->ReadPropertyBoolean("Open") == true) {
-						// Ausgang setzen
-						$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => $R, "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => $G, "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => $B)));
+			// Fade In			
+			for ($i = (0 + $Stepwide) ; $i <= ($l - $Stepwide); $i = $i + round($Stepwide, 2)) {
+				$Starttime = microtime(true);
+				// $i muss jetzt als HSL-Wert wieder in RGB umgerechnet werden
+				list($R, $G, $B) = $this->hslToRgb($h, $s, $i);
+				$this->SendDebug("FadeIn", "L: ".$i, 0);
+				If ($this->ReadPropertyBoolean("Open") == true) {
+					// Ausgang setzen
+					$Result = $this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => $R, "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => $G, "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => $B)));
+					If (!$Result) {
+						$this->SendDebug("FadeIn", "Fehler beim Schreiben des Wertes!", 0);
+						return; 
 					}
-					$Endtime = microtime(true);
-					$Delay = intval(($Endtime - $Starttime) * 1000);
-					$DelayMax = intval(1000 / $FadeScalar);
-					$Delaytime = min($DelayMax, max(0, ($DelayMax - $Delay)));   
-					IPS_Sleep($Delaytime);
 				}
+				$Endtime = microtime(true);
+				$Delay = intval(($Endtime - $Starttime) * 1000);
+				$DelayMax = intval(1000 / $FadeScalar);
+				$Delaytime = min($DelayMax, max(0, ($DelayMax - $Delay)));   
+				IPS_Sleep($Delaytime);
 			}	
 		}
+		
+		
 		$this->SetBuffer("Fade", 0);
 	}
 	
-	private function FadeOut()
+	private function FadeOut(Int $FadeTime)
 	{
 		// RGBW beim Ausschalten Faden
 		$this->SendDebug("FadeOut", "Ausfuehrung", 0);
 		$this->SetBuffer("Fade", 1);
-		$Fadetime = $this->ReadPropertyInteger("FadeIn");
-		$Fadetime = min(10, max(0, $Fadetime));
-		If ($Fadetime > 0) {
-			// Zielwert RGB bestimmen
-			$Value_R = GetValueInteger($this->GetIDForIdent("Intensity_R"));
-			$Value_G = GetValueInteger($this->GetIDForIdent("Intensity_G"));
-			$Value_B = GetValueInteger($this->GetIDForIdent("Intensity_B"));
-			
+		$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
+		$FadeScalar = min(16, max(1, $FadeScalar));
+		$Steps = $FadeTime * $FadeScalar;
+		
+		// Zielwert RGB bestimmen
+		$Value_R = GetValueInteger($this->GetIDForIdent("Intensity_R"));
+		$Value_G = GetValueInteger($this->GetIDForIdent("Intensity_G"));
+		$Value_B = GetValueInteger($this->GetIDForIdent("Intensity_B"));
+		$Value_RGB = $Value_R + $Value_G + $Value_B;
+		$this->SendDebug("FadeOut", "RGB: ".$Value_RGB, 0);
+		
+		If ($Value_RGB <= 3) {
+			$this->SendDebug("FadeOut", "RGB ist 0 -> keine Aktion", 0);
+		}
+		elseif ($Value_RGB > 3) {
+			$this->SendDebug("FadeOut", "RGB > 0 -> RGB faden", 0);
 			// Umrechnung in HSL
 			list($h, $s, $l) = $this->rgbToHsl($Value_R, $Value_G, $Value_B);
 			// $l muss von 0 auf den Zielwert gebracht werden
-			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
-			$Steps = $Fadetime * $FadeScalar;
 			$Stepwide = $l / $Steps;
-			
-			If ($Stepwide > 0) {
-				// Fade Out
-				for ($i = ($l - $Stepwide) ; $i >= (0 + $Stepwide); $i = $i - round($Stepwide, 2)) {
-					$Starttime = microtime(true);
-					//$this->SendDebug("RGBFadeOut", "Startzeit: ".$Starttime, 0);
-					// $i muss jetzt als HSL-Wert wieder in RGB umgerechnet werden
-					list($R, $G, $B) = $this->hslToRgb($h, $s, $i);
-					$this->SendDebug("FadeOut", "L: ".$i, 0);
-
-					If ($this->ReadPropertyBoolean("Open") == true) {
-						// Ausgang setzen
-						$this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => $R, "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => $G, "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => $B)));
+			// Fade Out
+			for ($i = ($l - $Stepwide) ; $i >= (0 + $Stepwide); $i = $i - round($Stepwide, 2)) {
+				$Starttime = microtime(true);
+				//$this->SendDebug("RGBFadeOut", "Startzeit: ".$Starttime, 0);
+				// $i muss jetzt als HSL-Wert wieder in RGB umgerechnet werden
+				list($R, $G, $B) = $this->hslToRgb($h, $s, $i);
+				$this->SendDebug("FadeOut", "L: ".$i, 0);
+				If ($this->ReadPropertyBoolean("Open") == true) {
+					// Ausgang setzen
+					$Result = $this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => $R, "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => $G, "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => $B)));
+					If (!$Result) {
+						$this->SendDebug("FadeOut", "Fehler beim Schreiben des Wertes!", 0);
+						return; 
 					}
-					$Endtime = microtime(true);
-					$Delay = intval(($Endtime - $Starttime) * 1000);
-					$DelayMax = intval(1000 / $FadeScalar);
-					$Delaytime = min($DelayMax, max(0, ($DelayMax - $Delay)));   
-					IPS_Sleep($Delaytime);
 				}
+				$Endtime = microtime(true);
+				$Delay = intval(($Endtime - $Starttime) * 1000);
+				$DelayMax = intval(1000 / $FadeScalar);
+				$Delaytime = min($DelayMax, max(0, ($DelayMax - $Delay)));   
+				IPS_Sleep($Delaytime);
 			}	
-		}
+		}	
+		
 		$this->SetBuffer("Fade", 0);
-	}     
-	
+	}      
+	    
+	    
 	public function Set_Status(Bool $value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
