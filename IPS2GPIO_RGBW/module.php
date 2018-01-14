@@ -164,7 +164,7 @@
 	        case "Status":
 	            $this->Set_Status($Value);
 	            //Neuen Wert in die Statusvariable schreiben
-	            SetValueBoolean($this->GetIDForIdent($Ident), $Value);
+	            //SetValueBoolean($this->GetIDForIdent($Ident), $Value);
 	            break;
 	        case "Intensity_R":
 	            $this->Set_RGB($Value, GetValueInteger($this->GetIDForIdent("Intensity_G")), GetValueInteger($this->GetIDForIdent("Intensity_B")));
@@ -498,7 +498,6 @@
 			$this->SendDebug("Set_Status", "Ausfuehrung", 0);
 			$FadeTime = $this->ReadPropertyInteger("FadeTime");
 			$FadeTime = min(10, max(0, $FadeTime));
-			SetValueBoolean($this->GetIDForIdent("Status"), $value);
 			
 			If ($value == true) {
 				If ($FadeTime > 0) {
@@ -514,6 +513,7 @@
 					return; 
 				}
 				else {
+					SetValueBoolean($this->GetIDForIdent("Status"), $value);
 					$this->Get_Status();
 				}
 			}
@@ -529,6 +529,9 @@
 				If (!$Result) {
 					$this->SendDebug("Set_Status", "Fehler beim Schreiben des Wertes!", 0);
 					return; 
+				}
+				else {
+					SetValueBoolean($this->GetIDForIdent("Status"), $value);
 				}
 			}
 		}
@@ -539,7 +542,6 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Set_Status", "Ausfuehrung", 0);
 			$FadeTime = min(10, max(0, $FadeTime));
-			SetValueBoolean($this->GetIDForIdent("Status"), $value);
 			
 			If ($value == true) {
 				If ($FadeTime > 0) {
@@ -555,6 +557,7 @@
 					return; 
 				}
 				else {
+					SetValueBoolean($this->GetIDForIdent("Status"), $value);
 					$this->Get_Status();
 				}
 			}
@@ -570,6 +573,9 @@
 				If (!$Result) {
 					$this->SendDebug("Set_Status", "Fehler beim Schreiben des Wertes!", 0);
 					return; 
+				}
+				else {
+					SetValueBoolean($this->GetIDForIdent("Status"), $value);
 				}
 			}
 		}
