@@ -15,8 +15,7 @@
             	$this->RegisterPropertyInteger("Pin_B", -1);
 		$this->SetBuffer("PreviousPin_B", -1);
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
-		$this->RegisterPropertyInteger("FadeIn", 0);
-		$this->RegisterPropertyInteger("FadeOut", 0);
+		$this->RegisterPropertyInteger("FadeTime", 0);
 		$this->RegisterPropertyInteger("FadeScalar", 4);
 	}
 	    
@@ -69,9 +68,10 @@
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_B", "caption" => "GPIO-Nr.Blau", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		$arrayElements[] = array("type" => "Label", "label" => "Optional: Angabe von Fade-In/-Out-Zeit in Sekunden (0 => aus, max. 10 Sek)");
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeIn",  "caption" => "Fade-In-Zeit"); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeOut",  "caption" => "Fade-Out-Zeit");
+		$arrayElements[] = array("type" => "Label", "label" => "Optional: Angabe der Standard Fade-In/-Out-Zeit in Sekunden (0 => aus, max. 10 Sek)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeTime",  "caption" => "Fade Zeit"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Schritte pro Sekunde: (1 - 16)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeScalar",  "caption" => "Fade Schritte"); 
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 
 		$arrayActions = array();
@@ -347,6 +347,36 @@
 		}
 	}
 	
+	public function Get_Status()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Get_Status", "Ausfuehrung", 0);
+			
+			If (GetValueBoolean($this->GetIDForIdent("Status")) == true) {
+				$Result = $this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_PWM_dutycycle_RGB", 
+							  "Pin_R" => $this->ReadPropertyInteger("Pin_R"), 
+							  "Pin_G" => $this->ReadPropertyInteger("Pin_G"), 
+							  "Pin_B" => $this->ReadPropertyInteger("Pin_B") )));
+				If ($Result < 0) {
+					$this->SendDebug("Get_Status", "Fehler beim Lesen des Wertes!", 0);
+					return;
+				}
+				else {
+					If (is_array(unserialize($Result)) == true) {
+						$this->SendDebug("Get_Status", "Ergebnis: ".$Result, 0);
+						$Color = array();
+						$Color = unserialize($Result);
+						If (count($Color) == 3) {
+							SetValueInteger($this->GetIDForIdent("Intensity_R"), $Color[0]);
+							SetValueInteger($this->GetIDForIdent("Intensity_G"), $Color[1]);
+							SetValueInteger($this->GetIDForIdent("Intensity_B"), $Color[2]);
+						}
+					}
+				}
+			}
+		}
+	}   
+	    
 	private function Hex2RGB($Hex)
 	{
 		$r = (($Hex >> 16) & 0xFF);
