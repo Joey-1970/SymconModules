@@ -15,8 +15,7 @@
 		$this->RegisterPropertyInteger("DeviceBus", 1);
 		$this->RegisterPropertyInteger("FadeScalar", 4);
 		for ($i = 1; $i <= 4; $i++) {
-			$this->RegisterPropertyInteger("FadeIn_".$i, 0);
-			$this->RegisterPropertyInteger("FadeOut_".$i, 0);
+			$this->RegisterPropertyInteger("FadeTime_".$i, 0);
 		}
         }
  	
@@ -49,12 +48,13 @@
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "Device Bus", "options" => $arrayOptions );
 		
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		$arrayElements[] = array("type" => "Label", "label" => "Optional: Angabe von Fade-In/-Out-Zeit in Sekunden (0 => aus, max. 10 Sek)");
+		$arrayElements[] = array("type" => "Label", "label" => "Optional: Angabe der Standard Fade-In/-Out-Zeit in Sekunden (0 => aus, max. 10 Sek)");
 		for ($i = 1; $i <= 4; $i++) {
 			$arrayElements[] = array("type" => "Label", "label" => "Gruppe ".$i." RGBW:");
-			$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeIn_".$i,  "caption" => "Fade-In-Zeit"); 
-			$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeOut_".$i,  "caption" => "Fade-Out-Zeit");
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeTime_".$i,  "caption" => "Fade Zeit"); 
 		}
+		$arrayElements[] = array("type" => "Label", "label" => "Schritte pro Sekunde: (1 - 16)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeScalar",  "caption" => "Fade Schritte"); 
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Button", "label" => "Herstellerinformationen", "onClick" => "echo 'https://www.gedad.de/projekte/projekte-f%C3%BCr-privat/gedad-control/'");
 		
