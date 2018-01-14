@@ -147,6 +147,7 @@
 				}
 				else {
 					SetValueInteger($this->GetIDForIdent("Intensity"), $value);
+					$this->Get_Status();
 				}
 			}
 			else {
