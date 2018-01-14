@@ -264,7 +264,6 @@
 	{
 		// RGBW beim Einschalten Faden
 		$this->SendDebug("FadeIn", "Ausfuehrung", 0);
-		$this->SetBuffer("Fade", 1);
 		$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
 		$FadeScalar = min(16, max(1, $FadeScalar));
 		$Steps = $FadeTime * $FadeScalar;
@@ -371,15 +370,12 @@
 			}
 
 		}	
-		
-		$this->SetBuffer("Fade", 0);
 	}
 	
 	private function FadeOut(Int $FadeTime)
 	{
 		// RGBW beim Ausschalten Faden
 		$this->SendDebug("FadeOut", "Ausfuehrung", 0);
-		$this->SetBuffer("Fade", 1);
 		$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
 		$FadeScalar = min(16, max(1, $FadeScalar));
 		$Steps = $FadeTime * $FadeScalar;
@@ -485,8 +481,6 @@
 				IPS_Sleep($Delaytime);
 			}
 		}		
-		
-		$this->SetBuffer("Fade", 0);
 	}  
 	        
 	public function Set_Status(Bool $value)
