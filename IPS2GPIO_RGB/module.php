@@ -107,11 +107,11 @@
 	        //Status-Variablen anlegen
 	        $this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
            	$this->EnableAction("Status");
-           	$this->RegisterVariableInteger("Intensity_R", "Intensity Rot", "~Intensity.255",20);
+           	$this->RegisterVariableInteger("Intensity_R", "Rot", "~Intensity.255",20);
            	$this->EnableAction("Intensity_R");
-           	$this->RegisterVariableInteger("Intensity_G", "Intensity Grün", "~Intensity.255", 30);
+           	$this->RegisterVariableInteger("Intensity_G", "Grün", "~Intensity.255", 30);
            	$this->EnableAction("Intensity_G");
-           	$this->RegisterVariableInteger("Intensity_B", "Intensity Blau", "~Intensity.255", 40);
+           	$this->RegisterVariableInteger("Intensity_B", "Blau", "~Intensity.255", 40);
            	$this->EnableAction("Intensity_B");
            	$this->RegisterVariableInteger("Color", "Farbe", "~HexColor", 50);
            	$this->EnableAction("Color");
