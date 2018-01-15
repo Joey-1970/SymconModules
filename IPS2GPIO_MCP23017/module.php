@@ -11,9 +11,10 @@
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
  	    	$this->RegisterPropertyInteger("DeviceAddress", 3);
 		$this->RegisterPropertyInteger("DeviceBus", 1);	
-		$this->RegisterPropertyInteger("Pin", -1);
-		$this->SetBuffer("PreviousPin", -1);
-		
+		$this->RegisterPropertyInteger("Pin_INT_A", -1);
+		$this->SetBuffer("PreviousPin_INT_A", -1);
+		$this->RegisterPropertyInteger("Pin_INT_B", -1);
+		$this->SetBuffer("PreviousPin_INT_B", -1);
         }
  	
 	public function GetConfigurationForm() 
@@ -43,90 +44,38 @@
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "Device Bus", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für den Interrupt"); 
 		
+		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für den Interrupt A"); 
 		$arrayOptions = array();
 		$GPIO = array();
 		$GPIO = unserialize($this->Get_GPIO());
-		If ($this->ReadPropertyInteger("Pin") >= 0 ) {
-			$GPIO[$this->ReadPropertyInteger("Pin")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin")));
+		If ($this->ReadPropertyInteger("Pin_INT_A") >= 0 ) {
+			$GPIO[$this->ReadPropertyInteger("Pin_INT_A")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_INT_A")));
 		}
 		ksort($GPIO);
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
 		
-		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für den Interrupt B"); 
+		$arrayElements[] = array("type" => "Select", "name" => "Pin_INT_A", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
+		$arrayOptions = array();
+		$GPIO = array();
+		$GPIO = unserialize($this->Get_GPIO());
+		If ($this->ReadPropertyInteger("Pin_INT_B") >= 0 ) {
+			$GPIO[$this->ReadPropertyInteger("Pin_INT_B")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_INT_B")));
+		}
+		ksort($GPIO);
+		foreach($GPIO AS $Value => $Label) {
+			$arrayOptions[] = array("label" => $Label, "value" => $Value);
+		}
+		
+		$arrayElements[] = array("type" => "Select", "name" => "Pin_INT_B", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
+
+		
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		
-		// NF_LEV Byte 0x01 [6:4] Default 2
-		$arrayElements[] = array("type" => "Label", "label" => "Geräuschpegel (uVrms) - (Outdoor/Indoor)"); 
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "390/28", "value" => 0);
-		$arrayOptions[] = array("label" => "630/45", "value" => 1);
-		$arrayOptions[] = array("label" => "860/62", "value" => 2);
-		$arrayOptions[] = array("label" => "1100/78", "value" => 3);
-		$arrayOptions[] = array("label" => "1140/95", "value" => 4);
-		$arrayOptions[] = array("label" => "1570/112", "value" => 5);
-		$arrayOptions[] = array("label" => "1800/130", "value" => 6);
-		$arrayOptions[] = array("label" => "2000/146", "value" => 7);
-		$arrayElements[] = array("type" => "Select", "name" => "NoiseFloorLevel", "caption" => "Geräuschpegel", "options" => $arrayOptions );
 		
-		// AFE_GB Byte 0x00 [5:1] Default 18 (Indoor), 14 (Outdoor) (+ Bit [0] = 36/28)
-		$arrayElements[] = array("type" => "Label", "label" => "Nutzung Default = Indoor"); 
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "Indoor", "value" => 36); // Default
-		$arrayOptions[] = array("label" => "Outdoor", "value" => 28); 
-		$arrayElements[] = array("type" => "Select", "name" => "AFEGain", "caption" => "Nutzung", "options" => $arrayOptions );
-		
-		// MASK_DIST byte 0x03 [5] Default = 0
-		$arrayElements[] = array("type" => "Label", "label" => "Störer anzeigen Default = Ja"); 
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "Ja", "value" => 0);
-		$arrayOptions[] = array("label" => "Nein", "value" => 1);
-		$arrayElements[] = array("type" => "Select", "name" => "MaskDisturber", "caption" => "Anzeige", "options" => $arrayOptions );
-		
-		// WDTH Byte 0x01 [3:0] Default 1
-		$arrayElements[] = array("type" => "Label", "label" => "Schwellwert (Watchdog Threshold) Default = 1"); 
-		$arrayOptions = array();
-		for ($i = 0; $i <= 10; $i++) {
-			$arrayOptions[] = array("label" => $i, "value" => $i);
-		}
-		$arrayElements[] = array("type" => "Select", "name" => "WDTH", "caption" => "Schwellwert", "options" => $arrayOptions );
-		
-		// SREJ Byte 0x02 [3:0] Default = 2
-		$arrayElements[] = array("type" => "Label", "label" => "Spitzen Ablehnung (Spike Rejection) Default = 2"); 
-		$arrayOptions = array();
-		for ($i = 0; $i <= 10; $i++) {
-			$arrayOptions[] = array("label" => $i, "value" => $i);
-		}
-		$arrayElements[] = array("type" => "Select", "name" => "SREJ", "caption" => "Spitzen Ablehnung", "options" => $arrayOptions );
-		
-		// TUN_CAP Byte 0x08 [3:0] Default = 0
-		$arrayElements[] = array("type" => "Label", "label" => "Interner Kondensator (pF) Default = 0pF"); 
-		$arrayOptions = array();
-		for ($i = 0; $i <= 15; $i++) {
-			$arrayOptions[] = array("label" => ($i * 8)."pF", "value" => $i);
-		}
-		$arrayElements[] = array("type" => "Select", "name" => "TunCap", "caption" => "Größe", "options" => $arrayOptions );
-		
-		// MIN_NUM_LIGH Byte 0x02 [5:4] Default = 0
-		$arrayElements[] = array("type" => "Label", "label" => "Minimale Anzahl der Detektionen in den letzten 15 Minuten bevor ein Interrupt ausgelöst wird. Default = 1"); 
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "1", "value" => 0);
-		$arrayOptions[] = array("label" => "5", "value" => 1);
-		$arrayOptions[] = array("label" => "9", "value" => 2);
-		$arrayOptions[] = array("label" => "16", "value" => 3);
-		$arrayElements[] = array("type" => "Select", "name" => "MinNumLigh", "caption" => "Anzahl", "options" => $arrayOptions );
-		
-		// LCO_FDIV Byte 0 [7:6] Default = 0
-		$arrayElements[] = array("type" => "Label", "label" => "Frequenzteilungsverhältnis anpassen Default = 16"); 
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "16", "value" => 0);
-		$arrayOptions[] = array("label" => "32", "value" => 1);
-		$arrayOptions[] = array("label" => "64", "value" => 2);
-		$arrayOptions[] = array("label" => "128", "value" => 3);
-		$arrayElements[] = array("type" => "Select", "name" => "FrequencyDivisionRatio", "caption" => "Teilungsverhältnis", "options" => $arrayOptions );
 		
 		 
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
@@ -142,38 +91,26 @@
             	// Diese Zeile nicht löschen
             	parent::ApplyChanges();
 		
-		If (intval($this->GetBuffer("PreviousPin")) <> $this->ReadPropertyInteger("Pin")) {
-			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin"), 0);
+		If ((intval($this->GetBuffer("PreviousPin_INT_A")) <> $this->ReadPropertyInteger("Pin_INT_A")) OR (intval($this->GetBuffer("PreviousPin_INT_B")) <> $this->ReadPropertyInteger("Pin_INT_B"))) {
+			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_INT_A")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_INT_A"), 0);
+			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_INT_B")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_INT_B"), 0);
 		}
 		// Device Adresse prüfen
 	    	If (($this->ReadPropertyInteger("DeviceAddress") < 0) OR ($this->ReadPropertyInteger("DeviceAddress") > 128)) {
-	    		IPS_LogMessage("IPS2GPIO MCP3424","I2C-Device Adresse in einem nicht definierten Bereich!");  
+	    		IPS_LogMessage("IPS2GPIO MCP23017","I2C-Device Adresse in einem nicht definierten Bereich!");  
 	    	}
 	    	// Profil anlegen
-		$this->RegisterProfileInteger("IPS2GPIO.km", "Distance", "", " km", 0, 10000, 1);
 		
-		$this->RegisterProfileInteger("IPS2GPIO.interrupt", "Information", "", "", 0, 3, 1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.interrupt", 0, "kein", "Information", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.interrupt", 1, "Geräusch Level zu hoch", "Graph", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.interrupt", 2, "Störer detektiert", "Graph", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.interrupt", 3, "Blitz detektiert", "Electricity", -1);
 		
 		//Status-Variablen anlegen
-		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 10);
-		$this->DisableAction("LastInterrupt");
-		IPS_SetHidden($this->GetIDForIdent("LastInterrupt"), false);
+		$this->RegisterVariableInteger("LastInterrupt_A", "Letzte Meldung INT A", "~UnixTimestamp", 10);
+		$this->DisableAction("LastInterrupt_A");
+		IPS_SetHidden($this->GetIDForIdent("LastInterrupt_A"), false);
 		
-		$this->RegisterVariableInteger("Interrupt", "Auslöser", "IPS2GPIO.interrupt", 20);
-		$this->DisableAction("Interrupt");
-		IPS_SetHidden($this->GetIDForIdent("Interrupt"), false);
+		$this->RegisterVariableInteger("LastInterrupt_B", "Letzte Meldung INT B", "~UnixTimestamp", 20);
+		$this->DisableAction("LastInterrupt_B");
+		IPS_SetHidden($this->GetIDForIdent("LastInterrupt_B"), false);
 		
-		$this->RegisterVariableInteger("Distance", "Entfernung", "IPS2GPIO.km", 30);
-           	$this->DisableAction("Distance");
-		IPS_SetHidden($this->GetIDForIdent("Distance"), false);
-		
-		$this->RegisterVariableInteger("Energy", "Energie", "", 40);
-           	$this->DisableAction("Energy");
-		IPS_SetHidden($this->GetIDForIdent("Energy"), false);
 		
 			
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {					
@@ -210,10 +147,21 @@
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
 			case "notify":
-			   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
+			   	If ($data->Pin == $this->ReadPropertyInteger("Pin_INT_A")) {
 					If (($data->Value == 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 						$this->SendDebug("Notify", "Wert: ".(int)$data->Value, 0);
-						SetValueInteger($this->GetIDForIdent("LastInterrupt"), time() );
+						SetValueInteger($this->GetIDForIdent("LastInterrupt_A"), time() );
+						$this->GetOutput();
+					}
+					elseIf (($data->Value == 1) AND ($this->ReadPropertyBoolean("Open") == true)) {
+						$this->SendDebug("Notify", "Wert: ".(int)$data->Value, 0);
+						$this->GetOutput();
+					}
+			   	}
+				elseif ($data->Pin == $this->ReadPropertyInteger("Pin_INT_B")) {
+					If (($data->Value == 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+						$this->SendDebug("Notify", "Wert: ".(int)$data->Value, 0);
+						SetValueInteger($this->GetIDForIdent("LastInterrupt_B"), time() );
 						$this->GetOutput();
 					}
 					elseIf (($data->Value == 1) AND ($this->ReadPropertyBoolean("Open") == true)) {
@@ -247,65 +195,8 @@
 	public function GetOutput()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_AS3935_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Count" => 9 )));
-			If ($Result < 0) {
-				$this->SendDebug("GetOutput", "Fehler beim Lesen der Werte!", 0);
-				return;
-			}
-			else {
-				$Data = array();
-				$Data = unserialize($Result);
-			}
-			/*
-			$PowerDown = $Data[1] & 1;
-			$this->SendDebug("PowerDown", $PowerDown, 0);
-		
-			$AFEGainBoost = $Data[1] & 62;
-			$this->SendDebug("AFEGainBoost", $AFEGainBoost, 0);
-			$NoiseFloorLevel = $Data[2] & 112;
-			$this->SendDebug("NoiseFloorLevel", $NoiseFloorLevel, 0);
-			$WatchdogThreshold = $Data[2] & 15;
-			$this->SendDebug("WatchdogThreshold", $WatchdogThreshold, 0);
+			$this->SendDebug("Setup", "GetOutput", 0);
 			
-			$MinNumLigh = $Data[3] & 48;
-			$this->SendDebug("MinNumLigh", $MinNumLigh, 0);
-			
-			$LcoFdiv = $Data[4] & 192;
-			$this->SendDebug("LcoFdiv", $LcoFdiv, 0);
-			$MaskDisturber = $Data[4] & 32;
-			$this->SendDebug("MaskDisturber", $MaskDisturber, 0);
-			
-			$LCO = $Data[9] & 128;
-			$this->SendDebug("LCO", $LCO, 0);
-			$SRCO = $Data[9] & 64;
-			$this->SendDebug("SRCO", $SRCO, 0);
-			$TRCO = $Data[9] & 32;
-			$this->SendDebug("TRCO", $TRCO, 0);
-			$Capacitor = $Data[9] & 15;
-			$this->SendDebug("Capacitor", $Capacitor, 0);
-			*/
-			
-			/*
-			1 Noise Level to high
-			4 Disturber Detected
-			8 Lightning interrupt
-			*/
-			$InterruptAssociation = array(0 => 0, 1 => 1, 4 => 2, 8 => 3);
-			$Interrupt = $Data[4] & 15;
-			$this->SendDebug("Interrupt", $Interrupt, 0);
-			SetValueInteger($this->GetIDForIdent("Interrupt"),  $InterruptAssociation[$Interrupt]);
-			
-			//If ($Interrupt == 8) {
-				$this->SendDebug("Energie LSB", $Data[5], 0);
-				$this->SendDebug("Energie MSB", $Data[6], 0);
-				$this->SendDebug("Energie MMSB", ($Data[7] & 31), 0);
-				$Energy = (($Data[7] & 31) << 16) | ($Data[6] << 8) | $Data[5] ;
-				SetValueInteger($this->GetIDForIdent("Energy"), $Energy);
-				$this->SendDebug("Energy", $Energy, 0);
-				$Distance = $Data[8] & 63;
-				SetValueInteger($this->GetIDForIdent("Distance"), $Distance);
-				$this->SendDebug("Distance", $Distance, 0);
-			//}
 		}
 	}
 	    
@@ -313,54 +204,13 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Setup", "Ausfuehrung", 0);
-			$Register = array();
-			$Register[0] = $this->ReadPropertyInteger("AFEGain");
-			$Register[1] = ($this->ReadPropertyInteger("NoiseFloorLevel") << 4) | $this->ReadPropertyInteger("WDTH");
-			$Register[2] = (3 << 6) | ($this->ReadPropertyInteger("NoiseFloorLevel") << 4) | $this->ReadPropertyInteger("SREJ");
-			$Register[3] = ($this->ReadPropertyInteger("FrequencyDivisionRatio") << 6) | ($this->ReadPropertyInteger("MaskDisturber") << 5) | (0 << 4) | 0;
-			$Register[8] = $this->ReadPropertyInteger("TunCap");
-			foreach($Register AS $Key => $Value) {
-				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_AS3935_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $Key, "Value" => $Value)));
-				If (!$Result) {
-					$this->SendDebug("Setup", "Schreiben von Wert ".$Value." in Register ".$Key." nicht erfolgreich!", 0);
-				}
-			}
+			
 		}
 	}    
 	
-	public function Calibrate()
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("Calibrate", "Ausfuehrung", 0);
-			// Zur Kalibrierung auffordern
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_AS3935_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 61, "Value" => 150)));
-			If (!$Result) {
-				$this->SendDebug("Calibrate", "Schreiben von Wert 150 in Register 61 nicht erfolgreich!", 0);
-			}
-			$Value = (1 << 4) | $this->ReadPropertyInteger("TunCap");
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_AS3935_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 8, "Value" => $Value)));
-			If (!$Result) {
-				$this->SendDebug("Calibrate", "Schreiben von Wert ".$Value." in Register 8 nicht erfolgreich!", 0);
-			}
-			IPS_Sleep(2);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_AS3935_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 8, "Value" =>  $this->ReadPropertyInteger("TunCap"))));
-			If (!$Result) {
-				$this->SendDebug("Calibrate", "Schreiben von Wert ".$this->ReadPropertyInteger("TunCap")." in Register 8 nicht erfolgreich!", 0);
-			}
-			
-		}
-	}
 	
-	public function Reset()
-	{ 
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("Reset", "Ausfuehrung", 0);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_AS3935_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 60, "Value" => 150)));
-			If (!$Result) {
-				$this->SendDebug("Reset", "Schreiben von Wert 150 in Register 60 nicht erfolgreich!", 0);
-			}
-		}
-	}
+	
+	
 	    
 	private function Get_I2C_Ports()
 	{
