@@ -604,7 +604,7 @@
 			}
 		}		
 	}      
-	    
+/*	    
 	private function RGBFadeIn(Int $Group)
 	{
 		// RGB beim Einschalten Faden
@@ -820,7 +820,7 @@
 		}
 	}
 		
-	    
+*/	    
 	public function SetOutputPinColor(Int $Group, Int $Color)
 	{
 		$this->SendDebug("SetOutputPinColor", "Ausfuehrung", 0);
