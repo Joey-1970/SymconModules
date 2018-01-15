@@ -207,26 +207,37 @@
 	
 	public function SetOutputPinStatus(Int $Group, String $Channel, Bool $Status)
 	{ 
+		{
+			$this->SendDebug("SetOutputPinStatus", "Ausfuehrung", 0);
+			$Group = min(4, max(1, $Group));
+			$Status = min(1, max(0, $Status));
+			$FadeTime = $this->ReadPropertyInteger("FadeTime_".$Group);
+			$FadeTime = min(10, max(0, $FadeTime));
+			$this->SetOutputPinStatusEx($Group, $Channel, $Status, $FadeTime);
+		}
+	}    	    
+
+	public function SetOutputPinStatusEx(Int $Group, String $Channel, Bool $Status, Int $FadeTime)
+	{ 
 		if (IPS_SemaphoreEnter("SetOutputPinStatus", 1))
 		{
 			$this->SendDebug("SetOutputPinStatus", "Ausfuehrung", 0);
 			$Group = min(4, max(1, $Group));
 			$Status = min(1, max(0, $Status));
+			$FadeTime = min(10, max(0, $FadeTime));
 
 			$ChannelArray = [
 			    "RGB" => 0,
 			    "W" => 12,
 			];
-			$FadeInTime = $this->ReadPropertyInteger("FadeIn_".$Group);
-			$FadeOutTime = $this->ReadPropertyInteger("FadeOut_".$Group);
 
 			$StartAddress = (($Group - 1) * 16) + $ChannelArray[$Channel] + 6;
 			If ($Channel == "W") {
-				If (($FadeInTime > 0) AND ($Status == true)) {
-					$this->WFadeIn($Group);
+				If (($FadeTime > 0) AND ($Status == true)) {
+					$this->FadeIn($Group);
 				}
-				If (($FadeOutTime > 0) AND ($Status == false)) {
-					$this->WFadeOut($Group);
+				If (($FadeTime > 0) AND ($Status == false)) {
+					$this->FadeOut($Group);
 				}
 				$Value = GetValueInteger($this->GetIDForIdent("Intensity_W_".$Group));
 				$L_Bit = $Value & 255;
@@ -251,11 +262,11 @@
 				}
 			}
 			else {
-				If (($FadeInTime > 0) AND ($Status == true)) {
-					$this->RGBFadeIn($Group);
+				If (($FadeTime > 0) AND ($Status == true)) {
+					$this->FadeIn($Group);
 				}
-				If (($FadeOutTime > 0) AND ($Status == false)) {
-					$this->RGBFadeOut($Group);
+				If (($FadeTime > 0) AND ($Status == false)) {
+					$this->FadeOut($Group);
 				}
 				$Value_R = GetValueInteger($this->GetIDForIdent("Intensity_R_".$Group));
 				$L_Bit_R = $Value_R & 255;
@@ -296,8 +307,8 @@
 			//Semaphore wieder freigeben!
 		    	IPS_SemaphoreLeave("SetOutputPinStatus");
 		}
-	}    	    
-	
+	}    
+	 
 	public function ToggleOutputPinStatus(Int $Group, String $Channel)
 	{ 
 		$this->SendDebug("ToggleOutputPinStatus", "Ausfuehrung", 0);
