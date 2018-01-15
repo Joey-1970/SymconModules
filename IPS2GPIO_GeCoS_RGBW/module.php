@@ -221,7 +221,7 @@
 	{ 
 		if (IPS_SemaphoreEnter("SetOutputPinStatus", 1))
 		{
-			$this->SendDebug("SetOutputPinStatus", "Ausfuehrung", 0);
+			$this->SendDebug("SetOutputPinStatusEx", "Ausfuehrung", 0);
 			$Group = min(4, max(1, $Group));
 			$Status = min(1, max(0, $Status));
 			$FadeTime = min(10, max(0, $FadeTime));
@@ -313,6 +313,15 @@
 	{ 
 		$this->SendDebug("ToggleOutputPinStatus", "Ausfuehrung", 0);
 		$Group = min(4, max(1, $Group));
+		$FadeTime = $this->ReadPropertyInteger("FadeTime_".$Group);
+		$FadeTime = min(10, max(0, $FadeTime));
+		$this->ToggleOutputPinStatusEx($Group, $Channel, , $FadeTime);	
+	}    	    
+	
+	public function ToggleOutputPinStatusEx(Int $Group, String $Channel, , Int $FadeTime)
+	{ 
+		$this->SendDebug("ToggleOutputPinStatusEx", "Ausfuehrung", 0);
+		$Group = min(4, max(1, $Group));
 				
 		$ChannelArray = [
 		    "RGB" => 0,
@@ -384,7 +393,8 @@
 			}
 		}		
 	}    	    
-	
+	    
+	    
 	private function FadeIn(Int $FadeTime, Int $Group)
 	{
 		// RGBW beim Einschalten Faden
@@ -761,90 +771,6 @@
 		}
 	}    
 	
-	private function WFadeIn(Int $Group)
-	{
-		// W beim Einschalten Faden
-		$this->SendDebug("WFadeIn", "Ausfuehrung", 0);
-		$Group = min(4, max(1, $Group));
-		$Fadetime = $this->ReadPropertyInteger("FadeIn_".$Group);
-		$Fadetime = min(10, max(0, $Fadetime));
-		If ($Fadetime > 0) {
-			// Zielwert W bestimmen
-			$Value_W = GetValueInteger($this->GetIDForIdent("Intensity_W_".$Group));
-			// $l muss von 0 auf den Zielwert gebracht werden
-			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
-			$Steps = $Fadetime * $FadeScalar;
-			$Stepwide = $Value_W / $Steps;
-			$StartAddress = (($Group - 1) * 16) + 18;
-			
-			// Fade In			
-			for ($i = (0 + $Stepwide) ; $i <= ($l - $Stepwide); $i = $i + round($Stepwide, 0)) {
-				// Werte skalieren
-				$Value_W = $i;
-				// Bytes bestimmen
-				$L_Bit = $Value_W & 255;
-				$H_Bit = $Value_W >> 8;
-				If ($this->ReadPropertyBoolean("Open") == true) {
-					// Ausgang setzen
-					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write_Channel_White", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
-										  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
-					If (!$Result) {
-						$this->SendDebug("WFadeIn", "Daten setzen fehlerhaft!", 0);
-					}
-					else {
-						If (GetValueBoolean($this->GetIDForIdent("Status_W_".$Group)) == false) {
-							SetValueBoolean($this->GetIDForIdent("Status_W_".$Group), true);
-						}
-					}
-				}
-				IPS_Sleep(intval(1000 / $FadeScalar));
-			}
-				
-		}
-	}
-	
-	private function WFadeOut(Int $Group)
-	{
-		// W beim Einschalten Faden
-		$this->SendDebug("WFadeOut", "Ausfuehrung", 0);
-		$Group = min(4, max(1, $Group));
-		$Fadetime = $this->ReadPropertyInteger("FadeOut_".$Group);
-		$Fadetime = min(10, max(0, $Fadetime));
-		If ($Fadetime > 0) {
-			// Zielwert W bestimmen
-			$Value_W = GetValueInteger($this->GetIDForIdent("Intensity_W_".$Group));
-			// $l muss von 0 auf den Zielwert gebracht werden
-			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
-			$Steps = $Fadetime * $FadeScalar;
-			$Stepwide = $Value_W / $Steps;
-			$StartAddress = (($Group - 1) * 16) + 18;
-			
-			// Fade Out			
-			for ($i = ($l - $Stepwide) ; $i >= (0 + $Stepwide); $i = $i - round($Stepwide, 0)) {
-				// Werte skalieren
-				$Value_W = $i;
-				// Bytes bestimmen
-				$L_Bit = $Value_W & 255;
-				$H_Bit = $Value_W >> 8;
-				If ($this->ReadPropertyBoolean("Open") == true) {
-					// Ausgang setzen
-					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write_Channel_White", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
-										  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
-					If (!$Result) {
-						$this->SendDebug("WFadeOut", "Daten setzen fehlerhaft!", 0);
-					}
-					else {
-						If (GetValueBoolean($this->GetIDForIdent("Status_W_".$Group)) == false) {
-							SetValueBoolean($this->GetIDForIdent("Status_W_".$Group), true);
-						}
-					}
-				}
-				IPS_Sleep(intval(1000 / $FadeScalar));
-			}
-				
-		}
-	}
-		
 */	    
 	public function SetOutputPinColor(Int $Group, Int $Color)
 	{
