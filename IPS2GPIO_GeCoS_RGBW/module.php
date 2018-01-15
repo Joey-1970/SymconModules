@@ -413,15 +413,27 @@
 		elseif (($Value_W > 3) AND ($Value_RGB <= 3)) {
 			$this->SendDebug("FadeIn", "RGB ist 0 -> W faden", 0);
 			$Stepwide = $Value_W / $Steps;
+			$StartAddress = (($Group - 1) * 16) + 18;
+			
 			// Fade In			
-			for ($i = (0 + $Stepwide) ; $i <= ($Value_W - $Stepwide); $i = $i + round($Stepwide, 2)) {
+			for ($i = (0 + $Stepwide) ; $i <= ($l - $Stepwide); $i = $i + round($Stepwide, 0)) {
 				$Starttime = microtime(true);
+				// Werte skalieren
+				$Value_W = $i;
+				// Bytes bestimmen
+				$L_Bit = $Value_W & 255;
+				$H_Bit = $Value_W >> 8;
 				If ($this->ReadPropertyBoolean("Open") == true) {
 					// Ausgang setzen
-					$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin_W"), "Value" => $i)));
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write_Channel_White", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
+										  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
 					If (!$Result) {
-						$this->SendDebug("FadeIn", "Fehler beim Schreiben des Wertes!", 0);
-						return; 
+						$this->SendDebug("WFadeIn", "Daten setzen fehlerhaft!", 0);
+					}
+					else {
+						If (GetValueBoolean($this->GetIDForIdent("Status_W_".$Group)) == false) {
+							SetValueBoolean($this->GetIDForIdent("Status_W_".$Group), true);
+						}
 					}
 				}
 				$Endtime = microtime(true);
@@ -521,16 +533,29 @@
 		}
 		elseif (($Value_W > 3) AND ($Value_RGB <= 3)) {
 			$this->SendDebug("FadeOut", "RGB ist 0 -> W faden", 0);
+			// Zielwert W bestimmen
 			$Stepwide = $Value_W / $Steps;
-			// Fade Out
-			for ($i = ($Value_W - $Stepwide) ; $i >= (0 + $Stepwide); $i = $i - round($Stepwide, 2)) {
+			$StartAddress = (($Group - 1) * 16) + 18;
+			
+			// Fade Out			
+			for ($i = ($l - $Stepwide) ; $i >= (0 + $Stepwide); $i = $i - round($Stepwide, 0)) {
 				$Starttime = microtime(true);
+				// Werte skalieren
+				$Value_W = $i;
+				// Bytes bestimmen
+				$L_Bit = $Value_W & 255;
+				$H_Bit = $Value_W >> 8;
 				If ($this->ReadPropertyBoolean("Open") == true) {
 					// Ausgang setzen
-					$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin_W"), "Value" => $i)));
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write_Channel_White", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
+										  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
 					If (!$Result) {
-						$this->SendDebug("FadeOut", "Fehler beim Schreiben des Wertes!", 0);
-						return; 
+						$this->SendDebug("WFadeOut", "Daten setzen fehlerhaft!", 0);
+					}
+					else {
+						If (GetValueBoolean($this->GetIDForIdent("Status_W_".$Group)) == false) {
+							SetValueBoolean($this->GetIDForIdent("Status_W_".$Group), true);
+						}
 					}
 				}
 				$Endtime = microtime(true);
