@@ -212,7 +212,7 @@
 			$this->SetReceiveDataFilter($Filter);
 		
 			
-			If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+			If ($this->ReadPropertyBoolean("Open") == true) {
 				$ResultI2C = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 				
 				If ($this->ReadPropertyInteger("Pin_INT_A") >= 0) {
