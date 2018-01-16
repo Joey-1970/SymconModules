@@ -119,7 +119,7 @@
 		}
 		for ($i = 0; $i <= 7; $i++) {
 		   	$arrayElements[] = array("type" => "Label", "label" => "Konfiguration des GPB".$i);
-			$arrayElements[] = array("type" => "Select", "name" => "GPAIODIR".$i, "caption" => "Nutzung", "options" => $arrayOptions_IODIR );
+			$arrayElements[] = array("type" => "Select", "name" => "GPBIODIR".$i, "caption" => "Nutzung", "options" => $arrayOptions_IODIR );
 			$arrayElements[] = array("type" => "Select", "name" => "GPBIPOL".$i, "caption" => "Negation", "options" => $arrayOptions_IPOL );	
 			$arrayElements[] = array("type" => "Select", "name" => "GPBINTEN".$i, "caption" => "Interrupt", "options" => $arrayOptions_GPINTIN );
 			$arrayElements[] = array("type" => "Select", "name" => "GPBDEFVAL".$i, "caption" => "Vergleichswert", "options" => $arrayOptions_DEFVAL );
