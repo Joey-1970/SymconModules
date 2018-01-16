@@ -21,6 +21,9 @@
 		for ($i = 0; $i <= 7; $i++) {
 		   	$this->RegisterPropertyInteger("GPB".$i, 0);	
 		}
+		$this->RegisterPropertyInteger("INTPOL", 0);
+		$this->RegisterPropertyInteger("ODR", 0);
+		$this->RegisterPropertyInteger("MIRROR", 0);
         }
  	
 	public function GetConfigurationForm() 
@@ -91,8 +94,23 @@
 		}
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration des Interrupt");
-	
+		$arrayElements[] = array("type" => "Label", "label" => "Polarität des Interrupt");
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "Aktiv - Low", "value" => 0);
+		$arrayOptions[] = array("label" => "Aktiv - High", "value" => 1); 
+		$arrayElements[] = array("type" => "Select", "name" => "INTPOL", "caption" => "Polarität", "options" => $arrayOptions );
 		
+		$arrayElements[] = array("type" => "Label", "label" => "Ausgangs-Konfiguration (wenn Open-Drain ausgewählt, wird Polarität überschrieben)");
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "Aktiver Treiber", "value" => 0);
+		$arrayOptions[] = array("label" => "Open Drain", "value" => 1); 
+		$arrayElements[] = array("type" => "Select", "name" => "ODR", "caption" => "Konfiguration", "options" => $arrayOptions );
+		
+		$arrayElements[] = array("type" => "Label", "label" => "Spiegelung der Interrupt-Ausgänge");
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "Int A -> Port A, Int B -> Port B", "value" => 0);
+		$arrayOptions[] = array("label" => "Interrupt ist intern verbunden", "value" => 1); 
+		$arrayElements[] = array("type" => "Select", "name" => "MIRROR", "caption" => "Spiegelung", "options" => $arrayOptions );	
 		 
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayActions = array();
