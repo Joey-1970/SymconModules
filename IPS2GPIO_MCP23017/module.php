@@ -113,7 +113,7 @@
 		   	$arrayElements[] = array("type" => "Label", "label" => "Konfiguration des GPA".$i);
 			$arrayElements[] = array("type" => "Select", "name" => "GPAIODIR".$i, "caption" => "Nutzung", "options" => $arrayOptions_IODIR );	
 			$arrayElements[] = array("type" => "Select", "name" => "GPAIPOL".$i, "caption" => "Negation", "options" => $arrayOptions_IPOL );	
-			$arrayElements[] = array("type" => "Select", "name" => "GPAINTEN".$i, "caption" => "Interrupt", "options" => $arrayOptions_GBINTEN );
+			$arrayElements[] = array("type" => "Select", "name" => "GPAINTEN".$i, "caption" => "Interrupt", "options" => $arrayOptions_GPINTEN );
 			$arrayElements[] = array("type" => "Select", "name" => "GPADEFVAL".$i, "caption" => "Vergleichswert", "options" => $arrayOptions_DEFVAL );
 			$arrayElements[] = array("type" => "Select", "name" => "GPAINTCON".$i, "caption" => "Interruptwert", "options" => $arrayOptions_INTCON );	
 		}
@@ -121,7 +121,7 @@
 		   	$arrayElements[] = array("type" => "Label", "label" => "Konfiguration des GPB".$i);
 			$arrayElements[] = array("type" => "Select", "name" => "GPBIODIR".$i, "caption" => "Nutzung", "options" => $arrayOptions_IODIR );
 			$arrayElements[] = array("type" => "Select", "name" => "GPBIPOL".$i, "caption" => "Negation", "options" => $arrayOptions_IPOL );	
-			$arrayElements[] = array("type" => "Select", "name" => "GPBINTEN".$i, "caption" => "Interrupt", "options" => $arrayOptions_GPINTIN );
+			$arrayElements[] = array("type" => "Select", "name" => "GPBINTEN".$i, "caption" => "Interrupt", "options" => $arrayOptions_GPINTEN );
 			$arrayElements[] = array("type" => "Select", "name" => "GPBDEFVAL".$i, "caption" => "Vergleichswert", "options" => $arrayOptions_DEFVAL );
 			$arrayElements[] = array("type" => "Select", "name" => "GPBINTCON".$i, "caption" => "Interruptwert", "options" => $arrayOptions_INTCON );	
 		}
