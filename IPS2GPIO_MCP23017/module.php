@@ -16,12 +16,18 @@
 		$this->RegisterPropertyInteger("Pin_INT_B", -1);
 		$this->SetBuffer("PreviousPin_INT_B", -1);
 		for ($i = 0; $i <= 7; $i++) {
-		   	$this->RegisterPropertyInteger("GPA".$i, 0);
+		   	$this->RegisterPropertyInteger("GPA".$i, 1);
+			$this->RegisterPropertyInteger("GPAIPOL".$i, 0);
 			$this->RegisterPropertyInteger("GPAINT".$i, 0);
+			$this->RegisterPropertyInteger("GPAVAL".$i, 0);
+			$this->RegisterPropertyInteger("GPAINTCON".$i, 0);
 		}
 		for ($i = 0; $i <= 7; $i++) {
-		   	$this->RegisterPropertyInteger("GPB".$i, 0);
+		   	$this->RegisterPropertyInteger("GPB".$i, 1);
+			$this->RegisterPropertyInteger("GPAIPOL".$i, 0);
 			$this->RegisterPropertyInteger("GPBINT".$i, 0);
+			$this->RegisterPropertyInteger("GPBVAL".$i, 0);
+			$this->RegisterPropertyInteger("GPBINTCON".$i, 0);
 		}
 		$this->RegisterPropertyInteger("INTPOL", 0);
 		$this->RegisterPropertyInteger("ODR", 0);
@@ -84,23 +90,40 @@
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration der Ports");
 		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "Eingang", "value" => 0);
-		$arrayOptions[] = array("label" => "Eingang invertiert", "value" => 1); 
-		$arrayOptions[] = array("label" => "Ausgang", "value" => 2); 
+		$arrayOptions[] = array("label" => "Ausgang", "value" => 0); 
+		$arrayOptions[] = array("label" => "Eingang", "value" => 1);
+		
+		$arrayOptions_Pol = array();
+		$arrayOptions_Pol[] = array("label" => "Eingang nicht negiert", "value" => 0);
+		$arrayOptions_Pol[] = array("label" => "Eingang negiert", "value" => 1); 
 		
 		$arrayOptions_Int = array();
 		$arrayOptions_Int[] = array("label" => "kein Interrupt-Auslöser", "value" => 0);
 		$arrayOptions_Int[] = array("label" => "Interrupt-Auslöser", "value" => 1); 
 		
+		$arrayOptions_Val = array();
+		$arrayOptions_Val[] = array("label" => "Aus", "value" => 0);
+		$arrayOptions_Val[] = array("label" => "Ein", "value" => 1); 
+		
+		$arrayOptions_Con = array();
+		$arrayOptions_Con[] = array("label" => "Voheriger Pin-Status", "value" => 0);
+		$arrayOptions_Con[] = array("label" => "Vergleichswert", "value" => 1); 
+		
 		for ($i = 0; $i <= 7; $i++) {
 		   	$arrayElements[] = array("type" => "Label", "label" => "Konfiguration des GPA".$i);
 			$arrayElements[] = array("type" => "Select", "name" => "GPA".$i, "caption" => "Nutzung", "options" => $arrayOptions );	
-			$arrayElements[] = array("type" => "Select", "name" => "GPAINT".$i, "caption" => "Interrupt", "options" => $arrayOptions_Int );	
+			$arrayElements[] = array("type" => "Select", "name" => "GPAIPOL".$i, "caption" => "Negation", "options" => $arrayOptions_Pol );	
+			$arrayElements[] = array("type" => "Select", "name" => "GPAINT".$i, "caption" => "Interrupt", "options" => $arrayOptions_Int );
+			$arrayElements[] = array("type" => "Select", "name" => "GPAVAL".$i, "caption" => "Vergleichswert", "options" => $arrayOptions_Val );
+			$arrayElements[] = array("type" => "Select", "name" => "GPAINTCON".$i, "caption" => "Interruptwert", "options" => $arrayOptions_Con );	
 		}
 		for ($i = 0; $i <= 7; $i++) {
 		   	$arrayElements[] = array("type" => "Label", "label" => "Konfiguration des GPB".$i);
 			$arrayElements[] = array("type" => "Select", "name" => "GPB".$i, "caption" => "Nutzung", "options" => $arrayOptions );
+			$arrayElements[] = array("type" => "Select", "name" => "GPBIPOL".$i, "caption" => "Negation", "options" => $arrayOptions_Pol );	
 			$arrayElements[] = array("type" => "Select", "name" => "GPBINT".$i, "caption" => "Interrupt", "options" => $arrayOptions_Int );
+			$arrayElements[] = array("type" => "Select", "name" => "GPBVAL".$i, "caption" => "Vergleichswert", "options" => $arrayOptions_Val );
+			$arrayElements[] = array("type" => "Select", "name" => "GPBINTCON".$i, "caption" => "Interruptwert", "options" => $arrayOptions_Con );	
 		}
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration des Interrupt");
