@@ -215,14 +215,14 @@
 			If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 				$ResultI2C = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 				
-				If (($this->ReadPropertyInteger("Pin_INT_A") >= 0)
-					$ResultPin_INA_A = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+				If ($this->ReadPropertyInteger("Pin_INT_A") >= 0) {
+					$ResultPin_INT_A = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
 									  "Pin" => $this->ReadPropertyInteger("Pin_INT_A"), "PreviousPin" => $this->GetBuffer("PreviousPin_INT_A"), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 5, "Resistance" => 0)));
 				
 					$this->SetBuffer("PreviousPin_INT_A", $this->ReadPropertyInteger("Pin_INT_A"));
 				}
-				If (($this->ReadPropertyInteger("Pin_INT_B") >= 0)
-					$ResultPin_INA_A = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+				If ($this->ReadPropertyInteger("Pin_INT_B") >= 0) {
+					$ResultPin_INT_B = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
 									  "Pin" => $this->ReadPropertyInteger("Pin_INT_B"), "PreviousPin" => $this->GetBuffer("PreviousPin_INT_B"), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 5, "Resistance" => 0)));
 				
 					$this->SetBuffer("PreviousPin_INT_B", $this->ReadPropertyInteger("Pin_INT_B"));
