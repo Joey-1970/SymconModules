@@ -24,7 +24,7 @@
 		}
 		for ($i = 0; $i <= 7; $i++) {
 		   	$this->RegisterPropertyInteger("GPBIODIR".$i, 1);
-			$this->RegisterPropertyInteger("GPAIPOL".$i, 0);
+			$this->RegisterPropertyInteger("GPBIPOL".$i, 0);
 			$this->RegisterPropertyInteger("GPBINTEN".$i, 0);
 			$this->RegisterPropertyInteger("GPBDEFVAL".$i, 0);
 			$this->RegisterPropertyInteger("GPBINTCON".$i, 0);
