@@ -207,20 +207,29 @@
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {					
 			//ReceiveData-Filter setzen
 			$this->SetBuffer("DeviceIdent", (($this->ReadPropertyInteger("DeviceBus") << 7) + $this->ReadPropertyInteger("DeviceAddress")));
-			$Filter = '((.*"Function":"get_used_i2c".*|.*"DeviceIdent":'.$this->GetBuffer("DeviceIdent").'.*)|(.*"Function":"status".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*))';
+			$Filter = '((.*"Function":"get_used_i2c".*|.*"DeviceIdent":'.$this->GetBuffer("DeviceIdent").'.*)|(.*"Function":"status".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_INT_A").'.*)|(.*"Pin":'.$this->ReadPropertyInteger("Pin_INT_B").'.*))';
 			//$this->SendDebug("IPS2GPIO", $Filter, 0);
 			$this->SetReceiveDataFilter($Filter);
 		
 			
 			If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 				$ResultI2C = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
-								
-				$ResultPin = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
-									  "Pin" => $this->ReadPropertyInteger("Pin"), "PreviousPin" => $this->GetBuffer("PreviousPin"), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 5, "Resistance" => 0)));
-				$this->SetBuffer("PreviousPin", $this->ReadPropertyInteger("Pin"));
-				If (($ResultI2C == true) AND ($ResultPin == true)) {
+				
+				If (($this->ReadPropertyInteger("Pin_INT_A") >= 0)
+					$ResultPin_INA_A = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+									  "Pin" => $this->ReadPropertyInteger("Pin_INT_A"), "PreviousPin" => $this->GetBuffer("PreviousPin_INT_A"), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 5, "Resistance" => 0)));
+				
+					$this->SetBuffer("PreviousPin_INT_A", $this->ReadPropertyInteger("Pin_INT_A"));
+				}
+				If (($this->ReadPropertyInteger("Pin_INT_B") >= 0)
+					$ResultPin_INA_A = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+									  "Pin" => $this->ReadPropertyInteger("Pin_INT_B"), "PreviousPin" => $this->GetBuffer("PreviousPin_INT_B"), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 5, "Resistance" => 0)));
+				
+					$this->SetBuffer("PreviousPin_INT_B", $this->ReadPropertyInteger("Pin_INT_B"));
+				}
+				If ($ResultI2C == true) {
 					// Erste Messdaten einlesen
-					$this->Setup();
+					//$this->Setup();
 					$this->SetStatus(102);
 				}
 			}
