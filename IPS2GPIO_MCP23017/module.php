@@ -180,7 +180,7 @@
 		for ($i = 0; $i <= 7; $i++) {
 		   	$this->RegisterVariableBoolean("GPA".$i, "GPA".$i, "~Switch", ($i * 10 + 20));
 			If ($this->ReadPropertyInteger("GPAIODIR".$i) == 0) {
-				$this->EnbleAction("GPA".$i);
+				$this->EnableAction("GPA".$i);
 			}
 			else {
 				$this->DisableAction("GPA".$i);
@@ -195,7 +195,7 @@
 		for ($i = 0; $i <= 7; $i++) {
 		   	$this->RegisterVariableBoolean("GPB".$i, "GPB".$i, "~Switch", ($i * 10 + 110));
 			If ($this->ReadPropertyInteger("GPBIODIR".$i) == 0) {
-				$this->EnbleAction("GPB".$i);
+				$this->EnableAction("GPB".$i);
 			}
 			else {
 				$this->DisableAction("GPB".$i);
