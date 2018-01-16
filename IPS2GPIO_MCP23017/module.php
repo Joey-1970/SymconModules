@@ -15,6 +15,12 @@
 		$this->SetBuffer("PreviousPin_INT_A", -1);
 		$this->RegisterPropertyInteger("Pin_INT_B", -1);
 		$this->SetBuffer("PreviousPin_INT_B", -1);
+		for ($i = 0; $i <= 7; $i++) {
+		   	$this->RegisterPropertyInteger("GPA".$i, 0);	
+		}
+		for ($i = 0; $i <= 7; $i++) {
+		   	$this->RegisterPropertyInteger("GPB".$i, 0);	
+		}
         }
  	
 	public function GetConfigurationForm() 
@@ -36,7 +42,6 @@
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceAddress", "caption" => "Device Adresse", "options" => $arrayOptions );
 		
 		$arrayElements[] = array("type" => "Label", "label" => "I²C-Bus (Default ist 1)");
-		
 		$arrayOptions = array();
 		$DevicePorts = array();
 		$DevicePorts = unserialize($this->Get_I2C_Ports());
@@ -59,6 +64,7 @@
 		
 		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für den Interrupt B"); 
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_INT_A", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
+		
 		$arrayOptions = array();
 		$GPIO = array();
 		$GPIO = unserialize($this->Get_GPIO());
@@ -69,13 +75,23 @@
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
-		
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_INT_B", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
-
-		
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration der Ports");
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "Eingang", "value" => 0);
+		$arrayOptions[] = array("label" => "Eingang invertiert", "value" => 1); 
+		$arrayOptions[] = array("label" => "Ausgang", "value" => 2); 
 		
-		
+		for ($i = 0; $i <= 7; $i++) {
+		   	$arrayElements[] = array("type" => "Select", "name" => "GPA".$i, "caption" => "Nutzung", "options" => $arrayOptions );	
+		}
+		for ($i = 0; $i <= 7; $i++) {
+		   	$arrayElements[] = array("type" => "Select", "name" => "GPB".$i, "caption" => "Nutzung", "options" => $arrayOptions );
+		}
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration des Interrupt");
+	
 		
 		 
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
