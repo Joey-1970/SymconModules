@@ -90,34 +90,38 @@
 		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration der Ports");
 		$arrayOptions_IODIR = array();
 		$arrayOptions_IODIR[] = array("label" => "Ausgang", "value" => 0); 
-		$arrayOptions_IODIR[] = array("label" => "Eingang", "value" => 1);
+		$arrayOptions_IODIR[] = array("label" => "Eingang (Default)", "value" => 1);
 		
 		$arrayOptions_IPOL = array();
-		$arrayOptions_IPOL[] = array("label" => "Eingang nicht negiert", "value" => 0);
-		$arrayOptions_IPOL[] = array("label" => "Eingang negiert", "value" => 1); 
+		$arrayOptions_IPOL[] = array("label" => "Eingang nicht negieren (Default)", "value" => 0);
+		$arrayOptions_IPOL[] = array("label" => "Eingang negieren", "value" => 1); 
 		
 		$arrayOptions_GPINTEN = array();
-		$arrayOptions_GPINTEN[] = array("label" => "kein Interrupt-Auslöser", "value" => 0);
-		$arrayOptions_GPINTEN[] = array("label" => "Interrupt-Auslöser", "value" => 1); 
+		$arrayOptions_GPINTEN[] = array("label" => "keine Interrupt-Auslösung (Default)", "value" => 0);
+		$arrayOptions_GPINTEN[] = array("label" => "Interrupt-Auslösung", "value" => 1); 
 		
 		$arrayOptions_DEFVAL = array();
-		$arrayOptions_DEFVAL[] = array("label" => "Aus", "value" => 0);
+		$arrayOptions_DEFVAL[] = array("label" => "Aus (Default)", "value" => 0);
 		$arrayOptions_DEFVAL[] = array("label" => "Ein", "value" => 1); 
 		
 		$arrayOptions_INTCON = array();
-		$arrayOptions_INTCON[] = array("label" => "Vorheriger Pin-Status", "value" => 0);
+		$arrayOptions_INTCON[] = array("label" => "Änderung Pin-Status (Default)", "value" => 0);
 		$arrayOptions_INTCON[] = array("label" => "Vergleichswert", "value" => 1); 
-		
+		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration Port A");
+
 		for ($i = 0; $i <= 7; $i++) {
-		   	$arrayElements[] = array("type" => "Label", "label" => "Konfiguration des GPA".$i);
+		   	$arrayElements[] = array("type" => "Label", "label" => "Konfiguration des GPA ".$i);
 			$arrayElements[] = array("type" => "Select", "name" => "GPAIODIR".$i, "caption" => "Nutzung", "options" => $arrayOptions_IODIR );	
 			$arrayElements[] = array("type" => "Select", "name" => "GPAIPOL".$i, "caption" => "Negation", "options" => $arrayOptions_IPOL );	
 			$arrayElements[] = array("type" => "Select", "name" => "GPAINTEN".$i, "caption" => "Interrupt", "options" => $arrayOptions_GPINTEN );
 			$arrayElements[] = array("type" => "Select", "name" => "GPADEFVAL".$i, "caption" => "Vergleichswert", "options" => $arrayOptions_DEFVAL );
 			$arrayElements[] = array("type" => "Select", "name" => "GPAINTCON".$i, "caption" => "Interruptwert", "options" => $arrayOptions_INTCON );	
 		}
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
+		
+		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration Port B");
 		for ($i = 0; $i <= 7; $i++) {
-		   	$arrayElements[] = array("type" => "Label", "label" => "Konfiguration des GPB".$i);
+		   	$arrayElements[] = array("type" => "Label", "label" => "Konfiguration des GPB ".$i);
 			$arrayElements[] = array("type" => "Select", "name" => "GPBIODIR".$i, "caption" => "Nutzung", "options" => $arrayOptions_IODIR );
 			$arrayElements[] = array("type" => "Select", "name" => "GPBIPOL".$i, "caption" => "Negation", "options" => $arrayOptions_IPOL );	
 			$arrayElements[] = array("type" => "Select", "name" => "GPBINTEN".$i, "caption" => "Interrupt", "options" => $arrayOptions_GPINTEN );
