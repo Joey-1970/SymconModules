@@ -97,8 +97,8 @@
 		$arrayOptions_IPOL[] = array("label" => "Eingang negieren", "value" => 1); 
 		
 		$arrayOptions_GPINTEN = array();
-		$arrayOptions_GPINTEN[] = array("label" => "keine Interrupt-Auslösung (Default)", "value" => 0);
-		$arrayOptions_GPINTEN[] = array("label" => "Interrupt-Auslösung", "value" => 1); 
+		$arrayOptions_GPINTEN[] = array("label" => "keine Auslösung (Default)", "value" => 0);
+		$arrayOptions_GPINTEN[] = array("label" => "Auslösung", "value" => 1); 
 		
 		$arrayOptions_DEFVAL = array();
 		$arrayOptions_DEFVAL[] = array("label" => "Aus (Default)", "value" => 0);
