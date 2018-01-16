@@ -16,17 +16,17 @@
 		$this->RegisterPropertyInteger("Pin_INT_B", -1);
 		$this->SetBuffer("PreviousPin_INT_B", -1);
 		for ($i = 0; $i <= 7; $i++) {
-		   	$this->RegisterPropertyInteger("GPA".$i, 1);
+		   	$this->RegisterPropertyInteger("GPAIODIR".$i, 1);
 			$this->RegisterPropertyInteger("GPAIPOL".$i, 0);
-			$this->RegisterPropertyInteger("GPAINT".$i, 0);
-			$this->RegisterPropertyInteger("GPAVAL".$i, 0);
+			$this->RegisterPropertyInteger("GPAINTEN".$i, 0);
+			$this->RegisterPropertyInteger("GPADEFVAL".$i, 0);
 			$this->RegisterPropertyInteger("GPAINTCON".$i, 0);
 		}
 		for ($i = 0; $i <= 7; $i++) {
-		   	$this->RegisterPropertyInteger("GPB".$i, 1);
+		   	$this->RegisterPropertyInteger("GPBIODIR".$i, 1);
 			$this->RegisterPropertyInteger("GPAIPOL".$i, 0);
-			$this->RegisterPropertyInteger("GPBINT".$i, 0);
-			$this->RegisterPropertyInteger("GPBVAL".$i, 0);
+			$this->RegisterPropertyInteger("GPBINTEN".$i, 0);
+			$this->RegisterPropertyInteger("GPBDEFVAL".$i, 0);
 			$this->RegisterPropertyInteger("GPBINTCON".$i, 0);
 		}
 		$this->RegisterPropertyInteger("INTPOL", 0);
@@ -89,41 +89,41 @@
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_INT_B", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration der Ports");
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "Ausgang", "value" => 0); 
-		$arrayOptions[] = array("label" => "Eingang", "value" => 1);
+		$arrayOptions_IODIR = array();
+		$arrayOptions_IODIR[] = array("label" => "Ausgang", "value" => 0); 
+		$arrayOptions_IODIR[] = array("label" => "Eingang", "value" => 1);
 		
-		$arrayOptions_Pol = array();
-		$arrayOptions_Pol[] = array("label" => "Eingang nicht negiert", "value" => 0);
-		$arrayOptions_Pol[] = array("label" => "Eingang negiert", "value" => 1); 
+		$arrayOptions_IPOL = array();
+		$arrayOptions_IPOL[] = array("label" => "Eingang nicht negiert", "value" => 0);
+		$arrayOptions_IPOL[] = array("label" => "Eingang negiert", "value" => 1); 
 		
-		$arrayOptions_Int = array();
-		$arrayOptions_Int[] = array("label" => "kein Interrupt-Auslöser", "value" => 0);
-		$arrayOptions_Int[] = array("label" => "Interrupt-Auslöser", "value" => 1); 
+		$arrayOptions_GPINTEN = array();
+		$arrayOptions_GPINTEN[] = array("label" => "kein Interrupt-Auslöser", "value" => 0);
+		$arrayOptions_GPINTEN[] = array("label" => "Interrupt-Auslöser", "value" => 1); 
 		
-		$arrayOptions_Val = array();
-		$arrayOptions_Val[] = array("label" => "Aus", "value" => 0);
-		$arrayOptions_Val[] = array("label" => "Ein", "value" => 1); 
+		$arrayOptions_DEFVAL = array();
+		$arrayOptions_DEFVAL[] = array("label" => "Aus", "value" => 0);
+		$arrayOptions_DEFVAL[] = array("label" => "Ein", "value" => 1); 
 		
-		$arrayOptions_Con = array();
-		$arrayOptions_Con[] = array("label" => "Voheriger Pin-Status", "value" => 0);
-		$arrayOptions_Con[] = array("label" => "Vergleichswert", "value" => 1); 
+		$arrayOptions_INTCON = array();
+		$arrayOptions_INTCON[] = array("label" => "Voheriger Pin-Status", "value" => 0);
+		$arrayOptions_INTCON[] = array("label" => "Vergleichswert", "value" => 1); 
 		
 		for ($i = 0; $i <= 7; $i++) {
 		   	$arrayElements[] = array("type" => "Label", "label" => "Konfiguration des GPA".$i);
-			$arrayElements[] = array("type" => "Select", "name" => "GPA".$i, "caption" => "Nutzung", "options" => $arrayOptions );	
-			$arrayElements[] = array("type" => "Select", "name" => "GPAIPOL".$i, "caption" => "Negation", "options" => $arrayOptions_Pol );	
-			$arrayElements[] = array("type" => "Select", "name" => "GPAINT".$i, "caption" => "Interrupt", "options" => $arrayOptions_Int );
-			$arrayElements[] = array("type" => "Select", "name" => "GPAVAL".$i, "caption" => "Vergleichswert", "options" => $arrayOptions_Val );
-			$arrayElements[] = array("type" => "Select", "name" => "GPAINTCON".$i, "caption" => "Interruptwert", "options" => $arrayOptions_Con );	
+			$arrayElements[] = array("type" => "Select", "name" => "GPAIODIR".$i, "caption" => "Nutzung", "options" => $arrayOptions_IODIR );	
+			$arrayElements[] = array("type" => "Select", "name" => "GPAIPOL".$i, "caption" => "Negation", "options" => $arrayOptions_IPOL );	
+			$arrayElements[] = array("type" => "Select", "name" => "GPAINTEN".$i, "caption" => "Interrupt", "options" => $arrayOptions_GBINTEN );
+			$arrayElements[] = array("type" => "Select", "name" => "GPADEFVAL".$i, "caption" => "Vergleichswert", "options" => $arrayOptions_DEFVAL );
+			$arrayElements[] = array("type" => "Select", "name" => "GPAINTCON".$i, "caption" => "Interruptwert", "options" => $arrayOptions_INTCON );	
 		}
 		for ($i = 0; $i <= 7; $i++) {
 		   	$arrayElements[] = array("type" => "Label", "label" => "Konfiguration des GPB".$i);
-			$arrayElements[] = array("type" => "Select", "name" => "GPB".$i, "caption" => "Nutzung", "options" => $arrayOptions );
-			$arrayElements[] = array("type" => "Select", "name" => "GPBIPOL".$i, "caption" => "Negation", "options" => $arrayOptions_Pol );	
-			$arrayElements[] = array("type" => "Select", "name" => "GPBINT".$i, "caption" => "Interrupt", "options" => $arrayOptions_Int );
-			$arrayElements[] = array("type" => "Select", "name" => "GPBVAL".$i, "caption" => "Vergleichswert", "options" => $arrayOptions_Val );
-			$arrayElements[] = array("type" => "Select", "name" => "GPBINTCON".$i, "caption" => "Interruptwert", "options" => $arrayOptions_Con );	
+			$arrayElements[] = array("type" => "Select", "name" => "GPAIODIR".$i, "caption" => "Nutzung", "options" => $arrayOptions_IODIR );
+			$arrayElements[] = array("type" => "Select", "name" => "GPBIPOL".$i, "caption" => "Negation", "options" => $arrayOptions_IPOL );	
+			$arrayElements[] = array("type" => "Select", "name" => "GPBINTEN".$i, "caption" => "Interrupt", "options" => $arrayOptions_GPINTIN );
+			$arrayElements[] = array("type" => "Select", "name" => "GPBDEFVAL".$i, "caption" => "Vergleichswert", "options" => $arrayOptions_DEFVAL );
+			$arrayElements[] = array("type" => "Select", "name" => "GPBINTCON".$i, "caption" => "Interruptwert", "options" => $arrayOptions_INTCON );	
 		}
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration des Interrupt");
@@ -176,7 +176,7 @@
 		
 		for ($i = 0; $i <= 7; $i++) {
 		   	$this->RegisterVariableBoolean("GPA".$i, "GPA".$i, "~Switch", ($i * 10 + 20));
-			If ($this->ReadPropertyInteger("GPA".$i) == 2) {
+			If ($this->ReadPropertyInteger("GPAIODIR".$i) == 0) {
 				$this->EnbleAction("GPA".$i);
 			}
 			else {
@@ -191,7 +191,7 @@
 		
 		for ($i = 0; $i <= 7; $i++) {
 		   	$this->RegisterVariableBoolean("GPB".$i, "GPB".$i, "~Switch", ($i * 10 + 110));
-			If ($this->ReadPropertyInteger("GPB".$i) == 2) {
+			If ($this->ReadPropertyInteger("GPBIODIR".$i) == 0) {
 				$this->EnbleAction("GPB".$i);
 			}
 			else {
