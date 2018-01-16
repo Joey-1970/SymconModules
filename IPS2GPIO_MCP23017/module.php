@@ -9,7 +9,7 @@
             	parent::Create();
  	    	$this->RegisterPropertyBoolean("Open", false);
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
- 	    	$this->RegisterPropertyInteger("DeviceAddress", 3);
+ 	    	$this->RegisterPropertyInteger("DeviceAddress", 32);
 		$this->RegisterPropertyInteger("DeviceBus", 1);	
 		$this->RegisterPropertyInteger("Pin_INT_A", -1);
 		$this->SetBuffer("PreviousPin_INT_A", -1);
@@ -72,10 +72,9 @@
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
-		
-		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für den Interrupt B"); 
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_INT_A", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		
+		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für den Interrupt B"); 
 		$arrayOptions = array();
 		$GPIO = array();
 		$GPIO = unserialize($this->Get_GPIO());
@@ -106,7 +105,7 @@
 		$arrayOptions_DEFVAL[] = array("label" => "Ein", "value" => 1); 
 		
 		$arrayOptions_INTCON = array();
-		$arrayOptions_INTCON[] = array("label" => "Voheriger Pin-Status", "value" => 0);
+		$arrayOptions_INTCON[] = array("label" => "Vorheriger Pin-Status", "value" => 0);
 		$arrayOptions_INTCON[] = array("label" => "Vergleichswert", "value" => 1); 
 		
 		for ($i = 0; $i <= 7; $i++) {
