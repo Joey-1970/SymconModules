@@ -16,10 +16,12 @@
 		$this->RegisterPropertyInteger("Pin_INT_B", -1);
 		$this->SetBuffer("PreviousPin_INT_B", -1);
 		for ($i = 0; $i <= 7; $i++) {
-		   	$this->RegisterPropertyInteger("GPA".$i, 0);	
+		   	$this->RegisterPropertyInteger("GPA".$i, 0);
+			$this->RegisterPropertyInteger("GPAINT".$i, 0);
 		}
 		for ($i = 0; $i <= 7; $i++) {
-		   	$this->RegisterPropertyInteger("GPB".$i, 0);	
+		   	$this->RegisterPropertyInteger("GPB".$i, 0);
+			$this->RegisterPropertyInteger("GPBINT".$i, 0);
 		}
 		$this->RegisterPropertyInteger("INTPOL", 0);
 		$this->RegisterPropertyInteger("ODR", 0);
@@ -86,11 +88,19 @@
 		$arrayOptions[] = array("label" => "Eingang invertiert", "value" => 1); 
 		$arrayOptions[] = array("label" => "Ausgang", "value" => 2); 
 		
+		$arrayOptions_Int = array();
+		$arrayOptions_Int[] = array("label" => "kein Interrupt-Auslöser", "value" => 0);
+		$arrayOptions_Int[] = array("label" => "Interrupt-Auslöser", "value" => 1); 
+		
 		for ($i = 0; $i <= 7; $i++) {
-		   	$arrayElements[] = array("type" => "Select", "name" => "GPA".$i, "caption" => "Nutzung", "options" => $arrayOptions );	
+		   	$arrayElements[] = array("type" => "Label", "label" => "Konfiguration des GPA".$i);
+			$arrayElements[] = array("type" => "Select", "name" => "GPA".$i, "caption" => "Nutzung", "options" => $arrayOptions );	
+			$arrayElements[] = array("type" => "Select", "name" => "GPAINT".$i, "caption" => "Interrupt", "options" => $arrayOptions_Int );	
 		}
 		for ($i = 0; $i <= 7; $i++) {
-		   	$arrayElements[] = array("type" => "Select", "name" => "GPB".$i, "caption" => "Nutzung", "options" => $arrayOptions );
+		   	$arrayElements[] = array("type" => "Label", "label" => "Konfiguration des GPB".$i);
+			$arrayElements[] = array("type" => "Select", "name" => "GPB".$i, "caption" => "Nutzung", "options" => $arrayOptions );
+			$arrayElements[] = array("type" => "Select", "name" => "GPBINT".$i, "caption" => "Interrupt", "options" => $arrayOptions_Int );
 		}
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration des Interrupt");
@@ -143,7 +153,12 @@
 		
 		for ($i = 0; $i <= 7; $i++) {
 		   	$this->RegisterVariableBoolean("GPA".$i, "GPA".$i, "~Switch", ($i * 10 + 20));
-			
+			If ($this->ReadPropertyInteger("GPA".$i) == 2) {
+				$this->EnbleAction("GPA".$i);
+			}
+			else {
+				$this->DisableAction("GPA".$i);
+			}
 			IPS_SetHidden($this->GetIDForIdent("GPA".$i), false);
 		}
 		
@@ -153,7 +168,12 @@
 		
 		for ($i = 0; $i <= 7; $i++) {
 		   	$this->RegisterVariableBoolean("GPB".$i, "GPB".$i, "~Switch", ($i * 10 + 110));
-			
+			If ($this->ReadPropertyInteger("GPB".$i) == 2) {
+				$this->EnbleAction("GPB".$i);
+			}
+			else {
+				$this->DisableAction("GPB".$i);
+			}
 			IPS_SetHidden($this->GetIDForIdent("GPB".$i), false);
 		}
 		
