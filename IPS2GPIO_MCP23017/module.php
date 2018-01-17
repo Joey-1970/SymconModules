@@ -307,6 +307,14 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Setup", "Ausfuehrung", 0);
+			// Bit 0: irrelevant
+			// Bit 1: INTPOL Polarität des Interrupts
+			// Bit 2: ODR Open-Drain oder aktiver Treiber beim Interrupt
+			// Bit 3: irrelvant, nur bei der SPI-Version nutzbar
+			// Bit 4: DISSLW Defaultwert = 0
+			// Bit 5: SEQOP Defaultwert = 0, automatische Adress-Zeiger inkrement
+			// Bit 6: MIRROR Interrupt-Konfiguration
+			// Bit 7: BANK Defaultwert = 0 Register sind in derselben Bank
 			
 		}
 	}    
