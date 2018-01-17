@@ -298,7 +298,7 @@
 	public function GetOutput()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("Setup", "GetOutput", 0);
+			$this->SendDebug("GetOutput", "Ausfuehrung", 0);
 			
 		}
 	}
@@ -324,10 +324,42 @@
 			// Bit 7: BANK Defaultwert = 0 Register sind in derselben Bank
 			
 			// ConfigByte senden!
+			$this->SendDebug("Setup", "Config-Byte: ".$Config, 0);
+			
+			// IO-Bytes ermitteln
+			$GPAIODIR = $this->GetConfigByte("GPAIODIR");
+			$this->SendDebug("Setup", "IO-Byte A: ".$GPAIODIR, 0);
+			
+			$GPBIODIR = $this->GetConfigByte("GPBIODIR");
+			$this->SendDebug("Setup", "IO-Byte B: ".$GPBIODIR, 0);
+			
+			// Polariät des Eingangs ermitteln
+			$GPAIPOL = $this->GetConfigByte("GPAIPOL");
+			$this->SendDebug("Setup", "Polaritäts-Byte A: ".$GPAIPOL, 0);
+			
+			$GPBIPOL = $this->GetConfigByte("GPBIPOL");
+			$this->SendDebug("Setup", "Polaritäts-Byte B: ".$GPBIPOL, 0);
+			
+			// Interrupt enable ermitteln
+			$GPAINTEN = $this->GetConfigByte("GPAINTEN");
+			$this->SendDebug("Setup", "Interrupt-Byte A: ".$GPAINTEN, 0);
+			
+			$GPBINTEN = $this->GetConfigByte("GPBINTEN");
+			$this->SendDebug("Setup", "Interrupt-Byte B: ".$GPBINTEN, 0);
 		}
 	}    
 	
-	
+	private function GetConfigByte(String $ConfigTyp)
+	{
+		$Result = 0;
+		for ($i = 0; $i <= 7; $i++) {
+			$BitValue = $this->ReadPropertyInteger($ConfigTyp.$i);
+			If ($BitValue == 1) {
+				$Result = $Result + pow(2, $i);
+			}
+		}
+	return $Result;
+	}
 	
 	
 	    
