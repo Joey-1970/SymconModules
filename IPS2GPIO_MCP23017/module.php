@@ -21,6 +21,7 @@
 			$this->RegisterPropertyInteger("GPAINTEN".$i, 0);
 			$this->RegisterPropertyInteger("GPADEFVAL".$i, 0);
 			$this->RegisterPropertyInteger("GPAINTCON".$i, 0);
+			$this->RegisterPropertyInteger("GPAPU".$i, 0);
 		}
 		for ($i = 0; $i <= 7; $i++) {
 		   	$this->RegisterPropertyInteger("GPBIODIR".$i, 1);
@@ -28,6 +29,7 @@
 			$this->RegisterPropertyInteger("GPBINTEN".$i, 0);
 			$this->RegisterPropertyInteger("GPBDEFVAL".$i, 0);
 			$this->RegisterPropertyInteger("GPBINTCON".$i, 0);
+			$this->RegisterPropertyInteger("GPBPU".$i, 0);
 		}
 		$this->RegisterPropertyInteger("INTPOL", 0);
 		$this->RegisterPropertyInteger("ODR", 0);
@@ -106,7 +108,12 @@
 		
 		$arrayOptions_INTCON = array();
 		$arrayOptions_INTCON[] = array("label" => "Änderung Pin-Status (Default)", "value" => 0);
-		$arrayOptions_INTCON[] = array("label" => "Vergleichswert", "value" => 1); 
+		$arrayOptions_INTCON[] = array("label" => "Referenzwert", "value" => 1); 
+		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration Port A");
+		
+		$arrayOptions_GPPU = array();
+		$arrayOptions_GPPU[] = array("label" => "kein Pull-up (Default)", "value" => 0);
+		$arrayOptions_GPPU[] = array("label" => "Pull-up (100kOhm)", "value" => 1); 
 		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration Port A");
 
 		for ($i = 0; $i <= 7; $i++) {
@@ -114,8 +121,9 @@
 			$arrayElements[] = array("type" => "Select", "name" => "GPAIODIR".$i, "caption" => "Nutzung", "options" => $arrayOptions_IODIR );	
 			$arrayElements[] = array("type" => "Select", "name" => "GPAIPOL".$i, "caption" => "Negation", "options" => $arrayOptions_IPOL );	
 			$arrayElements[] = array("type" => "Select", "name" => "GPAINTEN".$i, "caption" => "Interrupt", "options" => $arrayOptions_GPINTEN );
-			$arrayElements[] = array("type" => "Select", "name" => "GPADEFVAL".$i, "caption" => "Vergleichswert", "options" => $arrayOptions_DEFVAL );
-			$arrayElements[] = array("type" => "Select", "name" => "GPAINTCON".$i, "caption" => "Interrupttrigger", "options" => $arrayOptions_INTCON );	
+			$arrayElements[] = array("type" => "Select", "name" => "GPADEFVAL".$i, "caption" => "Referenzwert", "options" => $arrayOptions_DEFVAL );
+			$arrayElements[] = array("type" => "Select", "name" => "GPAINTCON".$i, "caption" => "Interrupttrigger", "options" => $arrayOptions_INTCON );
+			$arrayElements[] = array("type" => "Select", "name" => "GPAPU".$i, "caption" => "Pull-up", "options" => $arrayOptions_GPPU );
 		}
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		
@@ -125,8 +133,9 @@
 			$arrayElements[] = array("type" => "Select", "name" => "GPBIODIR".$i, "caption" => "Nutzung", "options" => $arrayOptions_IODIR );
 			$arrayElements[] = array("type" => "Select", "name" => "GPBIPOL".$i, "caption" => "Negation", "options" => $arrayOptions_IPOL );	
 			$arrayElements[] = array("type" => "Select", "name" => "GPBINTEN".$i, "caption" => "Interrupt", "options" => $arrayOptions_GPINTEN );
-			$arrayElements[] = array("type" => "Select", "name" => "GPBDEFVAL".$i, "caption" => "Vergleichswert", "options" => $arrayOptions_DEFVAL );
-			$arrayElements[] = array("type" => "Select", "name" => "GPBINTCON".$i, "caption" => "Interrupttrigger", "options" => $arrayOptions_INTCON );	
+			$arrayElements[] = array("type" => "Select", "name" => "GPBDEFVAL".$i, "caption" => "Referenzwert", "options" => $arrayOptions_DEFVAL );
+			$arrayElements[] = array("type" => "Select", "name" => "GPBINTCON".$i, "caption" => "Interrupttrigger", "options" => $arrayOptions_INTCON );
+			$arrayElements[] = array("type" => "Select", "name" => "GPBPU".$i, "caption" => "Pull-up", "options" => $arrayOptions_GPPU );
 		}
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration des Interrupt");
@@ -371,6 +380,15 @@
 			$GPBINTCON =  = $this->GetConfigByte("GPBINTCON");
 			$this->SendDebug("Setup", "Interrrupt-Referenz-Byte B: ".$GPBINTCON, 0);
 			// Adresse 09
+			
+			// Pull-Up-Byte ermitteln
+			$GPAPU =  = $this->GetConfigByte("GPAPU");
+			$this->SendDebug("Setup", "Pull-up-Byte A: ".$GPAPU, 0);
+			// Adresse 0C
+			
+			$GPBPU =  = $this->GetConfigByte("GPBPU");
+			$this->SendDebug("Setup", "Pull-up-Byte B: ".$GPBPU, 0);
+			// Adresse 0D
 		}
 	}    
 	
