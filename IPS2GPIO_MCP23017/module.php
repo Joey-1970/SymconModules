@@ -316,7 +316,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Setup", "Ausfuehrung", 0);
-			$Config = 0:
+			$Config = 0;
 			// Bit 0: irrelevant
 			// Bit 1: INTPOL Polarität des Interrupts
 			$INTPOL = $this->ReadPropertyInteger("INTPOL");
