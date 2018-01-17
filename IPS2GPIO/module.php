@@ -1977,7 +1977,9 @@ class IPS2GPIO_IO extends IPSModule
 		            		//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "DeviceIdent" => $this->GetI2C_HandleDevice($response[2]), "Register" => $response[3], "Value" => $response[4])));
 		            	}
 		            	else {
-					IPS_LogMessage("IPS2GPIO I2C Read Byte","Handle: ".$response[2]." Register: ".$response[3]." Fehlermeldung: ".$this->GetErrorText(abs($response[4])));	
+					If ($this->GetBuffer("I2CSearch") == 0) {
+						IPS_LogMessage("IPS2GPIO I2C Read Byte","Handle: ".$response[2]." Register: ".$response[3]." Fehlermeldung: ".$this->GetErrorText(abs($response[4])));	
+					}
 		            	}
 		            	break;
 		        case "62":
@@ -2698,15 +2700,15 @@ class IPS2GPIO_IO extends IPSModule
 		// PCF8574
 		for ($i = 32; $i <= 34; $i++) {
 			$SearchArray[] = $i;
-			$DeviceName[] = "PCF8574";
+			$DeviceName[] = "PCF8574/MCP23017";
 		}
 		// BH1750
 		$SearchArray[] = 35;
-		$DeviceName[] = "BH1750";
+		$DeviceName[] = "BH1750/MCP23017";
 		// PCF8574
 		for ($i = 36; $i <= 39; $i++) {
 			$SearchArray[] = $i;
-			$DeviceName[] = "PCF8574";
+			$DeviceName[] = "PCF8574/MCP23017";
 		}
 		// PCF8574
 		for ($i = 56; $i <= 63; $i++) {
@@ -2850,7 +2852,7 @@ class IPS2GPIO_IO extends IPSModule
 				}
 			}
 		}
-		elseIf (($DeviceAddress >= 32) OR ($DeviceAddress <= 39)) {
+		elseIf (($DeviceAddress >= 32) AND ($DeviceAddress <= 39)) {
 			// PCF8574/BH1750/MCP23017
 			$Result = $this->CommandClientSocket(pack("L*", 61, $Handle, hexdec("15"), 0), 16);
 			If ($Result < 0) {
