@@ -368,25 +368,25 @@
 			$this->SendDebug("Setup", "Referenzwert-Byte A: ".$GPADEFVAL, 0);
 			// Adresse 06
 			
-			$GPBDEFVAL =  = $this->GetConfigByte("GPBDEFVAL");
+			$GPBDEFVAL = $this->GetConfigByte("GPBDEFVAL");
 			$this->SendDebug("Setup", "Referenzwert-Byte B: ".$GPBDEFVAL, 0);
 			// Adresse 07
 			
 			// Interrupt-Referenz-Byte ermitteln
-			$GPAINTCON =  = $this->GetConfigByte("GPAINTCON");
+			$GPAINTCON = $this->GetConfigByte("GPAINTCON");
 			$this->SendDebug("Setup", "Interrrupt-Referenz-Byte A: ".$GPAINTCON, 0);
 			// Adresse 08
 			
-			$GPBINTCON =  = $this->GetConfigByte("GPBINTCON");
+			$GPBINTCON = $this->GetConfigByte("GPBINTCON");
 			$this->SendDebug("Setup", "Interrrupt-Referenz-Byte B: ".$GPBINTCON, 0);
 			// Adresse 09
 			
 			// Pull-Up-Byte ermitteln
-			$GPAPU =  = $this->GetConfigByte("GPAPU");
+			$GPAPU = $this->GetConfigByte("GPAPU");
 			$this->SendDebug("Setup", "Pull-up-Byte A: ".$GPAPU, 0);
 			// Adresse 0C
 			
-			$GPBPU =  = $this->GetConfigByte("GPBPU");
+			$GPBPU = $this->GetConfigByte("GPBPU");
 			$this->SendDebug("Setup", "Pull-up-Byte B: ".$GPBPU, 0);
 			// Adresse 0D
 		}
