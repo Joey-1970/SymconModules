@@ -325,41 +325,52 @@
 			
 			// ConfigByte senden!
 			$this->SendDebug("Setup", "Config-Byte: ".$Config, 0);
+			// Adressen 0A 0B
 			
 			// IO-Bytes ermitteln
 			$GPAIODIR = $this->GetConfigByte("GPAIODIR");
 			$this->SendDebug("Setup", "IO-Byte A: ".$GPAIODIR, 0);
+			// Adresse 00
 			
 			$GPBIODIR = $this->GetConfigByte("GPBIODIR");
 			$this->SendDebug("Setup", "IO-Byte B: ".$GPBIODIR, 0);
+			// Adresse 01
 			
 			// Polariät des Eingangs ermitteln
 			$GPAIPOL = $this->GetConfigByte("GPAIPOL");
 			$this->SendDebug("Setup", "Polaritäts-Byte A: ".$GPAIPOL, 0);
+			// Adresse 02
 			
 			$GPBIPOL = $this->GetConfigByte("GPBIPOL");
 			$this->SendDebug("Setup", "Polaritäts-Byte B: ".$GPBIPOL, 0);
+			// Adresse 03
 			
 			// Interrupt enable ermitteln
 			$GPAINTEN = $this->GetConfigByte("GPAINTEN");
 			$this->SendDebug("Setup", "Interrupt-Byte A: ".$GPAINTEN, 0);
+			// Adresse 04
 			
 			$GPBINTEN = $this->GetConfigByte("GPBINTEN");
 			$this->SendDebug("Setup", "Interrupt-Byte B: ".$GPBINTEN, 0);
+			// Adresse 05
 			
 			// Referenzwert-Byte ermitteln
 			$GPADEFVAL = $this->GetConfigByte("GPADEFVAL");
 			$this->SendDebug("Setup", "Referenzwert-Byte A: ".$GPADEFVAL, 0);
+			// Adresse 06
 			
 			$GPBDEFVAL =  = $this->GetConfigByte("GPBDEFVAL");
 			$this->SendDebug("Setup", "Referenzwert-Byte B: ".$GPBDEFVAL, 0);
+			// Adresse 07
 			
 			// Interrupt-Referenz-Byte ermitteln
 			$GPAINTCON =  = $this->GetConfigByte("GPAINTCON");
 			$this->SendDebug("Setup", "Interrrupt-Referenz-Byte A: ".$GPAINTCON, 0);
+			// Adresse 08
 			
 			$GPBINTCON =  = $this->GetConfigByte("GPBINTCON");
 			$this->SendDebug("Setup", "Interrrupt-Referenz-Byte B: ".$GPBINTCON, 0);
+			// Adresse 09
 		}
 	}    
 	
