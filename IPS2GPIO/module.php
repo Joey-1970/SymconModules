@@ -2850,6 +2850,22 @@ class IPS2GPIO_IO extends IPSModule
 				}
 			}
 		}
+		elseIf (($DeviceAddress >= 32) OR ($DeviceAddress <= 39)) {
+			// PCF8574/BH1750/MCP23017
+			$Result = $this->CommandClientSocket(pack("L*", 61, $Handle, hexdec("15"), 0), 16);
+			If ($Result < 0) {
+				$this->SendDebug("I2CDeviceSpecification", "PCF8574/BH1750", 0);
+				If ($DeviceAddress == 35) {
+					$DeviceName = "BH1750";
+				}
+				else {
+					$DeviceName = "PCF8574";
+				}	
+			}
+			else {
+				$DeviceName = "MCP23017";
+			}
+		}
 	Return $DeviceName;
 	}
 
