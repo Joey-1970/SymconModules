@@ -346,6 +346,20 @@
 			
 			$GPBINTEN = $this->GetConfigByte("GPBINTEN");
 			$this->SendDebug("Setup", "Interrupt-Byte B: ".$GPBINTEN, 0);
+			
+			// Referenzwert-Byte ermitteln
+			$GPADEFVAL = $this->GetConfigByte("GPADEFVAL");
+			$this->SendDebug("Setup", "Referenzwert-Byte A: ".$GPADEFVAL, 0);
+			
+			$GPBDEFVAL =  = $this->GetConfigByte("GPBDEFVAL");
+			$this->SendDebug("Setup", "Referenzwert-Byte B: ".$GPBDEFVAL, 0);
+			
+			// Interrupt-Referenz-Byte ermitteln
+			$GPAINTCON =  = $this->GetConfigByte("GPAINTCON");
+			$this->SendDebug("Setup", "Interrrupt-Referenz-Byte A: ".$GPAINTCON, 0);
+			
+			$GPBINTCON =  = $this->GetConfigByte("GPBINTCON");
+			$this->SendDebug("Setup", "Interrrupt-Referenz-Byte B: ".$GPBINTCON, 0);
 		}
 	}    
 	
