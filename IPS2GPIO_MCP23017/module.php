@@ -308,7 +308,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("GetOutput", "Ausfuehrung", 0);
-			
+			// Adressen 12 13
 		}
 	}
 	    
