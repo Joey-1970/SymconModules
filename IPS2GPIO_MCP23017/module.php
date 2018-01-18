@@ -2,6 +2,13 @@
     // Klassendefinition
     class IPS2GPIO_MCP23017 extends IPSModule 
     {
+	public function Destroy() 
+	{
+		//Never delete this line!
+		parent::Destroy();
+		$this->SetTimerInterval("Messzyklus", 0);
+	}
+	 
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
@@ -15,6 +22,8 @@
 		$this->SetBuffer("PreviousPin_INT_A", -1);
 		$this->RegisterPropertyInteger("Pin_INT_B", -1);
 		$this->SetBuffer("PreviousPin_INT_B", -1);
+		$this->RegisterPropertyInteger("Messzyklus", 60);
+            	$this->RegisterTimer("Messzyklus", 0, 'I2GMCP23017_GetOutput($_IPS["TARGET"]);');
 		for ($i = 0; $i <= 7; $i++) {
 		   	$this->RegisterPropertyInteger("GPAIODIR".$i, 1);
 			$this->RegisterPropertyInteger("GPAIPOL".$i, 0);
@@ -63,7 +72,7 @@
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "Device Bus", "options" => $arrayOptions );
 		
-		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für den Interrupt A"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Optional: Angabe der GPIO-Nummer (Broadcom-Number) für den Interrupt A"); 
 		$arrayOptions = array();
 		$GPIO = array();
 		$GPIO = unserialize($this->Get_GPIO());
@@ -76,7 +85,7 @@
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_INT_A", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		
-		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für den Interrupt B"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Optional: Angabe der GPIO-Nummer (Broadcom-Number) für den Interrupt B"); 
 		$arrayOptions = array();
 		$GPIO = array();
 		$GPIO = unserialize($this->Get_GPIO());
@@ -88,6 +97,8 @@
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_INT_B", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Label", "label" => "Optional: Lesen der Eingänge in Sekunden (0 -> aus, 5 sek -> Minimum)");
+		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration der Ports");
 		$arrayOptions_IODIR = array();
