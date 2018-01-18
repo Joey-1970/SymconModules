@@ -22,7 +22,7 @@
 		$this->SetBuffer("PreviousPin_INT_A", -1);
 		$this->RegisterPropertyInteger("Pin_INT_B", -1);
 		$this->SetBuffer("PreviousPin_INT_B", -1);
-		$this->RegisterPropertyInteger("Messzyklus", 60);
+		$this->RegisterPropertyInteger("Messzyklus", 0);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GMCP23017_GetOutput($_IPS["TARGET"]);');
 		for ($i = 0; $i <= 7; $i++) {
 		   	$this->RegisterPropertyInteger("GPAIODIR".$i, 1);
