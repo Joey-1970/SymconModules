@@ -334,61 +334,96 @@
 			
 			// ConfigByte senden!
 			$this->SendDebug("Setup", "Config-Byte: ".$Config, 0);
+			$ConfigArray = array();
+			$ConfigArray[] = $Config;
+			$ConfigArray[] = $Config;
 			// Adressen 0A 0B
 			
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_Write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("A0"), 
+										  "Parameter" => serialize($ConfigArray) )));
+			If (!$Result) {
+				$this->SendDebug("Setup", "Basis-Konfigurations-Byte setzen fehlerhaft!", 0);
+			}
+			else {
+				$this->SendDebug("Setup", "Basis-Konfigurations-Byte erfolgreich gesetzt", 0);
+			}
+			
+			$ConfigArray = array();
 			// IO-Bytes ermitteln
 			$GPAIODIR = $this->GetConfigByte("GPAIODIR");
+			$ConfigArray[] = $GPAIODIR;
 			$this->SendDebug("Setup", "IO-Byte A: ".$GPAIODIR, 0);
 			// Adresse 00
 			
 			$GPBIODIR = $this->GetConfigByte("GPBIODIR");
+			$ConfigArray[] = $GPBIODIR;
 			$this->SendDebug("Setup", "IO-Byte B: ".$GPBIODIR, 0);
 			// Adresse 01
 			
 			// Polariät des Eingangs ermitteln
 			$GPAIPOL = $this->GetConfigByte("GPAIPOL");
+			$ConfigArray[] = $GPAIPOL;
 			$this->SendDebug("Setup", "Polaritäts-Byte A: ".$GPAIPOL, 0);
 			// Adresse 02
 			
 			$GPBIPOL = $this->GetConfigByte("GPBIPOL");
+			$ConfigArray[] = $GPBIPOL;
 			$this->SendDebug("Setup", "Polaritäts-Byte B: ".$GPBIPOL, 0);
 			// Adresse 03
 			
 			// Interrupt enable ermitteln
 			$GPAINTEN = $this->GetConfigByte("GPAINTEN");
+			$ConfigArray[] = $GPAINTEN;
 			$this->SendDebug("Setup", "Interrupt-Byte A: ".$GPAINTEN, 0);
 			// Adresse 04
 			
 			$GPBINTEN = $this->GetConfigByte("GPBINTEN");
+			$ConfigArray[] = $GPBINTEN;
 			$this->SendDebug("Setup", "Interrupt-Byte B: ".$GPBINTEN, 0);
 			// Adresse 05
 			
 			// Referenzwert-Byte ermitteln
 			$GPADEFVAL = $this->GetConfigByte("GPADEFVAL");
+			$ConfigArray[] = $GPADEFVAL;
 			$this->SendDebug("Setup", "Referenzwert-Byte A: ".$GPADEFVAL, 0);
 			// Adresse 06
 			
 			$GPBDEFVAL = $this->GetConfigByte("GPBDEFVAL");
+			$ConfigArray[] = $GPBDEFVAL;
 			$this->SendDebug("Setup", "Referenzwert-Byte B: ".$GPBDEFVAL, 0);
 			// Adresse 07
 			
 			// Interrupt-Referenz-Byte ermitteln
 			$GPAINTCON = $this->GetConfigByte("GPAINTCON");
+			$ConfigArray[] = $GPAINTCON;
 			$this->SendDebug("Setup", "Interrrupt-Referenz-Byte A: ".$GPAINTCON, 0);
 			// Adresse 08
 			
 			$GPBINTCON = $this->GetConfigByte("GPBINTCON");
+			$ConfigArray[] = $GPBINTCON;
 			$this->SendDebug("Setup", "Interrrupt-Referenz-Byte B: ".$GPBINTCON, 0);
 			// Adresse 09
 			
 			// Pull-Up-Byte ermitteln
 			$GPAPU = $this->GetConfigByte("GPAPU");
+			$ConfigArray[] = $GPAPU;
 			$this->SendDebug("Setup", "Pull-up-Byte A: ".$GPAPU, 0);
 			// Adresse 0C
 			
 			$GPBPU = $this->GetConfigByte("GPBPU");
+			$ConfigArray[] = $GPBPU;
 			$this->SendDebug("Setup", "Pull-up-Byte B: ".$GPBPU, 0);
 			// Adresse 0D
+			
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_Write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("00"), 
+										  "Parameter" => serialize($ConfigArray) )));
+			If (!$Result) {
+				$this->SendDebug("Setup", "Konfigurations-Byte setzen fehlerhaft!", 0);
+			}
+			else {
+				$this->SendDebug("Setup", "Konfigurations-Byte erfolgreich gesetzt", 0);
+			}
+			
 		}
 	}    
 	
