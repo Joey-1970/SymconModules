@@ -327,8 +327,15 @@
 			   	break;  
 	 	}
  	}
+	
+	public function RequestAction($Ident, $Value) 
+	{
+		$Port = substr($Ident, 2, 1);
+		$Pin = substr($Ident, 3, 1);
+		$this->SetOutputPin($Port, intval($Pin), $Value);
+	}  
+	    
 	// Beginn der Funktionen
-	// Führt eine Messung aus
 	public function GetOutput()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
@@ -341,19 +348,42 @@
 			}
 			else {
 				$this->SendDebug("GetOutput", "Ergbnis: ".$Result, 0);
-				$MeasurementData = unserialize($Result);
+				If (is_array(unserialize($Result)) {
+					$PortData = array();
+					$PortData = unserialize($Result);
+					// Ergebnis sichern
+				}
 				// Statusvariablen setzen
+				
+			}
+		}
+	}
+	
+	public function SetOutputPin(String $Port, Int $Pin, Bool $Value)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$Pin = min(7, max(0, $Pin));
+			$Value = boolval($Value);
+			
+			If ($Port == "A") {
+					
+			}
+			elseif ($Port == "B") {
+				
 			}
 		}
 	}
 	    
-	public function SetOutput()
+	public function SetOutput(Int $PortA, Int $PortB)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("SetOutput", "Ausfuehrung", 0);
+			$PortA = min(255, max(0, $PortA));
+			$PortB = min(255, max(0, $PortB));
+			
 			$OutputArray = Array();
-			$OutputArray[0] = 0;
-			$OutputArray[1] = 0;
+			$OutputArray[0] = $PortA;
+			$OutputArray[1] = $PortB;
 			
 			// Adressen 14 15
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_Write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("14"), 
