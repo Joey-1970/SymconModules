@@ -348,7 +348,7 @@
 			}
 			else {
 				$this->SendDebug("GetOutput", "Ergbnis: ".$Result, 0);
-				If (is_array(unserialize($Result)) {
+				If (is_array(unserialize($Result))) {
 					$PortData = array();
 					$PortData = unserialize($Result);
 					// Ergebnis sichern
