@@ -197,6 +197,7 @@
 		$this->DisableAction("LastInterrupt_A");
 		IPS_SetHidden($this->GetIDForIdent("LastInterrupt_A"), true);
 		
+		$SetTimer = false;
 		for ($i = 0; $i <= 7; $i++) {
 		   	$this->RegisterVariableBoolean("GPA".$i, "GPA".$i, "~Switch", ($i * 10 + 20));
 			If ($this->ReadPropertyInteger("GPAIODIR".$i) == 0) {
@@ -204,6 +205,7 @@
 			}
 			else {
 				$this->DisableAction("GPA".$i);
+				$SetTimer = true;
 			}
 			IPS_SetHidden($this->GetIDForIdent("GPA".$i), false);
 		}
@@ -219,6 +221,7 @@
 			}
 			else {
 				$this->DisableAction("GPB".$i);
+				$SetTimer = true;
 			}
 			IPS_SetHidden($this->GetIDForIdent("GPB".$i), false);
 		}
@@ -251,12 +254,23 @@
 					$this->SetBuffer("PreviousPin_INT_B", $this->ReadPropertyInteger("Pin_INT_B"));
 				}
 				If ($ResultI2C == true) {
+					$Messzyklus = $this->ReadPropertyInteger("Messzyklus");
+					If (($Messzyklus > 0) AND ($Messzyklus < 5)) {
+						$Messzyklus = 5;
+					}
+					If ($SetTimer == true) {
+						$this->SetTimerInterval("Messzyklus", ($Messzyklus * 1000));
+					}
+					else {
+						$this->SetTimerInterval("Messzyklus", 0);
+					}
 					// Erste Messdaten einlesen
-					//$this->Setup();
+					$this->Setup();
 					$this->SetStatus(102);
 				}
 			}
 			else {
+				$this->SetTimerInterval("Messzyklus", 0);
 				$this->SetStatus(104);
 			}	
 		}
