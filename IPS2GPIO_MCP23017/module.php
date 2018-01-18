@@ -342,9 +342,53 @@
 			else {
 				$this->SendDebug("GetOutput", "Ergbnis: ".$Result, 0);
 				$MeasurementData = unserialize($Result);
+				// Statusvariablen setzen
 			}
 		}
 	}
+	    
+	public function SetOutput()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("SetOutput", "Ausfuehrung", 0);
+			$OutputArray = Array();
+			$OutputArray[0] = 0;
+			$OutputArray[1] = 0;
+			
+			// Adressen 14 15
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_Write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("14"), 
+										  "Parameter" => serialize($OutputArray) )));
+			If (!$Result) {
+				$this->SendDebug("SetOutput", "Setzen der Ausgänge fehlerhaft!", 0);
+			}
+			else {
+				// Statusvariablen setzen
+				for ($i = 0; $i <= 7; $i++) {
+					If ($OutputArray[0] & pow(2, $i)) {
+					    	If (GetValueBoolean($this->GetIDForIdent("GPA".$i)) == false) {
+							SetValueBoolean($this->GetIDForIdent("GPA".$i), true);
+						}
+					}
+					else {
+						If (GetValueBoolean($this->GetIDForIdent("GPA".$i)) == true) {
+							SetValueBoolean($this->GetIDForIdent("GPA".$i), false);
+						}
+					}
+					If ($OutputArray[1] & pow(2, $i)) {
+					    	If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == false) {
+							SetValueBoolean($this->GetIDForIdent("GPB".$i), true);
+						}
+					}
+					else {
+						If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == true) {
+							SetValueBoolean($this->GetIDForIdent("GPB".$i), false);
+						}
+					}
+				}
+				$this->GetOutput();
+			}
+		}
+	}   
 	    
 	private function Setup()
 	{
