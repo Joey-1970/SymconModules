@@ -2700,15 +2700,15 @@ class IPS2GPIO_IO extends IPSModule
 		// PCF8574
 		for ($i = 32; $i <= 34; $i++) {
 			$SearchArray[] = $i;
-			$DeviceName[] = "PCF8574/MCP23017";
+			$DeviceName[] = "PCF8574|MCP23017";
 		}
 		// BH1750
 		$SearchArray[] = 35;
-		$DeviceName[] = "BH1750/MCP23017";
+		$DeviceName[] = "BH1750|MCP23017";
 		// PCF8574
 		for ($i = 36; $i <= 39; $i++) {
 			$SearchArray[] = $i;
-			$DeviceName[] = "PCF8574/MCP23017";
+			$DeviceName[] = "PCF8574|MCP23017";
 		}
 		// PCF8574
 		for ($i = 56; $i <= 63; $i++) {
@@ -2855,6 +2855,7 @@ class IPS2GPIO_IO extends IPSModule
 				}
 			}
 		}
+		/*
 		elseIf (($DeviceAddress >= 32) AND ($DeviceAddress <= 39)) {
 			// PCF8574/BH1750/MCP23017
 			$Result = $this->CommandClientSocket(pack("L*", 61, $Handle, hexdec("15"), 0), 16);
@@ -2871,6 +2872,7 @@ class IPS2GPIO_IO extends IPSModule
 				$DeviceName = "MCP23017";
 			}
 		}
+		*/
 	Return $DeviceName;
 	}
 
