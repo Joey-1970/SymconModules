@@ -20,22 +20,10 @@
 		$this->RegisterPropertyInteger("DeviceBus", 1);
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->SetBuffer("PreviousPin", -1);
- 	    	$this->RegisterPropertyBoolean("P0", false);
- 	    	$this->RegisterPropertyBoolean("P1", false);
- 	    	$this->RegisterPropertyBoolean("P2", false);
- 	    	$this->RegisterPropertyBoolean("P3", false);
- 	    	$this->RegisterPropertyBoolean("P4", false);
- 	    	$this->RegisterPropertyBoolean("P5", false);
- 	    	$this->RegisterPropertyBoolean("P6", false);
- 	    	$this->RegisterPropertyBoolean("P7", false);
- 	    	$this->RegisterPropertyBoolean("LoggingP0", false);
- 	    	$this->RegisterPropertyBoolean("LoggingP1", false);
- 	    	$this->RegisterPropertyBoolean("LoggingP2", false);
- 	    	$this->RegisterPropertyBoolean("LoggingP3", false);
- 	    	$this->RegisterPropertyBoolean("LoggingP4", false);
- 	    	$this->RegisterPropertyBoolean("LoggingP5", false);
- 	    	$this->RegisterPropertyBoolean("LoggingP6", false);
- 	    	$this->RegisterPropertyBoolean("LoggingP7", false);
+		for ($i = 0; $i <= 7; $i++) {
+ 	    		$this->RegisterPropertyBoolean("P".$i, false);
+			$this->RegisterPropertyBoolean("LoggingP".$i, false);
+		}	
 		$this->RegisterPropertyInteger("Startoption", 0);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GIO1_Read_Status($_IPS["TARGET"]);');
