@@ -560,7 +560,14 @@
 	return $Result;
 	}
 	
-	
+	private function setBit($byte, $significance) { 
+ 		// ein bestimmtes Bit auf 1 setzen
+ 		return $byte | 1<<$significance;   
+ 	} 
+	private function unsetBit($byte, $significance) {
+	    // ein bestimmtes Bit auf 0 setzen
+	    return $byte & ~(1<<$significance);
+	}
 	    
 	private function Get_I2C_Ports()
 	{
