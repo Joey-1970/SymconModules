@@ -133,29 +133,10 @@
 		$this->DisableAction("LastInterrupt");
 		IPS_SetHidden($this->GetIDForIdent("LastInterrupt"), false);
 		
-		$this->RegisterVariableBoolean("P0", "P0", "~Switch", 10);
-          	IPS_SetHidden($this->GetIDForIdent("P0"), false);
-		
-		$this->RegisterVariableBoolean("P1", "P1", "~Switch", 20);
-          	IPS_SetHidden($this->GetIDForIdent("P1"), false);
-		
-		$this->RegisterVariableBoolean("P2", "P2", "~Switch", 30);
-          	IPS_SetHidden($this->GetIDForIdent("P2"), false);
-		
-		$this->RegisterVariableBoolean("P3", "P3", "~Switch", 40);
-          	IPS_SetHidden($this->GetIDForIdent("P3"), false);
-		
-		$this->RegisterVariableBoolean("P4", "P4", "~Switch", 50);
-          	IPS_SetHidden($this->GetIDForIdent("P4"), false);
-		
-		$this->RegisterVariableBoolean("P5", "P5", "~Switch", 60);
-          	IPS_SetHidden($this->GetIDForIdent("P5"), false);
-		
-		$this->RegisterVariableBoolean("P6", "P6", "~Switch", 70);
-          	IPS_SetHidden($this->GetIDForIdent("P6"), false);
-		
-		$this->RegisterVariableBoolean("P7", "P7", "~Switch", 80);
-          	IPS_SetHidden($this->GetIDForIdent("P7"), false);
+		for ($i = 0; $i <= 7; $i++) {
+			$this->RegisterVariableBoolean("P".$i, "P".$i, "~Switch", 10 * $i + 10);
+			IPS_SetHidden($this->GetIDForIdent("P".$i), false);
+		}
           	
           	$this->RegisterVariableInteger("Value", "Value", "", 90);
           	IPS_SetHidden($this->GetIDForIdent("Value"), false);
@@ -219,32 +200,14 @@
 	
 	public function RequestAction($Ident, $Value) 
 	{
-  		switch($Ident) {
-	        case "P0":
-	            $this->SetPinOutput(0, $Value);
+  		$Source = substr($Ident, 0, 1);
+		$Pin = substr($Ident, 1, 1);
+		
+		switch($Source) {
+	        case "P":
+	            $this->SetPinOutput(intval($Pin), $Value);
 	            break;
-	        case "P1":
-	            $this->SetPinOutput(1, $Value);
-	            break;
-	        case "P2":
-	            $this->SetPinOutput(2, $Value);
-	            break;
-	        case "P3":
-	            $this->SetPinOutput(3, $Value);
-	            break;
-	        case "P4":
-	            $this->SetPinOutput(4, $Value);
-	            break;
-	        case "P5":
-	            $this->SetPinOutput(5, $Value);
-	            break;    
-	        case "P6":
-	            $this->SetPinOutput(6, $Value);
-	            break;
-	        case "P7":
-	            $this->SetPinOutput(7, $Value);
-	            break;
-	        case "Value":
+	        case "V":
 	            $this->SetOutput($Value);
 	            break;
 	        default:
