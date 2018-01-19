@@ -330,9 +330,22 @@
 	
 	public function RequestAction($Ident, $Value) 
 	{
-		$Port = substr($Ident, 2, 1);
+		$Source = substr($Ident, 0, 3);
 		$Pin = substr($Ident, 3, 1);
-		$this->SetOutputPin($Port, intval($Pin), $Value);
+		
+		switch($Source) {
+		case "GPA":
+			$this->SetOutputPin("A", intval($Pin), $Value);
+	            	break;
+		case "GPB":
+			$this->SetOutputPin("B", intval($Pin), $Value);
+	            	break;
+	        default:
+	            throw new Exception("Invalid Ident");
+	    	}
+		
+		
+		
 	}  
 	    
 	// Beginn der Funktionen
