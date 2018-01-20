@@ -362,12 +362,39 @@
 			else {
 				$this->SendDebug("GetOutput", "Ergebnis: ".$Result, 0);
 				If (is_array(unserialize($Result))) {
-					$PortData = array();
-					$PortData = unserialize($Result);
+					$OutputArray = array();
+					$OutputArray = unserialize($Result);
 					// Ergebnis sichern
+					
+					// Statusvariablen setzen
+					for ($i = 0; $i <= 7; $i++) {
+						If ($GPAIODIR & pow(2, $i)) {
+							If ($OutputArray[1] & pow(2, $i)) {
+								If (GetValueBoolean($this->GetIDForIdent("GPA".$i)) == false) {
+									SetValueBoolean($this->GetIDForIdent("GPA".$i), true);
+								}
+							}
+							else {
+								If (GetValueBoolean($this->GetIDForIdent("GPA".$i)) == true) {
+									SetValueBoolean($this->GetIDForIdent("GPA".$i), false);
+								}
+							}
+						}
+						If ($GPBIODIR & pow(2, $i)) {
+							If ($OutputArray[2] & pow(2, $i)) {
+								If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == false) {
+									SetValueBoolean($this->GetIDForIdent("GPB".$i), true);
+								}
+							}
+							else {
+								If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == true) {
+									SetValueBoolean($this->GetIDForIdent("GPB".$i), false);
+								}
+							}
+						}
+					}
+					
 				}
-				// Statusvariablen setzen
-				
 			}
 		}
 	}
@@ -553,6 +580,7 @@
 			}
 			else {
 				$this->SendDebug("Setup", "Konfigurations-Byte erfolgreich gesetzt", 0);
+				$this->GetOutput();
 			}
 			
 		}
