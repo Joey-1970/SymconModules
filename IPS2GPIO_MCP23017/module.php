@@ -402,7 +402,7 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_Write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("14"), 
 										  "Parameter" => serialize($OutputArray) )));
 			If (!$Result) {
-				$this->SendDebug("SetOutput", "Setzen der Ausgänge fehlerhaft!", 0);
+				$this->SendDebug("SetOutput", "Setzen der Ausgaenge fehlerhaft!", 0);
 			}
 			else {
 				// Statusvariablen setzen
