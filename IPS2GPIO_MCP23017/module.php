@@ -411,24 +411,28 @@
 			else {
 				// Statusvariablen setzen
 				for ($i = 0; $i <= 7; $i++) {
-					If ($OutputArray[0] & pow(2, $i)) {
-					    	If (GetValueBoolean($this->GetIDForIdent("GPA".$i)) == false) {
-							SetValueBoolean($this->GetIDForIdent("GPA".$i), true);
+					If ($GPAIODIR & pow(2, $i)) {
+						If ($OutputArray[0] & pow(2, $i)) {
+							If (GetValueBoolean($this->GetIDForIdent("GPA".$i)) == false) {
+								SetValueBoolean($this->GetIDForIdent("GPA".$i), true);
+							}
+						}
+						else {
+							If (GetValueBoolean($this->GetIDForIdent("GPA".$i)) == true) {
+								SetValueBoolean($this->GetIDForIdent("GPA".$i), false);
+							}
 						}
 					}
-					else {
-						If (GetValueBoolean($this->GetIDForIdent("GPA".$i)) == true) {
-							SetValueBoolean($this->GetIDForIdent("GPA".$i), false);
+					If ($GPBIODIR & pow(2, $i)) {
+						If ($OutputArray[1] & pow(2, $i)) {
+							If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == false) {
+								SetValueBoolean($this->GetIDForIdent("GPB".$i), true);
+							}
 						}
-					}
-					If ($OutputArray[1] & pow(2, $i)) {
-					    	If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == false) {
-							SetValueBoolean($this->GetIDForIdent("GPB".$i), true);
-						}
-					}
-					else {
-						If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == true) {
-							SetValueBoolean($this->GetIDForIdent("GPB".$i), false);
+						else {
+							If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == true) {
+								SetValueBoolean($this->GetIDForIdent("GPB".$i), false);
+							}
 						}
 					}
 				}
