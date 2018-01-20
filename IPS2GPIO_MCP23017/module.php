@@ -360,7 +360,7 @@
 				return;
 			}
 			else {
-				$this->SendDebug("GetOutput", "Ergbnis: ".$Result, 0);
+				$this->SendDebug("GetOutput", "Ergebnis: ".$Result, 0);
 				If (is_array(unserialize($Result))) {
 					$PortData = array();
 					$PortData = unserialize($Result);
@@ -394,9 +394,13 @@
 			$PortA = min(255, max(0, $PortA));
 			$PortB = min(255, max(0, $PortB));
 			
+			// Maske für Ausgänge 
+			$GPAIODIR = $this->GetBuffer("GPAIODIR");
+			$GPBIODIR = $this->GetBuffer("GPBIODIR");
+			
 			$OutputArray = Array();
-			$OutputArray[0] = $PortA;
-			$OutputArray[1] = $PortB;
+			$OutputArray[0] = $PortA & $GPAIODIR;
+			$OutputArray[1] = $PortB & $GPBIODIR;
 			
 			// Adressen 14 15
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_Write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("14"), 
@@ -473,11 +477,13 @@
 			// IO-Bytes ermitteln
 			$GPAIODIR = $this->GetConfigByte("GPAIODIR");
 			$ConfigArray[0] = $GPAIODIR;
+			$this->SetBuffer("GPAIODIR", $GPAIODIR);
 			$this->SendDebug("Setup", "IO-Byte A: ".$GPAIODIR, 0);
 			// Adresse 00
 			
 			$GPBIODIR = $this->GetConfigByte("GPBIODIR");
 			$ConfigArray[1] = $GPBIODIR;
+			$this->SetBuffer("GPBIODIR", $GPBIODIR);
 			$this->SendDebug("Setup", "IO-Byte B: ".$GPBIODIR, 0);
 			// Adresse 01
 			
