@@ -365,7 +365,8 @@
 					$OutputArray = array();
 					$OutputArray = unserialize($Result);
 					// Ergebnis sichern
-					
+					$this->SetBuffer("GPA", $OutputArray[7]);
+					$this->SetBuffer("GPB", $OutputArray[8]);
 					// Statusvariablen setzen
 					for ($i = 0; $i <= 7; $i++) {
 						If ($OutputArray[7] & pow(2, $i)) {
@@ -391,6 +392,12 @@
 							}
 						}
 					}
+					If ($OutputArray[5] <> $OutputArray[7]) {
+						$this->SendDebug("GetOutput", "Hardwarefehler auf Port A?", 0);
+					}
+					If ($OutputArray[6] <> $OutputArray[8]) {
+						$this->SendDebug("GetOutput", "Hardwarefehler auf Port B?", 0);
+					}
 					
 				}
 			}
@@ -404,9 +411,25 @@
 			$Value = boolval($Value);
 			
 			If ($Port == "A") {
+				$GPA = intval($this->GetBuffer("GPA"));	
+				If ($Value == true) {
+					$GPA = $this->setBit($GPA, $Pin);
+				}
+				else {
+					$GPA = $this->unsetBit($GPA, $Pin);
+				}
+				// Neuen Wert senden
 					
 			}
 			elseif ($Port == "B") {
+				$GPB = intval($this->GetBuffer("GPB"));	
+				If ($Value == true) {
+					$GPB = $this->setBit($GPB, $Pin);
+				}
+				else {
+					$GPB = $this->unsetBit($GPB, $Pin);
+				}
+				// Neuen Wert senden
 				
 			}
 		}
@@ -604,21 +627,6 @@
 	private function unsetBit($byte, $significance) {
 	    // ein bestimmtes Bit auf 0 setzen
 	    return $byte & ~(1<<$significance);
-	}
-	    
-	private function bitflip(Int $Value)
-	{
-	   	// Umwandlung in einen Binär-String
-		$bin = decbin($Value);
-	   	$not = "";
-	   	// Umstellung der Binär-Strings
-		for ($i = 0; $i < strlen($bin); $i++)
-	   		{
-	      		if($bin[$i] == 0) { $not .= '1'; }
-	      		if($bin[$i] == 1) { $not .= '0'; }
-	   	}
-		// Rückgabe als Integer
-	return bindec($not);
 	}
 	    
 	private function Get_I2C_Ports()
