@@ -354,7 +354,7 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("GetOutput", "Ausfuehrung", 0);
 			// Adressen 12 13
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("12"), "Count" => 2)));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("0E"), "Count" => 8)));
 			If ($Result < 0) {
 				$this->SendDebug("GetOutput", "Einlesen der Werte fehlerhaft!", 0);
 				return;
@@ -368,7 +368,7 @@
 					
 					// Statusvariablen setzen
 					for ($i = 0; $i <= 7; $i++) {
-						If ($OutputArray[1] & pow(2, $i)) {
+						If ($OutputArray[7] & pow(2, $i)) {
 							If (GetValueBoolean($this->GetIDForIdent("GPA".$i)) == false) {
 								SetValueBoolean($this->GetIDForIdent("GPA".$i), true);
 							}
@@ -380,7 +380,7 @@
 						}
 
 
-						If ($OutputArray[2] & pow(2, $i)) {
+						If ($OutputArray[8] & pow(2, $i)) {
 							If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == false) {
 								SetValueBoolean($this->GetIDForIdent("GPB".$i), true);
 							}
