@@ -407,6 +407,7 @@
 	public function SetOutputPin(String $Port, Int $Pin, Bool $Value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("SetOutputPin", "Ausfuehrung", 0);
 			$Pin = min(7, max(0, $Pin));
 			$Value = boolval($Value);
 			// Maske für Ausgänge 
