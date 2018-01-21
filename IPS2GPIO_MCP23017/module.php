@@ -368,28 +368,26 @@
 					
 					// Statusvariablen setzen
 					for ($i = 0; $i <= 7; $i++) {
-						If ($GPAIODIR & pow(2, $i) == false) {
-							If ($OutputArray[1] & pow(2, $i)) {
-								If (GetValueBoolean($this->GetIDForIdent("GPA".$i)) == false) {
-									SetValueBoolean($this->GetIDForIdent("GPA".$i), true);
-								}
-							}
-							else {
-								If (GetValueBoolean($this->GetIDForIdent("GPA".$i)) == true) {
-									SetValueBoolean($this->GetIDForIdent("GPA".$i), false);
-								}
+						If ($OutputArray[1] & pow(2, $i)) {
+							If (GetValueBoolean($this->GetIDForIdent("GPA".$i)) == false) {
+								SetValueBoolean($this->GetIDForIdent("GPA".$i), true);
 							}
 						}
-						If ($GPBIODIR & pow(2, $i) == false) {
-							If ($OutputArray[2] & pow(2, $i)) {
-								If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == false) {
-									SetValueBoolean($this->GetIDForIdent("GPB".$i), true);
-								}
+						else {
+							If (GetValueBoolean($this->GetIDForIdent("GPA".$i)) == true) {
+								SetValueBoolean($this->GetIDForIdent("GPA".$i), false);
 							}
-							else {
-								If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == true) {
-									SetValueBoolean($this->GetIDForIdent("GPB".$i), false);
-								}
+						}
+
+
+						If ($OutputArray[2] & pow(2, $i)) {
+							If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == false) {
+								SetValueBoolean($this->GetIDForIdent("GPB".$i), true);
+							}
+						}
+						else {
+							If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == true) {
+								SetValueBoolean($this->GetIDForIdent("GPB".$i), false);
 							}
 						}
 					}
@@ -422,12 +420,12 @@
 			$PortB = min(255, max(0, $PortB));
 			
 			// Maske für Ausgänge 
-			$GPAIODIR = $this->GetBuffer("GPAIODIR");
-			$GPBIODIR = $this->GetBuffer("GPBIODIR");
+			$GPAIODIRout = $this->GetBuffer("GPAIODIRout");
+			$GPBIODIRout = $this->GetBuffer("GPBIODIRout");
 			
 			$OutputArray = Array();
-			$OutputArray[0] = $PortA & $GPAIODIR;
-			$OutputArray[1] = $PortB & $GPBIODIR;
+			$OutputArray[0] = $PortA & $GPAIODIRout;
+			$OutputArray[1] = $PortB & $GPBIODIRout;
 			
 			// Adressen 14 15
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_Write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("14"), 
@@ -438,7 +436,7 @@
 			else {
 				// Statusvariablen setzen
 				for ($i = 0; $i <= 7; $i++) {
-					If ($GPAIODIR & pow(2, $i) == false) {
+					If ($GPAIODIRout & pow(2, $i)) {
 						If ($OutputArray[0] & pow(2, $i)) {
 							If (GetValueBoolean($this->GetIDForIdent("GPA".$i)) == false) {
 								SetValueBoolean($this->GetIDForIdent("GPA".$i), true);
@@ -450,7 +448,7 @@
 							}
 						}
 					}
-					If ($GPBIODIR & pow(2, $i) == false) {
+					If ($GPBIODIRout & pow(2, $i)) {
 						If ($OutputArray[1] & pow(2, $i)) {
 							If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == false) {
 								SetValueBoolean($this->GetIDForIdent("GPB".$i), true);
@@ -508,13 +506,15 @@
 			// IO-Bytes ermitteln
 			$GPAIODIR = $this->GetConfigByte("GPAIODIR");
 			$ConfigArray[0] = $GPAIODIR;
-			$this->SetBuffer("GPAIODIR", $GPAIODIR);
+			$this->SetBuffer("GPAIODIRin", $GPAIODIR);
+			$this->SetBuffer("GPAIODIRout", $this->bitflip($GPAIODIR));
 			$this->SendDebug("Setup", "IO-Byte A: ".$GPAIODIR, 0);
 			// Adresse 00
 			
 			$GPBIODIR = $this->GetConfigByte("GPBIODIR");
 			$ConfigArray[1] = $GPBIODIR;
-			$this->SetBuffer("GPBIODIR", $GPBIODIR);
+			$this->SetBuffer("GPBIODIRin", $GPBIODIR);
+			$this->SetBuffer("GPBIODIRout", $this->bitflip($GPBIODIR));
 			$this->SendDebug("Setup", "IO-Byte B: ".$GPBIODIR, 0);
 			// Adresse 01
 			
@@ -602,9 +602,25 @@
  		// ein bestimmtes Bit auf 1 setzen
  		return $byte | 1<<$significance;   
  	} 
+	
 	private function unsetBit($byte, $significance) {
 	    // ein bestimmtes Bit auf 0 setzen
 	    return $byte & ~(1<<$significance);
+	}
+	    
+	private function bitflip(Int $Value)
+	{
+	   	// Umwandlung in einen Binär-String
+		$bin = decbin($Value);
+	   	$not = "";
+	   	// Umstellung der Binär-Strings
+		for ($i = 0; $i < strlen($bin); $i++)
+	   		{
+	      		if($bin[$i] == 0) { $not .= '1'; }
+	      		if($bin[$i] == 1) { $not .= '0'; }
+	   	}
+		// Rückgabe als Integer
+	return bindec($not);
 	}
 	    
 	private function Get_I2C_Ports()
