@@ -420,8 +420,8 @@
 			$PortB = min(255, max(0, $PortB));
 			
 			// Maske für Ausgänge 
-			$GPAIODIRout = $this->GetBuffer("GPAIODIRout");
-			$GPBIODIRout = $this->GetBuffer("GPBIODIRout");
+			$GPAIODIRout = 255 - intval($this->GetBuffer("GPAIODIR"));
+			$GPBIODIRout = 255 - intval($this->GetBuffer("GPBIODIR"));
 			
 			$OutputArray = Array();
 			$OutputArray[0] = $PortA & $GPAIODIRout;
@@ -506,15 +506,13 @@
 			// IO-Bytes ermitteln
 			$GPAIODIR = $this->GetConfigByte("GPAIODIR");
 			$ConfigArray[0] = $GPAIODIR;
-			$this->SetBuffer("GPAIODIRin", $GPAIODIR);
-			$this->SetBuffer("GPAIODIRout", $this->bitflip($GPAIODIR));
+			$this->SetBuffer("GPAIODIR", $GPAIODIR);
 			$this->SendDebug("Setup", "IO-Byte A: ".$GPAIODIR, 0);
 			// Adresse 00
 			
 			$GPBIODIR = $this->GetConfigByte("GPBIODIR");
 			$ConfigArray[1] = $GPBIODIR;
-			$this->SetBuffer("GPBIODIRin", $GPBIODIR);
-			$this->SetBuffer("GPBIODIRout", $this->bitflip($GPBIODIR));
+			$this->SetBuffer("GPBIODIR", $GPBIODIR);
 			$this->SendDebug("Setup", "IO-Byte B: ".$GPBIODIR, 0);
 			// Adresse 01
 			
