@@ -12,23 +12,12 @@
  	    	$this->RegisterPropertyInteger("DeviceAddress", 104);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
-		$this->RegisterPropertyInteger("Resolution_0", 0);
-		$this->RegisterPropertyInteger("Resolution_1", 0);
-		$this->RegisterPropertyInteger("Resolution_2", 0);
-		$this->RegisterPropertyInteger("Resolution_3", 0);
-		$this->RegisterPropertyInteger("Amplifier_0", 0);
-		$this->RegisterPropertyInteger("Amplifier_1", 0);
-		$this->RegisterPropertyInteger("Amplifier_2", 0);
-		$this->RegisterPropertyInteger("Amplifier_3", 0);
-		$this->RegisterPropertyBoolean("Active_0", true);
-		$this->RegisterPropertyBoolean("Active_1", true);
-		$this->RegisterPropertyBoolean("Active_2", true);
-		$this->RegisterPropertyBoolean("Active_3", true);
-		$this->RegisterPropertyBoolean("Logging_0", false);
-		$this->RegisterPropertyBoolean("Logging_1", false);
-		$this->RegisterPropertyBoolean("Logging_2", false);
-		$this->RegisterPropertyBoolean("Logging_3", false);
-		
+		for ($i = 0; $i <= 3; $i++) {
+			$this->RegisterPropertyInteger("Resolution_".$i, 0);
+			$this->RegisterPropertyInteger("Amplifier_".$i, 0);
+			$this->RegisterPropertyBoolean("Active_".$i, true);
+			$this->RegisterPropertyBoolean("Logging_".$i, false);
+		}
             	$this->RegisterTimer("Messzyklus", 0, 'I2GAD2_Measurement($_IPS["TARGET"]);');
         }
  	
