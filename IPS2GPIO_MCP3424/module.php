@@ -39,7 +39,8 @@
 		$arrayStatus[] = array("code" => 102, "icon" => "active", "caption" => "Instanz ist aktiv");
 		$arrayStatus[] = array("code" => 104, "icon" => "inactive", "caption" => "Instanz ist inaktiv");
 		$arrayStatus[] = array("code" => 200, "icon" => "error", "caption" => "Pin wird doppelt genutzt!");
-		$arrayStatus[] = array("code" => 201, "icon" => "error", "caption" => "Pin ist an diesem Raspberry Pi Modell nicht vorhanden!"); 
+		$arrayStatus[] = array("code" => 201, "icon" => "error", "caption" => "Pin ist an diesem Raspberry Pi Modell nicht vorhanden!");
+		$arrayStatus[] = array("code" => 202, "icon" => "error", "caption" => "I²C-Kommunikationfehler!");
 		
 		$arrayElements = array(); 
 		$arrayElements[] = array("name" => "Open", "type" => "CheckBox",  "caption" => "Aktiv"); 
@@ -198,6 +199,7 @@
 					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP3424_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $Configuration)));
 					If (!$Result) {
 						$this->SendDebug("Measurement", "Setzen der Konfiguration Port ".$i." fehlerhaft!", 0);
+						$this->SetStatus(202);
 						return;
 					}
 					IPS_Sleep(320);
@@ -206,9 +208,11 @@
 						$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP3424_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $this->ReadPropertyInteger("DeviceAddress"), "Count" => 3)));
 						If ($Result < 0) {
 							$this->SendDebug("Measurement", "Einlesen der Werte fehlerhaft!", 0);
+							$this->SetStatus(202);
 							return;
 						}
 						else {
+							$this->SetStatus(102);
 							$MeasurementData = unserialize($Result);
 						}
 					}
@@ -216,9 +220,11 @@
 						$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP3424_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $this->ReadPropertyInteger("DeviceAddress"), "Count" => 4)));
 						If ($Result < 0) {
 							$this->SendDebug("Measurement", "Einlesen der Werte fehlerhaft!", 0);
+							$this->SetStatus(202);
 							return;
 						}
 						else {
+							$this->SetStatus(102);
 							$MeasurementData = unserialize($Result);
 						}
 					}
