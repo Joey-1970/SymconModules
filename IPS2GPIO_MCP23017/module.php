@@ -354,11 +354,13 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("0E"), "Count" => 8)));
 			If ($Result < 0) {
 				$this->SendDebug("GetOutput", "Einlesen der Werte fehlerhaft!", 0);
+				$this->SetStatus(202);
 				return;
 			}
 			else {
 				$this->SendDebug("GetOutput", "Ergebnis: ".$Result, 0);
 				If (is_array(unserialize($Result))) {
+					$this->SetStatus(102);
 					$OutputArray = array();
 					$OutputArray = unserialize($Result);
 					// Ergebnis sichern
@@ -428,8 +430,10 @@
 										  "Parameter" => serialize($OutputArray) )));
 				If (!$Result) {
 					$this->SendDebug("SetOutputPin", "Setzen der Ausgaenge fehlerhaft!", 0);
+					$this->SetStatus(202);
 				}
 				else {
+					$this->SetStatus(102);
 					for ($i = 0; $i <= 7; $i++) {
 						If ($GPAIODIRout & pow(2, $i)) {
 							If ($OutputArray[0] & pow(2, $i)) {
