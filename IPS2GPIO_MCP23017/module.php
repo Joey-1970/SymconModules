@@ -53,6 +53,7 @@
 		$arrayStatus[] = array("code" => 104, "icon" => "inactive", "caption" => "Instanz ist inaktiv");
 		$arrayStatus[] = array("code" => 200, "icon" => "error", "caption" => "Pin wird doppelt genutzt!");
 		$arrayStatus[] = array("code" => 201, "icon" => "error", "caption" => "Pin ist an diesem Raspberry Pi Modell nicht vorhanden!"); 
+		$arrayStatus[] = array("code" => 202, "icon" => "error", "caption" => "I²C-Kommunikationfehler!");
 		
 		$arrayElements = array(); 
 		$arrayElements[] = array("name" => "Open", "type" => "CheckBox",  "caption" => "Aktiv"); 
@@ -226,10 +227,6 @@
 			IPS_SetHidden($this->GetIDForIdent("GPB".$i), false);
 		}
 		
-		
-		
-		
-			
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {					
 			//ReceiveData-Filter setzen
 			$this->SetBuffer("DeviceIdent", (($this->ReadPropertyInteger("DeviceBus") << 7) + $this->ReadPropertyInteger("DeviceAddress")));
@@ -467,8 +464,10 @@
 										  "Parameter" => serialize($OutputArray) )));
 				If (!$Result) {
 					$this->SendDebug("SetOutputPin", "Setzen der Ausgaenge fehlerhaft!", 0);
+					$this->SetStatus(202);
 				}
 				else {
+					$this->SetStatus(102);
 					for ($i = 0; $i <= 7; $i++) {
 						If ($GPBIODIRout & pow(2, $i)) {
 							If ($OutputArray[0] & pow(2, $i)) {
@@ -509,8 +508,10 @@
 										  "Parameter" => serialize($OutputArray) )));
 			If (!$Result) {
 				$this->SendDebug("SetOutput", "Setzen der Ausgaenge fehlerhaft!", 0);
+				$this->SetStatus(202);
 			}
 			else {
+				$this->SetStatus(102);
 				// Statusvariablen setzen
 				for ($i = 0; $i <= 7; $i++) {
 					If ($GPAIODIRout & pow(2, $i)) {
@@ -574,9 +575,11 @@
 										  "Parameter" => serialize($ConfigArray) )));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Basis-Konfigurations-Byte setzen fehlerhaft!", 0);
+				$this->SetStatus(202);
 			}
 			else {
 				$this->SendDebug("Setup", "Basis-Konfigurations-Byte erfolgreich gesetzt", 0);
+				$this->SetStatus(102);
 			}
 			
 			$ConfigArray = array();
@@ -652,9 +655,12 @@
 										  "Parameter" => serialize($ConfigArray) )));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Konfigurations-Byte setzen fehlerhaft!", 0);
+				$this->SetTimerInterval("Messzyklus", 0);
+				$this->SetStatus(202);
 			}
 			else {
 				$this->SendDebug("Setup", "Konfigurations-Byte erfolgreich gesetzt", 0);
+				$this->SetStatus(102);
 				$this->GetOutput();
 			}
 			
