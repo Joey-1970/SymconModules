@@ -49,7 +49,8 @@
 		$arrayStatus[] = array("code" => 102, "icon" => "active", "caption" => "Instanz ist aktiv");
 		$arrayStatus[] = array("code" => 104, "icon" => "inactive", "caption" => "Instanz ist inaktiv");
 		$arrayStatus[] = array("code" => 200, "icon" => "error", "caption" => "Pin wird doppelt genutzt!");
-		$arrayStatus[] = array("code" => 201, "icon" => "error", "caption" => "Pin ist an diesem Raspberry Pi Modell nicht vorhanden!"); 
+		$arrayStatus[] = array("code" => 201, "icon" => "error", "caption" => "Pin ist an diesem Raspberry Pi Modell nicht vorhanden!");
+		$arrayStatus[] = array("code" => 202, "icon" => "error", "caption" => "I²C-Kommunikationfehler!");
 		
 		$arrayElements = array(); 
 		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv"); 
@@ -306,9 +307,11 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("D0"))));
 			If ($Result < 0) {
 				$this->SendDebug("Setup", "Fehler beim Einlesen der Chip ID", 0);
+				$this->SetStatus(202);
 				return;
 			}
 			else {
+				$this->SetStatus(102);
 				SetValueInteger($this->GetIDForIdent("ChipID"), $Result);
 				If ($Result <> 97) {
 					$this->SendDebug("Setup", "Laut Chip ID ist es kein BME680!", 0);
@@ -337,6 +340,7 @@
 		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("75"), "Value" => $config_reg)));
 		If (!$Result) {
 			$this->SendDebug("Setup", "config_reg setzen fehlerhaft!", 0);
+			$this->SetStatus(202);
 			return;
 		}
 
@@ -345,6 +349,7 @@
 		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("70"), "Value" => $heatr_ctrl)));
 		If (!$Result) {
 			$this->SendDebug("Setup", "heatr_ctrl setzen fehlerhaft!", 0);
+			$this->SetStatus(202);
 			return;
 		}
 		
@@ -355,6 +360,7 @@
 		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("74"), "Value" => $ctrl_meas_reg)));
 		If (!$Result) {
 			$this->SendDebug("Setup", "ctrl_meas_reg setzen fehlerhaft!", 0);
+			$this->SetStatus(202);
 			return;
 		}
 
@@ -364,6 +370,7 @@
 		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("72"), "Value" => $ctrl_hum_reg)));
 		If (!$Result) {
 			$this->SendDebug("Setup", "ctrl_hum_reg setzen fehlerhaft!", 0);
+			$this->SetStatus(202);
 			return;
 		}
 
@@ -373,6 +380,7 @@
 		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("71"), "Value" => $ctrl_gas_1)));
 		If (!$Result) {
 			$this->SendDebug("Setup", "ctrl_hum_reg setzen fehlerhaft!", 0);
+			$this->SetStatus(202);
 			return;
 		}
 	return $Result;
@@ -396,11 +404,13 @@
 		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $reg_addr[0], "Value" => $reg_data[0])));
 		If (!$Result) {
 			$this->SendDebug("Setup", "res_heat_0 setzen fehlerhaft!", 0);
+			$this->SetStatus(202);
 			return;
 		}
 		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $reg_addr[1], "Value" => $reg_data[1])));
 		If (!$Result) {
 			$this->SendDebug("Setup", "gas_wait_0 setzen fehlerhaft!", 0);
+			$this->SetStatus(202);
 			return;
 		}
 		
@@ -468,9 +478,11 @@
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $i)));
 				If ($Result < 0) {
 					$this->SendDebug("ReadCalibrateData", "Fehler beim Einlesen der Kalibrierungsdaten bei Byte ".$i, 0);
+					$this->SetStatus(202);
 					return;
 				}
 				else {
+					$this->SetStatus(102);
 					$CalibrateData[] = $Result;
 				}
 			}
@@ -479,9 +491,11 @@
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $i)));
 				If ($Result < 0) {
 					$this->SendDebug("ReadCalibrateData", "Fehler beim Einlesen der Kalibrierungsdaten bei Byte ".$i, 0);
+					$this->SetStatus(202);
 					return;
 				}
 				else {
+					$this->SetStatus(102);
 					$CalibrateData[] = $Result;
 				}
 			}
@@ -490,9 +504,11 @@
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $i)));
 				If ($Result < 0) {
 					$this->SendDebug("ReadCalibrateData", "Fehler beim Einlesen der Kalibrierungsdaten bei Byte ".$i, 0);
+					$this->SetStatus(202);
 					return;
 				}
 				else {
+					$this->SetStatus(102);
 					$CalibrateData[] = $Result;
 				}
 			}
@@ -654,10 +670,12 @@
 				If ($Result < 0) {
 					$MeasurementData = array();
 					$this->SendDebug("read_field_data", "Fehler bei der Datenermittung", 0);
+					$this->SetStatus(202);
 					return;
 				}
 				else {
 					If (is_array(unserialize($Result)) == true) {
+						$this->SetStatus(102);
 						$MeasurementData = array();
 						$MeasurementData = unserialize($Result);
 						$this->SendDebug("read_field_data", "MeasurementData: ".$Result, 0);
@@ -889,6 +907,7 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME680_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $reg_addr, "Value" => $soft_rst_cmd)));
 			If (!$Result) {
 				$this->SendDebug("SoftReset", "SoftReset fehlerhaft!", 0);
+				$this->SetStatus(202);
 				return;
 			}
 			IPS_Sleep(5); 
