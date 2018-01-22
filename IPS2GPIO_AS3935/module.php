@@ -31,6 +31,7 @@
 		$arrayStatus[] = array("code" => 104, "icon" => "inactive", "caption" => "Instanz ist inaktiv");
 		$arrayStatus[] = array("code" => 200, "icon" => "error", "caption" => "Pin wird doppelt genutzt!");
 		$arrayStatus[] = array("code" => 201, "icon" => "error", "caption" => "Pin ist an diesem Raspberry Pi Modell nicht vorhanden!"); 
+		$arrayStatus[] = array("code" => 202, "icon" => "error", "caption" => "I²C-Kommunikationfehler!");
 		
 		$arrayElements = array(); 
 		$arrayElements[] = array("name" => "Open", "type" => "CheckBox",  "caption" => "Aktiv"); 
@@ -261,11 +262,14 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_AS3935_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Count" => 9 )));
 			If ($Result < 0) {
 				$this->SendDebug("GetOutput", "Fehler beim Lesen der Werte!", 0);
+				$this->SetStatus(202);
 				return;
 			}
 			else {
 				$Data = array();
 				$Data = unserialize($Result);
+				
+				$this->SetStatus(102);
 			}
 			/*
 			$PowerDown = $Data[1] & 1;
@@ -337,6 +341,10 @@
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_AS3935_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $Key, "Value" => $Value)));
 				If (!$Result) {
 					$this->SendDebug("Setup", "Schreiben von Wert ".$Value." in Register ".$Key." nicht erfolgreich!", 0);
+					$this->SetStatus(202);
+				}
+				else {
+					$this->SetStatus(102);
 				}
 			}
 		}
@@ -355,11 +363,20 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_AS3935_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 8, "Value" => $Value)));
 			If (!$Result) {
 				$this->SendDebug("Calibrate", "Schreiben von Wert ".$Value." in Register 8 nicht erfolgreich!", 0);
+				$this->SetStatus(202);
+				return;
+			}
+			else {
+				$this->SetStatus(102);
 			}
 			IPS_Sleep(2);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_AS3935_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 8, "Value" =>  $this->ReadPropertyInteger("TunCap"))));
 			If (!$Result) {
 				$this->SendDebug("Calibrate", "Schreiben von Wert ".$this->ReadPropertyInteger("TunCap")." in Register 8 nicht erfolgreich!", 0);
+				$this->SetStatus(202);
+			}
+			else {
+				$this->SetStatus(102);
 			}
 			
 		}
@@ -372,6 +389,10 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_AS3935_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 60, "Value" => 150)));
 			If (!$Result) {
 				$this->SendDebug("Reset", "Schreiben von Wert 150 in Register 60 nicht erfolgreich!", 0);
+				$this->SetStatus(202);
+			}
+			else {
+				$this->SetStatus(102);
 			}
 		}
 	}
