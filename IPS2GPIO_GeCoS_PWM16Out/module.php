@@ -29,6 +29,7 @@
 		$arrayStatus[] = array("code" => 104, "icon" => "inactive", "caption" => "Instanz ist inaktiv");
 		$arrayStatus[] = array("code" => 200, "icon" => "error", "caption" => "Instanz ist fehlerhaft");
 		$arrayStatus[] = array("code" => 201, "icon" => "error", "caption" => "Device konnte nicht gefunden werden");
+		$arrayStatus[] = array("code" => 202, "icon" => "error", "caption" => "I²C-Kommunikationfehler!");
 				
 		$arrayElements = array(); 
 		$arrayElements[] = array("name" => "Open", "type" => "CheckBox",  "caption" => "Aktiv"); 
@@ -173,8 +174,10 @@
 								  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
 			If (!$Result) {
 				$this->SendDebug("SetOutputPinStatus", "Daten setzen fehlerhaft!", 0);
+				$this->SetStatus(202);
 			}
 			else {
+				$this->SetStatus(102);
 				// Ausgang abfragen
 				$this->GetOutput($StartAddress + 2);
 			}
@@ -205,8 +208,10 @@
 								  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
 			If (!$Result) {
 				$this->SendDebug("SetOutputPinStatus", "Daten setzen fehlerhaft!", 0);
+				$this->SetStatus(202);
 			}
 			else {
+				$this->SetStatus(102);
 				// Ausgang abfragen
 				$this->GetOutput($StartAddress + 2);
 			}
@@ -237,8 +242,10 @@
 								  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
 			If (!$Result) {
 				$this->SendDebug("ToggleOutputPinStatus", "Daten setzen fehlerhaft!", 0);
+				$this->SetStatus(202);
 			}
 			else {
+				$this->SetStatus(102);
 				// Ausgang abfragen
 				$this->GetOutput($StartAddress + 2);
 			}
@@ -257,8 +264,10 @@
 			$Result_PreScale = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Read_Byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 254)));
 			If (($Result_Mode < 0) OR ($Result_PreScale < 0)) {
 				$this->SendDebug("Setup", "Lesen der Konfiguration fehlerhaft!", 0);
+				$this->SetStatus(202);
 			}
 			else {
+				$this->SetStatus(102);
 				If (($Result_Mode == 4) AND ($Result_PreScale == $PreScale)) {
 					$this->SendDebug("Setup", "Lesen der Konfiguration erfolgreich, keine Erneuerung notwendig.", 0);
 				}
@@ -268,21 +277,25 @@
 					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 0, "Value" => 16)));
 					If (!$Result) {
 						$this->SendDebug("Setup", "Ausfuehrung in Sleep setzen fehlerhaft!", 0);
+						$this->SetStatus(202);
 					}
 					IPS_Sleep(10);
 					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 254, "Value" => $PreScale)));
 					If (!$Result) {
 						$this->SendDebug("Setup", "Prescale setzen fehlerhaft!", 0);
+						$this->SetStatus(202);
 					}
 					// Mode 1 in Sleep zurücksetzen
 					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 0, "Value" => 32)));
 					If (!$Result) {
 						$this->SendDebug("Setup", "Mode 1 setzen fehlerhaft!", 0);
+						$this->SetStatus(202);
 					}
 					// Mode 2 auf Ausgänge setzen
 					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 1, "Value" => 4)));
 					If (!$Result) {
 						$this->SendDebug("Setup", "Mode 2 setzen fehlerhaft!", 0);
+						$this->SetStatus(202);
 					}
 				}
 			}
