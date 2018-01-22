@@ -35,6 +35,7 @@
 		$arrayStatus[] = array("code" => 104, "icon" => "inactive", "caption" => "Instanz ist inaktiv");
 		$arrayStatus[] = array("code" => 200, "icon" => "error", "caption" => "Pin wird doppelt genutzt!");
 		$arrayStatus[] = array("code" => 201, "icon" => "error", "caption" => "Pin ist an diesem Raspberry Pi Modell nicht vorhanden!"); 
+		$arrayStatus[] = array("code" => 202, "icon" => "error", "caption" => "I²C-Kommunikationfehler!");
 		
 		$arrayElements = array(); 
 		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv"); 
@@ -173,6 +174,7 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BH1750_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $this->ReadPropertyInteger("Resulution") )));
 			If (!$Result) {
 				$this->SendDebug("Measurement", "Fehler beim Schreiben der Aufloesung!", 0);
+				$this->SetStatus(202);
 				return;
 			}
 			IPS_Sleep(180);
@@ -180,9 +182,11 @@
 			$this->SendDebug("Measurement", "Wert: ".$Result, 0);
 			If ($Result < 0) {
 				$this->SendDebug("Measurement", "Fehler beim Lesen des Wertes!", 0);
+				$this->SetStatus(202);
 				return;
 			}
 			else {
+				$this->SetStatus(102);
 				If ($this->ReadPropertyInteger("Resulution") == 19) {
 					// LR
 					$Lux = (($Result & 0xff00)>>8) | (($Result & 0x00ff)<<8);
@@ -235,6 +239,7 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BH1750_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => hexdec("01"))));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Fehler beim Einschalten!", 0);
+				$this->SetStatus(202);
 				return;
 			}
 			IPS_Sleep(100);
@@ -245,6 +250,7 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BH1750_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $HighMTreg)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Fehler beim Schreiben des HighMTreg!", 0);
+				$this->SetStatus(202);
 				return;
 			}
 			// Low bit MTreg 011 + Bit 1, 2, 3 ,4, 5
@@ -252,12 +258,14 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BH1750_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $LowMTreg)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Fehler beim Schreiben des LowMTreg!", 0);
+				$this->SetStatus(202);
 				return;
 			}
 			// Messwerterfassung setzen
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BH1750_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $this->ReadPropertyInteger("Resulution") )));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Fehler beim Schreiben des Auflösung!", 0);
+				$this->SetStatus(202);
 				return;
 			}
 		}
