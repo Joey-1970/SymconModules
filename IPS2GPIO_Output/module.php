@@ -174,7 +174,7 @@
 	{
 		// Übergangsfunktion
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->ToggleOutput()
+			$this->ToggleOutput();
 		}
 	}
 	    
