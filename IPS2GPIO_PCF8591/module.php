@@ -18,14 +18,10 @@
  	    	$this->RegisterPropertyBoolean("Open", false);
 		$this->RegisterPropertyInteger("DeviceAddress", 72);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
- 	    	$this->RegisterPropertyBoolean("Ain0", true);
- 	    	$this->RegisterPropertyBoolean("LoggingAin0", false);
- 	    	$this->RegisterPropertyBoolean("Ain1", true);
- 	    	$this->RegisterPropertyBoolean("LoggingAin1", false);
- 	    	$this->RegisterPropertyBoolean("Ain2", true);
- 	    	$this->RegisterPropertyBoolean("LoggingAin2", false);
- 	    	$this->RegisterPropertyBoolean("Ain3", true);
- 	    	$this->RegisterPropertyBoolean("LoggingAin3", false);
+		for ($i = 0; $i <= 3; $i++) {
+ 	    		$this->RegisterPropertyBoolean("Ain".$i, true);
+ 	    		$this->RegisterPropertyBoolean("LoggingAin".$i, false);
+		}
  	    	$this->RegisterPropertyBoolean("LoggingOut", false);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GAD1_Measurement($_IPS["TARGET"]);');
