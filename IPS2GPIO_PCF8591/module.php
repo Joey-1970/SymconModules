@@ -213,11 +213,9 @@
 	public function Measurement()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			//IPS_LogMessage("IPS2GPIO PCF8591","Messung durchführen"); 
+			$this->SendDebug("Measurement", "Ausfuehrung", 0);
 			for ($i = 0; $i <= 3; $i++) {
 				If ($this->ReadPropertyBoolean("Ain".$i) == true) {
-					//IPS_LogMessage("IPS2GPIO PCF8591","Messung durchführen für Ain ".$i); 
-					$this->SetBuffer("WriteProtection", "true");
 					// Aktualisierung der Messerte anfordern
 					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8591_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("40")|($i & 3) )));
 					If ($Result < 0) {
@@ -225,7 +223,7 @@
 						$this->SetStatus(202);
 						return;
 					}
-					$this->SetBuffer("WriteProtection", "false");
+
 					// Messwerte einlesen
 					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8591_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("40")|($i & 3) )));
 					If ($Result < 0) {
@@ -252,6 +250,7 @@
 	public function SetOutput(Int $Value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("SetOutput", "Ausfuehrung", 0);
 			$Value = min(255, max(0, $Value));
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8591_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("40"), "Value" => $Value)));
 			If (!$Result) {
