@@ -16,8 +16,7 @@
 		$this->RegisterPropertyInteger("Frequency", 100);
 		$this->RegisterPropertyInteger("FadeScalar", 4);
 		for ($i = 0; $i <= 15; $i++) {
-			$this->RegisterPropertyInteger("FadeIn_".$i, 0);
-			$this->RegisterPropertyInteger("FadeOut_".$i, 0);
+			$this->RegisterPropertyInteger("FadeTime_".$i, 0);
 		}
         }
  	
@@ -53,12 +52,13 @@
 		$arrayOptions[] = array("label" => "200", "value" => 200);
 		$arrayElements[] = array("type" => "Select", "name" => "Frequency", "caption" => "Frequenz (Hz)", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		$arrayElements[] = array("type" => "Label", "label" => "Optional: Angabe von Fade-In/-Out-Zeit in Sekunden (0 => aus, max. 10 Sek)");
+		$arrayElements[] = array("type" => "Label", "label" => "Optional: Angabe der Standard Fade-In/-Out-Zeit in Sekunden (0 => aus, max. 10 Sek)");
 		for ($i = 0; $i <= 15; $i++) {
 			$arrayElements[] = array("type" => "Label", "label" => "Kanal ".$i.":");
-			$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeIn_".$i,  "caption" => "Fade-In-Zeit"); 
-			$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeOut_".$i,  "caption" => "Fade-Out-Zeit");
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeTime_".$i,  "caption" => "Fade Zeit"); 
 		}
+		$arrayElements[] = array("type" => "Label", "label" => "Schritte pro Sekunde: (1 - 16)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "FadeScalar",  "caption" => "Fade Schritte"); 
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 
 		
@@ -327,7 +327,7 @@
 			}
 		}
 	}
-	
+	/*
 	private function FadeIn(Int $Channel)
 	{
 		// W beim Einschalten Faden
@@ -411,6 +411,7 @@
 				
 		}
 	}
+	*/
 	    
 	private function SetStatusVariables(Int $Register, Int $Value)
 	{
