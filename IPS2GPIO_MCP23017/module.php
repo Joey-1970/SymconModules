@@ -282,25 +282,25 @@
 	 	switch ($data->Function) {
 			case "notify":
 			   	If ($data->Pin == $this->ReadPropertyInteger("Pin_INT_A")) {
+					SetValueInteger($this->GetIDForIdent("LastInterrupt_A"), time() );
 					If (($data->Value == 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-						$this->SendDebug("Notify", "Wert: ".(int)$data->Value, 0);
-						SetValueInteger($this->GetIDForIdent("LastInterrupt_A"), time() );
-						$this->GetOutput();
+						$this->SendDebug("Notify INT A", "Wert: ".(int)$data->Value, 0);
+						//$this->GetOutput();
 					}
 					elseIf (($data->Value == 1) AND ($this->ReadPropertyBoolean("Open") == true)) {
-						$this->SendDebug("Notify", "Wert: ".(int)$data->Value, 0);
-						$this->GetOutput();
+						$this->SendDebug("Notify INT A", "Wert: ".(int)$data->Value, 0);
+						//$this->GetOutput();
 					}
 			   	}
 				elseif ($data->Pin == $this->ReadPropertyInteger("Pin_INT_B")) {
+					SetValueInteger($this->GetIDForIdent("LastInterrupt_B"), time() );
 					If (($data->Value == 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-						$this->SendDebug("Notify", "Wert: ".(int)$data->Value, 0);
-						SetValueInteger($this->GetIDForIdent("LastInterrupt_B"), time() );
-						$this->GetOutput();
+						$this->SendDebug("Notify INT B", "Wert: ".(int)$data->Value, 0);
+						//$this->GetOutput();
 					}
 					elseIf (($data->Value == 1) AND ($this->ReadPropertyBoolean("Open") == true)) {
-						$this->SendDebug("Notify", "Wert: ".(int)$data->Value, 0);
-						$this->GetOutput();
+						$this->SendDebug("Notify INT B", "Wert: ".(int)$data->Value, 0);
+						//$this->GetOutput();
 					}
 			   	}
 			   	break; 
