@@ -34,6 +34,7 @@
 		$arrayStatus[] = array("code" => 104, "icon" => "inactive", "caption" => "Instanz ist inaktiv");
 		$arrayStatus[] = array("code" => 200, "icon" => "error", "caption" => "Pin wird doppelt genutzt!");
 		$arrayStatus[] = array("code" => 201, "icon" => "error", "caption" => "Pin ist an diesem Raspberry Pi Modell nicht vorhanden!"); 
+		$arrayStatus[] = array("code" => 202, "icon" => "error", "caption" => "I²C-Kommunikationfehler!");
 		
 		$arrayElements = array(); 
 		$arrayElements[] = array("name" => "Open", "type" => "CheckBox",  "caption" => "Aktiv"); 
@@ -202,9 +203,11 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("00"), "Value" => $Bitmask)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Setzen der Config fehlerhaft!", 0);
+				$this->SetStatus(202);
 				return;
 			}
 			else {
+				$this->SetStatus(102);
 				//$this->Read_Status();
 			}
 			
@@ -222,9 +225,11 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("08"), "Value" => $Bitmask)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Setzen der Config fehlerhaft!", 0);
+				$this->SetStatus(202);
 				return;
 			}
 			else {
+				$this->SetStatus(102);
 				//$this->Read_Status();
 			}
 		}
@@ -245,10 +250,12 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("01"), "Count" => 3)));
 			If ($Result < 0) {
 				$this->SendDebug("ReadCounter", "Fehler bei der Datenermittung", 0);
+				$this->SetStatus(202);
 				return 0;
 			}
 			else {
 				If (is_array(unserialize($Result)) == true) {
+					$this->SetStatus(102);
 					$this->SendDebug("ReadCounter", "Ergebnis: ".$Result, 0);
 					$MeasurementData = array();
 					$MeasurementData = unserialize($Result);
@@ -268,10 +275,12 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("09"), "Count" => 3)));
 			If ($Result < 0) {
 				$this->SendDebug("ReadAlarm", "Fehler bei der Datenermittung", 0);
+				$this->SetStatus(202);
 				return 0;
 			}
 			else {
 				If (is_array(unserialize($Result)) == true) {
+					$this->SetStatus(102);
 					$this->SendDebug("ReadAlarm", "Ergebnis: ".$Result, 0);
 					$MeasurementData = array();
 					$MeasurementData = unserialize($Result);
@@ -291,10 +300,12 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("07"), "Count" => 1)));
 			If ($Result < 0) {
 				$this->SendDebug("ReadTimer", "Fehler bei der Datenermittung", 0);
+				$this->SetStatus(202);
 				return 0;
 			}
 			else {
 				If (is_array(unserialize($Result)) == true) {
+					$this->SetStatus(102);
 					$this->SendDebug("ReadTimer", "Ergebnis: ".$Result, 0);
 					$MeasurementData = array();
 					$MeasurementData = unserialize($Result);
