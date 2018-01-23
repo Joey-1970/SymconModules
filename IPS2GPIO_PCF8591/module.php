@@ -152,7 +152,7 @@
 	{
   		switch($Ident) {
 	        case "Output":
-	            $this->Set_Output($Value);
+	            $this->SetOutput($Value);
 	            break;
 	        default:
 	            throw new Exception("Invalid Ident");
@@ -229,13 +229,20 @@
 		}
 	}
 	
-	public function Set_Output(Int $Value)
+	public function SetOutput(Int $Value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$Value = min(255, max(0, $Value));
-			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_write_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("40"), "Value" => $Value)));
-			//Neuen Wert in die Statusvariable schreiben
-	            	SetValueInteger($this->GetIDForIdent("Output"), $Value);
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8591_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("40"), "Value" => $Value)));
+			If (!$Result) {
+				$this->SendDebug("SetOutput", "Setzen des Ausgangs fehlerhaft!", 0);
+				$this->SetStatus(202);
+			}
+			else {
+				$this->SetStatus(102);
+				//Neuen Wert in die Statusvariable schreiben
+	            		SetValueInteger($this->GetIDForIdent("Output"), $Value);
+			}
 		}
 	}
 	
