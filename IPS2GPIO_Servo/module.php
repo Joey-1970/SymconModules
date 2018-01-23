@@ -23,7 +23,8 @@
 		$arrayStatus[] = array("code" => 102, "icon" => "active", "caption" => "Instanz ist aktiv");
 		$arrayStatus[] = array("code" => 104, "icon" => "inactive", "caption" => "Instanz ist inaktiv");
 		$arrayStatus[] = array("code" => 200, "icon" => "error", "caption" => "Pin wird doppelt genutzt!");
-		$arrayStatus[] = array("code" => 201, "icon" => "error", "caption" => "Pin ist an diesem Raspberry Pi Modell nicht vorhanden!"); 
+		$arrayStatus[] = array("code" => 201, "icon" => "error", "caption" => "Pin ist an diesem Raspberry Pi Modell nicht vorhanden!");
+		$arrayStatus[] = array("code" => 202, "icon" => "error", "caption" => "GPIO-Kommunikationfehler!");
 		
 		$arrayElements = array(); 
 		$arrayElements[] = array("name" => "Open", "type" => "CheckBox",  "caption" => "Aktiv"); 
@@ -138,8 +139,10 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value)));
 			If (!$Result) {
 				$this->SendDebug("SetOutput", "Fehler beim Positionieren!", 0);
+				$this->SetStatus(202);
 			}
 			else {
+				$this->SetStatus(102);
 				$Output = ($Value / ($Right - $Left)) * 100;
 				SetValueInteger($this->GetIDForIdent("Output"), $Output);
 				$this->GetOutput();
@@ -148,6 +151,7 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => 0)));
 			If (!$Result) {
 				$this->SendDebug("SetOutput", "Fehler beim Ausschalten!", 0);
+				$this->SetStatus(202);
 			}
 		}
 	}
@@ -159,8 +163,10 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_servo", "Pin" => $this->ReadPropertyInteger("Pin") )));
 			If ($Result < 0) {
 				$this->SendDebug("GetOutput", "Fehler beim Lesen!", 0);
+				$this->SetStatus(202);
 			}
 			else {
+				$this->SetStatus(102);
 				$this->SendDebug("GetOutput", "Wert: ".$Result, 0);
 				$Left = $this->ReadPropertyInteger("most_anti_clockwise");
 				$Right = $this->ReadPropertyInteger("most_clockwise");
@@ -177,8 +183,10 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $this->ReadPropertyInteger("midpoint"))));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Fehler beim Stellen der Mittelstellung!", 0);
+				$this->SetStatus(202);
 			}
 			else {
+				$this->SetStatus(102);
 				SetValueInteger($this->GetIDForIdent("Output"), 50);
 				$this->GetOutput();
 				IPS_Sleep(500);
