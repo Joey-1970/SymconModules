@@ -23,7 +23,8 @@
 		$arrayStatus[] = array("code" => 102, "icon" => "active", "caption" => "Instanz ist aktiv");
 		$arrayStatus[] = array("code" => 104, "icon" => "inactive", "caption" => "Instanz ist inaktiv");
 		$arrayStatus[] = array("code" => 200, "icon" => "error", "caption" => "Pin wird doppelt genutzt!");
-		$arrayStatus[] = array("code" => 201, "icon" => "error", "caption" => "Pin ist an diesem Raspberry Pi Modell nicht vorhanden!"); 
+		$arrayStatus[] = array("code" => 201, "icon" => "error", "caption" => "Pin ist an diesem Raspberry Pi Modell nicht vorhanden!");
+		$arrayStatus[] = array("code" => 202, "icon" => "error", "caption" => "GPIO-Kommunikationfehler!");
 		
 		$arrayElements = array(); 
 		$arrayElements[] = array("name" => "Open", "type" => "CheckBox",  "caption" => "Aktiv"); 
@@ -111,7 +112,7 @@
   		switch($Ident) {
 	        case "Status":
 	            If ($this->ReadPropertyBoolean("Open") == true) {
-		    	$this->Set_Status($Value);
+		    	$this->SetOutput($Value);
 		    }
 	            break;
 	        default:
@@ -142,16 +143,26 @@
 	// Schaltet den gewaehlten Pin
 	public function Set_Status(Bool $Value)
 	{
+		// Übergangsfunktion
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SetOutput($Value);
+		}
+	}
+	    
+	public function SetOutput(Bool $Value)
+	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$Value = min(1, max(0, $Value));
-			$this->SendDebug("Set_Status", "Ausfuehrung", 0);
+			$this->SendDebug("SetOutput", "Ausfuehrung", 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => ($Value ^ $this->ReadPropertyBoolean("Invert")) )));
-			$this->SendDebug("Set_Status", "Ergebnis: ".(int)$Result, 0);
+			$this->SendDebug("SetOutput", "Ergebnis: ".(int)$Result, 0);
 			IF (!$Result) {
-				$this->SendDebug("Set_Status", "Fehler beim Setzen des Status!", 0);
+				$this->SendDebug("SetOutput", "Fehler beim Setzen des Status!", 0);
+				$this->SetStatus(202);
 				return;
 			}
 			else {
+				$this->SetStatus(102);
 				SetValueBoolean($this->GetIDForIdent("Status"), ($Value ^ $this->ReadPropertyBoolean("Invert")));
 				$this->Get_Status();
 			}
@@ -161,8 +172,16 @@
 	// Toggelt den Status
 	public function Toggle_Status()
 	{
+		// Übergangsfunktion
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("Toggle_Status", "Ausfuehrung", 0);
+			$this->ToggleOutput()
+		}
+	}
+	    
+	public function ToggleOutput()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("ToggleOutput", "Ausfuehrung", 0);
 			$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")));
 		}
 	}
@@ -170,15 +189,25 @@
 	// Ermittelt den Status
 	public function Get_Status()
 	{
+		// Übergangsfunktion
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->GetOutput();
+		}
+	}
+	    
+	public function GetOutput()
+	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Get_Status", "Ausfuehrung", 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_value", "Pin" => $this->ReadPropertyInteger("Pin") )));
 			If ($Result < 0) {
-				$this->SendDebug("Get_Status", "Fehler beim Lesen des Status!", 0);
+				$this->SendDebug("GetOutput", "Fehler beim Lesen des Status!", 0);
+				$this->SetStatus(202);
 				return;
 			}
 			else {
-				$this->SendDebug("Get_Status", "Ergebnis: ".(int)$Result, 0);
+				$this->SetStatus(102);
+				$this->SendDebug("GetOutput", "Ergebnis: ".(int)$Result, 0);
 				SetValueBoolean($this->GetIDForIdent("Status"), ($Result ^ $this->ReadPropertyBoolean("Invert")));
 			}
 		}
