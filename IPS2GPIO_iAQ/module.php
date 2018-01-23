@@ -32,6 +32,7 @@
 		$arrayStatus[] = array("code" => 104, "icon" => "inactive", "caption" => "Instanz ist inaktiv");
 		$arrayStatus[] = array("code" => 200, "icon" => "error", "caption" => "Pin wird doppelt genutzt!");
 		$arrayStatus[] = array("code" => 201, "icon" => "error", "caption" => "Pin ist an diesem Raspberry Pi Modell nicht vorhanden!"); 
+		$arrayStatus[] = array("code" => 202, "icon" => "error", "caption" => "I²C-Kommunikationfehler!");
 		
 		$arrayElements = array(); 
 		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv"); 
@@ -166,10 +167,12 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_iAQ_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("5A"), "Count" => 9)));
 			If ($Result < 0) {
 				$this->SendDebug("Measurement", "Einlesen der Werte fehlerhaft!", 0);
+				$this->SetStatus(202);
 				return;
 			}
 			else {
 				If (is_array(unserialize($Result))) {
+					$this->SetStatus(102);
 					$MeasurementArray = array();
 					$MeasurementArray = unserialize($Result);
 					// CO2 berechnen
