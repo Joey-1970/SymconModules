@@ -36,7 +36,8 @@
 		$arrayStatus[] = array("code" => 102, "icon" => "active", "caption" => "Instanz ist aktiv");
 		$arrayStatus[] = array("code" => 104, "icon" => "inactive", "caption" => "Instanz ist inaktiv");
 		$arrayStatus[] = array("code" => 200, "icon" => "error", "caption" => "Pin wird doppelt genutzt!");
-		$arrayStatus[] = array("code" => 201, "icon" => "error", "caption" => "Pin ist an diesem Raspberry Pi Modell nicht vorhanden!"); 
+		$arrayStatus[] = array("code" => 201, "icon" => "error", "caption" => "Pin ist an diesem Raspberry Pi Modell nicht vorhanden!");
+		$arrayStatus[] = array("code" => 202, "icon" => "error", "caption" => "I²C-Kommunikationfehler!");
 		
 		$arrayElements = array(); 
 		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv"); 
@@ -300,9 +301,11 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $Bitmask)));
 			If (!$Result) {
 				$this->SendDebug("SetPinOutput", "Setzen des Ausgangs fehlerhaft!", 0);
+				$this->SetStatus(202);
 				return;
 			}
 			else {
+				$this->SetStatus(102);
 				$this->Read_Status();
 			}
 		}
@@ -316,9 +319,11 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $Value)));
 			If (!$Result) {
 				$this->SendDebug("SetOutput", "Setzen der Ausgaenge fehlerhaft!", 0);
+				$this->SetStatus(202);
 				return;
 			}
 			else {
+				$this->SetStatus(102);
 				$this->Read_Status();
 			}
 		}
