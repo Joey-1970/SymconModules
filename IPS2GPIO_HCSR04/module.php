@@ -36,6 +36,7 @@
 		$arrayStatus[] = array("code" => 104, "icon" => "inactive", "caption" => "Instanz ist inaktiv");
 		$arrayStatus[] = array("code" => 200, "icon" => "error", "caption" => "Pin wird doppelt genutzt!");
 		$arrayStatus[] = array("code" => 201, "icon" => "error", "caption" => "Pin ist an diesem Raspberry Pi Modell nicht vorhanden!"); 
+		$arrayStatus[] = array("code" => 202, "icon" => "error", "caption" => "GPIO-Kommunikationfehler!");
 		
 		$arrayElements = array(); 
 		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv"); 
@@ -175,9 +176,6 @@
 			   		$this->SetStatus($data->Status);
 			   	}
 			   	break;
-			   case "freepin":
-			   	// Funktion zum erstellen dynamischer Pulldown-Menüs
-			   	break;
 	 	}
  	}
 	// Beginn der Funktionen
@@ -190,6 +188,7 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_trigger", "Pin" => $this->ReadPropertyInteger("Pin_O"), "Time" => 10)));
 			If (!$Result) {
 				$this->SendDebug("Measurement", "Fehler beim Schreiben des Triggers!", 0);
+				$this->SetStatus(202);
 				return;
 			}
 		}
