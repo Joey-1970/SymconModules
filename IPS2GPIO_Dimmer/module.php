@@ -24,6 +24,7 @@
 		$arrayStatus[] = array("code" => 104, "icon" => "inactive", "caption" => "Instanz ist inaktiv");
 		$arrayStatus[] = array("code" => 200, "icon" => "error", "caption" => "Pin wird doppelt genutzt!");
 		$arrayStatus[] = array("code" => 201, "icon" => "error", "caption" => "Pin ist an diesem Raspberry Pi Modell nicht vorhanden!"); 
+		$arrayStatus[] = array("code" => 202, "icon" => "error", "caption" => "GPIO-Kommunikationfehler!");
 		
 		$arrayElements = array(); 
 		$arrayElements[] = array("name" => "Open", "type" => "CheckBox",  "caption" => "Aktiv"); 
@@ -143,9 +144,11 @@
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $value)));
 				If (!$Result) {
 					$this->SendDebug("Set_Intensity", "Fehler beim Schreiben des Wertes!", 0);
+					$this->SetStatus(202);
 					return;
 				}
 				else {
+					$this->SetStatus(102);
 					SetValueInteger($this->GetIDForIdent("Intensity"), $value);
 					$this->Get_Status();
 				}
@@ -182,6 +185,7 @@
 					$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $i)));
 					If (!$Result) {
 						$this->SendDebug("FadeIn", "Fehler beim Schreiben des Wertes!", 0);
+						$this->SetStatus(202);
 						return; 
 					}
 				}
@@ -220,6 +224,7 @@
 					$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $i)));
 					If (!$Result) {
 						$this->SendDebug("FadeOut", "Fehler beim Schreiben des Wertes!", 0);
+						$this->SetStatus(202);
 						return; 
 					}
 				}
@@ -256,9 +261,11 @@
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => GetValueInteger($this->GetIDForIdent("Intensity")))));
 				If (!$Result) {
 					$this->SendDebug("Set_Status", "Fehler beim Schreiben des Wertes!", 0);
+					$this->SetStatus(202);
 					return; 
 				}
 				else {
+					$this->SetStatus(102);
 					SetValueBoolean($this->GetIDForIdent("Status"), $value);
 					$this->Get_Status();
 				}
@@ -270,9 +277,11 @@
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => 0)));
 				If (!$Result) {
 					$this->SendDebug("Set_Status", "Fehler beim Schreiben des Wertes!", 0);
+					$this->SetStatus(202);
 					return; 
 				}
 				else {
+					$this->SetStatus(102);
 					SetValueBoolean($this->GetIDForIdent("Status"), $value);
 				}
 			}
@@ -288,9 +297,11 @@
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_PWM_dutycycle", "Pin" => $this->ReadPropertyInteger("Pin") )));
 				If ($Result < 0) {
 					$this->SendDebug("Get_Status", "Fehler beim Lesen des Wertes!", 0);
+					$this->SetStatus(202);
 					return;
 				}
 				else {
+					$this->SetStatus(102);
 					SetValueInteger($this->GetIDForIdent("Intensity"), $Result);
 				}
 			}
