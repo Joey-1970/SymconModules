@@ -251,9 +251,11 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"))));
 			If ($Result < 0) {
 				$this->SendDebug("Read_Status", "Fehler beim Einlesen der Ausgänge!", 0);
+				$this->SetStatus(202);
 				return;
 			}
 			else {
+				$this->SetStatus(102);
 				// Daten der Messung
 				SetValueInteger($this->GetIDForIdent("Value"), $Result);
 				$Result  = str_pad(decbin($Result), 8, '0', STR_PAD_LEFT );
