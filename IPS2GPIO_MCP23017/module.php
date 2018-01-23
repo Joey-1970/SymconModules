@@ -365,7 +365,7 @@
 					$this->SetBuffer("GPB", $OutputArray[8]);
 					// Statusvariablen setzen
 					for ($i = 0; $i <= 7; $i++) {
-						If ($OutputArray[7] & pow(2, $i)) {
+						If ($OutputArray[5] & pow(2, $i)) {
 							If (GetValueBoolean($this->GetIDForIdent("GPA".$i)) == false) {
 								SetValueBoolean($this->GetIDForIdent("GPA".$i), true);
 							}
@@ -377,7 +377,7 @@
 						}
 
 
-						If ($OutputArray[8] & pow(2, $i)) {
+						If ($OutputArray[6] & pow(2, $i)) {
 							If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == false) {
 								SetValueBoolean($this->GetIDForIdent("GPB".$i), true);
 							}
@@ -388,12 +388,14 @@
 							}
 						}
 					}
+					/*
 					If ($OutputArray[5] <> $OutputArray[7]) {
 						$this->SendDebug("GetOutput", "Hardwarefehler auf Port A?", 0);
 					}
 					If ($OutputArray[6] <> $OutputArray[8]) {
 						$this->SendDebug("GetOutput", "Hardwarefehler auf Port B?", 0);
 					}
+					*/
 					
 				}
 			}
