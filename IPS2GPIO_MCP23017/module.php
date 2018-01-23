@@ -340,9 +340,6 @@
 	        default:
 	            throw new Exception("Invalid Ident");
 	    	}
-		
-		
-		
 	}  
 	    
 	// Beginn der Funktionen
