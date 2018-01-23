@@ -181,7 +181,8 @@
 				   	}
 				}
 			   	break;
-			  case "set_i2c_data":
+			  /*
+			case "set_i2c_data":
 			  	If ($data->DeviceIdent == $this->GetBuffer("DeviceIdent")) {
 			  		// Daten der Messung
 			  		//IPS_LogMessage("IPS2GPIO PCF8591","Ergebnisse sind angekommen für Register ".$data->Register." Wert ".$data->Value. " WP ".$this->GetBuffer("WriteProtection"));
@@ -203,6 +204,7 @@
 			  		}
 			  	}
 			  	break;
+			*/
 	 	}
  	}
 	
@@ -217,13 +219,31 @@
 					//IPS_LogMessage("IPS2GPIO PCF8591","Messung durchführen für Ain ".$i); 
 					$this->SetBuffer("WriteProtection", "true");
 					// Aktualisierung der Messerte anfordern
-					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("40")|($i & 3) )));
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8591_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("40")|($i & 3) )));
+					If ($Result < 0) {
+						$this->SendDebug("Measurement", "Einlesen der Werte fehlerhaft!", 0);
+						$this->SetStatus(202);
+						return;
+					}
 					$this->SetBuffer("WriteProtection", "false");
 					// Messwerte einlesen
-					$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_read_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("40")|($i & 3) )));
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8591_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("40")|($i & 3) )));
+					If ($Result < 0) {
+						$this->SendDebug("Measurement", "Einlesen der Werte fehlerhaft!", 0);
+						$this->SetStatus(202);
+						return;
+					}
+					else {
+						$this->SetStatus(102);
+						If (GetValueInteger($this->GetIDForIdent("Channel_".$i)) <> $Result) {
+							SetValueInteger($this->GetIDForIdent("Channel_".$i), $Result);
+						}
+					}
 				}
 				else {
-					SetValueInteger($this->GetIDForIdent("Channel_".$i), 0);
+					If (GetValueInteger($this->GetIDForIdent("Channel_".$i)) <> 0) {
+						SetValueInteger($this->GetIDForIdent("Channel_".$i), 0);
+					}
 				}
 			}
 		}
@@ -241,7 +261,9 @@
 			else {
 				$this->SetStatus(102);
 				//Neuen Wert in die Statusvariable schreiben
-	            		SetValueInteger($this->GetIDForIdent("Output"), $Value);
+	            		If (GetValueInteger($this->GetIDForIdent("Output")) <> $Value) {
+					SetValueInteger($this->GetIDForIdent("Output"), $Value);
+				}
 			}
 		}
 	}
