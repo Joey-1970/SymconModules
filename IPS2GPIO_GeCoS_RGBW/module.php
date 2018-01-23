@@ -322,7 +322,7 @@
 		$Group = min(4, max(1, $Group));
 		$FadeTime = $this->ReadPropertyInteger("FadeTime_".$Group);
 		$FadeTime = min(10, max(0, $FadeTime));
-		$this->ToggleOutputPinStatusEx($Group, $Channel, , $FadeTime);	
+		$this->ToggleOutputPinStatusEx($Group, $Channel, $FadeTime);	
 	}    	    
 	
 	public function ToggleOutputPinStatusEx(Int $Group, String $Channel, , Int $FadeTime)
