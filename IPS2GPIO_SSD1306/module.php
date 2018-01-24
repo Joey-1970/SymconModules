@@ -9,7 +9,7 @@
             	parent::Create();
  	    	$this->RegisterPropertyBoolean("Open", false);
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
- 	    	$this->RegisterPropertyInteger("DeviceAddress", 35);
+ 	    	$this->RegisterPropertyInteger("DeviceAddress", 60);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
         }
 	    
@@ -27,8 +27,8 @@
 		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv"); 
  		
 		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "35 dez. / 0x23h", "value" => 35);
-		$arrayOptions[] = array("label" => "92 dez. / 0x5Ch", "value" => 92);
+		$arrayOptions[] = array("label" => "60 dez. / 0x3Ch", "value" => 60);
+		$arrayOptions[] = array("label" => "61 dez. / 0x3Dh", "value" => 61);
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceAddress", "caption" => "Device Adresse", "options" => $arrayOptions );
 		
 		$arrayElements[] = array("type" => "Label", "label" => "I²C-Bus (Default ist 1)");
