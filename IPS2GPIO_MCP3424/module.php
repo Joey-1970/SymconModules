@@ -91,10 +91,6 @@
             	// Diese Zeile nicht löschen
             	parent::ApplyChanges();
 
-		// Device Adresse prüfen
-	    	If (($this->ReadPropertyInteger("DeviceAddress") < 0) OR ($this->ReadPropertyInteger("DeviceAddress") > 128)) {
-	    		IPS_LogMessage("IPS2GPIO MCP3424","I2C-Device Adresse in einem nicht definierten Bereich!");  
-	    	}
 	    	// Profil anlegen
 	    	$this->RegisterProfileFloat("IPS2GPIO.mV", "Electricity", "", " mV", -100000, +100000, 0.1, 3);
 		
