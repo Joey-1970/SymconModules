@@ -393,12 +393,11 @@
 	private function Interrupt(String $Port, Bool $Value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("Interrupt", "Port:".$PortWert." Wert: ".(int)$Value, 0);
-			If ($Port == "A") {
-				
-			}
-			elseif ($Port == "B") {
-				
+			$this->SendDebug("Interrupt", "Port: ".$Port." Wert: ".(int)$Value, 0);
+			$INTPOL = $this->ReadPropertyInteger("INTPOL");
+			
+			If ($INTPOL == $Value) {
+				$this->GetOutput();
 			}
 		}
 	}
