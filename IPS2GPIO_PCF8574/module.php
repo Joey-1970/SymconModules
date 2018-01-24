@@ -113,10 +113,6 @@
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin"), 0);
 		}
  
-		// Device Adresse prüfen
-	    	If (($this->ReadPropertyInteger("DeviceAddress") < 0) OR ($this->ReadPropertyInteger("DeviceAddress") > 128)) {
-	    		IPS_LogMessage("IPS2GPIO PCF8574","I2C-Device Adresse in einem nicht definierten Bereich!");  
-	    	}
 	    	//Status-Variablen anlegen
 		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 10);
 		$this->DisableAction("LastInterrupt");
