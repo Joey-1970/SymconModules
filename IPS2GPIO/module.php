@@ -1540,10 +1540,16 @@ class IPS2GPIO_IO extends IPSModule
 			else {
 				$PinNotify = array();
 				$PinNotify = unserialize($this->GetBuffer("PinNotify"));
+				//$LastNotify = unserialize($this->GetBuffer("LastNotify"));
+				// Daten bereinigen
+				//$Level = $Level & $PinNotify;
+				
 				for ($j = 0; $j < Count($PinNotify); $j++) {
 					$Bitvalue = boolval($Level & (1<<$PinNotify[$j]));
+					
 					$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit ".$PinNotify[$j]." Wert: ".(int)$Bitvalue." - SeqNo: ".$SeqNo, 0);
 					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $Tick)));
+				
 				}
 				If (GetValueBoolean($this->GetIDForIdent("PigpioStatus")) == false) {
 					SetValueBoolean($this->GetIDForIdent("PigpioStatus"), true);
@@ -1551,9 +1557,6 @@ class IPS2GPIO_IO extends IPSModule
 				$i = $i + 2;
 			}		
 		}
-		//If ($SeqNo > 7000) {
-		//	$this->PIGPIOD_Restart();
-		//}
 	 }
 	
 	
