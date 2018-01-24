@@ -92,10 +92,6 @@
             	// Diese Zeile nicht löschen
             	parent::ApplyChanges();
    
-		// Device Adresse prüfen
-	    	If (($this->ReadPropertyInteger("DeviceAddress") < 0) OR ($this->ReadPropertyInteger("DeviceAddress") > 128)) {
-	    		IPS_LogMessage("IPS2GPIO BH1750","I2C-Device Adresse in einem nicht definierten Bereich!");  
-	    	}
 	    	// Profil anlegen
 	    	$this->RegisterProfileFloat("IPS2GPIO.lx", "Bulb", "", " lx", 0, 1000000, 0.1, 2);
 		//Status-Variablen anlegen
