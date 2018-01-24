@@ -86,10 +86,6 @@
             	// Diese Zeile nicht löschen
             	parent::ApplyChanges();
   
-		// Device Adresse prüfen
-	    	If (($this->ReadPropertyInteger("DeviceAddress") < 0) OR ($this->ReadPropertyInteger("DeviceAddress") > 128)) {
-	    		IPS_LogMessage("IPS2GPIO PCF8591","I2C-Device Adresse in einem nicht definierten Bereich!");  
-	    	}
 	    	//Status-Variablen anlegen
 		$this->RegisterVariableInteger("Channel_0", "Channel 0", "~Intensity.255", 10);
           	$this->DisableAction("Channel_0");
