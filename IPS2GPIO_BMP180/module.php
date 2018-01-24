@@ -86,11 +86,6 @@
         {
             	// Diese Zeile nicht löschen
             	parent::ApplyChanges();
-  
-		// Device Adresse prüfen
-	    	If (($this->ReadPropertyInteger("DeviceAddress") < 0) OR ($this->ReadPropertyInteger("DeviceAddress") > 128)) {
-	    		IPS_LogMessage("IPS2GPIO BME280","I2C-Device Adresse in einem nicht definierten Bereich!");  
-	    	}
 	    	
 		//Status-Variablen anlegen
              	$this->RegisterVariableInteger("ChipID", "Chip ID", "", 5);
