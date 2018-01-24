@@ -281,28 +281,16 @@
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
 			case "notify":
-			   	If ($data->Pin == $this->ReadPropertyInteger("Pin_INT_A")) {
-					SetValueInteger($this->GetIDForIdent("LastInterrupt_A"), time() );
-					If (($data->Value == 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-						$this->SendDebug("Notify INT A", "Wert: ".(int)$data->Value, 0);
-						//$this->GetOutput();
+			   	If ($this->ReadPropertyBoolean("Open") == true) {
+					If ($data->Pin == $this->ReadPropertyInteger("Pin_INT_A")) {
+						SetValueInteger($this->GetIDForIdent("LastInterrupt_A"), time() );
+						$this->Interrupt("A", intval($data->Value));
 					}
-					elseIf (($data->Value == 1) AND ($this->ReadPropertyBoolean("Open") == true)) {
-						$this->SendDebug("Notify INT A", "Wert: ".(int)$data->Value, 0);
-						//$this->GetOutput();
+					elseif ($data->Pin == $this->ReadPropertyInteger("Pin_INT_B")) {
+						SetValueInteger($this->GetIDForIdent("LastInterrupt_B"), time() );
+						$this->Interrupt("B", intval($data->Value));
 					}
-			   	}
-				elseif ($data->Pin == $this->ReadPropertyInteger("Pin_INT_B")) {
-					SetValueInteger($this->GetIDForIdent("LastInterrupt_B"), time() );
-					If (($data->Value == 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-						$this->SendDebug("Notify INT B", "Wert: ".(int)$data->Value, 0);
-						//$this->GetOutput();
-					}
-					elseIf (($data->Value == 1) AND ($this->ReadPropertyBoolean("Open") == true)) {
-						$this->SendDebug("Notify INT B", "Wert: ".(int)$data->Value, 0);
-						//$this->GetOutput();
-					}
-			   	}
+				}
 			   	break; 
 			
 			case "get_used_i2c":
@@ -402,6 +390,19 @@
 		}
 	}
 	
+	private function Interrupt(String $Port, Bool $Value)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Interrupt", "Port:".$PortWert." Wert: ".(int)$Value, 0);
+			If ($Port == "A") {
+				
+			}
+			elseif ($Port == "B") {
+				
+			}
+		}
+	}
+	    
 	public function SetOutputPin(String $Port, Int $Pin, Bool $Value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
