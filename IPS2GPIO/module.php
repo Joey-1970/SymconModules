@@ -12,7 +12,6 @@ class IPS2GPIO_IO extends IPSModule
 	{
 		if ($this->Socket) {
 		    	socket_close($this->Socket);
-			//$this->SendDebug("CommandClientSocket", "Socket wurde geloescht", 0);
 		}
 	} 
 
@@ -1539,18 +1538,29 @@ class IPS2GPIO_IO extends IPSModule
 				$PinNotify = array();
 				$PinNotify = unserialize($this->GetBuffer("PinNotify"));
 				$NotifyBitmask = intval($this->GetBuffer("NotifyBitmask"));
-				 
-				//$LastNotify = unserialize($this->GetBuffer("LastNotify"));
+				$LastNotify = intval($this->GetBuffer("LastNotify"));
+				
 				// Daten bereinigen
 				$Level = $Level & $NotifyBitmask;
 				
 				for ($j = 0; $j < Count($PinNotify); $j++) {
-					$Bitvalue = boolval($Level & (1<<$PinNotify[$j]));
+					$Bitvalue = boolval($Level & (1 << $PinNotify[$j]));
+					$LastBitvalue = boolval($LastNotify & (1 << $PinNotify[$j]));
 					
-					$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit ".$PinNotify[$j]." Wert: ".(int)$Bitvalue." - SeqNo: ".$SeqNo, 0);
-					$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $Tick)));
-				
+					$this->SendDebug("Datenanalyse", "Event: Interrupt - Bit ".$PinNotify[$j]." Aktueller Wert: ".(int)$Bitvalue." Letzter Wert: ".(int)$LastBitvalue." - SeqNo: ".$SeqNo, 0);
+					If ($LastNotify == -1) {
+						// ohne Vergleichswert an alle Instanzen senden
+						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $Tick)));
+					}
+					elseif ($LastNotify >= 0) {
+						// den Vergleichswert auf Veränderungen untersuchen
+						If ($LastBitvalue <> $Bitvalue) {
+							$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"notify", "Pin" => $PinNotify[$j], "Value"=> $Bitvalue, "Timestamp"=> $Tick)));
+						}
+					}
 				}
+				$this->SetBuffer("LastNotify", $Level);
+				
 				If (GetValueBoolean($this->GetIDForIdent("PigpioStatus")) == false) {
 					SetValueBoolean($this->GetIDForIdent("PigpioStatus"), true);
 				}
