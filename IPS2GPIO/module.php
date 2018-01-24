@@ -229,7 +229,8 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("Default_Serial_Bus", 0);
 			$this->SetBuffer("MUX_Handle", -1);
 			$this->SetBuffer("OW_Handle", -1);
-			$this->SetBuffer("NotifyCounter", -1);
+			$this->SetBuffer("NotifyBitmask", -1);
+			$this->SetBuffer("LastNotify", -1);
 			$PinNotify = array();
 			$this->SetBuffer("PinNotify", serialize($PinNotify));
 			
@@ -285,7 +286,6 @@ class IPS2GPIO_IO extends IPSModule
 				}
 							
 				// Notify Starten
-				$this->SetBuffer("NotifyCounter", 0);
 				$Handle = $this->ClientSocket(pack("L*", 99, 0, 0, 0));
 				$this->SetBuffer("Handle", $Handle);
 				$this->SendDebug("Handle", (int)$Handle, 0);
@@ -326,7 +326,6 @@ class IPS2GPIO_IO extends IPSModule
 				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"get_start_trigger")));
 
 				If ($Handle >= 0) {
-					$this->SetBuffer("NotifyCounter", 0);
 					// Notify setzen
 					$this->CommandClientSocket(pack("L*", 19, $Handle, $this->CalcBitmask(), 0), 16);
 				}
@@ -533,7 +532,6 @@ class IPS2GPIO_IO extends IPSModule
 						}
 						$this->SetBuffer("PinNotify", serialize($PinNotify));
 						// startet das Notify neu
-						$this->SetBuffer("NotifyCounter", 0);
 						$this->CommandClientSocket(pack("L*", 19, $this->GetBuffer("Handle"), $this->CalcBitmask(), 0), 16);
 						// Setzt den Glitch Filter
 						//IPS_LogMessage("IPS2GPIO SetGlitchFilter Parameter",$data->Pin." , ".$data->GlitchFilter);
@@ -1540,9 +1538,11 @@ class IPS2GPIO_IO extends IPSModule
 			else {
 				$PinNotify = array();
 				$PinNotify = unserialize($this->GetBuffer("PinNotify"));
+				$NotifyBitmask = intval($this->GetBuffer("NotifyBitmask"));
+				 
 				//$LastNotify = unserialize($this->GetBuffer("LastNotify"));
 				// Daten bereinigen
-				//$Level = $Level & $PinNotify;
+				$Level = $Level & $NotifyBitmask;
 				
 				for ($j = 0; $j < Count($PinNotify); $j++) {
 					$Bitvalue = boolval($Level & (1<<$PinNotify[$j]));
@@ -2345,11 +2345,11 @@ class IPS2GPIO_IO extends IPSModule
 		$PinNotify = array();
 		//$this->SendDebug("CalcBitmask", "PinNotify: ".$this->GetBuffer("PinNotify"), 0);
 		$PinNotify = unserialize($this->GetBuffer("PinNotify"));
-		$this->SetBuffer("NotifyCounter", 0);
 		$Bitmask = 0;
 		for ($i = 0; $i < Count($PinNotify); $i++) {
     			$Bitmask = $Bitmask + pow(2, $PinNotify[$i]);
 		}
+		$this->SetBuffer("NotifyBitmask", $Bitmask);
 	return $Bitmask;	
 	}
 	
