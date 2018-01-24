@@ -77,10 +77,6 @@
             	// Diese Zeile nicht löschen
             	parent::ApplyChanges();
  
-		// Device Adresse prüfen
-	    	If (($this->ReadPropertyInteger("DeviceAddress") < 0) OR ($this->ReadPropertyInteger("DeviceAddress") > 128)) {
-	    		IPS_LogMessage("IPS2GPIO iAQ-Core","I2C-Device Adresse in einem nicht definierten Bereich!");  
-	    	}
 	    	// Profil anlegen
 		$this->RegisterProfileInteger("IPS2GPIO.ppm", "Gauge", "", " ppm", 450, 2000, 1);
 		$this->RegisterProfileInteger("IPS2GPIO.ppb", "Gauge", "", " ppb", 125, 600, 1);
