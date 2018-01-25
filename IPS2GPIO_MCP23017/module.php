@@ -233,6 +233,7 @@
 						SetValueInteger($this->GetIDForIdent("LastInterrupt"), time() );
 						$this->SendDebug("Interrupt", "Wert: ".(int)$Value, 0);
 						$this->GetOutput();
+					}
 				}
 			   	break; 
 			
