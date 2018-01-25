@@ -341,6 +341,15 @@
 				If (is_array(unserialize($Result))) {
 					$this->SetStatus(102);
 					$OutputArray = array();
+					// $OutputArray[1] - INTFA Interrupt Flag Register (zeigt welcher Eingang den Interrupt ausgelöst hat)
+					// $OutputArray[2] - INTFB Interrupt Flag Register (zeigt welcher Eingang den Interrupt ausgelöst hat)
+					// $OutputArray[3] - INTCAPA Interrupt Captured Value (zeigt den Zustand des GPIO wo der Interrupt eintrat)
+					// $OutputArray[4] - INTCAPB Interrupt Captured Value (zeigt den Zustand des GPIO wo der Interrupt eintrat)
+					// $OutputArray[5] - GPIOA
+					// $OutputArray[6] - GPIOB
+					// $OutputArray[7] - OLATA
+					// $OutputArray[8] - OLATB
+					
 					$OutputArray = unserialize($Result);
 					// Ergebnis sichern
 					$this->SetBuffer("GPA", $OutputArray[7]);
