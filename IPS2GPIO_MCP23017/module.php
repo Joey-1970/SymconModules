@@ -38,9 +38,6 @@
 			$this->RegisterPropertyInteger("GPBINTCON".$i, 0);
 			$this->RegisterPropertyInteger("GPBPU".$i, 0);
 		}
-		//$this->RegisterPropertyInteger("INTPOL", 0);
-		//$this->RegisterPropertyInteger("ODR", 0);
-		//$this->RegisterPropertyInteger("MIRROR", 0);
         }
  	
 	public function GetConfigurationForm() 
@@ -83,20 +80,7 @@
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_INT", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
-		/*ssw<1>
-		$arrayElements[] = array("type" => "Label", "label" => "Optional: Angabe der GPIO-Nummer (Broadcom-Number) für den Interrupt B"); 
-		$arrayOptions = array();
-		$GPIO = array();
-		$GPIO = unserialize($this->Get_GPIO());
-		If ($this->ReadPropertyInteger("Pin_INT_B") >= 0 ) {
-			$GPIO[$this->ReadPropertyInteger("Pin_INT_B")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_INT_B")));
-		}
-		ksort($GPIO);
-		foreach($GPIO AS $Value => $Label) {
-			$arrayOptions[] = array("label" => $Label, "value" => $Value);
-		}
-		$arrayElements[] = array("type" => "Select", "name" => "Pin_INT_B", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
-		*/
+		
 		$arrayElements[] = array("type" => "Label", "label" => "Optional: Lesen der Eingänge in Sekunden (0 -> aus, 5 sek -> Minimum)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
@@ -148,27 +132,6 @@
 			$arrayElements[] = array("type" => "Select", "name" => "GPBINTCON".$i, "caption" => "Interrupttrigger", "options" => $arrayOptions_INTCON );
 			$arrayElements[] = array("type" => "Select", "name" => "GPBPU".$i, "caption" => "Pull-up", "options" => $arrayOptions_GPPU );
 		}
-		/*
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
-		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration des Interrupt");
-		$arrayElements[] = array("type" => "Label", "label" => "Polarität des Interrupt");
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "Aktiv - Low (Default)", "value" => 0);
-		$arrayOptions[] = array("label" => "Aktiv - High", "value" => 1); 
-		$arrayElements[] = array("type" => "Select", "name" => "INTPOL", "caption" => "Polarität", "options" => $arrayOptions );
-		
-		$arrayElements[] = array("type" => "Label", "label" => "Ausgangs-Konfiguration (wenn Open-Drain ausgewählt, wird Polarität überschrieben)");
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "Aktiver Treiber (Default)", "value" => 0);
-		$arrayOptions[] = array("label" => "Open Drain", "value" => 1); 
-		$arrayElements[] = array("type" => "Select", "name" => "ODR", "caption" => "Konfiguration", "options" => $arrayOptions );
-		
-		$arrayElements[] = array("type" => "Label", "label" => "Zuordnung der Interrupt-Ausgänge");
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "Int A->Port A, Int B->Port B (Default)", "value" => 0);
-		$arrayOptions[] = array("label" => "Interrupt ist intern verbunden", "value" => 1); 
-		$arrayElements[] = array("type" => "Select", "name" => "MIRROR", "caption" => "Spiegelung", "options" => $arrayOptions );	
-		*/ 
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayActions = array();
 		$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
@@ -203,13 +166,7 @@
 				$SetTimer = true;
 			}
 			IPS_SetHidden($this->GetIDForIdent("GPA".$i), false);
-		}
-		/*
-		$this->RegisterVariableInteger("LastInterrupt_B", "Letzte Meldung INT B", "~UnixTimestamp", 100);
-		$this->DisableAction("LastInterrupt_B");
-		IPS_SetHidden($this->GetIDForIdent("LastInterrupt_B"), true);
-		*/
-		for ($i = 0; $i <= 7; $i++) {
+			
 		   	$this->RegisterVariableBoolean("GPB".$i, "GPB".$i, "~Switch", ($i * 10 + 110));
 			If ($this->ReadPropertyInteger("GPBIODIR".$i) == 0) {
 				$this->EnableAction("GPB".$i);
@@ -220,6 +177,7 @@
 			}
 			IPS_SetHidden($this->GetIDForIdent("GPB".$i), false);
 		}
+		
 		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {					
 			//ReceiveData-Filter setzen
@@ -238,14 +196,7 @@
 				
 					$this->SetBuffer("PreviousPin_INT", $this->ReadPropertyInteger("Pin_INT"));
 				}
-				/*
-				If ($this->ReadPropertyInteger("Pin_INT_B") >= 0) {
-					$ResultPin_INT_B = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
-									  "Pin" => $this->ReadPropertyInteger("Pin_INT_B"), "PreviousPin" => $this->GetBuffer("PreviousPin_INT_B"), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 25, "Resistance" => 0)));
-				
-					$this->SetBuffer("PreviousPin_INT_B", $this->ReadPropertyInteger("Pin_INT_B"));
-				}
-				*/
+
 				If ($ResultI2C == true) {
 					$Messzyklus = $this->ReadPropertyInteger("Messzyklus");
 					If (($Messzyklus > 0) AND ($Messzyklus < 5)) {
@@ -282,14 +233,6 @@
 						SetValueInteger($this->GetIDForIdent("LastInterrupt"), time() );
 						$this->SendDebug("Interrupt", "Wert: ".(int)$Value, 0);
 						$this->GetOutput();
-						//$this->Interrupt(intval($data->Value));
-					}
-					/*
-					elseif ($data->Pin == $this->ReadPropertyInteger("Pin_INT_B")) {
-						SetValueInteger($this->GetIDForIdent("LastInterrupt_B"), time() );
-						$this->Interrupt("B", intval($data->Value));
-					}
-					*/
 				}
 			   	break; 
 			
@@ -392,35 +335,12 @@
 								SetValueBoolean($this->GetIDForIdent("GPB".$i), false);
 							}
 						}
-					}
-					/*
-					If ($OutputArray[5] <> $OutputArray[7]) {
-						$this->SendDebug("GetOutput", "Hardwarefehler auf Port A?", 0);
-					}
-					If ($OutputArray[6] <> $OutputArray[8]) {
-						$this->SendDebug("GetOutput", "Hardwarefehler auf Port B?", 0);
-					}
-					*/
-					
+					}	
 				}
 			}
 		}
 	}
 	
-	/*
-	private function Interrupt(Bool $Value)
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("Interrupt", "Wert: ".(int)$Value, 0);
-			//$INTPOL = $this->ReadPropertyInteger("INTPOL");
-			
-			//If ($INTPOL == $Value) {
-				$this->GetOutput();
-			//}
-		}
-	}
-	*/
-	    
 	public function SetOutputPin(String $Port, Int $Pin, Bool $Value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
