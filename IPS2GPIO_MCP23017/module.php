@@ -298,6 +298,7 @@
 					// $OutputArray[6] - GPIOB
 					// $OutputArray[7] - OLATA
 					// $OutputArray[8] - OLATB
+					// für Ausgänge LAT benutzen für Eingänge PORT 
 					
 					$OutputArray = unserialize($Result);
 					// Ergebnis sichern
@@ -313,7 +314,13 @@
 					
 					// Statusvariablen setzen
 					for ($i = 0; $i <= 7; $i++) {
-						If ($OutputArray[5] & pow(2, $i)) {
+						If (boolval($GPAIODIR & (1 << $i))) {
+							$j = 5;
+						}
+						else {
+							$j = 7;
+						}
+						If ($OutputArray[$j] & pow(2, $i)) {
 							If (GetValueBoolean($this->GetIDForIdent("GPA".$i)) == false) {
 								SetValueBoolean($this->GetIDForIdent("GPA".$i), true);
 							}
@@ -324,8 +331,13 @@
 							}
 						}
 
-
-						If ($OutputArray[6] & pow(2, $i)) {
+						If (boolval($GPBIODIR & (1 << $i))) {
+							$j = 6;
+						}
+						else {
+							$j = 8;
+						}
+						If ($OutputArray[$j] & pow(2, $i)) {
 							If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == false) {
 								SetValueBoolean($this->GetIDForIdent("GPB".$i), true);
 							}
