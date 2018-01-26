@@ -211,7 +211,7 @@
 	 	switch ($data->Function) {
 			case "notify":
 			   	If ($this->ReadPropertyBoolean("Open") == true) {
-					If (($data->Pin == $this->ReadPropertyInteger("Pin_INT")) AND (intval($data->Value) == 0)) {
+					If (($data->Pin == $this->ReadPropertyInteger("Pin_INT")) AND (intval($data->Value) == 1)) {
 						SetValueInteger($this->GetIDForIdent("LastInterrupt"), time() );
 						$this->SendDebug("Interrupt", "Wert: ".intval($data->Value), 0);
 						$this->Interrupt();
