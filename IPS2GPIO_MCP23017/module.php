@@ -26,16 +26,12 @@
 		   	$this->RegisterPropertyInteger("GPAIODIR".$i, 1);
 			$this->RegisterPropertyInteger("GPAIPOL".$i, 0);
 			$this->RegisterPropertyInteger("GPAINTEN".$i, 0);
-			$this->RegisterPropertyInteger("GPADEFVAL".$i, 0);
-			$this->RegisterPropertyInteger("GPAINTCON".$i, 0);
 			$this->RegisterPropertyInteger("GPAPU".$i, 0);
 		}
 		for ($i = 0; $i <= 7; $i++) {
 		   	$this->RegisterPropertyInteger("GPBIODIR".$i, 1);
 			$this->RegisterPropertyInteger("GPBIPOL".$i, 0);
 			$this->RegisterPropertyInteger("GPBINTEN".$i, 0);
-			$this->RegisterPropertyInteger("GPBDEFVAL".$i, 0);
-			$this->RegisterPropertyInteger("GPBINTCON".$i, 0);
 			$this->RegisterPropertyInteger("GPBPU".$i, 0);
 		}
         }
@@ -97,20 +93,11 @@
 		$arrayOptions_GPINTEN[] = array("label" => "keine Auslösung (Default)", "value" => 0);
 		$arrayOptions_GPINTEN[] = array("label" => "Auslösung", "value" => 1); 
 		
-		$arrayOptions_DEFVAL = array();
-		$arrayOptions_DEFVAL[] = array("label" => "Aus (Default)", "value" => 0);
-		$arrayOptions_DEFVAL[] = array("label" => "Ein", "value" => 1); 
-		
-		$arrayOptions_INTCON = array();
-		$arrayOptions_INTCON[] = array("label" => "Änderung Pin-Status (Default)", "value" => 0);
-		$arrayOptions_INTCON[] = array("label" => "Referenzwert", "value" => 1); 
-		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration Port A");
-		
 		$arrayOptions_GPPU = array();
 		$arrayOptions_GPPU[] = array("label" => "kein Pull-up (Default)", "value" => 0);
 		$arrayOptions_GPPU[] = array("label" => "Pull-up (100kOhm)", "value" => 1); 
+		
 		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration Port A");
-
 		for ($i = 0; $i <= 7; $i++) {
 		   	$arrayElements[] = array("type" => "Label", "label" => "Konfiguration des GPA ".$i);
 			$arrayElements[] = array("type" => "Select", "name" => "GPAIODIR".$i, "caption" => "Nutzung", "options" => $arrayOptions_IODIR );	
@@ -493,16 +480,16 @@
 			$Config = 0;
 			// Bit 0: irrelevant
 			// Bit 1: INTPOL Polarität des Interrupts
-			$INTPOL = 0; //$this->ReadPropertyInteger("INTPOL");
+			$INTPOL = 0;
 			$Config = $Config | ($INTPOL << 1);
 			// Bit 2: ODR Open-Drain oder aktiver Treiber beim Interrupt
-			$ODR = 0; // $this->ReadPropertyInteger("ODR");
+			$ODR = 0;
 			$Config = $Config | ($ODR << 2);
 			// Bit 3: irrelvant, nur bei der SPI-Version nutzbar
 			// Bit 4: DISSLW Defaultwert = 0
 			// Bit 5: SEQOP Defaultwert = 0, automatische Adress-Zeiger inkrement
 			// Bit 6: MIRROR Interrupt-Konfiguration
-			$MIRROR = 1; //$this->ReadPropertyInteger("MIRROR");
+			$MIRROR = 1;
 			$Config = $Config | ($MIRROR << 6);
 			// Bit 7: BANK Defaultwert = 0 Register sind in derselben Bank
 			
@@ -527,71 +514,47 @@
 			$ConfigArray = array();
 			// IO-Bytes ermitteln
 			$GPAIODIR = $this->GetConfigByte("GPAIODIR");
-			$ConfigArray[0] = $GPAIODIR;
+			$ConfigArray[0] = $GPAIODIR; // Adresse 00
 			$this->SetBuffer("GPAIODIR", $GPAIODIR);
-			$this->SendDebug("Setup", "IO-Byte A: ".$GPAIODIR, 0);
-			// Adresse 00
 			
 			$GPBIODIR = $this->GetConfigByte("GPBIODIR");
-			$ConfigArray[1] = $GPBIODIR;
+			$ConfigArray[1] = $GPBIODIR; // Adresse 01
 			$this->SetBuffer("GPBIODIR", $GPBIODIR);
-			$this->SendDebug("Setup", "IO-Byte B: ".$GPBIODIR, 0);
-			// Adresse 01
+			$this->SendDebug("Setup", "IO-Byte A: ".$GPAIODIR." IO-Byte B: ".$GPBIODIR, 0);
 			
 			// Polariät des Eingangs ermitteln
 			$GPAIPOL = $this->GetConfigByte("GPAIPOL");
-			$ConfigArray[2] = $GPAIPOL;
-			$this->SendDebug("Setup", "Polaritaets-Byte A: ".$GPAIPOL, 0);
-			// Adresse 02
+			$ConfigArray[2] = $GPAIPOL; // Adresse 02
 			
 			$GPBIPOL = $this->GetConfigByte("GPBIPOL");
-			$ConfigArray[3] = $GPBIPOL;
-			$this->SendDebug("Setup", "Polaritaets-Byte B: ".$GPBIPOL, 0);
-			// Adresse 03
+			$ConfigArray[3] = $GPBIPOL; // Adresse 03
+			$this->SendDebug("Setup", "Polaritaets-Byte A: ".$GPAIPOL." Polaritaets-Byte B: ".$GPBIPOL, 0);
 			
 			// Interrupt enable ermitteln
 			$GPAINTEN = $this->GetConfigByte("GPAINTEN");
-			$ConfigArray[4] = $GPAINTEN;
-			$this->SendDebug("Setup", "Interrupt-Byte A: ".$GPAINTEN, 0);
-			// Adresse 04
+			$ConfigArray[4] = $GPAINTEN; // Adresse 04
 			
 			$GPBINTEN = $this->GetConfigByte("GPBINTEN");
-			$ConfigArray[5] = $GPBINTEN;
-			$this->SendDebug("Setup", "Interrupt-Byte B: ".$GPBINTEN, 0);
-			// Adresse 05
+			$ConfigArray[5] = $GPBINTEN; // Adresse 05
+			$this->SendDebug("Setup", "Interrupt-Byte A: ".$GPAINTEN." Interrupt-Byte B: ".$GPBINTEN, 0);
 			
 			// Referenzwert-Byte ermitteln
-			$GPADEFVAL = $this->GetConfigByte("GPADEFVAL");
-			$ConfigArray[6] = $GPADEFVAL;
-			$this->SendDebug("Setup", "Referenzwert-Byte A: ".$GPADEFVAL, 0);
-			// Adresse 06
-			
-			$GPBDEFVAL = $this->GetConfigByte("GPBDEFVAL");
-			$ConfigArray[7] = $GPBDEFVAL;
-			$this->SendDebug("Setup", "Referenzwert-Byte B: ".$GPBDEFVAL, 0);
-			// Adresse 07
+			$ConfigArray[6] = 0; // Adresse 06
+			$ConfigArray[7] = 0; // Adresse 07
+			$this->SendDebug("Setup", "Referenzwert-Byte A/B = 0", 0);
 			
 			// Interrupt-Referenz-Byte ermitteln
-			$GPAINTCON = $this->GetConfigByte("GPAINTCON");
-			$ConfigArray[8] = $GPAINTCON;
-			$this->SendDebug("Setup", "Interrrupt-Referenz-Byte A: ".$GPAINTCON, 0);
-			// Adresse 08
-			
-			$GPBINTCON = $this->GetConfigByte("GPBINTCON");
-			$ConfigArray[9] = $GPBINTCON;
-			$this->SendDebug("Setup", "Interrrupt-Referenz-Byte B: ".$GPBINTCON, 0);
-			// Adresse 09
+			$ConfigArray[8] = 0; // Adresse 08
+			$ConfigArray[9] = 0; // Adresse 09
+			$this->SendDebug("Setup", "Interrupt-Referenzwert-Byte A/B = 0", 0);
 			
 			// Pull-Up-Byte ermitteln
 			$GPAPU = $this->GetConfigByte("GPAPU");
-			$ConfigArray[10] = $GPAPU;
-			$this->SendDebug("Setup", "Pull-up-Byte A: ".$GPAPU, 0);
-			// Adresse 0C
+			$ConfigArray[10] = $GPAPU; // Adresse 0C
 			
 			$GPBPU = $this->GetConfigByte("GPBPU");
-			$ConfigArray[11] = $GPBPU;
-			$this->SendDebug("Setup", "Pull-up-Byte B: ".$GPBPU, 0);
-			// Adresse 0D
+			$ConfigArray[11] = $GPBPU; // Adresse 0D
+			$this->SendDebug("Setup", "Pull-up-Byte A: ".$GPAPU." Pull-up-Byte B: ".$GPBPU, 0);
 			
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_Write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("00"), 
 										  "Parameter" => serialize($ConfigArray) )));
@@ -623,12 +586,12 @@
 	
 	private function setBit($byte, $significance) { 
  		// ein bestimmtes Bit auf 1 setzen
- 		return $byte | 1<<$significance;   
+ 		return $byte | 1 << $significance;   
  	} 
 	
 	private function unsetBit($byte, $significance) {
 	    // ein bestimmtes Bit auf 0 setzen
-	    return $byte & ~(1<<$significance);
+	    return $byte & ~(1 << $significance);
 	}
 	    
 	private function Get_I2C_Ports()
