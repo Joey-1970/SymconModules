@@ -328,6 +328,72 @@
 		}
 	}
 	
+	private function Interrupt()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("GetOutput", "Ausfuehrung", 0);
+			// Adressen 12 13
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("0E"), "Count" => 8)));
+			If ($Result < 0) {
+				$this->SendDebug("GetOutput", "Einlesen der Werte fehlerhaft!", 0);
+				$this->SetStatus(202);
+				return;
+			}
+			else {
+				$this->SendDebug("GetOutput", "Ergebnis: ".$Result, 0);
+				If (is_array(unserialize($Result))) {
+					$this->SetStatus(102);
+					$OutputArray = array();
+					// $OutputArray[1] - INTFA Interrupt Flag Register (zeigt welcher Eingang den Interrupt ausgelöst hat)
+					// $OutputArray[2] - INTFB Interrupt Flag Register (zeigt welcher Eingang den Interrupt ausgelöst hat)
+					// $OutputArray[3] - INTCAPA Interrupt Captured Value (zeigt den Zustand des GPIO wo der Interrupt eintrat)
+					// $OutputArray[4] - INTCAPB Interrupt Captured Value (zeigt den Zustand des GPIO wo der Interrupt eintrat)
+					// $OutputArray[5] - GPIOA
+					// $OutputArray[6] - GPIOB
+					// $OutputArray[7] - OLATA
+					// $OutputArray[8] - OLATB
+					// für Ausgänge LAT benutzen für Eingänge PORT 
+					
+					$OutputArray = unserialize($Result);
+					// Ergebnis sichern
+					$this->SetBuffer("GPA", $OutputArray[5]);
+					$this->SetBuffer("GPB", $OutputArray[6]);
+					
+					$GPAIODIR = intval($this->GetBuffer("GPAIODIR"));
+					$GPBIODIR = intval($this->GetBuffer("GPBIODIR"));
+					$GPIOA = $OutputArray[5];
+					$GPIOB = $OutputArray[6];
+					$OLATA = $OutputArray[7];
+					$OLATB = $OutputArray[8];
+					
+					// Statusvariablen setzen
+					for ($i = 0; $i <= 7; $i++) {
+						// Port A
+						If (boolval($GPAIODIR & (1 << $i))) {
+							$Value = $OutputArray[5] & pow(2, $i);
+						}
+						else {
+							$Value = $OutputArray[7] & pow(2, $i);
+						}
+						If (GetValueBoolean($this->GetIDForIdent("GPA".$i)) == !$Value) {
+							SetValueBoolean($this->GetIDForIdent("GPA".$i), $Value);
+						}
+						// Port B
+						If (boolval($GPBIODIR & (1 << $i))) {
+							$Value = $OutputArray[6] & pow(2, $i);
+						}
+						else {
+							$Value = $OutputArray[8] & pow(2, $i);
+						}
+						If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == !$Value) {
+							SetValueBoolean($this->GetIDForIdent("GPB".$i), $Value);
+						}
+					}	
+				}
+			}
+		}
+	}    
+	    
 	public function SetOutputPin(String $Port, Int $Pin, Bool $Value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
