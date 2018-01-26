@@ -281,8 +281,8 @@
 					
 					$OutputArray = unserialize($Result);
 					// Ergebnis sichern
-					$this->SetBuffer("GPA", $OutputArray[5]);
-					$this->SetBuffer("GPB", $OutputArray[6]);
+					$this->SetBuffer("GPA", $OutputArray[1]);
+					$this->SetBuffer("GPB", $OutputArray[2]);
 					
 					$GPAIODIR = intval($this->GetBuffer("GPAIODIR"));
 					$GPBIODIR = intval($this->GetBuffer("GPBIODIR"));
@@ -342,9 +342,6 @@
 					// für Ausgänge LAT benutzen für Eingänge PORT 
 					
 					$OutputArray = unserialize($Result);
-					// Ergebnis sichern
-					$this->SetBuffer("GPA", $OutputArray[5]);
-					$this->SetBuffer("GPB", $OutputArray[6]);
 					
 					$GPAIODIR = intval($this->GetBuffer("GPAIODIR"));
 					$GPBIODIR = intval($this->GetBuffer("GPBIODIR"));
