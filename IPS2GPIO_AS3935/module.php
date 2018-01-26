@@ -256,70 +256,79 @@
 	public function GetOutput()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_AS3935_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Count" => 9 )));
-			If ($Result < 0) {
-				$this->SendDebug("GetOutput", "Fehler beim Lesen der Werte!", 0);
-				$this->SetStatus(202);
-				return;
-			}
-			else {
-				$Data = array();
-				$Data = unserialize($Result);
-				
-				$this->SetStatus(102);
-			}
-			/*
-			$PowerDown = $Data[1] & 1;
-			$this->SendDebug("PowerDown", $PowerDown, 0);
-		
-			$AFEGainBoost = $Data[1] & 62;
-			$this->SendDebug("AFEGainBoost", $AFEGainBoost, 0);
+			$this->SendDebug("GetOutput", "Ausfuehrung", 0);
+			$tries = 3;
+			do {
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_AS3935_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Count" => 9 )));
+				If ($Result < 0) {
+					$this->SendDebug("GetOutput", "Fehler beim Lesen der Werte!", 0);
+					$this->SetStatus(202);
+				}
+				else {
+					$this->SendDebug("GetOutput", "Ergebnis: ".$Result, 0);
+					
+					If (is_array(unserialize($Result))) {
+						$this->SetStatus(102);
+						$Data = array();
+						$Data = unserialize($Result);
+						/*
+						$PowerDown = $Data[1] & 1;
+						$this->SendDebug("PowerDown", $PowerDown, 0);
 
-			$NoiseFloorLevel = $Data[2] & 112;
-			$this->SendDebug("NoiseFloorLevel", $NoiseFloorLevel, 0);
-			$WatchdogThreshold = $Data[2] & 15;
-			$this->SendDebug("WatchdogThreshold", $WatchdogThreshold, 0);
-			
-			$MinNumLigh = $Data[3] & 48;
-			$this->SendDebug("MinNumLigh", $MinNumLigh, 0);
-			
-			$LcoFdiv = $Data[4] & 192;
-			$this->SendDebug("LcoFdiv", $LcoFdiv, 0);
-			$MaskDisturber = $Data[4] & 32;
-			$this->SendDebug("MaskDisturber", $MaskDisturber, 0);
-			
-			$LCO = $Data[9] & 128;
-			$this->SendDebug("LCO", $LCO, 0);
-			$SRCO = $Data[9] & 64;
-			$this->SendDebug("SRCO", $SRCO, 0);
-			$TRCO = $Data[9] & 32;
-			$this->SendDebug("TRCO", $TRCO, 0);
-			$Capacitor = $Data[9] & 15;
-			$this->SendDebug("Capacitor", $Capacitor, 0);
-			*/
-			
-			/*
-			1 Noise Level to high
-			4 Disturber Detected
-			8 Lightning interrupt
-			*/
-			$InterruptAssociation = array(0 => 0, 1 => 1, 4 => 2, 8 => 3);
-			$Interrupt = $Data[4] & 15;
-			$this->SendDebug("Interrupt", $Interrupt, 0);
-			SetValueInteger($this->GetIDForIdent("Interrupt"),  $InterruptAssociation[$Interrupt]);
-			
-			//If ($Interrupt == 8) {
-				$this->SendDebug("Energie LSB", $Data[5], 0);
-				$this->SendDebug("Energie MSB", $Data[6], 0);
-				$this->SendDebug("Energie MMSB", ($Data[7] & 31), 0);
-				$Energy = (($Data[7] & 31) << 16) | ($Data[6] << 8) | $Data[5] ;
-				SetValueInteger($this->GetIDForIdent("Energy"), $Energy);
-				$this->SendDebug("Energy", $Energy, 0);
+						$AFEGainBoost = $Data[1] & 62;
+						$this->SendDebug("AFEGainBoost", $AFEGainBoost, 0);
 
-				$Distance = $Data[8] & 63;
-				SetValueInteger($this->GetIDForIdent("Distance"), $Distance);
-				$this->SendDebug("Distance", $Distance, 0);
-			//}
+						$NoiseFloorLevel = $Data[2] & 112;
+						$this->SendDebug("NoiseFloorLevel", $NoiseFloorLevel, 0);
+						$WatchdogThreshold = $Data[2] & 15;
+						$this->SendDebug("WatchdogThreshold", $WatchdogThreshold, 0);
+
+						$MinNumLigh = $Data[3] & 48;
+						$this->SendDebug("MinNumLigh", $MinNumLigh, 0);
+
+						$LcoFdiv = $Data[4] & 192;
+						$this->SendDebug("LcoFdiv", $LcoFdiv, 0);
+						$MaskDisturber = $Data[4] & 32;
+						$this->SendDebug("MaskDisturber", $MaskDisturber, 0);
+
+						$LCO = $Data[9] & 128;
+						$this->SendDebug("LCO", $LCO, 0);
+						$SRCO = $Data[9] & 64;
+						$this->SendDebug("SRCO", $SRCO, 0);
+						$TRCO = $Data[9] & 32;
+						$this->SendDebug("TRCO", $TRCO, 0);
+						$Capacitor = $Data[9] & 15;
+						$this->SendDebug("Capacitor", $Capacitor, 0);
+						*/
+
+						/*
+						1 Noise Level to high
+						4 Disturber Detected
+						8 Lightning interrupt
+						*/
+						$InterruptAssociation = array(0 => 0, 1 => 1, 4 => 2, 8 => 3);
+						$Interrupt = $Data[4] & 15;
+						$this->SendDebug("Interrupt", $Interrupt, 0);
+						SetValueInteger($this->GetIDForIdent("Interrupt"),  $InterruptAssociation[$Interrupt]);
+
+						//If ($Interrupt == 8) {
+						$this->SendDebug("Energie LSB", $Data[5], 0);
+						$this->SendDebug("Energie MSB", $Data[6], 0);
+						$this->SendDebug("Energie MMSB", ($Data[7] & 31), 0);
+						$Energy = (($Data[7] & 31) << 16) | ($Data[6] << 8) | $Data[5] ;
+						SetValueInteger($this->GetIDForIdent("Energy"), $Energy);
+						$this->SendDebug("Energy", $Energy, 0);
+
+						$Distance = $Data[8] & 63;
+						SetValueInteger($this->GetIDForIdent("Distance"), $Distance);
+						$this->SendDebug("Distance", $Distance, 0);
+						//}
+						break;
+					}
+					
+				}
+			$tries--;
+			} while ($tries);  
 		}
 	}
 	    
