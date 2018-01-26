@@ -268,7 +268,7 @@
 				If ($Result < 0) {
 					$this->SendDebug("GetOutput", "Einlesen der Werte fehlerhaft!", 0);
 					$this->SetStatus(202);
-					return;
+					//return;
 				}
 				else {
 					$this->SendDebug("GetOutput", "Ergebnis: ".$Result, 0);
