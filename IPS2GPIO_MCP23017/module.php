@@ -260,62 +260,67 @@
 	public function GetOutput()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("GetOutput", "Ausfuehrung", 0);
-			// Adressen 12 13
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("12"), "Count" => 4)));
-			If ($Result < 0) {
-				$this->SendDebug("GetOutput", "Einlesen der Werte fehlerhaft!", 0);
-				$this->SetStatus(202);
-				return;
-			}
-			else {
-				$this->SendDebug("GetOutput", "Ergebnis: ".$Result, 0);
-				If (is_array(unserialize($Result))) {
-					$this->SetStatus(102);
-					$OutputArray = array();
-					// $OutputArray[1] - GPIOA
-					// $OutputArray[2] - GPIOB
-					// $OutputArray[3] - OLATA
-					// $OutputArray[4] - OLATB
-					// für Ausgänge LAT benutzen für Eingänge PORT 
-					
-					$OutputArray = unserialize($Result);
-					// Ergebnis sichern
-					$this->SetBuffer("GPA", $OutputArray[1]);
-					$this->SetBuffer("GPB", $OutputArray[2]);
-					
-					$GPAIODIR = intval($this->GetBuffer("GPAIODIR"));
-					$GPBIODIR = intval($this->GetBuffer("GPBIODIR"));
-					$GPIOA = $OutputArray[1];
-					$GPIOB = $OutputArray[2];
-					$OLATA = $OutputArray[3];
-					$OLATB = $OutputArray[4];
-					
-					// Statusvariablen setzen
-					for ($i = 0; $i <= 7; $i++) {
-						// Port A
-						If (boolval($GPAIODIR & (1 << $i))) {
-							$Value = $GPIOA & pow(2, $i);
+			$tries = 3;
+			do {
+				$this->SendDebug("GetOutput", "Ausfuehrung", 0);
+				// Adressen 12 13
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("12"), "Count" => 4)));
+				If ($Result < 0) {
+					$this->SendDebug("GetOutput", "Einlesen der Werte fehlerhaft!", 0);
+					$this->SetStatus(202);
+					return;
+				}
+				else {
+					$this->SendDebug("GetOutput", "Ergebnis: ".$Result, 0);
+					If (is_array(unserialize($Result))) {
+						$this->SetStatus(102);
+						$OutputArray = array();
+						// $OutputArray[1] - GPIOA
+						// $OutputArray[2] - GPIOB
+						// $OutputArray[3] - OLATA
+						// $OutputArray[4] - OLATB
+						// für Ausgänge LAT benutzen für Eingänge PORT 
+
+						$OutputArray = unserialize($Result);
+						// Ergebnis sichern
+						$this->SetBuffer("GPA", $OutputArray[1]);
+						$this->SetBuffer("GPB", $OutputArray[2]);
+
+						$GPAIODIR = intval($this->GetBuffer("GPAIODIR"));
+						$GPBIODIR = intval($this->GetBuffer("GPBIODIR"));
+						$GPIOA = $OutputArray[1];
+						$GPIOB = $OutputArray[2];
+						$OLATA = $OutputArray[3];
+						$OLATB = $OutputArray[4];
+
+						// Statusvariablen setzen
+						for ($i = 0; $i <= 7; $i++) {
+							// Port A
+							If (boolval($GPAIODIR & (1 << $i))) {
+								$Value = $GPIOA & pow(2, $i);
+							}
+							else {
+								$Value = $OLATA & pow(2, $i);
+							}
+							If (GetValueBoolean($this->GetIDForIdent("GPA".$i)) == !$Value) {
+								SetValueBoolean($this->GetIDForIdent("GPA".$i), $Value);
+							}
+							// Port B
+							If (boolval($GPBIODIR & (1 << $i))) {
+								$Value = $GPIOB & pow(2, $i);
+							}
+							else {
+								$Value = $OLATB & pow(2, $i);
+							}
+							If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == !$Value) {
+								SetValueBoolean($this->GetIDForIdent("GPB".$i), $Value);
+							}
 						}
-						else {
-							$Value = $OLATA & pow(2, $i);
-						}
-						If (GetValueBoolean($this->GetIDForIdent("GPA".$i)) == !$Value) {
-							SetValueBoolean($this->GetIDForIdent("GPA".$i), $Value);
-						}
-						// Port B
-						If (boolval($GPBIODIR & (1 << $i))) {
-							$Value = $GPIOB & pow(2, $i);
-						}
-						else {
-							$Value = $OLATB & pow(2, $i);
-						}
-						If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == !$Value) {
-							SetValueBoolean($this->GetIDForIdent("GPB".$i), $Value);
-						}
+						break;
 					}
 				}
-			}
+			$tries--;
+			} while ($tries);  
 		}
 	}
 	
