@@ -666,7 +666,7 @@
 					$MeasurementData = array();
 					$this->SendDebug("read_field_data", "Fehler bei der Datenermittung", 0);
 					$this->SetStatus(202);
-					return;
+					//return;
 				}
 				else {
 					If (is_array(unserialize($Result)) == true) {
