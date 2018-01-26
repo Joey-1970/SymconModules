@@ -103,8 +103,6 @@
 			$arrayElements[] = array("type" => "Select", "name" => "GPAIODIR".$i, "caption" => "Nutzung", "options" => $arrayOptions_IODIR );	
 			$arrayElements[] = array("type" => "Select", "name" => "GPAIPOL".$i, "caption" => "Negation", "options" => $arrayOptions_IPOL );	
 			$arrayElements[] = array("type" => "Select", "name" => "GPAINTEN".$i, "caption" => "Interrupt", "options" => $arrayOptions_GPINTEN );
-			$arrayElements[] = array("type" => "Select", "name" => "GPADEFVAL".$i, "caption" => "Referenzwert", "options" => $arrayOptions_DEFVAL );
-			$arrayElements[] = array("type" => "Select", "name" => "GPAINTCON".$i, "caption" => "Interrupttrigger", "options" => $arrayOptions_INTCON );
 			$arrayElements[] = array("type" => "Select", "name" => "GPAPU".$i, "caption" => "Pull-up", "options" => $arrayOptions_GPPU );
 		}
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
@@ -115,8 +113,6 @@
 			$arrayElements[] = array("type" => "Select", "name" => "GPBIODIR".$i, "caption" => "Nutzung", "options" => $arrayOptions_IODIR );
 			$arrayElements[] = array("type" => "Select", "name" => "GPBIPOL".$i, "caption" => "Negation", "options" => $arrayOptions_IPOL );	
 			$arrayElements[] = array("type" => "Select", "name" => "GPBINTEN".$i, "caption" => "Interrupt", "options" => $arrayOptions_GPINTEN );
-			$arrayElements[] = array("type" => "Select", "name" => "GPBDEFVAL".$i, "caption" => "Referenzwert", "options" => $arrayOptions_DEFVAL );
-			$arrayElements[] = array("type" => "Select", "name" => "GPBINTCON".$i, "caption" => "Interrupttrigger", "options" => $arrayOptions_INTCON );
 			$arrayElements[] = array("type" => "Select", "name" => "GPBPU".$i, "caption" => "Pull-up", "options" => $arrayOptions_GPPU );
 		}
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
