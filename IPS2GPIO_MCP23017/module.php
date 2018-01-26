@@ -260,10 +260,11 @@
 	public function GetOutput()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("GetOutput", "Ausfuehrung", 0);
+			// Adressen 12 13
+			
 			$tries = 3;
 			do {
-				$this->SendDebug("GetOutput", "Ausfuehrung", 0);
-				// Adressen 12 13
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("12"), "Count" => 4)));
 				If ($Result < 0) {
 					$this->SendDebug("GetOutput", "Einlesen der Werte fehlerhaft!", 0);
@@ -329,53 +330,57 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Interrupt", "Ausfuehrung", 0);
 			// Adressen 12 13
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("0E"), "Count" => 4)));
-			If ($Result < 0) {
-				$this->SendDebug("Interrupt", "Einlesen der Werte fehlerhaft!", 0);
-				$this->SetStatus(202);
-				return;
-			}
-			else {
-				$this->SendDebug("Interrupt", "Ergebnis: ".$Result, 0);
-				If (is_array(unserialize($Result))) {
-					$this->SetStatus(102);
-					$OutputArray = array();
-					// $OutputArray[1] - INTFA Interrupt Flag Register (zeigt welcher Eingang den Interrupt ausgelöst hat)
-					// $OutputArray[2] - INTFB Interrupt Flag Register (zeigt welcher Eingang den Interrupt ausgelöst hat)
-					// $OutputArray[3] - INTCAPA Interrupt Captured Value (zeigt den Zustand des GPIO wo der Interrupt eintrat)
-					// $OutputArray[4] - INTCAPB Interrupt Captured Value (zeigt den Zustand des GPIO wo der Interrupt eintrat)
-					// für Ausgänge LAT benutzen für Eingänge PORT 
-					
-					$OutputArray = unserialize($Result);
-					
-					$GPAIODIR = intval($this->GetBuffer("GPAIODIR"));
-					$GPBIODIR = intval($this->GetBuffer("GPBIODIR"));
-					$INTFA = $OutputArray[1];
-					$INTFB = $OutputArray[2];
-					$INTCAPA = $OutputArray[3];
-					$INTCAPB = $OutputArray[4];
-					
-					// Statusvariablen setzen
-					for ($i = 0; $i <= 7; $i++) {
-						// Port A
-						If (boolval($GPAIODIR & (1 << $i))) {
-							$Value = $INTCAPA & pow(2, $i);
-							If (GetValueBoolean($this->GetIDForIdent("GPA".$i)) == !$Value) {
-								SetValueBoolean($this->GetIDForIdent("GPA".$i), $Value);
-							}
-						}
-						
-						// Port B
-						If (boolval($GPBIODIR & (1 << $i))) {
-							$Value = $INTCAPB & pow(2, $i);
-							If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == !$Value) {
-								SetValueBoolean($this->GetIDForIdent("GPB".$i), $Value);
-							}
-						}
-					}
-					$this->GetOutput();
+			$tries = 3;
+			do {
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("0E"), "Count" => 4)));
+				If ($Result < 0) {
+					$this->SendDebug("Interrupt", "Einlesen der Werte fehlerhaft!", 0);
+					$this->SetStatus(202);
 				}
-			}
+				else {
+					$this->SendDebug("Interrupt", "Ergebnis: ".$Result, 0);
+					If (is_array(unserialize($Result))) {
+						$this->SetStatus(102);
+						$OutputArray = array();
+						// $OutputArray[1] - INTFA Interrupt Flag Register (zeigt welcher Eingang den Interrupt ausgelöst hat)
+						// $OutputArray[2] - INTFB Interrupt Flag Register (zeigt welcher Eingang den Interrupt ausgelöst hat)
+						// $OutputArray[3] - INTCAPA Interrupt Captured Value (zeigt den Zustand des GPIO wo der Interrupt eintrat)
+						// $OutputArray[4] - INTCAPB Interrupt Captured Value (zeigt den Zustand des GPIO wo der Interrupt eintrat)
+						// für Ausgänge LAT benutzen für Eingänge PORT 
+
+						$OutputArray = unserialize($Result);
+
+						$GPAIODIR = intval($this->GetBuffer("GPAIODIR"));
+						$GPBIODIR = intval($this->GetBuffer("GPBIODIR"));
+						$INTFA = $OutputArray[1];
+						$INTFB = $OutputArray[2];
+						$INTCAPA = $OutputArray[3];
+						$INTCAPB = $OutputArray[4];
+
+						// Statusvariablen setzen
+						for ($i = 0; $i <= 7; $i++) {
+							// Port A
+							If (boolval($GPAIODIR & (1 << $i))) {
+								$Value = $INTCAPA & pow(2, $i);
+								If (GetValueBoolean($this->GetIDForIdent("GPA".$i)) == !$Value) {
+									SetValueBoolean($this->GetIDForIdent("GPA".$i), $Value);
+								}
+							}
+
+							// Port B
+							If (boolval($GPBIODIR & (1 << $i))) {
+								$Value = $INTCAPB & pow(2, $i);
+								If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == !$Value) {
+									SetValueBoolean($this->GetIDForIdent("GPB".$i), $Value);
+								}
+							}
+						}
+						$this->GetOutput();
+						break;
+					}
+				}
+			$tries--;
+			} while ($tries);  
 		}
 	}    
 	    
@@ -389,27 +394,119 @@
 			$GPAIODIRout = 255 - intval($this->GetBuffer("GPAIODIR"));
 			$GPBIODIRout = 255 - intval($this->GetBuffer("GPBIODIR"));
 			
-			If ($Port == "A") {
-				$GPA = intval($this->GetBuffer("GPA"));	
-				If ($Value == true) {
-					$GPA = $this->setBit($GPA, $Pin);
-				}
-				else {
-					$GPA = $this->unsetBit($GPA, $Pin);
-				}
-				// Neuen Wert senden
-				$OutputArray = Array();
-				$OutputArray[0] = $GPA & $GPAIODIRout;
+			$tries = 3;
+			do {
+				If ($Port == "A") {
+					$GPA = intval($this->GetBuffer("GPA"));	
+					If ($Value == true) {
+						$GPA = $this->setBit($GPA, $Pin);
+					}
+					else {
+						$GPA = $this->unsetBit($GPA, $Pin);
+					}
+					// Neuen Wert senden
+					$OutputArray = Array();
+					$OutputArray[0] = $GPA & $GPAIODIRout;
+			
 
-				// Adresse 14
+					// Adresse 14
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_Write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("14"), 
+											  "Parameter" => serialize($OutputArray) )));
+					If (!$Result) {
+						$this->SendDebug("SetOutputPin", "Setzen der Ausgaenge fehlerhaft!", 0);
+						$this->SetStatus(202);
+					}
+					else {
+						$this->SetStatus(102);
+						for ($i = 0; $i <= 7; $i++) {
+							If ($GPAIODIRout & pow(2, $i)) {
+								If ($OutputArray[0] & pow(2, $i)) {
+									If (GetValueBoolean($this->GetIDForIdent("GPA".$i)) == false) {
+										SetValueBoolean($this->GetIDForIdent("GPA".$i), true);
+									}
+								}
+								else {
+									If (GetValueBoolean($this->GetIDForIdent("GPA".$i)) == true) {
+										SetValueBoolean($this->GetIDForIdent("GPA".$i), false);
+									}
+								}
+							}
+						}
+						$this->GetOutput();
+						break;
+					}	
+				}
+				elseif ($Port == "B") {
+					$GPB = intval($this->GetBuffer("GPB"));	
+					If ($Value == true) {
+						$GPB = $this->setBit($GPB, $Pin);
+					}
+					else {
+						$GPB = $this->unsetBit($GPB, $Pin);
+					}
+					// Neuen Wert senden
+					$OutputArray = Array();
+					$OutputArray[0] = $GPB & $GPBIODIRout;
+
+					// Adresse 15
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_Write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("15"), 
+											  "Parameter" => serialize($OutputArray) )));
+					If (!$Result) {
+						$this->SendDebug("SetOutputPin", "Setzen der Ausgaenge fehlerhaft!", 0);
+						$this->SetStatus(202);
+					}
+					else {
+						$this->SetStatus(102);
+						for ($i = 0; $i <= 7; $i++) {
+							If ($GPBIODIRout & pow(2, $i)) {
+								If ($OutputArray[0] & pow(2, $i)) {
+									If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == false) {
+										SetValueBoolean($this->GetIDForIdent("GPB".$i), true);
+									}
+								}
+								else {
+									If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == true) {
+										SetValueBoolean($this->GetIDForIdent("GPB".$i), false);
+									}
+								}
+							}
+						}
+						$this->GetOutput();
+						break;
+					}
+				}
+			$tries--;
+			} while ($tries);  
+		}
+	}
+	    
+	public function SetOutput(Int $PortA, Int $PortB)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$tries = 3;
+			do {
+				$this->SendDebug("SetOutput", "Ausfuehrung", 0);
+				$PortA = min(255, max(0, $PortA));
+				$PortB = min(255, max(0, $PortB));
+
+				// Maske für Ausgänge 
+				$GPAIODIRout = 255 - intval($this->GetBuffer("GPAIODIR"));
+				$GPBIODIRout = 255 - intval($this->GetBuffer("GPBIODIR"));
+
+				$OutputArray = Array();
+				$OutputArray[0] = $PortA & $GPAIODIRout;
+				$OutputArray[1] = $PortB & $GPBIODIRout;
+
+				// Adressen 14 15
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_Write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("14"), 
-										  "Parameter" => serialize($OutputArray) )));
+											  "Parameter" => serialize($OutputArray) )));
 				If (!$Result) {
-					$this->SendDebug("SetOutputPin", "Setzen der Ausgaenge fehlerhaft!", 0);
+					$this->SendDebug("SetOutput", "Setzen der Ausgaenge fehlerhaft!", 0);
 					$this->SetStatus(202);
 				}
 				else {
 					$this->SetStatus(102);
+					// Statusvariablen setzen
 					for ($i = 0; $i <= 7; $i++) {
 						If ($GPAIODIRout & pow(2, $i)) {
 							If ($OutputArray[0] & pow(2, $i)) {
@@ -423,34 +520,8 @@
 								}
 							}
 						}
-					}
-					$this->GetOutput();
-				}	
-			}
-			elseif ($Port == "B") {
-				$GPB = intval($this->GetBuffer("GPB"));	
-				If ($Value == true) {
-					$GPB = $this->setBit($GPB, $Pin);
-				}
-				else {
-					$GPB = $this->unsetBit($GPB, $Pin);
-				}
-				// Neuen Wert senden
-				$OutputArray = Array();
-				$OutputArray[0] = $GPB & $GPBIODIRout;
-
-				// Adresse 15
-				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_Write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("15"), 
-										  "Parameter" => serialize($OutputArray) )));
-				If (!$Result) {
-					$this->SendDebug("SetOutputPin", "Setzen der Ausgaenge fehlerhaft!", 0);
-					$this->SetStatus(202);
-				}
-				else {
-					$this->SetStatus(102);
-					for ($i = 0; $i <= 7; $i++) {
 						If ($GPBIODIRout & pow(2, $i)) {
-							If ($OutputArray[0] & pow(2, $i)) {
+							If ($OutputArray[1] & pow(2, $i)) {
 								If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == false) {
 									SetValueBoolean($this->GetIDForIdent("GPB".$i), true);
 								}
@@ -463,64 +534,10 @@
 						}
 					}
 					$this->GetOutput();
+					break;
 				}
-			}
-		}
-	}
-	    
-	public function SetOutput(Int $PortA, Int $PortB)
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("SetOutput", "Ausfuehrung", 0);
-			$PortA = min(255, max(0, $PortA));
-			$PortB = min(255, max(0, $PortB));
-			
-			// Maske für Ausgänge 
-			$GPAIODIRout = 255 - intval($this->GetBuffer("GPAIODIR"));
-			$GPBIODIRout = 255 - intval($this->GetBuffer("GPBIODIR"));
-			
-			$OutputArray = Array();
-			$OutputArray[0] = $PortA & $GPAIODIRout;
-			$OutputArray[1] = $PortB & $GPBIODIRout;
-			
-			// Adressen 14 15
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_Write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("14"), 
-										  "Parameter" => serialize($OutputArray) )));
-			If (!$Result) {
-				$this->SendDebug("SetOutput", "Setzen der Ausgaenge fehlerhaft!", 0);
-				$this->SetStatus(202);
-			}
-			else {
-				$this->SetStatus(102);
-				// Statusvariablen setzen
-				for ($i = 0; $i <= 7; $i++) {
-					If ($GPAIODIRout & pow(2, $i)) {
-						If ($OutputArray[0] & pow(2, $i)) {
-							If (GetValueBoolean($this->GetIDForIdent("GPA".$i)) == false) {
-								SetValueBoolean($this->GetIDForIdent("GPA".$i), true);
-							}
-						}
-						else {
-							If (GetValueBoolean($this->GetIDForIdent("GPA".$i)) == true) {
-								SetValueBoolean($this->GetIDForIdent("GPA".$i), false);
-							}
-						}
-					}
-					If ($GPBIODIRout & pow(2, $i)) {
-						If ($OutputArray[1] & pow(2, $i)) {
-							If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == false) {
-								SetValueBoolean($this->GetIDForIdent("GPB".$i), true);
-							}
-						}
-						else {
-							If (GetValueBoolean($this->GetIDForIdent("GPB".$i)) == true) {
-								SetValueBoolean($this->GetIDForIdent("GPB".$i), false);
-							}
-						}
-					}
-				}
-				$this->GetOutput();
-			}
+			$tries--;
+			} while ($tries);  
 		}
 	}   
 	    
