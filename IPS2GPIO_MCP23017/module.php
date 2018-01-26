@@ -134,7 +134,6 @@
 		
 		If ( intval($this->GetBuffer("PreviousPin_INT")) <> $this->ReadPropertyInteger("Pin_INT") ) {
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_INT")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_INT"), 0);
-			//$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_INT_B")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_INT_B"), 0);
 		}
 
 		//Status-Variablen anlegen
