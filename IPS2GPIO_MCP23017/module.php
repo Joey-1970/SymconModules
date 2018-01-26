@@ -214,7 +214,7 @@
 					If (($data->Pin == $this->ReadPropertyInteger("Pin_INT")) AND (intval($data->Value) == 0)) {
 						SetValueInteger($this->GetIDForIdent("LastInterrupt"), time() );
 						$this->SendDebug("Interrupt", "Wert: ".intval($data->Value), 0);
-						$this->$this->Interrupt();
+						$this->Interrupt();
 					}
 				}
 			   	break; 
