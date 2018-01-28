@@ -27,6 +27,20 @@
 		$this->RegisterPropertyInteger("Startoption", 0);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GIO1_Read_Status($_IPS["TARGET"]);');
+		
+		// Status-Variablen anlegen
+		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 10);
+		$this->DisableAction("LastInterrupt");
+		IPS_SetHidden($this->GetIDForIdent("LastInterrupt"), false);
+		
+		for ($i = 0; $i <= 7; $i++) {
+			$this->RegisterVariableBoolean("P".$i, "P".$i, "~Switch", 10 * $i + 20);
+			IPS_SetHidden($this->GetIDForIdent("P".$i), false);
+		}
+          	
+          	$this->RegisterVariableInteger("Value", "Value", "", 100);
+		$this->EableAction("Value");
+          	IPS_SetHidden($this->GetIDForIdent("Value"), false);
 	}
 	
 	public function GetConfigurationForm() 
@@ -112,20 +126,6 @@
 		If (intval($this->GetBuffer("PreviousPin")) <> $this->ReadPropertyInteger("Pin")) {
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin"), 0);
 		}
- 
-	    	//Status-Variablen anlegen
-		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 10);
-		$this->DisableAction("LastInterrupt");
-		IPS_SetHidden($this->GetIDForIdent("LastInterrupt"), false);
-		
-		for ($i = 0; $i <= 7; $i++) {
-			$this->RegisterVariableBoolean("P".$i, "P".$i, "~Switch", 10 * $i + 20);
-			IPS_SetHidden($this->GetIDForIdent("P".$i), false);
-		}
-          	
-          	$this->RegisterVariableInteger("Value", "Value", "", 100);
-          	IPS_SetHidden($this->GetIDForIdent("Value"), false);
-		
 		
 		$SetTimer = false;
 		for ($i = 0; $i <= 7; $i++) {
