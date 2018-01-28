@@ -21,6 +21,64 @@
 		$this->RegisterPropertyBoolean("LoggingTempCPU", false);
  	    	$this->RegisterPropertyBoolean("LoggingTempGPU", false);
  	    	$this->RegisterPropertyBoolean("LoggingLoadAvg", false);
+		
+		// Profil anlegen
+		$this->RegisterProfileFloat("IPS2GPIO.MB", "Information", "", " MB", 0, 1000000, 0.1, 1);
+		$this->RegisterProfileFloat("IPS2GPIO.mhz", "Speedo", "", " MHz", 0, 10000, 0.1, 1);
+		
+		// Status-Variablen anlegen
+		$this->RegisterVariableString("Board", "Board", "", 10);
+		$this->DisableAction("Board");
+		$this->RegisterVariableString("Revision", "Revision", "", 20);
+		$this->DisableAction("Revision");
+		$this->RegisterVariableString("Hardware", "Hardware", "", 30);
+		$this->DisableAction("Hardware");
+		$this->RegisterVariableString("Serial", "Serial", "", 40);
+		$this->DisableAction("Serial");
+		$this->RegisterVariableString("Software", "Software", "", 50);
+		$this->DisableAction("Software");
+		$this->RegisterVariableFloat("MemoryCPU", "Memory CPU", "IPS2GPIO.MB", 60);
+		$this->DisableAction("MemoryCPU");
+		$this->RegisterVariableFloat("MemoryGPU", "Memory GPU", "IPS2GPIO.MB", 70);
+		$this->DisableAction("MemoryGPU");
+		$this->RegisterVariableString("Hostname", "Hostname", "", 80);
+		$this->DisableAction("Hostname");
+		$this->RegisterVariableString("Uptime", "Uptime", "", 90);
+		$this->DisableAction("Uptime");
+		
+		// CPU/GPU
+		$this->RegisterVariableFloat("TemperaturCPU", "Temperature CPU", "~Temperature", 100);
+		$this->DisableAction("TemperaturCPU");
+		$this->RegisterVariableFloat("TemperaturGPU", "Temperature GPU", "~Temperature", 110);
+		$this->DisableAction("TemperaturGPU");
+		$this->RegisterVariableFloat("VoltageCPU", "Voltage CPU", "~Volt", 120);
+		$this->DisableAction("VoltageCPU");
+		$this->RegisterVariableFloat("ARM_Frequenzy", "ARM Frequenzy", "IPS2GPIO.mhz", 130);
+		$this->DisableAction("ARM_Frequenzy");
+		
+		// CPU Auslastung
+		$this->RegisterVariableFloat("AverageLoad", "CPU AverageLoad", "~Intensity.1", 140);
+		$this->DisableAction("AverageLoad");
+		$this->SetBuffer("PrevTotal", 0);
+		$this->SetBuffer("PrevIdle", 0);
+
+		// Arbeitsspeicher
+		$this->RegisterVariableFloat("MemoryTotal", "Memory Total", "IPS2GPIO.MB", 200);
+		$this->DisableAction("MemoryTotal");
+		$this->RegisterVariableFloat("MemoryFree", "Memory Free", "IPS2GPIO.MB", 210);
+		$this->DisableAction("MemoryFree");
+		$this->RegisterVariableFloat("MemoryAvailable", "Memory Available", "IPS2GPIO.MB", 220);
+		$this->DisableAction("MemoryAvailable");
+		
+		// SD-Card
+		$this->RegisterVariableFloat("SD_Card_Total", "SD-Card Total", "IPS2GPIO.MB", 300);
+		$this->DisableAction("SD_Card_Total");
+		$this->RegisterVariableFloat("SD_Card_Used", "SD-Card Used", "IPS2GPIO.MB", 310);
+		$this->DisableAction("SD_Card_Used");
+		$this->RegisterVariableFloat("SD_Card_Available", "SD-Card Available", "IPS2GPIO.MB", 320);
+		$this->DisableAction("SD_Card_Available");
+		$this->RegisterVariableFloat("SD_Card_Used_rel", "SD-Card Used (rel)", "~Intensity.1", 330);
+		$this->DisableAction("SD_Card_Used_rel");
        }
  	
 	public function GetConfigurationForm() 
@@ -51,61 +109,6 @@
         {
                  // Diese Zeile nicht löschen
                  parent::ApplyChanges();
-  	   	
-		// Profil anlegen
-		$this->RegisterProfileFloat("IPS2GPIO.MB", "Information", "", " MB", 0, 1000000, 0.1, 1);
-		$this->RegisterProfileFloat("IPS2GPIO.mhz", "Speedo", "", " MHz", 0, 10000, 0.1, 1);
-		
-		//Status-Variablen anlegen
-		$this->RegisterVariableString("Board", "Board", "", 10);
-		$this->DisableAction("Board");
-		$this->RegisterVariableString("Revision", "Revision", "", 20);
-		$this->DisableAction("Revision");
-		$this->RegisterVariableString("Hardware", "Hardware", "", 30);
-		$this->DisableAction("Hardware");
-		$this->RegisterVariableString("Serial", "Serial", "", 40);
-		$this->DisableAction("Serial");
-		$this->RegisterVariableString("Software", "Software", "", 50);
-		$this->DisableAction("Software");
-		$this->RegisterVariableFloat("MemoryCPU", "Memory CPU", "IPS2GPIO.MB", 60);
-		$this->DisableAction("MemoryCPU");
-		$this->RegisterVariableFloat("MemoryGPU", "Memory GPU", "IPS2GPIO.MB", 70);
-		$this->DisableAction("MemoryGPU");
-		$this->RegisterVariableString("Hostname", "Hostname", "", 80);
-		$this->DisableAction("Hostname");
-		$this->RegisterVariableString("Uptime", "Uptime", "", 90);
-		$this->DisableAction("Uptime");
-		// CPU/GPU
-		$this->RegisterVariableFloat("TemperaturCPU", "Temperature CPU", "~Temperature", 100);
-		$this->DisableAction("TemperaturCPU");
-		$this->RegisterVariableFloat("TemperaturGPU", "Temperature GPU", "~Temperature", 110);
-		$this->DisableAction("TemperaturGPU");
-		$this->RegisterVariableFloat("VoltageCPU", "Voltage CPU", "~Volt", 120);
-		$this->DisableAction("VoltageCPU");
-		$this->RegisterVariableFloat("ARM_Frequenzy", "ARM Frequenzy", "IPS2GPIO.mhz", 130);
-		$this->DisableAction("ARM_Frequenzy");
-		// CPU Auslastung
-		$this->RegisterVariableFloat("AverageLoad", "CPU AverageLoad", "~Intensity.1", 140);
-		$this->DisableAction("AverageLoad");
-		$this->SetBuffer("PrevTotal", 0);
-		$this->SetBuffer("PrevIdle", 0);
-
-		// Arbeitsspeicher
-		$this->RegisterVariableFloat("MemoryTotal", "Memory Total", "IPS2GPIO.MB", 200);
-		$this->DisableAction("MemoryTotal");
-		$this->RegisterVariableFloat("MemoryFree", "Memory Free", "IPS2GPIO.MB", 210);
-		$this->DisableAction("MemoryFree");
-		$this->RegisterVariableFloat("MemoryAvailable", "Memory Available", "IPS2GPIO.MB", 220);
-		$this->DisableAction("MemoryAvailable");
-		// SD-Card
-		$this->RegisterVariableFloat("SD_Card_Total", "SD-Card Total", "IPS2GPIO.MB", 300);
-		$this->DisableAction("SD_Card_Total");
-		$this->RegisterVariableFloat("SD_Card_Used", "SD-Card Used", "IPS2GPIO.MB", 310);
-		$this->DisableAction("SD_Card_Used");
-		$this->RegisterVariableFloat("SD_Card_Available", "SD-Card Available", "IPS2GPIO.MB", 320);
-		$this->DisableAction("SD_Card_Available");
-		$this->RegisterVariableFloat("SD_Card_Used_rel", "SD-Card Used (rel)", "~Intensity.1", 330);
-		$this->DisableAction("SD_Card_Used_rel");
 		
                 If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
 			// Logging setzen
