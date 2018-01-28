@@ -25,6 +25,18 @@
 		$this->RegisterPropertyInteger("HysteresisOn", 100);
 		$this->RegisterPropertyInteger("HysteresisOff", 0);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GBH_Measurement($_IPS["TARGET"]);');
+		
+		// Profil anlegen
+	    	$this->RegisterProfileFloat("IPS2GPIO.lx", "Bulb", "", " lx", 0, 1000000, 0.1, 2);
+		
+		//Status-Variablen anlegen
+		$this->RegisterVariableFloat("Illuminance", "Illuminance", "IPS2GPIO.lx", 10);
+		$this->DisableAction("Illuminance");
+		IPS_SetHidden($this->GetIDForIdent("Illuminance"), false);
+		
+		$this->RegisterVariableBoolean("Hysteresis", "Hysteresis", "~Switch", 20);
+		$this->DisableAction("Hysteresis");
+		IPS_SetHidden($this->GetIDForIdent("Hysteresis"), false);
         }
 	    
 	public function GetConfigurationForm() 
@@ -91,17 +103,6 @@
         {
             	// Diese Zeile nicht löschen
             	parent::ApplyChanges();
-   
-	    	// Profil anlegen
-	    	$this->RegisterProfileFloat("IPS2GPIO.lx", "Bulb", "", " lx", 0, 1000000, 0.1, 2);
-		//Status-Variablen anlegen
-		$this->RegisterVariableFloat("Illuminance", "Illuminance", "IPS2GPIO.lx", 10);
-		$this->DisableAction("Illuminance");
-		IPS_SetHidden($this->GetIDForIdent("Illuminance"), false);
-		
-		$this->RegisterVariableBoolean("Hysteresis", "Hysteresis", "~Switch", 20);
-		$this->DisableAction("Hysteresis");
-		IPS_SetHidden($this->GetIDForIdent("Hysteresis"), false);
 		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 			// Logging setzen
