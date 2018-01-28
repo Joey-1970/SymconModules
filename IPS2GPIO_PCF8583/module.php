@@ -183,6 +183,7 @@
 	private function Setup()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Setup", "Ausfuehrung", 0);
 			// Kontroll und Status Register an Adresse x00 setzen
 			If ($this->ReadPropertyInteger("Pin") >= 0) {
 				// Interrupt setzen
@@ -240,6 +241,7 @@
 	private function ReadCounter()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("ReadCounter", "Ausfuehrung", 0);
 			$CounterValue =  0;
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("01"), "Count" => 3)));
 			If ($Result < 0) {
@@ -265,6 +267,7 @@
 	private function ReadAlarm()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("ReadAlarm", "Ausfuehrung", 0);
 			$AlarmValue =  0;
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("09"), "Count" => 3)));
 			If ($Result < 0) {
@@ -290,6 +293,7 @@
 	private function ReadTimer()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("ReadTimer", "Ausfuehrung", 0);
 			$TimerValue =  0;
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("07"), "Count" => 1)));
 			If ($Result < 0) {
