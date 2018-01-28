@@ -28,6 +28,31 @@
 		$this->RegisterPropertyString("MAC4", " ");
 		$this->RegisterPropertyBoolean("LoggingMAC4", false);
 		$this->RegisterTimer("Messzyklus", 0, 'I2GBT_Measurement($_IPS["TARGET"]);');
+		
+		 //Status-Variablen anlegen
+	         $this->RegisterVariableBoolean("MAC0Connect", "MAC 1", "~Switch", 10);
+		 $this->DisableAction("MAC0Connect");
+		 $this->RegisterVariableString("MAC0Name", "MAC 1 Name", "", 20);
+                 $this->DisableAction("MAC0Name");
+                 $this->RegisterVariableBoolean("MAC1Connect", "MAC 2", "~Switch", 30);
+		 $this->DisableAction("MAC1Connect");
+		 $this->RegisterVariableString("MAC1Name", "MAC 2 Name", "", 40);
+                 $this->DisableAction("MAC1Name");
+		 $this->RegisterVariableBoolean("MAC2Connect", "MAC 3", "~Switch", 50);
+		 $this->DisableAction("MAC2Connect");
+		 $this->RegisterVariableString("MAC2Name", "MAC 3 Name", "", 60);
+                 $this->DisableAction("MAC2Name");
+		 $this->RegisterVariableBoolean("MAC3Connect", "MAC 4", "~Switch", 70);
+		 $this->DisableAction("MAC3Connect");
+		 $this->RegisterVariableString("MAC3Name", "MAC 4 Name", "", 80);
+                 $this->DisableAction("MAC3Name");
+		 $this->RegisterVariableBoolean("MAC4Connect", "MAC 5", "~Switch", 90);
+		 $this->DisableAction("MAC4Connect");
+		 $this->RegisterVariableString("MAC4Name", "MAC 5 Name", "", 100);
+                 $this->DisableAction("MAC4Name");
+                 $this->RegisterVariableBoolean("Summary", "Summary", "~Switch", 110);
+		 $this->DisableAction("Summary");
+		 $this->SetBuffer("Summary", false);
       	}
 	
 	public function GetConfigurationForm() 
@@ -61,31 +86,6 @@
         {
                  // Diese Zeile nicht löschen
                  parent::ApplyChanges();
-	   
-	         //Status-Variablen anlegen
-	         $this->RegisterVariableBoolean("MAC0Connect", "MAC 1", "~Switch", 10);
-		 $this->DisableAction("MAC0Connect");
-		 $this->RegisterVariableString("MAC0Name", "MAC 1 Name", "", 20);
-                 $this->DisableAction("MAC0Name");
-                 $this->RegisterVariableBoolean("MAC1Connect", "MAC 2", "~Switch", 30);
-		 $this->DisableAction("MAC1Connect");
-		 $this->RegisterVariableString("MAC1Name", "MAC 2 Name", "", 40);
-                 $this->DisableAction("MAC1Name");
-		 $this->RegisterVariableBoolean("MAC2Connect", "MAC 3", "~Switch", 50);
-		 $this->DisableAction("MAC2Connect");
-		 $this->RegisterVariableString("MAC2Name", "MAC 3 Name", "", 60);
-                 $this->DisableAction("MAC2Name");
-		 $this->RegisterVariableBoolean("MAC3Connect", "MAC 4", "~Switch", 70);
-		 $this->DisableAction("MAC3Connect");
-		 $this->RegisterVariableString("MAC3Name", "MAC 4 Name", "", 80);
-                 $this->DisableAction("MAC3Name");
-		 $this->RegisterVariableBoolean("MAC4Connect", "MAC 5", "~Switch", 90);
-		 $this->DisableAction("MAC4Connect");
-		 $this->RegisterVariableString("MAC4Name", "MAC 5 Name", "", 100);
-                 $this->DisableAction("MAC4Name");
-                 $this->RegisterVariableBoolean("Summary", "Summary", "~Switch", 110);
-		 $this->DisableAction("Summary");
-		 $this->SetBuffer("Summary", false);
 		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
 			// Logging setzen
