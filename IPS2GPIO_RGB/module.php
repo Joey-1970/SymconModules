@@ -17,6 +17,27 @@
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 		$this->RegisterPropertyInteger("FadeTime", 0);
 		$this->RegisterPropertyInteger("FadeScalar", 4);
+		
+		// Status-Variablen anlegen
+	        $this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
+           	$this->EnableAction("Status");
+		IPS_SetHidden($this->GetIDForIdent("Status"), false);
+		
+           	$this->RegisterVariableInteger("Intensity_R", "Rot", "~Intensity.255",20);
+           	$this->EnableAction("Intensity_R");
+		IPS_SetHidden($this->GetIDForIdent("Intensity_R"), false);
+		
+           	$this->RegisterVariableInteger("Intensity_G", "Grün", "~Intensity.255", 30);
+           	$this->EnableAction("Intensity_G");
+		IPS_SetHidden($this->GetIDForIdent("Intensity_G"), false);
+		
+           	$this->RegisterVariableInteger("Intensity_B", "Blau", "~Intensity.255", 40);
+           	$this->EnableAction("Intensity_B");
+		IPS_SetHidden($this->GetIDForIdent("Intensity_B"), false);
+		
+           	$this->RegisterVariableInteger("Color", "Farbe", "~HexColor", 50);
+           	$this->EnableAction("Color");
+		IPS_SetHidden($this->GetIDForIdent("Color"), false);
 	}
 	    
 	public function GetConfigurationForm() 
@@ -104,18 +125,6 @@
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel G - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_G")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_G"), 0);
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel B - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_B")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_B"), 0);
 		}
-  	   
-	        //Status-Variablen anlegen
-	        $this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
-           	$this->EnableAction("Status");
-           	$this->RegisterVariableInteger("Intensity_R", "Rot", "~Intensity.255",20);
-           	$this->EnableAction("Intensity_R");
-           	$this->RegisterVariableInteger("Intensity_G", "Grün", "~Intensity.255", 30);
-           	$this->EnableAction("Intensity_G");
-           	$this->RegisterVariableInteger("Intensity_B", "Blau", "~Intensity.255", 40);
-           	$this->EnableAction("Intensity_B");
-           	$this->RegisterVariableInteger("Color", "Farbe", "~HexColor", 50);
-           	$this->EnableAction("Color");
            	
           	//ReceiveData-Filter setzen
           	$Filter = '((.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_R").'.*)|(.*"Pin":'.$this->ReadPropertyInteger("Pin_G").'.*|.*"Pin":'.$this->ReadPropertyInteger("Pin_B").'.*))';
