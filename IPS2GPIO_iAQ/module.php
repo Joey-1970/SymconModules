@@ -22,6 +22,28 @@
  	    	$this->RegisterPropertyBoolean("LoggingCO2", false);
 		$this->RegisterPropertyBoolean("LoggingTVOC", false);
           	$this->RegisterTimer("Messzyklus", 0, 'I2GiAQ_Measurement($_IPS["TARGET"]);');
+		
+		// Profil anlegen
+		$this->RegisterProfileInteger("IPS2GPIO.ppm", "Gauge", "", " ppm", 450, 2000, 1);
+		$this->RegisterProfileInteger("IPS2GPIO.ppb", "Gauge", "", " ppb", 125, 600, 1);
+		$this->RegisterProfileInteger("IPS2GPIO.ohm", "Gauge", "", " Ohm", 0, 1000000, 1);
+	    	
+		// Status-Variablen anlegen
+             	$this->RegisterVariableInteger("CO2", "CO2", "IPS2GPIO.ppm", 10);
+		$this->DisableAction("CO2");
+		IPS_SetHidden($this->GetIDForIdent("CO2"), false);
+		
+		$this->RegisterVariableInteger("TVOC", "TVOC", "IPS2GPIO.ppb", 20);
+		$this->DisableAction("TVOC");
+		IPS_SetHidden($this->GetIDForIdent("TVOC"), false);
+		
+		$this->RegisterVariableInteger("Resistance", "Resistance", "IPS2GPIO.ohm", 30);
+		$this->DisableAction("Resistance");
+		IPS_SetHidden($this->GetIDForIdent("Resistance"), false);
+		
+		$this->RegisterVariableString("Status", "Status", "", 40);
+		$this->DisableAction("Status");
+		IPS_SetHidden($this->GetIDForIdent("Status"), false);
 	}
 	    
 	public function GetConfigurationForm() 
@@ -76,26 +98,6 @@
         {
             	// Diese Zeile nicht löschen
             	parent::ApplyChanges();
- 
-	    	// Profil anlegen
-		$this->RegisterProfileInteger("IPS2GPIO.ppm", "Gauge", "", " ppm", 450, 2000, 1);
-		$this->RegisterProfileInteger("IPS2GPIO.ppb", "Gauge", "", " ppb", 125, 600, 1);
-		$this->RegisterProfileInteger("IPS2GPIO.ohm", "Gauge", "", " Ohm", 0, 1000000, 1);
-	    	
-		//Status-Variablen anlegen
-             	$this->RegisterVariableInteger("CO2", "CO2", "IPS2GPIO.ppm", 10);
-		$this->DisableAction("CO2");
-		IPS_SetHidden($this->GetIDForIdent("CO2"), false);
-		$this->RegisterVariableInteger("TVOC", "TVOC", "IPS2GPIO.ppb", 20);
-		$this->DisableAction("TVOC");
-		IPS_SetHidden($this->GetIDForIdent("TVOC"), false);
-		$this->RegisterVariableInteger("Resistance", "Resistance", "IPS2GPIO.ohm", 30);
-		$this->DisableAction("Resistance");
-		IPS_SetHidden($this->GetIDForIdent("Resistance"), false);
-		$this->RegisterVariableString("Status", "Status", "", 40);
-		$this->DisableAction("Status");
-		IPS_SetHidden($this->GetIDForIdent("Status"), false);
-		
 		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
 			// Logging setzen
