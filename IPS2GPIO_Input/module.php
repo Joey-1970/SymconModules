@@ -16,6 +16,19 @@
             	$this->RegisterPropertyInteger("TriggerScript", 0);
             	$this->RegisterPropertyInteger("ToggleScript", 0);
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+		
+	        //Status-Variablen anlegen
+	        $this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
+                $this->DisableAction("Status");
+		IPS_SetHidden($this->GetIDForIdent("Status"), false);
+		
+                $this->RegisterVariableBoolean("Toggle", "Toggle", "~Switch", 20);
+                $this->DisableAction("Toggle");
+		IPS_SetHidden($this->GetIDForIdent("Toggle"), false);
+		
+                $this->RegisterVariableBoolean("Trigger", "Trigger", "~Switch", 30);
+                $this->DisableAction("Trigger");
+		IPS_SetHidden($this->GetIDForIdent("Trigger"), false);
         }
 	
 	public function GetConfigurationForm() 
@@ -79,14 +92,6 @@
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin"), 0);
 		}
   	   
-	        //Status-Variablen anlegen
-	        $this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
-                $this->DisableAction("Status");
-                $this->RegisterVariableBoolean("Toggle", "Toggle", "~Switch", 20);
-                $this->DisableAction("Toggle");
-                $this->RegisterVariableBoolean("Trigger", "Trigger", "~Switch", 30);
-                $this->DisableAction("Trigger");
-            
                 //ReceiveData-Filter setzen
 		$Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*)';
 		$this->SetReceiveDataFilter($Filter);
