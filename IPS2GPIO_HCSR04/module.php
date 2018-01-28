@@ -26,6 +26,15 @@
 		$this->RegisterPropertyBoolean("Logging", false);
 		$this->RegisterTimer("Messzyklus", 0, 'I2GSR4_Measurement($_IPS["TARGET"]);');
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+		
+		
+		// Profil anlegen
+		$this->RegisterProfileFloat("IPS2GPIO.cm", "Distance", "", " cm", 0, 1000, 0.1, 1);
+		    
+		//Status-Variablen anlegen
+		$this->RegisterVariableFloat("Distance", "Distance", "IPS2GPIO.cm", 10);
+		$this->DisableAction("Distance");
+		IPS_SetHidden($this->GetIDForIdent("Distance"), false);
 	}
 
 	public function GetConfigurationForm() 
@@ -105,13 +114,6 @@
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_I")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_I"), 0);
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_O")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_O"), 0);
 		}
-
-		    // Profil anlegen
-		    $this->RegisterProfileFloat("IPS2GPIO.cm", "Distance", "", " cm", 0, 1000, 0.1, 1);
-		    //Status-Variablen anlegen
-		    $this->RegisterVariableFloat("Distance", "Distance", "IPS2GPIO.cm", 10);
-	            $this->DisableAction("Distance");
-	            IPS_SetHidden($this->GetIDForIdent("Distance"), false);
 
 	            // Logging setzen
 		    AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Distance"), $this->ReadPropertyBoolean("Logging"));
