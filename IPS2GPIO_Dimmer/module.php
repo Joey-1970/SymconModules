@@ -13,6 +13,15 @@
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 		$this->RegisterPropertyInteger("FadeTime", 0);
 		$this->RegisterPropertyInteger("FadeScalar", 4);
+		
+		//Status-Variablen anlegen
+		$this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
+	        $this->EnableAction("Status");
+		IPS_SetHidden($this->GetIDForIdent("Status"), false);
+		
+	        $this->RegisterVariableInteger("Intensity", "Intensity", "~Intensity.255", 20);
+	        $this->EnableAction("Intensity");
+		IPS_SetHidden($this->GetIDForIdent("Intensity"), false);
         }
 	
 	
@@ -74,12 +83,6 @@
 		If (intval($this->GetBuffer("PreviousPin")) <> $this->ReadPropertyInteger("Pin")) {
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin"), 0);
 		}
-		
-		//Status-Variablen anlegen
-		$this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
-	        $this->EnableAction("Status");
-	        $this->RegisterVariableInteger("Intensity", "Intensity", "~Intensity.255", 20);
-	        $this->EnableAction("Intensity");
            
            	//ReceiveData-Filter setzen
 		$Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*)';
