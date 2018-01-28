@@ -22,6 +22,23 @@
 		$this->RegisterPropertyInteger("DeviceAddress_1", 0);
 		$this->RegisterPropertyInteger("Messzyklus", 60);
 		$this->RegisterTimer("Messzyklus", 0, 'I2G2438_Measurement($_IPS["TARGET"]);');
+		
+		//Status-Variablen anlegen
+		$this->RegisterVariableFloat("Temperature", "Temperatur", "~Temperature", 10);
+          	$this->DisableAction("Temperature");
+		IPS_SetHidden($this->GetIDForIdent("Temperature"), false);
+		
+		$this->RegisterVariableFloat("VAD", "VAD", "", 20);
+          	$this->DisableAction("VAD");
+		IPS_SetHidden($this->GetIDForIdent("VAD"), false);
+		
+		$this->RegisterVariableFloat("VDD", "VDD", "", 30);
+          	$this->DisableAction("VDD");
+		IPS_SetHidden($this->GetIDForIdent("VDD"), false);
+		
+		$this->RegisterVariableFloat("XSENS", "XSENS", "", 40);
+          	$this->DisableAction("XSENS");
+		IPS_SetHidden($this->GetIDForIdent("XSENS"), false);
         }
  	
 	public function GetConfigurationForm() 
@@ -85,23 +102,6 @@
         {
             	// Diese Zeile nicht löschen
             	parent::ApplyChanges();
-            	
-		//Status-Variablen anlegen
-		$this->RegisterVariableFloat("Temperature", "Temperatur", "~Temperature", 10);
-          	$this->DisableAction("Temperature");
-		IPS_SetHidden($this->GetIDForIdent("Temperature"), false);
-		
-		$this->RegisterVariableFloat("VAD", "VAD", "", 20);
-          	$this->DisableAction("VAD");
-		IPS_SetHidden($this->GetIDForIdent("VAD"), false);
-		
-		$this->RegisterVariableFloat("VDD", "VDD", "", 30);
-          	$this->DisableAction("VDD");
-		IPS_SetHidden($this->GetIDForIdent("VDD"), false);
-		
-		$this->RegisterVariableFloat("XSENS", "XSENS", "", 40);
-          	$this->DisableAction("XSENS");
-		IPS_SetHidden($this->GetIDForIdent("XSENS"), false);
 		
 		$OWDeviceArray = Array();
 		$this->SetBuffer("OWDeviceArray", serialize($OWDeviceArray));
