@@ -45,6 +45,23 @@ class IPS2GPIO_IO extends IPSModule
 		$I2C_HandleData = array();
 		$this->SetBuffer("I2C_Handle", serialize($I2C_HandleData));
 		$this->RegisterPropertyBoolean("AudioDAC", false);
+		
+		// Statusvariablen anlegen
+		$this->RegisterVariableString("Hardware", "Hardware", "", 10);
+		$this->DisableAction("Hardware");
+		IPS_SetHidden($this->GetIDForIdent("Hardware"), true);
+
+		$this->RegisterVariableInteger("SoftwareVersion", "SoftwareVersion", "", 20);
+		$this->DisableAction("SoftwareVersion");
+		IPS_SetHidden($this->GetIDForIdent("SoftwareVersion"), true);
+
+		$this->RegisterVariableInteger("LastKeepAlive", "Letztes Keep Alive", "~UnixTimestamp", 30);
+		$this->DisableAction("LastKeepAlive");
+		IPS_SetHidden($this->GetIDForIdent("LastKeepAlive"), false);
+
+		$this->RegisterVariableBoolean("PigpioStatus", "Pigpio Status", "~Alert.Reversed", 40);
+		$this->DisableAction("PigpioStatus");
+		IPS_SetHidden($this->GetIDForIdent("PigpioStatus"), false);
 	}
   	
 	public function GetConfigurationForm() 
@@ -189,22 +206,6 @@ class IPS2GPIO_IO extends IPSModule
 	        $this->RegisterMessage(0, 10100); // Alle Kernelmessages (10103 muss im MessageSink ausgewertet werden.)
 		
 		If (IPS_GetKernelRunlevel() == 10103) {
-			$this->RegisterVariableString("Hardware", "Hardware", "", 10);
-			$this->DisableAction("Hardware");
-			IPS_SetHidden($this->GetIDForIdent("Hardware"), true);
-			
-			$this->RegisterVariableInteger("SoftwareVersion", "SoftwareVersion", "", 20);
-			$this->DisableAction("SoftwareVersion");
-			IPS_SetHidden($this->GetIDForIdent("SoftwareVersion"), true);
-			
-			$this->RegisterVariableInteger("LastKeepAlive", "Letztes Keep Alive", "~UnixTimestamp", 30);
-			$this->DisableAction("LastKeepAlive");
-			IPS_SetHidden($this->GetIDForIdent("LastKeepAlive"), false);
-			
-			$this->RegisterVariableBoolean("PigpioStatus", "Pigpio Status", "~Alert.Reversed", 40);
-			$this->DisableAction("PigpioStatus");
-			IPS_SetHidden($this->GetIDForIdent("PigpioStatus"), false);
-			
 			$this->SetBuffer("ModuleReady", 0);
 			$this->SetBuffer("Handle", -1);
 			$this->SetBuffer("HardwareRev", 0);
