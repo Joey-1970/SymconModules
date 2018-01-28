@@ -325,7 +325,7 @@
 		$this->ToggleOutputPinStatusEx($Group, $Channel, $FadeTime);	
 	}    	    
 	
-	public function ToggleOutputPinStatusEx(Int $Group, String $Channel, , Int $FadeTime)
+	public function ToggleOutputPinStatusEx(Int $Group, String $Channel, Int $FadeTime)
 	{ 
 		$this->SendDebug("ToggleOutputPinStatusEx", "Ausfuehrung", 0);
 		$Group = min(4, max(1, $Group));
