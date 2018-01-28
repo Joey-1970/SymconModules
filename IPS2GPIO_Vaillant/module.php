@@ -30,6 +30,35 @@
 		$this->RegisterPropertyInteger("Messzyklus", 600);
 		$this->RegisterTimer("Messzyklus", 0, 'I2GVt_Calculate($_IPS["TARGET"]);');
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+		
+		// Profile anlegen
+		$this->RegisterProfileInteger("IPS2GPIO.HeatingStatus", "Information", "", "", 0, 2, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.HeatingStatus", 0, "unbekannt", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.HeatingStatus", 1, "Winterbetrieb", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.HeatingStatus", 2, "Sommerbetrieb", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.HeatingStatus", 3, "gestört", "Information", -1);
+		
+		// Status-Variablen anlegen
+		$this->RegisterVariableInteger("Status", "Status", "IPS2GPIO.HeatingStatus", 10);
+	        $this->DisableAction("Status");
+		
+		$this->RegisterVariableFloat("SetTemperature", "Kessel-Soll-Temperatur", "~Temperature", 20);
+	        $this->DisableAction("SetTemperature");
+	        
+		$this->RegisterVariableFloat("Voltage", "Spannung", "~Volt", 30);
+	        $this->DisableAction("Voltage");
+		
+		$this->RegisterVariableFloat("OutdoorTemperature", "Aussen-Temperatur", "~Temperature", 40);
+	        $this->DisableAction("OutdoorTemperature");
+		
+		$this->RegisterVariableFloat("ReferenceTemperature", "Referenz-Temperatur", "~Temperature", 50);
+	        $this->DisableAction("ReferenceTemperature");
+		
+		$this->RegisterVariableFloat("FlowTemperature", "Vorlauf-Temperatur", "~Temperature", 60);
+	        $this->DisableAction("FlowTemperature");
+		
+		$this->RegisterVariableFloat("ReturnTemperature", "Rücklauf-Temperatur", "~Temperature", 70);
+	        $this->DisableAction("ReturnTemperature");
         }
 	
 	
@@ -108,35 +137,6 @@
 		If (intval($this->GetBuffer("PreviousPin")) <> $this->ReadPropertyInteger("Pin")) {
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin"), 0);
 		}
-		
-		$this->RegisterProfileInteger("IPS2GPIO.HeatingStatus", "Information", "", "", 0, 2, 1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.HeatingStatus", 0, "unbekannt", "Information", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.HeatingStatus", 1, "Winterbetrieb", "Information", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.HeatingStatus", 2, "Sommerbetrieb", "Information", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.HeatingStatus", 3, "gestört", "Information", -1);
-		
-		//Status-Variablen anlegen
-		$this->RegisterVariableInteger("Status", "Status", "IPS2GPIO.HeatingStatus", 10);
-	        $this->DisableAction("Status");
-		
-		$this->RegisterVariableFloat("SetTemperature", "Kessel-Soll-Temperatur", "~Temperature", 20);
-	        $this->DisableAction("SetTemperature");
-	        
-		$this->RegisterVariableFloat("Voltage", "Spannung", "~Volt", 30);
-	        $this->DisableAction("Voltage");
-		
-		$this->RegisterVariableFloat("OutdoorTemperature", "Aussen-Temperatur", "~Temperature", 40);
-	        $this->DisableAction("OutdoorTemperature");
-		
-		$this->RegisterVariableFloat("ReferenceTemperature", "Referenz-Temperatur", "~Temperature", 50);
-	        $this->DisableAction("ReferenceTemperature");
-		
-		$this->RegisterVariableFloat("FlowTemperature", "Vorlauf-Temperatur", "~Temperature", 60);
-	        $this->DisableAction("FlowTemperature");
-		
-		$this->RegisterVariableFloat("ReturnTemperature", "Rücklauf-Temperatur", "~Temperature", 70);
-	        $this->DisableAction("ReturnTemperature");
-		
            	
 		// Registrierung für die Änderung der Aussen-Temperatur
 		If ($this->ReadPropertyInteger("OutdoorTemperature_ID") > 0) {
