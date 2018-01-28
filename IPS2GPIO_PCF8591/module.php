@@ -25,6 +25,17 @@
  	    	$this->RegisterPropertyBoolean("LoggingOut", false);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GAD1_Measurement($_IPS["TARGET"]);');
+		
+		// Status-Variablen anlegen
+		for ($i = 0; $i <= 3; $i++) {
+			$this->RegisterVariableInteger("Channel_".$i, "Channel ".$i, "~Intensity.255", $i * 10 + 10);
+			$this->DisableAction("Channel_".$i);
+			IPS_SetHidden($this->GetIDForIdent("Channel_".$i), false);
+		}
+		
+		$this->RegisterVariableInteger("Output", "Output", "~Intensity.255", 50);
+          	$this->EnableAction("Output");
+		IPS_SetHidden($this->GetIDForIdent("Output"), false);
 	}
 	
         public function GetConfigurationForm() 
@@ -85,27 +96,6 @@
         {
             	// Diese Zeile nicht löschen
             	parent::ApplyChanges();
-  
-	    	//Status-Variablen anlegen
-		$this->RegisterVariableInteger("Channel_0", "Channel 0", "~Intensity.255", 10);
-          	$this->DisableAction("Channel_0");
-		IPS_SetHidden($this->GetIDForIdent("Channel_0"), false);
-		
-		$this->RegisterVariableInteger("Channel_1", "Channel 1", "~Intensity.255", 20);
-          	$this->DisableAction("Channel_1");
-		IPS_SetHidden($this->GetIDForIdent("Channel_1"), false);
-		
-		$this->RegisterVariableInteger("Channel_2", "Channel 2", "~Intensity.255", 30);
-          	$this->DisableAction("Channel_2");
-		IPS_SetHidden($this->GetIDForIdent("Channel_2"), false);
-		
-		$this->RegisterVariableInteger("Channel_3", "Channel 3", "~Intensity.255", 40);
-          	$this->DisableAction("Channel_3");
-		IPS_SetHidden($this->GetIDForIdent("Channel_3"), false);
-		
-		$this->RegisterVariableInteger("Output", "Output", "~Intensity.255", 50);
-          	$this->EnableAction("Output");
-		IPS_SetHidden($this->GetIDForIdent("Output"), false);
 		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
 			// Logging setzen
