@@ -21,7 +21,37 @@
 		$this->SetBuffer("PreviousPin_TxD", -1);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GPTLB10VE_GetStatus($_IPS["TARGET"]);');
             	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+		
+		// Profil anlegen
+		$this->RegisterProfileInteger("IPS2GPIO.PTLB10VEStatus", "Information", "", "", 0, 2, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEStatus", 0, "Bereitschaft", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEStatus", 1, "Lampeneinschaltsteuerung", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEStatus", 2, "Lampe eingeschaltet", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEStatus", 3, "Lampenausschaltsteuerung", "Information", -1);
+		
+		$this->RegisterProfileInteger("IPS2GPIO.PTLB10VEInput", "Information", "", "", 0, 2, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEInput", 0, "Video", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEInput", 1, "S-Video", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEInput", 2, "RGB", "Information", -1);
+	
+		// Status-Variablen anlegen
+		$this->RegisterVariableInteger("Status", "Status", "IPS2GPIO.PTLB10VEStatus", 10);
+		$this->DisableAction("Status");
+		IPS_SetHidden($this->GetIDForIdent("Status"), false);
+		
+		$this->RegisterVariableBoolean("Power", "Power", "~Switch", 20);
+		$this->EnableAction("Power");
+		IPS_SetHidden($this->GetIDForIdent("Power"), false);
+		
+		$this->RegisterVariableInteger("Input", "Input", "IPS2GPIO.PTLB10VEInput", 30);
+		$this->EnableAction("Input");
+		IPS_SetHidden($this->GetIDForIdent("Input"), false);
+		
+		$this->RegisterVariableInteger("Volume", "Volume", "~Intensity.255", 40);
+	        $this->EnableAction("Volume");
+		IPS_SetHidden($this->GetIDForIdent("Volume"), false);
         }
+	
 	public function GetConfigurationForm() 
 	{ 
 		$arrayStatus = array(); 
@@ -79,37 +109,6 @@
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel RxD - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_RxD")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_RxD"), 0);
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel TxD - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_TxD")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_TxD"), 0);
 		}
-		
-		// Profil anlegen
-		$this->RegisterProfileInteger("IPS2GPIO.PTLB10VEStatus", "Information", "", "", 0, 2, 1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEStatus", 0, "Bereitschaft", "Information", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEStatus", 1, "Lampeneinschaltsteuerung", "Information", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEStatus", 2, "Lampe eingeschaltet", "Information", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEStatus", 3, "Lampenausschaltsteuerung", "Information", -1);
-		
-		$this->RegisterProfileInteger("IPS2GPIO.PTLB10VEInput", "Information", "", "", 0, 2, 1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEInput", 0, "Video", "Information", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEInput", 1, "S-Video", "Information", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEInput", 2, "RGB", "Information", -1);
-		
-	   
-		//Status-Variablen anlegen
-		$this->RegisterVariableInteger("Status", "Status", "IPS2GPIO.PTLB10VEStatus", 10);
-		$this->DisableAction("Status");
-		IPS_SetHidden($this->GetIDForIdent("Status"), false);
-		
-		$this->RegisterVariableBoolean("Power", "Power", "~Switch", 20);
-		$this->EnableAction("Power");
-		IPS_SetHidden($this->GetIDForIdent("Power"), false);
-		
-		$this->RegisterVariableInteger("Input", "Input", "IPS2GPIO.PTLB10VEInput", 30);
-		$this->EnableAction("Input");
-		IPS_SetHidden($this->GetIDForIdent("Input"), false);
-		
-		$this->RegisterVariableInteger("Volume", "Volume", "~Intensity.255", 40);
-	        $this->EnableAction("Volume");
-		IPS_SetHidden($this->GetIDForIdent("Volume"), false);
-		
 		
         	If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 			// den Handle für dieses Gerät ermitteln
