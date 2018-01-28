@@ -18,6 +18,20 @@
 		for ($i = 0; $i <= 15; $i++) {
 			$this->RegisterPropertyInteger("FadeTime_".$i, 0);
 		}
+		
+		// Profil anlegen
+		$this->RegisterProfileInteger("IPS2GPIO.Intensity4096", "Intensity", "", " %", 0, 4095, 1);
+		
+		//Status-Variablen anlegen
+		for ($i = 0; $i <= 15; $i++) {
+			$this->RegisterVariableBoolean("Output_Bln_X".$i, "Ausgang X".$i, "~Switch", ($i + 1) * 10);
+			$this->EnableAction("Output_Bln_X".$i);	
+			IPS_SetHidden($this->GetIDForIdent("Output_Bln_X".$i), false);
+			
+			$this->RegisterVariableInteger("Output_Int_X".$i, "Ausgang X".$i, "IPS2GPIO.Intensity4096", (($i + 1) * 10) + 5);
+			$this->EnableAction("Output_Int_X".$i);	
+			IPS_SetHidden($this->GetIDForIdent("Output_Int_X".$i), false);
+		}
         }
  	
 	public function GetConfigurationForm() 
@@ -75,18 +89,9 @@
         {
             	// Diese Zeile nicht löschen
             	parent::ApplyChanges();
-		// Profil anlegen
-		$this->RegisterProfileInteger("IPS2GPIO.Intensity4096", "Intensity", "", " %", 0, 4095, 1);
 		
 		$this->SetBuffer("ErrorCounter", 0);
-				
-		//Status-Variablen anlegen
-		for ($i = 0; $i <= 15; $i++) {
-			$this->RegisterVariableBoolean("Output_Bln_X".$i, "Ausgang X".$i, "~Switch", ($i + 1) * 10);
-			$this->EnableAction("Output_Bln_X".$i);	
-			$this->RegisterVariableInteger("Output_Int_X".$i, "Ausgang X".$i, "IPS2GPIO.Intensity4096", (($i + 1) * 10) + 5);
-			$this->EnableAction("Output_Int_X".$i);	
-		}
+		
 		//ReceiveData-Filter setzen
 		$this->SetBuffer("DeviceIdent", (($this->ReadPropertyInteger("DeviceBus") << 7) + $this->ReadPropertyInteger("DeviceAddress")));
 		$Filter = '((.*"Function":"get_used_i2c".*|.*"InstanceID":'.$this->InstanceID.'.*)|.*"Function":"status".*)';
