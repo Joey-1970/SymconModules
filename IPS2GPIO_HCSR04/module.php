@@ -27,7 +27,6 @@
 		$this->RegisterTimer("Messzyklus", 0, 'I2GSR4_Measurement($_IPS["TARGET"]);');
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 		
-		
 		// Profil anlegen
 		$this->RegisterProfileFloat("IPS2GPIO.cm", "Distance", "", " cm", 0, 1000, 0.1, 1);
 		    
