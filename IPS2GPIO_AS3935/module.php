@@ -21,6 +21,32 @@
 		$this->RegisterPropertyInteger("WDTH", 1);
 		$this->RegisterPropertyInteger("SREJ", 2);
 		$this->RegisterPropertyInteger("TunCap", 0);
+		
+		// Profil anlegen
+		$this->RegisterProfileInteger("IPS2GPIO.km", "Distance", "", " km", 0, 10000, 1);
+		
+		$this->RegisterProfileInteger("IPS2GPIO.interrupt", "Information", "", "", 0, 3, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.interrupt", 0, "kein", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.interrupt", 1, "Geräusch Level zu hoch", "Graph", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.interrupt", 2, "Störer detektiert", "Graph", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.interrupt", 3, "Blitz detektiert", "Electricity", -1);
+		
+		//Status-Variablen anlegen
+		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 10);
+		$this->DisableAction("LastInterrupt");
+		IPS_SetHidden($this->GetIDForIdent("LastInterrupt"), false);
+		
+		$this->RegisterVariableInteger("Interrupt", "Auslöser", "IPS2GPIO.interrupt", 20);
+		$this->DisableAction("Interrupt");
+		IPS_SetHidden($this->GetIDForIdent("Interrupt"), false);
+		
+		$this->RegisterVariableInteger("Distance", "Entfernung", "IPS2GPIO.km", 30);
+           	$this->DisableAction("Distance");
+		IPS_SetHidden($this->GetIDForIdent("Distance"), false);
+		
+		$this->RegisterVariableInteger("Energy", "Energie", "", 40);
+           	$this->DisableAction("Energy");
+		IPS_SetHidden($this->GetIDForIdent("Energy"), false);
         }
  	
 	public function GetConfigurationForm() 
@@ -155,33 +181,6 @@
 		If (intval($this->GetBuffer("PreviousPin")) <> $this->ReadPropertyInteger("Pin")) {
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin"), 0);
 		}
-
-	    	// Profil anlegen
-		$this->RegisterProfileInteger("IPS2GPIO.km", "Distance", "", " km", 0, 10000, 1);
-		
-		$this->RegisterProfileInteger("IPS2GPIO.interrupt", "Information", "", "", 0, 3, 1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.interrupt", 0, "kein", "Information", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.interrupt", 1, "Geräusch Level zu hoch", "Graph", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.interrupt", 2, "Störer detektiert", "Graph", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.interrupt", 3, "Blitz detektiert", "Electricity", -1);
-		
-		//Status-Variablen anlegen
-		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 10);
-		$this->DisableAction("LastInterrupt");
-		IPS_SetHidden($this->GetIDForIdent("LastInterrupt"), false);
-		
-		$this->RegisterVariableInteger("Interrupt", "Auslöser", "IPS2GPIO.interrupt", 20);
-		$this->DisableAction("Interrupt");
-		IPS_SetHidden($this->GetIDForIdent("Interrupt"), false);
-		
-		$this->RegisterVariableInteger("Distance", "Entfernung", "IPS2GPIO.km", 30);
-           	$this->DisableAction("Distance");
-		IPS_SetHidden($this->GetIDForIdent("Distance"), false);
-		
-		$this->RegisterVariableInteger("Energy", "Energie", "", 40);
-           	$this->DisableAction("Energy");
-		IPS_SetHidden($this->GetIDForIdent("Energy"), false);
-		
 			
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {					
 			//ReceiveData-Filter setzen
