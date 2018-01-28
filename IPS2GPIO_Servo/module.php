@@ -14,6 +14,11 @@
 		$this->RegisterPropertyInteger("midpoint", 1500);
 		$this->RegisterPropertyInteger("most_clockwise", 2500);
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+		
+		// Status-Variablen anlegen
+		$this->RegisterVariableInteger("Output", "Ausgang", "~Intensity.100", 10);
+		$this->EnableAction("Output");
+		IPS_SetHidden($this->GetIDForIdent("Output"), false);
         }
 	
 	public function GetConfigurationForm() 
@@ -66,9 +71,6 @@
 		If (intval($this->GetBuffer("PreviousPin")) <> $this->ReadPropertyInteger("Pin")) {
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin"), 0);
 		}
-		//Status-Variablen anlegen
-		$this->RegisterVariableInteger("Output", "Ausgang", "~Intensity.100", 10);
-		$this->EnableAction("Output");	
             	
 		//ReceiveData-Filter setzen
                 $Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*)';
