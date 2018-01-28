@@ -18,6 +18,11 @@
 		$this->RegisterPropertyInteger("Messzyklus", 15);
 		$this->RegisterTimer("Messzyklus", 0, 'I2G1W_Measurement($_IPS["TARGET"]);');
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+		
+		 //Status-Variablen anlegen
+	        $this->RegisterVariableString("SensorArray", "SensorArray", "", 5);
+		$this->DisableAction("SensorArray");
+		IPS_SetHidden($this->GetIDForIdent("SensorArray"), true);
         }
        	
 	public function GetConfigurationForm() { 
@@ -51,11 +56,6 @@
         {
                 // Diese Zeile nicht löschen
                 parent::ApplyChanges();
- 	   
-	        //Status-Variablen anlegen
-	        $this->RegisterVariableString("SensorArray", "SensorArray", "", 5);
-		$this->DisableAction("SensorArray");
-		IPS_SetHidden($this->GetIDForIdent("SensorArray"), true);
             
                 //ReceiveData-Filter setzen
 		$Filter = '((.*"Function":"get_usedpin".*|.*"Pin":"4".*)|.*"InstanceID":'.$this->InstanceID.'.*)';
