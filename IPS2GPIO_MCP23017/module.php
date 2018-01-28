@@ -34,6 +34,19 @@
 			$this->RegisterPropertyInteger("GPBINTEN".$i, 0);
 			$this->RegisterPropertyInteger("GPBPU".$i, 0);
 		}
+		
+		//Status-Variablen anlegen
+		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung INT", "~UnixTimestamp", 10);
+		$this->DisableAction("LastInterrupt");
+		IPS_SetHidden($this->GetIDForIdent("LastInterrupt"), true);
+		
+		for ($i = 0; $i <= 7; $i++) {
+		   	$this->RegisterVariableBoolean("GPA".$i, "GPA".$i, "~Switch", ($i * 10 + 20));
+			IPS_SetHidden($this->GetIDForIdent("GPA".$i), false);
+			
+		   	$this->RegisterVariableBoolean("GPB".$i, "GPB".$i, "~Switch", ($i * 10 + 100));
+			IPS_SetHidden($this->GetIDForIdent("GPB".$i), false);
+		}
         }
  	
 	public function GetConfigurationForm() 
@@ -133,13 +146,8 @@
 		}
 
 		//Status-Variablen anlegen
-		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung INT", "~UnixTimestamp", 10);
-		$this->DisableAction("LastInterrupt");
-		IPS_SetHidden($this->GetIDForIdent("LastInterrupt"), true);
-		
 		$SetTimer = false;
 		for ($i = 0; $i <= 7; $i++) {
-		   	$this->RegisterVariableBoolean("GPA".$i, "GPA".$i, "~Switch", ($i * 10 + 20));
 			If ($this->ReadPropertyInteger("GPAIODIR".$i) == 0) {
 				$this->EnableAction("GPA".$i);
 			}
@@ -147,9 +155,7 @@
 				$this->DisableAction("GPA".$i);
 				$SetTimer = true;
 			}
-			IPS_SetHidden($this->GetIDForIdent("GPA".$i), false);
 			
-		   	$this->RegisterVariableBoolean("GPB".$i, "GPB".$i, "~Switch", ($i * 10 + 110));
 			If ($this->ReadPropertyInteger("GPBIODIR".$i) == 0) {
 				$this->EnableAction("GPB".$i);
 			}
@@ -157,9 +163,7 @@
 				$this->DisableAction("GPB".$i);
 				$SetTimer = true;
 			}
-			IPS_SetHidden($this->GetIDForIdent("GPB".$i), false);
 		}
-		
 		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {					
 			//ReceiveData-Filter setzen
