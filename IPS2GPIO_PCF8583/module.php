@@ -23,7 +23,20 @@
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->SetBuffer("PreviousPin", -1);
 		$this->RegisterPropertyInteger("Messzyklus", 60);
-		$this->RegisterTimer("Messzyklus", 0, 'I2GPCF8583_Measurement($_IPS["TARGET"]);');	
+		$this->RegisterTimer("Messzyklus", 0, 'I2GPCF8583_Measurement($_IPS["TARGET"]);');
+		
+		//Status-Variablen anlegen
+		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 10);
+		$this->DisableAction("LastInterrupt");
+		IPS_SetHidden($this->GetIDForIdent("LastInterrupt"), false);
+		
+		$this->RegisterVariableInteger("CounterValue", "Zählwert", "", 20);
+		$this->DisableAction("CounterValue");
+		IPS_SetHidden($this->GetIDForIdent("CounterValue"), false);
+		
+		$this->RegisterVariableInteger("AlarmValue", "Alarmwert", "", 30);
+		$this->DisableAction("AlarmValue");
+		IPS_SetHidden($this->GetIDForIdent("AlarmValue"), false);
         }
  	
 	public function GetConfigurationForm() 
@@ -88,19 +101,6 @@
 		If (intval($this->GetBuffer("PreviousPin")) <> $this->ReadPropertyInteger("Pin")) {
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin"), 0);
 		}
-		
-		//Status-Variablen anlegen
-		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 10);
-		$this->DisableAction("LastInterrupt");
-		IPS_SetHidden($this->GetIDForIdent("LastInterrupt"), false);
-		
-		$this->RegisterVariableInteger("CounterValue", "Zählwert", "", 20);
-		$this->DisableAction("CounterValue");
-		IPS_SetHidden($this->GetIDForIdent("CounterValue"), false);
-		
-		$this->RegisterVariableInteger("AlarmValue", "Alarmwert", "", 30);
-		$this->DisableAction("AlarmValue");
-		IPS_SetHidden($this->GetIDForIdent("AlarmValue"), false);
 		
 		//ReceiveData-Filter setzen
 		$this->SetBuffer("DeviceIdent", (($this->ReadPropertyInteger("DeviceBus") << 7) + $this->ReadPropertyInteger("DeviceAddress")));
