@@ -17,6 +17,40 @@
 		for ($i = 1; $i <= 4; $i++) {
 			$this->RegisterPropertyInteger("FadeTime_".$i, 0);
 		}
+		
+		// Profil anlegen
+		$this->RegisterProfileInteger("IPS2GPIO.Intensity4096", "Intensity", "", " %", 0, 4095, 1);
+		
+		//Status-Variablen anlegen
+		for ($i = 0; $i <= 3; $i++) {
+			$this->RegisterVariableBoolean("Status_RGB_".($i + 1), "Status RGB ".($i + 1), "~Switch", 10 + ($i * 70));
+			$this->EnableAction("Status_RGB_".($i + 1));
+			IPS_SetHidden($this->GetIDForIdent("Status_RGB_".($i + 1)), false);
+			
+			$this->RegisterVariableInteger("Color_RGB_".($i + 1), "Farbe ".($i + 1), "~HexColor", 20 + ($i * 70));
+			$this->EnableAction("Color_RGB_".($i + 1));
+			IPS_SetHidden($this->GetIDForIdent("Color_RGB_".($i + 1)), false);
+			
+			$this->RegisterVariableInteger("Intensity_R_".($i + 1), "Intensity Rot ".($i + 1), "IPS2GPIO.Intensity4096", 30 + ($i * 70) );
+			$this->EnableAction("Intensity_R_".($i + 1));
+			IPS_SetHidden($this->GetIDForIdent("Intensity_R_".($i + 1)), false);
+			
+			$this->RegisterVariableInteger("Intensity_G_".($i + 1), "Intensity Grün ".($i + 1), "IPS2GPIO.Intensity4096", 40 + ($i * 70));
+			$this->EnableAction("Intensity_G_".($i + 1));
+			IPS_SetHidden($this->GetIDForIdent("Intensity_G_".($i + 1)), false);
+			
+			$this->RegisterVariableInteger("Intensity_B_".($i + 1), "Intensity Blau ".($i + 1), "IPS2GPIO.Intensity4096", 50 + ($i * 70));
+			$this->EnableAction("Intensity_B_".($i + 1));
+			IPS_SetHidden($this->GetIDForIdent("Intensity_B_".($i + 1)), false);
+			
+			$this->RegisterVariableBoolean("Status_W_".($i + 1), "Status Weiß ".($i + 1), "~Switch", 60 + ($i * 70));
+			$this->EnableAction("Status_W_".($i + 1));
+			IPS_SetHidden($this->GetIDForIdent("Status_W_".($i + 1)), false);
+			
+			$this->RegisterVariableInteger("Intensity_W_".($i + 1), "Intensity Weiß ".($i + 1), "IPS2GPIO.Intensity4096", 70 + ($i * 70));
+			$this->EnableAction("Intensity_W_".($i + 1));
+			IPS_SetHidden($this->GetIDForIdent("Intensity_W_".($i + 1)), false);
+		}
         }
  	
 	public function GetConfigurationForm() 
@@ -70,26 +104,6 @@
         {
             	// Diese Zeile nicht löschen
             	parent::ApplyChanges();
-		// Profil anlegen
-		$this->RegisterProfileInteger("IPS2GPIO.Intensity4096", "Intensity", "", " %", 0, 4095, 1);
-		
-		//Status-Variablen anlegen
-		for ($i = 0; $i <= 3; $i++) {
-			$this->RegisterVariableBoolean("Status_RGB_".($i + 1), "Status RGB ".($i + 1), "~Switch", 10 + ($i * 70));
-			$this->EnableAction("Status_RGB_".($i + 1));
-			$this->RegisterVariableInteger("Color_RGB_".($i + 1), "Farbe ".($i + 1), "~HexColor", 20 + ($i * 70));
-			$this->EnableAction("Color_RGB_".($i + 1));
-			$this->RegisterVariableInteger("Intensity_R_".($i + 1), "Intensity Rot ".($i + 1), "IPS2GPIO.Intensity4096", 30 + ($i * 70) );
-			$this->EnableAction("Intensity_R_".($i + 1));
-			$this->RegisterVariableInteger("Intensity_G_".($i + 1), "Intensity Grün ".($i + 1), "IPS2GPIO.Intensity4096", 40 + ($i * 70));
-			$this->EnableAction("Intensity_G_".($i + 1));
-			$this->RegisterVariableInteger("Intensity_B_".($i + 1), "Intensity Blau ".($i + 1), "IPS2GPIO.Intensity4096", 50 + ($i * 70));
-			$this->EnableAction("Intensity_B_".($i + 1));
-			$this->RegisterVariableBoolean("Status_W_".($i + 1), "Status Weiß ".($i + 1), "~Switch", 60 + ($i * 70));
-			$this->EnableAction("Status_W_".($i + 1));
-			$this->RegisterVariableInteger("Intensity_W_".($i + 1), "Intensity Weiß ".($i + 1), "IPS2GPIO.Intensity4096", 70 + ($i * 70));
-			$this->EnableAction("Intensity_W_".($i + 1));			
-		}
 		
 		//ReceiveData-Filter setzen
 		$this->SetBuffer("DeviceIdent", (($this->ReadPropertyInteger("DeviceBus") << 7) + $this->ReadPropertyInteger("DeviceAddress")));
