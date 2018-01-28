@@ -29,6 +29,21 @@
 		$this->RegisterPropertyInteger("RunningTime_2", 0);
 		$this->RegisterTimer("RunningTime_2", 0, 'I2GL298N_MotorControl($_IPS["TARGET"], 2, 1);');
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+		
+		// Profile anlegen
+		$this->RegisterProfileInteger("IPS2GPIO.MotorControl", "Information", "", "", 0, 2, 0);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorControl", 0, "<=", "HollowArrowLeft", 0x00FF00);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorControl", 1, "Stop", "Cross", 0xFF0000);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorControl", 2, "=>", "HollowArrowRight", 0x00FF00);
+
+		// Status-Variablen anlegen
+		$this->RegisterVariableInteger("Motor_1", "Motor 1", "IPS2GPIO.MotorControl", 10);
+		$this->EnableAction("Motor_1");
+		IPS_SetHidden($this->GetIDForIdent("Motor_1"), false);
+		
+		$this->RegisterVariableInteger("Motor_2", "Motor 2", "IPS2GPIO.MotorControl", 20);
+		$this->EnableAction("Motor_2");
+		IPS_SetHidden($this->GetIDForIdent("Motor_2"), false);
         }
 	
 	public function GetConfigurationForm() 
@@ -129,22 +144,10 @@
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_2L")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_2L"), 0);
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_2R")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_2R"), 0);
 		}
-				
-		$this->RegisterProfileInteger("IPS2GPIO.MotorControl", "Information", "", "", 0, 2, 0);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorControl", 0, "<=", "HollowArrowLeft", 0x00FF00);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorControl", 1, "Stop", "Cross", 0xFF0000);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorControl", 2, "=>", "HollowArrowRight", 0x00FF00);
-
-		//Status-Variablen anlegen
-		$this->RegisterVariableInteger("Motor_1", "Motor 1", "IPS2GPIO.MotorControl", 10);
-		$this->EnableAction("Motor_1");
-		SetValueInteger($this->GetIDForIdent("Motor_1"), 1);
 		
-		$this->RegisterVariableInteger("Motor_2", "Motor 2", "IPS2GPIO.MotorControl", 20);
-		$this->EnableAction("Motor_2");
+		SetValueInteger($this->GetIDForIdent("Motor_1"), 1);
 		SetValueInteger($this->GetIDForIdent("Motor_2"), 1);
 		
-            	
              	//ReceiveData-Filter setzen
 		$Filter = '((.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_1L").'.*)|(.*"Pin":'.$this->ReadPropertyInteger("Pin_1R").'.*|.*"Pin":'.$this->ReadPropertyInteger("Pin_2L").'.*)|(.*"Pin":'.$this->ReadPropertyInteger("Pin_2R").'.*))';
 		$this->SetReceiveDataFilter($Filter);
