@@ -20,6 +20,17 @@
 		$this->RegisterPropertyInteger("DeviceBus", 1);
 		$this->RegisterPropertyInteger("RunningTime", 0);
 		$this->RegisterTimer("RunningTime", 0, 'I2GVS_MotorControl($_IPS["TARGET"], 1);');
+		
+		// Profilen anlegen
+		$this->RegisterProfileInteger("IPS2GPIO.MotorControl", "Information", "", "", 0, 2, 0);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorControl", 0, "<=", "HollowArrowLeft", 0x00FF00);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorControl", 1, "Stop", "Cross", 0xFF0000);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorControl", 2, "=>", "HollowArrowRight", 0x00FF00);
+		
+		// Status-Variablen anlegen
+		$this->RegisterVariableInteger("Motor", "Leinwand", "IPS2GPIO.MotorControl", 10);
+		$this->EnableAction("Motor");
+		IPS_SetHidden($this->GetIDForIdent("Motor"), false);
 	}
 	
 	public function GetConfigurationForm() 
@@ -73,19 +84,7 @@
         {
             	// Diese Zeile nicht löschen
             	parent::ApplyChanges();
-
-		// Device Adresse prüfen
-	    	If (($this->ReadPropertyInteger("DeviceAddress") < 0) OR ($this->ReadPropertyInteger("DeviceAddress") > 128)) {
-	    		IPS_LogMessage("IPS2GPIO PCF8574","I2C-Device Adresse in einem nicht definierten Bereich!");  
-	    	}
-	    	//Status-Variablen anlegen
-		$this->RegisterProfileInteger("IPS2GPIO.MotorControl", "Information", "", "", 0, 2, 0);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorControl", 0, "<=", "HollowArrowLeft", 0x00FF00);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorControl", 1, "Stop", "Cross", 0xFF0000);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.MotorControl", 2, "=>", "HollowArrowRight", 0x00FF00);
-		//Status-Variablen anlegen
-		$this->RegisterVariableInteger("Motor", "Leinwand", "IPS2GPIO.MotorControl", 10);
-		$this->EnableAction("Motor");
+		
 		SetValueInteger($this->GetIDForIdent("Motor"), 1);
 		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
