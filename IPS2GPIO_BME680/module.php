@@ -40,6 +40,77 @@
             	$this->RegisterTimer("Messzyklus", 0, 'I2GBME680_Measurement($_IPS["TARGET"]);');
 		$CalibrateData = array();
 		$this->SetBuffer("CalibrateData", serialize($CalibrateData));
+		
+		// Profil anlegen
+		$this->RegisterProfileFloat("IPS2GPIO.gm3", "Drops", "", " g/m³", 0, 1000, 0.1, 1);
+		$this->RegisterProfileInteger("IPS2GPIO.ohm", "Gauge", "", " Ohm", 0, 1000000, 1);
+		
+		$this->RegisterProfileInteger("IPS2GPIO.AirQuality", "Information", "", "", 0, 6, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 0, "Kalibrierung", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 1, "gut", "Information", 0x58FA58);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 2, "durchschnittlich", "Information", 0xF7FE2E);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 3, "etwas schlecht", "Information", 0xFE9A2E);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 4, "schlecht", "Information", 0xFF0000);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 5, "schlechter", "Information", 0x61380B);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 6, "sehr schlecht", "Information", 0x000000);
+		
+		//Status-Variablen anlegen
+             	$this->RegisterVariableInteger("ChipID", "Chip ID", "", 5);
+		$this->DisableAction("ChipID");
+		IPS_SetHidden($this->GetIDForIdent("ChipID"), true);
+		
+		$this->RegisterVariableFloat("Temperature", "Temperatur", "~Temperature", 10);
+		$this->DisableAction("Temperature");
+		IPS_SetHidden($this->GetIDForIdent("Temperature"), false);
+		
+		$this->RegisterVariableFloat("Pressure", "Luftdruck (abs)", "~AirPressure.F", 20);
+		$this->DisableAction("Pressure");
+		IPS_SetHidden($this->GetIDForIdent("Pressure"), false);
+		
+		$this->RegisterVariableFloat("PressureRel", "Luftdruck (rel)", "~AirPressure.F", 30);
+		$this->DisableAction("PressureRel");
+		IPS_SetHidden($this->GetIDForIdent("PressureRel"), false);
+		
+		$this->RegisterVariableFloat("HumidityAbs", "Luftfeuchtigkeit (abs)", "IPS2GPIO.gm3", 40);
+		$this->DisableAction("HumidityAbs");
+		IPS_SetHidden($this->GetIDForIdent("HumidityAbs"), false);
+		
+		$this->RegisterVariableFloat("Humidity", "Luftfeuchtigkeit (rel)", "~Humidity.F", 50);
+		$this->DisableAction("Humidity");
+		IPS_SetHidden($this->GetIDForIdent("Humidity"), false);
+		
+		$this->RegisterVariableFloat("DewPointTemperature", "Taupunkt Temperatur", "~Temperature", 60);
+		$this->DisableAction("DewPointTemperature");
+		IPS_SetHidden($this->GetIDForIdent("DewPointTemperature"), false);
+		
+		$this->RegisterVariableFloat("PressureTrend1h", "Luftdruck 1h-Trend", "~AirPressure.F", 70);
+		$this->DisableAction("PressureTrend1h");
+		IPS_SetHidden($this->GetIDForIdent("PressureTrend1h"), false);
+		SetValueFloat($this->GetIDForIdent("PressureTrend1h"), 0);
+		
+		$this->RegisterVariableFloat("PressureTrend3h", "Luftdruck 3h-Trend", "~AirPressure.F", 80);
+		$this->DisableAction("PressureTrend3h");
+		IPS_SetHidden($this->GetIDForIdent("PressureTrend3h"), false);
+		SetValueFloat($this->GetIDForIdent("PressureTrend3h"), 0);
+		
+		$this->RegisterVariableFloat("PressureTrend12h", "Luftdruck 12h-Trend", "~AirPressure.F", 90);
+		$this->DisableAction("PressureTrend12h");
+		IPS_SetHidden($this->GetIDForIdent("PressureTrend12h"), false);
+		SetValueFloat($this->GetIDForIdent("PressureTrend12h"), 0);
+		
+		$this->RegisterVariableFloat("PressureTrend24h", "Luftdruck 24h-Trend", "~AirPressure.F", 100);
+		$this->DisableAction("PressureTrend24h");
+		IPS_SetHidden($this->GetIDForIdent("PressureTrend24h"), false);
+		SetValueFloat($this->GetIDForIdent("PressureTrend24h"), 0);
+		
+		$this->RegisterVariableInteger("AirQuality", "Luftqualität", "IPS2GPIO.AirQuality", 110);
+		$this->DisableAction("AirQuality");
+		IPS_SetHidden($this->GetIDForIdent("AirQuality"), false);
+		SetValueInteger($this->GetIDForIdent("AirQuality"), 0);
+		
+		$this->RegisterVariableInteger("GasResistance", "Gas Widerstand", "IPS2GPIO.ohm", 120);
+		$this->DisableAction("GasResistance");
+		IPS_SetHidden($this->GetIDForIdent("GasResistance"), false);
         }
 	
 	public function GetConfigurationForm() 
@@ -147,77 +218,6 @@
         {
             	// Diese Zeile nicht löschen
             	parent::ApplyChanges();
-	    	
-		// Profil anlegen
-		$this->RegisterProfileFloat("IPS2GPIO.gm3", "Drops", "", " g/m³", 0, 1000, 0.1, 1);
-		$this->RegisterProfileInteger("IPS2GPIO.ohm", "Gauge", "", " Ohm", 0, 1000000, 1);
-		
-		$this->RegisterProfileInteger("IPS2GPIO.AirQuality", "Information", "", "", 0, 6, 1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 0, "Kalibrierung", "Information", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 1, "gut", "Information", 0x58FA58);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 2, "durchschnittlich", "Information", 0xF7FE2E);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 3, "etwas schlecht", "Information", 0xFE9A2E);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 4, "schlecht", "Information", 0xFF0000);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 5, "schlechter", "Information", 0x61380B);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.AirQuality", 6, "sehr schlecht", "Information", 0x000000);
-		
-		//Status-Variablen anlegen
-             	$this->RegisterVariableInteger("ChipID", "Chip ID", "", 5);
-		$this->DisableAction("ChipID");
-		IPS_SetHidden($this->GetIDForIdent("ChipID"), true);
-		
-		$this->RegisterVariableFloat("Temperature", "Temperatur", "~Temperature", 10);
-		$this->DisableAction("Temperature");
-		IPS_SetHidden($this->GetIDForIdent("Temperature"), false);
-		
-		$this->RegisterVariableFloat("Pressure", "Luftdruck (abs)", "~AirPressure.F", 20);
-		$this->DisableAction("Pressure");
-		IPS_SetHidden($this->GetIDForIdent("Pressure"), false);
-		
-		$this->RegisterVariableFloat("PressureRel", "Luftdruck (rel)", "~AirPressure.F", 30);
-		$this->DisableAction("PressureRel");
-		IPS_SetHidden($this->GetIDForIdent("PressureRel"), false);
-		
-		$this->RegisterVariableFloat("HumidityAbs", "Luftfeuchtigkeit (abs)", "IPS2GPIO.gm3", 40);
-		$this->DisableAction("HumidityAbs");
-		IPS_SetHidden($this->GetIDForIdent("HumidityAbs"), false);
-		
-		$this->RegisterVariableFloat("Humidity", "Luftfeuchtigkeit (rel)", "~Humidity.F", 50);
-		$this->DisableAction("Humidity");
-		IPS_SetHidden($this->GetIDForIdent("Humidity"), false);
-		
-		$this->RegisterVariableFloat("DewPointTemperature", "Taupunkt Temperatur", "~Temperature", 60);
-		$this->DisableAction("DewPointTemperature");
-		IPS_SetHidden($this->GetIDForIdent("DewPointTemperature"), false);
-		
-		$this->RegisterVariableFloat("PressureTrend1h", "Luftdruck 1h-Trend", "~AirPressure.F", 70);
-		$this->DisableAction("PressureTrend1h");
-		IPS_SetHidden($this->GetIDForIdent("PressureTrend1h"), false);
-		SetValueFloat($this->GetIDForIdent("PressureTrend1h"), 0);
-		
-		$this->RegisterVariableFloat("PressureTrend3h", "Luftdruck 3h-Trend", "~AirPressure.F", 80);
-		$this->DisableAction("PressureTrend3h");
-		IPS_SetHidden($this->GetIDForIdent("PressureTrend3h"), false);
-		SetValueFloat($this->GetIDForIdent("PressureTrend3h"), 0);
-		
-		$this->RegisterVariableFloat("PressureTrend12h", "Luftdruck 12h-Trend", "~AirPressure.F", 90);
-		$this->DisableAction("PressureTrend12h");
-		IPS_SetHidden($this->GetIDForIdent("PressureTrend12h"), false);
-		SetValueFloat($this->GetIDForIdent("PressureTrend12h"), 0);
-		
-		$this->RegisterVariableFloat("PressureTrend24h", "Luftdruck 24h-Trend", "~AirPressure.F", 100);
-		$this->DisableAction("PressureTrend24h");
-		IPS_SetHidden($this->GetIDForIdent("PressureTrend24h"), false);
-		SetValueFloat($this->GetIDForIdent("PressureTrend24h"), 0);
-		
-		$this->RegisterVariableInteger("AirQuality", "Luftqualität", "IPS2GPIO.AirQuality", 110);
-		$this->DisableAction("AirQuality");
-		IPS_SetHidden($this->GetIDForIdent("AirQuality"), false);
-		SetValueInteger($this->GetIDForIdent("AirQuality"), 0);
-		
-		$this->RegisterVariableInteger("GasResistance", "Gas Widerstand", "IPS2GPIO.ohm", 120);
-		$this->DisableAction("GasResistance");
-		IPS_SetHidden($this->GetIDForIdent("GasResistance"), false);
 		
 		$this->SetBuffer("CalibrateCounter", 0);
 		$this->SetBuffer("CalibrateValue", 0);
