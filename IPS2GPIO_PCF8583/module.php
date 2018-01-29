@@ -306,11 +306,9 @@
 				$this->SetStatus(202);
 			}
 			else {
-					$this->SetStatus(102);
-					$this->GetAlarmValue();
-				}
+				$this->SetStatus(102);
+				$this->GetAlarmValue();
 			}
-			
 		}
 	}      
 	    
