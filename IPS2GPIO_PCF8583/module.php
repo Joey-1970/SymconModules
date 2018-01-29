@@ -201,7 +201,6 @@
 			}
 			else {
 				$this->SetStatus(102);
-				//$this->Read_Status();
 			}
 			
 			// Alarm Kontrolle an Andresse x08 setzen
@@ -223,16 +222,15 @@
 			}
 			else {
 				$this->SetStatus(102);
-				//$this->Read_Status();
 			}
+			$this->SetAlarmValue();
 		}
 	}    
 	
 	public function Measurement()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->ReadCounter();
-			$this->ReadAlarm();		
+			$this->ReadCounter();	
 		}
 	}    
 	
@@ -295,16 +293,16 @@
 			$AlarmValue =  $this->ReadPropertyInteger("AlarmValue");
 			$AlarmValueArray = array();
 			$AlarmValueArray = unpack("C*", pack("L", $AlarmValue));
-
-			//$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("09"), "Count" => 3)));
 			
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("09"), 
+											  "Parameter" => serialize($AlarmValueArray) )));	
 			If (!$Result) {
 				$this->SendDebug("SetAlarmValue", "Setzen des Alarmwertes fehlerhaft!", 0);
 				$this->SetStatus(202);
-				return 0;
 			}
 			else {
 					$this->SetStatus(102);
+					$this->GetAlarmValue();
 				}
 			}
 			
