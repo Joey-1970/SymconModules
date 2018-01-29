@@ -34,10 +34,6 @@
 		$this->RegisterVariableInteger("CounterValue", "Zählwert", "", 20);
 		$this->DisableAction("CounterValue");
 		IPS_SetHidden($this->GetIDForIdent("CounterValue"), false);
-		
-		$this->RegisterVariableInteger("AlarmValue", "Alarmwert", "", 30);
-		$this->DisableAction("AlarmValue");
-		IPS_SetHidden($this->GetIDForIdent("AlarmValue"), false);
         }
  	
 	public function GetConfigurationForm() 
@@ -280,11 +276,11 @@
 			else {
 				If (is_array(unserialize($Result)) == true) {
 					$this->SetStatus(102);
-					$this->SendDebug("GetAlarmValue", "Ergebnis: ".$Result, 0);
+					//$this->SendDebug("GetAlarmValue", "Ergebnis: ".$Result, 0);
 					$MeasurementData = array();
 					$MeasurementData = unserialize($Result);
 					$AlarmValue = (($MeasurementData[3] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[1]);
-					SetValueInteger($this->GetIDForIdent("AlarmValue"), $AlarmValue );
+					$this->SendDebug("GetAlarmValue", "Ergebnis: ".$AlarmValue, 0);
 				}
 			}
 			
@@ -309,12 +305,10 @@
 			}
 			else {
 					$this->SetStatus(102);
-					SetValueInteger($this->GetIDForIdent("AlarmValue"), $AlarmValue);
 				}
 			}
 			
 		}
-	return $AlarmValue;
 	}      
 	    
 	private function ReadTimer()
