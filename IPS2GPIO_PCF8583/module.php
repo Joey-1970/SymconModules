@@ -296,11 +296,14 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("SetAlarmValue", "Ausfuehrung", 0);
-			$AlarmValue =  $this->ReadPropertyInteger("AlarmValue") ;
+			$AlarmValue =  $this->ReadPropertyInteger("AlarmValue");
+			$AlarmValueArray = array();
+			$AlarmValueArray = unpack("C*", pack("L", $AlarmValue));
+
 			//$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("09"), "Count" => 3)));
 			
 			If (!$Result) {
-				$this->SendDebug("SetAlarmValue", "Fehler bei der Datenermittung", 0);
+				$this->SendDebug("SetAlarmValue", "Setzen des Alarmwertes fehlerhaft!", 0);
 				$this->SetStatus(202);
 				return 0;
 			}
