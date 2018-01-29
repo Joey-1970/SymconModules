@@ -20,11 +20,12 @@
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
  	    	$this->RegisterPropertyInteger("DeviceAddress", 80);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
-		$this->RegisterPropertyInteger("AlarmValue", 0);	
+		$this->RegisterPropertyInteger("AlarmValue", 0);
+		$this->RegisterPropertyInteger("PulseScalar", 1);	
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->SetBuffer("PreviousPin", -1);
 		$this->RegisterPropertyInteger("Messzyklus", 60);
-		$this->RegisterTimer("Messzyklus", 0, 'I2GPCF8583_Measurement($_IPS["TARGET"]);');
+		$this->RegisterTimer("Messzyklus", 0, 'I2GPCF8583_GetCounter($_IPS["TARGET"]);');
 		
 		//Status-Variablen anlegen
 		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 10);
@@ -81,7 +82,17 @@
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
 		$arrayElements[] = array("type" => "Label", "label" => "Wert bei dem ein Interrupt ausgelöst werden soll");
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "AlarmValue",  "caption" => "Alarm Wert"); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "AlarmValue",  "caption" => "Alarm Wert");
+		$arrayElements[] = array("type" => "Label", "label" => "Wertigkeit der Zählimpulse");
+		
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "jeder Impuls", "value" => 1);
+		$arrayOptions[] = array("label" => "jeder Hundertste", "value" => 2);
+		$arrayOptions[] = array("label" => "jeder Zehntausendste", "value" => 3);
+		$arrayOptions[] = array("label" => "jeder Millionste", "value" => 4);
+		$arrayElements[] = array("type" => "Select", "name" => "PulseScalar", "caption" => "Wertigkeit", "options" => $arrayOptions );
+
+		
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		
 		$arrayActions = array();
@@ -122,8 +133,9 @@
 				
 				If (($ResultI2C == true) AND ($ResultPin == true)) {
 					$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
-					// Erste Messdaten einlesen
 					$this->Setup();
+					// Erste Messdaten einlesen
+					$this->GetCounter();	
 					$this->SetStatus(102);
 				}
 			}
@@ -146,11 +158,11 @@
 					If (($data->Value == 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 						$this->SendDebug("Notify", "Wert: ".(int)$data->Value, 0);
 						SetValueInteger($this->GetIDForIdent("LastInterrupt"), time() );
-						$this->GetOutput();
+						$this->GetCounter();
 					}
 					elseIf (($data->Value == 1) AND ($this->ReadPropertyBoolean("Open") == true)) {
 						$this->SendDebug("Notify", "Wert: ".(int)$data->Value, 0);
-						$this->GetOutput();
+						$this->GetCounter();
 					}
 			   	}
 			   	break; 
@@ -204,7 +216,7 @@
 			}
 			
 			// Alarm Kontrolle an Andresse x08 setzen
-			$Units = 1;
+			$Units = $this->ReadPropertyInteger("PulseScalar");
 			If ($this->ReadPropertyInteger("Pin") >= 0) {
 				// Interrupt setzen
 				$Interrupt = 1 << 3;
@@ -227,28 +239,21 @@
 		}
 	}    
 	
-	public function Measurement()
+	public function GetCounter()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->ReadCounter();	
-		}
-	}    
-	
-	private function ReadCounter()
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("ReadCounter", "Ausfuehrung", 0);
+			$this->SendDebug("GetCounter", "Ausfuehrung", 0);
 			$CounterValue =  0;
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("01"), "Count" => 3)));
 			If ($Result < 0) {
-				$this->SendDebug("ReadCounter", "Fehler bei der Datenermittung", 0);
+				$this->SendDebug("GetCounter", "Fehler bei der Datenermittung", 0);
 				$this->SetStatus(202);
 				return 0;
 			}
 			else {
 				If (is_array(unserialize($Result)) == true) {
 					$this->SetStatus(102);
-					$this->SendDebug("ReadCounter", "Ergebnis: ".$Result, 0);
+					$this->SendDebug("GetCounter", "Ergebnis: ".$Result, 0);
 					$MeasurementData = array();
 					$MeasurementData = unserialize($Result);
 					$CounterValue = (($MeasurementData[3] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[1]);
@@ -294,7 +299,7 @@
 			$AlarmValueArray = array();
 			$AlarmValueArray = unpack("C*", pack("L", $AlarmValue));
 			
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("09"), 
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write_array", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("09"), 
 											  "Parameter" => serialize($AlarmValueArray) )));	
 			If (!$Result) {
 				$this->SendDebug("SetAlarmValue", "Setzen des Alarmwertes fehlerhaft!", 0);
