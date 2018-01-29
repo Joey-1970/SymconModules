@@ -219,10 +219,10 @@
 			$Units = $this->ReadPropertyInteger("PulseScalar");
 			If ($this->ReadPropertyInteger("Pin") >= 0) {
 				// Interrupt setzen
-				$Interrupt = 1 << 3;
+				$Interrupt = 1 << 7;
 			}
 			else {
-				$Interrupt = 0 << 3;
+				$Interrupt = 0 << 7;
 			}
 			
 			$Bitmask = $Units | $Interrupt;
