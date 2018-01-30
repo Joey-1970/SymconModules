@@ -23,7 +23,7 @@
             	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 		
 		// Profil anlegen
-		$this->RegisterProfileInteger("IPS2GPIO.SDS011", "Intensity", "", "ug/m³", 0, 999, 1);
+		$this->RegisterProfileInteger("IPS2GPIO.SDS011", "Intensity", "", " ug/m³", 0, 999, 1);
 		
 		// Statusvariablen anlegen
 		$this->RegisterVariableInteger("PM25", "PM 2.5", "IPS2GPIO.SDS011", 10);
