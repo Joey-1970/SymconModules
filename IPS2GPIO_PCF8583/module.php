@@ -337,7 +337,7 @@
 					$this->SetStatus(102);
 					$MeasurementData = array();
 					$MeasurementData = unserialize($Result);
-					$TimerValue = $MeasurementData[1]);
+					$TimerValue = $MeasurementData[1];
 					$this->SendDebug("GetTimerValue", "Ergebnis: ".$TimerValue, 0);
 				}
 			}
