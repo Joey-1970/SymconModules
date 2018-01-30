@@ -39,7 +39,7 @@
 		}
           	
           	$this->RegisterVariableInteger("Value", "Value", "", 100);
-		$this->EableAction("Value");
+		$this->EnableAction("Value");
           	IPS_SetHidden($this->GetIDForIdent("Value"), false);
 	}
 	
