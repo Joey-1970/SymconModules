@@ -136,7 +136,6 @@
 					$this->Setup();
 					// Erste Messdaten einlesen
 					$this->GetCounter();	
-					$this->SetStatus(102);
 				}
 			}
 			else {
