@@ -1966,7 +1966,8 @@ class IPS2GPIO_IO extends IPSModule
 					//$this->SendDebug("Serielle Daten", "Text: ".$Result, 0);
 				}
 		            	else {
-           				$this->SendDebug("Serielle Daten", "Fehlermeldung: ".$this->GetErrorText(abs($response[4])), 0);
+           				$Result = -1;
+					$this->SendDebug("Serielle Daten", "Fehlermeldung: ".$this->GetErrorText(abs($response[4])), 0);
 					IPS_LogMessage("IPS2GPIO Serielle Daten", "Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
            			}
 				break;
