@@ -145,7 +145,7 @@
 			$this->SendDebug("GetData", "Ausfuehrung", 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "read_bb_serial", "Pin_RxD" => $this->ReadPropertyInteger("Pin_RxD") )));
 			$ByteMessage = utf8_decode($Result);
-			$this->SendDebug("GetData", "Ankommende Daten: ".$ByteMessage, 0);
+			$this->SendDebug("GetData", $ByteMessage, 0);
 		}
 	}				
 	      
