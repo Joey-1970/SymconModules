@@ -253,10 +253,10 @@
 			else {
 				If (is_array(unserialize($Result)) == true) {
 					$this->SetStatus(102);
-					$this->SendDebug("GetCounter", "Ergebnis: ".$Result, 0);
 					$MeasurementData = array();
 					$MeasurementData = unserialize($Result);
 					$CounterValue = (($MeasurementData[3] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[1]);
+					$this->SendDebug("GetCounter", "Ergebnis: ".$CounterValue, 0);
 					SetValueInteger($this->GetIDForIdent("CounterValue"), $CounterValue );
 				}
 			}
