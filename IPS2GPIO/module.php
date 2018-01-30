@@ -1142,11 +1142,13 @@ class IPS2GPIO_IO extends IPSModule
 					
 					//SLRO u b db - Open GPIO for bit bang serial data
 					$this->CommandClientSocket(pack("L*", 42, (int)$data->Pin_RxD, $data->Baud, 4, 8), 16);
+					/*
 					// Event setzen für den seriellen Anschluss
 					$Handle = $this->GetBuffer("Handle");
 					If ($Handle >= 0) {
 						$this->CommandClientSocket(pack("L*", 115, $Handle, pow(2, (int)$data->Pin_RxD), 0), 16);
 					}
+					*/
 					$this->SetBuffer("Serial_PTLB10VE_Configured", 1);
 				}
 				
