@@ -155,12 +155,12 @@
 			case "notify":
 			   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
 					If (($data->Value == 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-						$this->SendDebug("Notify", "Wert: ".(int)$data->Value, 0);
+						$this->SendDebug("Interrupt", "Wert: ".(int)$data->Value, 0);
 						SetValueInteger($this->GetIDForIdent("LastInterrupt"), time() );
 						$this->GetCounter();
 					}
 					elseIf (($data->Value == 1) AND ($this->ReadPropertyBoolean("Open") == true)) {
-						$this->SendDebug("Notify", "Wert: ".(int)$data->Value, 0);
+						$this->SendDebug("Interrupt", "Wert: ".(int)$data->Value, 0);
 						//$this->GetCounter();
 					}
 			   	}
