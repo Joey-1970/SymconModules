@@ -1197,7 +1197,9 @@ class IPS2GPIO_IO extends IPSModule
 				$Result = false;
 			}
 	   		break;	
-				
+		case "read_bb_serial_sds011":
+			$this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_SDS011_RxD"), 8192, 0), 16 + 8192);
+		   	break;
 		case "check_bytes_serial":
 		   	//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle")));
 		   	$this->CommandClientSocket(pack("L*", 82, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
