@@ -19,37 +19,11 @@
 		$this->SetBuffer("PreviousPin_RxD", -1);
 		$this->RegisterPropertyInteger("Pin_TxD", -1);
 		$this->SetBuffer("PreviousPin_TxD", -1);
-            	$this->RegisterTimer("Messzyklus", 0, 'I2GPTLB10VE_GetStatus($_IPS["TARGET"]);');
+
             	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 		
-		// Profil anlegen
-		$this->RegisterProfileInteger("IPS2GPIO.PTLB10VEStatus", "Information", "", "", 0, 2, 1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEStatus", 0, "Bereitschaft", "Information", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEStatus", 1, "Lampeneinschaltsteuerung", "Information", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEStatus", 2, "Lampe eingeschaltet", "Information", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEStatus", 3, "Lampenausschaltsteuerung", "Information", -1);
-		
-		$this->RegisterProfileInteger("IPS2GPIO.PTLB10VEInput", "Information", "", "", 0, 2, 1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEInput", 0, "Video", "Information", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEInput", 1, "S-Video", "Information", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.PTLB10VEInput", 2, "RGB", "Information", -1);
-	
-		// Status-Variablen anlegen
-		$this->RegisterVariableInteger("Status", "Status", "IPS2GPIO.PTLB10VEStatus", 10);
-		$this->DisableAction("Status");
-		IPS_SetHidden($this->GetIDForIdent("Status"), false);
-		
-		$this->RegisterVariableBoolean("Power", "Power", "~Switch", 20);
-		$this->EnableAction("Power");
-		IPS_SetHidden($this->GetIDForIdent("Power"), false);
-		
-		$this->RegisterVariableInteger("Input", "Input", "IPS2GPIO.PTLB10VEInput", 30);
-		$this->EnableAction("Input");
-		IPS_SetHidden($this->GetIDForIdent("Input"), false);
-		
-		$this->RegisterVariableInteger("Volume", "Volume", "~Intensity.255", 40);
-	        $this->EnableAction("Volume");
-		IPS_SetHidden($this->GetIDForIdent("Volume"), false);
+		// Statusvariablen anlegen
+
         }
 	
 	public function GetConfigurationForm() 
@@ -113,14 +87,12 @@
         	If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 			// den Handle für dieses Gerät ermitteln
 			If (($this->ReadPropertyInteger("Pin_RxD") >= 0) AND ($this->ReadPropertyInteger("Pin_TxD") >= 0) AND ($this->ReadPropertyBoolean("Open") == true) ) {
-				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "open_bb_serial_ptlb10ve", "Baud" => 9600, "Pin_RxD" => $this->ReadPropertyInteger("Pin_RxD"), "PreviousPin_RTxD" => $this->GetBuffer("PreviousPin_RxD"), "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "PreviousPin_TxD" => $this->GetBuffer("PreviousPin_TxD"), "InstanceID" => $this->InstanceID )));
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "open_bb_serial_sds011", "Baud" => 9600, "Pin_RxD" => $this->ReadPropertyInteger("Pin_RxD"), "PreviousPin_RTxD" => $this->GetBuffer("PreviousPin_RxD"), "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "PreviousPin_TxD" => $this->GetBuffer("PreviousPin_TxD"), "InstanceID" => $this->InstanceID )));
 				$this->SetBuffer("PreviousPin_RxD", $this->ReadPropertyInteger("Pin_RxD"));
 				$this->SetBuffer("PreviousPin_TxD", $this->ReadPropertyInteger("Pin_TxD"));
-				$this->SetTimerInterval("Messzyklus", 5 * 1000);
 				$this->SetStatus(102);
 			}
 			else {
-				$this->SetTimerInterval("Messzyklus", 0);
 				$this->SetStatus(104);
 			}
 		}
@@ -128,27 +100,7 @@
 	public function RequestAction($Ident, $Value) 
 	{
   		switch($Ident) {
-	        case "Power":
-	            	$this->SendDebug("RequestAction", "Power: Ausfuehrung", 0);
-			If (GetValueInteger($this->GetIDForIdent("Status")) == 0) {
-				$this->Send("PON");
-			}
-			elseif (GetValueInteger($this->GetIDForIdent("Status")) == 2) {
-				$this->Send("POF");
-			}
-	            	break;
-	        case "Input":
-			$this->SendDebug("RequestAction", "Input: Ausfuehrung", 0);
-	            	$Input = array("VID", "SVD", "RG1");
-			$this->Send("IIS:".$Input[$Value]);
-			SetValueInteger($this->GetIDForIdent("Input"), $Value);
-	           	break;
-		case "Volume":
-			$this->SendDebug("RequestAction", "Volume: Ausfuehrung", 0);
-	            	$Volume = sprintf('%03s',intval($Value / 4));
-			$this->Send("AVL:".$Volume);
-			SetValueInteger($this->GetIDForIdent("Volume"), $Value);
-	            	break;	
+	       
 	        default:
 	            throw new Exception("Invalid Ident");
 	    	}
@@ -158,7 +110,7 @@
 	{
 		$data = json_decode($JSONString);
 	 	switch ($data->Function) {
-			 case "set_serial_PTLB10VE_data":
+			 case "set_serial_SDS011_data":
 				$ByteMessage = utf8_decode($data->Value);
 				$this->SendDebug("ReceiveData", "Ankommende Daten: ".$ByteMessage, 0);
 				
@@ -236,26 +188,6 @@
 		}
         return false;
     	}  
-	 
-	/*
-	PANASONIC Video Projector Remote Codes
-	1114
-	1243
-	1321
-	1331
-	2113
-	2114
-	3312
-	3313
-	3411
-	3412
-	3413
-	3434
-	4112
-	4113
-	4341
-	*/
-	    
-	    
+	
 }
 ?>
