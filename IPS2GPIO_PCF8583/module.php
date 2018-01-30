@@ -335,10 +335,10 @@
 			else {
 				If (is_array(unserialize($Result)) == true) {
 					$this->SetStatus(102);
-					$this->SendDebug("GetTimerValue", "Ergebnis: ".$Result, 0);
 					$MeasurementData = array();
 					$MeasurementData = unserialize($Result);
-					$TimerValue = $MeasurementData[1];
+					$TimerValue = $MeasurementData[1]);
+					$this->SendDebug("GetTimerValue", "Ergebnis: ".$TimerValue, 0);
 				}
 			}
 			
