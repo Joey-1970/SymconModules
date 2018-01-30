@@ -12,7 +12,11 @@
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
-            	// Diese Zeile nicht löschen.
+            	// https://github.com/kadamski/arduino_sds011/blob/master/lib/Sds011/Sds011.cpp
+		// https://cdn.sparkfun.com/assets/parts/1/2/2/7/5/Laser_Dust_Sensor_Control_Protocol_V1.3.pdf
+		// https://forum-raspberrypi.de/forum/thread/32634-nova-pm2-5-pm10-feinstaub-sensor-sds011-am-pi-anschlie%C3%9Fen/
+		
+		// Diese Zeile nicht löschen.
             	parent::Create();
             	$this->RegisterPropertyBoolean("Open", false);
 		$this->RegisterPropertyInteger("Pin_RxD", -1);
@@ -144,7 +148,7 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("GetData", "Ausfuehrung", 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "read_bb_serial", "Pin_RxD" => $this->ReadPropertyInteger("Pin_RxD") )));
-			$ByteMessage = utf8_decode($Result);
+			$ByteMessage = $Result;
 			$this->SendDebug("GetData", $ByteMessage, 0);
 		}
 	}				
