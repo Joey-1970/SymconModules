@@ -318,18 +318,18 @@
 	private function GetTimer()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("ReadTimer", "Ausfuehrung", 0);
+			$this->SendDebug("GetTimer", "Ausfuehrung", 0);
 			$TimerValue =  0;
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("07"), "Count" => 1)));
 			If ($Result < 0) {
-				$this->SendDebug("ReadTimer", "Fehler bei der Datenermittung", 0);
+				$this->SendDebug("GetTimer", "Fehler bei der Datenermittung", 0);
 				$this->SetStatus(202);
 				return 0;
 			}
 			else {
 				If (is_array(unserialize($Result)) == true) {
 					$this->SetStatus(102);
-					$this->SendDebug("ReadTimer", "Ergebnis: ".$Result, 0);
+					$this->SendDebug("GetTimer", "Ergebnis: ".$Result, 0);
 					$MeasurementData = array();
 					$MeasurementData = unserialize($Result);
 					$TimerValue = $MeasurementData[1];
@@ -338,6 +338,31 @@
 			
 		}
 	}            
+	
+	private function SetTimer()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("SetTimer", "Ausfuehrung", 0);
+			$TimerValue =  0;
+			//$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("07"), "Count" => 1)));
+			If (!$Result) {
+				$this->SendDebug("SetTimer", "Fehler bei der Datenermittung", 0);
+				$this->SetStatus(202);
+				return 0;
+			}
+			else {
+				If (is_array(unserialize($Result)) == true) {
+					$this->SetStatus(102);
+					$this->SendDebug("SetTimer", "Ergebnis: ".$Result, 0);
+					$MeasurementData = array();
+					$MeasurementData = unserialize($Result);
+					$TimerValue = $MeasurementData[1];
+				}
+			}
+			
+		}
+	}             
+	    
 	    
 	private function Get_I2C_Ports()
 	{
