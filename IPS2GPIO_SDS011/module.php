@@ -22,7 +22,17 @@
 		$this->RegisterTimer("Messzyklus", 0, 'I2GSDS011_GetData($_IPS["TARGET"]);');
             	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 		
+		// Profil anlegen
+		$this->RegisterProfileInteger("IPS2GPIO.SDS011", "Intensity", "", "ug/m³", 0, 999, 1);
+		
 		// Statusvariablen anlegen
+		$this->RegisterVariableInteger("PM25", "PM 2.5", "IPS2GPIO.SDS011", 10);
+		$this->DisableAction("PM25");
+		IPS_SetHidden($this->GetIDForIdent("PM25"), false);
+		
+		$this->RegisterVariableInteger("PM10", "PM 10", "IPS2GPIO.SDS011", 20);
+		$this->DisableAction("PM10");
+		IPS_SetHidden($this->GetIDForIdent("PM10"), false);
 
         }
 	
@@ -133,10 +143,29 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("GetData", "Ausfuehrung", 0);
-			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "read_bb_serial_sds011" )));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "read_bb_serial", "Pin_RxD" => $this->ReadPropertyInteger("Pin_RxD") )));
+			$ByteMessage = utf8_decode($Result);
+			$this->SendDebug("GetData", "Ankommende Daten: ".$ByteMessage, 0);
 		}
 	}				
 	      
+	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
+	{
+	        if (!IPS_VariableProfileExists($Name))
+	        {
+	            IPS_CreateVariableProfile($Name, 1);
+	        }
+	        else
+	        {
+	            $profile = IPS_GetVariableProfile($Name);
+	            if ($profile['ProfileType'] != 1)
+	                throw new Exception("Variable profile type does not match for profile " . $Name);
+	        }
+	        IPS_SetVariableProfileIcon($Name, $Icon);
+	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);        
+	}    
+	    
 	private function Get_GPIO()
 	{
 		If ($this->HasActiveParent() == true) {
