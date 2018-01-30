@@ -222,6 +222,8 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("Serial_GPS_Configured", 0);
 			$this->SetBuffer("Serial_GPS_RxD", -1);
 			$this->SetBuffer("Serial_GPS_Data", "");
+			$this->SetBuffer("Serial_SDS011_Configured", 0);
+			$this->SetBuffer("Serial_SDS011_RxD", -1);
 			$this->SetBuffer("1Wire_Configured", 0);
 			$this->SetBuffer("SerialNotify", 0);
 			$this->SetBuffer("SerialScriptID", -1);
@@ -1157,7 +1159,45 @@ class IPS2GPIO_IO extends IPSModule
 				$Result = false;
 			}
 	   		break;	
-		
+		case "open_bb_serial_sds011":
+	   		If ($this->GetBuffer("ModuleReady") == 1) {
+				If ($this->GetBuffer("Serial_SDS011_Configured") == 0) {
+					$PinUsed = array();
+					$PinUsed = unserialize($this->GetBuffer("PinUsed"));
+					// GPIO RxD als Input konfigurieren
+					$this->CommandClientSocket(pack("L*", 0, (int)$data->Pin_RxD, 0, 0), 16);
+					$PinUsed[(int)$data->Pin_RxD] = $data->InstanceID; 
+					$this->SetBuffer("Serial_SDS011_RxD", (int)$data->Pin_RxD);
+					// GPIO TxD als Output konfigurieren
+					$this->CommandClientSocket(pack("L*", 0, (int)$data->Pin_TxD, 1, 0), 16);
+					$this->SetBuffer("Serial_SDS011_TxD", (int)$data->Pin_TxD);
+					$PinUsed[(int)$data->Pin_TxD] = $data->InstanceID; 
+					$this->SendDebug("GPIO", "Mode der GPIO fuer Seriellen Bus gesetzt", 0);
+					$this->SetBuffer("PinUsed", serialize($PinUsed));
+					
+					// SLRC u - Close GPIO for bit bang serial data	
+					$this->CommandClientSocket(pack("L*", 44, (int)$data->Pin_RxD, 0, 0), 16);
+					
+					//SLRO u b db - Open GPIO for bit bang serial data
+					$this->CommandClientSocket(pack("L*", 42, (int)$data->Pin_RxD, $data->Baud, 4, 8), 16);
+					// Event setzen für den seriellen Anschluss
+					$Handle = $this->GetBuffer("Handle");
+					If ($Handle >= 0) {
+						$this->CommandClientSocket(pack("L*", 115, $Handle, pow(2, (int)$data->Pin_RxD), 0), 16);
+					}
+					$this->SetBuffer("Serial_SDS011_Configured", 1);
+				}
+				
+				// Messages einrichten
+				$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
+				$this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
+				$Result = true;
+			}
+			else {
+				$Result = false;
+			}
+	   		break;	
+				
 		case "check_bytes_serial":
 		   	//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle")));
 		   	$this->CommandClientSocket(pack("L*", 82, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
@@ -1540,6 +1580,10 @@ class IPS2GPIO_IO extends IPSModule
 				elseIf ($EventNumber == $this->GetBuffer("Serial_PTLB10VE_RxD")) {
 					// Daten PTLB10VE
 					$this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_PTLB10VE_RxD"), 8192, 0), 16 + 8192);
+				}
+				elseIf ($EventNumber == $this->GetBuffer("Serial_SDS011_RxD")) {
+					// Daten SDS011
+					$this->CommandClientSocket(pack("L*", 43, $this->GetBuffer("Serial_SDS011_RxD"), 8192, 0), 16 + 8192);
 				}
 				If (GetValueBoolean($this->GetIDForIdent("PigpioStatus")) == false) {
 					SetValueBoolean($this->GetIDForIdent("PigpioStatus"), true);
