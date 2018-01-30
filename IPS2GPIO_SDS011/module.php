@@ -125,42 +125,16 @@
 			   	break;
 	 	}
  	}
-	// Beginn der Funktionen
-	public function Send(String $Message)
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("Send", "Ausfuehrung", 0);
-			$Message = utf8_encode(chr(2).$Message.chr(3));
-			//$Message = utf8_encode($Message);
-			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytes_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => $Message)));
-		}
-	}
 	
-	public function GetStatus()
+	// Beginn der Funktionen
+	private function GetData()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("GetStatus", "Ausfuehrung", 0);
-			$this->Send('Q$S');
+			$this->SendDebug("GetData", "Ausfuehrung", 0);
+			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "read_bb_serial_sds011" )));
 		}
 	}				
-	    
-	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
-	{
-	        if (!IPS_VariableProfileExists($Name))
-	        {
-	            IPS_CreateVariableProfile($Name, 1);
-	        }
-	        else
-	        {
-	            $profile = IPS_GetVariableProfile($Name);
-	            if ($profile['ProfileType'] != 1)
-	                throw new Exception("Variable profile type does not match for profile " . $Name);
-	        }
-	        IPS_SetVariableProfileIcon($Name, $Icon);
-	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
-	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);        
-	}    
-	    
+	      
 	private function Get_GPIO()
 	{
 		If ($this->HasActiveParent() == true) {
