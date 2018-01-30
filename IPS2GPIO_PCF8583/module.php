@@ -296,8 +296,11 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("SetAlarmValue", "Ausfuehrung", 0);
 			$AlarmValue =  $this->ReadPropertyInteger("AlarmValue");
+			$AlarmValue = min(pow(2, 47), max(0, $AlarmValue));
 			$AlarmValueArray = array();
-			$AlarmValueArray = unpack("C*", pack("L", $AlarmValue));
+			$AlarmValueArray = unpack("C*", pack("Q", $AlarmValue));
+			unset($AlarmValueArray[7]);
+			unset($AlarmValueArray[8]);
 			
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write_array", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("09"), 
 											  "Parameter" => serialize($AlarmValueArray) )));	
@@ -312,7 +315,7 @@
 		}
 	}      
 	    
-	private function ReadTimer()
+	private function GetTimer()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("ReadTimer", "Ausfuehrung", 0);
@@ -334,7 +337,6 @@
 			}
 			
 		}
-	return $TimerValue;
 	}            
 	    
 	private function Get_I2C_Ports()
