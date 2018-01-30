@@ -1062,7 +1062,7 @@ class IPS2GPIO_IO extends IPSModule
 			}
 	   		break;
 		case "write_bb_bytes_serial":	
-		   	$Command = utf8_decode($data->Command);
+		   	$Command = $data->Command;
 			$this->SendDebug("Serielle Sendung", "GPIO: ".$data->Pin_TxD." Baud: ".$data->Baud. " Text: ".$Command, 0);
 		   	$Result = $this->CommandClientSocket(pack("L*", 29, $data->Pin_TxD, $data->Baud, (12 + strlen($Command)), 8, 4, 0).$Command, 16);
 			// WVCRE 	49 	0 	0 	0
@@ -1959,7 +1959,7 @@ class IPS2GPIO_IO extends IPSModule
 						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_data", "Value"=> utf8_encode($Result) )));
 					}
 					elseif ($response[2] == $this->GetBuffer("Serial_PTLB10VE_RxD")) {
-						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_PTLB10VE_data", "Value"=> utf8_encode($Result) )));
+						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_PTLB10VE_data", "Value"=> $Message )));
 					}
 					elseif ($response[2] == $this->GetBuffer("Serial_SDS011_RxD")) {
 						//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_SDS011_data", "Value"=> utf8_encode($Result) )));
