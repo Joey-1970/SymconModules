@@ -157,7 +157,7 @@
 				$this->SetStatus(102);
 				$ByteMessage = array();
 				$ByteMessage = unpack("C*", $Result);
-				$this->SendDebug("GetData", $ByteMessage, 0);
+				$this->SendDebug("GetData", serialize($ByteMessage), 0);
 			}
 			
 		}
