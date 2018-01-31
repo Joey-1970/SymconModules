@@ -157,13 +157,14 @@
 				$this->SetStatus(102);
 				$ByteMessage = array();
 				$ByteMessage = unpack("C*", $Result);
+				$this->SendDebug("GetData", $Result, 0);
 				$this->SendDebug("GetData", serialize($ByteMessage), 0);
 			}
 			
 		}
 	}				
 	      
-	private function GetReportingMode()
+	public function GetReportingMode()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("GetReportingMode", "Ausfuehrung", 0);
@@ -174,7 +175,7 @@
 		}
 	}
 	    
-	private function SetReportingMode(Bool $ActiveMode)
+	public function SetReportingMode(Bool $ActiveMode)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("SetReportingMode", "Ausfuehrung", 0);
@@ -185,7 +186,7 @@
 		}
 	}    
 	
-	private function QueryData()
+	public function QueryData()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("QueryData", "Ausfuehrung", 0);
@@ -196,7 +197,7 @@
 		}
 	}       
 	
-	private function GetSleepWork()
+	public function GetSleepWork()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("GetSleepWork", "Ausfuehrung", 0);
@@ -207,7 +208,7 @@
 		}
 	}
 	
-	private function SetSleepWork(Bool $Active)
+	public function SetSleepWork(Bool $Active)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("SetSleepWork", "Ausfuehrung", 0);
@@ -218,7 +219,7 @@
 		}
 	}        
 	
-	private function GetWorkingPeriod()
+	public function GetWorkingPeriod()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("GetWorkingPeriod", "Ausfuehrung", 0);
@@ -229,7 +230,7 @@
 		}
 	}
 	
-	private function SetWorkingPeriod(Int $Time)
+	public function SetWorkingPeriod(Int $Time)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("SetWorkingPeriod", "Ausfuehrung", 0);
