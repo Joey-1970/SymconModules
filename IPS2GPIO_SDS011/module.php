@@ -154,12 +154,47 @@
 				$ByteMessage = unpack("C*", $Result);
 				$this->SendDebug("GetData", $Result, 0);
 				$this->SendDebug("GetData", serialize($ByteMessage), 0);
+				
+				$StartKey = array_search(170, $ByteMessage);
+				If (($StartKey === 0) OR ($StartKey > 0)) {
+				    	// Startwert wurde gefunden
+				    	// Daten vor AA entfernen
+				    	If ($StartKey > 0) {
+						for ($i = 0; $i < $StartKey; $i++) {
+						    unset ($ByteMessage[$i]);
+						}
+						$ByteMessage = array_values($ByteMessage);
+						If (isset($ByteMessage[9])) {
+							for ($i = 0; $i <= 9; $i++) {
+								$ResponseArray[$i] = $ByteMessage[$i];
+								unset($ByteMessage[$i]); 
+								// $ResponseArray[$i] an Funktion zur Auswertung senden
+							}
+							$ByteMessage = array_values($ByteMessage);
+							// Restarray zum Anfügen an nächsten ankommenden Datensatz sichern
+						}
+						else {
+						    	// Endwert nicht gefunden
+						    	$ByteMessage = array_values($ByteMessage);
+							// Restarray zum Anfügen an nächsten ankommenden Datensatz sichern
+							return;
+						}
+						
+				    	} 
+				}
+				else {
+				    	$ByteMessage = array_values($ByteMessage);
+					// Restarray zum Anfügen an nächsten ankommenden Datensatz sichern
+					
+					// Kein Startwert vorhanden, Schleife beenden
+				    	return;
+				}
 			}
 			
 		}
 	}				
 	
-	private function EvaluateDate()
+	private function EvaluateData()
 	{
 		
 	}
@@ -213,8 +248,12 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("SetSleepWork", "Ausfuehrung", 0);
 			$Checksum = (0x06 + 0x01 + intval(!$Active) + 0xFF + 0xFF) & 0xFF;
-			$Message = pack("C*", 0xAA, 0xB4, 0x02, 0x01, intval(!$Active), 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, $Checksum, 0xAB);
-			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytes_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => $Message)));
+			//$Message = pack("C*", 0xAA, 0xB4, 0x02, 0x01, intval(!$Active), 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, $Checksum, 0xAB);
+			//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytes_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => $Message)));
+
+			$Message = array(0xAA, 0xB4, 0x02, 0x01, intval(!$Active), 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, $Checksum, 0xAB);
+			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytesarray_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => serialize($Message) )));
+
 			$this->GetData();
 		}
 	}        
