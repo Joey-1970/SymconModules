@@ -196,7 +196,7 @@
 	
 	private function EvaluateData()
 	{
-		
+		// Daten aufteilen
 	}
 	    
 	public function GetReportingMode()
