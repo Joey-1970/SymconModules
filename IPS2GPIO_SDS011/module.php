@@ -127,11 +127,6 @@
 	{
 		$data = json_decode($JSONString);
 	 	switch ($data->Function) {
-			 case "set_serial_SDS011_data":
-				$ByteMessage = utf8_decode($data->Value);
-				$this->SendDebug("ReceiveData", "Ankommende Daten: ".$ByteMessage, 0);
-				
-				break;
 			 case "get_serial":
 			   	$this->ApplyChanges();
 				break;
@@ -163,7 +158,12 @@
 			
 		}
 	}				
-	      
+	
+	private function EvaluateDate()
+	{
+		
+	}
+	    
 	public function GetReportingMode()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
@@ -234,7 +234,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("SetWorkingPeriod", "Ausfuehrung", 0);
-			// $Time begrenzen auf 1 -30
+			$Time = min(30, max(1, $Time));
 			$Checksum = (0x08 + 0x01 + $Time + 0xFF + 0xFF) & 0xFF;
 			$Message = pack("C*", 0xAA, 0xB4, 0x02, 0x01, $Time, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, $Checksum, 0xAB);
 			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytes_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => $Message)));
@@ -258,8 +258,8 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("GetFirmware", "Ausfuehrung", 0);
-			$Checksum = (0x08 + 0xFF + 0xFF) & 0xFF;
-			$Message = pack("C*", 0xAA, 0xB4, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, $Checksum, 0xAB);
+			$Checksum = (0x07 + 0xFF + 0xFF) & 0xFF;
+			$Message = pack("C*", 0xAA, 0xB4, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, $Checksum, 0xAB);
 			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytes_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => $Message)));
 			$this->GetData();
 		}
