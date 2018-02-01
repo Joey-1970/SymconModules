@@ -156,6 +156,7 @@
 				$this->SendDebug("GetData", serialize($ByteMessage), 0);
 				
 				$StartKey = array_search(170, $ByteMessage);
+				/*
 				If (($StartKey === 0) OR ($StartKey > 0)) {
 				    	// Startwert wurde gefunden
 				    	// Daten vor AA entfernen
@@ -189,6 +190,7 @@
 					// Kein Startwert vorhanden, Schleife beenden
 				    	return;
 				}
+				*/
 			}
 			
 		}
@@ -198,6 +200,7 @@
 	{
 		// Daten aufteilen
 	}
+	
 	    
 	public function GetReportingMode()
 	{
