@@ -154,9 +154,9 @@
 				$ByteMessage = unpack("C*", $Result);
 				$this->SendDebug("GetData", $Result, 0);
 				$this->SendDebug("GetData", serialize($ByteMessage), 0);
-				
-				$StartKey = array_search(170, $ByteMessage);
 				/*
+				$StartKey = array_search(170, $ByteMessage);
+				
 				If (($StartKey === 0) OR ($StartKey > 0)) {
 				    	// Startwert wurde gefunden
 				    	// Daten vor AA entfernen
@@ -307,7 +307,7 @@
 			$this->GetData();
 		}
 	} 
-	 */   
+	   
 	private function GetFirmware()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
@@ -322,7 +322,7 @@
 			$this->GetData();
 		}
 	}
-	    
+	  */   
 	private function Get_GPIO()
 	{
 		If ($this->HasActiveParent() == true) {
