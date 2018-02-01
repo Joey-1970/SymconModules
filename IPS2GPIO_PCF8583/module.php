@@ -204,6 +204,19 @@
 			
 			$CounterMode = 2 << 4;
 			$Bitmask = $CounterMode | $Interrupt;
+			$this->SendDebug("Setup", "Wert fuer 0x00: ".$Bitmask, 0);
+			$Bitmask = 0xE0;
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("00"), "Value" => $Bitmask)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "Setzen der Config fehlerhaft!", 0);
+				$this->SetStatus(202);
+				return;
+			}
+			else {
+				$this->SetStatus(102);
+			}
+			
+			$Bitmask = 0x24;
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("00"), "Value" => $Bitmask)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Setzen der Config fehlerhaft!", 0);
