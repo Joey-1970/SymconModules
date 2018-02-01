@@ -276,7 +276,7 @@
 			$this->GetData();
 		}
 	}        
-	
+	/*
 	public function GetWorkingPeriod()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
@@ -307,7 +307,7 @@
 			$this->GetData();
 		}
 	} 
-	    
+	 */   
 	private function GetFirmware()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
