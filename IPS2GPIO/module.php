@@ -1084,6 +1084,25 @@ class IPS2GPIO_IO extends IPSModule
 				}
 			}
 			break;
+		case "write_bb_bytesarray_serial":	
+		   	$CommandArray = array();
+			$CommandArray = unserialize($data->Command);
+			$Command = pack("C*", ...$CommandArray);
+			$this->SendDebug("Serielle Sendung", "GPIO: ".$data->Pin_TxD." Baud: ".$data->Baud. " Text: ".$Command, 0);
+		   	$Result = $this->CommandClientSocket(pack("L*", 29, $data->Pin_TxD, $data->Baud, (12 + strlen($Command)), 8, 4, 0).$Command, 16);
+			// WVCRE 	49 	0 	0 	0
+			If ($Result > 0) {
+				$WaveID = $this->CommandClientSocket(pack("L*", 49, 0, 0, 0), 16);
+				If ($WaveID >= 0) {
+					// WVTX 	51 	wave_id 	0 	0
+					$Result = $this->CommandClientSocket(pack("L*", 51, $WaveID, 0, 0), 16);
+					If ($Result >= 0) {
+						// WVDEL 	50 	wave_id 	0 	0
+						$this->CommandClientSocket(pack("L*", 50, $WaveID, 0, 0), 16);
+					}
+				}
+			}
+			break;
 		case "open_bb_serial_gps":
 	   		If ($this->GetBuffer("ModuleReady") == 1) {
 				If ($this->GetBuffer("Serial_GPS_Configured") == 0) {
