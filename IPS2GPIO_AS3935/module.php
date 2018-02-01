@@ -199,7 +199,6 @@
 				If (($ResultI2C == true) AND ($ResultPin == true)) {
 					// Erste Messdaten einlesen
 					$this->Setup();
-					$this->SetStatus(102);
 				}
 			}
 			else {
