@@ -172,17 +172,17 @@
 							$PM10 = ($ByteMessage[5] << 8)|$ByteMessage[4];
 							$this->SendDebug("GetData", "Messwerte: ".$PM25." - ".$PM10, 0);
 						}
-						elseif ($ByteMessage[1] == 0xC5) AND ($ByteMessage[2] == 0x02) {
+						elseif (($ByteMessage[1] == 0xC5) AND ($ByteMessage[2] == 0x02)) {
 							// DateReportingMode
 						}
-						elseif ($ByteMessage[1] == 0xC5) AND ($ByteMessage[2] == 0x06) {
+						elseif (($ByteMessage[1] == 0xC5) AND ($ByteMessage[2] == 0x06)) {
 							// Sleep and Work
 						}
-						elseif ($ByteMessage[1] == 0xC5) AND ($ByteMessage[2] == 0x07) {
+						elseif (($ByteMessage[1] == 0xC5) AND ($ByteMessage[2] == 0x07)) {
 							// Firmwareversion
 							$this->SendDebug("GetData", "Firmware: ".$ByteMessage[3]." - ".$ByteMessage[2]." -".$ByteMessage[1], 0);
 						}
-						elseif ($ByteMessage[1] == 0xC5) AND ($ByteMessage[2] == 0x08) {
+						elseif (($ByteMessage[1] == 0xC5) AND ($ByteMessage[2] == 0x08)) {
 							// Working Period
 						}
 						else {
