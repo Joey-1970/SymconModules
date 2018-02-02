@@ -109,7 +109,12 @@
 				$this->SetBuffer("PreviousPin_TxD", $this->ReadPropertyInteger("Pin_TxD"));
 				$Messzyklus = max(3, $this->ReadPropertyInteger("Messzyklus"));
 				$this->SetTimerInterval("Messzyklus", ($Messzyklus * 1000));
+				// ReportingMode auf Anfragegesteuert setzen
 				$this->SetReportingMode(false);
+				// Firmware ermitteln
+				$this->GetFirmware();
+				// Erste Daten
+				$this->QueryData();
 				$this->SetStatus(102);
 			}
 			else {
@@ -147,6 +152,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("GetData", "Ausfuehrung", 0);
+			IPS_Sleep(50); // Damit alle Daten auch da sind
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "read_bb_serial", "Pin_RxD" => $this->ReadPropertyInteger("Pin_RxD") )));
 			If (!$Result) {
 				$this->SendDebug("GetData", "Lesen des Dateneingangs nicht erfolgreich!", 0);
@@ -157,7 +163,7 @@
 				$ByteMessage = array();
 				$ByteMessage = unpack("C*", $Result);
 				$this->SendDebug("GetData", $Result, 0);
-				$this->SendDebug("GetData", serialize($ByteMessage), 0);
+				//$this->SendDebug("GetData", serialize($ByteMessage), 0);
 				/*
 				$StartKey = array_search(170, $ByteMessage);
 				
@@ -211,9 +217,7 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("GetReportingMode", "Ausfuehrung", 0);
 			$Checksum = (0x02 + 0xFF + 0xFF) & 0xFF;
-			//$Message = pack("C*", 0xAA, 0xB4, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, $Checksum, 0xAB);
-			//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytes_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => $Message)));
-			
+		
 			$Message = array(0xAA, 0xB4, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, $Checksum, 0xAB);
 			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytesarray_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => serialize($Message) )));
 
@@ -227,8 +231,6 @@
 			// Entscheidet ob der SDS011 automatisch im Sekundentakt sendet oder nur auf Anfrage (per Definition nur auf Anfrage)
 			$this->SendDebug("SetReportingMode", "Ausfuehrung", 0);
 			$Checksum = (0x02 + 0x01 + intval(!$ActiveMode) + 0xFF + 0xFF) & 0xFF;
-			//$Message = pack("C*", 0xAA, 0xB4, 0x02, 0x01, !$ActiveMode, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, $Checksum, 0xAB);
-			//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytes_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => $Message)));
 			
 			$Message = array(0xAA, 0xB4, 0x02, 0x01, !$ActiveMode, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, $Checksum, 0xAB);
 			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytesarray_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => serialize($Message) )));
