@@ -165,7 +165,7 @@
 				$this->SendDebug("GetData", $Result, 0);
 				// Plausibilitätskontrolle
 				If (count($ByteMessage) == 10) {
-					If (($ByteMessage[0] == 0xAA) AND (($ByteMessage[9] == 0xAB)) {
+					If ( ($ByteMessage[0] == 0xAA) AND ($ByteMessage[9] == 0xAB) ) {
 						If ($ByteMessage[1] == 0xC0) {
 							// Messwerte
 							$PM25 = ($ByteMessage[3] << 8)|$ByteMessage[2];
