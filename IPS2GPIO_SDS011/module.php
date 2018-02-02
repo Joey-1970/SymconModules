@@ -28,16 +28,24 @@
             	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 		
 		// Profil anlegen
-		$this->RegisterProfileFloat("IPS2GPIO.SDS011", "Intensity", "", " ug/m³", 0, 999, 0.1, 1);
+		$this->RegisterProfileFloat("IPS2GPIO.SDS011", "Intensity", "", " ug/m³", 0, 1000, 0.1, 1);
 		
 		// Statusvariablen anlegen
-		$this->RegisterVariableInteger("PM25", "PM 2.5", "IPS2GPIO.SDS011", 10);
+		$this->RegisterVariableFloat("PM25", "PM 2.5", "IPS2GPIO.SDS011", 10);
 		$this->DisableAction("PM25");
 		IPS_SetHidden($this->GetIDForIdent("PM25"), false);
 		
-		$this->RegisterVariableInteger("PM10", "PM 10", "IPS2GPIO.SDS011", 20);
+		$this->RegisterVariableFloat("PM10", "PM 10", "IPS2GPIO.SDS011", 20);
 		$this->DisableAction("PM10");
 		IPS_SetHidden($this->GetIDForIdent("PM10"), false);
+		
+		$this->RegisterVariableFloat("PM10", "PM 10", "IPS2GPIO.SDS011", 20);
+		$this->DisableAction("PM10");
+		IPS_SetHidden($this->GetIDForIdent("PM10"), false);
+		
+		$this->RegisterVariableString("Firmware", "Firmware", "", 30);
+		$this->DisableAction("Firmware");
+		IPS_SetHidden($this->GetIDForIdent("Firmware"), true);
         }
 	
 	public function GetConfigurationForm() 
@@ -163,6 +171,8 @@
 				$ByteMessage = array();
 				$ByteMessage = unpack("C*", $Result);
 				$this->SendDebug("GetData", $Result, 0);
+				$this->SendDebug("GetData", count($ByteMessage), 0);
+				$this->SendDebug("GetData", serialize($ByteMessage), 0);
 				// Plausibilitätskontrolle
 				If (count($ByteMessage) == 10) {
 					If ( ($ByteMessage[0] == 0xAA) AND ($ByteMessage[9] == 0xAB) ) {
