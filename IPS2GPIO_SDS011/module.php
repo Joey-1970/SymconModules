@@ -175,24 +175,24 @@
 				$this->SendDebug("GetData", serialize($ByteMessage), 0);
 				// Plausibilitätskontrolle
 				If (count($ByteMessage) == 10) {
-					If ( ($ByteMessage[0] == 0xAA) AND ($ByteMessage[9] == 0xAB) ) {
-						If ($ByteMessage[1] == 0xC0) {
+					If ( ($ByteMessage[1] == 0xAA) AND ($ByteMessage[10] == 0xAB) ) {
+						If ($ByteMessage[2] == 0xC0) {
 							// Messwerte
-							$PM25 = ($ByteMessage[3] << 8)|$ByteMessage[2];
-							$PM10 = ($ByteMessage[5] << 8)|$ByteMessage[4];
+							$PM25 = ($ByteMessage[4] << 8)|$ByteMessage[3];
+							$PM10 = ($ByteMessage[6] << 8)|$ByteMessage[5];
 							$this->SendDebug("GetData", "Messwerte: ".$PM25." - ".$PM10, 0);
 						}
-						elseif (($ByteMessage[1] == 0xC5) AND ($ByteMessage[2] == 0x02)) {
+						elseif (($ByteMessage[2] == 0xC5) AND ($ByteMessage[3] == 0x02)) {
 							// DateReportingMode
 						}
-						elseif (($ByteMessage[1] == 0xC5) AND ($ByteMessage[2] == 0x06)) {
+						elseif (($ByteMessage[2] == 0xC5) AND ($ByteMessage[3] == 0x06)) {
 							// Sleep and Work
 						}
-						elseif (($ByteMessage[1] == 0xC5) AND ($ByteMessage[2] == 0x07)) {
+						elseif (($ByteMessage[2] == 0xC5) AND ($ByteMessage[3] == 0x07)) {
 							// Firmwareversion
-							$this->SendDebug("GetData", "Firmware: ".$ByteMessage[3]." - ".$ByteMessage[2]." -".$ByteMessage[1], 0);
+							$this->SendDebug("GetData", "Firmware: ".$ByteMessage[4]." - ".$ByteMessage[3]." -".$ByteMessage[2], 0);
 						}
-						elseif (($ByteMessage[1] == 0xC5) AND ($ByteMessage[2] == 0x08)) {
+						elseif (($ByteMessage[2] == 0xC5) AND ($ByteMessage[3] == 0x08)) {
 							// Working Period
 						}
 						else {
@@ -391,23 +391,6 @@
 	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
 	        IPS_SetVariableProfileDigits($Name, $Digits);
 	}
-	    
-	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
-	{
-	        if (!IPS_VariableProfileExists($Name))
-	        {
-	            IPS_CreateVariableProfile($Name, 1);
-	        }
-	        else
-	        {
-	            $profile = IPS_GetVariableProfile($Name);
-	            if ($profile['ProfileType'] != 1)
-	                throw new Exception("Variable profile type does not match for profile " . $Name);
-	        }
-	        IPS_SetVariableProfileIcon($Name, $Icon);
-	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
-	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);        
-	}    
 	    
 	private function Get_GPIO()
 	{
