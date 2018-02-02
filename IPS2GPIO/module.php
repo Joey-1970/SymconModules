@@ -1984,7 +1984,8 @@ class IPS2GPIO_IO extends IPSModule
 					}
 					elseif ($response[2] == $this->GetBuffer("Serial_SDS011_RxD")) {
 						//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_SDS011_data", "Value"=> utf8_encode($Result) )));
-						$Result = $Message;
+						$Result = substr($Message, -($response[4]));
+						//$Result = $Message;
 					}
 					//$this->SendDebug("Serielle Daten", "Text: ".$Result, 0);
 				}
