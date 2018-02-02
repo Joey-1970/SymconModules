@@ -26,8 +26,9 @@
 		$this->RegisterTimer("Messzyklus", 0, 'I2GSDS011_GetData($_IPS["TARGET"]);');
             	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 		
+		/*
 		// Profil anlegen
-		//$this->RegisterProfileInteger("IPS2GPIO.SDS011", "Intensity", "", " ug/m³", 0, 999, 1);
+		$this->RegisterProfileInteger("IPS2GPIO.SDS011", "Intensity", "", " ug/m³", 0, 999, 1);
 		
 		// Statusvariablen anlegen
 		$this->RegisterVariableInteger("PM25", "PM 2.5", "IPS2GPIO.SDS011", 10);
@@ -37,7 +38,7 @@
 		$this->RegisterVariableInteger("PM10", "PM 10", "IPS2GPIO.SDS011", 20);
 		$this->DisableAction("PM10");
 		IPS_SetHidden($this->GetIDForIdent("PM10"), false);
-
+		*/
         }
 	
 	public function GetConfigurationForm() 
@@ -101,6 +102,15 @@
 		
 		// Profil anlegen
 		$this->RegisterProfileInteger("IPS2GPIO.SDS011", "Intensity", "", " ug/m³", 0, 999, 1);
+		
+		// Statusvariablen anlegen
+		$this->RegisterVariableInteger("PM25", "PM 2.5", "IPS2GPIO.SDS011", 10);
+		$this->DisableAction("PM25");
+		IPS_SetHidden($this->GetIDForIdent("PM25"), false);
+		
+		$this->RegisterVariableInteger("PM10", "PM 10", "IPS2GPIO.SDS011", 20);
+		$this->DisableAction("PM10");
+		IPS_SetHidden($this->GetIDForIdent("PM10"), false);
 		
         	If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 			// den Handle für dieses Gerät ermitteln
