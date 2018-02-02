@@ -23,7 +23,8 @@
 		$this->SetBuffer("PreviousPin_RxD", -1);
 		$this->RegisterPropertyInteger("Pin_TxD", -1);
 		$this->SetBuffer("PreviousPin_TxD", -1);
-		$this->RegisterTimer("Messzyklus", 0, 'I2GSDS011_GetData($_IPS["TARGET"]);');
+		$this->RegisterPropertyInteger("Messzyklus", 60);
+		$this->RegisterTimer("Messzyklus", 0, 'I2GSDS011_QueryData($_IPS["TARGET"]);');
             	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 		
 		// Profil anlegen
@@ -77,6 +78,8 @@
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_TxD", "caption" => "GPIO-Nr. TxD", "options" => $arrayOptions );
 				
+		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (3 sek -> Minimum)");
+		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
 		
 		$arrayActions = array();
 		If ($this->ReadPropertyBoolean("Open") == true) {
@@ -97,19 +100,6 @@
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel RxD - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_RxD")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_RxD"), 0);
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel TxD - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_TxD")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_TxD"), 0);
 		}
-		/*
-		// Profil anlegen
-		$this->RegisterProfileInteger("IPS2GPIO.SDS011", "Intensity", "", " ug/m³", 0, 999, 1);
-		
-		// Statusvariablen anlegen
-		$this->RegisterVariableInteger("PM25", "PM 2.5", "IPS2GPIO.SDS011", 10);
-		$this->DisableAction("PM25");
-		IPS_SetHidden($this->GetIDForIdent("PM25"), false);
-		
-		$this->RegisterVariableInteger("PM10", "PM 10", "IPS2GPIO.SDS011", 20);
-		$this->DisableAction("PM10");
-		IPS_SetHidden($this->GetIDForIdent("PM10"), false);
-		*/
 		
         	If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 			// den Handle für dieses Gerät ermitteln
@@ -117,7 +107,9 @@
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "open_bb_serial_sds011", "Baud" => 9600, "Pin_RxD" => $this->ReadPropertyInteger("Pin_RxD"), "PreviousPin_RTxD" => $this->GetBuffer("PreviousPin_RxD"), "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "PreviousPin_TxD" => $this->GetBuffer("PreviousPin_TxD"), "InstanceID" => $this->InstanceID )));
 				$this->SetBuffer("PreviousPin_RxD", $this->ReadPropertyInteger("Pin_RxD"));
 				$this->SetBuffer("PreviousPin_TxD", $this->ReadPropertyInteger("Pin_TxD"));
-				$this->SetTimerInterval("Messzyklus", 2 * 1000);
+				$Messzyklus = max(3, $this->ReadPropertyInteger("Messzyklus"));
+				$this->SetTimerInterval("Messzyklus", ($Messzyklus * 1000));
+				$this->SetReportingMode(false);
 				$this->SetStatus(102);
 			}
 			else {
@@ -214,7 +206,7 @@
 	}
 	
 	    
-	public function GetReportingMode()
+	private function GetReportingMode()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("GetReportingMode", "Ausfuehrung", 0);
@@ -229,9 +221,10 @@
 		}
 	}
 	    
-	public function SetReportingMode(Bool $ActiveMode)
+	private function SetReportingMode(Bool $ActiveMode)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			// Entscheidet ob der SDS011 automatisch im Sekundentakt sendet oder nur auf Anfrage (per Definition nur auf Anfrage)
 			$this->SendDebug("SetReportingMode", "Ausfuehrung", 0);
 			$Checksum = (0x02 + 0x01 + intval(!$ActiveMode) + 0xFF + 0xFF) & 0xFF;
 			//$Message = pack("C*", 0xAA, 0xB4, 0x02, 0x01, !$ActiveMode, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, $Checksum, 0xAB);
