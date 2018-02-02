@@ -26,7 +26,6 @@
 		$this->RegisterTimer("Messzyklus", 0, 'I2GSDS011_GetData($_IPS["TARGET"]);');
             	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 		
-		/*
 		// Profil anlegen
 		$this->RegisterProfileInteger("IPS2GPIO.SDS011", "Intensity", "", " ug/m³", 0, 999, 1);
 		
@@ -38,7 +37,6 @@
 		$this->RegisterVariableInteger("PM10", "PM 10", "IPS2GPIO.SDS011", 20);
 		$this->DisableAction("PM10");
 		IPS_SetHidden($this->GetIDForIdent("PM10"), false);
-		*/
         }
 	
 	public function GetConfigurationForm() 
@@ -99,7 +97,7 @@
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel RxD - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_RxD")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_RxD"), 0);
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel TxD - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_TxD")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_TxD"), 0);
 		}
-		
+		/*
 		// Profil anlegen
 		$this->RegisterProfileInteger("IPS2GPIO.SDS011", "Intensity", "", " ug/m³", 0, 999, 1);
 		
@@ -111,6 +109,7 @@
 		$this->RegisterVariableInteger("PM10", "PM 10", "IPS2GPIO.SDS011", 20);
 		$this->DisableAction("PM10");
 		IPS_SetHidden($this->GetIDForIdent("PM10"), false);
+		*/
 		
         	If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 			// den Handle für dieses Gerät ermitteln
@@ -335,7 +334,25 @@
 			$this->GetData();
 		}
 	}
-	  */   
+	  */ 
+	    
+	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
+	{
+	        if (!IPS_VariableProfileExists($Name))
+	        {
+	            IPS_CreateVariableProfile($Name, 1);
+	        }
+	        else
+	        {
+	            $profile = IPS_GetVariableProfile($Name);
+	            if ($profile['ProfileType'] != 1)
+	                throw new Exception("Variable profile type does not match for profile " . $Name);
+	        }
+	        IPS_SetVariableProfileIcon($Name, $Icon);
+	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);        
+	}    
+	    
 	private function Get_GPIO()
 	{
 		If ($this->HasActiveParent() == true) {
