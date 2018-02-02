@@ -288,7 +288,7 @@
 			$this->GetData();
 		}
 	}        
-	/*
+	
 	public function GetWorkingPeriod()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
@@ -334,7 +334,6 @@
 			$this->GetData();
 		}
 	}
-	  */ 
 	    
 	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
 	{
