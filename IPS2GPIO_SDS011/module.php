@@ -170,9 +170,9 @@
 				$this->SetStatus(102);
 				$ByteMessage = array();
 				$ByteMessage = unpack("C*", $Result);
-				$this->SendDebug("GetData", $Result, 0);
-				$this->SendDebug("GetData", count($ByteMessage), 0);
-				$this->SendDebug("GetData", serialize($ByteMessage), 0);
+				//$this->SendDebug("GetData", $Result, 0);
+				//$this->SendDebug("GetData", count($ByteMessage), 0);
+				//$this->SendDebug("GetData", serialize($ByteMessage), 0);
 				// Plausibilitätskontrolle
 				If (count($ByteMessage) == 10) {
 					If ( ($ByteMessage[1] == 0xAA) AND ($ByteMessage[10] == 0xAB) ) {
@@ -181,6 +181,8 @@
 							$PM25 = ($ByteMessage[4] << 8)|$ByteMessage[3];
 							$PM10 = ($ByteMessage[6] << 8)|$ByteMessage[5];
 							$this->SendDebug("GetData", "Messwerte: ".$PM25." - ".$PM10, 0);
+							SetValueFloat($this->GetIDForIdent("PM25"), ($PM25 / 10));
+							SetValueFloat($this->GetIDForIdent("PM10"), ($PM10 / 10));
 						}
 						elseif (($ByteMessage[2] == 0xC5) AND ($ByteMessage[3] == 0x02)) {
 							// DateReportingMode
@@ -190,7 +192,7 @@
 						}
 						elseif (($ByteMessage[2] == 0xC5) AND ($ByteMessage[3] == 0x07)) {
 							// Firmwareversion
-							$this->SendDebug("GetData", "Firmware: ".$ByteMessage[4]." - ".$ByteMessage[3]." -".$ByteMessage[2], 0);
+							$this->SendDebug("GetData", "Firmware: ".$ByteMessage[6]." - ".$ByteMessage[5]." -".(2000 + intval($ByteMessage[4])), 0);
 						}
 						elseif (($ByteMessage[2] == 0xC5) AND ($ByteMessage[3] == 0x08)) {
 							// Working Period
