@@ -28,7 +28,7 @@
             	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 		
 		// Profil anlegen
-		$this->RegisterProfileInteger("IPS2GPIO.SDS011", "Intensity", "", " ug/m³", 0, 999, 1);
+		$this->RegisterProfileFloat("IPS2GPIO.SDS011", "Intensity", "", " ug/m³", 0, 999, 0.1, 1);
 		
 		// Statusvariablen anlegen
 		$this->RegisterVariableInteger("PM25", "PM 2.5", "IPS2GPIO.SDS011", 10);
@@ -362,6 +362,24 @@
 
 			$this->GetData();
 		}
+	}
+	    
+	private function RegisterProfileFloat($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits)
+	{
+	        if (!IPS_VariableProfileExists($Name))
+	        {
+	            IPS_CreateVariableProfile($Name, 2);
+	        }
+	        else
+	        {
+	            $profile = IPS_GetVariableProfile($Name);
+	            if ($profile['ProfileType'] != 2)
+	                throw new Exception("Variable profile type does not match for profile " . $Name);
+	        }
+	        IPS_SetVariableProfileIcon($Name, $Icon);
+	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
+	        IPS_SetVariableProfileDigits($Name, $Digits);
 	}
 	    
 	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
