@@ -163,6 +163,40 @@
 				$ByteMessage = array();
 				$ByteMessage = unpack("C*", $Result);
 				$this->SendDebug("GetData", $Result, 0);
+				// Plausibilitätskontrolle
+				If (count($ByteMessage) == 10) {
+					If (($ByteMessage[0] == 0xAA) AND (($ByteMessage[9] == 0xAB)) {
+						If ($ByteMessage[1] == 0xC0) {
+							// Messwerte
+							$PM25 = ($ByteMessage[3] << 8)|$ByteMessage[2];
+							$PM10 = ($ByteMessage[5] << 8)|$ByteMessage[4];
+							$this->SendDebug("GetData", "Messwerte: ".$PM25." - ".$PM10, 0);
+						}
+						elseif ($ByteMessage[1] == 0xC5) AND ($ByteMessage[2] == 0x02) {
+							// DateReportingMode
+						}
+						elseif ($ByteMessage[1] == 0xC5) AND ($ByteMessage[2] == 0x06) {
+							// Sleep and Work
+						}
+						elseif ($ByteMessage[1] == 0xC5) AND ($ByteMessage[2] == 0x07) {
+							// Firmwareversion
+							$this->SendDebug("GetData", "Firmware: ".$ByteMessage[3]." - ".$ByteMessage[2]." -".$ByteMessage[1], 0);
+						}
+						elseif ($ByteMessage[1] == 0xC5) AND ($ByteMessage[2] == 0x08) {
+							// Working Period
+						}
+						else {
+							$this->SendDebug("GetData", "Datensatz konnte nicht identifiziert werden!", 0);
+						}
+					}
+					else {
+						$this->SendDebug("GetData", "Fehlerhafter Datensatz!", 0);
+					}
+				}
+				else {
+					$this->SendDebug("GetData", "Falsche Datenlaenge!", 0);
+				}
+				
 				//$this->SendDebug("GetData", serialize($ByteMessage), 0);
 				/*
 				$StartKey = array_search(170, $ByteMessage);
