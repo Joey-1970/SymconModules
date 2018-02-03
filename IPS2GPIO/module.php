@@ -1161,13 +1161,6 @@ class IPS2GPIO_IO extends IPSModule
 					
 					//SLRO u b db - Open GPIO for bit bang serial data
 					$this->CommandClientSocket(pack("L*", 42, (int)$data->Pin_RxD, $data->Baud, 4, 8), 16);
-					/*
-					// Event setzen für den seriellen Anschluss
-					$Handle = $this->GetBuffer("Handle");
-					If ($Handle >= 0) {
-						$this->CommandClientSocket(pack("L*", 115, $Handle, pow(2, (int)$data->Pin_RxD), 0), 16);
-					}
-					*/
 					$this->SetBuffer("Serial_PTLB10VE_Configured", 1);
 				}
 				
@@ -1201,13 +1194,6 @@ class IPS2GPIO_IO extends IPSModule
 					
 					//SLRO u b db - Open GPIO for bit bang serial data
 					$this->CommandClientSocket(pack("L*", 42, (int)$data->Pin_RxD, $data->Baud, 4, 8), 16);
-					/*
-					// Event setzen für den seriellen Anschluss
-					$Handle = $this->GetBuffer("Handle");
-					If ($Handle >= 0) {
-						$this->CommandClientSocket(pack("L*", 115, $Handle, pow(2, (int)$data->Pin_RxD), 0), 16);
-					}
-					*/
 					$this->SetBuffer("Serial_SDS011_Configured", 1);
 				}
 				
@@ -1980,7 +1966,8 @@ class IPS2GPIO_IO extends IPSModule
 						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_data", "Value"=> utf8_encode($Result) )));
 					}
 					elseif ($response[2] == $this->GetBuffer("Serial_PTLB10VE_RxD")) {
-						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_PTLB10VE_data", "Value"=> $Message )));
+						//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_PTLB10VE_data", "Value"=> $Message )));
+						$Result = substr($Message, -($response[4]));
 					}
 					elseif ($response[2] == $this->GetBuffer("Serial_SDS011_RxD")) {
 						//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_serial_SDS011_data", "Value"=> utf8_encode($Result) )));
