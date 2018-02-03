@@ -270,7 +270,7 @@
 					$MeasurementData = unserialize($Result);
 					$CounterValue = (($MeasurementData[3] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[1]);
 					$this->SendDebug("GetCounter", "Ergebnis: ".$CounterValue, 0);
-					SetValueInteger($this->GetIDForIdent("CounterValue"), $CounterValue );
+					//SetValueInteger($this->GetIDForIdent("CounterValue"), $CounterValue );
 					$Value1a = $MeasurementData[1] & 15;
 					$Value1b = ($MeasurementData[1] & 240) >> 4;
 					
@@ -279,6 +279,8 @@
 					
 					$Value3a = $MeasurementData[3] & 15;
 					$Value3b = ($MeasurementData[3] & 240) >> 4;
+					$String = intval($Value3b.$Value3a.$Value2b.$Value2a.$Value1b.$Value1a);
+					SetValueInteger($this->GetIDForIdent("CounterValue"), hexdec($String) );
 				}
 			}
 			
