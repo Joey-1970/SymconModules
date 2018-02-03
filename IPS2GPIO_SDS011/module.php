@@ -162,7 +162,6 @@
 				$this->GetFirmware();
 				// Erste Daten
 				$this->QueryData();
-				$this->SetStatus(102);
 			}
 			else {
 				$this->SetTimerInterval("Messzyklus", 0);
@@ -215,6 +214,7 @@
 				// Plausibilitätskontrolle
 				If (count($ByteMessage) == 10) {
 					If ( ($ByteMessage[1] == 0xAA) AND ($ByteMessage[10] == 0xAB) ) {
+						$this->SetStatus(102);
 						If ($ByteMessage[2] == 0xC0) {
 							// Messwerte
 							$PM25 = ($ByteMessage[4] << 8)|$ByteMessage[3];
@@ -252,52 +252,14 @@
 					}
 					else {
 						$this->SendDebug("GetData", "Fehlerhafter Datensatz!", 0);
+						$this->SetStatus(202);
 					}
 				}
 				else {
 					$this->SendDebug("GetData", "Falsche Datenlaenge!", 0);
+					$this->SetStatus(202);
 				}
-				
-				//$this->SendDebug("GetData", serialize($ByteMessage), 0);
-				/*
-				$StartKey = array_search(170, $ByteMessage);
-				
-				If (($StartKey === 0) OR ($StartKey > 0)) {
-				    	// Startwert wurde gefunden
-				    	// Daten vor AA entfernen
-				    	If ($StartKey > 0) {
-						for ($i = 0; $i < $StartKey; $i++) {
-						    unset ($ByteMessage[$i]);
-						}
-						$ByteMessage = array_values($ByteMessage);
-						If (isset($ByteMessage[9])) {
-							for ($i = 0; $i <= 9; $i++) {
-								$ResponseArray[$i] = $ByteMessage[$i];
-								unset($ByteMessage[$i]); 
-								// $ResponseArray[$i] an Funktion zur Auswertung senden
-							}
-							$ByteMessage = array_values($ByteMessage);
-							// Restarray zum Anfügen an nächsten ankommenden Datensatz sichern
-						}
-						else {
-						    	// Endwert nicht gefunden
-						    	$ByteMessage = array_values($ByteMessage);
-							// Restarray zum Anfügen an nächsten ankommenden Datensatz sichern
-							return;
-						}
-						
-				    	} 
-				}
-				else {
-				    	$ByteMessage = array_values($ByteMessage);
-					// Restarray zum Anfügen an nächsten ankommenden Datensatz sichern
-					
-					// Kein Startwert vorhanden, Schleife beenden
-				    	return;
-				}
-				*/
 			}
-			
 		}
 	}				
 	    
