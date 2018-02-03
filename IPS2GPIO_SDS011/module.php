@@ -39,6 +39,10 @@
 		IPS_SetVariableProfileAssociation("IPS2GPIO.SDS011SW", 0, "Schlaf Modus", "Information", -1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.SDS011SW", 1, "Arbeits Modus", "Information", -1);
 		
+		$this->RegisterProfileInteger("IPS2GPIO.SDS011WP", "Information", "", "", 0, 1, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.SDS011WP", 0, "Kontinuierlich", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.SDS011WP", 1, "Sparmodus", "Information", -1);
+		
 		// Statusvariablen anlegen
 		$this->RegisterVariableFloat("PM25", "PM 2.5", "IPS2GPIO.SDS011", 10);
 		$this->DisableAction("PM25");
@@ -63,6 +67,14 @@
 		$this->RegisterVariableInteger("SleepWork", "Status", "IPS2GPIO.SDS011SW", 50);
 		$this->DisableAction("SleepWork");
 		IPS_SetHidden($this->GetIDForIdent("SleepWork"), true);
+		
+		$this->RegisterVariableInteger("WorkingPeriod", "Arbeitsweise", "IPS2GPIO.SDS011WP", 60);
+		$this->DisableAction("WorkingPeriod");
+		IPS_SetHidden($this->GetIDForIdent("WorkingPeriod"), true);
+		
+		$this->RegisterVariableInteger("WorkingPeriodTime", "Zeit", "", 70);
+		$this->DisableAction("WorkingPeriodTime");
+		IPS_SetHidden($this->GetIDForIdent("WorkingPeriodTime"), true);
         }
 	
 	public function GetConfigurationForm() 
@@ -220,6 +232,10 @@
 						}
 						elseif (($ByteMessage[2] == 0xC5) AND ($ByteMessage[3] == 0x08)) {
 							// Working Period
+							$WorkingPeriod = min(1, max(0, $ByteMessage[5]));
+							$this->SendDebug("GetData", "WorkingPeriod: ".$WorkingPeriod." Zeit: ".$ByteMessage[5], 0);
+							SetValueInteger($this->GetIDForIdent("WorkingPeriod"), $WorkingPeriod);
+							SetValueInteger($this->GetIDForIdent("WorkingPeriodTime"), $ByteMessage[5]);
 						}
 						else {
 							$this->SendDebug("GetData", "Datensatz konnte nicht identifiziert werden!", 0);
