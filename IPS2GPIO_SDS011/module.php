@@ -149,6 +149,7 @@
 				// ReportingMode auf anfragegesteuert setzen
 				$this->SetReportingMode(false);
 				$this->GetSleepWork();
+				$this->GetWorkingPeriod();
 				// Firmware ermitteln
 				$this->GetFirmware();
 				// Erste Daten
@@ -291,12 +292,6 @@
 			
 		}
 	}				
-	
-	private function EvaluateData()
-	{
-		// Daten aufteilen
-	}
-	
 	    
 	private function GetReportingMode()
 	{
@@ -330,8 +325,6 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("QueryData", "Ausfuehrung", 0);
 			$Checksum = (0x04 + 0xFF + 0xFF) & 0xFF;
-			//$Message = pack("C*", 0xAA, 0xB4, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, $Checksum, 0xAB);
-			//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytes_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => $Message)));
 			
 			$Message = array(0xAA, 0xB4, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, $Checksum, 0xAB);
 			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytesarray_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => serialize($Message) )));
@@ -340,13 +333,11 @@
 		}
 	}       
 	
-	public function GetSleepWork()
+	private function GetSleepWork()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("GetSleepWork", "Ausfuehrung", 0);
 			$Checksum = (0x06 + 0xFF + 0xFF) & 0xFF;
-			//$Message = pack("C*", 0xAA, 0xB4, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, $Checksum, 0xAB);
-			//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytes_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => $Message)));
 			
 			$Message = array(0xAA, 0xB4, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, $Checksum, 0xAB);
 			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytesarray_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => serialize($Message) )));
@@ -355,13 +346,11 @@
 		}
 	}
 	
-	public function SetSleepWork(Bool $Active)
+	private function SetSleepWork(Bool $Active)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("SetSleepWork", "Ausfuehrung", 0);
 			$Checksum = (0x06 + 0x01 + intval(!$Active) + 0xFF + 0xFF) & 0xFF;
-			//$Message = pack("C*", 0xAA, 0xB4, 0x02, 0x01, intval(!$Active), 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, $Checksum, 0xAB);
-			//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytes_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => $Message)));
 
 			$Message = array(0xAA, 0xB4, 0x02, 0x01, intval(!$Active), 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, $Checksum, 0xAB);
 			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytesarray_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => serialize($Message) )));
@@ -370,7 +359,7 @@
 		}
 	}        
 	
-	public function GetWorkingPeriod()
+	private function GetWorkingPeriod()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("GetWorkingPeriod", "Ausfuehrung", 0);
@@ -385,7 +374,7 @@
 		}
 	}
 	
-	public function SetWorkingPeriod(Int $Time)
+	private function SetWorkingPeriod(Int $Time)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("SetWorkingPeriod", "Ausfuehrung", 0);
