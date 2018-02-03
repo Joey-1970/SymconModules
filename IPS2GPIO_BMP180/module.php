@@ -142,7 +142,6 @@
 					$this->ReadCalibrateData();
 					// Erste Messdaten einlesen
 					$this->Measurement();
-					$this->SetStatus(102);
 				}
 			}
 			else {
