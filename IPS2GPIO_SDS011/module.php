@@ -31,11 +31,9 @@
 		$Suffix = " ".chr(181)."g/m³";
 		$this->RegisterProfileFloat("IPS2GPIO.SDS011", "Intensity", "", $Suffix, 0, 1000, 0.1, 1);
 		
-		/*
 		$this->RegisterProfileInteger("IPS2GPIO.SDS011RM", "Information", "", "", 0, 1, 1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.SDS011RM", 0, "kein", "Information", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.SDS011RM", 1, "Geräusch Level zu hoch", "Graph", -1);
-		*/
+		IPS_SetVariableProfileAssociation("IPS2GPIO.SDS011RM", 0, "Aktiv Modus", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.SDS011RM", 1, "Abruf Modus", "Information", -1);
 		
 		// Statusvariablen anlegen
 		$this->RegisterVariableFloat("PM25", "PM 2.5", "IPS2GPIO.SDS011", 10);
@@ -53,6 +51,10 @@
 		$this->RegisterVariableInteger("Firmware", "Firmware", "~UnixTimestampDate", 30);
 		$this->DisableAction("Firmware");
 		IPS_SetHidden($this->GetIDForIdent("Firmware"), true);
+		
+		$this->RegisterVariableInteger("ReportingMode", "Report Modus", "IPS2GPIO.SDS011RM", 40);
+		$this->DisableAction("ReportingMode");
+		IPS_SetHidden($this->GetIDForIdent("ReportingMode"), true);
         }
 	
 	public function GetConfigurationForm() 
@@ -192,7 +194,9 @@
 							SetValueFloat($this->GetIDForIdent("PM10"), ($PM10 / 10));
 						}
 						elseif (($ByteMessage[2] == 0xC5) AND ($ByteMessage[3] == 0x02)) {
-							// DateReportingMode
+							// DataReportingMode
+							$this->SendDebug("GetData", "ReportingMode: ".$ByteMessage[5], 0);
+							SetValueInteger($this->GetIDForIdent("ReportingMode"), $ByteMessage[5]);
 						}
 						elseif (($ByteMessage[2] == 0xC5) AND ($ByteMessage[3] == 0x06)) {
 							// Sleep and Work
