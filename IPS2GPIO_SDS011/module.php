@@ -43,7 +43,7 @@
 		$this->DisableAction("PM10");
 		IPS_SetHidden($this->GetIDForIdent("PM10"), false);
 		
-		$this->RegisterVariableString("Firmware", "Firmware", "", 30);
+		$this->RegisterVariableInteger("Firmware", "Firmware", "~UnixTimestampDate", 30);
 		$this->DisableAction("Firmware");
 		IPS_SetHidden($this->GetIDForIdent("Firmware"), true);
         }
