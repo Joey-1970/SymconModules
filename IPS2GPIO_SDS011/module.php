@@ -31,6 +31,12 @@
 		$Suffix = " ".chr(181)."g/m³";
 		$this->RegisterProfileFloat("IPS2GPIO.SDS011", "Intensity", "", $Suffix, 0, 1000, 0.1, 1);
 		
+		/*
+		$this->RegisterProfileInteger("IPS2GPIO.SDS011RM", "Information", "", "", 0, 1, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.SDS011RM", 0, "kein", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.SDS011RM", 1, "Geräusch Level zu hoch", "Graph", -1);
+		*/
+		
 		// Statusvariablen anlegen
 		$this->RegisterVariableFloat("PM25", "PM 2.5", "IPS2GPIO.SDS011", 10);
 		$this->DisableAction("PM25");
@@ -369,9 +375,7 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("GetFirmware", "Ausfuehrung", 0);
 			$Checksum = (0x07 + 0xFF + 0xFF) & 0xFF;
-			//$Message = pack("C*", 0xAA, 0xB4, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, $Checksum, 0xAB);
-			//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytes_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => $Message)));
-			
+
 			$Message = array(0xAA, 0xB4, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, $Checksum, 0xAB);
 			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytesarray_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => serialize($Message) )));
 
@@ -395,6 +399,23 @@
 	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
 	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
 	        IPS_SetVariableProfileDigits($Name, $Digits);
+	}
+	    
+	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
+	{
+	        if (!IPS_VariableProfileExists($Name))
+	        {
+	            IPS_CreateVariableProfile($Name, 1);
+	        }
+	        else
+	        {
+	            $profile = IPS_GetVariableProfile($Name);
+	            if ($profile['ProfileType'] != 1)
+	                throw new Exception("Variable profile type does not match for profile " . $Name);
+	        }
+	        IPS_SetVariableProfileIcon($Name, $Icon);
+	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);        
 	}
 	    
 	private function Get_GPIO()
