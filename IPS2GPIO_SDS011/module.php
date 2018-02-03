@@ -35,6 +35,10 @@
 		IPS_SetVariableProfileAssociation("IPS2GPIO.SDS011RM", 0, "Aktiv Modus", "Information", -1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.SDS011RM", 1, "Abruf Modus", "Information", -1);
 		
+		$this->RegisterProfileInteger("IPS2GPIO.SDS011SW", "Information", "", "", 0, 1, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.SDS011SW", 0, "Schlaf Modus", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.SDS011SW", 1, "Arbeits Modus", "Information", -1);
+		
 		// Statusvariablen anlegen
 		$this->RegisterVariableFloat("PM25", "PM 2.5", "IPS2GPIO.SDS011", 10);
 		$this->DisableAction("PM25");
@@ -55,6 +59,10 @@
 		$this->RegisterVariableInteger("ReportingMode", "Report Modus", "IPS2GPIO.SDS011RM", 40);
 		$this->DisableAction("ReportingMode");
 		IPS_SetHidden($this->GetIDForIdent("ReportingMode"), true);
+		
+		$this->RegisterVariableInteger("SleepWork", "Status", "IPS2GPIO.SDS011SW", 50);
+		$this->DisableAction("SleepWork");
+		IPS_SetHidden($this->GetIDForIdent("SleepWork"), true);
         }
 	
 	public function GetConfigurationForm() 
@@ -126,8 +134,9 @@
 				$this->SetBuffer("PreviousPin_TxD", $this->ReadPropertyInteger("Pin_TxD"));
 				$Messzyklus = max(3, $this->ReadPropertyInteger("Messzyklus"));
 				$this->SetTimerInterval("Messzyklus", ($Messzyklus * 1000));
-				// ReportingMode auf Anfragegesteuert setzen
+				// ReportingMode auf anfragegesteuert setzen
 				$this->SetReportingMode(false);
+				$this->GetSleepWork();
 				// Firmware ermitteln
 				$this->GetFirmware();
 				// Erste Daten
@@ -200,6 +209,8 @@
 						}
 						elseif (($ByteMessage[2] == 0xC5) AND ($ByteMessage[3] == 0x06)) {
 							// Sleep and Work
+							$this->SendDebug("GetData", "SleepWorkMode: ".$ByteMessage[5], 0);
+							SetValueInteger($this->GetIDForIdent("SleepWork"), $ByteMessage[5]);
 						}
 						elseif (($ByteMessage[2] == 0xC5) AND ($ByteMessage[3] == 0x07)) {
 							// Firmwareversion
