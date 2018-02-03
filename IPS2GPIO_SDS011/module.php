@@ -192,7 +192,9 @@
 						}
 						elseif (($ByteMessage[2] == 0xC5) AND ($ByteMessage[3] == 0x07)) {
 							// Firmwareversion
-							$this->SendDebug("GetData", "Firmware: ".$ByteMessage[6]." - ".$ByteMessage[5]." -".(2000 + intval($ByteMessage[4])), 0);
+							$FirmewareDate = $ByteMessage[6].".".$ByteMessage[5].".".(2000 + intval($ByteMessage[4]));
+							$this->SendDebug("GetData", "Firmware: ".$FirmewareDate, 0);
+							SetValueInteger($this->GetIDForIdent("Firmware"), strtotime($FirmewareDate));
 						}
 						elseif (($ByteMessage[2] == 0xC5) AND ($ByteMessage[3] == 0x08)) {
 							// Working Period
