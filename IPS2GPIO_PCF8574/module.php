@@ -170,7 +170,6 @@
 					$this->Setup();
 					// Erste Messdaten einlesen
 					$this->Read_Status();
-					$this->SetStatus(102);
 				}
 			}
 			else {
