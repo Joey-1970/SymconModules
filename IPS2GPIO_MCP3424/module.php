@@ -132,7 +132,6 @@
 					$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
 					// Erste Messdaten einlesen
 					$this->Measurement();
-					$this->SetStatus(102);
 				}
 			}
 			else {
