@@ -255,7 +255,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("GetOutput", "Ausfuehrung", 0);
-			$tries = 3;
+			$tries = 10;
 			do {
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_AS3935_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Count" => 9 )));
 				If ($Result < 0) {
@@ -382,7 +382,6 @@
 			else {
 				$this->SetStatus(102);
 			}
-			
 		}
 	}
 	
