@@ -174,13 +174,41 @@
 	 	}
  	}
 	// Beginn der Funktionen
+	public function GetData()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("GetData", "Ausfuehrung", 0);
+			IPS_Sleep(50); // Damit alle Daten auch da sind
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "read_bb_serial", "Pin_RxD" => $this->ReadPropertyInteger("Pin_RxD") )));
+			If (!$Result) {
+				$this->SendDebug("GetData", "Lesen des Dateneingangs nicht erfolgreich!", 0);
+				$this->SetStatus(202);
+			}
+			else {
+				$this->SetStatus(102);
+				$ByteMessage = array();
+				$ByteMessage = unpack("C*", $Result);
+				$this->SendDebug("GetData", $Result, 0);
+				//$this->SendDebug("GetData", count($ByteMessage), 0);
+				$this->SendDebug("GetData", serialize($ByteMessage), 0);
+				
+			}
+		}
+	}	
+	    
+	    
 	public function Send(String $Message)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Send", "Ausfuehrung", 0);
 			$Message = chr(2).$Message.chr(3);
+			$MessageArray = array();
+			$MessageArray = unpack("C*", $Message);
 			//$Message = utf8_encode($Message);
-			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytes_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => $Message)));
+			//$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytes_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => $Message)));
+			$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "write_bb_bytesarray_serial", "Baud" => 9600, "Pin_TxD" => $this->ReadPropertyInteger("Pin_TxD"), "Command" => serialize($Message) )));
+			$this->GetData();
+
 		}
 	}
 	
