@@ -542,8 +542,9 @@ class IPS2GPIO_IO extends IPSModule
 					// Pin in den entsprechenden R/W-Mode setzen, ggf. gleichzeitig Pull-Up/Down setzen
 					If ($data->Modus == 0) {
 						// R/W-Mode und Pull Up/Down Widerstände für den Pin setzen
-						//IPS_LogMessage("IPS2GPIO Set Pull Up/Down",$data->Pin." , ".$data->Resistance);
-						//IPS_LogMessage("IPS2GPIO SetMode",$data->Pin." , ".$data->Modus);
+						// PI_PUD_OFF  0
+						// PI_PUD_DOWN 1
+						// PI_PUD_UP   2
 						$this->CommandClientSocket(pack("LLLL", 0, $data->Pin, 0, 0).pack("LLLL", 2, $data->Pin, $data->Resistance, 0), 32);
 					}
 					else {
