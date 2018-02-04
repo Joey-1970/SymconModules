@@ -134,8 +134,6 @@
 				If (($ResultI2C == true) AND ($ResultPin == true)) {
 					$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
 					$this->Setup();
-					// Erste Messdaten einlesen
-					$this->GetCounter();	
 				}
 			}
 			else {
@@ -202,9 +200,7 @@
 				$Interrupt = 0 << 2;
 			}
 			
-			$CounterMode = 2 << 4;
-			$Bitmask = $CounterMode | $Interrupt;
-			$this->SendDebug("Setup", "Wert fuer 0x00: ".$Bitmask, 0);
+			// Zähler zurücksetzen
 			$Bitmask = 0xE0;
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("00"), "Value" => $Bitmask)));
 			If (!$Result) {
@@ -216,7 +212,8 @@
 				$this->SetStatus(102);
 			}
 			
-			$Bitmask = 0x24;
+			$CounterMode = 2 << 4;
+			$Bitmask = $CounterMode | $Interrupt;
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("00"), "Value" => $Bitmask)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Setzen der Config fehlerhaft!", 0);
@@ -249,6 +246,8 @@
 			}
 			$this->SetAlarmValue();
 			$this->SetTimerValue();
+			// Erste Messdaten einlesen
+			$this->GetCounter();	
 		}
 	}    
 	
@@ -270,17 +269,7 @@
 					$MeasurementData = unserialize($Result);
 					$CounterValue = (($MeasurementData[3] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[1]);
 					$this->SendDebug("GetCounter", "Ergebnis: ".$CounterValue, 0);
-					//SetValueInteger($this->GetIDForIdent("CounterValue"), $CounterValue );
-					$Value1a = $MeasurementData[1] & 15;
-					$Value1b = ($MeasurementData[1] & 240) >> 4;
-					
-					$Value2a = $MeasurementData[2] & 15;
-					$Value2b = ($MeasurementData[2] & 240) >> 4;
-					
-					$Value3a = $MeasurementData[3] & 15;
-					$Value3b = ($MeasurementData[3] & 240) >> 4;
-					$String = intval($Value3b.$Value3a.$Value2b.$Value2a.$Value1b.$Value1a);
-					SetValueInteger($this->GetIDForIdent("CounterValue"), hexdec($String) );
+					SetValueInteger($this->GetIDForIdent("CounterValue"), $CounterValue );
 				}
 			}
 			
