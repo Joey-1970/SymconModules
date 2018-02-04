@@ -206,7 +206,6 @@
 			}
 			else {
 				$this->SetStatus(102);
-				$this->GetAlarmValue();
 			}
 			
 			// Alarm Kontrolle an Andresse x08 setzen
