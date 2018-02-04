@@ -197,6 +197,7 @@
 			If (!$Result) {
 				$this->SendDebug("Setup", "Setzen der Config fehlerhaft!", 0);
 				$this->SetStatus(202);
+				$this->SetTimerInterval("Messzyklus", 0);
 				return;
 			}
 			else {
@@ -211,6 +212,7 @@
 			If (!$Result) {
 				$this->SendDebug("Setup", "Setzen des Counterwertes fehlerhaft!", 0);
 				$this->SetStatus(202);
+				$this->SetTimerInterval("Messzyklus", 0);
 				return;
 			}
 			else {
@@ -232,6 +234,7 @@
 			If (!$Result) {
 				$this->SendDebug("Setup", "Setzen der Config fehlerhaft!", 0);
 				$this->SetStatus(202);
+				$this->SetTimerInterval("Messzyklus", 0);
 				return;
 			}
 			else {
@@ -249,6 +252,7 @@
 			If (!$Result) {
 				$this->SendDebug("Setup", "Setzen des Alarmwertes fehlerhaft!", 0);
 				$this->SetStatus(202);
+				$this->SetTimerInterval("Messzyklus", 0);
 				return;
 			}
 			else {
@@ -270,6 +274,7 @@
 			If (!$Result) {
 				$this->SendDebug("Setup", "Setzen der Config fehlerhaft!", 0);
 				$this->SetStatus(202);
+				$this->SetTimerInterval("Messzyklus", 0);
 				return;
 			}
 			else {
@@ -285,25 +290,29 @@
 	public function GetCounter()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("GetCounter", "Ausfuehrung", 0);
-			$CounterValue =  0;
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("01"), "Count" => 3)));
-			If ($Result < 0) {
-				$this->SendDebug("GetCounter", "Fehler bei der Datenermittung", 0);
-				$this->SetStatus(202);
-				return 0;
-			}
-			else {
-				If (is_array(unserialize($Result)) == true) {
-					$this->SetStatus(102);
-					$MeasurementData = array();
-					$MeasurementData = unserialize($Result);
-					$CounterValue = (($MeasurementData[3] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[1]);
-					$this->SendDebug("GetCounter", "Ergebnis: ".$CounterValue, 0);
-					SetValueInteger($this->GetIDForIdent("CounterValue"), $CounterValue );
+			$tries = 5;
+			do {
+				$this->SendDebug("GetCounter", "Ausfuehrung", 0);
+				$CounterValue =  0;
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("01"), "Count" => 3)));
+				If ($Result < 0) {
+					$this->SendDebug("GetCounter", "Fehler bei der Datenermittung", 0);
+					$this->SetStatus(202);
+					return 0;
 				}
-			}
-			
+				else {
+					If (is_array(unserialize($Result)) == true) {
+						$this->SetStatus(102);
+						$MeasurementData = array();
+						$MeasurementData = unserialize($Result);
+						$CounterValue = (($MeasurementData[3] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[1]);
+						$this->SendDebug("GetCounter", "Ergebnis: ".$CounterValue, 0);
+						SetValueInteger($this->GetIDForIdent("CounterValue"), $CounterValue );
+						break;
+					}
+				}
+			$tries--;
+			} while ($tries);  
 		}
 	return $CounterValue;
 	}    
@@ -332,78 +341,7 @@
 			
 		}
 	return $AlarmValue;
-	} 
-	    
-	private function SetAlarmValue()
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("SetAlarmValue", "Ausfuehrung", 0);
-			$AlarmValue =  $this->ReadPropertyInteger("AlarmValue");
-			$AlarmValueArray = array();
-	
-			$AlarmValue = min(pow(2, 31), max(0, $AlarmValue));
-			$AlarmValueArray = unpack("C*", pack("L", $AlarmValue));
-			$AlarmValueArray[5] = 0;
-			$AlarmValueArray[6] = 0;
-			
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write_array", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("09"), 
-											  "Parameter" => serialize($AlarmValueArray) )));	
-			If (!$Result) {
-				$this->SendDebug("SetAlarmValue", "Setzen des Alarmwertes fehlerhaft!", 0);
-				$this->SetStatus(202);
-			}
-			else {
-				$this->SetStatus(102);
-				$this->GetAlarmValue();
-			}
-		}
-	}      
-	    
-	private function GetTimerValue()
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("GetTimerValue", "Ausfuehrung", 0);
-			$TimerValue =  0;
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("07"), "Count" => 1)));
-			If ($Result < 0) {
-				$this->SendDebug("GetTimerValue", "Fehler bei der Datenermittung", 0);
-				$this->SetStatus(202);
-				return 0;
-			}
-			else {
-				If (is_array(unserialize($Result)) == true) {
-					$this->SetStatus(102);
-					$MeasurementData = array();
-					$MeasurementData = unserialize($Result);
-					$TimerValue = $MeasurementData[1];
-					$this->SendDebug("GetTimerValue", "Ergebnis: ".$TimerValue, 0);
-				}
-			}
-			
-		}
-	}            
-	
-	private function SetTimerValue()
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("SetTimerValue", "Ausfuehrung", 0);
-			$TimerValue = 0;
-			$TimerValueArray = array();
-			$TimerValueArray = unpack("C*", pack("S", $TimerValue));
-			
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write_array", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("07"), 
-						"Parameter" => serialize($TimerValueArray) )));	
-			If (!$Result) {
-				$this->SendDebug("SetTimerValue", "Setzen des Timerwertes fehlerhaft!", 0);
-				$this->SetStatus(202);
-			}
-			else {
-				$this->SetStatus(102);
-				$this->GetTimerValue();
-			}
-		}
-	}             
-	    
+	}     
 	    
 	private function Get_I2C_Ports()
 	{
