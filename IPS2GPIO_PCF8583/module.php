@@ -298,7 +298,6 @@
 				If ($Result < 0) {
 					$this->SendDebug("GetCounter", "Fehler bei der Datenermittung", 0);
 					$this->SetStatus(202);
-					return 0;
 				}
 				else {
 					If (is_array(unserialize($Result)) == true) {
