@@ -206,7 +206,7 @@
 			// Zähler zurücksetzen
 			$CounterValueArray = array();
 			$CounterValueArray = array(0, 0, 0);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write_array", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("09"), 
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write_array", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("01"), 
 											  "Parameter" => serialize($CounterValueArray) )));	
 			If (!$Result) {
 				$this->SendDebug("Setup", "Setzen des Counterwertes fehlerhaft!", 0);
@@ -238,6 +238,23 @@
 				$this->SetStatus(102);
 			}
 			
+			$AlarmValue =  $this->ReadPropertyInteger("AlarmValue");
+			$AlarmValueArray = array();
+	
+			$AlarmValue = min(pow(2, 23), max(0, $AlarmValue));
+			$AlarmValueArray = unpack("C*", pack("L", $AlarmValue));
+			unset ($AlarmValueArray[3]);
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write_array", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("09"), 
+											  "Parameter" => serialize($AlarmValueArray) )));	
+			If (!$Result) {
+				$this->SendDebug("Setup, "Setzen des Alarmwertes fehlerhaft!", 0);
+				$this->SetStatus(202);
+				return;
+			}
+			else {
+				$this->SetStatus(102);
+			}
+			
 			// Counter Einstellungen beenden
 			// Kontroll und Status Register an Adresse x00 setzen
 			If ($this->ReadPropertyInteger("Pin") >= 0) {
@@ -259,9 +276,7 @@
 				$this->SetStatus(102);
 			}
 			
-			
-			//$this->SetAlarmValue();
-			//$this->SetTimerValue();
+			$this->GetAlarmValue();sw
 			// Erste Messdaten einlesen
 			$this->GetCounter();	
 		}
@@ -325,12 +340,7 @@
 			$this->SendDebug("SetAlarmValue", "Ausfuehrung", 0);
 			$AlarmValue =  $this->ReadPropertyInteger("AlarmValue");
 			$AlarmValueArray = array();
-			/*
-			$AlarmValue = min(pow(2, 47), max(0, $AlarmValue));
-			$AlarmValueArray = unpack("C*", pack("Q", $AlarmValue));
-			unset($AlarmValueArray[7]);
-			unset($AlarmValueArray[8]);
-			*/
+	
 			$AlarmValue = min(pow(2, 31), max(0, $AlarmValue));
 			$AlarmValueArray = unpack("C*", pack("L", $AlarmValue));
 			$AlarmValueArray[5] = 0;
