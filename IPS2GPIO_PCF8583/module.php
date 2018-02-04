@@ -247,7 +247,7 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write_array", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("09"), 
 											  "Parameter" => serialize($AlarmValueArray) )));	
 			If (!$Result) {
-				$this->SendDebug("Setup, "Setzen des Alarmwertes fehlerhaft!", 0);
+				$this->SendDebug("Setup", "Setzen des Alarmwertes fehlerhaft!", 0);
 				$this->SetStatus(202);
 				return;
 			}
@@ -276,7 +276,7 @@
 				$this->SetStatus(102);
 			}
 			
-			$this->GetAlarmValue();sw
+			$this->GetAlarmValue();
 			// Erste Messdaten einlesen
 			$this->GetCounter();	
 		}
