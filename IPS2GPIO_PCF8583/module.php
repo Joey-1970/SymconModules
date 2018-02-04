@@ -230,6 +230,7 @@
 				$Interrupt = 0 << 7;
 			}
 			$Bitmask = $Units | $Interrupt;
+			$this->SendDebug("Setup", "Alarmregister: ".$Bitmask, 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("08"), "Value" => $Bitmask)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Setzen der Config fehlerhaft!", 0);
@@ -247,6 +248,7 @@
 			$AlarmValue = min(pow(2, 23), max(0, $AlarmValue));
 			$AlarmValueArray = unpack("C*", pack("L", $AlarmValue));
 			unset ($AlarmValueArray[3]);
+			$this->SendDebug("Setup", "Alarmwert: ".serialize($AlarmValueArray), 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write_array", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("09"), 
 											  "Parameter" => serialize($AlarmValueArray) )));	
 			If (!$Result) {
