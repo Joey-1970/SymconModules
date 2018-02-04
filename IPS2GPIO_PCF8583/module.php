@@ -191,16 +191,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Setup", "Ausfuehrung", 0);
-			// Kontroll und Status Register an Adresse x00 setzen
-			If ($this->ReadPropertyInteger("Pin") >= 0) {
-				// Interrupt setzen
-				$Interrupt = 1 << 2;
-			}
-			else {
-				$Interrupt = 0 << 2;
-			}
-			
-			// Zähler zurücksetzen
+			// PCF8583 zum Schreiben vorbereiten
 			$Bitmask = 0xE0;
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("00"), "Value" => $Bitmask)));
 			If (!$Result) {
@@ -212,6 +203,50 @@
 				$this->SetStatus(102);
 			}
 			
+			// Zähler zurücksetzen
+			$CounterValueArray = array();
+			$CounterValueArray = array(0, 0, 0);
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write_array", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("09"), 
+											  "Parameter" => serialize($CounterValueArray) )));	
+			If (!$Result) {
+				$this->SendDebug("Setup", "Setzen des Counterwertes fehlerhaft!", 0);
+				$this->SetStatus(202);
+				return;
+			}
+			else {
+				$this->SetStatus(102);
+				$this->GetAlarmValue();
+			}
+			
+			// Alarm Kontrolle an Andresse x08 setzen
+			$Units = $this->ReadPropertyInteger("PulseScalar");
+			If ($this->ReadPropertyInteger("Pin") >= 0) {
+				// Interrupt setzen
+				$Interrupt = 1 << 7;
+			}
+			else {
+				$Interrupt = 0 << 7;
+			}
+			$Bitmask = $Units | $Interrupt;
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("08"), "Value" => $Bitmask)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "Setzen der Config fehlerhaft!", 0);
+				$this->SetStatus(202);
+				return;
+			}
+			else {
+				$this->SetStatus(102);
+			}
+			
+			// Counter Einstellungen beenden
+			// Kontroll und Status Register an Adresse x00 setzen
+			If ($this->ReadPropertyInteger("Pin") >= 0) {
+				// Interrupt setzen
+				$Interrupt = 1 << 2;
+			}
+			else {
+				$Interrupt = 0 << 2;
+			}
 			$CounterMode = 2 << 4;
 			$Bitmask = $CounterMode | $Interrupt;
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("00"), "Value" => $Bitmask)));
@@ -224,28 +259,9 @@
 				$this->SetStatus(102);
 			}
 			
-			// Alarm Kontrolle an Andresse x08 setzen
-			$Units = $this->ReadPropertyInteger("PulseScalar");
-			If ($this->ReadPropertyInteger("Pin") >= 0) {
-				// Interrupt setzen
-				$Interrupt = 1 << 7;
-			}
-			else {
-				$Interrupt = 0 << 7;
-			}
 			
-			$Bitmask = $Units | $Interrupt;
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("08"), "Value" => $Bitmask)));
-			If (!$Result) {
-				$this->SendDebug("Setup", "Setzen der Config fehlerhaft!", 0);
-				$this->SetStatus(202);
-				return;
-			}
-			else {
-				$this->SetStatus(102);
-			}
-			$this->SetAlarmValue();
-			$this->SetTimerValue();
+			//$this->SetAlarmValue();
+			//$this->SetTimerValue();
 			// Erste Messdaten einlesen
 			$this->GetCounter();	
 		}
