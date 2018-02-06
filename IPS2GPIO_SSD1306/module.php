@@ -121,7 +121,6 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Setup", "Ausfuehrung", 0);
 			
-			}
 		}
 	}
 
