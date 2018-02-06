@@ -21,6 +21,7 @@
  	    	$this->RegisterPropertyInteger("DeviceAddress", 80);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
 		$this->RegisterPropertyInteger("AlarmValue", 0);
+		$this->RegisterPropertyInteger("CounterInterrupt", 0);
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->SetBuffer("PreviousPin", -1);
 		$this->RegisterPropertyInteger("Messzyklus", 60);
@@ -80,6 +81,16 @@
 		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "Wert bei dem ein Interrupt ausgelöst werden soll");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "AlarmValue",  "caption" => "Alarm Wert");
+		
+		$arrayElements[] = array("type" => "Label", "label" => "Interrupt-Auslösung nach Zählerwert (optional)"); 
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "Kein (Default)", "value" => 0); // Default
+		$arrayOptions[] = array("label" => "Jeder Impuls", "value" => 1);
+		$arrayOptions[] = array("label" => "Jeder 100", "value" => 2);
+		$arrayOptions[] = array("label" => "Jeder 10.000", "value" => 3);
+		$arrayOptions[] = array("label" => "Jeder 1.000.000", "value" => 4);
+		$arrayElements[] = array("type" => "Select", "name" => "CounterInterrupt", "caption" => "Impulse", "options" => $arrayOptions );
+		
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus) (optional)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
@@ -219,8 +230,10 @@
 				$Bitmask = 0x90;
 			}
 			else {
-				$Interrupt = 0x00;
+				$Bitmask = 0x00;
 			}
+			$CounterInterrupt = $this->ReadPropertyInteger("CounterInterrupt");
+			$Bitmask = $Bitmask | $CounterInterrupt;
 			$this->SendDebug("Setup", "Alarmregister: ".$Bitmask, 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("08"), "Value" => $Bitmask)));
 			If (!$Result) {
