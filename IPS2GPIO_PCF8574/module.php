@@ -254,6 +254,7 @@
 				for ($i = 0; $i <= 7; $i++) {
 					SetValueBoolean($this->GetIDForIdent("P".$i), substr($Result, 7-$i, 1));
 				}
+				$this->SetBuffer("Output", $Result);
 			}
 		}
 	}
@@ -282,9 +283,10 @@
 			$Pin = min(7, max(0, $Pin));
 			$Value = boolval($Value);
 			// Aktuellen Status abfragen
-			$this->Read_Status();
+			//$this->Read_Status();
 			// Bitmaske erstellen
-			$Bitmask = GetValueInteger($this->GetIDForIdent("Value"));
+			//$Bitmask = GetValueInteger($this->GetIDForIdent("Value"));
+			$Bitmask = intval($this->GetBuffer("Output"));
 			If ($Value == true) {
 				$Bitmask = $this->setBit($Bitmask, $Pin);
 			}
