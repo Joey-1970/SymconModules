@@ -124,7 +124,70 @@
 			}
 		}
 	}
-	
+
+	public function SetDisplayOn()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("SetDisplayOn", "Ausfuehrung", 0);
+			$ConfigArray = array();
+			$ConfigArray[0] = 0xAF;
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_SSD1306_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("00"), 
+										  "Parameter" => serialize($ConfigArray) )));
+			}
+		}
+	}
+
+	public function SetDisplayOff()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("SetDisplayOff", "Ausfuehrung", 0);
+			$ConfigArray = array();
+			$ConfigArray[0] = 0xAE;
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_SSD1306_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("00"), 
+										  "Parameter" => serialize($ConfigArray) )));
+			}
+		}
+	}
+
+	public function SetNormalDisplay()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("SetNormalDisplay", "Ausfuehrung", 0);
+			$ConfigArray = array();
+			$ConfigArray[0] = 0xA6;
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_SSD1306_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("00"), 
+										  "Parameter" => serialize($ConfigArray) )));
+			}
+		}
+	}
+
+	public function SetInverseDisplay()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("SetInverseDisplay", "Ausfuehrung", 0);
+			$ConfigArray = array();
+			$ConfigArray[0] = 0xA7;
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_SSD1306_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("00"), 
+										  "Parameter" => serialize($ConfigArray) )));
+			}
+		}
+	}
+
+	public function SetContrastControl(Int $Contrast)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("SetContrastControl", "Ausfuehrung", 0);
+			$Contrast = min(255, max(0, $Contrast));
+			$ConfigArray = array();
+			$ConfigArray[0] = 0x81;
+			$ConfigArray[1] = $Contrast;
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_SSD1306_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("00"), 
+										  "Parameter" => serialize($ConfigArray) )));
+			}
+		}
+	}
+
+
 	private function Get_I2C_Ports()
 	{
 		If ($this->HasActiveParent() == true) {
