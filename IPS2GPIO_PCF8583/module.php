@@ -236,7 +236,12 @@
 				$Bitmask = 0x00;
 			}
 			$CounterInterrupt = $this->ReadPropertyInteger("CounterInterrupt");
-			$Bitmask = $Bitmask | $CounterInterrupt;
+			If ($CounterInterrupt == 0) {
+				$Bitmask = $Bitmask | $CounterInterrupt;
+			}
+			else {
+				$Bitmask = $Bitmask | $CounterInterrupt | (1 << 6);
+			}
 			$this->SendDebug("Setup", "Alarmregister: ".$Bitmask, 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("08"), "Value" => $Bitmask)));
 			If (!$Result) {
