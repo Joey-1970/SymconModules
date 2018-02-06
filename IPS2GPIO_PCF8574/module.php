@@ -251,11 +251,11 @@
 				$this->SetStatus(102);
 				// Daten der Messung
 				SetValueInteger($this->GetIDForIdent("Value"), $Result);
+				$this->SetBuffer("Output", $Result);
 				$Result  = str_pad(decbin($Result), 8, '0', STR_PAD_LEFT );
 				for ($i = 0; $i <= 7; $i++) {
 					SetValueBoolean($this->GetIDForIdent("P".$i), substr($Result, 7-$i, 1));
 				}
-				$this->SetBuffer("Output", $Result);
 			}
 		}
 	}
