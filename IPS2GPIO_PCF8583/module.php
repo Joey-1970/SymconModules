@@ -273,6 +273,22 @@
 				$this->SetStatus(102);
 			}
 			
+			$TimerValue =  1;
+			$TimerValueArray = array();
+			$TimerValueArray[0] = $TimerValue;
+			$this->SendDebug("Setup", "Timerwert: ".$TimerValue, 0);
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write_array", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 0x0F, 
+											  "Parameter" => serialize($TimerValueArray) )));	
+			If (!$Result) {
+				$this->SendDebug("Setup", "Setzen des Timerwertes fehlerhaft!", 0);
+				$this->SetStatus(202);
+				$this->SetTimerInterval("Messzyklus", 0);
+				return;
+			}
+			else {
+				$this->SetStatus(102);
+			}
+			
 			// Counter Einstellungen beenden
 			// Kontroll und Status Register an Adresse x00 setzen
 			If ($this->ReadPropertyInteger("Pin") >= 0) {
