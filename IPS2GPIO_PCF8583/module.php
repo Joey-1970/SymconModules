@@ -79,9 +79,9 @@
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "label" => "Wert bei dem ein Interrupt ausgelöst werden soll");
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Fix-Wert bei dem ein Interrupt ausgelöst werden soll (optional)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "AlarmValue",  "caption" => "Alarm Wert");
-		
 		$arrayElements[] = array("type" => "Label", "label" => "Interrupt-Auslösung nach Zählerwert (optional)"); 
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "Kein (Default)", "value" => 0); // Default
@@ -90,7 +90,6 @@
 		$arrayOptions[] = array("label" => "Jeder 10.000", "value" => 3);
 		$arrayOptions[] = array("label" => "Jeder 1.000.000", "value" => 4);
 		$arrayElements[] = array("type" => "Select", "name" => "CounterInterrupt", "caption" => "Impulse", "options" => $arrayOptions );
-		
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus) (optional)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
@@ -160,7 +159,7 @@
 					If (($data->Value == 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 						$this->SendDebug("Interrupt", "Wert: ".(int)$data->Value, 0);
 						SetValueInteger($this->GetIDForIdent("LastInterrupt"), time() );
-						$this->GetCounter();
+						$this->GetCounterByInterrupt();
 					}
 					elseIf (($data->Value == 1) AND ($this->ReadPropertyBoolean("Open") == true)) {
 						$this->SendDebug("Interrupt", "Wert: ".(int)$data->Value, 0);
@@ -252,7 +251,7 @@
 			$AlarmValue = min(pow(2, 23), max(0, $AlarmValue));
 			$AlarmValueArray = unpack("C*", pack("L", $AlarmValue));
 			unset ($AlarmValueArray[4]);
-			$this->SendDebug("Setup", "Alarmwert: ".serialize($AlarmValueArray), 0);
+			$this->SendDebug("Setup", "Alarmwert: ".$AlarmValue, 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write_array", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("09"), 
 											  "Parameter" => serialize($AlarmValueArray) )));	
 			If (!$Result) {
@@ -322,6 +321,42 @@
 	return $CounterValue;
 	}    
 	
+	private function GetCounterByInterrupt()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$tries = 5;
+			do {
+				$this->SendDebug("GetCounterByInterrupt", "Ausfuehrung", 0);
+				$CounterValue =  0;
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("01"), "Count" => 3)));
+				If ($Result < 0) {
+					$this->SendDebug("GetCounterByInterrupt", "Fehler bei der Datenermittung", 0);
+					$this->SetStatus(202);
+				}
+				else {
+					If (is_array(unserialize($Result)) == true) {
+						$this->SetStatus(102);
+						$MeasurementData = array();
+						$MeasurementData = unserialize($Result);
+						$CounterValue = (($MeasurementData[3] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[1]);
+						SetValueInteger($this->GetIDForIdent("CounterValue"), $CounterValue );
+						// Interruptauslöser bestimmen
+						$AlarmValue =  $this->ReadPropertyInteger("AlarmValue");
+						
+						If ($CounterValue == $AlarmValue) {
+							$this->SendDebug("GetCounterByInterrupt", "Interruptausloeser - Alarmwert erreicht: ".$CounterValue, 0);
+						}
+						else {
+							$this->SendDebug("GetCounterByInterrupt", "Interruptausloeser - Zaehlwert erreicht: ".$CounterValue, 0);
+						}
+						break;
+					}
+				}
+			$tries--;
+			} while ($tries);  
+		}
+	}        
+	    
 	private function GetAlarmValue()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
