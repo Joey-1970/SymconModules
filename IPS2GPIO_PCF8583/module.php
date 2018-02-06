@@ -39,7 +39,7 @@
 		
 		$this->RegisterVariableBoolean("Interrupt", "Interrupt", "", 30);
 		$this->DisableAction("Interrupt");
-		IPS_SetHidden($this->GetIDForIdent("Interrupt"), true);
+		IPS_SetHidden($this->GetIDForIdent("Interrupt"), false);
         }
  	
 	public function GetConfigurationForm() 
