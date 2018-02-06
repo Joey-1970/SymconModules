@@ -36,6 +36,10 @@
 		$this->RegisterVariableInteger("CounterValue", "Zählwert", "", 20);
 		$this->DisableAction("CounterValue");
 		IPS_SetHidden($this->GetIDForIdent("CounterValue"), false);
+		
+		$this->RegisterVariableBoolean("Interrupt", "Interrupt", "", 30);
+		$this->DisableAction("Interrupt");
+		IPS_SetHidden($this->GetIDForIdent("Interrupt"), true);
         }
  	
 	public function GetConfigurationForm() 
