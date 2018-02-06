@@ -63,7 +63,7 @@
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "Device Bus", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
-		$arrayElements[] = array("type" => "Label", "label" => "MLaufzeit: Maximale Laufzeit in Sekunden (0 = aus)");
+		$arrayElements[] = array("type" => "Label", "label" => "Laufzeit: Maximale Laufzeit in Sekunden (0 = aus)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "RunningTime", "caption" => "Sekunden");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 		
 		$arrayElements[] = array("type" => "Label", "label" => "Hinweise:");
