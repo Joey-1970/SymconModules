@@ -941,7 +941,7 @@ class IPS2GPIO_IO extends IPSModule
 							   pack("L*", 62, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register + 11, 4, $data->Value_12), 192);
 			}
 			break;
-		case "i2c_MCP23017_Write": 
+		case "i2c_MCP23017_write": 
 			// I2CWI h r bvs - smb Write I2C Block Data
 			If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
 				$this->SetI2CBus(intval($data->DeviceIdent));
@@ -969,6 +969,16 @@ class IPS2GPIO_IO extends IPSModule
 		   		$Result = $this->CommandClientSocket(pack("L*", 61, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 0), 16);
 		   	}
 		   	break;
+		case "i2c_SSD1306_write": 
+			// I2CWI h r bvs - smb Write I2C Block Data
+			If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
+				$this->SetI2CBus(intval($data->DeviceIdent));
+				$ParameterArray = array();
+				$ParameterArray = unserialize($data->Parameter);
+				$Result = $this->CommandClientSocket(pack("LLLLC*", 68, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, count($ParameterArray), 
+									  ...$ParameterArray), 16);
+			}
+			break;
 
 		   
 		   // Serielle Kommunikation
