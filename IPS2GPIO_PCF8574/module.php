@@ -240,7 +240,6 @@
 	public function Read_Status()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			//$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"))));
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x00)));
 			If ($Result < 0) {
 				$this->SendDebug("Read_Status", "Fehler beim Einlesen der Ausgänge!", 0);
@@ -293,9 +292,7 @@
 				$Bitmask = $this->unsetBit($Bitmask, $Pin);
 			}
 			$Bitmask = min(255, max(0, $Bitmask));
-			//$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $Bitmask)));
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x00, "Value" => $Bitmask)));
-
 			If (!$Result) {
 				$this->SendDebug("SetPinOutput", "Setzen des Ausgangs fehlerhaft!", 0);
 				$this->SetStatus(202);
@@ -313,7 +310,6 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Setzt alle Ausgänge
 			$Value = min(255, max(0, $Value));
-			//$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Value" => $Value)));
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x00, "Value" => $Bitmask)));
 
 			If (!$Result) {
