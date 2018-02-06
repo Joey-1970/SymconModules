@@ -156,7 +156,10 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Read_Status", "Ausfuehrung", 0);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"))));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x00)));
+
+			
+			//$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"))));
 			If ($Result < 0) {
 				$this->SendDebug("Read_Status", "Fehler beim Einlesen der Ausgänge!", 0);
 				return -1;
