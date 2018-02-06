@@ -132,7 +132,10 @@
 			$ConfigArray[0] = 0xAF;
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_SSD1306_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("00"), 
 										  "Parameter" => serialize($ConfigArray) )));
-
+			If (!$Result) {
+				$this->SendDebug("SetDisplayOn", "Fehler beim Setzen der Daten", 0);
+			}
+				
 		}
 	}
 
@@ -144,7 +147,9 @@
 			$ConfigArray[0] = 0xAE;
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_SSD1306_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("00"), 
 										  "Parameter" => serialize($ConfigArray) )));
-
+			If (!$Result) {
+				$this->SendDebug("SetDisplayOff", "Fehler beim Setzen der Daten", 0);
+			}
 		}
 	}
 
@@ -156,7 +161,9 @@
 			$ConfigArray[0] = 0xA6;
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_SSD1306_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("00"), 
 										  "Parameter" => serialize($ConfigArray) )));
-
+			If (!$Result) {
+				$this->SendDebug("SetNormalDisplay", "Fehler beim Setzen der Daten", 0);
+			}
 		}
 	}
 
@@ -168,7 +175,9 @@
 			$ConfigArray[0] = 0xA7;
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_SSD1306_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("00"), 
 										  "Parameter" => serialize($ConfigArray) )));
-
+			If (!$Result) {
+				$this->SendDebug("SetInverseDisplay", "Fehler beim Setzen der Daten", 0);
+			}
 		}
 	}
 
@@ -182,7 +191,9 @@
 			$ConfigArray[1] = $Contrast;
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_SSD1306_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("00"), 
 										  "Parameter" => serialize($ConfigArray) )));
-			
+			If (!$Result) {
+				$this->SendDebug("SetContrastControl", "Fehler beim Setzen der Daten", 0);
+			}
 		}
 	}
 
