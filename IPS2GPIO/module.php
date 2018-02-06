@@ -728,7 +728,9 @@ class IPS2GPIO_IO extends IPSModule
 		case "i2c_PCF8574_read":
 		   	If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
 				$this->SetI2CBus(intval($data->DeviceIdent));
-				$Result = $this->CommandClientSocket(pack("L*", 61, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 0), 16);
+				$Result = $this->CommandClientSocket(pack("L*", 59, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), 0, 0), 16);
+
+				//$Result = $this->CommandClientSocket(pack("L*", 61, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 0), 16);
 		   		//$Result = $this->CommandClientSocket(pack("L*", 67, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 4, $data->Count), 16 + ($data->Count));
 		   	}
 		   	break;	 
@@ -2069,11 +2071,13 @@ class IPS2GPIO_IO extends IPSModule
            			If ($response[4] >= 0) {
            				//IPS_LogMessage("IPS2GPIO I2C Read Byte Handle","Handle: ".$response[2]." Value: ".$response[4]);
 		            		If ($this->GetBuffer("I2CSearch") == 0) {
-						$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "DeviceIdent" => $this->GetI2C_HandleDevice($response[2]), "Value" => $response[4])));
+						$Result = true;
+						//$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_i2c_data", "DeviceIdent" => $this->GetI2C_HandleDevice($response[2]), "Value" => $response[4])));
 					}
            			}
            			else {
            				If ($this->GetBuffer("I2CSearch") == 0) {
+						$Result = false;
 						IPS_LogMessage("IPS2GPIO I2C Read Byte Handle","Handle: ".$response[2]." Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
 					}
            			}
