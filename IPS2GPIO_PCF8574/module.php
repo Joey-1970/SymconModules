@@ -311,7 +311,7 @@
 			}
 			else {
 				$this->SetStatus(102);
-				SetValueBoolean($this->GetIDForIdent("P".$i), $Value);
+				SetValueBoolean($this->GetIDForIdent("P".$Pin), $Value);
 				$this->Read_Status();
 			}
 		}
