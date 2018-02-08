@@ -202,10 +202,8 @@
 			   	break;  
 	 	}
  	}
-	// Beginn der Funktionen
-	// Führt eine Messung aus
 	
-
+	// Beginn der Funktionen
 	private function Setup()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
