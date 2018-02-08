@@ -362,6 +362,7 @@
 						$MeasurementTime = time();
 						$CounterOldTime = intval($this->GetBuffer("CounterOldTime"));
 						$TimeDifference = $MeasurementTime - $CounterOldTime;
+						$PulseMinute = 0;
 						If ($TimeDifference > 0) {
 							$PulseMinute = 60 / $TimeDifference * $CounterDifference;
 						}
@@ -407,6 +408,7 @@
 						$MeasurementTime = time();
 						$CounterOldTime = intval($this->GetBuffer("CounterOldTime"));
 						$TimeDifference = $MeasurementTime - $CounterOldTime;
+						$PulseMinute = 0;
 						If ($TimeDifference > 0) {
 							$PulseMinute = 60 / $TimeDifference * $CounterDifference;
 						}
