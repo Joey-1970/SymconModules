@@ -28,6 +28,9 @@
 		$this->RegisterTimer("Messzyklus", 0, 'I2GPCF8583_GetCounter($_IPS["TARGET"]);');
 		$this->RegisterPropertyBoolean("Logging", false);
 		
+		// Profile anlegen
+		$this->RegisterProfileFloat("IPS2GPIO.PCF8583", "Intensity", "", " Imp./min", 0, 1000, 0.1, 1);
+		
 		//Status-Variablen anlegen
 		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 10);
 		$this->DisableAction("LastInterrupt");
@@ -44,6 +47,10 @@
 		$this->RegisterVariableInteger("CounterDifference", "Zählwert-Differenz", "", 40);
 		$this->DisableAction("CounterDifference");
 		IPS_SetHidden($this->GetIDForIdent("CounterDifference"), false);
+		
+		$this->RegisterVariableInteger("PulseMinute", "Impulse/Minute", "IPS2GPIO.PCF8583", 50);
+		$this->DisableAction("PulseMinute");
+		IPS_SetHidden($this->GetIDForIdent("PulseMinute"), false);
         }
  	
 	public function GetConfigurationForm() 
@@ -345,16 +352,21 @@
 						$CounterValue = (($MeasurementData[3] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[1]);
 						$this->SendDebug("GetCounter", "Ergebnis: ".$CounterValue, 0);
 						SetValueInteger($this->GetIDForIdent("CounterValue"), $CounterValue);
+						
+						// Zählerdifferenz berechnen
 						$CounterOldValue = intval($this->GetBuffer("CounterOldValue"));
-						SetValueInteger($this->GetIDForIdent("CounterDifference"), $CounterValue - $CounterOldValue);
+						$CounterDifference = $CounterValue - $CounterOldValue;
+						SetValueInteger($this->GetIDForIdent("CounterDifference"), $CounterDifference);
 						$this->SetBuffer("CounterOldValue", $CounterValue);
 						
+						// Zeitdifferenz berechnen und Impulse/Minute ausgeben
 						$MeasurementTime = time();
 						$CounterOldTime = intval($this->GetBuffer("CounterOldTime"));
 						$TimeDifference = $MeasurementTime - $CounterOldTime;
 						If ($TimeDifference > 0) {
-							
+							$PulseMinute = 60 / $TimeDifference * $CounterDifference;
 						}
+						SetValueInteger($this->GetIDForIdent("PulseMinute"), $PulseMinute);
 						$this->SetBuffer("CounterOldTime", $MeasurementTime);
 						break;
 					}
@@ -384,9 +396,24 @@
 						$MeasurementData = unserialize($Result);
 						$CounterValue = (($MeasurementData[3] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[1]);
 						SetValueInteger($this->GetIDForIdent("CounterValue"), $CounterValue );
-						$CounterOldValue = intval($this->SetBuffer("CounterOldValue", 0));
-						SetValueInteger($this->GetIDForIdent("CounterDifference"), $CounterValue - $CounterOldValue);
 						$this->SetBuffer("CounterOldValue", $CounterValue);
+						
+						// Zählerdifferenz berechnen
+						$CounterOldValue = intval($this->GetBuffer("CounterOldValue"));
+						$CounterDifference = $CounterValue - $CounterOldValue;
+						SetValueInteger($this->GetIDForIdent("CounterDifference"), $CounterDifference);
+						$this->SetBuffer("CounterOldValue", $CounterValue);
+						
+						// Zeitdifferenz berechnen und Impulse/Minute ausgeben
+						$MeasurementTime = time();
+						$CounterOldTime = intval($this->GetBuffer("CounterOldTime"));
+						$TimeDifference = $MeasurementTime - $CounterOldTime;
+						If ($TimeDifference > 0) {
+							$PulseMinute = 60 / $TimeDifference * $CounterDifference;
+						}
+						SetValueInteger($this->GetIDForIdent("PulseMinute"), $PulseMinute);
+						$this->SetBuffer("CounterOldTime", $MeasurementTime);
+						break;
 						
 						// Interruptauslöser bestimmen
 						$AlarmValue =  $this->ReadPropertyInteger("AlarmValue");
