@@ -230,6 +230,7 @@
 			else {
 				$this->SetStatus(102);
 				$this->SetBuffer("CounterOldValue", 0);
+				SetValueInteger($this->GetIDForIdent("CounterDifference"), 0);
 			}
 			
 			// Alarm Kontrolle an Andresse x08 setzen
