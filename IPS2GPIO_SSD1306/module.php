@@ -123,13 +123,13 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Setup", "Ausfuehrung", 0);
 			$InitArray = array();
-			$InitArray = (0xAE, 0xD5, 0x80, 0x3F, 0xD3, 0x00, 0x40 | 0x00, 0x8D, 0x10, 0x20, 0x00, 0xA0 | 0x01, 0xC8, 0xDA, 0x12, 0x81, 0x9F,
+			$InitArray = array(0xAE, 0xD5, 0x80, 0x3F, 0xD3, 0x00, 0x40 | 0x00, 0x8D, 0x10, 0x20, 0x00, 0xA0 | 0x01, 0xC8, 0xDA, 0x12, 0x81, 0x9F,
 				      0xD9, 0x22, 0xDB, 0x40, 0xA4, 0xA6);
 			
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_SSD1306_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("00"), 
 										  "Parameter" => serialize($InitArray) )));
 			If (!$Result) {
-				$this->SendDebug("SetDisplayOn", "Fehler beim Setzen der Daten", 0);
+				$this->SendDebug("Setup", "Fehler beim Setzen der Daten", 0);
 			}
 			/*
 			self.command(SSD1306_DISPLAYOFF)                    # 0xAE
