@@ -365,7 +365,7 @@
 						If ($TimeDifference > 0) {
 							$PulseMinute = 60 / $TimeDifference * $CounterDifference;
 						}
-						SetValueInteger($this->GetIDForIdent("PulseMinute"), $PulseMinute);
+						SetValueFloat($this->GetIDForIdent("PulseMinute"), $PulseMinute);
 						$this->SetBuffer("CounterOldTime", $MeasurementTime);
 						break;
 					}
@@ -410,9 +410,8 @@
 						If ($TimeDifference > 0) {
 							$PulseMinute = 60 / $TimeDifference * $CounterDifference;
 						}
-						SetValueInteger($this->GetIDForIdent("PulseMinute"), $PulseMinute);
+						SetValueFloat($this->GetIDForIdent("PulseMinute"), $PulseMinute);
 						$this->SetBuffer("CounterOldTime", $MeasurementTime);
-						break;
 						
 						// Interruptauslöser bestimmen
 						$AlarmValue =  $this->ReadPropertyInteger("AlarmValue");
