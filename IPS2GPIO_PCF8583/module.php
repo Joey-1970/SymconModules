@@ -40,6 +40,10 @@
 		$this->RegisterVariableBoolean("Interrupt", "Interrupt", "", 30);
 		$this->DisableAction("Interrupt");
 		IPS_SetHidden($this->GetIDForIdent("Interrupt"), false);
+		
+		$this->RegisterVariableInteger("CounterDifference", "Zählwert-Differenz", "", 40);
+		$this->DisableAction("CounterDifference");
+		IPS_SetHidden($this->GetIDForIdent("CounterDifference"), false);
         }
  	
 	public function GetConfigurationForm() 
@@ -225,6 +229,7 @@
 			}
 			else {
 				$this->SetStatus(102);
+				$this->SetBuffer("CounterOldValue", 0);
 			}
 			
 			// Alarm Kontrolle an Andresse x08 setzen
@@ -336,7 +341,10 @@
 						$MeasurementData = unserialize($Result);
 						$CounterValue = (($MeasurementData[3] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[1]);
 						$this->SendDebug("GetCounter", "Ergebnis: ".$CounterValue, 0);
-						SetValueInteger($this->GetIDForIdent("CounterValue"), $CounterValue );
+						SetValueInteger($this->GetIDForIdent("CounterValue"), $CounterValue);
+						$CounterOldValue = intval($this->SetBuffer("CounterOldValue", 0));
+						SetValueInteger($this->GetIDForIdent("CounterDifference"), $CounterValue - $CounterOldValue);
+						$this->SetBuffer("CounterOldValue", $CounterValue);
 						break;
 					}
 				}
@@ -365,6 +373,10 @@
 						$MeasurementData = unserialize($Result);
 						$CounterValue = (($MeasurementData[3] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[1]);
 						SetValueInteger($this->GetIDForIdent("CounterValue"), $CounterValue );
+						$CounterOldValue = intval($this->SetBuffer("CounterOldValue", 0));
+						SetValueInteger($this->GetIDForIdent("CounterDifference"), $CounterValue - $CounterOldValue);
+						$this->SetBuffer("CounterOldValue", $CounterValue);
+						
 						// Interruptauslöser bestimmen
 						$AlarmValue =  $this->ReadPropertyInteger("AlarmValue");
 						
