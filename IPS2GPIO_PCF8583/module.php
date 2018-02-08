@@ -27,10 +27,10 @@
 		$this->RegisterPropertyInteger("Messzyklus", 60);
 		$this->RegisterTimer("Messzyklus", 0, 'I2GPCF8583_GetCounter($_IPS["TARGET"]);');
 		$this->RegisterPropertyBoolean("Logging", false);
-		
+		/*
 		// Profile anlegen
 		$this->RegisterProfileFloat("IPS2GPIO.PCF8583", "Intensity", "", " Imp./min", 0, 1000, 0.1, 1);
-		
+		*/
 		//Status-Variablen anlegen
 		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 10);
 		$this->DisableAction("LastInterrupt");
@@ -43,7 +43,7 @@
 		$this->RegisterVariableBoolean("Interrupt", "Interrupt", "", 30);
 		$this->DisableAction("Interrupt");
 		IPS_SetHidden($this->GetIDForIdent("Interrupt"), false);
-		
+		/*
 		$this->RegisterVariableInteger("CounterDifference", "Zählwert-Differenz", "", 40);
 		$this->DisableAction("CounterDifference");
 		IPS_SetHidden($this->GetIDForIdent("CounterDifference"), false);
@@ -51,6 +51,7 @@
 		$this->RegisterVariableInteger("PulseMinute", "Impulse/Minute", "IPS2GPIO.PCF8583", 50);
 		$this->DisableAction("PulseMinute");
 		IPS_SetHidden($this->GetIDForIdent("PulseMinute"), false);
+		*/
         }
  	
 	public function GetConfigurationForm() 
@@ -126,6 +127,17 @@
 		If (intval($this->GetBuffer("PreviousPin")) <> $this->ReadPropertyInteger("Pin")) {
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin"), 0);
 		}
+		
+		// Profile anlegen
+		$this->RegisterProfileFloat("IPS2GPIO.PCF8583", "Intensity", "", " Imp./min", 0, 1000, 0.1, 1);
+		
+		$this->RegisterVariableInteger("CounterDifference", "Zählwert-Differenz", "", 40);
+		$this->DisableAction("CounterDifference");
+		IPS_SetHidden($this->GetIDForIdent("CounterDifference"), false);
+		
+		$this->RegisterVariableInteger("PulseMinute", "Impulse/Minute", "IPS2GPIO.PCF8583", 50);
+		$this->DisableAction("PulseMinute");
+		IPS_SetHidden($this->GetIDForIdent("PulseMinute"), false);
 			
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {					
 			// Logging setzen
