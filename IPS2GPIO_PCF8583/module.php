@@ -319,6 +319,8 @@
 			
 			$this->GetAlarmValue();
 			// Erste Messdaten einlesen
+			$StartTime = time();
+			$this->SetBuffer("CounterOldTime", $StartTime);
 			$this->GetCounter();	
 		}
 	}    
@@ -343,9 +345,17 @@
 						$CounterValue = (($MeasurementData[3] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[1]);
 						$this->SendDebug("GetCounter", "Ergebnis: ".$CounterValue, 0);
 						SetValueInteger($this->GetIDForIdent("CounterValue"), $CounterValue);
-						$CounterOldValue = intval($this->SetBuffer("CounterOldValue", 0));
+						$CounterOldValue = intval($this->GetBuffer("CounterOldValue"));
 						SetValueInteger($this->GetIDForIdent("CounterDifference"), $CounterValue - $CounterOldValue);
 						$this->SetBuffer("CounterOldValue", $CounterValue);
+						
+						$MeasurementTime = time();
+						$CounterOldTime = intval($this->GetBuffer("CounterOldTime"));
+						$TimeDifference = $MeasurementTime - $CounterOldTime;
+						If ($TimeDifference > 0) {
+							
+						}
+						$this->SetBuffer("CounterOldTime", $MeasurementTime);
 						break;
 					}
 				}
