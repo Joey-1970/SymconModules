@@ -19,7 +19,7 @@
  	    	$this->RegisterPropertyInteger("DeviceAddress", 104);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
 		$this->RegisterPropertyInteger("Messzyklus", 60);
-		$this->RegisterTimer("Messzyklus", 0, 'I2GDS3231_GetRTC_Data($_IPS["TARGET"]);');
+		$this->RegisterTimer("Messzyklus", 0, 'I2GDS3231_GetRTC($_IPS["TARGET"]);');
 		
 		$this->RegisterVariableInteger("RTC_Timestamp", "RTC Zeitstempel", "~UnixTimestamp", 10);
 		$this->DisableAction("RTC_Timestamp");
@@ -142,9 +142,12 @@
  	}
 	
 	// Beginn der Funktionen
- 	public function GetRTC_Data()
+ 	public function GetRTC()
 	{
-		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("SetRTC", "Ausfuehrung", 0);
+			
+			
 			$Sec = $this->CommandClientSocket(pack("L*", 61, $this->GetBuffer("RTC_Handle"), 0, 0), 16);
 			$Sec = str_pad(dechex($Sec & 127), 2 ,'0', STR_PAD_LEFT);
 			$Min = $this->CommandClientSocket(pack("L*", 61, $this->GetBuffer("RTC_Handle"), 1, 0), 16);
@@ -190,12 +193,24 @@
 		}
 	}
 	
-	public function SetRTC_Data()
+	public function SetRTC()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("SetRTC", "Ausfuehrung", 0);
 			$DateArray = array();
-			
 			$DataArray = array(date("s"), date("i"), date("H"), date("d"), date("m") | 128, date("y"));
+			
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_DS3231_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 0x00, 
+											  "Parameter" => serialize($DataArray) )));
+			If (!$Result) {
+				$this->SendDebug("SetRTC", "Setzen der Zeit fehlerhaft!", 0);
+				$this->SetStatus(202);
+			}
+			else {
+				$this->SetStatus(102);
+				$this->GetRTC_Data();
+				break;
+			}	
 			
 			/*
 			// Sekunden
