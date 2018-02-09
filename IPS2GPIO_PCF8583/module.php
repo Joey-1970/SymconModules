@@ -266,6 +266,7 @@
 			else {
 				$this->SetStatus(102);
 			}
+			
 			// Alarmwert setzen
 			$AlarmValue =  $this->ReadPropertyInteger("AlarmValue");
 			$AlarmValueArray = array();
@@ -286,7 +287,8 @@
 				$this->SetStatus(102);
 			}
 			
-			$TimerValue =  1;
+			// Timerwert setzen
+			$TimerValue =  10;
 			$TimerValueArray = array();
 			$TimerValueArray[0] = $TimerValue;
 			$this->SendDebug("Setup", "Timerwert: ".$TimerValue, 0);
