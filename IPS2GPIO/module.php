@@ -975,7 +975,22 @@ class IPS2GPIO_IO extends IPSModule
 									  ...$ParameterArray), 16);
 			}
 			break;
-
+		case "i2c_DS3231_write": 
+			// I2CWI h r bvs - smb Write I2C Block Data
+			If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
+				$this->SetI2CBus(intval($data->DeviceIdent));
+				$ParameterArray = array();
+				$ParameterArray = unserialize($data->Parameter);
+				$Result = $this->CommandClientSocket(pack("LLLLC*", 68, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, count($ParameterArray), 
+									  ...$ParameterArray), 16);
+			}
+			break;
+		case "i2c_DS3231_read":
+		   	If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
+				$this->SetI2CBus(intval($data->DeviceIdent));
+		   		$Result = $this->CommandClientSocket(pack("L*", 67, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 4, $data->Count), 16 + ($data->Count));
+		   	}
+			break;  
 		   
 		   // Serielle Kommunikation
 		case "get_handle_serial":
@@ -2878,8 +2893,11 @@ class IPS2GPIO_IO extends IPSModule
 			$SearchArray[] = $i;
 			$DeviceName[] = "iAQ";
 		}
+		// MCP3424|DS3231
+		$SearchArray[] = 104;
+		$DeviceName[] = "MCP3424|DS3231";
 		// MCP3424
-		for ($i = 104; $i <= 110; $i++) {
+		for ($i = 105; $i <= 110; $i++) {
 			$SearchArray[] = $i;
 			$DeviceName[] = "MCP3424";
 		}
