@@ -135,7 +135,7 @@
 			$DateArray = array();
 			// Config-Byte bestimmen
 			
-			$DataArray[0] = 0;
+			$DataArray[0] = 60;
 			
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_DS3231_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 0x0E, 
 											  "Parameter" => serialize($DataArray) )));
