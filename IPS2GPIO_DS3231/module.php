@@ -192,7 +192,12 @@
 	
 	public function SetRTC_Data()
 	{
-		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$DateArray = array();
+			
+			$DataArray = array(date("s"), date("i"), date("H"), date("d"), date("m") | 128, date("y"));
+			
+			/*
 			// Sekunden
 			$Sec = date("s");
 			$this->CommandClientSocket(pack("L*", 62, $this->GetBuffer("RTC_Handle"), 0, 4, hexdec($Sec)), 16);
@@ -207,6 +212,7 @@
 			$Year = date("y");
 			$this->CommandClientSocket(pack("L*", 62, $this->GetBuffer("RTC_Handle"), 6, 4, hexdec($Year)), 16);
 			$this->GetRTC_Data();
+			*/
 		}
 	} 
 	    
