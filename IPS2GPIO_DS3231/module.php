@@ -98,8 +98,6 @@
 				$this->SetStatus(104);
 			}	
 		}
-		else {
-		}
 	}
 	
 	public function ReceiveData($JSONString) 
@@ -107,20 +105,6 @@
 	    	// Empfangene Daten vom Gateway/Splitter
 	    	$data = json_decode($JSONString);
 	 	switch ($data->Function) {
-			case "notify":
-			   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
-					If (($data->Value == 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-						$this->SendDebug("Interrupt", "Wert: ".(int)$data->Value, 0);
-						SetValueInteger($this->GetIDForIdent("LastInterrupt"), time() );
-						$this->GetCounterByInterrupt();
-					}
-					elseIf (($data->Value == 1) AND ($this->ReadPropertyBoolean("Open") == true)) {
-						$this->SendDebug("Interrupt", "Wert: ".(int)$data->Value, 0);
-						//$this->GetCounter();
-					}
-			   	}
-			   	break; 
-			
 			case "get_used_i2c":
 			   	If ($this->ReadPropertyBoolean("Open") == true) {
 					$this->ApplyChanges();
@@ -142,7 +126,28 @@
  	}
 	
 	// Beginn der Funktionen
- 	public function GetRTC()
+ 	private function Setup()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Setup", "Ausfuehrung", 0);
+			$DateArray = array();
+			// Config-Byte bestimmen
+			
+			$DataArray[0] = 0;
+			
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_DS3231_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 0x0E, 
+											  "Parameter" => serialize($DataArray) )));
+			If (!$Result) {
+				$this->SendDebug("SetRTC", "Setzen des Config-Byte fehlerhaft!", 0);
+				$this->SetStatus(202);
+			}
+			else {
+				$this->SetStatus(102);
+			}	
+		}
+	}
+	    
+	public function GetRTC()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("SetRTC", "Ausfuehrung", 0);
@@ -194,7 +199,8 @@
 	
 	public function GetTemperature()  
 	{
-		$this->SendDebug("GetTemperature", "Ausfuehrung", 0);
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("GetTemperature", "Ausfuehrung", 0);
 			
 			$tries = 3;
 			do {
