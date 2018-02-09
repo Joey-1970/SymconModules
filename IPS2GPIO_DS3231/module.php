@@ -12,19 +12,22 @@
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
-            	//http://www.raspberry-pi-geek.de/Magazin/2015/02/Der-Uhrenbaustein-PCF8583-am-I-2-C-Bus-des-Raspberry-Pi/(offset)/2
-		
 		// Diese Zeile nicht löschen.
             	parent::Create();
  	    	$this->RegisterPropertyBoolean("Open", false);
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
- 	    	$this->RegisterPropertyInteger("DeviceAddress", 80);
+ 	    	$this->RegisterPropertyInteger("DeviceAddress", 104);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
 		$this->RegisterPropertyInteger("Messzyklus", 60);
-		$this->RegisterTimer("Messzyklus", 0, 'I2GDS3231_GetTime($_IPS["TARGET"]);');
+		$this->RegisterTimer("Messzyklus", 0, 'I2GDS3231_GetRTC_Data($_IPS["TARGET"]);');
 		
+		$this->RegisterVariableInteger("RTC_Timestamp", "RTC Zeitstempel", "~UnixTimestamp", 10);
+		$this->DisableAction("RTC_Timestamp");
+		IPS_SetHidden($this->GetIDForIdent("RTC_Timestamp"), false);
 		
-		
+		$this->RegisterVariableFloat("RTC_Temperature", "RTC Temperatur", "~Temperature", 20);
+		$this->DisableAction("RTC_Temperature");
+		IPS_SetHidden($this->GetIDForIdent("RTC_Temperature"), false);
         }
  	
 	public function GetConfigurationForm() 
@@ -41,8 +44,7 @@
 		$arrayElements[] = array("name" => "Open", "type" => "CheckBox",  "caption" => "Aktiv"); 
  		
 		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "80 dez. / 0x50h", "value" => 80);
-		$arrayOptions[] = array("label" => "81 dez. / 0x51h", "value" => 81);
+		$arrayOptions[] = array("label" => "104 dez. / 0x68h", "value" => 104);
 		
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceAddress", "caption" => "Device Adresse", "options" => $arrayOptions );
 		
@@ -140,20 +142,73 @@
  	}
 	
 	// Beginn der Funktionen
-	private function Setup()
+ 	public function GetRTC_Data()
 	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("Setup", "Ausfuehrung", 0);
-			
-				
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+			$Sec = $this->CommandClientSocket(pack("L*", 61, $this->GetBuffer("RTC_Handle"), 0, 0), 16);
+			$Sec = str_pad(dechex($Sec & 127), 2 ,'0', STR_PAD_LEFT);
+			$Min = $this->CommandClientSocket(pack("L*", 61, $this->GetBuffer("RTC_Handle"), 1, 0), 16);
+			$Min = str_pad(dechex($Min & 127), 2 ,'0', STR_PAD_LEFT);
+			$Hour = $this->CommandClientSocket(pack("L*", 61, $this->GetBuffer("RTC_Handle"), 2, 0), 16);
+			If(($Hour & 64) > 0) {
+				// 12 Stunden Anzeige
+				If (($Hour & 32) > 0) {
+					$AMPM = "PM";
+				}
+				else {
+					$AMPM = "AM";
+				}
+				$Hour = $AMPM." ".str_pad(dechex($Hour & 31), 2 ,'0', STR_PAD_LEFT);
+			}
+			else {
+				// 24 Stunden Anzeige
+				$Hour = str_pad(dechex($Hour & 63), 2 ,'0', STR_PAD_LEFT);
+			}
+			$Date = $this->CommandClientSocket(pack("L*", 61, $this->GetBuffer("RTC_Handle"), 4, 0), 16);
+			$Date = str_pad(dechex($Date & 63), 2 ,'0', STR_PAD_LEFT);
+			$Month = $this->CommandClientSocket(pack("L*", 61, $this->GetBuffer("RTC_Handle"), 5, 0), 16);
+			$Century = ($Month >> 7) & 1;
+			$Month = str_pad(dechex($Month & 31), 2 ,'0', STR_PAD_LEFT);
+			$Year = $this->CommandClientSocket(pack("L*", 61, $this->GetBuffer("RTC_Handle"), 6, 0), 16);
+			$Year = str_pad(dechex($Year & 255), 2 ,'0', STR_PAD_LEFT);
+			If ($Century == 1) {
+				$Year = $Year + 2000;
+			}
+			else {
+				$Year = $Year + 1900;	
+			}
+			$Timestamp = mktime(intval($Hour), intval($Min), intval($Sec), intval($Month), intval($Date), intval($Year));
+			SetValueInteger($this->GetIDForIdent("RTC_Timestamp"), $Timestamp);
+			$MSBofTemp = $this->CommandClientSocket(pack("L*", 61, $this->GetBuffer("RTC_Handle"), 17, 0), 16);
+			$LSBofTemp = $this->CommandClientSocket(pack("L*", 61, $this->GetBuffer("RTC_Handle"), 18, 0), 16);
+			$MSBofTemp = ($MSBofTemp & 127);
+			//$Temp = ($MSBofTemp << 2) | ($LSBofTemp >> 6);
+			$LSBofTemp = ($LSBofTemp >> 6) * 0.25;
+			$Temp = $MSBofTemp + $LSBofTemp;
+			//IPS_LogMessage("GeCoS_IO getRTC_Data", $Temp);
+			SetValueFloat($this->GetIDForIdent("RTC_Temperature"), $Temp);
 		}
-	}    
+	}
 	
-   
-	
-   
-	    
-
+	public function SetRTC_Data()
+	{
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
+			// Sekunden
+			$Sec = date("s");
+			$this->CommandClientSocket(pack("L*", 62, $this->GetBuffer("RTC_Handle"), 0, 4, hexdec($Sec)), 16);
+			$Min = date("i");
+			$this->CommandClientSocket(pack("L*", 62, $this->GetBuffer("RTC_Handle"), 1, 4, hexdec($Min)), 16);
+			$Hour = date("H");
+			$this->CommandClientSocket(pack("L*", 62, $this->GetBuffer("RTC_Handle"), 2, 4, hexdec($Hour)), 16);
+			$Date = date("d");
+			$this->CommandClientSocket(pack("L*", 62, $this->GetBuffer("RTC_Handle"), 4, 4, hexdec($Date)), 16);
+			$Month = date("m");
+			$this->CommandClientSocket(pack("L*", 62, $this->GetBuffer("RTC_Handle"), 5, 4, (hexdec($Month) | 128) ), 16);
+			$Year = date("y");
+			$this->CommandClientSocket(pack("L*", 62, $this->GetBuffer("RTC_Handle"), 6, 4, hexdec($Year)), 16);
+			$this->GetRTC_Data();
+		}
+	} 
 	    
 	private function Get_I2C_Ports()
 	{
