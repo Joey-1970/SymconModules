@@ -147,52 +147,83 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("SetRTC", "Ausfuehrung", 0);
 			
-			
-			$Sec = $this->CommandClientSocket(pack("L*", 61, $this->GetBuffer("RTC_Handle"), 0, 0), 16);
-			$Sec = str_pad(dechex($Sec & 127), 2 ,'0', STR_PAD_LEFT);
-			$Min = $this->CommandClientSocket(pack("L*", 61, $this->GetBuffer("RTC_Handle"), 1, 0), 16);
-			$Min = str_pad(dechex($Min & 127), 2 ,'0', STR_PAD_LEFT);
-			$Hour = $this->CommandClientSocket(pack("L*", 61, $this->GetBuffer("RTC_Handle"), 2, 0), 16);
-			If(($Hour & 64) > 0) {
-				// 12 Stunden Anzeige
-				If (($Hour & 32) > 0) {
-					$AMPM = "PM";
+			$tries = 3;
+			do {
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_DS3231_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x00, "Count" => 6)));
+				If ($Result < 0) {
+					$this->SendDebug("GetRTC", "Einlesen der Zeit fehlerhaft!", 0);
+					$this->SetStatus(202);
 				}
 				else {
-					$AMPM = "AM";
+					$this->SendDebug("GetRTC", "Ergebnis: ".$Result, 0);
+					If (is_array(unserialize($Result))) {
+						$this->SetStatus(102);
+						$DataArray = array();
+						// $DataArray[1] - Sekunden
+						// $DataArray[2] - Minuten
+						// $DataArray[3] - Stunden
+						// $DataArray[4] - Tag
+						// $DataArray[5] - Monat und Jahrhundert
+						// $DataArray[6] - Jahr
+						$DataArray = unserialize($Result);
+						// Ergebnis sichern
+						$Sec = $DataArray[1] & 127;
+						$Min = $DataArray[2] & 127;
+						// 24 Stunden Anzeige
+						$Hour = $DataArray[3] & 63;
+						$Date = $DataArray[4] & 63;
+						$Month = $DataArray[5] & 31;
+						$Century = ($DataArray[5] >> 7) & 1;
+						If ($Century == 1) {
+							$Year = $DataArray[6] + 2000;
+						}
+						else {
+							$Year = $DataArray[6] + 1900;	
+						}
+						$Timestamp = mktime(intval($Hour), intval($Min), intval($Sec), intval($Month), intval($Date), intval($Year));
+						SetValueInteger($this->GetIDForIdent("RTC_Timestamp"), $Timestamp);
+						
+						
+						break;
+					}
 				}
-				$Hour = $AMPM." ".str_pad(dechex($Hour & 31), 2 ,'0', STR_PAD_LEFT);
-			}
-			else {
-				// 24 Stunden Anzeige
-				$Hour = str_pad(dechex($Hour & 63), 2 ,'0', STR_PAD_LEFT);
-			}
-			$Date = $this->CommandClientSocket(pack("L*", 61, $this->GetBuffer("RTC_Handle"), 4, 0), 16);
-			$Date = str_pad(dechex($Date & 63), 2 ,'0', STR_PAD_LEFT);
-			$Month = $this->CommandClientSocket(pack("L*", 61, $this->GetBuffer("RTC_Handle"), 5, 0), 16);
-			$Century = ($Month >> 7) & 1;
-			$Month = str_pad(dechex($Month & 31), 2 ,'0', STR_PAD_LEFT);
-			$Year = $this->CommandClientSocket(pack("L*", 61, $this->GetBuffer("RTC_Handle"), 6, 0), 16);
-			$Year = str_pad(dechex($Year & 255), 2 ,'0', STR_PAD_LEFT);
-			If ($Century == 1) {
-				$Year = $Year + 2000;
-			}
-			else {
-				$Year = $Year + 1900;	
-			}
-			$Timestamp = mktime(intval($Hour), intval($Min), intval($Sec), intval($Month), intval($Date), intval($Year));
-			SetValueInteger($this->GetIDForIdent("RTC_Timestamp"), $Timestamp);
-			$MSBofTemp = $this->CommandClientSocket(pack("L*", 61, $this->GetBuffer("RTC_Handle"), 17, 0), 16);
-			$LSBofTemp = $this->CommandClientSocket(pack("L*", 61, $this->GetBuffer("RTC_Handle"), 18, 0), 16);
-			$MSBofTemp = ($MSBofTemp & 127);
-			//$Temp = ($MSBofTemp << 2) | ($LSBofTemp >> 6);
-			$LSBofTemp = ($LSBofTemp >> 6) * 0.25;
-			$Temp = $MSBofTemp + $LSBofTemp;
-			//IPS_LogMessage("GeCoS_IO getRTC_Data", $Temp);
-			SetValueFloat($this->GetIDForIdent("RTC_Temperature"), $Temp);
+			$tries--;
+			} while ($tries);  
 		}
 	}
 	
+	public function GetTemperature()  
+	{
+		$this->SendDebug("GetTemperature", "Ausfuehrung", 0);
+			
+			$tries = 3;
+			do {
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_DS3231_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 17, "Count" => 2)));
+				If ($Result < 0) {
+					$this->SendDebug("GetTemperature", "Einlesen der Temperatur fehlerhaft!", 0);
+					$this->SetStatus(202);
+				}
+				else {
+					$this->SendDebug("GetRTC", "Ergebnis: ".$Result, 0);
+					If (is_array(unserialize($Result))) {
+						$this->SetStatus(102);
+						$DataArray = array();
+						$DataArray = unserialize($Result);
+						
+						$MSBofTemp = $DataArray[1];
+						$LSBofTemp = $DataArray[2];
+						$MSBofTemp = ($MSBofTemp & 127);
+						$LSBofTemp = ($LSBofTemp >> 6) * 0.25;
+						$Temp = $MSBofTemp + $LSBofTemp;
+						SetValueFloat($this->GetIDForIdent("RTC_Temperature"), $Temp);
+						break;
+					}
+				}
+			$tries--;
+			} while ($tries);  
+		}	
+	}
+	  
 	public function SetRTC()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
@@ -211,23 +242,6 @@
 				$this->GetRTC_Data();
 				break;
 			}	
-			
-			/*
-			// Sekunden
-			$Sec = date("s");
-			$this->CommandClientSocket(pack("L*", 62, $this->GetBuffer("RTC_Handle"), 0, 4, hexdec($Sec)), 16);
-			$Min = date("i");
-			$this->CommandClientSocket(pack("L*", 62, $this->GetBuffer("RTC_Handle"), 1, 4, hexdec($Min)), 16);
-			$Hour = date("H");
-			$this->CommandClientSocket(pack("L*", 62, $this->GetBuffer("RTC_Handle"), 2, 4, hexdec($Hour)), 16);
-			$Date = date("d");
-			$this->CommandClientSocket(pack("L*", 62, $this->GetBuffer("RTC_Handle"), 4, 4, hexdec($Date)), 16);
-			$Month = date("m");
-			$this->CommandClientSocket(pack("L*", 62, $this->GetBuffer("RTC_Handle"), 5, 4, (hexdec($Month) | 128) ), 16);
-			$Year = date("y");
-			$this->CommandClientSocket(pack("L*", 62, $this->GetBuffer("RTC_Handle"), 6, 4, hexdec($Year)), 16);
-			$this->GetRTC_Data();
-			*/
 		}
 	} 
 	    
