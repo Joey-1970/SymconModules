@@ -174,18 +174,19 @@
 						// $DataArray[6] - Jahr
 						$DataArray = unserialize($Result);
 						// Ergebnis sichern
-						$Sec = $DataArray[1] & 127;
-						$Min = $DataArray[2] & 127;
+						$Sec = str_pad(dechex($DataArray[1] & 127), 2 ,'0', STR_PAD_LEFT);
+						$Min = str_pad(dechex($DataArray[2] & 127), 2 ,'0', STR_PAD_LEFT);
 						// 24 Stunden Anzeige
-						$Hour = $DataArray[3] & 63;
-						$Date = $DataArray[4] & 63;
-						$Month = $DataArray[5] & 31;
+						$Hour = str_pad(dechex($DataArray[3] & 63), 2 ,'0', STR_PAD_LEFT);
+						$Date = str_pad(dechex($DataArray[4] & 63), 2 ,'0', STR_PAD_LEFT);;
+						$Month = str_pad(dechex($DataArray[5] & 31), 2 ,'0', STR_PAD_LEFT);
 						$Century = ($DataArray[5] >> 7) & 1;
+						$Year = str_pad(dechex($DataArray[6] & 255), 2 ,'0', STR_PAD_LEFT);
 						If ($Century == 1) {
-							$Year = $DataArray[6] + 2000;
+							$Year = $Year + 2000;
 						}
 						else {
-							$Year = $DataArray[6] + 1900;	
+							$Year = $Year + 1900;	
 						}
 						$Timestamp = mktime(intval($Hour), intval($Min), intval($Sec), intval($Month), intval($Date), intval($Year));
 						SetValueInteger($this->GetIDForIdent("RTC_Timestamp"), $Timestamp);
