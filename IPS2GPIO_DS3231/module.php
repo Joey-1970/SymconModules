@@ -247,7 +247,7 @@
 			}
 			else {
 				$this->SetStatus(102);
-				$this->GetRTC_Data();
+				$this->GetRTC();
 			}	
 		}
 	} 
