@@ -237,7 +237,7 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("SetRTC", "Ausfuehrung", 0);
 			$DateArray = array();
-			$DataArray = array(hexdec(date("s")), hexdec(date("i")), hexdec(date("H")), hexdec(date("d")), hexdec(date("m") | 128, date("y")));
+			$DataArray = array(hexdec(date("s")), hexdec(date("i")), hexdec(date("H")), hexdec(date("d")), hexdec(date("m")) | 128, hexdec(date("y")) );
 			$this->SendDebug("SetRTC", "Datensatz: ".serialize($DataArray), 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_DS3231_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 0x00, 
 											  "Parameter" => serialize($DataArray) )));
