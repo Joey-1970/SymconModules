@@ -19,6 +19,8 @@
  	    	$this->RegisterPropertyInteger("DeviceAddress", 104);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
 		$this->RegisterPropertyInteger("Messzyklus", 60);
+		$this->RegisterPropertyInteger("NTPTimeout", 10);
+		$this->RegisterPropertyString("NTPHost", "pool.ntp.org");
 		$this->RegisterTimer("Messzyklus", 0, 'I2GDS3231_GetRTC($_IPS["TARGET"]);');
 		
 		$this->RegisterVariableInteger("RTC_Timestamp", "RTC Zeitstempel", "~UnixTimestamp", 10);
@@ -28,6 +30,10 @@
 		$this->RegisterVariableFloat("RTC_Temperature", "RTC Temperatur", "~Temperature", 20);
 		$this->DisableAction("RTC_Temperature");
 		IPS_SetHidden($this->GetIDForIdent("RTC_Temperature"), false);
+		
+		$this->RegisterVariableInteger("NTP_Timestamp", "NTP Zeitstempel", "~UnixTimestamp", 30);
+		$this->DisableAction("NTP_Timestamp");
+		IPS_SetHidden($this->GetIDForIdent("NTP_Timestamp"), false);
         }
  	
 	public function GetConfigurationForm() 
@@ -259,6 +265,51 @@
 			}	
 		}
 	} 
+	
+	public function SetRTCFromIPS()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("SetRTCFromIPS", "Ausfuehrung", 0);
+			$DateArray = array();
+			$DataArray = array($this->decbcd(date("s")), $this->decbcd(date("i")), $this->decbcd(date("H")), ($this->decbcd(date("w")) + 1), $this->decbcd(date("d")), ($this->decbcd(date("m")) | 128), $this->decbcd(date("y")) );
+			$this->SendDebug("SetRTC", "Datensatz: ".serialize($DataArray), 0);
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_DS3231_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 0x00, 
+											  "Parameter" => serialize($DataArray) )));
+			If (!$Result) {
+				$this->SendDebug("SetRTC", "Setzen der Zeit fehlerhaft!", 0);
+				$this->SetStatus(202);
+			}
+			else {
+				$this->SetStatus(102);
+				$this->GetRTC();
+			}	
+		}
+	}     
+	    
+	public function SetRTCFromNTP()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("SetRTCFromNTP", "Ausfuehrung", 0);
+			$timeout = $this->ReadPropertyInteger("NTPTimeout");
+			$host = $this->ReadPropertyString("NTPHost");
+			
+			$socket = stream_socket_client('udp://' . $host . ':123', $errno, $errstr, (int)$timeout);
+			$msg = "\010" . str_repeat("\0", 47);
+			fwrite($socket, $msg);
+			$response = fread($socket, 48);
+			fclose($socket);
+			// unpack to unsigned long
+			$data = unpack('N12', $response);
+			// 9 =  Receive Timestamp (rec): Time at the server when the request arrived
+			// from the client, in NTP timestamp format.
+			$timestamp = sprintf('%u', $data[9]);
+			// NTP = number of seconds since January 1st, 1900
+			// Unix time = seconds since January 1st, 1970
+			// remove 70 years in seconds to get unix timestamp from NTP time
+			$timestamp -= 2208988800;
+			SetValueInteger($this->GetIDForIdent("NTP_Timestamp"), $timestamp);
+		}
+	}   
 	    
 	private function Get_I2C_Ports()
 	{
