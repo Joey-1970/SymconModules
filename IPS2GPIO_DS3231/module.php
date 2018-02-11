@@ -156,7 +156,7 @@
 			
 			$tries = 3;
 			do {
-				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_DS3231_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x00, "Count" => 6)));
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_DS3231_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x00, "Count" => 7)));
 				If ($Result < 0) {
 					$this->SendDebug("GetRTC", "Einlesen der Zeit fehlerhaft!", 0);
 					$this->SetStatus(202);
@@ -178,10 +178,11 @@
 						$Min = str_pad(dechex($DataArray[2] & 127), 2 ,'0', STR_PAD_LEFT);
 						// 24 Stunden Anzeige
 						$Hour = str_pad(dechex($DataArray[3] & 63), 2 ,'0', STR_PAD_LEFT);
-						$Date = str_pad(dechex($DataArray[4] & 63), 2 ,'0', STR_PAD_LEFT);;
-						$Month = str_pad(dechex($DataArray[5] & 31), 2 ,'0', STR_PAD_LEFT);
-						$Century = ($DataArray[5] >> 7) & 1;
-						$Year = str_pad(dechex($DataArray[6] & 255), 2 ,'0', STR_PAD_LEFT);
+						
+						$Date = str_pad(dechex($DataArray[5] & 63), 2 ,'0', STR_PAD_LEFT);;
+						$Month = str_pad(dechex($DataArray[6] & 31), 2 ,'0', STR_PAD_LEFT);
+						$Century = ($DataArray[6] >> 7) & 1;
+						$Year = str_pad(dechex($DataArray[7] & 255), 2 ,'0', STR_PAD_LEFT);
 						If ($Century == 1) {
 							$Year = $Year + 2000;
 						}
@@ -244,7 +245,7 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("SetRTC", "Ausfuehrung", 0);
 			$DateArray = array();
-			$DataArray = array($this->decbcd(date("s")), $this->decbcd(date("i")), $this->decbcd(date("H")), $this->decbcd(date("d")), ($this->decbcd(date("m")) | 128), $this->decbcd(date("y")) );
+			$DataArray = array($this->decbcd(date("s")), $this->decbcd(date("i")), $this->decbcd(date("H")), ($this->decbcd(date("w")) + 1), $this->decbcd(date("d")), ($this->decbcd(date("m")) | 128), $this->decbcd(date("y")) );
 			$this->SendDebug("SetRTC", "Datensatz: ".serialize($DataArray), 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_DS3231_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 0x00, 
 											  "Parameter" => serialize($DataArray) )));
