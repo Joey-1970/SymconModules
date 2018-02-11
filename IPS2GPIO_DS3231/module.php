@@ -235,7 +235,7 @@
 	
 	private function decbcd(int $DecValue)
 	{
-		$BCD = intval(hexdec($Value));
+		$BCD = intval(hexdec($DecValue));
 	return $BCD;
 	}
 	    
