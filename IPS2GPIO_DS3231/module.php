@@ -68,7 +68,10 @@
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus) (optional)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");  
-		
+		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "NTPHost", "caption" => "NTP-Host");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "NTPTimeout", "caption" => "NTP-Timeout");
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");  
+
 		$arrayActions = array();
 		$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
 		
@@ -291,37 +294,43 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("SetRTCFromNTP", "Ausfuehrung", 0);
 			$timeout = $this->ReadPropertyInteger("NTPTimeout");
+			$timeout = min(15, max(1, $timeout));
 			$host = $this->ReadPropertyString("NTPHost");
+			
 			// https://gist.github.com/bohwaz/6d01bf00fdb4721a601c4b9fc1007d81
 			$socket = stream_socket_client('udp://' . $host . ':123', $errno, $errstr, (int)$timeout);
-			$msg = "\010" . str_repeat("\0", 47);
-			fwrite($socket, $msg);
-			$response = fread($socket, 48);
-			fclose($socket);
-			// unpack to unsigned long
-			$data = unpack('N12', $response);
-			// 9 =  Receive Timestamp (rec): Time at the server when the request arrived
-			// from the client, in NTP timestamp format.
-			$timestamp = sprintf('%u', $data[9]);
-			// NTP = number of seconds since January 1st, 1900
-			// Unix time = seconds since January 1st, 1970
-			// remove 70 years in seconds to get unix timestamp from NTP time
-			$timestamp -= 2208988800;
-			SetValueInteger($this->GetIDForIdent("NTP_Timestamp"), $timestamp);
-			
-			$DateArray = array();
-			$DataArray = array($this->decbcd(date("s"), $timestamp), $this->decbcd(date("i"), $timestamp), $this->decbcd(date("H"), $timestamp), ($this->decbcd(date("w"), $timestamp) + 1), $this->decbcd(date("d"), $timestamp), ($this->decbcd(date("m"), $timestamp) | 128), $this->decbcd(date("y"), $timestamp) );
-			$this->SendDebug("SetRTCFromNTP", "Datensatz: ".serialize($DataArray), 0);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_DS3231_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 0x00, 
-											  "Parameter" => serialize($DataArray) )));
-			If (!$Result) {
-				$this->SendDebug("SetRTCFromNTP", "Setzen der Zeit fehlerhaft!", 0);
-				$this->SetStatus(202);
+			if (!$socket) {
+			    	$this->SendDebug("SetRTCFromNTP", "Fehler in der Verbindung: ".$errstr, 0);
+			} else {
+				$msg = "\010" . str_repeat("\0", 47);
+				fwrite($socket, $msg);
+				$response = fread($socket, 48);
+				fclose($socket);
+				// unpack to unsigned long
+				$data = unpack('N12', $response);
+				// 9 =  Receive Timestamp (rec): Time at the server when the request arrived
+				// from the client, in NTP timestamp format.
+				$timestamp = sprintf('%u', $data[9]);
+				// NTP = number of seconds since January 1st, 1900
+				// Unix time = seconds since January 1st, 1970
+				// remove 70 years in seconds to get unix timestamp from NTP time
+				$timestamp -= 2208988800;
+				SetValueInteger($this->GetIDForIdent("NTP_Timestamp"), $timestamp);
+
+				$DateArray = array();
+				$DataArray = array($this->decbcd(date("s"), $timestamp), $this->decbcd(date("i"), $timestamp), $this->decbcd(date("H"), $timestamp), ($this->decbcd(date("w"), $timestamp) + 1), $this->decbcd(date("d"), $timestamp), ($this->decbcd(date("m"), $timestamp) | 128), $this->decbcd(date("y"), $timestamp) );
+				$this->SendDebug("SetRTCFromNTP", "Datensatz: ".serialize($DataArray), 0);
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_DS3231_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 0x00, 
+												  "Parameter" => serialize($DataArray) )));
+				If (!$Result) {
+					$this->SendDebug("SetRTCFromNTP", "Setzen der Zeit fehlerhaft!", 0);
+					$this->SetStatus(202);
+				}
+				else {
+					$this->SetStatus(102);
+					$this->GetRTC();
+				}
 			}
-			else {
-				$this->SetStatus(102);
-				$this->GetRTC();
-			}	
 		}
 	}   
 	    
