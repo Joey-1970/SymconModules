@@ -495,7 +495,8 @@
 					$this->SetStatus(102);
 					$MeasurementData = array();
 					$MeasurementData = unserialize($Result);
-					$this->SendDebug("GetTimerValue", "Ergebnis: ".$Result, 0);
+					$TimerValue = ($MeasurementData[1] & 15) + ((($MeasurementData[1] & 240) >> 4) * 10);
+					$this->SendDebug("GetTimerValue", "Ergebnis: ".$TimerValue, 0);
 				}
 			}
 			
