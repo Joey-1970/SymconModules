@@ -379,6 +379,9 @@
 						}
 						SetValueFloat($this->GetIDForIdent("PulseMinute"), $PulseMinute);
 						$this->SetBuffer("CounterOldTime", $MeasurementTime);
+						
+						$this->GetTimerValue();									
+																
 						break;
 					}
 				}
@@ -435,6 +438,9 @@
 						else {
 							$this->SendDebug("GetCounterByInterrupt", "Interruptausloeser - Zaehlwert erreicht: ".$CounterValue, 0);
 						}
+						
+						$this->GetTimerValue();	
+						
 						break;
 					}
 				}
@@ -452,23 +458,41 @@
 			If ($Result < 0) {
 				$this->SendDebug("GetAlarmValue", "Fehler bei der Datenermittung", 0);
 				$this->SetStatus(202);
-				return 0;
 			}
 			else {
 				If (is_array(unserialize($Result)) == true) {
 					$this->SetStatus(102);
-					//$this->SendDebug("GetAlarmValue", "Ergebnis: ".$Result, 0);
 					$MeasurementData = array();
 					$MeasurementData = unserialize($Result);
 					$AlarmValue = (($MeasurementData[3] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[1]);
 					$this->SendDebug("GetAlarmValue", "Ergebnis: ".$AlarmValue, 0);
 				}
 			}
+		}
+	}     
+	
+	private function GetTimerValue()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("GetTimerValue", "Ausfuehrung", 0);
+			$TimerValue =  0;
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("07"), "Count" => 1)));
+			If ($Result < 0) {
+				$this->SendDebug("GetTimerValue", "Fehler bei der Datenermittung", 0);
+				$this->SetStatus(202);
+			}
+			else {
+				If (is_array(unserialize($Result)) == true) {
+					$this->SetStatus(102);
+					$MeasurementData = array();
+					$MeasurementData = unserialize($Result);
+					$this->SendDebug("GetTimerValue", "Ergebnis: ".$Result, 0);
+				}
+			}
 			
 		}
-	return $AlarmValue;
-	}     
-	    
+	}     														
+																
 	private function Get_I2C_Ports()
 	{
 		If ($this->HasActiveParent() == true) {
