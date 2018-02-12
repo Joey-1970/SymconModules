@@ -358,8 +358,8 @@
 						// Berechnung des Wertes Darstellung BCD
 						$CounterValue = 0;
 						for ($i = 1; $i <= 3; $i++) {
-							$CounterValue = $CounterValue + ($MeasurementData[$i] & 15) * pow(10, ($i + $i - 2);
-							$CounterValue = $CounterValue + ($MeasurementData[$i] & 240 >> 4) * pow(10, ($i + $i - 1);
+							$CounterValue = $CounterValue + ($MeasurementData[$i] & 15) * pow(10, ($i + $i - 2));
+							$CounterValue = $CounterValue + ($MeasurementData[$i] & 240 >> 4) * pow(10, ($i + $i - 1));
 						}
 						$this->SendDebug("GetCounter", "Ergebnis BCD: ".$CounterValue, 0);									
 						
