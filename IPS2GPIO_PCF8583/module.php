@@ -351,9 +351,8 @@
 						$this->SetStatus(102);
 						$MeasurementData = array();
 						$MeasurementData = unserialize($Result);
-						$CounterValue = (($MeasurementData[3] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[1]);
-						$this->SendDebug("GetCounter", "Ergebnis: ".$CounterValue, 0);
-						SetValueInteger($this->GetIDForIdent("CounterValue"), $CounterValue);
+						//$CounterValue = (($MeasurementData[3] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[1]);
+						//$this->SendDebug("GetCounter", "Ergebnis: ".$CounterValue, 0);
 						
 						// Berechnung des Wertes Darstellung BCD
 						$CounterValue = 0;
@@ -362,6 +361,7 @@
 							$CounterValue = $CounterValue + (($MeasurementData[$i] & 240) >> 4) * pow(10, ($i + $i - 1));
 						}
 						$this->SendDebug("GetCounter", "Ergebnis BCD: ".$CounterValue, 0);									
+						SetValueInteger($this->GetIDForIdent("CounterValue"), $CounterValue);
 						
 						// Zählerdifferenz berechnen
 						$CounterOldValue = intval($this->GetBuffer("CounterOldValue"));
@@ -408,9 +408,18 @@
 						$this->SetStatus(102);
 						$MeasurementData = array();
 						$MeasurementData = unserialize($Result);
-						$CounterValue = (($MeasurementData[3] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[1]);
-						SetValueInteger($this->GetIDForIdent("CounterValue"), $CounterValue );
-						$this->SetBuffer("CounterOldValue", $CounterValue);
+						//$CounterValue = (($MeasurementData[3] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[1]);
+						//SetValueInteger($this->GetIDForIdent("CounterValue"), $CounterValue );
+						//$this->SetBuffer("CounterOldValue", $CounterValue);
+						
+						// Berechnung des Wertes Darstellung BCD
+						$CounterValue = 0;
+						for ($i = 1; $i <= 3; $i++) {
+							$CounterValue = $CounterValue + ($MeasurementData[$i] & 15) * pow(10, ($i + $i - 2));
+							$CounterValue = $CounterValue + (($MeasurementData[$i] & 240) >> 4) * pow(10, ($i + $i - 1));
+						}
+						$this->SendDebug("GetCounter", "Ergebnis BCD: ".$CounterValue, 0);									
+						SetValueInteger($this->GetIDForIdent("CounterValue"), $CounterValue);
 						
 						// Zählerdifferenz berechnen
 						$CounterOldValue = intval($this->GetBuffer("CounterOldValue"));
