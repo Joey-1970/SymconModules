@@ -7,6 +7,7 @@
 		//Never delete this line!
 		parent::Destroy();
 		$this->SetTimerInterval("Messzyklus", 0);
+		$this->SetTimerInterval("Interrupt", 0);
 	}
 	    
 	// Überschreibt die interne IPS_Create($id) Funktion
@@ -461,6 +462,7 @@
 	public function ResetInterrupt()
 	{
 		SetValueBoolean($this->GetIDForIdent("Interrupt"), false);
+		$this->SetTimerInterval("Interrupt", 0);
 	}
 	    
 	private function GetAlarmValue()
