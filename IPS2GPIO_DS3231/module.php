@@ -311,6 +311,7 @@
 			$timeout = min(15, max(1, $timeout));
 			$host = $this->ReadPropertyString("NTPHost");
 			
+			// http://doc-tcpip.org/Ntp/basics.html
 			// https://gist.github.com/bohwaz/6d01bf00fdb4721a601c4b9fc1007d81
 			$socket = stream_socket_client('udp://' . $host . ':123', $errno, $errstr, (int)$timeout);
 			if (!$socket) {
