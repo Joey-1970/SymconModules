@@ -19,9 +19,13 @@
  	    	$this->RegisterPropertyInteger("DeviceAddress", 104);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
 		$this->RegisterPropertyInteger("Messzyklus", 60);
+		$this->RegisterTimer("Messzyklus", 0, 'I2GDS3231_GetRTC($_IPS["TARGET"]);');
 		$this->RegisterPropertyInteger("NTPTimeout", 10);
 		$this->RegisterPropertyString("NTPHost", "pool.ntp.org");
-		$this->RegisterTimer("Messzyklus", 0, 'I2GDS3231_GetRTC($_IPS["TARGET"]);');
+		$this->RegisterPropertyInteger("NTPUpdate", 60);
+		$this->RegisterTimer("NTPUpdate", 0, 'I2GDS3231_SetRTCFromNTP($_IPS["TARGET"]);');
+		
+		
 		
 		$this->RegisterVariableInteger("RTC_Timestamp", "RTC Zeitstempel", "~UnixTimestamp", 10);
 		$this->DisableAction("RTC_Timestamp");
