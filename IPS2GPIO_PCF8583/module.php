@@ -26,6 +26,8 @@
 		$this->SetBuffer("PreviousPin", -1);
 		$this->RegisterPropertyInteger("Messzyklus", 60);
 		$this->RegisterTimer("Messzyklus", 0, 'I2GPCF8583_GetCounter($_IPS["TARGET"]);');
+		$this->RegisterPropertyInteger("Interrupt", 0);
+		$this->RegisterTimer("Interrupt", 0, 'I2GPCF8583_ResetInterrupt($_IPS["TARGET"]);');
 		$this->RegisterPropertyBoolean("Logging", false);
 		
 		// Profile anlegen
@@ -443,6 +445,9 @@
 							$this->SendDebug("GetCounterByInterrupt", "Interruptausloeser - Zaehlwert erreicht: ".$CounterValue, 0);
 						}
 						
+						$this->SetTimerInterval("Interrupt", (1 * 1000));
+						SetValueBoolean($this->GetIDForIdent("Interrupt"), true);
+						
 						$this->GetTimerValue();	
 						
 						break;
@@ -452,6 +457,11 @@
 			} while ($tries);  
 		}
 	}        
+	    
+	public function ResetInterrupt()
+	{
+		SetValueBoolean($this->GetIDForIdent("Interrupt"), false);
+	}
 	    
 	private function GetAlarmValue()
 	{
