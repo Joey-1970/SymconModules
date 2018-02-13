@@ -95,7 +95,7 @@
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {					
 			
 			$this->RegisterProfileInteger("IPS2GPIO.NTPStatus", "Network", "", "", 0, 3, 1);
-			IPS_SetVariableProfileAssociation("IPS2GPIO.NTPStatus", 0, "keine Information", "Network", #0000FF);
+			IPS_SetVariableProfileAssociation("IPS2GPIO.NTPStatus", 0, "unbekannt", "Network", -1);
 			IPS_SetVariableProfileAssociation("IPS2GPIO.NTPStatus", 1, "offline", "Network", #FF0000);
 			IPS_SetVariableProfileAssociation("IPS2GPIO.NTPStatus", 2, "online", "Network", #00FF00);
 							  
