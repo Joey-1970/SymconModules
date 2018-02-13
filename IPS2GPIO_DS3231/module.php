@@ -96,8 +96,8 @@
 			
 			$this->RegisterProfileInteger("IPS2GPIO.NTPStatus", "Network", "", "", 0, 3, 1);
 			IPS_SetVariableProfileAssociation("IPS2GPIO.NTPStatus", 0, "unbekannt", "Network", -1);
-			IPS_SetVariableProfileAssociation("IPS2GPIO.NTPStatus", 1, "offline", "Network", #FF0000);
-			IPS_SetVariableProfileAssociation("IPS2GPIO.NTPStatus", 2, "online", "Network", #00FF00);
+			IPS_SetVariableProfileAssociation("IPS2GPIO.NTPStatus", 1, "offline", "Network", -1);
+			IPS_SetVariableProfileAssociation("IPS2GPIO.NTPStatus", 2, "online", "Network", -1);
 							  
 			$this->RegisterVariableInteger("NTP_Status", "NTP Status", "IPS2GPIO.NTPStatus", 40);
 			$this->DisableAction("NTP_Status");
