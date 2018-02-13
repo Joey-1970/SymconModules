@@ -7,6 +7,7 @@
 		//Never delete this line!
 		parent::Destroy();
 		$this->SetTimerInterval("Messzyklus", 0);
+		$this->SetTimerInterval("NTPUpdate", 0);
 	}
 	    
 	// Überschreibt die interne IPS_Create($id) Funktion
@@ -72,6 +73,8 @@
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus) (optional)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");  
+		$arrayElements[] = array("type" => "Label", "label" => "NTP-Abfrageintervall in Sekunden (0 -> aus) (optional)");
+		$arrayElements[] = array("type" => "IntervalBox", "name" => "NTPUpdate", "caption" => "Sekunden");
 		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "NTPHost", "caption" => "NTP-Host");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "NTPTimeout", "caption" => "NTP-Timeout");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");  
@@ -90,7 +93,17 @@
 
 			
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {					
-			// Logging setzen
+			
+			$this->RegisterProfileInteger("IPS2GPIO.NTPStatus", "Network", "", "", 0, 3, 1);
+			IPS_SetVariableProfileAssociation("IPS2GPIO.NTPStatus", 0, "keine Information", "Network", #0000FF);
+			IPS_SetVariableProfileAssociation("IPS2GPIO.NTPStatus", 1, "offline", "Network", #FF0000);
+			IPS_SetVariableProfileAssociation("IPS2GPIO.NTPStatus", 2, "online", "Network", #00FF00);
+							  
+			$this->RegisterVariableInteger("NTP_Status", "NTP Status", "IPS2GPIO.NTPStatus", 40);
+			$this->DisableAction("NTP_Status");
+			IPS_SetHidden($this->GetIDForIdent("NTP_Status"), false);
+							  
+			SetValueInteger($this->GetIDForIdent("NTP_Status"), 0);
 			
 			//ReceiveData-Filter setzen
 			$this->SetBuffer("DeviceIdent", (($this->ReadPropertyInteger("DeviceBus") << 7) + $this->ReadPropertyInteger("DeviceAddress")));
@@ -102,14 +115,17 @@
 								
 				If ($Result == true) {
 					$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
+					$this->SetTimerInterval("NTPUpdate", ($this->ReadPropertyInteger("NTPUpdate") * 1000));
 					$this->Setup();
 				}
 				else {
 					$this->SetTimerInterval("Messzyklus", 0);
+					$this->SetTimerInterval("NTPUpdate", 0);
 				}
 			}
 			else {
 				$this->SetTimerInterval("Messzyklus", 0);
+				$this->SetTimerInterval("NTPUpdate", 0);
 				$this->SetStatus(104);
 			}	
 		}
@@ -246,12 +262,6 @@
 			} while ($tries);  
 		}	
 	}
-	
-	private function decbcd(int $DecValue)
-	{
-		$BCD = intval(hexdec($DecValue));
-	return $BCD;
-	}
 	    
 	public function SetRTC()
 	{
@@ -305,6 +315,7 @@
 			$socket = stream_socket_client('udp://' . $host . ':123', $errno, $errstr, (int)$timeout);
 			if (!$socket) {
 			    	$this->SendDebug("SetRTCFromNTP", "Fehler in der Verbindung: ".$errstr, 0);
+				SetValueInteger($this->GetIDForIdent("NTP_Status"), 1);
 			} else {
 				$msg = "\010" . str_repeat("\0", 47);
 				fwrite($socket, $msg);
@@ -320,6 +331,7 @@
 				// remove 70 years in seconds to get unix timestamp from NTP time
 				$timestamp -= 2208988800;
 				SetValueInteger($this->GetIDForIdent("NTP_Timestamp"), $timestamp);
+				SetValueInteger($this->GetIDForIdent("NTP_Status"), 2);
 
 				$DateArray = array();
 				$DataArray = array($this->decbcd(date("s"), $timestamp), $this->decbcd(date("i"), $timestamp), $this->decbcd(date("H"), $timestamp), ($this->decbcd(date("w"), $timestamp) + 1), $this->decbcd(date("d"), $timestamp), ($this->decbcd(date("m"), $timestamp) | 128), $this->decbcd(date("y"), $timestamp) );
@@ -337,6 +349,12 @@
 			}
 		}
 	}   
+	    
+	private function decbcd(int $DecValue)
+	{
+		$BCD = intval(hexdec($DecValue));
+	return $BCD;
+	}
 	    
 	private function Get_I2C_Ports()
 	{
