@@ -351,8 +351,6 @@
 						$this->SetStatus(102);
 						$MeasurementData = array();
 						$MeasurementData = unserialize($Result);
-						//$CounterValue = (($MeasurementData[3] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[1]);
-						//$this->SendDebug("GetCounter", "Ergebnis: ".$CounterValue, 0);
 						
 						// Berechnung des Wertes Darstellung BCD
 						$CounterValue = 0;
@@ -408,9 +406,6 @@
 						$this->SetStatus(102);
 						$MeasurementData = array();
 						$MeasurementData = unserialize($Result);
-						//$CounterValue = (($MeasurementData[3] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[1]);
-						//SetValueInteger($this->GetIDForIdent("CounterValue"), $CounterValue );
-						//$this->SetBuffer("CounterOldValue", $CounterValue);
 						
 						// Berechnung des Wertes Darstellung BCD
 						$CounterValue = 0;
@@ -473,8 +468,14 @@
 					$this->SetStatus(102);
 					$MeasurementData = array();
 					$MeasurementData = unserialize($Result);
-					$AlarmValue = (($MeasurementData[3] << 16) | ($MeasurementData[2] << 8) | $MeasurementData[1]);
-					$this->SendDebug("GetAlarmValue", "Ergebnis: ".$AlarmValue, 0);
+										
+					// Berechnung des Wertes Darstellung BCD
+					$AlarmValue = 0;
+					for ($i = 1; $i <= 3; $i++) {
+						$AlarmValue = $AlarmValue + ($MeasurementData[$i] & 15) * pow(10, ($i + $i - 2));
+						$AlarmValue = $AlarmValue + (($MeasurementData[$i] & 240) >> 4) * pow(10, ($i + $i - 1));
+					}
+					$this->SendDebug("GetAlarmValue", "Ergebnis BCD: ".$AlarmValue, 0);		
 				}
 			}
 		}
