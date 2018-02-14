@@ -191,7 +191,7 @@
 					$this->SetStatus(202);
 				}
 				else {
-					$this->SendDebug("GetRTC", "Ergebnis: ".$Result, 0);
+					//$this->SendDebug("GetRTC", "Ergebnis: ".$Result, 0);
 					If (is_array(unserialize($Result))) {
 						$this->SetStatus(102);
 						$DataArray = array();
@@ -219,6 +219,7 @@
 							$Year = $Year + 1900;	
 						}
 						$Timestamp = mktime(intval($Hour), intval($Min), intval($Sec), intval($Month), intval($Date), intval($Year));
+						$this->SendDebug("GetRTC", "Ergebnis: ".date("d.m.Y H:i:s", $Timestamp), 0);
 						SetValueInteger($this->GetIDForIdent("RTC_Timestamp"), $Timestamp);
 						
 						
