@@ -244,7 +244,7 @@
 					$this->SetStatus(202);
 				}
 				else {
-					$this->SendDebug("GetRTC", "Ergebnis: ".$Result, 0);
+					//$this->SendDebug("GetTemperature", "Ergebnis: ".$Result, 0);
 					If (is_array(unserialize($Result))) {
 						$this->SetStatus(102);
 						$DataArray = array();
@@ -256,6 +256,7 @@
 						$LSBofTemp = ($LSBofTemp >> 6) * 0.25;
 						$Temp = $MSBofTemp + $LSBofTemp;
 						SetValueFloat($this->GetIDForIdent("RTC_Temperature"), $Temp);
+						$this->SendDebug("GetTemperature", "Ergebnis: ".$Temp, 0);
 						break;
 					}
 				}
@@ -332,6 +333,7 @@
 				// Unix time = seconds since January 1st, 1970
 				// remove 70 years in seconds to get unix timestamp from NTP time
 				$timestamp -= 2208988800;
+				$this->SendDebug("SetRTCFromNTP", "Ergebnis: ".date("d.m.Y H:i:s", $timestamp), 0);
 				SetValueInteger($this->GetIDForIdent("NTP_Timestamp"), $timestamp);
 				SetValueInteger($this->GetIDForIdent("NTP_Status"), 2);
 
