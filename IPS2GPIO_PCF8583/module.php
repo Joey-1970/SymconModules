@@ -473,7 +473,7 @@
 			$tries = 3;
 			do {
 				// PCF8583 zum Schreiben vorbereiten
-				$Bitmask = 0xE0;
+				$Bitmask = 0x20;
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" =>0x00, "Value" => $Bitmask)));
 				If (!$Result) {
 					$this->SendDebug("ResetInterruptFlags", "Setzen der Config fehlerhaft!", 0);
