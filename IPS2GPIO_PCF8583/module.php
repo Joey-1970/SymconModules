@@ -104,10 +104,10 @@
 		$arrayElements[] = array("type" => "Label", "label" => "Interrupt-Auslösung nach Zählerwert (optional)"); 
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "Kein (Default)", "value" => 0); // Default
-		$arrayOptions[] = array("label" => "Jeder Impuls", "value" => 1);
-		$arrayOptions[] = array("label" => "Jeder 100", "value" => 2);
-		$arrayOptions[] = array("label" => "Jeder 10.000", "value" => 3);
-		$arrayOptions[] = array("label" => "Jeder 1.000.000", "value" => 4);
+		$arrayOptions[] = array("label" => "Jeder 100", "value" => 1);
+		$arrayOptions[] = array("label" => "Jeder 10.000", "value" => 2);
+		$arrayOptions[] = array("label" => "Jeder 1.000.000", "value" => 3);
+		$arrayOptions[] = array("label" => "Jeder 100.000.000", "value" => 4);
 		$arrayElements[] = array("type" => "Select", "name" => "CounterInterrupt", "caption" => "Impulse", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus) (optional)");
@@ -176,13 +176,12 @@
 			case "notify":
 			   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
 					If (($data->Value == 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-						$this->SendDebug("Interrupt", "Wert: ".(int)$data->Value, 0);
+						$this->SendDebug("Interrupt", "Wert: ".(int)$data->Value." Counter auslesen"), 0);
 						SetValueInteger($this->GetIDForIdent("LastInterrupt"), time() );
 						$this->GetCounterByInterrupt();
 					}
 					elseIf (($data->Value == 1) AND ($this->ReadPropertyBoolean("Open") == true)) {
-						$this->SendDebug("Interrupt", "Wert: ".(int)$data->Value, 0);
-						//$this->GetCounter();
+						$this->SendDebug("Interrupt", "Wert: ".(int)$data->Value." keine Aktion", 0);
 					}
 			   	}
 			   	break; 
