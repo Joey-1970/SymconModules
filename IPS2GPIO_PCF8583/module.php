@@ -43,9 +43,11 @@
 		$this->DisableAction("CounterValue");
 		IPS_SetHidden($this->GetIDForIdent("CounterValue"), false);
 		
+		/*
 		$this->RegisterVariableBoolean("Interrupt", "Interrupt", "", 30);
 		$this->DisableAction("Interrupt");
 		IPS_SetHidden($this->GetIDForIdent("Interrupt"), false);
+		*/
 		
 		$this->RegisterVariableInteger("CounterDifference", "Zählwert-Differenz", "", 40);
 		$this->DisableAction("CounterDifference");
@@ -132,6 +134,16 @@
 		}
 			
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {					
+			$this->RegisterProfileInteger("IPS2GPIO.Pulse", "Network", "", "", 0, 1, 1);
+			IPS_SetVariableProfileAssociation("IPS2GPIO.Pulse", 0, "", "Flag", -1);
+			IPS_SetVariableProfileAssociation("IPS2GPIO.Pulse", 1, "Impuls", "Flag", 0xFF0000);
+			
+			$this->RegisterVariableInteger("Pulse", "Impuls", "IPS2GPIO.Pulse", 30);
+			$this->DisableAction("Pulse");
+			IPS_SetHidden($this->GetIDForIdent("Pulse"), false);
+			
+			SetValueInteger($this->GetIDForIdent("Pulse"), 0);
+			
 			// Logging setzen
 			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("CounterValue"), $this->ReadPropertyBoolean("Logging"));
 			IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
@@ -446,7 +458,8 @@
 						}
 						
 						$this->SetTimerInterval("Interrupt", (1 * 1000));
-						SetValueBoolean($this->GetIDForIdent("Interrupt"), true);
+						//SetValueBoolean($this->GetIDForIdent("Interrupt"), true);
+						SetValueInteger($this->GetIDForIdent("Pulse"), 1);
 						$this->ResetInterruptFlags();	
 						$this->GetTimerValue();	
 						
@@ -460,7 +473,8 @@
 	    
 	public function ResetInterrupt()
 	{
-		SetValueBoolean($this->GetIDForIdent("Interrupt"), false);
+		SetValueInteger($this->GetIDForIdent("Pulse"), 0);
+		//SetValueBoolean($this->GetIDForIdent("Interrupt"), false);
 		$this->SetTimerInterval("Interrupt", 0);
 		
 	}
