@@ -26,8 +26,13 @@
 		$this->RegisterPropertyInteger("NTPUpdate", 60);
 		$this->RegisterTimer("NTPUpdate", 0, 'I2GDS3231_SetRTCFromNTP($_IPS["TARGET"]);');
 		
+		// Profile erstellen
+		$this->RegisterProfileInteger("IPS2GPIO.NTPStatus", "Network", "", "", 0, 3, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.NTPStatus", 0, "unbekannt", "Network", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.NTPStatus", 1, "offline", "Network", 0xFF0000);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.NTPStatus", 2, "online", "Network", 0x00FF00);
 		
-		
+		// Statusvariablen anlegen
 		$this->RegisterVariableInteger("RTC_Timestamp", "RTC Zeitstempel", "~UnixTimestamp", 10);
 		$this->DisableAction("RTC_Timestamp");
 		IPS_SetHidden($this->GetIDForIdent("RTC_Timestamp"), false);
@@ -39,6 +44,10 @@
 		$this->RegisterVariableInteger("NTP_Timestamp", "NTP Zeitstempel", "~UnixTimestamp", 30);
 		$this->DisableAction("NTP_Timestamp");
 		IPS_SetHidden($this->GetIDForIdent("NTP_Timestamp"), false);
+							  
+		$this->RegisterVariableInteger("NTP_Status", "NTP Status", "IPS2GPIO.NTPStatus", 40);
+		$this->DisableAction("NTP_Status");
+		IPS_SetHidden($this->GetIDForIdent("NTP_Status"), false);
         }
  	
 	public function GetConfigurationForm() 
@@ -93,16 +102,7 @@
 
 			
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {					
-			
-			$this->RegisterProfileInteger("IPS2GPIO.NTPStatus", "Network", "", "", 0, 3, 1);
-			IPS_SetVariableProfileAssociation("IPS2GPIO.NTPStatus", 0, "unbekannt", "Network", -1);
-			IPS_SetVariableProfileAssociation("IPS2GPIO.NTPStatus", 1, "offline", "Network", 0xFF0000);
-			IPS_SetVariableProfileAssociation("IPS2GPIO.NTPStatus", 2, "online", "Network", 0x00FF00);
-							  
-			$this->RegisterVariableInteger("NTP_Status", "NTP Status", "IPS2GPIO.NTPStatus", 40);
-			$this->DisableAction("NTP_Status");
-			IPS_SetHidden($this->GetIDForIdent("NTP_Status"), false);
-							  
+						  
 			SetValueInteger($this->GetIDForIdent("NTP_Status"), 0);
 			
 			//ReceiveData-Filter setzen
