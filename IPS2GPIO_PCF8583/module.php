@@ -176,12 +176,12 @@
 			case "notify":
 			   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
 					If (($data->Value == 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-						$this->SendDebug("Interrupt", "Wert: ".(int)$data->Value." Counter auslesen"), 0);
+						$this->SendDebug("Interrupt", "Wert: ".(int)$data->Value." -> Counter auslesen", 0);
 						SetValueInteger($this->GetIDForIdent("LastInterrupt"), time() );
 						$this->GetCounterByInterrupt();
 					}
 					elseIf (($data->Value == 1) AND ($this->ReadPropertyBoolean("Open") == true)) {
-						$this->SendDebug("Interrupt", "Wert: ".(int)$data->Value." keine Aktion", 0);
+						$this->SendDebug("Interrupt", "Wert: ".(int)$data->Value." -> keine Aktion", 0);
 					}
 			   	}
 			   	break; 
