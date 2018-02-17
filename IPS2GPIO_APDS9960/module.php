@@ -6,7 +6,7 @@
 	{
 		//Never delete this line!
 		parent::Destroy();
-
+		$this->SetTimerInterval("Messzyklus", 0);
 	}
 	    
 	// Überschreibt die interne IPS_Create($id) Funktion
@@ -19,6 +19,7 @@
  	    	$this->RegisterPropertyInteger("DeviceAddress", 57);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
 		$this->RegisterPropertyInteger("Messzyklus", 60);
+		$this->RegisterTimer("Messzyklus", 0, 'I2GPCF8583_Setup($_IPS["TARGET"]);');
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->SetBuffer("PreviousPin", -1);
 		
