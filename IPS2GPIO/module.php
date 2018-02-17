@@ -2846,7 +2846,13 @@ class IPS2GPIO_IO extends IPSModule
 			$DeviceName[] = "PCF8574|MCP23017";
 		}
 		// PCF8574
-		for ($i = 56; $i <= 59; $i++) {
+		$SearchArray[] = 56;
+		$DeviceName[] = "PCF8574";
+		// APDS9960
+		$SearchArray[] = 57;
+		$DeviceName[] = "PCF8574|APDS9960";
+		// PCF8574
+		for ($i = 58; $i <= 59; $i++) {
 			$SearchArray[] = $i;
 			$DeviceName[] = "PCF8574";
 		}
