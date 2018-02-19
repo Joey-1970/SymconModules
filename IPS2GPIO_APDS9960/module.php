@@ -263,11 +263,13 @@
 			}
 			
 			$PILT = $this->ReadPropertyInteger("PILT");
+			$PILT = min(255, max(0, $PILT));
 			if (!$this->WriteData(0x89, $PILT, "PILT")) {
 				return false;
 			}
 			
 			$PIHT = $this->ReadPropertyInteger("PIHT");
+			$PIHT = min(255, max(0, $PIHT));
 			if (!$this->WriteData(0x8B, $PIHT, "PIHT")) {
 				return false;
 			}
@@ -279,10 +281,10 @@
 	private function WriteData(Int $Register, Int $Value, String $RegisterName)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("WriteData", "Ausfuehrung", 0);
+			$this->SendDebug("WriteData", "Ausfuehrung setzen von: ".$RegisterName, 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $Register, "Value" => $Value)));
 			If (!$Result) {
-				$this->SendDebug("Setup", "Setzen ".$Registername." fehlerhaft!", 0);
+				$this->SendDebug("Setup", "Setzen ".$RegisterName." fehlerhaft!", 0);
 				$this->SetStatus(202);
 				$this->SetTimerInterval("Messzyklus", 0);
 				return false;
@@ -323,7 +325,7 @@
 			/* Change bit(s) in ENABLE register */
 			$Enable = $Enable & 0x01;
 			
-			If ($Mode >= 0) AND ($Mode <= 6) {
+			If (($Mode >= 0) AND ($Mode <= 6)) {
 				If ($Enable) {
 					$Bitmask = $Bitmask | (1 << $Mode);
 				}
