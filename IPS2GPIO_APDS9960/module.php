@@ -32,6 +32,10 @@
 		$this->RegisterPropertyInteger("AIHT", 0);
 		$this->RegisterPropertyInteger("GPENTH", 40);
 		$this->RegisterPropertyInteger("GEXTH", 30);
+		
+		$this->RegisterPropertyInteger("GFIFOTH", 0);
+		$this->RegisterPropertyInteger("GEXMSK", 0);
+		$this->RegisterPropertyInteger("GEXPERS", 0);
 	
         }
  	
@@ -125,6 +129,35 @@
 		
 		$arrayElements[] = array("type" => "Label", "label" => "Ausgangs-Schwellwert für Gestik (0-255)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "GEXTH",  "caption" => "Wert");
+		
+		$arrayElements[] = array("type" => "Label", "label" => "Gestik Konfiguration - Interruptauslösung"); 
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "nach 1 (Default)", "value" => 0);
+		$arrayOptions[] = array("label" => "nach 4", "value" => 1);
+		$arrayOptions[] = array("label" => "nach 8", "value" => 2);
+		$arrayOptions[] = array("label" => "nach 16", "value" => 3);
+		$arrayElements[] = array("type" => "Select", "name" => "GFIFOTH", "caption" => "Datensätze", "options" => $arrayOptions );
+
+		$arrayElements[] = array("type" => "Label", "label" => "Gestik Konfiguration - Ausstieg"); 
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "alle Daten (Default)", "value" => 0);
+		$arrayOptions[] = array("label" => "ohne R", "value" => 1);
+		$arrayOptions[] = array("label" => "ohne L", "value" => 2);
+		$arrayOptions[] = array("label" => "ohne D", "value" => 4);
+		$arrayOptions[] = array("label" => "ohne U", "value" => 8);
+		$arrayOptions[] = array("label" => "...", "value" => 5);
+		$arrayOptions[] = array("label" => "ohne L und R", "value" => 6);
+		$arrayOptions[] = array("label" => "ohne UDLR", "value" => 15);
+		$arrayElements[] = array("type" => "Select", "name" => "GEXMSK", "caption" => "Datensätze", "options" => $arrayOptions );
+
+		$arrayElements[] = array("type" => "Label", "label" => "Gestik Konfiguration - Persitenz"); 
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "erste (Default)", "value" => 0);
+		$arrayOptions[] = array("label" => "zweite", "value" => 1);
+		$arrayOptions[] = array("label" => "vierte", "value" => 2);
+		$arrayOptions[] = array("label" => "siebte", "value" => 3);
+		$arrayElements[] = array("type" => "Select", "name" => "GEXPERS", "caption" => "Datensätze", "options" => $arrayOptions );
+
 		
 		$arrayActions = array();
 		$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
@@ -231,10 +264,10 @@
 			}
 			else {
 				If (($Result == 0xAB) OR ($Result == 0x9C)) {
-					SetValueInteger($this->GetIDForIdent("ChipID"), $Result);
+					SetValueInteger($this->GetIDForIdent("ChipID"), $Result[1]);
 				}
 				else {
-					$this->SendDebug("Setup", "Laut Chip ID ist es kein zulaessiger ADPS9960! Ermittelt: ".$Result, 0);
+					$this->SendDebug("Setup", "Laut Chip ID ist es kein zulaessiger ADPS9960! Ermittelt: ".$Result[1], 0);
 				}
 				$this->SetStatus(102);
 			}
@@ -331,6 +364,18 @@
 			$GEXTH = $this->ReadPropertyInteger("GEXTH");
 			$GEXTH = min(255, max(0, $GEXTH));
 			if (!$this->WriteData(0xA1, $GEXTH, "GEXTH")) {
+				return false;
+			}
+			
+			if (!$this->WriteData(0xA2, 0x40, "GCONF1")) {
+				return false;
+			}
+			
+			$GFIFOTH = $this->ReadPropertyInteger("GFIFOTH");
+			$GEXMASK = $this->ReadPropertyInteger("GEXMAS");
+			$GEXPERS = $this->ReadPropertyInteger("GEXPERS");
+			$GestureRegisterOne = $GEXPERS | ($$GEXMASK << 2) | ($GFIFOTH << 6);
+			if (!$this->WriteData(0xA3, $GestureRegisterOne, "GCONF2")) {
 				return false;
 			}
 		}
