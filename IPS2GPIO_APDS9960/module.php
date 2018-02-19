@@ -28,7 +28,6 @@
 		$this->RegisterPropertyInteger("AGAIN", 0);
 		$this->RegisterPropertyInteger("PILT", 0);
 		$this->RegisterPropertyInteger("PIHT", 50);
-		$this->RegisterPropertyInteger("PILT", 0);
 		$this->RegisterPropertyInteger("AILT", 65535);
 		$this->RegisterPropertyInteger("AIHT", 0);
 		$this->RegisterPropertyInteger("GPENTH", 40);
