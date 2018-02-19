@@ -186,6 +186,14 @@
 				}
 				$this->SetStatus(102);
 			}
+			
+			$Result = $this->SetMode( 7, 0);
+			If ($Result == false) {
+				$this->SetStatus(202);
+				$this->SetTimerInterval("Messzyklus", 0);
+			}
+			
+			
 			/*
 			// Zähler zurücksetzen
 			$CounterValueArray = array();
@@ -230,51 +238,44 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("SetMode", "Ausfuehrung", 0);
 			/* Read current ENABLE register */
-			$reg_val = $this->GetMode();
-			If ($reg_val < 0) {
+			$Bitmask = $this->GetMode();
+			If ($Bitmask < 0) {
 				return false;
 			}
 			/* Change bit(s) in ENABLE register */
 			$Enable = $Enable & 0x01;
 			
 			If ($Mode >= 0) AND ($Mode <= 6) {
-				If 
-					/*
-			    if( mode >= 0 && mode <= 6 ) {
-				if (enable) {
-				    reg_val |= (1 << mode);
-				} else {
-				    reg_val &= ~(1 << mode);
+				If ($Enable) {
+					$Bitmask = $Bitmask | (1 << $Mode);
 				}
-			    } else if( mode == ALL ) {
-				if (enable) {
-				    reg_val = 0x7F;
-				} else {
-				    reg_val = 0x00;
+				else {
+					$Bitmask = $Bitmask | ~(1 << $Mode);
 				}
-			    }
-
-			    /* Write value back to ENABLE register */
-			    if( !wireWriteDataByte(APDS9960_ENABLE, reg_val) ) {
-				return false;
-			    }
-			*/
-			
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x80, "Count" => 1)));
-			If ($Result < 0) {
-				$this->SendDebug("Setup", "Ermittlung des Status fehlerhaft!", 0);
+			}
+			elseif ($Mode == 7) {
+				If ($Enable) {
+					$Bitmask = 0x7F;
+				}
+				else {
+					$Bitmask = 0x00;
+				}
+			}
+					
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x80, "Value" => $Bitmask)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "Setzen der Enable Status fehlerhaft!", 0);
 				$this->SetStatus(202);
 				$this->SetTimerInterval("Messzyklus", 0);
+				return false;
 			}
 			else {
 				$this->SetStatus(102);
-				return $Result;
-			}
+				return true;
+			}   		
 		}
 	}
    
-
-
 
 	    
 
