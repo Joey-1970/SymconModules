@@ -19,7 +19,7 @@
  	    	$this->RegisterPropertyInteger("DeviceAddress", 57);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
 		$this->RegisterPropertyInteger("Messzyklus", 60);
-		$this->RegisterTimer("Messzyklus", 0, 'I2GPCF8583_Measurement($_IPS["TARGET"]);');
+		$this->RegisterTimer("Messzyklus", 0, 'I2GAPDS9960_Measurement($_IPS["TARGET"]);');
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->SetBuffer("PreviousPin", -1);
 		
@@ -311,15 +311,15 @@
 				return false;
 			}
 			
-			if( !$this->WriteData(0x8C, 0x11, "PERS") ) {
+			if (!$this->WriteData(0x8C, 0x11, "PERS")) {
 				return false;
 			}
 			
-			if( !$this->WriteData(0x90, 0x01, "CONFIG2") ) {
+			if (!$this->WriteData(0x90, 0x01, "CONFIG2")) {
 				return false;
 			}
 			
-			if( !$this->WriteData(0x9F, 0, "CONFIG3") ) {
+			if (!$this->WriteData(0x9F, 0, "CONFIG3")) {
 				return false;
 			}
 			
