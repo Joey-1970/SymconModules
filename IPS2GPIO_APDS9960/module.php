@@ -135,7 +135,7 @@
 			
 		
 		//Status-Variablen anlegen
-             	$this->RegisterVariableInteger("ChipID", "Chip ID", "", 5);
+             	$this->RegisterVariableInteger("ChipID", "Chip ID", "", 10);
 		$this->DisableAction("ChipID");
 		IPS_SetHidden($this->GetIDForIdent("ChipID"), true);
 		
