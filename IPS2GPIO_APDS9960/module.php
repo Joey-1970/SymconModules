@@ -193,25 +193,83 @@
 				$this->SetTimerInterval("Messzyklus", 0);
 			}
 			
-			
-			/*
-			// Zähler zurücksetzen
-			$CounterValueArray = array();
-			$CounterValueArray = array(0, 0, 0);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write_array", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 0x01, 
-											  "Parameter" => serialize($CounterValueArray) )));	
+			// ATIME setzen
+			$Bitmask = 219;
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x81, "Value" => $Bitmask)));
 			If (!$Result) {
-				$this->SendDebug("Setup", "Setzen des Counterwertes fehlerhaft!", 0);
+				$this->SendDebug("Setup", "Setzen ATIME fehlerhaft!", 0);
 				$this->SetStatus(202);
 				$this->SetTimerInterval("Messzyklus", 0);
 				return;
 			}
 			else {
 				$this->SetStatus(102);
-				$this->SetBuffer("CounterOldValue", 0);
-				SetValueInteger($this->GetIDForIdent("CounterDifference"), 0);
+			}   	
+			
+			// WTIME setzen
+			$Bitmask = 246;
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x83, "Value" => $Bitmask)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "Setzen WTIME fehlerhaft!", 0);
+				$this->SetStatus(202);
+				$this->SetTimerInterval("Messzyklus", 0);
+				return;
 			}
-			*/
+			else {
+				$this->SetStatus(102);
+			}   
+			
+			// PPULSE setzen
+			$Bitmask = 0x87;
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x8E, "Value" => $Bitmask)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "Setzen PPULSE fehlerhaft!", 0);
+				$this->SetStatus(202);
+				$this->SetTimerInterval("Messzyklus", 0);
+				return;
+			}
+			else {
+				$this->SetStatus(102);
+			}   
+			
+			// POFFSET_UR setzen
+			$Bitmask = 0;
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x9D, "Value" => $Bitmask)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "Setzen POFFSET_UR fehlerhaft!", 0);
+				$this->SetStatus(202);
+				$this->SetTimerInterval("Messzyklus", 0);
+				return;
+			}
+			else {
+				$this->SetStatus(102);
+			}   
+			
+			// POFFSET_DL setzen
+			$Bitmask = 0;
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x9E, "Value" => $Bitmask)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "Setzen POFFSET_DL fehlerhaft!", 0);
+				$this->SetStatus(202);
+				$this->SetTimerInterval("Messzyklus", 0);
+				return;
+			}
+			else {
+				$this->SetStatus(102);
+			}  
+			
+			// CONFIG1 setzen
+			$Bitmask = 0x60;
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x8D, "Value" => $Bitmask)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "Setzen CONFIG1 fehlerhaft!", 0);
+				$this->SetStatus(202);
+				$this->SetTimerInterval("Messzyklus", 0);
+				return;
+			}
+			else {
+				$this->SetStatus(102);
+			}  
 			
 		}
 	}
