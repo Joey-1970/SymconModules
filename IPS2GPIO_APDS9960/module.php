@@ -26,6 +26,8 @@
 		$this->RegisterPropertyInteger("LDRIVE", 0);
 		$this->RegisterPropertyInteger("PGAIN", 0);
 		$this->RegisterPropertyInteger("AGAIN", 0);
+		$this->RegisterPropertyInteger("PILT", 0);
+		$this->RegisterPropertyInteger("PIHT", 0);
 	
         }
  	
@@ -101,6 +103,12 @@
 		$arrayOptions[] = array("label" => "16x", "value" => 2);
 		$arrayOptions[] = array("label" => "64x", "value" => 3);
 		$arrayElements[] = array("type" => "Select", "name" => "AGAIN", "caption" => "Faktor", "options" => $arrayOptions );
+		
+		$arrayElements[] = array("type" => "Label", "label" => "Unterer Schwellwert für Annährungs-Interrupt (0-255)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PILT",  "caption" => "Wert");
+		
+		$arrayElements[] = array("type" => "Label", "label" => "Oberer Schwellwert für Annährungs-Interrupt (0-255)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PIHT",  "caption" => "Wert");
 
 		
 		$arrayActions = array();
@@ -251,6 +259,16 @@
 			$AGAIN = $this->ReadPropertyInteger("AGAIN");
 			$ControlRegisterOne = $AGAIN | ($PGAIN << 2) | ($LDRIVE << 6);
 			if (!$this->WriteData(0x8F, $ControlRegisterOne, "CONTROL")) {
+				return false;
+			}
+			
+			$PILT = $this->ReadPropertyInteger("PILT");
+			if (!$this->WriteData(0x89, $PILT, "PILT")) {
+				return false;
+			}
+			
+			$PIHT = $this->ReadPropertyInteger("PIHT");
+			if (!$this->WriteData(0x8B, $PIHT, "PIHT")) {
 				return false;
 			}
 			
