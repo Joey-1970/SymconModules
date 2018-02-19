@@ -23,8 +23,9 @@
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->SetBuffer("PreviousPin", -1);
 		
-	
-		
+		$this->RegisterPropertyInteger("LDRIVE", 0);
+		$this->RegisterPropertyInteger("PGAIN", 0);
+		$this->RegisterPropertyInteger("AGAIN", 0);
 	
         }
  	
@@ -70,10 +71,38 @@
 		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
-		
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus) (optional)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");  
+		
+		// LED Drive Strength 0x8F Bit 7:6
+		$arrayElements[] = array("type" => "Label", "label" => "LED Drive Strength"); 
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "100 mA (Default)", "value" => 0);
+		$arrayOptions[] = array("label" => "50 mA", "value" => 1);
+		$arrayOptions[] = array("label" => "25 mA", "value" => 2);
+		$arrayOptions[] = array("label" => "12,5 mA", "value" => 3);
+		$arrayElements[] = array("type" => "Select", "name" => "LDRIVE", "caption" => "Stromstärke", "options" => $arrayOptions );
+
+		// Proximity Gain Control 0x8F Bit 3:2
+		$arrayElements[] = array("type" => "Label", "label" => "Annährungsverstärkung"); 
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "1x (Default)", "value" => 0);
+		$arrayOptions[] = array("label" => "2x", "value" => 1);
+		$arrayOptions[] = array("label" => "4x", "value" => 2);
+		$arrayOptions[] = array("label" => "8x", "value" => 3);
+		$arrayElements[] = array("type" => "Select", "name" => "PGAIN", "caption" => "Faktor", "options" => $arrayOptions );
+
+		// ALS and Color Gain Control 0x8F Bit 1:0
+		$arrayElements[] = array("type" => "Label", "label" => "ALS und Farbverstärkung"); 
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "1x (Default)", "value" => 0);
+		$arrayOptions[] = array("label" => "4x", "value" => 1);
+		$arrayOptions[] = array("label" => "16x", "value" => 2);
+		$arrayOptions[] = array("label" => "64x", "value" => 3);
+		$arrayElements[] = array("type" => "Select", "name" => "AGAIN", "caption" => "Faktor", "options" => $arrayOptions );
+
+		
 		$arrayActions = array();
 		$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
 		
@@ -217,8 +246,13 @@
 				return false;
 			}
 			
-			
-			
+			$LDRIVE = $this->ReadPropertyInteger("LDRIVE");
+			$PGAIN = $this->ReadPropertyInteger("PGAIN");
+			$AGAIN = $this->ReadPropertyInteger("AGAIN");
+			$ControlRegisterOne = $AGAIN | ($PGAIN << 2) | ($LDRIVE << 6);
+			if (!$this->WriteData(0x8F, $ControlRegisterOne, "CONTROL")) {
+				return false;
+			}
 			
 			
 		}
