@@ -193,84 +193,52 @@
 				$this->SetTimerInterval("Messzyklus", 0);
 			}
 			
-			// ATIME setzen
-			$Bitmask = 219;
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x81, "Value" => $Bitmask)));
-			If (!$Result) {
-				$this->SendDebug("Setup", "Setzen ATIME fehlerhaft!", 0);
-				$this->SetStatus(202);
-				$this->SetTimerInterval("Messzyklus", 0);
-				return;
+			if (!$this->WriteData(0x81, 219, "ATIME")) {
+				return false;
 			}
-			else {
-				$this->SetStatus(102);
-			}   	
+
+			if (!$this->WriteData(0x83, 246, "WTIME")) {
+				return false;
+			}
 			
-			// WTIME setzen
-			$Bitmask = 246;
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x83, "Value" => $Bitmask)));
-			If (!$Result) {
-				$this->SendDebug("Setup", "Setzen WTIME fehlerhaft!", 0);
-				$this->SetStatus(202);
-				$this->SetTimerInterval("Messzyklus", 0);
-				return;
+			if (!$this->WriteData(0x8E, 0x87, "PPULSE")) {
+				return false;
 			}
-			else {
-				$this->SetStatus(102);
-			}   
 			
-			// PPULSE setzen
-			$Bitmask = 0x87;
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x8E, "Value" => $Bitmask)));
-			If (!$Result) {
-				$this->SendDebug("Setup", "Setzen PPULSE fehlerhaft!", 0);
-				$this->SetStatus(202);
-				$this->SetTimerInterval("Messzyklus", 0);
-				return;
+			if (!$this->WriteData(0x9D, 0, "POFFSET_UR")) {
+				return false;
 			}
-			else {
-				$this->SetStatus(102);
-			}   
 			
-			// POFFSET_UR setzen
-			$Bitmask = 0;
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x9D, "Value" => $Bitmask)));
-			If (!$Result) {
-				$this->SendDebug("Setup", "Setzen POFFSET_UR fehlerhaft!", 0);
-				$this->SetStatus(202);
-				$this->SetTimerInterval("Messzyklus", 0);
-				return;
+			if (!$this->WriteData(0x9E, 0, "POFFSET_DL")) {
+				return false;
 			}
-			else {
-				$this->SetStatus(102);
-			}   
 			
-			// POFFSET_DL setzen
-			$Bitmask = 0;
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x9E, "Value" => $Bitmask)));
+			if (!$this->WriteData(0x8D, 0x60, "CONFIG1")) {
+				return false;
+			}
+			
+			
+			
+			
+			
+		}
+	}
+	    
+	private function WriteData(Int $Register, Int $Value, String $RegisterName)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("WriteData", "Ausfuehrung", 0);
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $Register, "Value" => $Value)));
 			If (!$Result) {
-				$this->SendDebug("Setup", "Setzen POFFSET_DL fehlerhaft!", 0);
+				$this->SendDebug("Setup", "Setzen ".$Registername." fehlerhaft!", 0);
 				$this->SetStatus(202);
 				$this->SetTimerInterval("Messzyklus", 0);
-				return;
+				return false;
 			}
 			else {
 				$this->SetStatus(102);
+				return true;
 			}  
-			
-			// CONFIG1 setzen
-			$Bitmask = 0x60;
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x8D, "Value" => $Bitmask)));
-			If (!$Result) {
-				$this->SendDebug("Setup", "Setzen CONFIG1 fehlerhaft!", 0);
-				$this->SetStatus(202);
-				$this->SetTimerInterval("Messzyklus", 0);
-				return;
-			}
-			else {
-				$this->SetStatus(102);
-			}  
-			
 		}
 	}
 	    
