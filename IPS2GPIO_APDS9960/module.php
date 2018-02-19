@@ -86,6 +86,13 @@
             	// Diese Zeile nicht löschen
             	parent::ApplyChanges();
 			
+		
+		//Status-Variablen anlegen
+             	$this->RegisterVariableInteger("ChipID", "Chip ID", "", 5);
+		$this->DisableAction("ChipID");
+		IPS_SetHidden($this->GetIDForIdent("ChipID"), true);
+		
+		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {					
 			If (intval($this->GetBuffer("PreviousPin")) <> $this->ReadPropertyInteger("Pin")) {
 				$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin"), 0);
@@ -162,6 +169,25 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Setup", "Ausfuehrung", 0);
+			// Ermittlung der Device ID
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x92, "Count" => 1)));
+			If ($Result < 0) {
+				$this->SendDebug("Setup", "Ermittlung der DeviceID fehlerhaft!", 0);
+				$this->SetStatus(202);
+				$this->SetTimerInterval("Messzyklus", 0);
+				return;
+			}
+			else {
+				If (($Result == 0xAB) OR ($Result == 0x9C)) {
+					SetValueInteger($this->GetIDForIdent("ChipID"), $Result);
+				}
+				else {
+					$this->SendDebug("Setup", "Laut Chip ID ist es kein zulaessiger ADPS9960!", 0);
+				}
+				$this->SetStatus(102);
+			}
+			
+			
 			
 		}
 	}
