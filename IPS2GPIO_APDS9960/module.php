@@ -186,15 +186,93 @@
 				}
 				$this->SetStatus(102);
 			}
-			
-			
+			/*
+			// Zähler zurücksetzen
+			$CounterValueArray = array();
+			$CounterValueArray = array(0, 0, 0);
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write_array", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 0x01, 
+											  "Parameter" => serialize($CounterValueArray) )));	
+			If (!$Result) {
+				$this->SendDebug("Setup", "Setzen des Counterwertes fehlerhaft!", 0);
+				$this->SetStatus(202);
+				$this->SetTimerInterval("Messzyklus", 0);
+				return;
+			}
+			else {
+				$this->SetStatus(102);
+				$this->SetBuffer("CounterOldValue", 0);
+				SetValueInteger($this->GetIDForIdent("CounterDifference"), 0);
+			}
+			*/
 			
 		}
 	}
 	    
+	private function GetMode()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("GetMode", "Ausfuehrung", 0);
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x80, "Count" => 1)));
+			If ($Result < 0) {
+				$this->SendDebug("Setup", "Ermittlung des Status fehlerhaft!", 0);
+				$this->SetStatus(202);
+				$this->SetTimerInterval("Messzyklus", 0);
+			}
+			else {
+				$this->SetStatus(102);
+			}
+		}
+	return $Result;
+	}
 
+	private function SetMode(Int $Mode, Int $Enable)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("SetMode", "Ausfuehrung", 0);
+			/* Read current ENABLE register */
+			$reg_val = $this->GetMode();
+			If ($reg_val < 0) {
+				return false;
+			}
+			/* Change bit(s) in ENABLE register */
+			$Enable = $Enable & 0x01;
+			
+			If ($Mode >= 0) AND ($Mode <= 6) {
+				If 
+					/*
+			    if( mode >= 0 && mode <= 6 ) {
+				if (enable) {
+				    reg_val |= (1 << mode);
+				} else {
+				    reg_val &= ~(1 << mode);
+				}
+			    } else if( mode == ALL ) {
+				if (enable) {
+				    reg_val = 0x7F;
+				} else {
+				    reg_val = 0x00;
+				}
+			    }
 
-	    
+			    /* Write value back to ENABLE register */
+			    if( !wireWriteDataByte(APDS9960_ENABLE, reg_val) ) {
+				return false;
+			    }
+			*/
+			
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x80, "Count" => 1)));
+			If ($Result < 0) {
+				$this->SendDebug("Setup", "Ermittlung des Status fehlerhaft!", 0);
+				$this->SetStatus(202);
+				$this->SetTimerInterval("Messzyklus", 0);
+			}
+			else {
+				$this->SetStatus(102);
+				return $Result;
+			}
+		}
+	}
+   
 
 
 
