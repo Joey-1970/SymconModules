@@ -286,8 +286,25 @@
 			
 			$AILT = $this->ReadPropertyInteger("AILT");
 			$AILT = min(65535, max(0, $AILT));
+			$AILTL = $AILT & 0x00FF;
+			if (!$this->WriteData(0x84, $AILTL, "AILTL")) {
+				return false;
+			}
+			$AILTH = ($AILT & 0xFF00) >> 8;
+			if (!$this->WriteData(0x85, $AILTH, "AILTH")) {
+				return false;
+			}
 			$AIHT = $this->ReadPropertyInteger("AIHT");
 			$AIHT = min(65535, max(0, $AIHT));
+			$AIHTL = $AIHT & 0x00FF;
+			if (!$this->WriteData(0x86, $AIHTL, "AIHTL")) {
+				return false;
+			}
+			$AIHTH = ($AIHT & 0xFF00) >> 8;
+			if (!$this->WriteData(0x87, $AIHTH, "AIHTH")) {
+				return false;
+			}
+			
 			
 		}
 	}
