@@ -27,7 +27,10 @@
 		$this->RegisterPropertyInteger("PGAIN", 0);
 		$this->RegisterPropertyInteger("AGAIN", 0);
 		$this->RegisterPropertyInteger("PILT", 0);
-		$this->RegisterPropertyInteger("PIHT", 0);
+		$this->RegisterPropertyInteger("PIHT", 50);
+		$this->RegisterPropertyInteger("PILT", 0);
+		$this->RegisterPropertyInteger("AILT", 65535);
+		$this->RegisterPropertyInteger("AIHT", 0);
 	
         }
  	
@@ -110,6 +113,13 @@
 		$arrayElements[] = array("type" => "Label", "label" => "Oberer Schwellwert für Annährungs-Interrupt (0-255)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PIHT",  "caption" => "Wert");
 
+		$arrayElements[] = array("type" => "Label", "label" => "Unterer Schwellwert für Ambilght-Sensing-Interrupt (0-65535)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "AILT",  "caption" => "Wert");
+		
+		$arrayElements[] = array("type" => "Label", "label" => "Oberer Schwellwert für Ambilght-Sensing-Interrupt (0-65535)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "AIHT",  "caption" => "Wert");
+
+		
 		
 		$arrayActions = array();
 		$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
@@ -219,7 +229,7 @@
 					SetValueInteger($this->GetIDForIdent("ChipID"), $Result);
 				}
 				else {
-					$this->SendDebug("Setup", "Laut Chip ID ist es kein zulaessiger ADPS9960!", 0);
+					$this->SendDebug("Setup", "Laut Chip ID ist es kein zulaessiger ADPS9960! Ermittelt: ".$Result, 0);
 				}
 				$this->SetStatus(102);
 			}
@@ -274,6 +284,10 @@
 				return false;
 			}
 			
+			$AILT = $this->ReadPropertyInteger("AILT");
+			$AILT = min(65535, max(0, $AILT));
+			$AIHT = $this->ReadPropertyInteger("AIHT");
+			$AIHT = min(65535, max(0, $AIHT));
 			
 		}
 	}
