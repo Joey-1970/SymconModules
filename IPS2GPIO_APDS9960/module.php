@@ -31,6 +31,8 @@
 		$this->RegisterPropertyInteger("PILT", 0);
 		$this->RegisterPropertyInteger("AILT", 65535);
 		$this->RegisterPropertyInteger("AIHT", 0);
+		$this->RegisterPropertyInteger("GPENTH", 40);
+		$this->RegisterPropertyInteger("GEXTH", 30);
 	
         }
  	
@@ -119,7 +121,11 @@
 		$arrayElements[] = array("type" => "Label", "label" => "Oberer Schwellwert für Ambilght-Sensing-Interrupt (0-65535)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "AIHT",  "caption" => "Wert");
 
+		$arrayElements[] = array("type" => "Label", "label" => "Eingangs-Schwellwert für Gestik (0-255)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "GPENTH",  "caption" => "Wert");
 		
+		$arrayElements[] = array("type" => "Label", "label" => "Ausgangs-Schwellwert für Gestik (0-255)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "GEXTH",  "caption" => "Wert");
 		
 		$arrayActions = array();
 		$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
@@ -317,7 +323,17 @@
 				return false;
 			}
 			
-
+			$GPENTH = $this->ReadPropertyInteger("GPENTH");
+			$GPENTH = min(255, max(0, $GPENTH));
+			if (!$this->WriteData(0xA0, $GPENTH, "GPENTH")) {
+				return false;
+			}
+			
+			$GEXTH = $this->ReadPropertyInteger("GEXTH");
+			$GEXTH = min(255, max(0, $GEXTH));
+			if (!$this->WriteData(0xA1, $GEXTH, "GEXTH")) {
+				return false;
+			}
 		}
 	}
 	    
