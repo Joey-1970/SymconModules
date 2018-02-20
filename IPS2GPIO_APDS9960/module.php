@@ -566,6 +566,18 @@
 				If (is_array(unserialize($Result)) == true) {
 					$this->SetStatus(102);
 					$this->SendDebug("Measurement", "Daten: ".$Result, 0);
+					// Status
+					$this->SendDebug("Measurement", "Status: ".$Result[1], 0);
+					// Clear Channel
+					$this->SendDebug("Measurement", "Clear Channel: ".($Result[2] | ($Result[3] << 8)), 0);
+					// Red Channel
+					$this->SendDebug("Measurement", "Red Channel: ".($Result[4] | ($Result[5] << 8)), 0);
+					// Green Channel
+					$this->SendDebug("Measurement", "Green Channel: ".($Result[6] | ($Result[7] << 8)), 0);
+					// Blue Channel
+					$this->SendDebug("Measurement", "Green Channel: ".($Result[8] | ($Result[9] << 8)), 0);
+					// Nährung
+					$this->SendDebug("Measurement", "Naehrung: ".$Result[10], 0);
 				}
 			}
 			
@@ -581,6 +593,8 @@
 				If (is_array(unserialize($Result)) == true) {
 					$this->SetStatus(102);
 					$this->SendDebug("Measurement", "Daten: ".$Result, 0);
+					$this->SendDebug("Measurement", "Gestik FIFO Level: ".$Result[1], 0);
+					$this->SendDebug("Measurement", "Gestik Status: ".$Result[2], 0);
 				}
 			}
 			
@@ -596,6 +610,10 @@
 				If (is_array(unserialize($Result)) == true) {
 					$this->SetStatus(102);
 					$this->SendDebug("Measurement", "Daten: ".$Result, 0);
+					$this->SendDebug("Measurement", "Gestik FIFO Up: ".$Result[1], 0);
+					$this->SendDebug("Measurement", "Gestik FIFO Down: ".$Result[2], 0);
+					$this->SendDebug("Measurement", "Gestik FIFO Left: ".$Result[3], 0);
+					$this->SendDebug("Measurement", "Gestik FIFO Right: ".$Result[4], 0);
 				}
 			}
 		}
