@@ -282,6 +282,7 @@
 			If ($Result == false) {
 				$this->SetStatus(202);
 				$this->SetTimerInterval("Messzyklus", 0);
+				return false;
 			}
 			
 			 // Set default values for ambient light and proximity registers
@@ -411,13 +412,11 @@
 				return false;
 			}
 			
-			$this->SetGestureIntEnable(0);
-			
-			/*
-			if( !setGestureIntEnable(DEFAULT_GIEN) ) {
+			$Result = $this->SetGestureIntEnable(0);
+			If ($Result == false) {
 				return false;
-			    }
-			*/
+			}
+			
 		}
 	}
 	    
@@ -484,18 +483,11 @@
 					$Bitmask = 0x00;
 				}
 			}
-					
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x80, "Value" => $Bitmask)));
-			If (!$Result) {
-				$this->SendDebug("Setup", "Setzen der Enable Status fehlerhaft!", 0);
-				$this->SetStatus(202);
-				$this->SetTimerInterval("Messzyklus", 0);
+			
+			if (!$this->WriteData(0x80, $Bitmask, "ENABLE")) {
 				return false;
-			}
-			else {
-				$this->SetStatus(102);
-				return true;
-			}   		
+			} 
+			return true;  		
 		}
 	}
    
