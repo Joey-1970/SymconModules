@@ -198,6 +198,14 @@
 		$this->DisableAction("ChipID");
 		IPS_SetHidden($this->GetIDForIdent("ChipID"), true);
 		
+		$this->RegisterVariableInteger("Intensity", "Intensity", "~Intensity.255", 20);
+	        $this->DisableAction("Intensity");
+		IPS_SetHidden($this->GetIDForIdent("Intensity"), false);
+		
+		$this->RegisterVariableInteger("Color", "Farbe", "~HexColor", 30);
+           	$this->DisableAction("Color");
+		IPS_SetHidden($this->GetIDForIdent("Color"), false);
+		
 		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {					
 			If (intval($this->GetBuffer("PreviousPin")) <> $this->ReadPropertyInteger("Pin")) {
@@ -586,14 +594,23 @@
 					$Result = unserialize($Result);
 					// Status
 					$this->SendDebug("Measurement", "Status: ".$Result[1], 0);
+					
 					// Clear Channel
 					$this->SendDebug("Measurement", "Clear Channel: ".($Result[2] | ($Result[3] << 8)), 0);
+					$W = intval(($Result[2] | ($Result[3] << 8)) / 65535 * 255);
+					SetValueInteger($this->GetIDForIdent("Intensity"), $W);
+					
 					// Red Channel
 					$this->SendDebug("Measurement", "Red Channel: ".($Result[4] | ($Result[5] << 8)), 0);
 					// Green Channel
 					$this->SendDebug("Measurement", "Green Channel: ".($Result[6] | ($Result[7] << 8)), 0);
 					// Blue Channel
-					$this->SendDebug("Measurement", "Green Channel: ".($Result[8] | ($Result[9] << 8)), 0);
+					$this->SendDebug("Measurement", "Blue Channel: ".($Result[8] | ($Result[9] << 8)), 0);
+					$R = intval(($Result[4] | ($Result[5] << 8)) / 65535 * 255);
+					$G = intval(($Result[6] | ($Result[7] << 8)) / 65535 * 255);
+					$B = intval(($Result[8] | ($Result[9] << 8)) / 65535 * 255);
+					SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex($R, $G, $B));
+					
 					// Nährung
 					$this->SendDebug("Measurement", "Naehrung: ".$Result[10], 0);
 				}
@@ -636,7 +653,12 @@
 		}
 	}
 	    
-
+	private function RGB2Hex($r, $g, $b)
+	{
+		$Hex = hexdec(str_pad(dechex($r), 2,'0', STR_PAD_LEFT).str_pad(dechex($g), 2,'0', STR_PAD_LEFT).str_pad(dechex($b), 2,'0', STR_PAD_LEFT));
+	return $Hex;
+	}
+	
 	private function Get_I2C_Ports()
 	{
 		If ($this->HasActiveParent() == true) {
