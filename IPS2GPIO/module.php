@@ -1003,17 +1003,8 @@ class IPS2GPIO_IO extends IPSModule
 		   		$Result = $this->CommandClientSocket(pack("L*", 62, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 4, $data->Value), 16);
 		   	}
 		   	break;
-		case "i2c_APDS9960_write_array": 
-			// I2CWI h r bvs - smb Write I2C Block Data
-			If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
-				$this->SetI2CBus(intval($data->DeviceIdent));
-				$ParameterArray = array();
-				$ParameterArray = unserialize($data->Parameter);
-				$Result = $this->CommandClientSocket(pack("LLLLC*", 68, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, count($ParameterArray), 
-									  ...$ParameterArray), 16);
-			}
-			break;
-		   // Serielle Kommunikation
+
+		// Serielle Kommunikation
 		case "get_handle_serial":
 	   		If ($this->GetBuffer("ModuleReady") == 1) {
 				If ($this->GetBuffer("Serial_Configured") == 0) {
