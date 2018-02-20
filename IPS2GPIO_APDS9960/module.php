@@ -285,16 +285,18 @@
 				return;
 			}
 			else {
-				$this->SendDebug("Setup", "DeviceID: ", 0);
-				$Result = unserialize($Result);
-				$ChipID = $Result[1];
-				If (($ChipID == 0xAB) OR ($ChipID == 0x9C)) {
-					SetValueInteger($this->GetIDForIdent("ChipID"), $ChipID);
+				If (is_array(unserialize($Result)) == true) {
+					$Result = unserialize($Result);
+					$ChipID = $Result[1];
+					$this->SendDebug("Setup", "DeviceID: ".$ChipID, 0);
+					If (($ChipID == 0xAB) OR ($ChipID == 0x9C)) {
+						SetValueInteger($this->GetIDForIdent("ChipID"), $ChipID);
+					}
+					else {
+						$this->SendDebug("Setup", "Laut Chip ID ist es kein zulaessiger ADPS9960! Ermittelt: ".$ChipID, 0);
+					}
+					$this->SetStatus(102);
 				}
-				else {
-					$this->SendDebug("Setup", "Laut Chip ID ist es kein zulaessiger ADPS9960! Ermittelt: ".$ChipID, 0);
-				}
-				$this->SetStatus(102);
 			}
 			
 			// Set ENABLE register to 0 (disable all features)
@@ -306,6 +308,7 @@
 			$PIEN = $this->ReadPropertyBoolean("PIEN");
 			$GEN = $this->ReadPropertyBoolean("GEN");
 			$EnableRegister = $PON | ($AEN << 1) | ($PEN << 2) |($WEN << 3) | ($AIEN << 4) | ($PIEN << 5) | ($GEN << 6);
+			$this->SendDebug("Setup", "EnableRegister: ".$EnableRegister, 0);
 			if (!$this->WriteData(0x80, $EnableRegister, "ENABLE")) {
 				return false;
 			}
@@ -437,7 +440,7 @@
 				return false;
 			}
 			
-			$Result = $this->SetGestureIntEnable(0);
+			$Result = $this->SetGestureIntEnable(1);
 			If ($Result == false) {
 				return false;
 			}
