@@ -289,7 +289,7 @@
 				$Result = unserialize($Result);
 				$ChipID = $Result[1];
 				If (($ChipID == 0xAB) OR ($ChipID == 0x9C)) {
-					SetValueInteger($this->GetIDForIdent("ChipID"), $Result[1]);
+					SetValueInteger($this->GetIDForIdent("ChipID"), $ChipID);
 				}
 				else {
 					$this->SendDebug("Setup", "Laut Chip ID ist es kein zulaessiger ADPS9960! Ermittelt: ".$ChipID, 0);
