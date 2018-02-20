@@ -387,26 +387,35 @@
 				return false;
 			}
 			
-			/*
-			if( !wireWriteDataByte(APDS9960_GOFFSET_U, DEFAULT_GOFFSET) ) {
+			if (!$this->WriteData(0xA4, 0, "GOFFSET_U")) {
 				return false;
-			    }
-			    if( !wireWriteDataByte(APDS9960_GOFFSET_D, DEFAULT_GOFFSET) ) {
-				return false;
-			    }
-			    if( !wireWriteDataByte(APDS9960_GOFFSET_L, DEFAULT_GOFFSET) ) {
-				return false;
-			    }
-			    if( !wireWriteDataByte(APDS9960_GOFFSET_R, DEFAULT_GOFFSET) ) {
-				return false;
-			    }
-			    if( !wireWriteDataByte(APDS9960_GPULSE, DEFAULT_GPULSE) ) {
-				return false;
-			    }
-			    if( !wireWriteDataByte(APDS9960_GCONF3, DEFAULT_GCONF3) ) {
-				return false;
-			*/
+			}
 			
+			if (!$this->WriteData(0xA5, 0, "GOFFSET_D")) {
+				return false;
+			}
+			
+			if (!$this->WriteData(0xA7, 0, "GOFFSET_L")) {
+				return false;
+			}
+			
+			if (!$this->WriteData(0xA9, 0, "GOFFSET_R")) {
+				return false;
+			}
+			
+			if (!$this->WriteData(0xA6, 0xC9, "GPULSE")) {
+				return false;
+			}
+			
+			if (!$this->WriteData(0xAA, 0, "GCONF3")) {
+				return false;
+			}
+			
+			/*
+			if( !setGestureIntEnable(DEFAULT_GIEN) ) {
+				return false;
+			    }
+			*/
 		}
 	}
 	    
