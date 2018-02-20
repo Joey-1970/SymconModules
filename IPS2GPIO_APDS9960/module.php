@@ -9,6 +9,8 @@
 		$this->SetTimerInterval("Messzyklus", 0);
 	}
 	    
+	// https://github.com/sparkfun/APDS-9960_RGB_and_Gesture_Sensor/blob/master/Libraries/Arduino/APDS-9960_RGB_and_Gesture_Sensor_Arduino_Library/src/SparkFun_APDS9960.h
+	// https://github.com/sparkfun/APDS-9960_RGB_and_Gesture_Sensor/blob/master/Libraries/Arduino/APDS-9960_RGB_and_Gesture_Sensor_Arduino_Library/src/SparkFun_APDS9960.cpp
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
