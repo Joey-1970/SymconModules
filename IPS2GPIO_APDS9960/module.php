@@ -411,6 +411,8 @@
 				return false;
 			}
 			
+			$this->SetGestureIntEnable(0);
+			
 			/*
 			if( !setGestureIntEnable(DEFAULT_GIEN) ) {
 				return false;
@@ -451,7 +453,7 @@
 				$this->SetStatus(102);
 			}
 		}
-	return $Result;
+	return $Result[1];
 	}
 
 	private function SetMode(Int $Mode, Int $Enable)
@@ -497,6 +499,33 @@
 		}
 	}
    
+	private function SetGestureIntEnable(Int $Enable)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("SetGestureIntEnable", "Ausfuehrung", 0);
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0xAB, "Count" => 1)));
+			If ($Result < 0) {
+				$this->SendDebug("Setup", "Ermittlung des GestureIntEnable fehlerhaft!", 0);
+				$this->SetStatus(202);
+				$this->SetTimerInterval("Messzyklus", 0);
+				return false;
+			}
+			else {
+				$this->SetStatus(102);
+				/* Set bits in register to given value */
+				$Enable = $Enable & 0x01;
+				$Enable = $Enable & << 1;
+				$Value = $Result[1];
+				$Value = $Value & 0xFD;
+				$Value = $Value | $Enable;
+				if (!$this->WriteData(0xAB, $Value, "GCONF4")) {
+					return false;
+				} 
+				return true;
+			}
+		}
+	}
+	    
 	public function Measurement()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
