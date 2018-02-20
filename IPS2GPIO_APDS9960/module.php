@@ -459,6 +459,18 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("SetMode", "Ausfuehrung", 0);
+			
+			/* Acceptable parameters for setMode
+			POWER                   0
+			AMBIENT_LIGHT           1
+			PROXIMITY               2
+			WAIT                    3
+			AMBIENT_LIGHT_INT       4
+			PROXIMITY_INT           5
+			GESTURE                 6
+			ALL                     7
+			*/
+			
 			/* Read current ENABLE register */
 			$Bitmask = $this->GetMode();
 			If ($Bitmask < 0) {
