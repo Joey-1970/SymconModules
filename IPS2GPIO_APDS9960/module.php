@@ -23,6 +23,14 @@
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->SetBuffer("PreviousPin", -1);
 		
+		$this->RegisterPropertyBoolean("PON", false);
+		$this->RegisterPropertyBoolean("AEN", false);
+		$this->RegisterPropertyBoolean("PEN", false);
+		$this->RegisterPropertyBoolean("WEN", false);
+		$this->RegisterPropertyBoolean("AIEN", false);
+		$this->RegisterPropertyBoolean("PIEN", false);
+		$this->RegisterPropertyBoolean("GEN", false);
+		
 		$this->RegisterPropertyInteger("LDRIVE", 0);
 		$this->RegisterPropertyInteger("PGAIN", 0);
 		$this->RegisterPropertyInteger("AGAIN", 0);
@@ -84,7 +92,14 @@
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus) (optional)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");  
-		
+		$arrayElements[] = array("name" => "PON", "type" => "CheckBox",  "caption" => "Power"); 
+		$arrayElements[] = array("name" => "AEN", "type" => "CheckBox",  "caption" => "Ambilight Sensor"); 
+		$arrayElements[] = array("name" => "PEN", "type" => "CheckBox",  "caption" => "Annährungs Sensor"); 
+		$arrayElements[] = array("name" => "WEN", "type" => "CheckBox",  "caption" => "Wartezeit"); 
+		$arrayElements[] = array("name" => "AIEN", "type" => "CheckBox",  "caption" => "Ambilight Interrupt");
+		$arrayElements[] = array("name" => "PIEN", "type" => "CheckBox",  "caption" => "Annährungs Interrupt"); 
+		$arrayElements[] = array("name" => "GEN", "type" => "CheckBox",  "caption" => "Gestik Sensor"); 
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");  
 		// LED Drive Strength 0x8F Bit 7:6
 		$arrayElements[] = array("type" => "Label", "label" => "LED Drive Strength"); 
 		$arrayOptions = array();
@@ -278,14 +293,19 @@
 			}
 			
 			// Set ENABLE register to 0 (disable all features)
-			$Result = $this->SetMode( 7, 0);
-			If ($Result == false) {
-				$this->SetStatus(202);
-				$this->SetTimerInterval("Messzyklus", 0);
+			$PON = $this->ReadPropertyBoolean("PON");
+			$AEN = $this->ReadPropertyBoolean("AEN");
+			$PEN = $this->ReadPropertyBoolean("PEN");
+			$WEN = $this->ReadPropertyBoolean("WEN");
+			$AIEN = $this->ReadPropertyBoolean("AIEN");
+			$PIEN = $this->ReadPropertyBoolean("PIEN");
+			$GEN = $this->ReadPropertyBoolean("GEN");
+			$EnableRegister = $PON | ($AEN << 1) | ($PEN << 2) |($WEN << 3) | ($AIEN << 4) | ($PIEN << 5) | ($GEN << 6);
+			if (!$this->WriteData(0x80, $EnableRegister, "ENABLE")) {
 				return false;
 			}
 			
-			 // Set default values for ambient light and proximity registers
+			// Set default values for ambient light and proximity registers
 			if (!$this->WriteData(0x81, 219, "ATIME")) {
 				return false;
 			}
