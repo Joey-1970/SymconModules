@@ -448,18 +448,26 @@
 	private function WriteData(Int $Register, Int $Value, String $RegisterName)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("WriteData", "Ausfuehrung setzen von: ".$RegisterName, 0);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $Register, "Value" => $Value)));
-			If (!$Result) {
-				$this->SendDebug("Setup", "Setzen ".$RegisterName." fehlerhaft!", 0);
-				$this->SetStatus(202);
-				$this->SetTimerInterval("Messzyklus", 0);
-				return false;
-			}
-			else {
-				$this->SetStatus(102);
-				return true;
-			}  
+			$tries = 3;
+			do {
+				$this->SendDebug("WriteData", "Ausfuehrung setzen von: ".$RegisterName, 0);
+				$Response = false;
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $Register, "Value" => $Value)));
+				If (!$Result) {
+					$this->SendDebug("Setup", "Setzen ".$RegisterName." fehlerhaft!", 0);
+					$this->SetStatus(202);
+					$this->SetTimerInterval("Messzyklus", 0);
+					$Response = false;
+				}
+				else {
+					$this->SetStatus(102);
+					$Response = true;
+					return true;
+					break;
+				} 
+			$tries--;
+			} while ($tries); 
+			return $Response;
 		}
 	}
 	    
