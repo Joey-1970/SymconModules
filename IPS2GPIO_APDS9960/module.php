@@ -540,7 +540,7 @@
 				$this->SetStatus(102);
 				/* Set bits in register to given value */
 				$Enable = $Enable & 0x01;
-				$Enable = $Enable & << 1;
+				$Enable = $Enable << 1;
 				$Value = $Result[1];
 				$Value = $Value & 0xFD;
 				$Value = $Value | $Enable;
