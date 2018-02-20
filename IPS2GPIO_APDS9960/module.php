@@ -386,6 +386,27 @@
 			if (!$this->WriteData(0xA3, $GestureRegisterTwo, "GCONF2")) {
 				return false;
 			}
+			
+			/*
+			if( !wireWriteDataByte(APDS9960_GOFFSET_U, DEFAULT_GOFFSET) ) {
+				return false;
+			    }
+			    if( !wireWriteDataByte(APDS9960_GOFFSET_D, DEFAULT_GOFFSET) ) {
+				return false;
+			    }
+			    if( !wireWriteDataByte(APDS9960_GOFFSET_L, DEFAULT_GOFFSET) ) {
+				return false;
+			    }
+			    if( !wireWriteDataByte(APDS9960_GOFFSET_R, DEFAULT_GOFFSET) ) {
+				return false;
+			    }
+			    if( !wireWriteDataByte(APDS9960_GPULSE, DEFAULT_GPULSE) ) {
+				return false;
+			    }
+			    if( !wireWriteDataByte(APDS9960_GCONF3, DEFAULT_GCONF3) ) {
+				return false;
+			*/
+			
 		}
 	}
 	    
