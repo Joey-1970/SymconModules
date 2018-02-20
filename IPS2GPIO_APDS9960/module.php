@@ -285,11 +285,14 @@
 				return;
 			}
 			else {
-				If (($Result == 0xAB) OR ($Result == 0x9C)) {
+				$this->SendDebug("Setup", "DeviceID: ", 0);
+				$Result = unserialize($Result);
+				$ChipID = $Result[1];
+				If (($ChipID == 0xAB) OR ($ChipID == 0x9C)) {
 					SetValueInteger($this->GetIDForIdent("ChipID"), $Result[1]);
 				}
 				else {
-					$this->SendDebug("Setup", "Laut Chip ID ist es kein zulaessiger ADPS9960! Ermittelt: ".$Result[1], 0);
+					$this->SendDebug("Setup", "Laut Chip ID ist es kein zulaessiger ADPS9960! Ermittelt: ".$ChipID, 0);
 				}
 				$this->SetStatus(102);
 			}
@@ -541,6 +544,7 @@
 				/* Set bits in register to given value */
 				$Enable = $Enable & 0x01;
 				$Enable = $Enable << 1;
+				$Result = unserialize($Result);
 				$Value = $Result[1];
 				$Value = $Value & 0xFD;
 				$Value = $Value | $Enable;
