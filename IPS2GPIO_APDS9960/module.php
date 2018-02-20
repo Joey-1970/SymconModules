@@ -465,7 +465,7 @@
 				$Response = false;
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $Register, "Value" => $Value)));
 				If (!$Result) {
-					$this->SendDebug("Setup", "Setzen ".$RegisterName." fehlerhaft!", 0);
+					$this->SendDebug("WriteData", "Setzen ".$RegisterName." fehlerhaft!", 0);
 				}
 				else {
 					$this->SetStatus(102);
@@ -483,6 +483,35 @@
 		}
 	return $Response;
 	}
+	
+	private function ReadData(Int $Register, String $RegisterName)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$tries = 3;
+			do {
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_read_byte", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $Register)));
+				$this->SendDebug("ReadData", "Ausfuehrung lesen von: ".$RegisterName, 0);
+				$Response = -1;
+				
+				If ($Result < 0) {
+					$this->SendDebug("ReadData", "Lesen ".$RegisterName." fehlerhaft!", 0);
+				}
+				else {
+					$this->SetStatus(102);
+					$Response = $Result;
+					break;
+				} 
+			$tries--;
+			} while ($tries); 
+			
+			If (!$tries) {
+				$this->SetStatus(202);
+				$this->SetTimerInterval("Messzyklus", 0);
+				$Response = -1;
+			}
+		}
+	return $Response;
+	}    
 	    
 	private function GetMode()
 	{
@@ -581,6 +610,20 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Measurement", "Ausfuehrung", 0);
+			
+			$CDATAL = $this->ReadData(0x94, 0, "CDATAL");
+			if ($CDATAL < 0) {
+				return false;
+			}
+			$this->SendDebug("Measurement", "Test Clear Channel low: ".$CDATAL, 0);
+			
+			$CDATAH = $this->ReadData(0x95, 0, "CDATAH");
+			if ($CDATAH < 0) {
+				return false;
+			}
+			$this->SendDebug("Measurement", "Test Clear Channel high: ".$CDATAH, 0);
+			
+			
 			// Lesen des Status, Helligkeit, RGB und Annährung
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x93, "Count" => 10)));
 			If ($Result < 0) {
