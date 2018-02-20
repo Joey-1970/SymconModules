@@ -578,8 +578,6 @@
 			If ($Result < 0) {
 				$this->SendDebug("Measurement", "Ermittlung der Daten fehlerhaft!", 0);
 				$this->SetStatus(202);
-				$this->SetTimerInterval("Messzyklus", 0);
-				return;
 			}
 			else {
 				If (is_array(unserialize($Result)) == true) {
@@ -606,8 +604,7 @@
 			If ($Result < 0) {
 				$this->SendDebug("Measurement", "Ermittlung der Daten fehlerhaft!", 0);
 				$this->SetStatus(202);
-				$this->SetTimerInterval("Messzyklus", 0);
-				return;
+
 			}
 			else {
 				If (is_array(unserialize($Result)) == true) {
@@ -624,8 +621,6 @@
 			If ($Result < 0) {
 				$this->SendDebug("Measurement", "Ermittlung der Daten fehlerhaft!", 0);
 				$this->SetStatus(202);
-				$this->SetTimerInterval("Messzyklus", 0);
-				return;
 			}
 			else {
 				If (is_array(unserialize($Result)) == true) {
