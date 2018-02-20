@@ -255,6 +255,7 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Setup", "Ausfuehrung", 0);
 			// Ermittlung der Device ID
+			// Read ID register and check against known values for APDS-9960
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x92, "Count" => 1)));
 			If ($Result < 0) {
 				$this->SendDebug("Setup", "Ermittlung der DeviceID fehlerhaft!", 0);
@@ -272,12 +273,14 @@
 				$this->SetStatus(102);
 			}
 			
+			// Set ENABLE register to 0 (disable all features)
 			$Result = $this->SetMode( 7, 0);
 			If ($Result == false) {
 				$this->SetStatus(202);
 				$this->SetTimerInterval("Messzyklus", 0);
 			}
 			
+			 // Set default values for ambient light and proximity registers
 			if (!$this->WriteData(0x81, 219, "ATIME")) {
 				return false;
 			}
@@ -355,6 +358,7 @@
 				return false;
 			}
 			
+			// Set default values for gesture sense registers
 			$GPENTH = $this->ReadPropertyInteger("GPENTH");
 			$GPENTH = min(255, max(0, $GPENTH));
 			if (!$this->WriteData(0xA0, $GPENTH, "GPENTH")) {
