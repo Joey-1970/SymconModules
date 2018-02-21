@@ -198,11 +198,23 @@
 		$this->DisableAction("ChipID");
 		IPS_SetHidden($this->GetIDForIdent("ChipID"), true);
 		
-		$this->RegisterVariableInteger("Intensity", "Intensity", "~Intensity.255", 20);
-	        $this->DisableAction("Intensity");
-		IPS_SetHidden($this->GetIDForIdent("Intensity"), false);
+		$this->RegisterVariableInteger("Intensity_W", "Intensität Weiß", "~Intensity.255", 20);
+	        $this->DisableAction("Intensity_W");
+		IPS_SetHidden($this->GetIDForIdent("Intensity_W"), false);
 		
-		$this->RegisterVariableInteger("Color", "Farbe", "~HexColor", 30);
+		$this->RegisterVariableInteger("Intensity_R", "Intensität Rot", "~Intensity.255", 30);
+	        $this->DisableAction("Intensity_R");
+		IPS_SetHidden($this->GetIDForIdent("Intensity_R"), false);
+		
+		$this->RegisterVariableInteger("Intensity_G", "Intensität Grün", "~Intensity.255", 40);
+	        $this->DisableAction("Intensity_G");
+		IPS_SetHidden($this->GetIDForIdent("Intensity_G"), false);
+		
+		$this->RegisterVariableInteger("Intensity_B", "Intensität Blau", "~Intensity.255", 50);
+	        $this->DisableAction("Intensity_B");
+		IPS_SetHidden($this->GetIDForIdent("Intensity_B"), false);
+		
+		$this->RegisterVariableInteger("Color", "Farbe", "~HexColor", 60);
            	$this->DisableAction("Color");
 		IPS_SetHidden($this->GetIDForIdent("Color"), false);
 		
@@ -610,7 +622,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Measurement", "Ausfuehrung", 0);
-			
+			/*
 			$CDATAL = $this->ReadData(0x94, 0, "CDATAL");
 			if ($CDATAL < 0) {
 				return false;
@@ -622,7 +634,7 @@
 				return false;
 			}
 			$this->SendDebug("Measurement", "Test Clear Channel high: ".$CDATAH, 0);
-			
+			*/
 			
 			// Lesen des Status, Helligkeit, RGB und Annährung
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x93, "Count" => 10)));
@@ -641,7 +653,7 @@
 					// Clear Channel
 					$this->SendDebug("Measurement", "Clear Channel: ".($Result[2] | ($Result[3] << 8)), 0);
 					$W = intval(($Result[2] | ($Result[3] << 8)) / 65535 * 255);
-					SetValueInteger($this->GetIDForIdent("Intensity"), $W);
+					SetValueInteger($this->GetIDForIdent("Intensity_W"), $W);
 					
 					// Red Channel
 					$this->SendDebug("Measurement", "Red Channel: ".($Result[4] | ($Result[5] << 8)), 0);
@@ -650,8 +662,11 @@
 					// Blue Channel
 					$this->SendDebug("Measurement", "Blue Channel: ".($Result[8] | ($Result[9] << 8)), 0);
 					$R = intval(($Result[4] | ($Result[5] << 8)) / 65535 * 255);
+					SetValueInteger($this->GetIDForIdent("Intensity_R"), $R);
 					$G = intval(($Result[6] | ($Result[7] << 8)) / 65535 * 255);
+					SetValueInteger($this->GetIDForIdent("Intensity_G"), $G);
 					$B = intval(($Result[8] | ($Result[9] << 8)) / 65535 * 255);
+					SetValueInteger($this->GetIDForIdent("Intensity_B"), $B);
 					SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex($R, $G, $B));
 					
 					// Nährung
