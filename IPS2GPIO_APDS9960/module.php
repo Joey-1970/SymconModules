@@ -47,8 +47,8 @@
 		$this->RegisterPropertyInteger("GLDRIVE", 0);
 		$this->RegisterPropertyInteger("GWTIME", 0);
 		
-		$this->RegisterPropertyInteger("PSIEN", 0);
-		$this->RegisterPropertyInteger("CPSIEN", 0);
+		$this->RegisterPropertyBoolean("PSIEN", true);
+		$this->RegisterPropertyBoolean("CPSIEN", true);
 		$this->RegisterPropertyInteger("LED_BOOST", 0);
 	
         }
@@ -418,8 +418,8 @@
 				return false;
 			}
 			
-			$PSIEN = $this->ReadPropertyInteger("PSIEN");
-			$CPSIEN = $this->ReadPropertyInteger("CPSIEN");
+			$PSIEN = $this->ReadPropertyBoolean("PSIEN");
+			$CPSIEN = $this->ReadPropertyBoolean("CPSIEN");
 			$LED_BOOST = $this->ReadPropertyInteger("LED_BOOST");
 			$ConfigurationRegisterTwo = 1 | ($LED_BOOST << 4) | ($CPSIEN << 6) | ($PSIEN << 7);
 			if (!$this->WriteData(0x90, $ConfigurationRegisterTwo, "CONFIG2")) {
