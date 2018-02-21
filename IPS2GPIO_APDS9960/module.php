@@ -46,6 +46,10 @@
 		$this->RegisterPropertyInteger("GGAIN", 0);
 		$this->RegisterPropertyInteger("GLDRIVE", 0);
 		$this->RegisterPropertyInteger("GWTIME", 0);
+		
+		$this->RegisterPropertyInteger("PSIEN", 0);
+		$this->RegisterPropertyInteger("CPSIEN", 0);
+		$this->RegisterPropertyInteger("LED_BOOST", 0);
 	
         }
  	
@@ -102,6 +106,17 @@
 		$arrayElements[] = array("name" => "PIEN", "type" => "CheckBox",  "caption" => "Annährungs Interrupt"); 
 		$arrayElements[] = array("name" => "GEN", "type" => "CheckBox",  "caption" => "Gestik Sensor"); 
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");  
+		$arrayElements[] = array("name" => "PSIEN", "type" => "CheckBox",  "caption" => "Annährungs Interrupt"); 
+		$arrayElements[] = array("name" => "CPSIEN", "type" => "CheckBox",  "caption" => "Weiße Fotodiode Interrupt"); 
+		
+		$arrayElements[] = array("type" => "Label", "label" => "LED Boost"); 
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "100% (Default)", "value" => 0);
+		$arrayOptions[] = array("label" => "150%", "value" => 1);
+		$arrayOptions[] = array("label" => "200%", "value" => 2);
+		$arrayOptions[] = array("label" => "300%", "value" => 3);
+		$arrayElements[] = array("type" => "Select", "name" => "LED_BOOST", "caption" => "Boost", "options" => $arrayOptions );
+		
 		// LED Drive Strength 0x8F Bit 7:6
 		$arrayElements[] = array("type" => "Label", "label" => "LED Drive Strength"); 
 		$arrayOptions = array();
@@ -403,7 +418,11 @@
 				return false;
 			}
 			
-			if (!$this->WriteData(0x90, 0x01, "CONFIG2")) {
+			$PSIEN = $this->ReadPropertyInteger("PSIEN");
+			$CPSIEN = $this->ReadPropertyInteger("CPSIEN");
+			$LED_BOOST = $this->ReadPropertyInteger("LED_BOOST");
+			$ConfigurationRegisterTwo = 1 | ($LED_BOOST << 4) | ($CPSIEN << 6) | ($PSIEN << 7);
+			if (!$this->WriteData(0x90, $ConfigurationRegisterTwo, "CONFIG2")) {
 				return false;
 			}
 			
