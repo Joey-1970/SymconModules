@@ -571,17 +571,21 @@
 			$ConfigArray[0] = $Config;
 			$ConfigArray[1] = $Config;
 			// Adressen 0A 0B
-			
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("A0"), 
-										  "Parameter" => serialize($ConfigArray) )));
-			If (!$Result) {
-				$this->SendDebug("Setup", "Basis-Konfigurations-Byte setzen fehlerhaft!", 0);
-				$this->SetStatus(202);
-			}
-			else {
-				$this->SendDebug("Setup", "Basis-Konfigurations-Byte erfolgreich gesetzt", 0);
-				$this->SetStatus(102);
-			}
+			$tries = 5;
+			do {
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("A0"), 
+											  "Parameter" => serialize($ConfigArray) )));
+				If (!$Result) {
+					$this->SendDebug("Setup", "Basis-Konfigurations-Byte setzen fehlerhaft!", 0);
+					$this->SetStatus(202);
+				}
+				else {
+					$this->SendDebug("Setup", "Basis-Konfigurations-Byte erfolgreich gesetzt", 0);
+					$this->SetStatus(102);
+					break;
+				}
+			$tries--;
+			} while ($tries);  
 			
 			$ConfigArray = array();
 			// IO-Bytes ermitteln
@@ -627,20 +631,23 @@
 			$GPBPU = $this->GetConfigByte("GPBPU");
 			$ConfigArray[11] = $GPBPU; // Adresse 0D
 			$this->SendDebug("Setup", "Pull-up-Byte A: ".$GPAPU." Pull-up-Byte B: ".$GPBPU, 0);
-			
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("00"), 
-										  "Parameter" => serialize($ConfigArray) )));
-			If (!$Result) {
-				$this->SendDebug("Setup", "Konfigurations-Byte setzen fehlerhaft!", 0);
-				$this->SetTimerInterval("Messzyklus", 0);
-				$this->SetStatus(202);
-			}
-			else {
-				$this->SendDebug("Setup", "Konfigurations-Byte erfolgreich gesetzt", 0);
-				$this->SetStatus(102);
-				$this->GetOutput();
-			}
-			
+			$tries = 5;
+			do {
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("00"), 
+											  "Parameter" => serialize($ConfigArray) )));
+				If (!$Result) {
+					$this->SendDebug("Setup", "Konfigurations-Byte setzen fehlerhaft!", 0);
+					$this->SetTimerInterval("Messzyklus", 0);
+					$this->SetStatus(202);
+				}
+				else {
+					$this->SendDebug("Setup", "Konfigurations-Byte erfolgreich gesetzt", 0);
+					$this->SetStatus(102);
+					$this->GetOutput();
+					break;
+				}
+			$tries--;
+			} while ($tries);  
 		}
 	}    
 	
