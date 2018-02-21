@@ -261,6 +261,9 @@
 				If ($Result < 0) {
 					$this->SendDebug("GetOutput", "Fehler beim Lesen der Werte!", 0);
 					$this->SetStatus(202);
+					If ($tries < 5) {
+						IPS_Sleep(100);
+					}
 				}
 				else {
 					$this->SendDebug("GetOutput", "Ergebnis: ".$Result, 0);
