@@ -25,21 +25,21 @@
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->SetBuffer("PreviousPin", -1);
 		
-		$this->RegisterPropertyBoolean("PON", false);
-		$this->RegisterPropertyBoolean("AEN", false);
-		$this->RegisterPropertyBoolean("PEN", false);
-		$this->RegisterPropertyBoolean("WEN", false);
-		$this->RegisterPropertyBoolean("AIEN", false);
-		$this->RegisterPropertyBoolean("PIEN", false);
-		$this->RegisterPropertyBoolean("GEN", false);
+		$this->RegisterPropertyBoolean("PON", true);
+		$this->RegisterPropertyBoolean("AEN", true);
+		$this->RegisterPropertyBoolean("PEN", true);
+		$this->RegisterPropertyBoolean("WEN", true);
+		$this->RegisterPropertyBoolean("AIEN", true);
+		$this->RegisterPropertyBoolean("PIEN", true);
+		$this->RegisterPropertyBoolean("GEN", true);
 		
 		$this->RegisterPropertyInteger("LDRIVE", 0);
 		$this->RegisterPropertyInteger("PGAIN", 0);
 		$this->RegisterPropertyInteger("AGAIN", 0);
 		$this->RegisterPropertyInteger("PILT", 0);
-		$this->RegisterPropertyInteger("PIHT", 50);
-		$this->RegisterPropertyInteger("AILT", 65535);
-		$this->RegisterPropertyInteger("AIHT", 0);
+		$this->RegisterPropertyInteger("PIHT", 255);
+		$this->RegisterPropertyInteger("AILT", 0);
+		$this->RegisterPropertyInteger("AIHT", 65535);
 		$this->RegisterPropertyInteger("GPENTH", 40);
 		$this->RegisterPropertyInteger("GEXTH", 30);
 		
