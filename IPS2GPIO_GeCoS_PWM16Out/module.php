@@ -200,7 +200,7 @@
 		$Value = GetValueInteger($this->GetIDForIdent("Output_Int_X".$Output));
 		$L_Bit = $Value & 255;
 		$H_Bit = $Value >> 8;
-		$FadeTime = $this->ReadPropertyInteger("FadeTime_".$Output)
+		$FadeTime = $this->ReadPropertyInteger("FadeTime_".$Output);
 		
 		If ($Status == true) {
 			$H_Bit = $this->unsetBit($H_Bit, 4);
