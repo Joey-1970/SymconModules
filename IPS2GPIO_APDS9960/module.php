@@ -667,8 +667,15 @@
 					$this->SendDebug("Measurement", "Daten: ".$Result, 0);
 					$Result = unserialize($Result);
 					// Status
-					$this->SendDebug("Measurement", "Status: ".$Result[1], 0);
-					
+					$Status = $Result[1];
+					$AVALID = boolval($Status & 1);
+					$PVALID = boolval($Status & 2);
+					$GINT = boolval($Status & 4);
+					$AINT = boolval($Status & 16);
+					$PINT = boolval($Status & 32);
+					$PGSAT = boolval($Status & 64);
+					$CPSAT = boolval($Status & 128);
+					$this->SendDebug("Measurement", "Status: ".$Status." AVALID: ".$AVALID." PVALID: ".$PVALID." GINT: ".$GINT." AINT: ".$AINT." PINT: ".$PINT." PGSAT: ".$PGSAT." CPSAT: ".$CPSAT, 0);
 					
 					// RGBW Farbergebnis Rohwerte
 					$W = ($Result[2] | ($Result[3] << 8));
