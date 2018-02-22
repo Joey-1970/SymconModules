@@ -217,19 +217,19 @@
 	        $this->DisableAction("Intensity_W");
 		IPS_SetHidden($this->GetIDForIdent("Intensity_W"), false);
 		
-		$this->RegisterVariableInteger("Intensity_R", "Intensität Rot", "~Intensity.255", 30);
+		$this->RegisterVariableInteger("Intensity_R", "Intensität Rot (skaliert)", "~Intensity.255", 30);
 	        $this->DisableAction("Intensity_R");
 		IPS_SetHidden($this->GetIDForIdent("Intensity_R"), false);
 		
-		$this->RegisterVariableInteger("Intensity_G", "Intensität Grün", "~Intensity.255", 40);
+		$this->RegisterVariableInteger("Intensity_G", "Intensität Grün (skaliert)", "~Intensity.255", 40);
 	        $this->DisableAction("Intensity_G");
 		IPS_SetHidden($this->GetIDForIdent("Intensity_G"), false);
 		
-		$this->RegisterVariableInteger("Intensity_B", "Intensität Blau", "~Intensity.255", 50);
+		$this->RegisterVariableInteger("Intensity_B", "Intensität Blau (skaliert)", "~Intensity.255", 50);
 	        $this->DisableAction("Intensity_B");
 		IPS_SetHidden($this->GetIDForIdent("Intensity_B"), false);
 		
-		$this->RegisterVariableInteger("Color", "Farbe", "~HexColor", 60);
+		$this->RegisterVariableInteger("Color", "Farbe (skaliert)", "~HexColor", 60);
            	$this->DisableAction("Color");
 		IPS_SetHidden($this->GetIDForIdent("Color"), false);
 		
@@ -669,21 +669,22 @@
 					// Status
 					$this->SendDebug("Measurement", "Status: ".$Result[1], 0);
 					
-					// Clear Channel
-					$this->SendDebug("Measurement", "Clear Channel: ".($Result[2] | ($Result[3] << 8)), 0);
 					
-					$W = intval(($Result[2] | ($Result[3] << 8)) / 65535 * 255);
-					SetValueInteger($this->GetIDForIdent("Intensity_W"), $W);
-					
-					// RGB Farbergebnis
+					// RGBW Farbergebnis Rohwerte
+					$W = ($Result[2] | ($Result[3] << 8));
 					$R = ($Result[4] | ($Result[5] << 8));
 					$G = ($Result[6] | ($Result[7] << 8));
 					$B = ($Result[8] | ($Result[9] << 8));
-					$this->SendDebug("Measurement", "Rot: ".$R." Gruen: ".$G." Blau: ".$B , 0);
+					$this->SendDebug("Measurement", "Rohwerte - Weiss: ".$W."Rot: ".$R." Gruen: ".$G." Blau: ".$B , 0);
 					
+					// Weiß skaliert
+					$W = intval(($Result[2] | ($Result[3] << 8)) / 65535 * 255);
+					SetValueInteger($this->GetIDForIdent("Intensity_W"), $W);
+					
+										
 					$RGBMax = max($R, $G, $B);
 					If ($RGBMax > 0) {
-						// Werte skalieren
+						// RGB-Werte skalieren
 						$R = intval(($Result[4] | ($Result[5] << 8)) / $RGBMax * 255);
 						$G = intval(($Result[6] | ($Result[7] << 8)) / $RGBMax * 255);
 						$B = intval(($Result[8] | ($Result[9] << 8)) / $RGBMax * 255);
@@ -693,6 +694,9 @@
 						SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex($R, $G, $B));
 					}
 					else {
+						SetValueInteger($this->GetIDForIdent("Intensity_R"), 0);
+						SetValueInteger($this->GetIDForIdent("Intensity_G"), 0);
+						SetValueInteger($this->GetIDForIdent("Intensity_B"), 0);
 						SetValueInteger($this->GetIDForIdent("Color"), 0);
 					}
 					
