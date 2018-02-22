@@ -200,12 +200,19 @@
 		$Value = GetValueInteger($this->GetIDForIdent("Output_Int_X".$Output));
 		$L_Bit = $Value & 255;
 		$H_Bit = $Value >> 8;
+		$FadeTime = $this->ReadPropertyInteger("FadeTime_".$Output)
 		
 		If ($Status == true) {
 			$H_Bit = $this->unsetBit($H_Bit, 4);
+			If ($FadeTime > 0) {
+				$this->FadeIn($Output);
+			}
 		}
 		else {
 			$H_Bit = $this->setBit($H_Bit, 4);
+			If ($FadeTime > 0) {
+				$this->FadeOut($Output);
+			}
 		}
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Ausgang setzen
@@ -332,18 +339,18 @@
 			}
 		}
 	}
-	/*
+
 	private function FadeIn(Int $Channel)
 	{
 		// W beim Einschalten Faden
 		$this->SendDebug("FadeIn", "Ausfuehrung", 0);
 		$Group = min(4, max(1, $Channel));
-		$Fadetime = $this->ReadPropertyInteger("FadeIn_".$Channel);
+		$Fadetime = $this->ReadPropertyInteger("FadeTime_".$Channel);
 		$Fadetime = min(10, max(0, $Fadetime));
 		If ($Fadetime > 0) {
 			// Zielwert W bestimmen
 			$Value_W = GetValueInteger($this->GetIDForIdent("Output_Int_X".$Channel));
-			// $l muss von 0 auf den Zielwert gebracht werden
+			// muss von 0 auf den Zielwert gebracht werden
 			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
 			$Steps = $Fadetime * $FadeScalar;
 			$Stepwide = 4095 / $Steps;
@@ -356,6 +363,7 @@
 				// Bytes bestimmen
 				$L_Bit = $Value_W & 255;
 				$H_Bit = $Value_W >> 8;
+				$Starttime = microtime(true);
 				If ($this->ReadPropertyBoolean("Open") == true) {
 					// Ausgang setzen
 					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write_Channel_White", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
@@ -369,7 +377,11 @@
 						}
 					}
 				}
-				IPS_Sleep(intval(1000 / $FadeScalar));
+				$Endtime = microtime(true);
+				$Delay = intval(($Endtime - $Starttime) * 1000);
+				$DelayMax = intval(1000 / $FadeScalar);
+				$Delaytime = min($DelayMax, max(0, ($DelayMax - $Delay)));   
+				IPS_Sleep($Delaytime);
 			}
 				
 		}
@@ -380,7 +392,7 @@
 		// W beim Einschalten Faden
 		$this->SendDebug("FadeOut", "Ausfuehrung", 0);
 		$Group = min(15, max(0, $Channel));
-		$Fadetime = $this->ReadPropertyInteger("FadeOut_".$Channel);
+		$Fadetime = $this->ReadPropertyInteger("FadeTime_".$Channel);
 		$Fadetime = min(10, max(0, $Fadetime));
 		If ($Fadetime > 0) {
 			// Zielwert W bestimmen
@@ -398,6 +410,7 @@
 				// Bytes bestimmen
 				$L_Bit = $Value_W & 255;
 				$H_Bit = $Value_W >> 8;
+				$Starttime = microtime(true);
 				If ($this->ReadPropertyBoolean("Open") == true) {
 					// Ausgang setzen
 					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write_Channel_White", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
@@ -411,12 +424,15 @@
 						}
 					}
 				}
-				IPS_Sleep(intval(1000 / $FadeScalar));
+				$Endtime = microtime(true);
+				$Delay = intval(($Endtime - $Starttime) * 1000);
+				$DelayMax = intval(1000 / $FadeScalar);
+				$Delaytime = min($DelayMax, max(0, ($DelayMax - $Delay)));   
+				IPS_Sleep($Delaytime);
 			}
 				
 		}
 	}
-	*/
 	    
 	private function SetStatusVariables(Int $Register, Int $Value)
 	{
