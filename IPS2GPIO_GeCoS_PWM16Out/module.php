@@ -357,7 +357,7 @@
 			$StartAddress = ($Channel * 4) + 6;
 			
 			// Fade In			
-			for ($i = (0 + $Stepwide) ; $i <= ($l - $Stepwide); $i = $i + round($Stepwide, 0)) {
+			for ($i = (0 + $Stepwide) ; $i <= ($Value_W - $Stepwide); $i = $i + round($Stepwide, 0)) {
 				// Werte skalieren
 				$Value_W = $i;
 				// Bytes bestimmen
@@ -404,7 +404,7 @@
 			$StartAddress = ($Channel * 4) + 6;
 			
 			// Fade Out			
-			for ($i = ($l - $Stepwide) ; $i >= (0 + $Stepwide); $i = $i - round($Stepwide, 0)) {
+			for ($i = ($Value_W - $Stepwide) ; $i >= (0 + $Stepwide); $i = $i - round($Stepwide, 0)) {
 				// Werte skalieren
 				$Value_W = $i;
 				// Bytes bestimmen
