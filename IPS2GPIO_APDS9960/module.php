@@ -674,19 +674,26 @@
 					$W = intval(($Result[2] | ($Result[3] << 8)) / 65535 * 255);
 					SetValueInteger($this->GetIDForIdent("Intensity_W"), $W);
 					
-					// Red Channel
-					$this->SendDebug("Measurement", "Red Channel: ".($Result[4] | ($Result[5] << 8)), 0);
-					// Green Channel
-					$this->SendDebug("Measurement", "Green Channel: ".($Result[6] | ($Result[7] << 8)), 0);
-					// Blue Channel
-					$this->SendDebug("Measurement", "Blue Channel: ".($Result[8] | ($Result[9] << 8)), 0);
-					$R = intval(($Result[4] | ($Result[5] << 8)) / 65535 * 255);
+					// RGB Farbergebnis
+					$R = ($Result[4] | ($Result[5] << 8));
+					$G = ($Result[6] | ($Result[7] << 8));
+					$B = ($Result[8] | ($Result[9] << 8));
+					$this->SendDebug("Measurement", "Rot: ".$R." Gruen: ".$G." Blau: ".$B , 0);
 					SetValueInteger($this->GetIDForIdent("Intensity_R"), $R);
-					$G = intval(($Result[6] | ($Result[7] << 8)) / 65535 * 255);
 					SetValueInteger($this->GetIDForIdent("Intensity_G"), $G);
-					$B = intval(($Result[8] | ($Result[9] << 8)) / 65535 * 255);
 					SetValueInteger($this->GetIDForIdent("Intensity_B"), $B);
-					SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex($R, $G, $B));
+					$RGBMax = max($R, $G, $B);
+					If ($RGBMax > 0) {
+						// Werte skalieren
+						$R = intval(($Result[4] | ($Result[5] << 8)) / $RGBMax * 255);
+						$G = intval(($Result[6] | ($Result[7] << 8)) / $RGBMax * 255);
+						$B = intval(($Result[8] | ($Result[9] << 8)) / $RGBMax * 255);
+						SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex($R, $G, $B));
+					}
+					else {
+						
+						SetValueInteger($this->GetIDForIdent("Color"), 0);
+					}
 					
 					// Nährung
 					$this->SendDebug("Measurement", "Naehrung: ".$Result[10], 0);
