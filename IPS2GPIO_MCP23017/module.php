@@ -276,14 +276,9 @@
 					//return;
 				}
 				else {
-					$this->SendDebug("GetOutput", "Ergebnis: ".$Result, 0);
 					If (is_array(unserialize($Result))) {
 						$this->SetStatus(102);
 						$OutputArray = array();
-						// $OutputArray[1] - GPIOA
-						// $OutputArray[2] - GPIOB
-						// $OutputArray[3] - OLATA
-						// $OutputArray[4] - OLATB
 						// für Ausgänge LAT benutzen für Eingänge PORT 
 
 						$OutputArray = unserialize($Result);
@@ -297,7 +292,7 @@
 						$GPIOB = $OutputArray[2];
 						$OLATA = $OutputArray[3];
 						$OLATB = $OutputArray[4];
-
+						$this->SendDebug("GetOutput", "GPIOA: ".$GPIOA." GPIOA: ".$GPIOB." OLATA: ".$OLATA." OLATB: ".$OLATB, 0);
 						// Statusvariablen setzen
 						for ($i = 0; $i <= 7; $i++) {
 							// Port A
@@ -411,7 +406,6 @@
 					// Neuen Wert senden
 					$OutputArray = Array();
 					$OutputArray[0] = $GPA & $GPAIODIRout;
-			
 
 					// Adresse 14
 					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_MCP23017_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => hexdec("14"), 
