@@ -669,7 +669,7 @@
 					$R = ($Result[4] | ($Result[5] << 8));
 					$G = ($Result[6] | ($Result[7] << 8));
 					$B = ($Result[8] | ($Result[9] << 8));
-					$this->SendDebug("Measurement", "Rohwerte - Weiss: ".$W."Rot: ".$R." Gruen: ".$G." Blau: ".$B , 0);
+					$this->SendDebug("Measurement", "Rohwerte - Weiss: ".$W." Rot: ".$R." Gruen: ".$G." Blau: ".$B , 0);
 					
 					// Weiß skaliert
 					$W = intval(($Result[2] | ($Result[3] << 8)) / 65535 * 255);
