@@ -734,6 +734,23 @@
 				}
 			}
 			
+			if (!$this->WriteData(0xE4, 0, "IFORCE")) {
+				return false;
+			}
+			
+			if (!$this->WriteData(0xE5, 0, "PICLEAR")) {
+				return false;
+			}
+			
+			if (!$this->WriteData(0xE6, 0, "CICLEAR")) {
+				return false;
+			}
+			
+			if (!$this->WriteData(0xE7, 0, "AICLEAR")) {
+				return false;
+			}
+			
+			/*
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0xE4, "Count" => 4)));
 			If ($Result < 0) {
 				$this->SendDebug("Measurement", "Loeschung Interrupt Register fehlerhaft!", 0);
@@ -745,7 +762,7 @@
 					$this->SendDebug("Measurement", "Loeschung Interrupt Register erfolgreich!", 0);
 				}
 			}
-			
+			*/
 		}
 	}
 	    
