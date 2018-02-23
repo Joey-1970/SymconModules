@@ -651,7 +651,7 @@
 			else {
 				If (is_array(unserialize($Result)) == true) {
 					$this->SetStatus(102);
-					$this->SendDebug("Measurement", "Daten: ".$Result, 0);
+					//$this->SendDebug("Measurement", "Daten: ".$Result, 0);
 					$Result = unserialize($Result);
 					// Status
 					$Status = $Result[1];
@@ -709,7 +709,7 @@
 			else {
 				If (is_array(unserialize($Result)) == true) {
 					$this->SetStatus(102);
-					$this->SendDebug("Measurement", "Daten: ".$Result, 0);
+					//$this->SendDebug("Measurement", "Daten: ".$Result, 0);
 					$Result = unserialize($Result);
 					$this->SendDebug("Measurement", "Gestik FIFO Level: ".$Result[1], 0);
 					$this->SendDebug("Measurement", "Gestik Status: ".$Result[2], 0);
@@ -725,7 +725,7 @@
 			else {
 				If (is_array(unserialize($Result)) == true) {
 					$this->SetStatus(102);
-					$this->SendDebug("Measurement", "Daten: ".$Result, 0);
+					//$this->SendDebug("Measurement", "Daten: ".$Result, 0);
 					$Result = unserialize($Result);
 					$this->SendDebug("Measurement", "Gestik FIFO Up: ".$Result[1], 0);
 					$this->SendDebug("Measurement", "Gestik FIFO Down: ".$Result[2], 0);
