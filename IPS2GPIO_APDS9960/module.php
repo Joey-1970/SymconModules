@@ -655,47 +655,50 @@
 					$Result = unserialize($Result);
 					// Status
 					$Status = $Result[1];
-					$AVALID = boolval($Status & 1);
-					$PVALID = boolval($Status & 2);
-					$GINT = boolval($Status & 4);
-					$AINT = boolval($Status & 16);
-					$PINT = boolval($Status & 32);
-					$PGSAT = boolval($Status & 64);
-					$CPSAT = boolval($Status & 128);
+					$AVALID = boolval($Status & 1); // Ambilight Sensor Ergebnis gültig
+					$PVALID = boolval($Status & 2); // Annährungswert ist gültig
+					$GINT = boolval($Status & 4); // Gestrik Interrupt
+					$AINT = boolval($Status & 16); // Ambilight Interrupt
+					$PINT = boolval($Status & 32); // Annährungs-Interrupt
+					$PGSAT = boolval($Status & 64); // Analoges Sättigungs Ereignis -> Löschung durch PICLEAR
+					$CPSAT = boolval($Status & 128); // Weise Fotodiode am oberen Ende des Bereiches -> Löschung durch CICLEAR
 					$this->SendDebug("Measurement", "Status: ".$Status." AVALID: ".$AVALID." PVALID: ".$PVALID." GINT: ".$GINT." AINT: ".$AINT." PINT: ".$PINT." PGSAT: ".$PGSAT." CPSAT: ".$CPSAT, 0);
 					
-					// RGBW Farbergebnis Rohwerte
-					$W = ($Result[2] | ($Result[3] << 8));
-					$R = ($Result[4] | ($Result[5] << 8));
-					$G = ($Result[6] | ($Result[7] << 8));
-					$B = ($Result[8] | ($Result[9] << 8));
-					$this->SendDebug("Measurement", "Rohwerte - Weiss: ".$W." Rot: ".$R." Gruen: ".$G." Blau: ".$B , 0);
-					
-					// Weiß skaliert
-					$W = intval(($Result[2] | ($Result[3] << 8)) / 65535 * 255);
-					SetValueInteger($this->GetIDForIdent("Intensity_W"), $W);
-					
-										
-					$RGBMax = max($R, $G, $B);
-					If ($RGBMax > 0) {
-						// RGB-Werte skalieren
-						$R = intval(($Result[4] | ($Result[5] << 8)) / $RGBMax * 255);
-						$G = intval(($Result[6] | ($Result[7] << 8)) / $RGBMax * 255);
-						$B = intval(($Result[8] | ($Result[9] << 8)) / $RGBMax * 255);
-						SetValueInteger($this->GetIDForIdent("Intensity_R"), $R);
-						SetValueInteger($this->GetIDForIdent("Intensity_G"), $G);
-						SetValueInteger($this->GetIDForIdent("Intensity_B"), $B);
-						SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex($R, $G, $B));
+					If ($AVALID) {
+						// RGBW Farbergebnis Rohwerte
+						$W = ($Result[2] | ($Result[3] << 8));
+						$R = ($Result[4] | ($Result[5] << 8));
+						$G = ($Result[6] | ($Result[7] << 8));
+						$B = ($Result[8] | ($Result[9] << 8));
+						$this->SendDebug("Measurement", "Rohwerte - Weiss: ".$W." Rot: ".$R." Gruen: ".$G." Blau: ".$B , 0);
+
+						// Weiß skaliert
+						$W = intval(($Result[2] | ($Result[3] << 8)) / 65535 * 255);
+						SetValueInteger($this->GetIDForIdent("Intensity_W"), $W);
+
+
+						$RGBMax = max($R, $G, $B);
+						If ($RGBMax > 0) {
+							// RGB-Werte skalieren
+							$R = intval(($Result[4] | ($Result[5] << 8)) / $RGBMax * 255);
+							$G = intval(($Result[6] | ($Result[7] << 8)) / $RGBMax * 255);
+							$B = intval(($Result[8] | ($Result[9] << 8)) / $RGBMax * 255);
+							SetValueInteger($this->GetIDForIdent("Intensity_R"), $R);
+							SetValueInteger($this->GetIDForIdent("Intensity_G"), $G);
+							SetValueInteger($this->GetIDForIdent("Intensity_B"), $B);
+							SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex($R, $G, $B));
+						}
+						else {
+							SetValueInteger($this->GetIDForIdent("Intensity_R"), 0);
+							SetValueInteger($this->GetIDForIdent("Intensity_G"), 0);
+							SetValueInteger($this->GetIDForIdent("Intensity_B"), 0);
+							SetValueInteger($this->GetIDForIdent("Color"), 0);
+						}
 					}
-					else {
-						SetValueInteger($this->GetIDForIdent("Intensity_R"), 0);
-						SetValueInteger($this->GetIDForIdent("Intensity_G"), 0);
-						SetValueInteger($this->GetIDForIdent("Intensity_B"), 0);
-						SetValueInteger($this->GetIDForIdent("Color"), 0);
+					If ($PVALID) {
+						// Nährung
+						$this->SendDebug("Measurement", "Naehrung: ".$Result[10], 0);
 					}
-					
-					// Nährung
-					$this->SendDebug("Measurement", "Naehrung: ".$Result[10], 0);
 				}
 			}
 			
@@ -712,34 +715,42 @@
 					//$this->SendDebug("Measurement", "Daten: ".$Result, 0);
 					$Result = unserialize($Result);
 					$this->SendDebug("Measurement", "Gestik FIFO Level: ".$Result[1]." Gestik Status: ".$Result[2], 0);
+					$GFLVL = $Result[1];
+					
 				}
 			}
 			
 			// Lesen Gestik
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0xFC, "Count" => 4)));
-			If ($Result < 0) {
-				$this->SendDebug("Measurement", "Ermittlung der Daten fehlerhaft!", 0);
-				$this->SetStatus(202);
-			}
-			else {
-				If (is_array(unserialize($Result)) == true) {
-					$this->SetStatus(102);
-					//$this->SendDebug("Measurement", "Daten: ".$Result, 0);
-					$Result = unserialize($Result);
-					$this->SendDebug("Measurement", "Gestik FIFO Up: ".$Result[1]." Down: ".$Result[2]." Left: ".$Result[3]." Right: ".$Result[4], 0);
+			for ($i = 0; $i <= $GFLVL; $i++) {
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0xFC, "Count" => 4)));
+				If ($Result < 0) {
+					$this->SendDebug("Measurement", "Ermittlung der Daten fehlerhaft!", 0);
+					$this->SetStatus(202);
+				}
+				else {
+					If (is_array(unserialize($Result)) == true) {
+						$this->SetStatus(102);
+						//$this->SendDebug("Measurement", "Daten: ".$Result, 0);
+						$Result = unserialize($Result);
+						$this->SendDebug("Measurement", "Gestik FIFO Zyklus: ".($i + 1)." Up: ".$Result[1]." Down: ".$Result[2]." Left: ".$Result[3]." Right: ".$Result[4], 0);
+					}
 				}
 			}
 			
+			// Zurücksetzen der Flags
 			if (!$this->WriteData(0xE4, 0, "IFORCE")) {
 				return false;
 			}
 			
-			if (!$this->WriteData(0xE5, 0, "PICLEAR")) {
-				return false;
+			If ($PGSAT) {
+				if (!$this->WriteData(0xE5, 0, "PICLEAR")) {
+					return false;
+				}
 			}
-			
-			if (!$this->WriteData(0xE6, 0, "CICLEAR")) {
-				return false;
+			If ($CPSAT) {
+				if (!$this->WriteData(0xE6, 0, "CICLEAR")) {
+					return false;
+				}
 			}
 			
 			if (!$this->WriteData(0xE7, 0, "AICLEAR")) {
