@@ -321,7 +321,7 @@
 	{
 		// W beim Einschalten Faden
 		$this->SendDebug("FadeIn", "Ausfuehrung", 0);
-		$Group = min(4, max(1, $Channel));
+		$Channel = min(15, max(0, $Channel));
 		$Fadetime = $this->ReadPropertyInteger("FadeTime_".$Channel);
 		$Fadetime = min(10, max(0, $Fadetime));
 		If ($Fadetime > 0) {
@@ -334,7 +334,7 @@
 			$StartAddress = ($Channel * 4) + 6;
 			
 			// Fade In	
-			for ($i = (0 + $Stepwide) ; $i <= ($Value_W - $Stepwide); $i = $i + round($Stepwide, 2)) {
+			for ($i = (0 + $Stepwide); $i <= ($Value_W - $Stepwide); $i = $i + round($Stepwide, 2)) {
 				// Werte skalieren
 				$Value_W = intval($i);
 				// Bytes bestimmen
@@ -351,7 +351,7 @@
 					}
 					else {
 						If (GetValueBoolean($this->GetIDForIdent("Output_Bln_X".$Channel)) == false) {
-							SetValueBoolean($this->GetIDForIdent("Output_Bln_X".$Channel), true);
+							//SetValueBoolean($this->GetIDForIdent("Output_Bln_X".$Channel), true);
 						}
 					}
 				}
@@ -367,9 +367,9 @@
 	
 	private function FadeOut(Int $Channel)
 	{
-		// W beim Einschalten Faden
+		// W beim Ausschalten Faden
 		$this->SendDebug("FadeOut", "Ausfuehrung", 0);
-		$Group = min(15, max(0, $Channel));
+		$Channel = min(15, max(0, $Channel));
 		$Fadetime = $this->ReadPropertyInteger("FadeTime_".$Channel);
 		$Fadetime = min(10, max(0, $Fadetime));
 		If ($Fadetime > 0) {
