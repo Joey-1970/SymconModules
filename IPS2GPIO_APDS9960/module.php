@@ -233,6 +233,10 @@
            	$this->DisableAction("Color");
 		IPS_SetHidden($this->GetIDForIdent("Color"), false);
 		
+		$this->RegisterVariableInteger("Interrupt", "Letzte Interrupt", "~UnixTimestamp", 90);
+		$this->DisableAction("Interrupt");
+		IPS_SetHidden($this->GetIDForIdent("Interrupt"), true);
+		
 		$this->RegisterVariableInteger("InterruptAINT", "Letzte Interrupt Ambilight", "~UnixTimestamp", 100);
 		$this->DisableAction("InterruptAINT");
 		IPS_SetHidden($this->GetIDForIdent("InterruptAINT"), true);
@@ -243,7 +247,7 @@
 		
 		$this->RegisterVariableInteger("InterruptGINT", "Letzte Interrupt Gestik", "~UnixTimestamp", 120);
 		$this->DisableAction("InterruptPINT");
-		IPS_SetHidden($this->GetIDForIdent("InterruptPINT"), true);
+		IPS_SetHidden($this->GetIDForIdent("InterruptGINT"), true);
 		
 		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {					
@@ -288,12 +292,12 @@
 			case "notify":
 			   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
 					If (($data->Value == 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-						$this->SendDebug("Interrupt", "Wert: ".(int)$data->Value." -> Counter auslesen", 0);
-						SetValueInteger($this->GetIDForIdent("LastInterrupt"), time() );
-						//$this->GetCounterByInterrupt();
+						$this->SendDebug("Interrupt", "Wert: ".(int)$data->Value." -> keine Aktion", 0);
 					}
 					elseIf (($data->Value == 1) AND ($this->ReadPropertyBoolean("Open") == true)) {
-						$this->SendDebug("Interrupt", "Wert: ".(int)$data->Value." -> keine Aktion", 0);
+						$this->SendDebug("Interrupt", "Wert: ".(int)$data->Value." -> Daten einlesen", 0);
+						SetValueInteger($this->GetIDForIdent("Interrupt"), time() );
+						$this->Measurement();
 					}
 			   	}
 			   	break; 
@@ -493,6 +497,10 @@
 			
 			$Result = $this->SetGestureIntEnable(1);
 			If ($Result == false) {
+				return false;
+			}
+			
+			if (!$this->WriteData(0xE4, 0, "IFORCE")) {
 				return false;
 			}
 			
@@ -760,10 +768,6 @@
 			}
 			
 			// Zurücksetzen der Flags
-			if (!$this->WriteData(0xE4, 0, "IFORCE")) {
-				return false;
-			}
-			
 			If ($PGSAT) {
 				if (!$this->WriteData(0xE5, 0, "PICLEAR")) {
 					return false;
