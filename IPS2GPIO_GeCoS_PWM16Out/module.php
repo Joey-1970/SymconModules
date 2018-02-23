@@ -336,12 +336,12 @@
 			// Fade In	
 			for ($i = (0 + $Stepwide); $i <= ($Value_W - $Stepwide); $i = $i + round($Stepwide, 2)) {
 				// Werte skalieren
-				$Value_W = intval($i);
+				$Value = intval($i);
 				// Bytes bestimmen
-				$L_Bit = $Value_W & 255;
-				$H_Bit = $Value_W >> 8;
+				$L_Bit = $Value & 255;
+				$H_Bit = $Value >> 8;
 				$this->SendDebug("FadeIn", "Weisswert: ".$Value_W, 0);
-				$this->SendDebug("FadeIn", "Von: ".(0 + $Stepwide)." Bis: ".($Value_W - $Stepwide)." Schritt: ".($i + round($Stepwide, 2)), 0);
+				//$this->SendDebug("FadeIn", "Von: ".(0 + $Stepwide)." Bis: ".($Value_W - $Stepwide)." Schritt: ".($i + round($Stepwide, 2)), 0);
 				$Starttime = microtime(true);
 				If ($this->ReadPropertyBoolean("Open") == true) {
 					// Ausgang setzen
@@ -361,7 +361,7 @@
 				$DelayMax = intval(1000 / $FadeScalar);
 				$Delaytime = min($DelayMax, max(0, ($DelayMax - $Delay)));   
 				IPS_Sleep($Delaytime);
-				$this->SendDebug("FadeIn", "Von: ".(0 + $Stepwide)." Bis: ".($Value_W - $Stepwide)." Schritt: ".($i + round($Stepwide, 2))." Delay: ".$Delaytime, 0);
+				//$this->SendDebug("FadeIn", "Von: ".(0 + $Stepwide)." Bis: ".($Value_W - $Stepwide)." Schritt: ".($i + round($Stepwide, 2))." Delay: ".$Delaytime, 0);
 
 			}
 				
@@ -387,10 +387,10 @@
 			// Fade Out			
 			for ($i = ($Value_W - $Stepwide) ; $i >= (0 + $Stepwide); $i = $i - round($Stepwide, 2)) {
 				// Werte skalieren
-				$Value_W = intval($i);
+				$Value = intval($i);
 				// Bytes bestimmen
-				$L_Bit = $Value_W & 255;
-				$H_Bit = $Value_W >> 8;
+				$L_Bit = $Value & 255;
+				$H_Bit = $Value >> 8;
 				$this->SendDebug("FadeOut", "Weisswert: ".$Value_W, 0);
 				$Starttime = microtime(true);
 				If ($this->ReadPropertyBoolean("Open") == true) {
