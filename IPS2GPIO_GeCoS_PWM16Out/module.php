@@ -340,7 +340,7 @@
 				// Bytes bestimmen
 				$L_Bit = $Value & 255;
 				$H_Bit = $Value >> 8;
-				$this->SendDebug("FadeIn", "Weisswert: ".$Value_W, 0);
+				$this->SendDebug("FadeIn", "Weisswert: ".$Value, 0);
 				//$this->SendDebug("FadeIn", "Von: ".(0 + $Stepwide)." Bis: ".($Value_W - $Stepwide)." Schritt: ".($i + round($Stepwide, 2)), 0);
 				$Starttime = microtime(true);
 				If ($this->ReadPropertyBoolean("Open") == true) {
@@ -352,7 +352,7 @@
 					}
 					else {
 						If (GetValueBoolean($this->GetIDForIdent("Output_Bln_X".$Channel)) == false) {
-							//SetValueBoolean($this->GetIDForIdent("Output_Bln_X".$Channel), true);
+							SetValueBoolean($this->GetIDForIdent("Output_Bln_X".$Channel), true);
 						}
 					}
 				}
@@ -391,7 +391,7 @@
 				// Bytes bestimmen
 				$L_Bit = $Value & 255;
 				$H_Bit = $Value >> 8;
-				$this->SendDebug("FadeOut", "Weisswert: ".$Value_W, 0);
+				$this->SendDebug("FadeOut", "Weisswert: ".$Value, 0);
 				$Starttime = microtime(true);
 				If ($this->ReadPropertyBoolean("Open") == true) {
 					// Ausgang setzen
