@@ -194,6 +194,10 @@
 		$this->SendDebug("SetOutputPinStatus", "Ausfuehrung", 0);
 		$Output = min(15, max(0, $Output));
 		$Status = min(1, max(0, $Status));
+		$CurrentStatus = GetValueBoolean($this->GetIDForIdent("Output_Bln_X".$Output));
+		If ($CurrentStatus == $Status) {
+			return;
+		}
 		
 		$ByteArray = array();
 		$StartAddress = ($Output * 4) + 6;
@@ -232,36 +236,9 @@
 	
 	public function ToggleOutputPinStatus(Int $Output)
 	{ 
-		$this->SendDebug("SetOutputPinStatus", "Ausfuehrung", 0);
-		$Output = min(15, max(0, $Output));
-		
-		$ByteArray = array();
-		$StartAddress = ($Output * 4) + 6;
+		$this->SendDebug("ToggleOutputPinStatus", "Ausfuehrung", 0);
 		$Status = GetValueBoolean($this->GetIDForIdent("Output_Bln_X".$Output));
-		$Value = GetValueInteger($this->GetIDForIdent("Output_Int_X".$Output));
-		$L_Bit = $Value & 255;
-		$H_Bit = $Value >> 8;
-		
-		If (!$Status == true) {
-			$H_Bit = $this->unsetBit($H_Bit, 4);
-		}
-		else {
-			$H_Bit = $this->setBit($H_Bit, 4);
-		}
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			// Ausgang setzen
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write_Channel_White", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
-								  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
-			If (!$Result) {
-				$this->SendDebug("ToggleOutputPinStatus", "Daten setzen fehlerhaft!", 0);
-				$this->SetStatus(202);
-			}
-			else {
-				$this->SetStatus(102);
-				// Ausgang abfragen
-				$this->GetOutput($StartAddress + 2);
-			}
-		}
+		$this->SetOutputPinStatus($Output, !$Status);
 	}         
 	    
 	private function Setup()
@@ -363,6 +340,7 @@
 				// Bytes bestimmen
 				$L_Bit = $Value_W & 255;
 				$H_Bit = $Value_W >> 8;
+				$this->SendDebug("FadeIn", "Weisswert: ".$Value_W, 0);
 				$Starttime = microtime(true);
 				If ($this->ReadPropertyBoolean("Open") == true) {
 					// Ausgang setzen
@@ -410,6 +388,7 @@
 				// Bytes bestimmen
 				$L_Bit = $Value_W & 255;
 				$H_Bit = $Value_W >> 8;
+				$this->SendDebug("FadeOut", "Weisswert: ".$Value_W, 0);
 				$Starttime = microtime(true);
 				If ($this->ReadPropertyBoolean("Open") == true) {
 					// Ausgang setzen
