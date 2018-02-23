@@ -292,7 +292,7 @@
 						$GPIOB = $OutputArray[2];
 						$OLATA = $OutputArray[3];
 						$OLATB = $OutputArray[4];
-						$this->SendDebug("GetOutput", "GPIOA: ".$GPIOA." GPIOA: ".$GPIOB." OLATA: ".$OLATA." OLATB: ".$OLATB, 0);
+						$this->SendDebug("GetOutput", "GPIOA: ".$GPIOA." GPIOB: ".$GPIOB." OLATA: ".$OLATA." OLATB: ".$OLATB, 0);
 						// Statusvariablen setzen
 						for ($i = 0; $i <= 7; $i++) {
 							// Port A
@@ -337,24 +337,20 @@
 					$this->SetStatus(202);
 				}
 				else {
-					$this->SendDebug("Interrupt", "Ergebnis: ".$Result, 0);
 					If (is_array(unserialize($Result))) {
 						$this->SetStatus(102);
 						$OutputArray = array();
-						// $OutputArray[1] - INTFA Interrupt Flag Register (zeigt welcher Eingang den Interrupt ausgelöst hat)
-						// $OutputArray[2] - INTFB Interrupt Flag Register (zeigt welcher Eingang den Interrupt ausgelöst hat)
-						// $OutputArray[3] - INTCAPA Interrupt Captured Value (zeigt den Zustand des GPIO wo der Interrupt eintrat)
-						// $OutputArray[4] - INTCAPB Interrupt Captured Value (zeigt den Zustand des GPIO wo der Interrupt eintrat)
 						// für Ausgänge LAT benutzen für Eingänge PORT 
 
 						$OutputArray = unserialize($Result);
 
 						$GPAIODIR = intval($this->GetBuffer("GPAIODIR"));
 						$GPBIODIR = intval($this->GetBuffer("GPBIODIR"));
-						$INTFA = $OutputArray[1];
-						$INTFB = $OutputArray[2];
-						$INTCAPA = $OutputArray[3];
-						$INTCAPB = $OutputArray[4];
+						$INTFA = $OutputArray[1]; // INTFA Interrupt Flag Register (zeigt welcher Eingang den Interrupt ausgelöst hat)
+						$INTFB = $OutputArray[2]; // INTFB Interrupt Flag Register (zeigt welcher Eingang den Interrupt ausgelöst hat)
+						$INTCAPA = $OutputArray[3]; // INTCAPA Interrupt Captured Value (zeigt den Zustand des GPIO wo der Interrupt eintrat)
+						$INTCAPB = $OutputArray[4]; // INTCAPB Interrupt Captured Value (zeigt den Zustand des GPIO wo der Interrupt eintrat)
+						$this->SendDebug("Interrupt", "INTFA: ".$INTFA." INTFB: ".$INTFB." INTCAPA: ".$INTCAPA." INTCAPB: ".$INTCAPB, 0);
 
 						// Statusvariablen setzen
 						for ($i = 0; $i <= 7; $i++) {
