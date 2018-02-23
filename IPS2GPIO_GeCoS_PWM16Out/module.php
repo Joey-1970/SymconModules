@@ -341,6 +341,7 @@
 				$L_Bit = $Value_W & 255;
 				$H_Bit = $Value_W >> 8;
 				$this->SendDebug("FadeIn", "Weisswert: ".$Value_W, 0);
+				$this->SendDebug("FadeIn", "Von: ".(0 + $Stepwide)." Bis: ".($Value_W - $Stepwide)." Schritt: ".$i + round($Stepwide, 2), 0);
 				$Starttime = microtime(true);
 				If ($this->ReadPropertyBoolean("Open") == true) {
 					// Ausgang setzen
@@ -360,6 +361,8 @@
 				$DelayMax = intval(1000 / $FadeScalar);
 				$Delaytime = min($DelayMax, max(0, ($DelayMax - $Delay)));   
 				IPS_Sleep($Delaytime);
+				$this->SendDebug("FadeIn", "Von: ".(0 + $Stepwide)." Bis: ".($Value_W - $Stepwide)." Schritt: ".$i + round($Stepwide, 2)." Delay: ".$Delaytime, 0);
+
 			}
 				
 		}
