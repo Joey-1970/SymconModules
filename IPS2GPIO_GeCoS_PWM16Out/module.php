@@ -300,20 +300,21 @@
 	{
 		$this->SendDebug("GetOutput", "Ausfuehrung", 0);
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $Register)));
-			if (($Result === NULL) OR ($Result < 0) OR ($Result > 65536)) {// Falls der Splitter einen Fehler hat und 'nichts' zurückgibt.
-				$this->SetBuffer("ErrorCounter", ($this->GetBuffer("ErrorCounter") + 1));
-				$this->SendDebug("GetOutput", "Keine gueltige Antwort: ".$Result, 0);
-				IPS_LogMessage("GeCoS_PWM16Out", "GetOutput: Keine gueltige Antwort: ".$Result);
-				If ($this->GetBuffer("ErrorCounter") <= 3) {
-					$this->GetOutput($Register);
+			$tries = 3;
+			do {
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $Register)));
+				if ($Result < 0) {
+					$this->SendDebug("GetOutput", "Lesen der Ausgaenge fehlerhaft!", 0);
+					$this->SetStatus(202);
 				}
-			}
-			else {
-				$this->SendDebug("GetOutput", "Ergebnis: ".$Result, 0);
-				$this->SetStatusVariables($Register, $Result);
-				$this->SetBuffer("ErrorCounter", 0);
-			}
+				else {
+					//$this->SendDebug("GetOutput", "Ergebnis: ".$Result, 0);
+					$this->SetStatusVariables($Register, $Result);
+					$this->SetStatus(102);
+					break;
+				}
+			$tries--;
+			} while ($tries);  
 		}
 	}
 
@@ -341,7 +342,6 @@
 				$L_Bit = $Value & 255;
 				$H_Bit = $Value >> 8;
 				$this->SendDebug("FadeIn", "Weisswert: ".$Value, 0);
-				//$this->SendDebug("FadeIn", "Von: ".(0 + $Stepwide)." Bis: ".($Value_W - $Stepwide)." Schritt: ".($i + round($Stepwide, 2)), 0);
 				$Starttime = microtime(true);
 				If ($this->ReadPropertyBoolean("Open") == true) {
 					// Ausgang setzen
@@ -361,8 +361,6 @@
 				$DelayMax = intval(1000 / $FadeScalar);
 				$Delaytime = min($DelayMax, max(0, ($DelayMax - $Delay)));   
 				IPS_Sleep($Delaytime);
-				//$this->SendDebug("FadeIn", "Von: ".(0 + $Stepwide)." Bis: ".($Value_W - $Stepwide)." Schritt: ".($i + round($Stepwide, 2))." Delay: ".$Delaytime, 0);
-
 			}
 				
 		}
