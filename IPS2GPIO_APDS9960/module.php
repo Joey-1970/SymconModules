@@ -233,6 +233,18 @@
            	$this->DisableAction("Color");
 		IPS_SetHidden($this->GetIDForIdent("Color"), false);
 		
+		$this->RegisterVariableInteger("InterruptAINT", "Letzte Interrupt Ambilight", "~UnixTimestamp", 100);
+		$this->DisableAction("InterruptAINT");
+		IPS_SetHidden($this->GetIDForIdent("InterruptAINT"), true);
+		
+		$this->RegisterVariableInteger("InterruptPINT", "Letzte Interrupt Nährung", "~UnixTimestamp", 110);
+		$this->DisableAction("InterruptPINT");
+		IPS_SetHidden($this->GetIDForIdent("InterruptPINT"), true);
+		
+		$this->RegisterVariableInteger("InterruptGINT", "Letzte Interrupt Gestik", "~UnixTimestamp", 120);
+		$this->DisableAction("InterruptPINT");
+		IPS_SetHidden($this->GetIDForIdent("InterruptPINT"), true);
+		
 		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {					
 			If (intval($this->GetBuffer("PreviousPin")) <> $this->ReadPropertyInteger("Pin")) {
@@ -663,6 +675,16 @@
 					$PGSAT = boolval($Status & 64); // Analoges Sättigungs Ereignis -> Löschung durch PICLEAR
 					$CPSAT = boolval($Status & 128); // Weise Fotodiode am oberen Ende des Bereiches -> Löschung durch CICLEAR
 					$this->SendDebug("Measurement", "Status: ".$Status." AVALID: ".$AVALID." PVALID: ".$PVALID." GINT: ".$GINT." AINT: ".$AINT." PINT: ".$PINT." PGSAT: ".$PGSAT." CPSAT: ".$CPSAT, 0);
+					
+					If ($AINT) {
+						SetValueInteger($this->GetIDForIdent("InterruptAINT"), time());
+					}
+					If ($GINT) {
+						SetValueInteger($this->GetIDForIdent("InterruptGINT"), time());
+					}
+					If ($PINT) {
+						SetValueInteger($this->GetIDForIdent("InterruptPINT"), time());
+					}
 					
 					If ($AVALID) {
 						// RGBW Farbergebnis Rohwerte
