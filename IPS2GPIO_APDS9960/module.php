@@ -711,8 +711,7 @@
 					$this->SetStatus(102);
 					//$this->SendDebug("Measurement", "Daten: ".$Result, 0);
 					$Result = unserialize($Result);
-					$this->SendDebug("Measurement", "Gestik FIFO Level: ".$Result[1], 0);
-					$this->SendDebug("Measurement", "Gestik Status: ".$Result[2], 0);
+					$this->SendDebug("Measurement", "Gestik FIFO Level: ".$Result[1]." Gestik Status: ".$Result[2], 0);
 				}
 			}
 			
@@ -727,10 +726,7 @@
 					$this->SetStatus(102);
 					//$this->SendDebug("Measurement", "Daten: ".$Result, 0);
 					$Result = unserialize($Result);
-					$this->SendDebug("Measurement", "Gestik FIFO Up: ".$Result[1], 0);
-					$this->SendDebug("Measurement", "Gestik FIFO Down: ".$Result[2], 0);
-					$this->SendDebug("Measurement", "Gestik FIFO Left: ".$Result[3], 0);
-					$this->SendDebug("Measurement", "Gestik FIFO Right: ".$Result[4], 0);
+					$this->SendDebug("Measurement", "Gestik FIFO Up: ".$Result[1]." Down: ".$Result[2]." Left: ".$Result[3]." Right: ".$Result[4], 0);
 				}
 			}
 			
@@ -749,20 +745,6 @@
 			if (!$this->WriteData(0xE7, 0, "AICLEAR")) {
 				return false;
 			}
-			
-			/*
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0xE4, "Count" => 4)));
-			If ($Result < 0) {
-				$this->SendDebug("Measurement", "Loeschung Interrupt Register fehlerhaft!", 0);
-				$this->SetStatus(202);
-			}
-			else {
-				If (is_array(unserialize($Result)) == true) {
-					$this->SetStatus(102);
-					$this->SendDebug("Measurement", "Loeschung Interrupt Register erfolgreich!", 0);
-				}
-			}
-			*/
 		}
 	}
 	    
