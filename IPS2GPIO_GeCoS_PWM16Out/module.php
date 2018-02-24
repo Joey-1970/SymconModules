@@ -420,7 +420,7 @@
 			$this->SendDebug("FadeTo", "Ausfuehrung", 0);
 			$Channel = min(15, max(0, $Channel));
 			$TargetValueRel = min(100, max(0, $TargetValueRel));
-			$TargetValue = 4095 / $TargetValueRel * 100;
+			$TargetValue = 4095 / 100 * $TargetValueRel;
 			$Fadetime = min(10, max(1, $Fadetime));
 			$CurrentValue = GetValueInteger($this->GetIDForIdent("Output_Int_X".$Channel));
 			
