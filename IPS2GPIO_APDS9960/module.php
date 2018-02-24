@@ -297,7 +297,7 @@
 					elseIf (($data->Value == 1) AND ($this->ReadPropertyBoolean("Open") == true)) {
 						$this->SendDebug("Interrupt", "Wert: ".(int)$data->Value." -> Daten einlesen", 0);
 						SetValueInteger($this->GetIDForIdent("Interrupt"), time() );
-						$this->Measurement();
+						//$this->Measurement();
 					}
 			   	}
 			   	break; 
@@ -779,9 +779,11 @@
 				}
 			}
 			
+			/*
 			if (!$this->WriteData(0xE7, 0, "AICLEAR")) {
 				return false;
 			}
+			*/
 		}
 	}
 	    
