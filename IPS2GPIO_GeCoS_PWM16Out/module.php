@@ -331,7 +331,7 @@
 			// muss von 0 auf den Zielwert gebracht werden
 			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
 			$Steps = $Fadetime * $FadeScalar;
-			$Stepwide = 4095 / $Steps;
+			$Stepwide = $Value_W / $Steps;
 			$StartAddress = ($Channel * 4) + 6;
 			
 			// Fade In	
@@ -379,7 +379,7 @@
 			// $l muss von 0 auf den Zielwert gebracht werden
 			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
 			$Steps = $Fadetime * $FadeScalar;
-			$Stepwide = 4095 / $Steps;
+			$Stepwide = $Value_W / $Steps;
 			$StartAddress = ($Channel * 4) + 6;
 			
 			// Fade Out			
@@ -414,18 +414,19 @@
 		}
 	}
 	
-	public function FadeTo(Int $Channel, Int $TargetValue, Int $Fadetime)
+	public function FadeTo(Int $Channel, Int $TargetValueRel, Int $Fadetime)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("FadeTo", "Ausfuehrung", 0);
 			$Channel = min(15, max(0, $Channel));
-			$TargetValue = min(4095, max(0, $TargetValue));
-			$Fadetime = min(10, max(0, $Fadetime));
+			$TargetValueRel = min(100, max(0, $TargetValueRel));
+			$TargetValue = 4095 / $TargetValueRel * 100;
+			$Fadetime = min(10, max(1, $Fadetime));
 			$CurrentValue = GetValueInteger($this->GetIDForIdent("Output_Int_X".$Channel));
 			
 			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
 			$Steps = $Fadetime * $FadeScalar;
-			$Stepwide = 4095 / $Steps;
+			$Stepwide = abs($TargetValue - $CurrentValue) / $Steps;
 			$StartAddress = ($Channel * 4) + 6;
 			
 			If ($TargetValue == $CurrentValue) {
