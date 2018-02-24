@@ -779,11 +779,9 @@
 				}
 			}
 			
-			/*
 			if (!$this->WriteData(0xE7, 0, "AICLEAR")) {
 				return false;
 			}
-			*/
 		}
 	}
 	    
