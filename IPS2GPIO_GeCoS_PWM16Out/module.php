@@ -413,6 +413,78 @@
 				
 		}
 	}
+	
+	public function FadeTo(Int $Channel, Int $TargetValue, Int $Fadetime)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("FadeTo", "Ausfuehrung", 0);
+			$Channel = min(15, max(0, $Channel));
+			$TargetValue = min(4095, max(0, $TargetValue));
+			$Fadetime = min(10, max(0, $Fadetime));
+			$CurrentValue = GetValueInteger($this->GetIDForIdent("Output_Int_X".$Channel));
+			
+			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
+			$Steps = $Fadetime * $FadeScalar;
+			$Stepwide = 4095 / $Steps;
+			$StartAddress = ($Channel * 4) + 6;
+			
+			If ($TargetValue == $CurrentValue) {
+				// es gibt nichts zu tun
+				return;
+			}
+			elseif ($TargetValue > $CurrentValue) {
+				// FadeIn
+				for ($i = ($CurrentValue + $Stepwide); $i <= ($TargetValue - $Stepwide); $i = $i + round($Stepwide, 2)) {
+					// Werte skalieren
+					$Value = intval($i);
+					// Bytes bestimmen
+					$L_Bit = $Value & 255;
+					$H_Bit = $Value >> 8;
+					$this->SendDebug("FadeTo", "Weisswert: ".$Value, 0);
+					$Starttime = microtime(true);
+					If ($this->ReadPropertyBoolean("Open") == true) {
+						// Ausgang setzen
+						$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write_Channel_White", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
+											  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
+						If (!$Result) {
+							$this->SendDebug("FadeTo", "Daten setzen fehlerhaft!", 0);
+						}
+					}
+					$Endtime = microtime(true);
+					$Delay = intval(($Endtime - $Starttime) * 1000);
+					$DelayMax = intval(1000 / $FadeScalar);
+					$Delaytime = min($DelayMax, max(0, ($DelayMax - $Delay)));   
+					IPS_Sleep($Delaytime);
+				}
+			}	
+			elseif ($TargetValue < $CurrentValue) {
+				// FadeOut			
+				for ($i = ($CurrentValue - $Stepwide) ; $i >= ($TargetValue + $Stepwide); $i = $i - round($Stepwide, 2)) {
+					// Werte skalieren
+					$Value = intval($i);
+					// Bytes bestimmen
+					$L_Bit = $Value & 255;
+					$H_Bit = $Value >> 8;
+					$this->SendDebug("FadeTo", "Weisswert: ".$Value, 0);
+					$Starttime = microtime(true);
+					If ($this->ReadPropertyBoolean("Open") == true) {
+						// Ausgang setzen
+						$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Write_Channel_White", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress, 
+											  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
+						If (!$Result) {
+							$this->SendDebug("FadeTo", "Daten setzen fehlerhaft!", 0);
+						}
+					}
+					$Endtime = microtime(true);
+					$Delay = intval(($Endtime - $Starttime) * 1000);
+					$DelayMax = intval(1000 / $FadeScalar);
+					$Delaytime = min($DelayMax, max(0, ($DelayMax - $Delay)));   
+					IPS_Sleep($Delaytime);
+				}
+			}
+			$this->SetOutputPinValue($Channel, $TargetValue);
+		}
+	}
 	    
 	private function SetStatusVariables(Int $Register, Int $Value)
 	{
