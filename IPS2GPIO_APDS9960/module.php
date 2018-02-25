@@ -350,19 +350,6 @@
 				}
 			}
 			
-			// Set ENABLE register to 0 (disable all features)
-			$PON = $this->ReadPropertyBoolean("PON");
-			$AEN = $this->ReadPropertyBoolean("AEN");
-			$PEN = $this->ReadPropertyBoolean("PEN");
-			$WEN = $this->ReadPropertyBoolean("WEN");
-			$AIEN = $this->ReadPropertyBoolean("AIEN");
-			$PIEN = $this->ReadPropertyBoolean("PIEN");
-			$GEN = $this->ReadPropertyBoolean("GEN");
-			$EnableRegister = $PON | ($AEN << 1) | ($PEN << 2) |($WEN << 3) | ($AIEN << 4) | ($PIEN << 5) | ($GEN << 6);
-			$this->SendDebug("Setup", "EnableRegister: ".$EnableRegister, 0);
-			if (!$this->WriteData(0x80, $EnableRegister, "ENABLE")) {
-				return false;
-			}
 			
 			// Set default values for ambient light and proximity registers
 			if (!$this->WriteData(0x81, 219, "ATIME")) {
@@ -497,6 +484,20 @@
 			
 			$Result = $this->SetGestureIntEnable(1);
 			If ($Result == false) {
+				return false;
+			}
+			
+			// Set ENABLE register
+			$PON = $this->ReadPropertyBoolean("PON");
+			$AEN = $this->ReadPropertyBoolean("AEN");
+			$PEN = $this->ReadPropertyBoolean("PEN");
+			$WEN = $this->ReadPropertyBoolean("WEN");
+			$AIEN = $this->ReadPropertyBoolean("AIEN");
+			$PIEN = $this->ReadPropertyBoolean("PIEN");
+			$GEN = $this->ReadPropertyBoolean("GEN");
+			$EnableRegister = $PON | ($AEN << 1) | ($PEN << 2) |($WEN << 3) | ($AIEN << 4) | ($PIEN << 5) | ($GEN << 6);
+			$this->SendDebug("Setup", "EnableRegister: ".$EnableRegister, 0);
+			if (!$this->WriteData(0x80, $EnableRegister, "ENABLE")) {
 				return false;
 			}
 			
