@@ -325,11 +325,12 @@
 		$Channel = min(15, max(0, $Channel));
 		$Fadetime = $this->ReadPropertyInteger("FadeTime_".$Channel);
 		$Fadetime = min(10, max(0, $Fadetime));
-		If ($Fadetime > 0) {
-			// Zielwert W bestimmen
-			$Value_W = GetValueInteger($this->GetIDForIdent("Output_Int_X".$Channel));
+		// Zielwert W bestimmen
+		$Value_W = GetValueInteger($this->GetIDForIdent("Output_Int_X".$Channel));
+		$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
+		
+		If (($Fadetime > 0) AND ($Value_W > 50)) {
 			// muss von 0 auf den Zielwert gebracht werden
-			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
 			$Steps = $Fadetime * $FadeScalar;
 			$Stepwide = $Value_W / $Steps;
 			$StartAddress = ($Channel * 4) + 6;
@@ -362,7 +363,6 @@
 				$Delaytime = min($DelayMax, max(0, ($DelayMax - $Delay)));   
 				IPS_Sleep($Delaytime);
 			}
-				
 		}
 	}
 	
@@ -373,11 +373,12 @@
 		$Channel = min(15, max(0, $Channel));
 		$Fadetime = $this->ReadPropertyInteger("FadeTime_".$Channel);
 		$Fadetime = min(10, max(0, $Fadetime));
-		If ($Fadetime > 0) {
-			// Zielwert W bestimmen
-			$Value_W = GetValueInteger($this->GetIDForIdent("Output_Int_X".$Channel));
-			// $l muss von 0 auf den Zielwert gebracht werden
-			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
+		// Istwert W bestimmen
+		$Value_W = GetValueInteger($this->GetIDForIdent("Output_Int_X".$Channel));
+		$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
+		
+		If (($Fadetime > 0) AND ($Value_W > 50)) {
+			// muss vom Zielwert auf 0 gebracht werden
 			$Steps = $Fadetime * $FadeScalar;
 			$Stepwide = $Value_W / $Steps;
 			$StartAddress = ($Channel * 4) + 6;
@@ -426,14 +427,15 @@
 			
 			$FadeScalar = $this->ReadPropertyInteger("FadeScalar");
 			$Steps = $Fadetime * $FadeScalar;
-			$Stepwide = abs($TargetValue - $CurrentValue) / $Steps;
+			$Difference = abs($TargetValue - $CurrentValue);
+			$Stepwide = $Difference / $Steps;
 			$StartAddress = ($Channel * 4) + 6;
 			
 			If ($TargetValue == $CurrentValue) {
 				// es gibt nichts zu tun
 				return;
 			}
-			elseif ($TargetValue > $CurrentValue) {
+			elseif (($TargetValue > $CurrentValue) AND ($Difference > 50)) {
 				// FadeIn
 				for ($i = ($CurrentValue + $Stepwide); $i <= ($TargetValue - $Stepwide); $i = $i + round($Stepwide, 2)) {
 					// Werte skalieren
@@ -458,7 +460,7 @@
 					IPS_Sleep($Delaytime);
 				}
 			}	
-			elseif ($TargetValue < $CurrentValue) {
+			elseif (($TargetValue < $CurrentValue) AND ($Difference > 50)) {
 				// FadeOut			
 				for ($i = ($CurrentValue - $Stepwide) ; $i >= ($TargetValue + $Stepwide); $i = $i - round($Stepwide, 2)) {
 					// Werte skalieren
