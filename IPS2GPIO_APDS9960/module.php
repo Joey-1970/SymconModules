@@ -352,6 +352,10 @@
 			
 			
 			// Set default values for ambient light and proximity registers
+			if (!$this->WriteData(0x80, 0, "ENABLE")) {
+				return false;
+			}
+			
 			if (!$this->WriteData(0x81, 219, "ATIME")) {
 				return false;
 			}
