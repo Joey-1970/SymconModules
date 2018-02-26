@@ -48,6 +48,8 @@
 		$this->RegisterPropertyInteger("GWTIME", 0);
 		$this->RegisterPropertyInteger("PPERS", 0);
 		$this->RegisterPropertyInteger("APERS", 0);
+		$this->RegisterPropertyInteger("PPLEN", 0);
+		$this->RegisterPropertyInteger("PPULSE", 0);
 		
 		$this->RegisterPropertyBoolean("PSIEN", true);
 		$this->RegisterPropertyBoolean("CPSIEN", true);
@@ -134,7 +136,15 @@
 		$arrayOptions[] = array("label" => "15 aufeinanderfolgende außerhalb Schwellwert", "value" => 15);
 		$arrayElements[] = array("type" => "Select", "name" => "PPERS", "caption" => "Kontrollrate", "options" => $arrayOptions );
 		
-		
+		$arrayElements[] = array("type" => "Label", "label" => "Impuls Zähler Register"); 
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "4us(Default)", "value" => 0);
+		$arrayOptions[] = array("label" => "8us", "value" => 1);
+		$arrayOptions[] = array("label" => "16us", "value" => 2);
+		$arrayOptions[] = array("label" => "32us", "value" => 3);
+		$arrayElements[] = array("type" => "Select", "name" => "PPLEN", "caption" => "Impulslänge", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Label", "label" => "Annärungs Impuls Zähler (1-65)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PPULSE",  "caption" => "Anzahl");
 		
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");  
 
@@ -397,6 +407,15 @@
 			
 			$PPERS = $this->ReadPropertyInteger("PPERS");
 			
+			$PPLEN = $this->ReadPropertyInteger("PPLEN");
+			$PPULSE = $this->ReadPropertyInteger("PPULSE");
+			$PPULSE = min(65, max(1, $PPULSE));
+			$ProximityPulseCountRegister = ($PPULSE - 1) | ($PPLEN << 6);
+			if (!$this->WriteData(0x8E, $ProximityPulseCountRegister, "PPULSE")) {
+				return false;
+			}
+			
+			
 			
 			// Konfiguration des Ambilght-Sensors
 			
@@ -408,10 +427,10 @@
 			}
 			
 			
+			
+			
 			// Set default values for ambient light and proximity registers
-			if (!$this->WriteData(0x80, 0, "ENABLE")) {
-				return false;
-			}
+			
 			
 			if (!$this->WriteData(0x81, 219, "ATIME")) {
 				return false;
@@ -421,9 +440,7 @@
 				return false;
 			}
 			
-			if (!$this->WriteData(0x8E, 0x87, "PPULSE")) {
-				return false;
-			}
+			
 			
 			if (!$this->WriteData(0x9D, 0, "POFFSET_UR")) {
 				return false;
