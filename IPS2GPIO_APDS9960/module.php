@@ -169,7 +169,7 @@
 
 		$arrayElements[] = array("name" => "PSIEN", "type" => "CheckBox",  "caption" => "Annährungs Interrupt"); 
 		
-		$arrayElements[] = array("type" => "Label", "label" => "LED Boost"); 
+		$arrayElements[] = array("type" => "Label", "label" => "LED Boost Annährung/Gestik"); 
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "100% (Default)", "value" => 0);
 		$arrayOptions[] = array("label" => "150%", "value" => 1);
