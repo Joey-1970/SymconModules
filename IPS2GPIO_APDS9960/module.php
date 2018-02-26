@@ -623,20 +623,7 @@
 				return false;
 			}
 			
-			// Set default values for gesture sense registers
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+			//****************************************************************************************
 			// Set ENABLE register
 			$PON = $this->ReadPropertyBoolean("PON");
 			$EnableRegister = $PON | ($AEN << 1) | ($PEN << 2) |($WEN << 3) | ($AIEN << 4) | ($PIEN << 5) | ($GEN << 6);
@@ -645,6 +632,7 @@
 				return false;
 			}
 			
+			// Interrupt zum Test erzwingen
 			if (!$this->WriteData(0xE4, 0, "IFORCE")) {
 				return false;
 			}
