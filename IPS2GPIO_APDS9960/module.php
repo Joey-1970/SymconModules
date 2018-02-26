@@ -57,7 +57,9 @@
 		$this->RegisterPropertyBoolean("GIEN", true);
 		$this->RegisterPropertyInteger("GPENTH", 40);
 		$this->RegisterPropertyInteger("GEXTH", 30);
-		
+		$this->RegisterPropertyInteger("GEXPERS", 0);
+		$this->RegisterPropertyInteger("GEXMSK", 0);
+		$this->RegisterPropertyInteger("GFIFOTH", 0);
 		
 		$this->RegisterPropertyInteger("GGAIN", 0);
 		$this->RegisterPropertyInteger("GLDRIVE", 0);
@@ -232,11 +234,22 @@
 		$arrayElements[] = array("type" => "Label", "label" => "Oberer Schwellwert für Gestik-Interrupt (0-255)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "GEXTH",  "caption" => "Wert");
 		
+		$arrayElements[] = array("type" => "Label", "label" => "Anzahl Gestik Ende"); 
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "Erstes Gestik Ende Ergebnis (Default)", "value" => 0);
+		$arrayOptions[] = array("label" => "Zweites Gestik Ende Ergebnis", "value" => 1);
+		$arrayOptions[] = array("label" => "Viertes Gestik Ende Ergebnis", "value" => 2);
+		$arrayOptions[] = array("label" => "Siebtes Gestik Ende Ergebnis", "value" => 3);
+		$arrayElements[] = array("type" => "Select", "name" => "GEXPERS", "caption" => "Anzahl", "options" => $arrayOptions );
 		
-		
-		
-		
-		
+		$arrayElements[] = array("type" => "Label", "label" => "Interrupt Auslösung"); 
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "Nach erstem Datensatz (Default)", "value" => 0);
+		$arrayOptions[] = array("label" => "Nach viertem Datensatz", "value" => 1);
+		$arrayOptions[] = array("label" => "Nach achtem Datensatz", "value" => 2);
+		$arrayOptions[] = array("label" => "Nach sechszehntem Datensatz", "value" => 3);
+		$arrayElements[] = array("type" => "Select", "name" => "GFIFOTH", "caption" => "Anzahl", "options" => $arrayOptions );
+	
 		$arrayElements[] = array("type" => "Label", "label" => "Gestik Konfiguration - Gain Control"); 
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "1x (Default)", "value" => 0);
@@ -267,6 +280,8 @@
 		$arrayOptions[] = array("label" => "39.2 ms", "value" => 7);
 		$arrayElements[] = array("type" => "Select", "name" => "GWTIME", "caption" => "Zeit", "options" => $arrayOptions );
 
+		
+		
 		
 		$arrayActions = array();
 		$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
@@ -553,14 +568,11 @@
 				return false;
 			}
 			
-			
-			
-
-			
-			// Set default values for gesture sense registers
-			
-			
-			if (!$this->WriteData(0xA2, 0x40, "GCONF1")) {
+			$GFIFOTH = $this->ReadPropertyInteger("GFIFOTH");
+			$GEXMSK = $this->ReadPropertyInteger("GEXMSK");
+			$GEXPERS = $this->ReadPropertyInteger("GEXPERS");
+			$GestureConfigurationOneRegister = $GEXPERS | ($GEXMSK << 2) | ($GFIFOTH << 6);
+			if (!$this->WriteData(0xA2, $GestureConfigurationOneRegister, "GCONF1")) {
 				return false;
 			}
 			
@@ -571,6 +583,14 @@
 			if (!$this->WriteData(0xA3, $GestureRegisterTwo, "GCONF2")) {
 				return false;
 			}
+
+			
+			// Set default values for gesture sense registers
+			
+			
+			
+			
+			
 			
 			if (!$this->WriteData(0xA4, 0, "GOFFSET_U")) {
 				return false;
