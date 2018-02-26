@@ -46,6 +46,8 @@
 		$this->RegisterPropertyInteger("GGAIN", 0);
 		$this->RegisterPropertyInteger("GLDRIVE", 0);
 		$this->RegisterPropertyInteger("GWTIME", 0);
+		$this->RegisterPropertyInteger("PPERS", 0);
+		$this->RegisterPropertyInteger("APERS", 0);
 		
 		$this->RegisterPropertyBoolean("PSIEN", true);
 		$this->RegisterPropertyBoolean("CPSIEN", true);
@@ -98,14 +100,44 @@
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus) (optional)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");  
-		$arrayElements[] = array("name" => "PON", "type" => "CheckBox",  "caption" => "Power"); 
 		$arrayElements[] = array("name" => "AEN", "type" => "CheckBox",  "caption" => "Ambilight Sensor"); 
-		$arrayElements[] = array("name" => "PEN", "type" => "CheckBox",  "caption" => "Annährungs Sensor"); 
+		
 		$arrayElements[] = array("name" => "WEN", "type" => "CheckBox",  "caption" => "Wartezeit"); 
 		$arrayElements[] = array("name" => "AIEN", "type" => "CheckBox",  "caption" => "Ambilight Interrupt");
-		$arrayElements[] = array("name" => "PIEN", "type" => "CheckBox",  "caption" => "Annährungs Interrupt"); 
+		
 		$arrayElements[] = array("name" => "GEN", "type" => "CheckBox",  "caption" => "Gestik Sensor"); 
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");  
+		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration des Annährungssensors");  
+		$arrayElements[] = array("name" => "PEN", "type" => "CheckBox",  "caption" => "Annährungs Sensor"); 
+		$arrayElements[] = array("name" => "PIEN", "type" => "CheckBox",  "caption" => "Annährungs Interrupt"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Unterer Schwellwert für Annährungs-Interrupt (0-255)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PILT",  "caption" => "Wert");
+		$arrayElements[] = array("type" => "Label", "label" => "Oberer Schwellwert für Annährungs-Interrupt (0-255)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PIHT",  "caption" => "Wert");
+		$arrayElements[] = array("type" => "Label", "label" => "Interrupt Beharrlichkeit"); 
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "Jeden Annährungszyklus", "value" => 0);
+		$arrayOptions[] = array("label" => "Jeden Wert außerhalb des Schwellwertes", "value" => 1);
+		$arrayOptions[] = array("label" => "2 aufeinanderfolgende außerhalb Schwellwert", "value" => 2);
+		$arrayOptions[] = array("label" => "3 aufeinanderfolgende außerhalb Schwellwert", "value" => 3);
+		$arrayOptions[] = array("label" => "4 aufeinanderfolgende außerhalb Schwellwert", "value" => 4);
+		$arrayOptions[] = array("label" => "5 aufeinanderfolgende außerhalb Schwellwert", "value" => 5);
+		$arrayOptions[] = array("label" => "6 aufeinanderfolgende außerhalb Schwellwert", "value" => 6);
+		$arrayOptions[] = array("label" => "7 aufeinanderfolgende außerhalb Schwellwert", "value" => 7);
+		$arrayOptions[] = array("label" => "8 aufeinanderfolgende außerhalb Schwellwert", "value" => 8);
+		$arrayOptions[] = array("label" => "9 aufeinanderfolgende außerhalb Schwellwert", "value" => 9);
+		$arrayOptions[] = array("label" => "10 aufeinanderfolgende außerhalb Schwellwert", "value" => 10);
+		$arrayOptions[] = array("label" => "11 aufeinanderfolgende außerhalb Schwellwert", "value" => 11);
+		$arrayOptions[] = array("label" => "12 aufeinanderfolgende außerhalb Schwellwert", "value" => 12);
+		$arrayOptions[] = array("label" => "13 aufeinanderfolgende außerhalb Schwellwert", "value" => 13);
+		$arrayOptions[] = array("label" => "14 aufeinanderfolgende außerhalb Schwellwert", "value" => 14);
+		$arrayOptions[] = array("label" => "15 aufeinanderfolgende außerhalb Schwellwert", "value" => 15);
+		$arrayElements[] = array("type" => "Select", "name" => "PPERS", "caption" => "Kontrollrate", "options" => $arrayOptions );
+		
+		
+		
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");  
+
 		$arrayElements[] = array("name" => "PSIEN", "type" => "CheckBox",  "caption" => "Annährungs Interrupt"); 
 		$arrayElements[] = array("name" => "CPSIEN", "type" => "CheckBox",  "caption" => "Weiße Fotodiode Interrupt"); 
 		
@@ -144,11 +176,7 @@
 		$arrayOptions[] = array("label" => "64x", "value" => 3);
 		$arrayElements[] = array("type" => "Select", "name" => "AGAIN", "caption" => "Faktor", "options" => $arrayOptions );
 		
-		$arrayElements[] = array("type" => "Label", "label" => "Unterer Schwellwert für Annährungs-Interrupt (0-255)");
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PILT",  "caption" => "Wert");
 		
-		$arrayElements[] = array("type" => "Label", "label" => "Oberer Schwellwert für Annährungs-Interrupt (0-255)");
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PIHT",  "caption" => "Wert");
 
 		$arrayElements[] = array("type" => "Label", "label" => "Unterer Schwellwert für Ambilght-Sensing-Interrupt (0-65535)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "AILT",  "caption" => "Wert");
@@ -350,6 +378,35 @@
 				}
 			}
 			
+			// Konfiguration des Annährungs-Sensors
+			// ENABLE wird am Ende gesetzt
+			$PEN = $this->ReadPropertyBoolean("PEN");
+			$PIEN = $this->ReadPropertyBoolean("PIEN");
+			
+			$PILT = $this->ReadPropertyInteger("PILT");
+			$PILT = min(255, max(0, $PILT));
+			if (!$this->WriteData(0x89, $PILT, "PILT")) {
+				return false;
+			}
+			
+			$PIHT = $this->ReadPropertyInteger("PIHT");
+			$PIHT = min(255, max(0, $PIHT));
+			if (!$this->WriteData(0x8B, $PIHT, "PIHT")) {
+				return false;
+			}
+			
+			$PPERS = $this->ReadPropertyInteger("PPERS");
+			
+			
+			// Konfiguration des Ambilght-Sensors
+			
+			
+			$APERS = $this->ReadPropertyInteger("APERS");
+			$PersistanceRegister = $APERS | ($PPERS << 4);
+			if (!$this->WriteData(0x8C, $PersistanceRegister, "PERS")) {
+				return false;
+			}
+			
 			
 			// Set default values for ambient light and proximity registers
 			if (!$this->WriteData(0x80, 0, "ENABLE")) {
@@ -388,17 +445,7 @@
 				return false;
 			}
 			
-			$PILT = $this->ReadPropertyInteger("PILT");
-			$PILT = min(255, max(0, $PILT));
-			if (!$this->WriteData(0x89, $PILT, "PILT")) {
-				return false;
-			}
 			
-			$PIHT = $this->ReadPropertyInteger("PIHT");
-			$PIHT = min(255, max(0, $PIHT));
-			if (!$this->WriteData(0x8B, $PIHT, "PIHT")) {
-				return false;
-			}
 			
 			$AILT = $this->ReadPropertyInteger("AILT");
 			$AILT = min(65535, max(0, $AILT));
@@ -494,10 +541,10 @@
 			// Set ENABLE register
 			$PON = $this->ReadPropertyBoolean("PON");
 			$AEN = $this->ReadPropertyBoolean("AEN");
-			$PEN = $this->ReadPropertyBoolean("PEN");
+			
 			$WEN = $this->ReadPropertyBoolean("WEN");
 			$AIEN = $this->ReadPropertyBoolean("AIEN");
-			$PIEN = $this->ReadPropertyBoolean("PIEN");
+			
 			$GEN = $this->ReadPropertyBoolean("GEN");
 			$EnableRegister = $PON | ($AEN << 1) | ($PEN << 2) |($WEN << 3) | ($AIEN << 4) | ($PIEN << 5) | ($GEN << 6);
 			$this->SendDebug("Setup", "EnableRegister: ".$EnableRegister, 0);
