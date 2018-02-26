@@ -60,10 +60,13 @@
 		$this->RegisterPropertyInteger("GEXPERS", 0);
 		$this->RegisterPropertyInteger("GEXMSK", 0);
 		$this->RegisterPropertyInteger("GFIFOTH", 0);
-		
 		$this->RegisterPropertyInteger("GGAIN", 0);
 		$this->RegisterPropertyInteger("GLDRIVE", 0);
 		$this->RegisterPropertyInteger("GWTIME", 0);
+		$this->RegisterPropertyInteger("GPLEN", 0);
+		$this->RegisterPropertyInteger("GPULSE", 0);
+		$this->RegisterPropertyInteger("GDIMS", 0);
+		
 		
 	
         }
@@ -148,7 +151,7 @@
 		$arrayOptions[] = array("label" => "16us", "value" => 2);
 		$arrayOptions[] = array("label" => "32us", "value" => 3);
 		$arrayElements[] = array("type" => "Select", "name" => "PPLEN", "caption" => "Impulslänge", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "label" => "Annärungs Impuls Zähler (1-65)");
+		$arrayElements[] = array("type" => "Label", "label" => "Annährungs Impuls Zähler (1-65)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PPULSE",  "caption" => "Anzahl");
 		
 		$arrayElements[] = array("type" => "Label", "label" => "LED Treiber Strom"); 
@@ -280,6 +283,15 @@
 		$arrayOptions[] = array("label" => "39.2 ms", "value" => 7);
 		$arrayElements[] = array("type" => "Select", "name" => "GWTIME", "caption" => "Zeit", "options" => $arrayOptions );
 
+		$arrayElements[] = array("type" => "Label", "label" => "Impuls Zähler Register"); 
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "4us(Default)", "value" => 0);
+		$arrayOptions[] = array("label" => "8us", "value" => 1);
+		$arrayOptions[] = array("label" => "16us", "value" => 2);
+		$arrayOptions[] = array("label" => "32us", "value" => 3);
+		$arrayElements[] = array("type" => "Select", "name" => "GPLEN", "caption" => "Impulslänge", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Label", "label" => "Gestik Impuls Zähler (1-65)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "GPULSE",  "caption" => "Anzahl");
 		
 		
 		
@@ -420,7 +432,6 @@
 			If ($Result < 0) {
 				$this->SendDebug("Setup", "Ermittlung der DeviceID fehlerhaft!", 0);
 				$this->SetStatus(202);
-				$this->SetTimerInterval("Messzyklus", 0);
 				return;
 			}
 			else {
@@ -584,14 +595,6 @@
 				return false;
 			}
 
-			
-			// Set default values for gesture sense registers
-			
-			
-			
-			
-			
-			
 			if (!$this->WriteData(0xA4, 0, "GOFFSET_U")) {
 				return false;
 			}
@@ -608,13 +611,29 @@
 				return false;
 			}
 			
-			if (!$this->WriteData(0xA6, 0xC9, "GPULSE")) {
+			$GPLEN = $this->ReadPropertyInteger("GPLEN");
+			$GPULSE = $this->ReadPropertyInteger("GPULSE");
+			$GesturePulseCountRegister = $GPULSE | ($GPLEN << 6);
+			if (!$this->WriteData(0xA6, $GesturePulseCountRegister, "GPULSE")) {
 				return false;
 			}
 			
-			if (!$this->WriteData(0xAA, 0, "GCONF3")) {
+			$GDIMS = $this->ReadPropertyInteger("GDIMS");
+			if (!$this->WriteData(0xAA, $GDIMS, "GCONF3")) {
 				return false;
 			}
+			
+			// Set default values for gesture sense registers
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			
 			
 			
