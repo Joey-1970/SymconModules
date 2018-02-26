@@ -396,6 +396,7 @@
 				}
 			}
 			
+			//****************************************************************************************
 			// Konfiguration des Annährungs-Sensors
 			// ENABLE wird am Ende gesetzt
 			$PEN = $this->ReadPropertyBoolean("PEN");
@@ -442,8 +443,12 @@
 				return false;
 			}
 			
+			if (!$this->WriteData(0x9F, 0, "CONFIG3")) {
+				return false;
+			}
 			
-			// Konfiguration des Ambilght-Sensors
+			//****************************************************************************************
+			// Konfiguration des Ambilight-Sensors
 			
 			
 			$APERS = $this->ReadPropertyInteger("APERS");
@@ -510,9 +515,7 @@
 			
 			
 			
-			if (!$this->WriteData(0x9F, 0, "CONFIG3")) {
-				return false;
-			}
+
 			
 			// Set default values for gesture sense registers
 			$GPENTH = $this->ReadPropertyInteger("GPENTH");
