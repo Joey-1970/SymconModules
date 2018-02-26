@@ -146,20 +146,20 @@
 		
 		$arrayElements[] = array("type" => "Label", "label" => "Impuls Zähler Register"); 
 		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "4us(Default)", "value" => 0);
-		$arrayOptions[] = array("label" => "8us", "value" => 1);
-		$arrayOptions[] = array("label" => "16us", "value" => 2);
-		$arrayOptions[] = array("label" => "32us", "value" => 3);
+		$arrayOptions[] = array("label" => "4".chr(181)."s(Default)", "value" => 0);
+		$arrayOptions[] = array("label" => "8".chr(181)."s", "value" => 1);
+		$arrayOptions[] = array("label" => "16".chr(181)."s", "value" => 2);
+		$arrayOptions[] = array("label" => "32".chr(181)."s", "value" => 3);
 		$arrayElements[] = array("type" => "Select", "name" => "PPLEN", "caption" => "Impulslänge", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "Annährungs Impuls Zähler (1-65)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PPULSE",  "caption" => "Anzahl");
 		
 		$arrayElements[] = array("type" => "Label", "label" => "LED Treiber Strom"); 
 		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "100 mA (Default)", "value" => 0);
-		$arrayOptions[] = array("label" => "50 mA", "value" => 1);
-		$arrayOptions[] = array("label" => "25 mA", "value" => 2);
-		$arrayOptions[] = array("label" => "12,5 mA", "value" => 3);
+		$arrayOptions[] = array("label" => "100mA (Default)", "value" => 0);
+		$arrayOptions[] = array("label" => "50mA", "value" => 1);
+		$arrayOptions[] = array("label" => "25mA", "value" => 2);
+		$arrayOptions[] = array("label" => "12.5mA", "value" => 3);
 		$arrayElements[] = array("type" => "Select", "name" => "LDRIVE", "caption" => "Stromstärke", "options" => $arrayOptions );
 
 		$arrayElements[] = array("type" => "Label", "label" => "Annährungsverstärkung"); 
@@ -264,31 +264,31 @@
 		// LED Drive Strength 
 		$arrayElements[] = array("type" => "Label", "label" => "LED Drive Strength"); 
 		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "100 mA (Default)", "value" => 0);
-		$arrayOptions[] = array("label" => "50 mA", "value" => 1);
-		$arrayOptions[] = array("label" => "25 mA", "value" => 2);
-		$arrayOptions[] = array("label" => "12,5 mA", "value" => 3);
+		$arrayOptions[] = array("label" => "100mA (Default)", "value" => 0);
+		$arrayOptions[] = array("label" => "50mA", "value" => 1);
+		$arrayOptions[] = array("label" => "25mA", "value" => 2);
+		$arrayOptions[] = array("label" => "12,5mA", "value" => 3);
 		$arrayElements[] = array("type" => "Select", "name" => "GLDRIVE", "caption" => "Stromstärke", "options" => $arrayOptions );
 		
 		// GWTIME
 		$arrayElements[] = array("type" => "Label", "label" => "GWTIME"); 
 		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "0 ms (Default)", "value" => 0);
-		$arrayOptions[] = array("label" => "2.8 ms", "value" => 1);
-		$arrayOptions[] = array("label" => "5.6 ms", "value" => 2);
-		$arrayOptions[] = array("label" => "8.4 ms", "value" => 3);
-		$arrayOptions[] = array("label" => "14.0 ms", "value" => 4);
-		$arrayOptions[] = array("label" => "22.4 ms", "value" => 5);
-		$arrayOptions[] = array("label" => "30.8 ms", "value" => 6);
-		$arrayOptions[] = array("label" => "39.2 ms", "value" => 7);
+		$arrayOptions[] = array("label" => "0ms (Default)", "value" => 0);
+		$arrayOptions[] = array("label" => "2.8ms", "value" => 1);
+		$arrayOptions[] = array("label" => "5.6ms", "value" => 2);
+		$arrayOptions[] = array("label" => "8.4ms", "value" => 3);
+		$arrayOptions[] = array("label" => "14.0ms", "value" => 4);
+		$arrayOptions[] = array("label" => "22.4ms", "value" => 5);
+		$arrayOptions[] = array("label" => "30.8ms", "value" => 6);
+		$arrayOptions[] = array("label" => "39.2ms", "value" => 7);
 		$arrayElements[] = array("type" => "Select", "name" => "GWTIME", "caption" => "Zeit", "options" => $arrayOptions );
 
 		$arrayElements[] = array("type" => "Label", "label" => "Impuls Zähler Register"); 
 		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "4us(Default)", "value" => 0);
-		$arrayOptions[] = array("label" => "8us", "value" => 1);
-		$arrayOptions[] = array("label" => "16us", "value" => 2);
-		$arrayOptions[] = array("label" => "32us", "value" => 3);
+		$arrayOptions[] = array("label" => "4".chr(181)."s(Default)", "value" => 0);
+		$arrayOptions[] = array("label" => "8".chr(181)."s", "value" => 1);
+		$arrayOptions[] = array("label" => "16".chr(181)."s", "value" => 2);
+		$arrayOptions[] = array("label" => "32".chr(181)."s", "value" => 3);
 		$arrayElements[] = array("type" => "Select", "name" => "GPLEN", "caption" => "Impulslänge", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "Gestik Impuls Zähler (1-65)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "GPULSE",  "caption" => "Anzahl");
