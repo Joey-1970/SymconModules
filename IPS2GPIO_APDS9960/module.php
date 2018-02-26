@@ -49,7 +49,7 @@
 		$this->RegisterPropertyInteger("WTIME", 255);
 		$this->RegisterPropertyInteger("AILT", 0);
 		$this->RegisterPropertyInteger("AIHT", 65535);
-		
+		$this->RegisterPropertyInteger("APERS", 0);
 		
 		
 		$this->RegisterPropertyBoolean("GEN", true);
@@ -59,7 +59,6 @@
 		$this->RegisterPropertyInteger("GGAIN", 0);
 		$this->RegisterPropertyInteger("GLDRIVE", 0);
 		$this->RegisterPropertyInteger("GWTIME", 0);
-		$this->RegisterPropertyInteger("APERS", 0);
 		
 	
         }
@@ -168,8 +167,7 @@
 		$arrayElements[] = array("type" => "Select", "name" => "PGAIN", "caption" => "Faktor", "options" => $arrayOptions );
 
 		$arrayElements[] = array("name" => "PSIEN", "type" => "CheckBox",  "caption" => "Annährungs Interrupt"); 
-		$arrayElements[] = array("name" => "CPSIEN", "type" => "CheckBox",  "caption" => "Weiße Fotodiode Interrupt"); 
-
+		
 		$arrayElements[] = array("type" => "Label", "label" => "LED Boost"); 
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "100% (Default)", "value" => 0);
@@ -195,11 +193,25 @@
 		$arrayElements[] = array("type" => "Label", "label" => "Oberer Schwellwert für Ambilght-Sensing-Interrupt (0-65535)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "AIHT",  "caption" => "Wert");
 
-		
-		
-			
-				
-
+		$arrayElements[] = array("type" => "Label", "label" => "Interrupt Beharrlichkeit"); 
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "Jeden Ambilightzyklus", "value" => 0);
+		$arrayOptions[] = array("label" => "Jeden Wert außerhalb des Schwellwertes", "value" => 1);
+		$arrayOptions[] = array("label" => "2 aufeinanderfolgende außerhalb Schwellwert", "value" => 2);
+		$arrayOptions[] = array("label" => "3 aufeinanderfolgende außerhalb Schwellwert", "value" => 3);
+		$arrayOptions[] = array("label" => "5 aufeinanderfolgende außerhalb Schwellwert", "value" => 4);
+		$arrayOptions[] = array("label" => "10 aufeinanderfolgende außerhalb Schwellwert", "value" => 5);
+		$arrayOptions[] = array("label" => "15 aufeinanderfolgende außerhalb Schwellwert", "value" => 6);
+		$arrayOptions[] = array("label" => "20 aufeinanderfolgende außerhalb Schwellwert", "value" => 7);
+		$arrayOptions[] = array("label" => "25 aufeinanderfolgende außerhalb Schwellwert", "value" => 8);
+		$arrayOptions[] = array("label" => "30 aufeinanderfolgende außerhalb Schwellwert", "value" => 9);
+		$arrayOptions[] = array("label" => "35 aufeinanderfolgende außerhalb Schwellwert", "value" => 10);
+		$arrayOptions[] = array("label" => "40 aufeinanderfolgende außerhalb Schwellwert", "value" => 11);
+		$arrayOptions[] = array("label" => "45 aufeinanderfolgende außerhalb Schwellwert", "value" => 12);
+		$arrayOptions[] = array("label" => "50 aufeinanderfolgende außerhalb Schwellwert", "value" => 13);
+		$arrayOptions[] = array("label" => "55 aufeinanderfolgende außerhalb Schwellwert", "value" => 14);
+		$arrayOptions[] = array("label" => "60 aufeinanderfolgende außerhalb Schwellwert", "value" => 15);
+		$arrayElements[] = array("type" => "Select", "name" => "APERS", "caption" => "Kontrollrate", "options" => $arrayOptions );
 
 		// ALS and Color Gain Control 0x8F Bit 1:0
 		$arrayElements[] = array("type" => "Label", "label" => "ALS und Farbverstärkung"); 
@@ -210,9 +222,11 @@
 		$arrayOptions[] = array("label" => "64x", "value" => 3);
 		$arrayElements[] = array("type" => "Select", "name" => "AGAIN", "caption" => "Faktor", "options" => $arrayOptions );
 		
-		
+		$arrayElements[] = array("name" => "CPSIEN", "type" => "CheckBox",  "caption" => "Weiße Fotodiode Interrupt"); 
 
 				
+		
+		
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");  
 
 		$arrayElements[] = array("type" => "Label", "label" => "Eingangs-Schwellwert für Gestik (0-255)");
@@ -439,12 +453,7 @@
 			$PGAIN = $this->ReadPropertyInteger("PGAIN");
 			
 			$PSIEN = $this->ReadPropertyBoolean("PSIEN");
-			$CPSIEN = $this->ReadPropertyBoolean("CPSIEN");
 			$LED_BOOST = $this->ReadPropertyInteger("LED_BOOST");
-			$ConfigurationRegisterTwo = 1 | ($LED_BOOST << 4) | ($CPSIEN << 6) | ($PSIEN << 7);
-			if (!$this->WriteData(0x90, $ConfigurationRegisterTwo, "CONFIG2")) {
-				return false;
-			}
 			
 			if (!$this->WriteData(0x9D, 0, "POFFSET_UR")) {
 				return false;
@@ -503,6 +512,22 @@
 				return false;
 			}
 			
+			if (!$this->WriteData(0x8D, 0x60, "CONFIG1")) {
+				return false;
+			}
+			
+			$AGAIN = $this->ReadPropertyInteger("AGAIN");
+			$ControlRegisterOne = $AGAIN | ($PGAIN << 2) | ($LDRIVE << 6);
+			if (!$this->WriteData(0x8F, $ControlRegisterOne, "CONTROL")) {
+				return false;
+			}
+			
+			$CPSIEN = $this->ReadPropertyBoolean("CPSIEN");
+			$ConfigurationRegisterTwo = 1 | ($LED_BOOST << 4) | ($CPSIEN << 6) | ($PSIEN << 7);
+			if (!$this->WriteData(0x90, $ConfigurationRegisterTwo, "CONFIG2")) {
+				return false;
+			}
+			
 			
 			//****************************************************************************************
 			// Konfiguration des Gestik-Sensors
@@ -516,24 +541,15 @@
 			
 			
 			
-			if (!$this->WriteData(0x8D, 0x60, "CONFIG1")) {
-				return false;
-			}
-			
-			
-			$AGAIN = $this->ReadPropertyInteger("AGAIN");
-			$ControlRegisterOne = $AGAIN | ($PGAIN << 2) | ($LDRIVE << 6);
-			if (!$this->WriteData(0x8F, $ControlRegisterOne, "CONTROL")) {
-				return false;
-			}
 			
 			
 			
 			
 			
-			if (!$this->WriteData(0x8C, 0x11, "PERS")) {
-				return false;
-			}
+			
+			
+			
+			
 			
 			
 			
