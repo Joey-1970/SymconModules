@@ -55,10 +55,10 @@
 		// Gestik Sensorik
 		$this->RegisterPropertyBoolean("GEN", true);
 		$this->RegisterPropertyBoolean("GIEN", true);
-		
-		
 		$this->RegisterPropertyInteger("GPENTH", 40);
 		$this->RegisterPropertyInteger("GEXTH", 30);
+		
+		
 		$this->RegisterPropertyInteger("GGAIN", 0);
 		$this->RegisterPropertyInteger("GLDRIVE", 0);
 		$this->RegisterPropertyInteger("GWTIME", 0);
@@ -230,11 +230,9 @@
 		
 		
 		
-		$arrayElements[] = array("type" => "Label", "label" => "Eingangs-Schwellwert für Gestik (0-255)");
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "GPENTH",  "caption" => "Wert");
 		
-		$arrayElements[] = array("type" => "Label", "label" => "Ausgangs-Schwellwert für Gestik (0-255)");
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "GEXTH",  "caption" => "Wert");
+		
+		
 		
 		$arrayElements[] = array("type" => "Label", "label" => "Gestik Konfiguration - Gain Control"); 
 		$arrayOptions = array();
@@ -532,31 +530,14 @@
 			
 			//****************************************************************************************
 			// Konfiguration des Gestik-Sensors
+			$GEN = $this->ReadPropertyBoolean("GEN");
 			
-			// Set default values for ambient light and proximity registers
+			$GIEN = $this->ReadPropertyBoolean("GIEN");
+			$GestureConfigurationFourRegister = ($GIEN < 1);
+			if (!$this->WriteData(0xAB, $GestureConfigurationFourRegister, "GCONF4")) {
+				return false;
+			} 
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-
-			
-			// Set default values for gesture sense registers
 			$GPENTH = $this->ReadPropertyInteger("GPENTH");
 			$GPENTH = min(255, max(0, $GPENTH));
 			if (!$this->WriteData(0xA0, $GPENTH, "GPENTH")) {
@@ -568,6 +549,13 @@
 			if (!$this->WriteData(0xA1, $GEXTH, "GEXTH")) {
 				return false;
 			}
+			
+			
+			
+
+			
+			// Set default values for gesture sense registers
+			
 			
 			if (!$this->WriteData(0xA2, 0x40, "GCONF1")) {
 				return false;
@@ -605,16 +593,10 @@
 				return false;
 			}
 			
-			$Result = $this->SetGestureIntEnable(1);
-			If ($Result == false) {
-				return false;
-			}
+			
 			
 			// Set ENABLE register
 			$PON = $this->ReadPropertyBoolean("PON");
-			
-			
-			$GEN = $this->ReadPropertyBoolean("GEN");
 			$EnableRegister = $PON | ($AEN << 1) | ($PEN << 2) |($WEN << 3) | ($AIEN << 4) | ($PIEN << 5) | ($GEN << 6);
 			$this->SendDebug("Setup", "EnableRegister: ".$EnableRegister, 0);
 			if (!$this->WriteData(0x80, $EnableRegister, "ENABLE")) {
