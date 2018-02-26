@@ -227,7 +227,10 @@
 		$arrayElements[] = array("name" => "GEN", "type" => "CheckBox",  "caption" => "Gestik Sensor"); 
 		$arrayElements[] = array("name" => "GIEN", "type" => "CheckBox",  "caption" => "Gestik Interrupt"); 
 		
-		
+		$arrayElements[] = array("type" => "Label", "label" => "Unterer Schwellwert für Gestik-Interrupt (0-255)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "GPENTH",  "caption" => "Wert");
+		$arrayElements[] = array("type" => "Label", "label" => "Oberer Schwellwert für Gestik-Interrupt (0-255)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "GEXTH",  "caption" => "Wert");
 		
 		
 		
