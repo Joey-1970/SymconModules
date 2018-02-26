@@ -26,35 +26,41 @@
 		$this->SetBuffer("PreviousPin", -1);
 		
 		$this->RegisterPropertyBoolean("PON", true);
-		$this->RegisterPropertyBoolean("AEN", true);
+		
+		// Annährungs-Sensorik
 		$this->RegisterPropertyBoolean("PEN", true);
-		$this->RegisterPropertyBoolean("WEN", true);
-		$this->RegisterPropertyBoolean("AIEN", true);
 		$this->RegisterPropertyBoolean("PIEN", true);
-		$this->RegisterPropertyBoolean("GEN", true);
-		
-		
-		$this->RegisterPropertyInteger("AGAIN", 0);
 		$this->RegisterPropertyInteger("PILT", 0);
 		$this->RegisterPropertyInteger("PIHT", 255);
-		$this->RegisterPropertyInteger("AILT", 0);
-		$this->RegisterPropertyInteger("AIHT", 65535);
-		$this->RegisterPropertyInteger("GPENTH", 40);
-		$this->RegisterPropertyInteger("GEXTH", 30);
-		
-		$this->RegisterPropertyInteger("GGAIN", 0);
-		$this->RegisterPropertyInteger("GLDRIVE", 0);
-		$this->RegisterPropertyInteger("GWTIME", 0);
 		$this->RegisterPropertyInteger("PPERS", 0);
-		$this->RegisterPropertyInteger("APERS", 0);
-		$this->RegisterPropertyInteger("PPLEN", 0);
 		$this->RegisterPropertyInteger("PPULSE", 0);
 		$this->RegisterPropertyInteger("LDRIVE", 0);
 		$this->RegisterPropertyInteger("PGAIN", 0);
-		
+		$this->RegisterPropertyInteger("PPLEN", 0);
 		$this->RegisterPropertyBoolean("PSIEN", true);
 		$this->RegisterPropertyBoolean("CPSIEN", true);
 		$this->RegisterPropertyInteger("LED_BOOST", 0);
+		
+		// Ambilight-Sensorik
+		$this->RegisterPropertyBoolean("AEN", true);
+		$this->RegisterPropertyBoolean("AIEN", true);
+		$this->RegisterPropertyBoolean("WEN", true);
+		$this->RegisterPropertyInteger("ATIME", 255);
+		$this->RegisterPropertyInteger("WTIME", 255);
+		$this->RegisterPropertyInteger("AILT", 0);
+		$this->RegisterPropertyInteger("AIHT", 65535);
+		
+		
+		
+		$this->RegisterPropertyBoolean("GEN", true);
+		$this->RegisterPropertyInteger("AGAIN", 0);
+		$this->RegisterPropertyInteger("GPENTH", 40);
+		$this->RegisterPropertyInteger("GEXTH", 30);
+		$this->RegisterPropertyInteger("GGAIN", 0);
+		$this->RegisterPropertyInteger("GLDRIVE", 0);
+		$this->RegisterPropertyInteger("GWTIME", 0);
+		$this->RegisterPropertyInteger("APERS", 0);
+		
 	
         }
  	
@@ -103,14 +109,12 @@
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus) (optional)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");  
-		$arrayElements[] = array("name" => "AEN", "type" => "CheckBox",  "caption" => "Ambilight Sensor"); 
-		
-		$arrayElements[] = array("name" => "WEN", "type" => "CheckBox",  "caption" => "Wartezeit"); 
-		$arrayElements[] = array("name" => "AIEN", "type" => "CheckBox",  "caption" => "Ambilight Interrupt");
 		
 		$arrayElements[] = array("name" => "GEN", "type" => "CheckBox",  "caption" => "Gestik Sensor"); 
+		
+		
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");  
-		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration des Annährungssensors");  
+		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration Annährungs-Sensor");  
 		$arrayElements[] = array("name" => "PEN", "type" => "CheckBox",  "caption" => "Annährungs Sensor"); 
 		$arrayElements[] = array("name" => "PIEN", "type" => "CheckBox",  "caption" => "Annährungs Interrupt"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Unterer Schwellwert für Annährungs-Interrupt (0-255)");
@@ -176,9 +180,21 @@
 
 		
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");  
+		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration Annährungs-Sensor");
+		$arrayElements[] = array("name" => "AEN", "type" => "CheckBox",  "caption" => "Ambilight Sensor"); 
+		$arrayElements[] = array("name" => "AIEN", "type" => "CheckBox",  "caption" => "Ambilight Interrupt");
+		$arrayElements[] = array("name" => "WEN", "type" => "CheckBox",  "caption" => "Wartezeit"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Integration Zeit Register (0-255)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "ATIME",  "caption" => "Wert");
+		$arrayElements[] = array("type" => "Label", "label" => "Wartezeit Register (0-255)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "WTIME",  "caption" => "Wert");
+		
+		$arrayElements[] = array("type" => "Label", "label" => "Unterer Schwellwert für Ambilght-Sensing-Interrupt (0-65535)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "AILT",  "caption" => "Wert");
+		
+		$arrayElements[] = array("type" => "Label", "label" => "Oberer Schwellwert für Ambilght-Sensing-Interrupt (0-65535)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "AIHT",  "caption" => "Wert");
 
-		
-		
 		
 		
 			
@@ -196,12 +212,7 @@
 		
 		
 
-		$arrayElements[] = array("type" => "Label", "label" => "Unterer Schwellwert für Ambilght-Sensing-Interrupt (0-65535)");
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "AILT",  "caption" => "Wert");
-		
-		$arrayElements[] = array("type" => "Label", "label" => "Oberer Schwellwert für Ambilght-Sensing-Interrupt (0-65535)");
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "AIHT",  "caption" => "Wert");
-		
+				
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");  
 
 		$arrayElements[] = array("type" => "Label", "label" => "Eingangs-Schwellwert für Gestik (0-255)");
@@ -449,44 +460,21 @@
 			
 			//****************************************************************************************
 			// Konfiguration des Ambilight-Sensors
+			$AEN = $this->ReadPropertyBoolean("AEN");
+			$WEN = $this->ReadPropertyBoolean("WEN");
+			$AIEN = $this->ReadPropertyBoolean("AIEN");
 			
-			
-			$APERS = $this->ReadPropertyInteger("APERS");
-			$PersistanceRegister = $APERS | ($PPERS << 4);
-			if (!$this->WriteData(0x8C, $PersistanceRegister, "PERS")) {
+			$ATIME = $this->ReadPropertyInteger("ATIME");
+			$ATIME = min(255, max(0, $ATIME));
+			if (!$this->WriteData(0x81, $ATIME, "ATIME")) {
 				return false;
 			}
 			
-			
-			
-			
-			// Set default values for ambient light and proximity registers
-			
-			
-			if (!$this->WriteData(0x81, 219, "ATIME")) {
+			$WTIME = $this->ReadPropertyInteger("WTIME");
+			$WTIME = min(255, max(0, $WTIME));
+			if (!$this->WriteData(0x83, $WTIME, "WTIME")) {
 				return false;
 			}
-
-			if (!$this->WriteData(0x83, 246, "WTIME")) {
-				return false;
-			}
-			
-			
-			
-			
-			
-			if (!$this->WriteData(0x8D, 0x60, "CONFIG1")) {
-				return false;
-			}
-			
-			
-			$AGAIN = $this->ReadPropertyInteger("AGAIN");
-			$ControlRegisterOne = $AGAIN | ($PGAIN << 2) | ($LDRIVE << 6);
-			if (!$this->WriteData(0x8F, $ControlRegisterOne, "CONTROL")) {
-				return false;
-			}
-			
-			
 			
 			$AILT = $this->ReadPropertyInteger("AILT");
 			$AILT = min(65535, max(0, $AILT));
@@ -508,6 +496,40 @@
 			if (!$this->WriteData(0x87, $AIHTH, "AIHTH")) {
 				return false;
 			}
+			
+			$APERS = $this->ReadPropertyInteger("APERS");
+			$PersistanceRegister = $APERS | ($PPERS << 4);
+			if (!$this->WriteData(0x8C, $PersistanceRegister, "PERS")) {
+				return false;
+			}
+			
+			
+			//****************************************************************************************
+			// Konfiguration des Gestik-Sensors
+			
+			// Set default values for ambient light and proximity registers
+			
+			
+			
+			
+			
+			
+			
+			
+			if (!$this->WriteData(0x8D, 0x60, "CONFIG1")) {
+				return false;
+			}
+			
+			
+			$AGAIN = $this->ReadPropertyInteger("AGAIN");
+			$ControlRegisterOne = $AGAIN | ($PGAIN << 2) | ($LDRIVE << 6);
+			if (!$this->WriteData(0x8F, $ControlRegisterOne, "CONTROL")) {
+				return false;
+			}
+			
+			
+			
+			
 			
 			if (!$this->WriteData(0x8C, 0x11, "PERS")) {
 				return false;
@@ -573,10 +595,7 @@
 			
 			// Set ENABLE register
 			$PON = $this->ReadPropertyBoolean("PON");
-			$AEN = $this->ReadPropertyBoolean("AEN");
 			
-			$WEN = $this->ReadPropertyBoolean("WEN");
-			$AIEN = $this->ReadPropertyBoolean("AIEN");
 			
 			$GEN = $this->ReadPropertyBoolean("GEN");
 			$EnableRegister = $PON | ($AEN << 1) | ($PEN << 2) |($WEN << 3) | ($AIEN << 4) | ($PIEN << 5) | ($GEN << 6);
