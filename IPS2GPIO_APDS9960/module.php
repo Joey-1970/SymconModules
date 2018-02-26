@@ -50,10 +50,13 @@
 		$this->RegisterPropertyInteger("AILT", 0);
 		$this->RegisterPropertyInteger("AIHT", 65535);
 		$this->RegisterPropertyInteger("APERS", 0);
-		
-		
-		$this->RegisterPropertyBoolean("GEN", true);
 		$this->RegisterPropertyInteger("AGAIN", 0);
+		
+		// Gestik Sensorik
+		$this->RegisterPropertyBoolean("GEN", true);
+		$this->RegisterPropertyBoolean("GIEN", true);
+		
+		
 		$this->RegisterPropertyInteger("GPENTH", 40);
 		$this->RegisterPropertyInteger("GEXTH", 30);
 		$this->RegisterPropertyInteger("GGAIN", 0);
@@ -107,11 +110,7 @@
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus) (optional)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");  
-		
-		$arrayElements[] = array("name" => "GEN", "type" => "CheckBox",  "caption" => "Gestik Sensor"); 
-		
-		
+
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");  
 		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration Annährungs-Sensor");  
 		$arrayElements[] = array("name" => "PEN", "type" => "CheckBox",  "caption" => "Annährungs Sensor"); 
@@ -178,7 +177,7 @@
 
 		
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");  
-		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration Annährungs-Sensor");
+		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration Ambilight-Sensor");
 		$arrayElements[] = array("name" => "AEN", "type" => "CheckBox",  "caption" => "Ambilight Sensor"); 
 		$arrayElements[] = array("name" => "AIEN", "type" => "CheckBox",  "caption" => "Ambilight Interrupt");
 		$arrayElements[] = array("name" => "WEN", "type" => "CheckBox",  "caption" => "Wartezeit"); 
@@ -223,12 +222,14 @@
 		$arrayElements[] = array("type" => "Select", "name" => "AGAIN", "caption" => "Faktor", "options" => $arrayOptions );
 		
 		$arrayElements[] = array("name" => "CPSIEN", "type" => "CheckBox",  "caption" => "Weiße Fotodiode Interrupt"); 
-
-				
-		
-		
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");  
-
+		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration Gestik-Sensor");
+		$arrayElements[] = array("name" => "GEN", "type" => "CheckBox",  "caption" => "Gestik Sensor"); 
+		$arrayElements[] = array("name" => "GIEN", "type" => "CheckBox",  "caption" => "Gestik Interrupt"); 
+		
+		
+		
+		
 		$arrayElements[] = array("type" => "Label", "label" => "Eingangs-Schwellwert für Gestik (0-255)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "GPENTH",  "caption" => "Wert");
 		
