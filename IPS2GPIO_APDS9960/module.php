@@ -633,7 +633,7 @@
 			}
 			
 			// Interrupt zum Test erzwingen
-			if (!$this->WriteData(0xE4, 0, "IFORCE")) {
+			if (!$this->ReadData(0xE4, "IFORCE")) {
 				return false;
 			}
 			
