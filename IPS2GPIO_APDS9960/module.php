@@ -142,6 +142,7 @@
 		$arrayElements[] = array("type" => "Select", "name" => "PPERS", "caption" => "Kontrollrate", "options" => $arrayOptions );
 		
 		$arrayElements[] = array("type" => "Label", "label" => "Impuls Zähler Register"); 
+		/*
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "4".chr(181)."s(Default)", "value" => 0);
 		$arrayOptions[] = array("label" => "8".chr(181)."s", "value" => 1);
@@ -150,6 +151,7 @@
 		$arrayElements[] = array("type" => "Select", "name" => "PPLEN", "caption" => "Impulslänge", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "Annährungs Impuls Zähler (1-65)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PPULSE",  "caption" => "Anzahl");
+		*/
 		
 		$arrayElements[] = array("type" => "Label", "label" => "LED Treiber Strom"); 
 		$arrayOptions = array();
@@ -177,7 +179,6 @@
 		$arrayOptions[] = array("label" => "300%", "value" => 3);
 		$arrayElements[] = array("type" => "Select", "name" => "LED_BOOST", "caption" => "Boost", "options" => $arrayOptions );
 
-		
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");  
 		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration Ambilight-Sensor");
 		$arrayElements[] = array("name" => "AEN", "type" => "CheckBox",  "caption" => "Ambilight Sensor"); 
@@ -279,8 +280,9 @@
 		$arrayOptions[] = array("label" => "30.8ms", "value" => 6);
 		$arrayOptions[] = array("label" => "39.2ms", "value" => 7);
 		$arrayElements[] = array("type" => "Select", "name" => "GWTIME", "caption" => "Zeit", "options" => $arrayOptions );
-
+		
 		$arrayElements[] = array("type" => "Label", "label" => "Impuls Zähler Register"); 
+		/*
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "4".chr(181)."s(Default)", "value" => 0);
 		$arrayOptions[] = array("label" => "8".chr(181)."s", "value" => 1);
@@ -289,8 +291,9 @@
 		$arrayElements[] = array("type" => "Select", "name" => "GPLEN", "caption" => "Impulslänge", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "Gestik Impuls Zähler (1-65)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "GPULSE",  "caption" => "Anzahl");
+		*/
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
-
+		
 		$arrayActions = array();
 		$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
 		
