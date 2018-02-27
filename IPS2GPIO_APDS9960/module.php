@@ -66,10 +66,7 @@
 		$this->RegisterPropertyInteger("GPLEN", 0);
 		$this->RegisterPropertyInteger("GPULSE", 0);
 		$this->RegisterPropertyInteger("GDIMS", 0);
-		
-		
-	
-        }
+	}
  	
 	public function GetConfigurationForm() 
 	{ 
@@ -292,9 +289,8 @@
 		$arrayElements[] = array("type" => "Select", "name" => "GPLEN", "caption" => "Impulslänge", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "Gestik Impuls Zähler (1-65)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "GPULSE",  "caption" => "Anzahl");
-		
-		
-		
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
+
 		$arrayActions = array();
 		$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
 		
