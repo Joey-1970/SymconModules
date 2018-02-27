@@ -907,13 +907,13 @@
 			
 			// Zurücksetzen der Flags
 			If (($PGSAT) OR ($PINT)) {
-				$this->ReadData(0xE5, 0, "PICLEAR"); 
+				$this->ReadData(0xE5, "PICLEAR"); 
 			}
 			If (($CPSAT) OR ($AINT)) {
-				$this->ReadData(0xE6, 0, "CICLEAR");
+				$this->ReadData(0xE6, "CICLEAR");
 			}
 			
-			$this->ReadData(0xE7, 0, "AICLEAR");
+			$this->ReadData(0xE7, "AICLEAR");
 		}
 	}
 	    
