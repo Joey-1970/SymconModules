@@ -142,16 +142,15 @@
 		$arrayElements[] = array("type" => "Select", "name" => "PPERS", "caption" => "Kontrollrate", "options" => $arrayOptions );
 		
 		$arrayElements[] = array("type" => "Label", "label" => "Impuls Zähler Register"); 
-		/*
+		$Micro = chr(181)."s";
 		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "4".chr(181)."s(Default)", "value" => 0);
-		$arrayOptions[] = array("label" => "8".chr(181)."s", "value" => 1);
-		$arrayOptions[] = array("label" => "16".chr(181)."s", "value" => 2);
-		$arrayOptions[] = array("label" => "32".chr(181)."s", "value" => 3);
+		$arrayOptions[] = array("label" => "4".$Micro." (Default)", "value" => 0);
+		$arrayOptions[] = array("label" => "8".$Micro, "value" => 1);
+		$arrayOptions[] = array("label" => "16".$Micro, "value" => 2);
+		$arrayOptions[] = array("label" => "32".$Micro, "value" => 3);
 		$arrayElements[] = array("type" => "Select", "name" => "PPLEN", "caption" => "Impulslänge", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "Annährungs Impuls Zähler (1-65)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PPULSE",  "caption" => "Anzahl");
-		*/
 		
 		$arrayElements[] = array("type" => "Label", "label" => "LED Treiber Strom"); 
 		$arrayOptions = array();
