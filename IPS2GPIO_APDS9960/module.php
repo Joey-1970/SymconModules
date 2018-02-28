@@ -144,7 +144,8 @@
 		$arrayElements[] = array("type" => "Select", "name" => "PPERS", "caption" => "Kontrollrate", "options" => $arrayOptions );
 		
 		$arrayElements[] = array("type" => "Label", "label" => "Impulslänge der LED"); 
-		$Micro = chr(181)."s";
+		//$Micro = chr(181)."s";
+		$Micro = "us";
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "4".$Micro." (Default)", "value" => 0);
 		$arrayOptions[] = array("label" => "8".$Micro, "value" => 1);
