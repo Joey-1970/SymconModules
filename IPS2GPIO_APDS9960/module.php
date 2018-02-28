@@ -154,7 +154,7 @@
 		$arrayElements[] = array("type" => "Label", "label" => "Anzahl der LDR-Impulse (1-65)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PPULSE",  "caption" => "Anzahl");
 		
-		$arrayElements[] = array("type" => "Label", "label" => "LED Treiber Strom"); 
+		$arrayElements[] = array("type" => "Label", "label" => "LED Strom"); 
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "100mA (Default)", "value" => 0);
 		$arrayOptions[] = array("label" => "50mA", "value" => 1);
@@ -260,7 +260,7 @@
 		$arrayElements[] = array("type" => "Select", "name" => "GGAIN", "caption" => "Faktor", "options" => $arrayOptions );
 
 		// LED Drive Strength 
-		$arrayElements[] = array("type" => "Label", "label" => "LED Drive Strength"); 
+		$arrayElements[] = array("type" => "Label", "label" => "LED Strom"); 
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "100mA (Default)", "value" => 0);
 		$arrayOptions[] = array("label" => "50mA", "value" => 1);
@@ -269,7 +269,7 @@
 		$arrayElements[] = array("type" => "Select", "name" => "GLDRIVE", "caption" => "Stromstärke", "options" => $arrayOptions );
 		
 		// GWTIME
-		$arrayElements[] = array("type" => "Label", "label" => "GWTIME"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Wartezeit zwischen zwei Gestik-Erkennungsphasen"); 
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "0ms (Default)", "value" => 0);
 		$arrayOptions[] = array("label" => "2.8ms", "value" => 1);
