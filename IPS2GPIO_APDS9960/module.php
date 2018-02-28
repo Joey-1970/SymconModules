@@ -689,7 +689,6 @@
 			
 			If (!$tries) {
 				$this->SetStatus(202);
-				$this->SetTimerInterval("Messzyklus", 0);
 				$Response = -1;
 			}
 		}
@@ -794,97 +793,106 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Measurement", "Ausfuehrung", 0);
 			
-			// Lesen des Status, Helligkeit, RGB und Annährung
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x93, "Count" => 10)));
-			If ($Result < 0) {
-				$this->SendDebug("Measurement", "Ermittlung der Daten fehlerhaft!", 0);
-				$this->SetStatus(202);
-			}
-			else {
-				If (is_array(unserialize($Result)) == true) {
-					$this->SetStatus(102);
-					//$this->SendDebug("Measurement", "Daten: ".$Result, 0);
-					$Result = unserialize($Result);
-					// Status
-					$Status = $Result[1];
-					$AVALID = boolval($Status & 1); // Ambilight Sensor Ergebnis gültig
-					$PVALID = boolval($Status & 2); // Annährungswert ist gültig
-					$GINT = boolval($Status & 4); // Gestrik Interrupt
-					$AINT = boolval($Status & 16); // Ambilight Interrupt
-					$PINT = boolval($Status & 32); // Annährungs-Interrupt
-					$PGSAT = boolval($Status & 64); // Analoges Sättigungs Ereignis -> Löschung durch PICLEAR
-					$CPSAT = boolval($Status & 128); // Weise Fotodiode am oberen Ende des Bereiches -> Löschung durch CICLEAR
-					$this->SendDebug("Measurement", "Status: ".$Status." AVALID: ".$AVALID." PVALID: ".$PVALID." GINT: ".$GINT." AINT: ".$AINT." PINT: ".$PINT." PGSAT: ".$PGSAT." CPSAT: ".$CPSAT, 0);
-					
-					If ($AINT) {
-						SetValueInteger($this->GetIDForIdent("InterruptAINT"), time());
-					}
-					If ($GINT) {
-						SetValueInteger($this->GetIDForIdent("InterruptGINT"), time());
-					}
-					If ($PINT) {
-						SetValueInteger($this->GetIDForIdent("InterruptPINT"), time());
-					}
-					
-					If ($AVALID) {
-						// RGBW Farbergebnis Rohwerte
-						$W = ($Result[2] | ($Result[3] << 8));
-						$R = ($Result[4] | ($Result[5] << 8));
-						$G = ($Result[6] | ($Result[7] << 8));
-						$B = ($Result[8] | ($Result[9] << 8));
-						$this->SendDebug("Measurement", "Rohwerte - Weiss: ".$W." Rot: ".$R." Gruen: ".$G." Blau: ".$B , 0);
+			$tries = 3;
+			do {
+				// Lesen des Status, Helligkeit, RGB und Annährung
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x93, "Count" => 10)));
+				If ($Result < 0) {
+					$this->SendDebug("Measurement", "Ermittlung der Daten fehlerhaft!", 0);
+					$this->SetStatus(202);
+				}
+				else {
+					If (is_array(unserialize($Result)) == true) {
+						$this->SetStatus(102);
+						//$this->SendDebug("Measurement", "Daten: ".$Result, 0);
+						$Result = unserialize($Result);
+						// Status
+						$Status = $Result[1];
+						$AVALID = boolval($Status & 1); // Ambilight Sensor Ergebnis gültig
+						$PVALID = boolval($Status & 2); // Annährungswert ist gültig
+						$GINT = boolval($Status & 4); // Gestrik Interrupt
+						$AINT = boolval($Status & 16); // Ambilight Interrupt
+						$PINT = boolval($Status & 32); // Annährungs-Interrupt
+						$PGSAT = boolval($Status & 64); // Analoges Sättigungs Ereignis -> Löschung durch PICLEAR
+						$CPSAT = boolval($Status & 128); // Weise Fotodiode am oberen Ende des Bereiches -> Löschung durch CICLEAR
+						$this->SendDebug("Measurement", "Status: ".$Status." AVALID: ".$AVALID." PVALID: ".$PVALID." GINT: ".$GINT." AINT: ".$AINT." PINT: ".$PINT." PGSAT: ".$PGSAT." CPSAT: ".$CPSAT, 0);
 
-						// Weiß skaliert
-						$W = intval(($Result[2] | ($Result[3] << 8)) / 65535 * 255);
-						SetValueInteger($this->GetIDForIdent("Intensity_W"), $W);
-
-
-						$RGBMax = max($R, $G, $B);
-						If ($RGBMax > 0) {
-							// RGB-Werte skalieren
-							$R = intval(($Result[4] | ($Result[5] << 8)) / $RGBMax * 255);
-							$G = intval(($Result[6] | ($Result[7] << 8)) / $RGBMax * 255);
-							$B = intval(($Result[8] | ($Result[9] << 8)) / $RGBMax * 255);
-							SetValueInteger($this->GetIDForIdent("Intensity_R"), $R);
-							SetValueInteger($this->GetIDForIdent("Intensity_G"), $G);
-							SetValueInteger($this->GetIDForIdent("Intensity_B"), $B);
-							SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex($R, $G, $B));
+						If ($AINT) {
+							SetValueInteger($this->GetIDForIdent("InterruptAINT"), time());
 						}
-						else {
-							SetValueInteger($this->GetIDForIdent("Intensity_R"), 0);
-							SetValueInteger($this->GetIDForIdent("Intensity_G"), 0);
-							SetValueInteger($this->GetIDForIdent("Intensity_B"), 0);
-							SetValueInteger($this->GetIDForIdent("Color"), 0);
+						If ($GINT) {
+							SetValueInteger($this->GetIDForIdent("InterruptGINT"), time());
 						}
-					}
-					If ($PVALID) {
-						// Nährung
-						$this->SendDebug("Measurement", "Naehrung: ".$Result[10], 0);
+						If ($PINT) {
+							SetValueInteger($this->GetIDForIdent("InterruptPINT"), time());
+						}
+
+						If ($AVALID) {
+							// RGBW Farbergebnis Rohwerte
+							$W = ($Result[2] | ($Result[3] << 8));
+							$R = ($Result[4] | ($Result[5] << 8));
+							$G = ($Result[6] | ($Result[7] << 8));
+							$B = ($Result[8] | ($Result[9] << 8));
+							$this->SendDebug("Measurement", "Rohwerte - Weiss: ".$W." Rot: ".$R." Gruen: ".$G." Blau: ".$B , 0);
+
+							// Weiß skaliert
+							$W = intval(($Result[2] | ($Result[3] << 8)) / 65535 * 255);
+							SetValueInteger($this->GetIDForIdent("Intensity_W"), $W);
+
+
+							$RGBMax = max($R, $G, $B);
+							If ($RGBMax > 0) {
+								// RGB-Werte skalieren
+								$R = intval(($Result[4] | ($Result[5] << 8)) / $RGBMax * 255);
+								$G = intval(($Result[6] | ($Result[7] << 8)) / $RGBMax * 255);
+								$B = intval(($Result[8] | ($Result[9] << 8)) / $RGBMax * 255);
+								SetValueInteger($this->GetIDForIdent("Intensity_R"), $R);
+								SetValueInteger($this->GetIDForIdent("Intensity_G"), $G);
+								SetValueInteger($this->GetIDForIdent("Intensity_B"), $B);
+								SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex($R, $G, $B));
+							}
+							else {
+								SetValueInteger($this->GetIDForIdent("Intensity_R"), 0);
+								SetValueInteger($this->GetIDForIdent("Intensity_G"), 0);
+								SetValueInteger($this->GetIDForIdent("Intensity_B"), 0);
+								SetValueInteger($this->GetIDForIdent("Color"), 0);
+							}
+						}
+						If ($PVALID) {
+							// Nährung
+							$this->SendDebug("Measurement", "Naehrung: ".$Result[10], 0);
+						}
+						break;
 					}
 				}
-			}
+			$tries--;
+			} while ($tries);  
 			
-			// Lesen Gestik FIFO Level und Gestik Status
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0xAE, "Count" => 2)));
-			If ($Result < 0) {
-				$this->SendDebug("Measurement", "Ermittlung der Daten fehlerhaft!", 0);
-				$this->SetStatus(202);
+			$tries = 3;
+			do {
+				// Lesen Gestik FIFO Level und Gestik Status
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_APDS9960_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0xAE, "Count" => 2)));
+				If ($Result < 0) {
+					$this->SendDebug("Measurement", "Ermittlung der Daten fehlerhaft!", 0);
+					$this->SetStatus(202);
 
-			}
-			else {
-				If (is_array(unserialize($Result)) == true) {
-					$this->SetStatus(102);
-					//$this->SendDebug("Measurement", "Daten: ".$Result, 0);
-					$Result = unserialize($Result);
-					$GFLVL = $Result[1];
-					$GVALID = boolval($Result[2] & 1);
-					$GFOV = boolval($Result[2] & 2);
-					$this->SendDebug("Measurement", "Gestik FIFO Level: ".$GFLVL." Gestik Status: ".$GVALID, 0);
-					$GFLVL = $Result[1];
-					
 				}
-			}
-			
+				else {
+					If (is_array(unserialize($Result)) == true) {
+						$this->SetStatus(102);
+						//$this->SendDebug("Measurement", "Daten: ".$Result, 0);
+						$Result = unserialize($Result);
+						$GFLVL = $Result[1];
+						$GVALID = boolval($Result[2] & 1);
+						$GFOV = boolval($Result[2] & 2);
+						$this->SendDebug("Measurement", "Gestik FIFO Level: ".$GFLVL." Gestik Status: ".$GVALID, 0);
+						$GFLVL = $Result[1];
+						break;
+					}
+				}
+			$tries--;
+			} while ($tries);  
+				
 			If ($GVALID) {
 				// Lesen Gestik
 				for ($i = 0; $i < $GFLVL; $i++) {
@@ -913,6 +921,20 @@
 			}
 			
 			$this->ReadData(0xE7, "AICLEAR");
+			
+			// Status-Byte zur Kontrolle noch einmal einlesen
+			$Result = $this->ReadData(0x93, "STATUS");
+			If ($Result >= 0) {
+				$Status = $Result;
+				$AVALID = boolval($Status & 1); // Ambilight Sensor Ergebnis gültig
+				$PVALID = boolval($Status & 2); // Annährungswert ist gültig
+				$GINT = boolval($Status & 4); // Gestrik Interrupt
+				$AINT = boolval($Status & 16); // Ambilight Interrupt
+				$PINT = boolval($Status & 32); // Annährungs-Interrupt
+				$PGSAT = boolval($Status & 64); // Analoges Sättigungs Ereignis -> Löschung durch PICLEAR
+				$CPSAT = boolval($Status & 128); // Weise Fotodiode am oberen Ende des Bereiches -> Löschung durch CICLEAR
+				$this->SendDebug("Measurement", "Status: ".$Status." AVALID: ".$AVALID." PVALID: ".$PVALID." GINT: ".$GINT." AINT: ".$AINT." PINT: ".$PINT." PGSAT: ".$PGSAT." CPSAT: ".$CPSAT, 0);
+			}
 		}
 	}
 	    
