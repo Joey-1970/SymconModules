@@ -123,8 +123,9 @@
 		$arrayElements[] = array("type" => "Label", "label" => "Oberer Schwellwert für Annährungs-Interrupt (0-255)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PIHT",  "caption" => "Wert");
 		$arrayElements[] = array("type" => "Label", "label" => "Die Anzahl der Werte die zu einer Interruptauslösung führen können hier definiert werden");
+		$arrayElements[] = array("type" => "Label", "label" => "Bis auf den Default-Wert beziehen sich die Werte auf diejenigen außerhalb der Schwellwerte");
 		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "Jede Messung", "value" => 0);
+		$arrayOptions[] = array("label" => "Jede Messung (Default)", "value" => 0);
 		$arrayOptions[] = array("label" => "Jeden Wert", "value" => 1);
 		$arrayOptions[] = array("label" => "2 aufeinanderfolgende", "value" => 2);
 		$arrayOptions[] = array("label" => "3 aufeinanderfolgende", "value" => 3);
@@ -188,31 +189,30 @@
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "ATIME",  "caption" => "Wert");
 		$arrayElements[] = array("type" => "Label", "label" => "Wartezeit Register (0-255)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "WTIME",  "caption" => "Wert");
-		
+		$arrayElements[] = array("type" => "Label", "label" => "Ein Interrupt wird ausgelöst, wenn er außerhalb der im folgenden definierten Schwellwerte liegt");
 		$arrayElements[] = array("type" => "Label", "label" => "Unterer Schwellwert für Ambilght-Sensing-Interrupt (0-65535)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "AILT",  "caption" => "Wert");
-		
 		$arrayElements[] = array("type" => "Label", "label" => "Oberer Schwellwert für Ambilght-Sensing-Interrupt (0-65535)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "AIHT",  "caption" => "Wert");
-
-		$arrayElements[] = array("type" => "Label", "label" => "Interrupt Beharrlichkeit"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Die Anzahl der Werte die zu einer Interruptauslösung führen können hier definiert werden");
+		$arrayElements[] = array("type" => "Label", "label" => "Bis auf den Default-Wert beziehen sich die Werte auf diejenigen außerhalb der Schwellwerte");
 		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "Jeden Ambilightzyklus", "value" => 0);
-		$arrayOptions[] = array("label" => "Jeden Wert außerhalb des Schwellwertes", "value" => 1);
-		$arrayOptions[] = array("label" => "2 aufeinanderfolgende außerhalb Schwellwert", "value" => 2);
-		$arrayOptions[] = array("label" => "3 aufeinanderfolgende außerhalb Schwellwert", "value" => 3);
-		$arrayOptions[] = array("label" => "5 aufeinanderfolgende außerhalb Schwellwert", "value" => 4);
-		$arrayOptions[] = array("label" => "10 aufeinanderfolgende außerhalb Schwellwert", "value" => 5);
-		$arrayOptions[] = array("label" => "15 aufeinanderfolgende außerhalb Schwellwert", "value" => 6);
-		$arrayOptions[] = array("label" => "20 aufeinanderfolgende außerhalb Schwellwert", "value" => 7);
-		$arrayOptions[] = array("label" => "25 aufeinanderfolgende außerhalb Schwellwert", "value" => 8);
-		$arrayOptions[] = array("label" => "30 aufeinanderfolgende außerhalb Schwellwert", "value" => 9);
-		$arrayOptions[] = array("label" => "35 aufeinanderfolgende außerhalb Schwellwert", "value" => 10);
-		$arrayOptions[] = array("label" => "40 aufeinanderfolgende außerhalb Schwellwert", "value" => 11);
-		$arrayOptions[] = array("label" => "45 aufeinanderfolgende außerhalb Schwellwert", "value" => 12);
-		$arrayOptions[] = array("label" => "50 aufeinanderfolgende außerhalb Schwellwert", "value" => 13);
-		$arrayOptions[] = array("label" => "55 aufeinanderfolgende außerhalb Schwellwert", "value" => 14);
-		$arrayOptions[] = array("label" => "60 aufeinanderfolgende außerhalb Schwellwert", "value" => 15);
+		$arrayOptions[] = array("label" => "Jeden Messung (Default)", "value" => 0);
+		$arrayOptions[] = array("label" => "Jeden Wert", "value" => 1);
+		$arrayOptions[] = array("label" => "2 aufeinanderfolgende", "value" => 2);
+		$arrayOptions[] = array("label" => "3 aufeinanderfolgende", "value" => 3);
+		$arrayOptions[] = array("label" => "5 aufeinanderfolgende", "value" => 4);
+		$arrayOptions[] = array("label" => "10 aufeinanderfolgende", "value" => 5);
+		$arrayOptions[] = array("label" => "15 aufeinanderfolgende", "value" => 6);
+		$arrayOptions[] = array("label" => "20 aufeinanderfolgende", "value" => 7);
+		$arrayOptions[] = array("label" => "25 aufeinanderfolgende", "value" => 8);
+		$arrayOptions[] = array("label" => "30 aufeinanderfolgende", "value" => 9);
+		$arrayOptions[] = array("label" => "35 aufeinanderfolgende", "value" => 10);
+		$arrayOptions[] = array("label" => "40 aufeinanderfolgende", "value" => 11);
+		$arrayOptions[] = array("label" => "45 aufeinanderfolgende", "value" => 12);
+		$arrayOptions[] = array("label" => "50 aufeinanderfolgende", "value" => 13);
+		$arrayOptions[] = array("label" => "55 aufeinanderfolgende", "value" => 14);
+		$arrayOptions[] = array("label" => "60 aufeinanderfolgende", "value" => 15);
 		$arrayElements[] = array("type" => "Select", "name" => "APERS", "caption" => "Kontrollrate", "options" => $arrayOptions );
 
 		// ALS and Color Gain Control 0x8F Bit 1:0
