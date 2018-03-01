@@ -186,9 +186,9 @@
 		$arrayElements[] = array("name" => "AIEN", "type" => "CheckBox",  "caption" => "Ambilight Interrupt aktivieren");
 		$arrayElements[] = array("name" => "CPSIEN", "type" => "CheckBox",  "caption" => "Sättigungs Interrupt aktivieren"); 
 		$arrayElements[] = array("name" => "WEN", "type" => "CheckBox",  "caption" => "Wartezeit"); 
-		$arrayElements[] = array("type" => "Label", "label" => "Integration Zeit Register (0-255)");
+		$arrayElements[] = array("type" => "Label", "label" => "Integration Zeit Register (0=>712ms - 255=>2.78ms)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "ATIME",  "caption" => "Wert");
-		$arrayElements[] = array("type" => "Label", "label" => "Wartezeit Register (0-255)");
+		$arrayElements[] = array("type" => "Label", "label" => "Wartezeit Register (0=>712ms - 255=>2.78ms)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "WTIME",  "caption" => "Wert");
 		$arrayElements[] = array("type" => "Label", "label" => "Ein Interrupt wird ausgelöst, wenn er außerhalb der im folgenden definierten Schwellwerte liegt");
 		$arrayElements[] = array("type" => "Label", "label" => "Unterer Schwellwert für Ambilght-Sensing-Interrupt (0-65535)");
@@ -282,14 +282,13 @@
 		$arrayElements[] = array("type" => "Select", "name" => "GWTIME", "caption" => "Zeit", "options" => $arrayOptions );
 		
 		$arrayElements[] = array("type" => "Label", "label" => "Impulslänge der LED"); 
-		/*
 		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "4".chr(181)."s(Default)", "value" => 0);
-		$arrayOptions[] = array("label" => "8".chr(181)."s", "value" => 1);
-		$arrayOptions[] = array("label" => "16".chr(181)."s", "value" => 2);
-		$arrayOptions[] = array("label" => "32".chr(181)."s", "value" => 3);
+		$arrayOptions[] = array("label" => "4".$Micro."(Default)", "value" => 0);
+		$arrayOptions[] = array("label" => "8".$Micro, "value" => 1);
+		$arrayOptions[] = array("label" => "16".$Micro, "value" => 2);
+		$arrayOptions[] = array("label" => "32".$Micro, "value" => 3);
 		$arrayElements[] = array("type" => "Select", "name" => "GPLEN", "caption" => "Impulslänge", "options" => $arrayOptions );
-		*/
+		
 		$arrayElements[] = array("type" => "Label", "label" => "Anzahl der LDR-Impulse (1-65)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "GPULSE",  "caption" => "Anzahl");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
@@ -632,11 +631,6 @@
 			}
 			
 			// Interrupt zum Test erzwingen
-			/*
-			if (!$this->ReadData(0xE4, "IFORCE")) {
-				return false;
-			}
-			*/
 			$this->WriteData(0xE4, 0, "IFORCE");
 			
 		}
@@ -917,16 +911,13 @@
 			
 			// Zurücksetzen der Flags
 			If (($PGSAT) OR ($PINT)) {
-				//$this->ReadData(0xE5, "PICLEAR"); 
 				$this->WriteData(0xE5, 0, "PICLEAR");
 			}
 			If (($CPSAT) OR ($AINT)) {
-				//$this->ReadData(0xE6, "CICLEAR");
 				$this->WriteData(0xE6, 0, "CICLEAR");
 			}
-			
-			//$this->ReadData(0xE7, "AICLEAR");
-			$this->WriteData(0xE7, 0, "AICLEAR");
+
+			//$this->WriteData(0xE7, 0, "AICLEAR");
 			
 			// Status-Byte zur Kontrolle noch einmal einlesen
 			$Result = $this->ReadData(0x93, "STATUS");
