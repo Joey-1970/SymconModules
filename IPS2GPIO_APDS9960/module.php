@@ -632,11 +632,11 @@
 			}
 			
 			// Interrupt zum Test erzwingen
-			/*
+			
 			if (!$this->ReadData(0xE4, "IFORCE")) {
 				return false;
 			}
-			*/
+			
 			$this->WriteData(0xE4, 0, "IFORCE");
 			
 		}
@@ -917,15 +917,15 @@
 			
 			// Zurücksetzen der Flags
 			If (($PGSAT) OR ($PINT)) {
-				//$this->ReadData(0xE5, "PICLEAR"); 
+				$this->ReadData(0xE5, "PICLEAR"); 
 				$this->WriteData(0xE5, 0, "PICLEAR");
 			}
 			If (($CPSAT) OR ($AINT)) {
-				//$this->ReadData(0xE6, "CICLEAR");
+				$this->ReadData(0xE6, "CICLEAR");
 				$this->WriteData(0xE6, 0, "CICLEAR");
 			}
 			
-			//$this->ReadData(0xE7, "AICLEAR");
+			$this->ReadData(0xE7, "AICLEAR");
 			$this->WriteData(0xE7, 0, "AICLEAR");
 			
 			// Status-Byte zur Kontrolle noch einmal einlesen
