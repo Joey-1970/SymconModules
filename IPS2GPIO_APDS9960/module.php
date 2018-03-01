@@ -116,7 +116,8 @@
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");  
 		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration Annährungs-Sensor");  
 		$arrayElements[] = array("name" => "PEN", "type" => "CheckBox",  "caption" => "Annährungs Sensor aktivieren"); 
-		$arrayElements[] = array("name" => "PIEN", "type" => "CheckBox",  "caption" => "Annährungs Interrupt auslösen"); 
+		$arrayElements[] = array("name" => "PIEN", "type" => "CheckBox",  "caption" => "Annährungs Interrupt aktivieren"); 
+		$arrayElements[] = array("name" => "PSIEN", "type" => "CheckBox",  "caption" => "Sättigungs Interrupt aktivieren"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Ein Interrupt wird ausgelöst, wenn er außerhalb der im folgenden definierten Schwellwerte liegt");
 		$arrayElements[] = array("type" => "Label", "label" => "Unterer Schwellwert für Annährungs-Interrupt (0-255)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PILT",  "caption" => "Wert");
@@ -170,8 +171,6 @@
 		$arrayOptions[] = array("label" => "4x", "value" => 2);
 		$arrayOptions[] = array("label" => "8x", "value" => 3);
 		$arrayElements[] = array("type" => "Select", "name" => "PGAIN", "caption" => "Faktor", "options" => $arrayOptions );
-
-		$arrayElements[] = array("name" => "PSIEN", "type" => "CheckBox",  "caption" => "Annährungs Interrupt"); 
 		
 		$arrayElements[] = array("type" => "Label", "label" => "LED Boost Annährung/Gestik"); 
 		$arrayOptions = array();
@@ -183,8 +182,9 @@
 
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");  
 		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration Ambilight-Sensor");
-		$arrayElements[] = array("name" => "AEN", "type" => "CheckBox",  "caption" => "Ambilight Sensor"); 
-		$arrayElements[] = array("name" => "AIEN", "type" => "CheckBox",  "caption" => "Ambilight Interrupt");
+		$arrayElements[] = array("name" => "AEN", "type" => "CheckBox",  "caption" => "Ambilight Sensor aktivieren"); 
+		$arrayElements[] = array("name" => "AIEN", "type" => "CheckBox",  "caption" => "Ambilight Interrupt aktivieren");
+		$arrayElements[] = array("name" => "CPSIEN", "type" => "CheckBox",  "caption" => "Sättigungs Interrupt aktivieren"); 
 		$arrayElements[] = array("name" => "WEN", "type" => "CheckBox",  "caption" => "Wartezeit"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Integration Zeit Register (0-255)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "ATIME",  "caption" => "Wert");
@@ -225,7 +225,6 @@
 		$arrayOptions[] = array("label" => "64x", "value" => 3);
 		$arrayElements[] = array("type" => "Select", "name" => "AGAIN", "caption" => "Faktor", "options" => $arrayOptions );
 		
-		$arrayElements[] = array("name" => "CPSIEN", "type" => "CheckBox",  "caption" => "Weiße Fotodiode Interrupt"); 
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");  
 		$arrayElements[] = array("type" => "Label", "label" => "Konfiguration Gestik-Sensor");
 		$arrayElements[] = array("name" => "GEN", "type" => "CheckBox",  "caption" => "Gestik Sensor"); 
