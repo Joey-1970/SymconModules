@@ -832,12 +832,12 @@
 							$B = ($Result[8] | ($Result[9] << 8));
 							$this->SendDebug("Measurement", "Rohwerte - Weiss: ".$W." Rot: ".$R." Gruen: ".$G." Blau: ".$B , 0);
 
+							$RGBMax = max($R, $G, $B, $W);
+							
 							// Weiß skaliert
 							$W = intval(($Result[2] | ($Result[3] << 8)) / 65535 * 255);
 							SetValueInteger($this->GetIDForIdent("Intensity_W"), $W);
-
-
-							$RGBMax = max($R, $G, $B);
+							
 							If ($RGBMax > 0) {
 								// RGB-Werte skalieren
 								$R = intval(($Result[4] | ($Result[5] << 8)) / $RGBMax * 255);
