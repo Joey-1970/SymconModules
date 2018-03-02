@@ -625,7 +625,7 @@
 			// Set ENABLE register
 			$PON = $this->ReadPropertyBoolean("PON");
 			$EnableRegister = $PON | ($AEN << 1) | ($PEN << 2) |($WEN << 3) | ($AIEN << 4) | ($PIEN << 5) | ($GEN << 6);
-			$this->SendDebug("Setup", "EnableRegister: ".$EnableRegister, 0);
+			$this->SendDebug("Setup", "EnableRegister: ".$EnableRegister." PON: ".$PON." AEN: ".$AEN." PEN: ".$PEN." WEN: ".$WEN." AIEN: ".$AIEN." PIEN: ".$PIEN." GEN: ".$GEN, 0);
 			if (!$this->WriteData(0x80, $EnableRegister, "ENABLE")) {
 				return false;
 			}
