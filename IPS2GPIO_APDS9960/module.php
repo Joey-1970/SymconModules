@@ -145,8 +145,8 @@
 		$arrayElements[] = array("type" => "Select", "name" => "PPERS", "caption" => "Kontrollrate", "options" => $arrayOptions );
 		
 		$arrayElements[] = array("type" => "Label", "label" => "Impulslänge der LED"); 
-		//$Micro = utf8_encode(chr(181))."s";
-		$Micro = "us";
+		$Micro = utf8_encode(chr(181))."s";
+		//$Micro = "us";
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "4".$Micro." (Default)", "value" => 0);
 		$arrayOptions[] = array("label" => "8".$Micro, "value" => 1);
@@ -926,6 +926,7 @@
 
 			//$this->WriteData(0xE7, 0, "AICLEAR");
 			
+			/*
 			// Status-Byte zur Kontrolle noch einmal einlesen
 			$Result = $this->ReadData(0x93, "STATUS");
 			If ($Result >= 0) {
@@ -939,6 +940,7 @@
 				$CPSAT = boolval($Status & 128); // Weise Fotodiode am oberen Ende des Bereiches -> Löschung durch CICLEAR
 				$this->SendDebug("Measurement", "Status: ".$Status." AVALID: ".$AVALID." PVALID: ".$PVALID." GINT: ".$GINT." AINT: ".$AINT." PINT: ".$PINT." PGSAT: ".$PGSAT." CPSAT: ".$CPSAT, 0);
 			}
+			*/
 		}
 	}
 	    
