@@ -18,7 +18,7 @@
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 		
 	        //Status-Variablen anlegen
-                $this->RegisterVariableBoolean("Trigger", "Trigger", "~Switch", 30);
+                $this->RegisterVariableBoolean("Trigger", "Trigger", "~Switch", 10);
                 $this->DisableAction("Trigger");
 		IPS_SetHidden($this->GetIDForIdent("Trigger"), false);
         }
@@ -106,7 +106,7 @@
 				If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
 			   		$this->SendDebug("Notify", "Ausfuehrung", 0);
 					// Trigger kurzzeitig setzen
-			   		If (intval($data->Value) == $this->ReadPropertyBoolean("ActionValue") ) {
+			   		If (intval($data->Value) == true) {
 			   			$this->SendDebug("Notify", "Trigger setzen mit Wert: ".intval($data->Value), 0);
 						SetValueBoolean($this->GetIDForIdent("Trigger"), true);
 			   			
