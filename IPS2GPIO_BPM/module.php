@@ -112,7 +112,10 @@
 							$this->SetBuffer("OldTimestamp", intval($data->Timestamp) );
 						}
 						else {
+							// Zeitdifferenz in Microsekunden
 							$TimeDiff = abs(intval($data->Timestamp) - $OldTimestamp);
+							// Zeitdifferenz in Millisekunden
+							$TimeDiff = $TimeDiff / 1000;
 							$BPM = round(60000 / $TimeDiff, 0);
 							
 							$this->SendDebug("Notify", "Zeitdifferenz: ".$TimeDiff." BPM: ".$BPM, 0);
