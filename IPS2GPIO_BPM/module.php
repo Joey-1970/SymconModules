@@ -124,11 +124,13 @@
 							If (count($BPMArray) < 10) {
 								$BPMArray[] = $BPM;
 								$this->SetBuffer("BPMArray", serialize($BPMArray));
+								$this->SendDebug("Notify", "Array: ".serialize($BPMArray), 0);
 							}
 							else {
 								$BPMArray = array_shift($BPMArray);
 								$BPMArray[] = $BPM;
 								$this->SetBuffer("BPMArray", serialize($BPMArray));
+								$this->SendDebug("Notify", "Array: ".serialize($BPMArray), 0);
 								$BPM = array_sum($BPMArray) / count($BPMArray);
 								SetValueInteger($this->GetIDForIdent("BPM"), $BPM);
 							}
