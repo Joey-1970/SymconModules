@@ -130,7 +130,9 @@
 								$this->SendDebug("Notify", "Array < 10: ".serialize($BPMArray), 0);
 							}
 							else {
-								$BPMArray = array_shift($BPMArray);
+								$ShiftArray = array();
+								$ShiftArray = array_shift($BPMArray);
+								$BPMArray = $ShiftArray;
 								$BPMArray[] = $BPM;
 								$this->SetBuffer("BPMArray", serialize($BPMArray));
 								$this->SendDebug("Notify", "Array = 10: ".serialize($BPMArray), 0);
