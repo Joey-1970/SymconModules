@@ -112,7 +112,7 @@
 							$this->SetBuffer("OldTimestamp", intval($data->Timestamp) );
 						}
 						else {
-							$TimeDiff = (intval($data->Timestamp) - $OldTimestamp) / 1000;
+							$TimeDiff = abs(intval($data->Timestamp) - $OldTimestamp);
 							$BPM = round(60000 / $TimeDiff, 0);
 							
 							$this->SendDebug("Notify", "Zeitdifferenz: ".$TimeDiff." BPM: ".$BPM, 0);
