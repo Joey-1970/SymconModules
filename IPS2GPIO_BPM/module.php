@@ -105,15 +105,15 @@
 					// Trigger kurzzeitig setzen
 			   		If (intval($data->Value) == true) {
 			   			$OldTimestamp = intval($this->GetBuffer("OldTimestamp"));
-						//$this->SendDebug("Notify", "Trigger setzen mit Wert: ".intval($data->Value)." Zeitstempel:".$data->Timestamp, 0);
+						$this->SendDebug("Notify", "Trigger setzen mit Wert: ".intval($data->Value)." Zeitstempel:".$data->Timestamp, 0);
 						SetValueBoolean($this->GetIDForIdent("Trigger"), true);
 			   			SetValueBoolean($this->GetIDForIdent("Trigger"), false);
 						If ($OldTimestamp == 0) {
-							$this->SetBuffer("OldTimestamp", (intval($data->Timestamp)));
+							$this->SetBuffer("OldTimestamp", intval($data->Timestamp) );
 						}
 						else {
-							$TimeDiff = ((intval($data->Timestamp)) - $OldTimestamp) / 1000;
-							$BPM = 60000 / $TimeDiff;
+							$TimeDiff = (intval($data->Timestamp) - $OldTimestamp) / 1000;
+							$BPM = round(60000 / $TimeDiff, 0);
 							
 							$this->SendDebug("Notify", "Zeitdifferenz: ".$TimeDiff." BPM: ".$BPM, 0);
 							SetValueInteger($this->GetIDForIdent("BPM"), $BPM);
