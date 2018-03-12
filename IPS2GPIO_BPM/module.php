@@ -18,14 +18,6 @@
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 		
 	        //Status-Variablen anlegen
-	        $this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
-                $this->DisableAction("Status");
-		IPS_SetHidden($this->GetIDForIdent("Status"), false);
-		
-                $this->RegisterVariableBoolean("Toggle", "Toggle", "~Switch", 20);
-                $this->DisableAction("Toggle");
-		IPS_SetHidden($this->GetIDForIdent("Toggle"), false);
-		
                 $this->RegisterVariableBoolean("Trigger", "Trigger", "~Switch", 30);
                 $this->DisableAction("Trigger");
 		IPS_SetHidden($this->GetIDForIdent("Trigger"), false);
@@ -57,21 +49,8 @@
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		
-		$arrayElements[] = array("type" => "Label", "label" => "Der Trigger soll reagieren auf (aktiviert => True):");
-		$arrayElements[] = array("type" => "CheckBox", "name" => "ActionValue", "caption" => "Aktions Wert");
-		$arrayElements[] = array("type" => "Label", "label" => "Zur Software-Entprellung angeschlossener Taster/Schalter (0-300000ms)");
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "GlitchFilter", "caption" => "Glitchfilter (ms)");	
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		$arrayElements[] = array("type" => "Label", "label" => "Setzen der internen Pull Up/Down Widerstände"); 
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "Kein", "value" => 0);
-		$arrayOptions[] = array("label" => "Pull-Down", "value" => 1);
-		$arrayOptions[] = array("label" => "Pull-Up", "value" => 2);		
-		$arrayElements[] = array("type" => "Select", "name" => "PUL", "caption" => "Widerstand setzen", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		$arrayElements[] = array("type" => "Label", "label" => "Skriptausführung als Reaktion auf:"); 
-		$arrayElements[] = array("type" => "SelectScript", "name" => "TriggerScript", "caption" => "Triggerimpuls");
-		$arrayElements[] = array("type" => "SelectScript", "name" => "ToggleScript", "caption" => "Toggle Status"); 
+
 		$arrayActions = array();
 		If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 					}
@@ -122,24 +101,10 @@
 			   		If (intval($data->Value) == $this->ReadPropertyBoolean("ActionValue") ) {
 			   			$this->SendDebug("Notify", "Trigger setzen mit Wert: ".intval($data->Value), 0);
 						SetValueBoolean($this->GetIDForIdent("Trigger"), true);
-			   			If ($this->ReadPropertyInteger("TriggerScript") > 0) {
-			   				$this->SendDebug("Notify", "Triggerskript ausfuehren", 0);
-							IPS_RunScript($this->ReadPropertyInteger("TriggerScript"));
-			   			}
+			   			
 						$this->SendDebug("Notify", "Trigger zuruecksetzen", 0);
 			   			SetValueBoolean($this->GetIDForIdent("Trigger"), false);
-			   		}
-			   		// Toggle-Variable
-			   		If ((GetValueBoolean($this->GetIDForIdent("Status")) == false) and (intval($data->Value) == true)) {
-			   			$this->SendDebug("Notify", "Toggle setzen", 0);
-						SetValueBoolean($this->GetIDForIdent("Toggle"), !GetValueBoolean($this->GetIDForIdent("Toggle")));
-			   			If ($this->ReadPropertyInteger("ToggleScript") > 0) {
-			   				$this->SendDebug("Notify", "Toggleskript ausfuehren", 0);
-							IPS_RunScript($this->ReadPropertyInteger("ToggleScript"));
-			   			}
-			   		}
-			   		// Status setzen
-			   		SetValueBoolean($this->GetIDForIdent("Status"), $data->Value);
+			   		}		   		
 			   	}
 			   	break;
 			   case "get_usedpin":
