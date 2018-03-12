@@ -77,6 +77,8 @@
 		$this->EnableAction("BPM");
 		IPS_SetHidden($this->GetIDForIdent("BPM"), false);
 		
+		$this->SetBuffer("Timestamp", 0);
+		
   	   
                 //ReceiveData-Filter setzen
 		$Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*)';
