@@ -124,15 +124,14 @@
 							$this->SendDebug("Notify", "Zeitdifferenz: ".$TimeDiff." BPM: ".$BPM, 0);
 							$BPMArray = array();
 							$BPMArray = unserialize($this->GetBuffer("BPMArray"));
+							
 							If (count($BPMArray) < 10) {
 								$BPMArray[] = $BPM;
 								$this->SetBuffer("BPMArray", serialize($BPMArray));
 								$this->SendDebug("Notify", "Array < 10: ".serialize($BPMArray), 0);
 							}
 							else {
-								$ShiftArray = array();
-								$ShiftArray = array_shift($BPMArray);
-								$BPMArray = $ShiftArray;
+								$FirstValue = array_shift($BPMArray);
 								$BPMArray[] = $BPM;
 								$this->SetBuffer("BPMArray", serialize($BPMArray));
 								$this->SendDebug("Notify", "Array = 10: ".serialize($BPMArray), 0);
