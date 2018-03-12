@@ -121,7 +121,7 @@
 							// Zeitdifferenz in Millisekunden
 							$TimeDiff = intval($TimeDiff / 1000);
 							$BPM = round(60000 / $TimeDiff, 0);
-							$this->SendDebug("Notify", "Zeitdifferenz: ".$TimeDiff." BPM: ".$BPM, 0);
+							$this->SendDebug("Notify", "Zeitdifferenz: ".$TimeDiff."ms BPM: ".$BPM, 0);
 							$BPMArray = array();
 							$BPMArray = unserialize($this->GetBuffer("BPMArray"));
 							
