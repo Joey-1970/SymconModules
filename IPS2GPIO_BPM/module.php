@@ -74,6 +74,8 @@
 		$this->EnableAction("BPM");
 		IPS_SetHidden($this->GetIDForIdent("BPM"), false);
 		
+		$BPMArray = array();
+		$this->SetBuffer("BPMArray", serialize($BPMArray));
 		$this->SetBuffer("OldTimestamp", 0);
 		
   	   
@@ -119,22 +121,23 @@
 							// Zeitdifferenz in Millisekunden
 							$TimeDiff = intval($TimeDiff / 1000);
 							$BPM = round(60000 / $TimeDiff, 0);
-							
+							$this->SendDebug("Notify", "Zeitdifferenz: ".$TimeDiff." BPM: ".$BPM, 0);
+							$BPMArray = array();
 							$BPMArray = unserialize($this->GetBuffer("BPMArray"));
 							If (count($BPMArray) < 10) {
 								$BPMArray[] = $BPM;
 								$this->SetBuffer("BPMArray", serialize($BPMArray));
-								$this->SendDebug("Notify", "Array: ".serialize($BPMArray), 0);
+								$this->SendDebug("Notify", "Array < 10: ".serialize($BPMArray), 0);
 							}
 							else {
 								$BPMArray = array_shift($BPMArray);
 								$BPMArray[] = $BPM;
 								$this->SetBuffer("BPMArray", serialize($BPMArray));
-								$this->SendDebug("Notify", "Array: ".serialize($BPMArray), 0);
+								$this->SendDebug("Notify", "Array = 10: ".serialize($BPMArray), 0);
 								$BPM = array_sum($BPMArray) / count($BPMArray);
 								SetValueInteger($this->GetIDForIdent("BPM"), $BPM);
 							}
-							$this->SendDebug("Notify", "Zeitdifferenz: ".$TimeDiff." BPM: ".$BPM, 0);
+							
 						}
 			   		}		   		
 			   	}
