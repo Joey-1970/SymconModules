@@ -10,10 +10,6 @@
             	$this->RegisterPropertyBoolean("Open", false);
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->SetBuffer("PreviousPin", -1);
-            	$this->RegisterPropertyInteger("GlitchFilter", 10);
-	    	$this->RegisterPropertyInteger("PUL", 0);
-            	$this->RegisterPropertyInteger("TriggerScript", 0);
-            	$this->RegisterPropertyInteger("ToggleScript", 0);
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 		
 	        //Status-Variablen anlegen
@@ -86,7 +82,7 @@
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 			If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
-									  "Pin" => $this->ReadPropertyInteger("Pin"), "PreviousPin" => $this->GetBuffer("PreviousPin"), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => $this->ReadPropertyInteger("GlitchFilter"), "Resistance" => $this->ReadPropertyInteger("PUL"))));
+									  "Pin" => $this->ReadPropertyInteger("Pin"), "PreviousPin" => $this->GetBuffer("PreviousPin"), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 0, "Resistance" => 0)));
 				$this->SetBuffer("PreviousPin", $this->ReadPropertyInteger("Pin"));
 				If ($Result == true) {
 					$this->SetStatus(102);
