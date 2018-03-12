@@ -138,7 +138,7 @@
 								$BPM = array_sum($BPMArray) / count($BPMArray);
 								SetValueInteger($this->GetIDForIdent("BPM"), $BPM);
 							}
-							
+							$this->SetBuffer("OldTimestamp", intval($data->Timestamp) );
 						}
 			   		}		   		
 			   	}
