@@ -109,10 +109,10 @@
 						SetValueBoolean($this->GetIDForIdent("Trigger"), true);
 			   			SetValueBoolean($this->GetIDForIdent("Trigger"), false);
 						If ($OldTimestamp == 0) {
-							$this->SetBuffer("OldTimestamp", abs(intval($data->Timestamp)));
+							$this->SetBuffer("OldTimestamp", (intval($data->Timestamp)));
 						}
 						else {
-							$TimeDiff = (abs(intval($data->Timestamp)) - $OldTimestamp) / 1000;
+							$TimeDiff = ((intval($data->Timestamp)) - $OldTimestamp) / 1000;
 							$BPM = 60000 / $TimeDiff;
 							
 							$this->SendDebug("Notify", "Zeitdifferenz: ".$TimeDiff." BPM: ".$BPM, 0);
