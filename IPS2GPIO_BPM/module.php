@@ -10,7 +10,6 @@
             	$this->RegisterPropertyBoolean("Open", false);
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->SetBuffer("PreviousPin", -1);
-            	$this->RegisterPropertyBoolean("ActionValue", true);
             	$this->RegisterPropertyInteger("GlitchFilter", 10);
 	    	$this->RegisterPropertyInteger("PUL", 0);
             	$this->RegisterPropertyInteger("TriggerScript", 0);
@@ -77,7 +76,7 @@
 		$this->EnableAction("BPM");
 		IPS_SetHidden($this->GetIDForIdent("BPM"), false);
 		
-		$this->SetBuffer("Timestamp", 0);
+		$this->SetBuffer("OldTimestamp", 0);
 		
   	   
                 //ReceiveData-Filter setzen
@@ -109,11 +108,20 @@
 			   		$this->SendDebug("Notify", "Ausfuehrung", 0);
 					// Trigger kurzzeitig setzen
 			   		If (intval($data->Value) == true) {
-			   			$this->SendDebug("Notify", "Trigger setzen mit Wert: ".intval($data->Value), 0);
+			   			$OldTimestamp = intval($this->GetBuffer("OldTimestamp"));
+						$this->SendDebug("Notify", "Trigger setzen mit Wert: ".intval($data->Value)." Zeitstempel:".$data->Timestamp, 0);
 						SetValueBoolean($this->GetIDForIdent("Trigger"), true);
 			   			
 						$this->SendDebug("Notify", "Trigger zuruecksetzen", 0);
 			   			SetValueBoolean($this->GetIDForIdent("Trigger"), false);
+						If ($OldTimestamp == 0) {
+							$this->SetBuffer("OldTimestamp", $data->Timestamp);
+						}
+						else {
+							$TimeDiff = intval($data->Timestamp) - $OldTimestamp;
+							$this->SendDebug("Notify", "Zeitdifferenz: ".$TimeDiff, 0);
+							$this->SetBuffer("OldTimestamp", $data->Timestamp);
+						}
 			   		}		   		
 			   	}
 			   	break;
