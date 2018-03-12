@@ -11,6 +11,8 @@
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->SetBuffer("PreviousPin", -1);
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+		$BPMArray = array();
+		$this->SetBuffer("BPMArray", serialize($BPMArray));
 		
 	        //Status-Variablen anlegen
                 $this->RegisterVariableBoolean("Trigger", "Trigger", "~Switch", 10);
@@ -118,9 +120,19 @@
 							$TimeDiff = intval($TimeDiff / 1000);
 							$BPM = round(60000 / $TimeDiff, 0);
 							
+							$BPMArray = unserialize($this->GetBuffer("BPMArray"));
+							If (count($BPMArray) < 10) {
+								$BPMArray[] = $BPM;
+								$this->SetBuffer("BPMArray", serialize($BPMArray));
+							}
+							else {
+								$BPMArray = array_shift($BPMArray);
+								$BPMArray[] = $BPM;
+								$this->SetBuffer("BPMArray", serialize($BPMArray));
+								$BPM = array_sum($BPMArray) / count($BPMArray);
+								SetValueInteger($this->GetIDForIdent("BPM"), $BPM);
+							}
 							$this->SendDebug("Notify", "Zeitdifferenz: ".$TimeDiff." BPM: ".$BPM, 0);
-							SetValueInteger($this->GetIDForIdent("BPM"), $BPM);
-							$this->SetBuffer("OldTimestamp", abs(intval($data->Timestamp)));
 						}
 			   		}		   		
 			   	}
