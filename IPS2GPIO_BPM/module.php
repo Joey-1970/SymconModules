@@ -135,15 +135,15 @@
 								$FirstValue = array_shift($BPMArray);
 								// Neustes Element hinzufügen
 								$BPMArray[] = $BPM;
-								// Array sichern
-								$this->SetBuffer("BPMArray", serialize($BPMArray));
+								
 								// Höchsten und niedrigsten Wert löschen
 								$MaxValue = max($BPMArray);
 								$MaxIndex = array_search($MaxValue, $BPMArray);
 								$MinValue = min($BPMArray);
 								$MinIndex = array_search($MinValue, $BPMArray);
 								unset($BPMArray[$MinIndex], $BPMArray[$MaxIndex]);
-								
+								// Array sichern
+								$this->SetBuffer("BPMArray", serialize($BPMArray));
 								$this->SendDebug("Notify", "Array = 10: ".serialize($BPMArray), 0);
 								$BPM = array_sum($BPMArray) / count($BPMArray);
 								SetValueInteger($this->GetIDForIdent("BPM"), $BPM);
