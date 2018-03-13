@@ -125,15 +125,25 @@
 							$BPMArray = array();
 							$BPMArray = unserialize($this->GetBuffer("BPMArray"));
 							
-							If (count($BPMArray) < 10) {
+							If (count($BPMArray) < 12) {
 								$BPMArray[] = $BPM;
 								$this->SetBuffer("BPMArray", serialize($BPMArray));
 								$this->SendDebug("Notify", "Array < 10: ".serialize($BPMArray), 0);
 							}
 							else {
+								// Erstes (ältestes) Element entfernen
 								$FirstValue = array_shift($BPMArray);
+								// Neustes Element hinzufügen
 								$BPMArray[] = $BPM;
+								// Array sichern
 								$this->SetBuffer("BPMArray", serialize($BPMArray));
+								// Höchsten und niedrigsten Wert löschen
+								$MaxValue = max($BPMArray);
+								$MaxIndex = array_search($MaxValue, $BPMArray);
+								$MinValue = min($BPMArray);
+								$MinIndex = array_search($MinValue, $BPMArray);
+								unset($BPMArray[$MinIndex], $BPMArray[$MaxIndex]);
+								
 								$this->SendDebug("Notify", "Array = 10: ".serialize($BPMArray), 0);
 								$BPM = array_sum($BPMArray) / count($BPMArray);
 								SetValueInteger($this->GetIDForIdent("BPM"), $BPM);
