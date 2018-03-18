@@ -121,11 +121,7 @@
 							// Zeitdifferenz in Millisekunden
 							$TimeDiff = intval($TimeDiff / 1000);
 							$BPM = round(60000 / $TimeDiff, 0);
-							If (($TimeDiff > 1200) OR ($TimeDiff < 300)) {
-								// < 50 BPM oder > 200 BPM
-								$this->SendDebug("Notify", "Zeitdifferenz: ".$TimeDiff."ms BPM: ".$BPM, 0);
-								return;
-							}
+							
 							$this->SendDebug("Notify", "Zeitdifferenz: ".$TimeDiff."ms BPM: ".$BPM, 0);
 							$BPMArray = array();
 							$BPMArray = unserialize($this->GetBuffer("BPMArray"));
@@ -136,6 +132,14 @@
 								$this->SendDebug("Notify", "Array < 5: ".serialize($BPMArray), 0);
 							}
 							else {
+								If (($BPM < 50) OR ($BPM > 200)) {
+									// < 50 BPM oder > 200 BPM
+									If ($BPM < 50) {
+										$this->SetBuffer("OldTimestamp", intval($data->Timestamp) );
+									}
+									return;
+								}
+								
 								// Erstes (ältestes) Element entfernen
 								$FirstValue = array_shift($BPMArray);
 								// Neustes Element hinzufügen
