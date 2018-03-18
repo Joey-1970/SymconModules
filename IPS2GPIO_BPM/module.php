@@ -120,6 +120,10 @@
 							$TimeDiff = abs(intval($data->Timestamp) - $OldTimestamp);
 							// Zeitdifferenz in Millisekunden
 							$TimeDiff = intval($TimeDiff / 1000);
+							If (($TimeDiff > 1200) OR ($TimeDiff < 300)) {
+								// < 50 BPM oder > 200 BPM
+								return;
+							}
 							$BPM = round(60000 / $TimeDiff, 0);
 							$this->SendDebug("Notify", "Zeitdifferenz: ".$TimeDiff."ms BPM: ".$BPM, 0);
 							$BPMArray = array();
@@ -143,7 +147,7 @@
 								$MinIndex = array_search($MinValue, $BPMArray);
 								unset($BPMArray[$MinIndex], $BPMArray[$MaxIndex]);
 								// Array sichern
-								$this->SetBuffer("BPMArray", serialize($BPMArray));
+								//$this->SetBuffer("BPMArray", serialize($BPMArray));
 								$this->SendDebug("Notify", "Array > 5: ".serialize($BPMArray), 0);
 								$BPM = array_sum($BPMArray) / count($BPMArray);
 								SetValueInteger($this->GetIDForIdent("BPM"), $BPM);
