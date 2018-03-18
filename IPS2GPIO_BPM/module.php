@@ -133,11 +133,11 @@
 								$this->SetBuffer("OldTimestamp", intval($data->Timestamp) );
 							}
 							else {
-								If (($BPM < 50) OR ($BPM > 200)) {
-									// < 50 BPM oder > 200 BPM
-									If ($BPM < 50) {
-										$this->SetBuffer("OldTimestamp", intval($data->Timestamp) );
-									}
+								If ($BPM < 50) {
+									$this->SetBuffer("OldTimestamp", intval($data->Timestamp) );
+								}
+								elseif ($BPM > 200) {
+									// nichts machen
 								}
 								else {
 									// Erstes (ältestes) Element entfernen
@@ -152,7 +152,7 @@
 									$MinIndex = array_search($MinValue, $BPMArray);
 									unset($BPMArray[$MinIndex], $BPMArray[$MaxIndex]);
 									// Array sichern
-									//$this->SetBuffer("BPMArray", serialize($BPMArray));
+									$this->SetBuffer("BPMArray", serialize($BPMArray));
 									$this->SendDebug("Notify", "Array > 5: ".serialize($BPMArray), 0);
 									$BPM = array_sum($BPMArray) / count($BPMArray);
 									SetValueInteger($this->GetIDForIdent("BPM"), $BPM);
