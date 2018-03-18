@@ -120,11 +120,12 @@
 							$TimeDiff = abs(intval($data->Timestamp) - $OldTimestamp);
 							// Zeitdifferenz in Millisekunden
 							$TimeDiff = intval($TimeDiff / 1000);
+							$BPM = round(60000 / $TimeDiff, 0);
 							If (($TimeDiff > 1200) OR ($TimeDiff < 300)) {
 								// < 50 BPM oder > 200 BPM
+								$this->SendDebug("Notify", "Zeitdifferenz: ".$TimeDiff."ms BPM: ".$BPM, 0);
 								return;
 							}
-							$BPM = round(60000 / $TimeDiff, 0);
 							$this->SendDebug("Notify", "Zeitdifferenz: ".$TimeDiff."ms BPM: ".$BPM, 0);
 							$BPMArray = array();
 							$BPMArray = unserialize($this->GetBuffer("BPMArray"));
