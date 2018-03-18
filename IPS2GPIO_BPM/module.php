@@ -11,6 +11,8 @@
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->SetBuffer("PreviousPin", -1);
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+		$this->RegisterPropertyInteger("BPMUpThreshold", 160);
+		$this->RegisterPropertyInteger("BPMDownThreshold", 50);
 		$BPMArray = array();
 		$this->SetBuffer("BPMArray", serialize($BPMArray));
 		
@@ -109,6 +111,8 @@
 					// Trigger kurzzeitig setzen
 			   		If (intval($data->Value) == true) {
 			   			$OldTimestamp = intval($this->GetBuffer("OldTimestamp"));
+						$BPMUpThreshold = $this->ReadPropertyInteger("BPMUpThreshold");
+						$BPMDownThreshold = $this->ReadPropertyInteger("BPMDownThreshold");
 						$this->SendDebug("Notify", "Trigger setzen mit Wert: ".intval($data->Value)." Zeitstempel:".$data->Timestamp, 0);
 						SetValueBoolean($this->GetIDForIdent("Trigger"), true);
 			   			SetValueBoolean($this->GetIDForIdent("Trigger"), false);
@@ -127,16 +131,24 @@
 							$BPMArray = unserialize($this->GetBuffer("BPMArray"));
 							
 							If (count($BPMArray) < 5) {
-								$BPMArray[] = $BPM;
-								$this->SetBuffer("BPMArray", serialize($BPMArray));
-								$this->SendDebug("Notify", "Array < 5: ".serialize($BPMArray), 0);
-								$this->SetBuffer("OldTimestamp", intval($data->Timestamp) );
-							}
-							else {
-								If ($BPM < 50) {
+								If ($BPM < $BPMDownThreshold) {
 									$this->SetBuffer("OldTimestamp", intval($data->Timestamp) );
 								}
-								elseif ($BPM > 200) {
+								elseif ($BPM > $BPMUpThreshold) {
+									// nichts machen
+								}
+								else {
+									$BPMArray[] = $BPM;
+									$this->SetBuffer("BPMArray", serialize($BPMArray));
+									$this->SendDebug("Notify", "Array < 5: ".serialize($BPMArray), 0);
+									$this->SetBuffer("OldTimestamp", intval($data->Timestamp) );
+								}
+							}
+							else {
+								If ($BPM < $BPMDownThreshold) {
+									$this->SetBuffer("OldTimestamp", intval($data->Timestamp) );
+								}
+								elseif ($BPM > $BPMUpThreshold) {
 									// nichts machen
 								}
 								else {
