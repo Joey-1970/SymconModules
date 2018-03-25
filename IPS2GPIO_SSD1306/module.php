@@ -85,7 +85,7 @@
 			}	
 		}
 		else {
-			//
+			$this->SetStatus(104);
 		}
 	}
 	
