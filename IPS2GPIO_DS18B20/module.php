@@ -121,6 +121,7 @@
 		}
 		else {
 			$this->SendDebug("ApplyChanges", "Startrestriktionen nicht erfuellt!", 0);
+			$this->SetStatus(104);
 		}	
 	}
 	
