@@ -143,6 +143,9 @@
 				$this->SetStatus(104);
 			}
 		}
+		else {
+			$this->SetStatus(104);
+		}
 	}
 	public function RequestAction($Ident, $Value) 
 	{
