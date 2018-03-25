@@ -135,6 +135,7 @@
 		}
 		else {
 			$this->SetTimerInterval("Messzyklus", 0);
+			$this->SetStatus(104);
 		}
 	}
 	
