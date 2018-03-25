@@ -304,32 +304,29 @@
         {
             	// Diese Zeile nicht löschen
             	parent::ApplyChanges();
-			
+		// Profile erstellen	
+		$this->RegisterProfileInteger("IPS2GPIO.Lux", "Bulb", "", " lx", 0, 65535, 1);
 		
 		//Status-Variablen anlegen
              	$this->RegisterVariableInteger("ChipID", "Chip ID", "", 10);
 		$this->DisableAction("ChipID");
 		IPS_SetHidden($this->GetIDForIdent("ChipID"), true);
 		
-		$this->RegisterVariableInteger("Intensity_W", "Intensität Weiß", "~Intensity.255", 20);
+		$this->RegisterVariableInteger("Intensity_W", "Intensität Weiß", "IPS2GPIO.Lux", 20);
 	        $this->DisableAction("Intensity_W");
 		IPS_SetHidden($this->GetIDForIdent("Intensity_W"), false);
 		
-		$this->RegisterVariableInteger("Intensity_R", "Intensität Rot (skaliert)", "~Intensity.255", 30);
+		$this->RegisterVariableInteger("Intensity_R", "Intensität Rot", "IPS2GPIO.Lux", 30);
 	        $this->DisableAction("Intensity_R");
 		IPS_SetHidden($this->GetIDForIdent("Intensity_R"), false);
 		
-		$this->RegisterVariableInteger("Intensity_G", "Intensität Grün (skaliert)", "~Intensity.255", 40);
+		$this->RegisterVariableInteger("Intensity_G", "Intensität Grün", "IPS2GPIO.Lux", 40);
 	        $this->DisableAction("Intensity_G");
 		IPS_SetHidden($this->GetIDForIdent("Intensity_G"), false);
 		
-		$this->RegisterVariableInteger("Intensity_B", "Intensität Blau (skaliert)", "~Intensity.255", 50);
+		$this->RegisterVariableInteger("Intensity_B", "Intensität Blau", "IPS2GPIO.Lux", 50);
 	        $this->DisableAction("Intensity_B");
 		IPS_SetHidden($this->GetIDForIdent("Intensity_B"), false);
-		
-		$this->RegisterVariableInteger("Color", "Farbe (skaliert)", "~HexColor", 60);
-           	$this->DisableAction("Color");
-		IPS_SetHidden($this->GetIDForIdent("Color"), false);
 		
 		$this->RegisterVariableInteger("Interrupt", "Letzte Interrupt", "~UnixTimestamp", 90);
 		$this->DisableAction("Interrupt");
@@ -829,35 +826,17 @@
 						}
 
 						If ($AVALID) {
-							// RGBW Farbergebnis Rohwerte
+							// RGBW Farbergebnis
 							$W = ($Result[2] | ($Result[3] << 8));
 							$R = ($Result[4] | ($Result[5] << 8));
 							$G = ($Result[6] | ($Result[7] << 8));
 							$B = ($Result[8] | ($Result[9] << 8));
 							$this->SendDebug("Measurement", "Rohwerte - Weiss: ".$W." Rot: ".$R." Gruen: ".$G." Blau: ".$B , 0);
 
-							$RGBMax = max($R, $G, $B, $W);
-							
-							// Weiß skaliert
-							$W = intval(($Result[2] | ($Result[3] << 8)) / 65535 * 255);
 							SetValueInteger($this->GetIDForIdent("Intensity_W"), $W);
-							
-							If ($RGBMax > 0) {
-								// RGB-Werte skalieren
-								$R = intval(($Result[4] | ($Result[5] << 8)) / $RGBMax * 255);
-								$G = intval(($Result[6] | ($Result[7] << 8)) / $RGBMax * 255);
-								$B = intval(($Result[8] | ($Result[9] << 8)) / $RGBMax * 255);
-								SetValueInteger($this->GetIDForIdent("Intensity_R"), $R);
-								SetValueInteger($this->GetIDForIdent("Intensity_G"), $G);
-								SetValueInteger($this->GetIDForIdent("Intensity_B"), $B);
-								SetValueInteger($this->GetIDForIdent("Color"), $this->RGB2Hex($R, $G, $B));
-							}
-							else {
-								SetValueInteger($this->GetIDForIdent("Intensity_R"), 0);
-								SetValueInteger($this->GetIDForIdent("Intensity_G"), 0);
-								SetValueInteger($this->GetIDForIdent("Intensity_B"), 0);
-								SetValueInteger($this->GetIDForIdent("Color"), 0);
-							}
+							SetValueInteger($this->GetIDForIdent("Intensity_R"), $R);
+							SetValueInteger($this->GetIDForIdent("Intensity_G"), $G);
+							SetValueInteger($this->GetIDForIdent("Intensity_B"), $B);
 						}
 						If ($PVALID) {
 							// Nährung
