@@ -128,7 +128,8 @@
 			}	
 		}
 		else {
-			$this->SendDebug("ApplyChanges", "Startrestriktionen nicht erfuellt!", 0);
+			$this->SetTimerInterval("Messzyklus", 0);
+			$this->SetStatus(104);
 		}	
 	}
 	
