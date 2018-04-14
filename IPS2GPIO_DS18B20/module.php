@@ -27,7 +27,6 @@
 		//Status-Variablen anlegen
 		$this->RegisterVariableFloat("Temperature", "Temperatur", "~Temperature", 10);
           	$this->DisableAction("Temperature");
-		IPS_SetHidden($this->GetIDForIdent("Temperature"), false);
         }
  	
 	public function GetConfigurationForm() 
