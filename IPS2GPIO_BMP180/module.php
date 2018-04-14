@@ -35,31 +35,21 @@
 		
 		$this->RegisterVariableFloat("Temperature", "Temperatur", "~Temperature", 10);
 		$this->DisableAction("Temperature");
-		IPS_SetHidden($this->GetIDForIdent("Temperature"), false);
 		
 		$this->RegisterVariableFloat("Pressure", "Luftdruck (abs)", "~AirPressure.F", 20);
 		$this->DisableAction("Pressure");
-		IPS_SetHidden($this->GetIDForIdent("Pressure"), false);
 		
 		$this->RegisterVariableFloat("PressureTrend1h", "Luftdruck 1h-Trend", "~AirPressure.F", 70);
 		$this->DisableAction("PressureTrend1h");
-		IPS_SetHidden($this->GetIDForIdent("PressureTrend1h"), false);
-		SetValueFloat($this->GetIDForIdent("PressureTrend1h"), 0);
 		
 		$this->RegisterVariableFloat("PressureTrend3h", "Luftdruck 3h-Trend", "~AirPressure.F", 80);
 		$this->DisableAction("PressureTrend3h");
-		IPS_SetHidden($this->GetIDForIdent("PressureTrend3h"), false);
-		SetValueFloat($this->GetIDForIdent("PressureTrend3h"), 0);
 		
 		$this->RegisterVariableFloat("PressureTrend12h", "Luftdruck 12h-Trend", "~AirPressure.F", 90);
 		$this->DisableAction("PressureTrend12h");
-		IPS_SetHidden($this->GetIDForIdent("PressureTrend12h"), false);
-		SetValueFloat($this->GetIDForIdent("PressureTrend12h"), 0);
 		
 		$this->RegisterVariableFloat("PressureTrend24h", "Luftdruck 24h-Trend", "~AirPressure.F", 100);
 		$this->DisableAction("PressureTrend24h");
-		IPS_SetHidden($this->GetIDForIdent("PressureTrend24h"), false);
-		SetValueFloat($this->GetIDForIdent("PressureTrend24h"), 0);
         }
 	
 	public function GetConfigurationForm() 
