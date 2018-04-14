@@ -34,19 +34,15 @@
 		//Status-Variablen anlegen
 		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 10);
 		$this->DisableAction("LastInterrupt");
-		IPS_SetHidden($this->GetIDForIdent("LastInterrupt"), false);
 		
 		$this->RegisterVariableInteger("Interrupt", "Auslöser", "IPS2GPIO.interrupt", 20);
 		$this->DisableAction("Interrupt");
-		IPS_SetHidden($this->GetIDForIdent("Interrupt"), false);
 		
 		$this->RegisterVariableInteger("Distance", "Entfernung", "IPS2GPIO.km", 30);
            	$this->DisableAction("Distance");
-		IPS_SetHidden($this->GetIDForIdent("Distance"), false);
 		
 		$this->RegisterVariableInteger("Energy", "Energie", "", 40);
            	$this->DisableAction("Energy");
-		IPS_SetHidden($this->GetIDForIdent("Energy"), false);
         }
  	
 	public function GetConfigurationForm() 
