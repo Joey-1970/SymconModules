@@ -31,17 +31,14 @@
 		// Status-Variablen anlegen
 		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 10);
 		$this->DisableAction("LastInterrupt");
-		IPS_SetHidden($this->GetIDForIdent("LastInterrupt"), false);
 		
 		for ($i = 0; $i <= 7; $i++) {
 			$this->RegisterVariableBoolean("P".$i, "P".$i, "~Switch", 10 * $i + 20);
-			IPS_SetHidden($this->GetIDForIdent("P".$i), false);
 		}
           	
           	$this->RegisterVariableInteger("Value", "Value", "", 100);
 		$this->EnableAction("Value");
-          	IPS_SetHidden($this->GetIDForIdent("Value"), false);
-	}
+ 	}
 	
 	public function GetConfigurationForm() 
 	{ 
