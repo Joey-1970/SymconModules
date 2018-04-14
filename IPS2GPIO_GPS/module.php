@@ -21,55 +21,42 @@
 		//Status-Variablen anlegen
 		$this->RegisterVariableInteger("Timestamp", "Zeitstempel", "~UnixTimestampTime", 10);
 		$this->DisableAction("Timestamp");
-		IPS_SetHidden($this->GetIDForIdent("Timestamp"), false);
 		
 		$this->RegisterVariableFloat("Latitude", "Breitengrad", "", 20);
 		$this->DisableAction("Latitude");
-		IPS_SetHidden($this->GetIDForIdent("Latitude"), false);
 		
 		$this->RegisterVariableString("LatitudeLocal", "Breitengrad Lokalität", "", 30);
 		$this->DisableAction("LatitudeLocal");
-		IPS_SetHidden($this->GetIDForIdent("LatitudeLocal"), false);
 		
 		$this->RegisterVariableFloat("Longitude", "Längengrad", "", 40);
 		$this->DisableAction("Longitude");
-		IPS_SetHidden($this->GetIDForIdent("Longitude"), false);
 		
 		$this->RegisterVariableString("LongitudeLocal", "Längengrad Lokalität", "", 50);
 		$this->DisableAction("LongitudeLocal");
-		IPS_SetHidden($this->GetIDForIdent("LongitudeLocal"), false);
 		
 		$this->RegisterVariableString("MeasurementQuality", "Qualität der Messung", "", 60);
 		$this->DisableAction("MeasurementQuality");
-		IPS_SetHidden($this->GetIDForIdent("MeasurementQuality"), false);
 		
 		$this->RegisterVariableInteger("Satellites", "Anzahl Satelliten", "", 70);
 		$this->DisableAction("Satellites");
-		IPS_SetHidden($this->GetIDForIdent("Satellites"), false);
 		
 		$this->RegisterVariableFloat("Precision", "Genauigkeit", "", 80);
 		$this->DisableAction("Precision");
-		IPS_SetHidden($this->GetIDForIdent("Precision"), false);
 		
 		$this->RegisterVariableFloat("Height", "Höhe über NN", "IPS2GPIO.m", 90);
 		$this->DisableAction("Height");
-		IPS_SetHidden($this->GetIDForIdent("Height"), false);
 		
 		$this->RegisterVariableString("Status", "Status der Bestimmung", "", 100);
 		$this->DisableAction("Status");
-		IPS_SetHidden($this->GetIDForIdent("Status"), false);
 		
 		$this->RegisterVariableFloat("CogT", "Kurs (wahr)", "~WindDirection.F", 110);
 		$this->DisableAction("CogT");
-		IPS_SetHidden($this->GetIDForIdent("CogT"), false);
 		
 		$this->RegisterVariableFloat("CogM", "Kurs (magnetisch)", "~WindDirection.F", 120);
 		$this->DisableAction("CogM");
-		IPS_SetHidden($this->GetIDForIdent("CogM"), false);
 		
 		$this->RegisterVariableFloat("Kph", "Geschwindigkeit", "~WindSpeed.kmh", 130);
 		$this->DisableAction("Kph");
-		IPS_SetHidden($this->GetIDForIdent("Kph"), false);
         }
 	 
 	public function GetConfigurationForm() 
