@@ -19,7 +19,6 @@
 	        //Status-Variablen anlegen
                 $this->RegisterVariableBoolean("Trigger", "Trigger", "~Switch", 10);
                 $this->DisableAction("Trigger");
-		IPS_SetHidden($this->GetIDForIdent("Trigger"), false);
         }
 	
 	public function GetConfigurationForm() 
