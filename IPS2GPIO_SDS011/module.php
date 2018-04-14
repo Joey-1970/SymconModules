@@ -47,35 +47,27 @@
 		// Statusvariablen anlegen
 		$this->RegisterVariableFloat("PM25", "PM 2.5", "IPS2GPIO.SDS011", 10);
 		$this->DisableAction("PM25");
-		IPS_SetHidden($this->GetIDForIdent("PM25"), false);
 		
 		$this->RegisterVariableFloat("PM10", "PM 10", "IPS2GPIO.SDS011", 20);
 		$this->DisableAction("PM10");
-		IPS_SetHidden($this->GetIDForIdent("PM10"), false);
 		
 		$this->RegisterVariableFloat("PM10", "PM 10", "IPS2GPIO.SDS011", 20);
 		$this->DisableAction("PM10");
-		IPS_SetHidden($this->GetIDForIdent("PM10"), false);
 		
 		$this->RegisterVariableInteger("Firmware", "Firmware", "~UnixTimestampDate", 30);
 		$this->DisableAction("Firmware");
-		IPS_SetHidden($this->GetIDForIdent("Firmware"), true);
 		
 		$this->RegisterVariableInteger("ReportingMode", "Report Modus", "IPS2GPIO.SDS011RM", 40);
 		$this->DisableAction("ReportingMode");
-		IPS_SetHidden($this->GetIDForIdent("ReportingMode"), true);
 		
 		$this->RegisterVariableInteger("SleepWork", "Status", "IPS2GPIO.SDS011SW", 50);
 		$this->DisableAction("SleepWork");
-		IPS_SetHidden($this->GetIDForIdent("SleepWork"), true);
 		
 		$this->RegisterVariableInteger("WorkingPeriod", "Arbeitsweise", "IPS2GPIO.SDS011WP", 60);
 		$this->DisableAction("WorkingPeriod");
-		IPS_SetHidden($this->GetIDForIdent("WorkingPeriod"), true);
 		
 		$this->RegisterVariableInteger("WorkingPeriodTime", "Zeit", "", 70);
 		$this->DisableAction("WorkingPeriodTime");
-		IPS_SetHidden($this->GetIDForIdent("WorkingPeriodTime"), true);
         }
 	
 	public function GetConfigurationForm() 
