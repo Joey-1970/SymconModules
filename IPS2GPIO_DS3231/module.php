@@ -35,19 +35,15 @@
 		// Statusvariablen anlegen
 		$this->RegisterVariableInteger("RTC_Timestamp", "RTC Zeitstempel", "~UnixTimestamp", 10);
 		$this->DisableAction("RTC_Timestamp");
-		IPS_SetHidden($this->GetIDForIdent("RTC_Timestamp"), false);
 		
 		$this->RegisterVariableFloat("RTC_Temperature", "RTC Temperatur", "~Temperature", 20);
 		$this->DisableAction("RTC_Temperature");
-		IPS_SetHidden($this->GetIDForIdent("RTC_Temperature"), false);
 		
 		$this->RegisterVariableInteger("NTP_Timestamp", "NTP Zeitstempel", "~UnixTimestamp", 30);
 		$this->DisableAction("NTP_Timestamp");
-		IPS_SetHidden($this->GetIDForIdent("NTP_Timestamp"), false);
 							  
 		$this->RegisterVariableInteger("NTP_Status", "NTP Status", "IPS2GPIO.NTPStatus", 40);
 		$this->DisableAction("NTP_Status");
-		IPS_SetHidden($this->GetIDForIdent("NTP_Status"), false);
         }
  	
 	public function GetConfigurationForm() 
