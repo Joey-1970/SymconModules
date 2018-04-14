@@ -18,7 +18,6 @@
 		// Status-Variablen anlegen
 		$this->RegisterVariableInteger("Output", "Ausgang", "~Intensity.100", 10);
 		$this->EnableAction("Output");
-		IPS_SetHidden($this->GetIDForIdent("Output"), false);
         }
 	
 	public function GetConfigurationForm() 
