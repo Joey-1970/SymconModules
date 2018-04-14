@@ -310,40 +310,30 @@
 		//Status-Variablen anlegen
              	$this->RegisterVariableInteger("ChipID", "Chip ID", "", 10);
 		$this->DisableAction("ChipID");
-		IPS_SetHidden($this->GetIDForIdent("ChipID"), true);
 		
 		$this->RegisterVariableInteger("Intensity_W", "Intensität Weiß", "IPS2GPIO.Lux", 20);
 	        $this->DisableAction("Intensity_W");
-		IPS_SetHidden($this->GetIDForIdent("Intensity_W"), false);
 		
 		$this->RegisterVariableInteger("Intensity_R", "Intensität Rot", "IPS2GPIO.Lux", 30);
 	        $this->DisableAction("Intensity_R");
-		IPS_SetHidden($this->GetIDForIdent("Intensity_R"), false);
 		
 		$this->RegisterVariableInteger("Intensity_G", "Intensität Grün", "IPS2GPIO.Lux", 40);
 	        $this->DisableAction("Intensity_G");
-		IPS_SetHidden($this->GetIDForIdent("Intensity_G"), false);
 		
 		$this->RegisterVariableInteger("Intensity_B", "Intensität Blau", "IPS2GPIO.Lux", 50);
 	        $this->DisableAction("Intensity_B");
-		IPS_SetHidden($this->GetIDForIdent("Intensity_B"), false);
 		
 		$this->RegisterVariableInteger("Interrupt", "Letzte Interrupt", "~UnixTimestamp", 90);
 		$this->DisableAction("Interrupt");
-		IPS_SetHidden($this->GetIDForIdent("Interrupt"), true);
 		
 		$this->RegisterVariableInteger("InterruptAINT", "Letzte Interrupt Ambilight", "~UnixTimestamp", 100);
 		$this->DisableAction("InterruptAINT");
-		IPS_SetHidden($this->GetIDForIdent("InterruptAINT"), true);
 		
 		$this->RegisterVariableInteger("InterruptPINT", "Letzte Interrupt Nährung", "~UnixTimestamp", 110);
 		$this->DisableAction("InterruptPINT");
-		IPS_SetHidden($this->GetIDForIdent("InterruptPINT"), true);
 		
 		$this->RegisterVariableInteger("InterruptGINT", "Letzte Interrupt Gestik", "~UnixTimestamp", 120);
-		$this->DisableAction("InterruptPINT");
-		IPS_SetHidden($this->GetIDForIdent("InterruptGINT"), true);
-		
+		$this->DisableAction("InterruptPINT");		
 		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {					
 			If (intval($this->GetBuffer("PreviousPin")) <> $this->ReadPropertyInteger("Pin")) {
