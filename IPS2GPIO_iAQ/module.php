@@ -31,19 +31,15 @@
 		// Status-Variablen anlegen
              	$this->RegisterVariableInteger("CO2", "CO2", "IPS2GPIO.ppm", 10);
 		$this->DisableAction("CO2");
-		IPS_SetHidden($this->GetIDForIdent("CO2"), false);
 		
 		$this->RegisterVariableInteger("TVOC", "TVOC", "IPS2GPIO.ppb", 20);
 		$this->DisableAction("TVOC");
-		IPS_SetHidden($this->GetIDForIdent("TVOC"), false);
 		
 		$this->RegisterVariableInteger("Resistance", "Resistance", "IPS2GPIO.ohm", 30);
 		$this->DisableAction("Resistance");
-		IPS_SetHidden($this->GetIDForIdent("Resistance"), false);
 		
 		$this->RegisterVariableString("Status", "Status", "", 40);
 		$this->DisableAction("Status");
-		IPS_SetHidden($this->GetIDForIdent("Status"), false);
 	}
 	    
 	public function GetConfigurationForm() 
