@@ -28,71 +28,54 @@
 
 		$this->RegisterVariableInteger("Baud", "Baud", "", 110);
 		$this->DisableAction("Baud");
-		IPS_SetHidden($this->GetIDForIdent("Baud"), true);
 		
 		$this->RegisterVariableInteger("ButtonNumber", "ButtonNumber", "", 110);
 		$this->DisableAction("ButtonNumber");
-		IPS_SetHidden($this->GetIDForIdent("ButtonNumber"), false);
 		
 		$this->RegisterVariableInteger("PageNumber", "PageNumber", "", 110);
 		$this->DisableAction("PageNumber");
-		IPS_SetHidden($this->GetIDForIdent("PageNumber"), false);
 		
 		$this->RegisterVariableBoolean("ButtonState", "ButtonState", "", 110);
 		$this->DisableAction("ButtonState");
-		IPS_SetHidden($this->GetIDForIdent("ButtonState"), false);
 		
 		$this->RegisterVariableString("ButtonSummary", "ButtonSummary", "", 120);
 		$this->DisableAction("ButtonSummary");
-		IPS_SetHidden($this->GetIDForIdent("ButtonSummary"), false);
 		
 		$this->RegisterVariableInteger("Coordinate_X", "Coordinate_X", "", 110);
 		$this->DisableAction("Coordinate_X");
-		IPS_SetHidden($this->GetIDForIdent("Coordinate_X"), false);
 		
 		$this->RegisterVariableInteger("Coordinate_Y", "Coordinate_Y", "", 110);
 		$this->DisableAction("Coordinate_Y");
-		IPS_SetHidden($this->GetIDForIdent("Coordinate_Y"), false);
 		
 		$this->RegisterVariableBoolean("SleepMode", "SleepMode", "", 110);
 		$this->DisableAction("SleepMode");
-		IPS_SetHidden($this->GetIDForIdent("SleepMode"), false);
 		
 		$this->RegisterVariableString("StringReturn", "StringReturn", "", 120);
 		$this->DisableAction("StringReturn");
-		IPS_SetHidden($this->GetIDForIdent("StringReturn"), false);
 		
 		$this->RegisterVariableInteger("IntegerReturn", "IntegerReturn", "", 120);
 		$this->DisableAction("IntegerReturn");
-		IPS_SetHidden($this->GetIDForIdent("IntegerReturn"), false);
 		
 		$this->RegisterVariableString("Response", "Response", "", 120);
 		$this->DisableAction("Response");
-		IPS_SetHidden($this->GetIDForIdent("Response"), false);
 		
 		$this->RegisterVariableBoolean("Touchdisplay", "Touchdisplay", "", 300);
 		$this->DisableAction("Touchdisplay");
-		IPS_SetHidden($this->GetIDForIdent("Touchdisplay"), false);
 		
 		$this->RegisterVariableString("DisplayModel", "DisplayModel", "", 310);
 		$this->DisableAction("DisplayModel");
-		IPS_SetHidden($this->GetIDForIdent("DisplayModel"), false);
 		
 		$this->RegisterVariableInteger("MCU_Code", "MCU_Code", "", 320);
 		$this->DisableAction("MCU_Code");
-		IPS_SetHidden($this->GetIDForIdent("MCU_Code"), false);
 		
 		$this->RegisterVariableString("SerialNumber", "SerialNumber", "", 330);
 		$this->DisableAction("SerialNumber");
-		IPS_SetHidden($this->GetIDForIdent("SerialNumber"), false);
 		
 		$this->RegisterVariableString("FlashSize", "FlashSize", "", 340);
 		$this->DisableAction("FlashSize");
-		IPS_SetHidden($this->GetIDForIdent("FlashSize"), false);
 		
 		$this->RegisterVariableInteger("FirmwareVersion", "FirmwareVersion", "", 350);
 		$this->DisableAction("FirmwareVersion");
-		IPS_SetHidden($this->GetIDForIdent("FirmwareVersion"), false);
         }
 
 	public function GetConfigurationForm() 
