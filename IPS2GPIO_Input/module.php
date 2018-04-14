@@ -20,15 +20,12 @@
 	        //Status-Variablen anlegen
 	        $this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
                 $this->DisableAction("Status");
-		IPS_SetHidden($this->GetIDForIdent("Status"), false);
 		
                 $this->RegisterVariableBoolean("Toggle", "Toggle", "~Switch", 20);
                 $this->DisableAction("Toggle");
-		IPS_SetHidden($this->GetIDForIdent("Toggle"), false);
 		
                 $this->RegisterVariableBoolean("Trigger", "Trigger", "~Switch", 30);
                 $this->DisableAction("Trigger");
-		IPS_SetHidden($this->GetIDForIdent("Trigger"), false);
         }
 	
 	public function GetConfigurationForm() 
