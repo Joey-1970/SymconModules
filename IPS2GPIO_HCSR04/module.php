@@ -33,7 +33,6 @@
 		//Status-Variablen anlegen
 		$this->RegisterVariableFloat("Distance", "Distance", "IPS2GPIO.cm", 10);
 		$this->DisableAction("Distance");
-		IPS_SetHidden($this->GetIDForIdent("Distance"), false);
 	}
 
 	public function GetConfigurationForm() 
