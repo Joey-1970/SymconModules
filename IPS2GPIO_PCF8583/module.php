@@ -37,26 +37,15 @@
 		//Status-Variablen anlegen
 		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 10);
 		$this->DisableAction("LastInterrupt");
-		IPS_SetHidden($this->GetIDForIdent("LastInterrupt"), false);
 		
 		$this->RegisterVariableInteger("CounterValue", "Zählwert", "", 20);
 		$this->DisableAction("CounterValue");
-		IPS_SetHidden($this->GetIDForIdent("CounterValue"), false);
-		
-		/*
-		$this->RegisterVariableBoolean("Interrupt", "Interrupt", "", 30);
-		$this->DisableAction("Interrupt");
-		IPS_SetHidden($this->GetIDForIdent("Interrupt"), false);
-		*/
 		
 		$this->RegisterVariableInteger("CounterDifference", "Zählwert-Differenz", "", 40);
 		$this->DisableAction("CounterDifference");
-		IPS_SetHidden($this->GetIDForIdent("CounterDifference"), false);
 		
 		$this->RegisterVariableFloat("PulseMinute", "Impulse/Minute", "IPS2GPIO.PCF8583", 50);
 		$this->DisableAction("PulseMinute");
-		IPS_SetHidden($this->GetIDForIdent("PulseMinute"), false);
-		
         }
  	
 	public function GetConfigurationForm() 
