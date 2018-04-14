@@ -30,7 +30,6 @@
 		// Status-Variablen anlegen
 		$this->RegisterVariableInteger("Motor", "Leinwand", "IPS2GPIO.MotorControl", 10);
 		$this->EnableAction("Motor");
-		IPS_SetHidden($this->GetIDForIdent("Motor"), false);
 	}
 	
 	public function GetConfigurationForm() 
