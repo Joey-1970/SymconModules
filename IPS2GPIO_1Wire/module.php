@@ -22,7 +22,6 @@
 		 //Status-Variablen anlegen
 	        $this->RegisterVariableString("SensorArray", "SensorArray", "", 5);
 		$this->DisableAction("SensorArray");
-		IPS_SetHidden($this->GetIDForIdent("SensorArray"), true);
         }
        	
 	public function GetConfigurationForm() { 
@@ -99,55 +98,6 @@
 			   		$this->SetStatus($data->Status);
 			   	}
 			   	break;
-			/*
-			case "set_1wire_devices":
-			   	$ResultArray = unserialize(utf8_decode($data->Result));
-				SetValueString($this->GetIDForIdent("SensorArray"), utf8_decode($data->Result));
-				If (count($ResultArray) > 0 ) {
-					for ($i = 0; $i < Count($ResultArray); $i++) {
-						//IPS_LogMessage("IPS2GPIO 1-Wire: ","Sensor ".$ResultArray[$i]);
-						$Ident = "Sensor_".str_replace("-", "", $ResultArray[$i]);
-						$this->RegisterVariableFloat($Ident, "Sensor_".$ResultArray[$i], "~Temperature", ($i + 1) *10);
-						$this->DisableAction($Ident);
-						$Ident = "CRC_".str_replace("-", "", $ResultArray[$i]);
-						$this->RegisterVariableBoolean($Ident, "CRC_".$ResultArray[$i], "~Alert.Reversed", ($i + 1) *12);
-						$this->DisableAction($Ident);
-					}
-				}
-				else {
-					IPS_LogMessage("IPS2GPIO 1-Wire","Keine 1-Wire-Sensoren gefunden!");
-				}	
-			   	break;
-			
-			case "set_1wire_data":
-			   	$ResultArray = unserialize(utf8_decode($data->Result));
-				$SensorArray = unserialize(GetValueString($this->GetIDForIdent("SensorArray")));
-				
-				If (count($ResultArray) > 0 ) {
-					for ($i = 0; $i < Count($ResultArray); $i++) {
-						$Ident = "Sensor_".str_replace("-", "", $SensorArray[$i]);
-						$LinesArray = explode(chr(10), $ResultArray[$i]);
-						// Temperatur auskoppeln
-						$TempArray = explode("t=", $LinesArray[1]);
-						//Echo (int)$TempArray[1] / 1000
-						//SetValueFloat($this->GetIDForIdent("$Ident"), (int)substr($LinesArray[1], -5) / 1000);
-						SetValueFloat($this->GetIDForIdent("$Ident"), (int)$TempArray[1] / 1000);
-						// CRC auskoppeln
-						$Ident = "CRC_".str_replace("-", "", $SensorArray[$i]);
-						If (trim(substr($LinesArray[0], -4)) == "YES") {
-							SetValueBoolean($this->GetIDForIdent("$Ident"), true);
-						}
-						else {
-							SetValueBoolean($this->GetIDForIdent("$Ident"), false);
-						}
-
-					}
-				}
-				else {
-					IPS_LogMessage("IPS2GPIO 1-Wire","Es konnten keine 1-Wire-Messergebnisse ermittelt werden!");
-				}		
-			   	break;
-				*/
 	 	}
  	}
 	// Beginn der Funktionen
