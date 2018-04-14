@@ -17,11 +17,9 @@
 		//Status-Variablen anlegen
 		$this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
 	        $this->EnableAction("Status");
-		IPS_SetHidden($this->GetIDForIdent("Status"), false);
 		
 	        $this->RegisterVariableInteger("Intensity", "Intensity", "~Intensity.255", 20);
 	        $this->EnableAction("Intensity");
-		IPS_SetHidden($this->GetIDForIdent("Intensity"), false);
         }
 	
 	
