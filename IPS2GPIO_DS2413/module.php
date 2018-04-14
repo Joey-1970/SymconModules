@@ -29,11 +29,9 @@
 		
 		//Status-Variablen anlegen
 		$this->RegisterVariableBoolean("Status_0", "Status (0)", "~Switch", 10);
-		IPS_SetHidden($this->GetIDForIdent("Status_0"), false);
 		
 		$this->RegisterVariableBoolean("Status_1", "Status (1)", "~Switch", 20);	
-		IPS_SetHidden($this->GetIDForIdent("Status_1"), false);
-        }
+       }
  	
 	public function GetConfigurationForm() 
 	{ 
