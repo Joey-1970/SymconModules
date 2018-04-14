@@ -32,11 +32,9 @@
 		//Status-Variablen anlegen
 		$this->RegisterVariableFloat("Illuminance", "Illuminance", "IPS2GPIO.lx", 10);
 		$this->DisableAction("Illuminance");
-		IPS_SetHidden($this->GetIDForIdent("Illuminance"), false);
 		
 		$this->RegisterVariableBoolean("Hysteresis", "Hysteresis", "~Switch", 20);
 		$this->DisableAction("Hysteresis");
-		IPS_SetHidden($this->GetIDForIdent("Hysteresis"), false);
         }
 	    
 	public function GetConfigurationForm() 
