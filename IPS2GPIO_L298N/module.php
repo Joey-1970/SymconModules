@@ -39,11 +39,9 @@
 		// Status-Variablen anlegen
 		$this->RegisterVariableInteger("Motor_1", "Motor 1", "IPS2GPIO.MotorControl", 10);
 		$this->EnableAction("Motor_1");
-		IPS_SetHidden($this->GetIDForIdent("Motor_1"), false);
 		
 		$this->RegisterVariableInteger("Motor_2", "Motor 2", "IPS2GPIO.MotorControl", 20);
 		$this->EnableAction("Motor_2");
-		IPS_SetHidden($this->GetIDForIdent("Motor_2"), false);
         }
 	
 	public function GetConfigurationForm() 
