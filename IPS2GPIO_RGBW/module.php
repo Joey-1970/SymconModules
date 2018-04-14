@@ -23,27 +23,21 @@
 		// Status-Variablen anlegen
 	        $this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
            	$this->EnableAction("Status");
-		IPS_SetHidden($this->GetIDForIdent("Status"), false);
 		
            	$this->RegisterVariableInteger("Intensity_R", "Rot", "~Intensity.255",20);
            	$this->EnableAction("Intensity_R");
-		IPS_SetHidden($this->GetIDForIdent("Intensity_R"), false);
 		
            	$this->RegisterVariableInteger("Intensity_G", "Grün", "~Intensity.255", 30);
            	$this->EnableAction("Intensity_G");
-		IPS_SetHidden($this->GetIDForIdent("Intensity_G"), false);
 		
            	$this->RegisterVariableInteger("Intensity_B", "Blau", "~Intensity.255", 40);
            	$this->EnableAction("Intensity_B");
-		IPS_SetHidden($this->GetIDForIdent("Intensity_B"), false);
 		
 		$this->RegisterVariableInteger("Intensity_W", "Weiß", "~Intensity.255", 50);
            	$this->EnableAction("Intensity_W");
-		IPS_SetHidden($this->GetIDForIdent("Intensity_W"), false);
 		
            	$this->RegisterVariableInteger("Color", "Farbe", "~HexColor", 60);
            	$this->EnableAction("Color");
-		IPS_SetHidden($this->GetIDForIdent("Color"), false);
 	}
 	    
 	public function GetConfigurationForm() 
