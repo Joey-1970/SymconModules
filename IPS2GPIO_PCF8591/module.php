@@ -30,12 +30,10 @@
 		for ($i = 0; $i <= 3; $i++) {
 			$this->RegisterVariableInteger("Channel_".$i, "Channel ".$i, "~Intensity.255", $i * 10 + 10);
 			$this->DisableAction("Channel_".$i);
-			IPS_SetHidden($this->GetIDForIdent("Channel_".$i), false);
 		}
 		
 		$this->RegisterVariableInteger("Output", "Output", "~Intensity.255", 50);
           	$this->EnableAction("Output");
-		IPS_SetHidden($this->GetIDForIdent("Output"), false);
 	}
 	
         public function GetConfigurationForm() 
