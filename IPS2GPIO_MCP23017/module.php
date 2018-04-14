@@ -38,14 +38,10 @@
 		//Status-Variablen anlegen
 		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung INT", "~UnixTimestamp", 10);
 		$this->DisableAction("LastInterrupt");
-		IPS_SetHidden($this->GetIDForIdent("LastInterrupt"), true);
 		
 		for ($i = 0; $i <= 7; $i++) {
 		   	$this->RegisterVariableBoolean("GPA".$i, "GPA".$i, "~Switch", ($i * 10 + 20));
-			IPS_SetHidden($this->GetIDForIdent("GPA".$i), false);
-			
 		   	$this->RegisterVariableBoolean("GPB".$i, "GPB".$i, "~Switch", ($i * 10 + 100));
-			IPS_SetHidden($this->GetIDForIdent("GPB".$i), false);
 		}
         }
  	
