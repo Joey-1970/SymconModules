@@ -10,14 +10,7 @@
             	$this->RegisterPropertyBoolean("Open", false);
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->SetBuffer("PreviousPin", -1);
-		$this->RegisterPropertyBoolean("Invert", false);
-		$this->RegisterPropertyBoolean("Logging", false);
-		$this->RegisterPropertyInteger("Startoption", 2);
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
-		
-		// Status-Variablen anlegen
-		$this->RegisterVariableBoolean("Status", "Status", "~Switch", 10);
-		$this->EnableAction("Status");
         }
 	
 	public function GetConfigurationForm() 
@@ -46,19 +39,10 @@
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
-		$arrayElements[] = array("name" => "Invert", "type" => "CheckBox",  "caption" => "Invertiere Anzeige");
-		$arrayElements[] = array("name" => "Logging", "type" => "CheckBox",  "caption" => "Logging aktivieren");
-		$arrayElements[] = array("type" => "Label", "label" => "Status des Ausgangs nach Neustart");
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "Aus", "value" => 0);
-		$arrayOptions[] = array("label" => "An", "value" => 1);
-		$arrayOptions[] = array("label" => "undefiniert", "value" => 2);
-		$arrayElements[] = array("type" => "Select", "name" => "Startoption", "caption" => "Startoption", "options" => $arrayOptions );
+		
 		$arrayActions = array();
 		If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-			$arrayActions[] = array("type" => "Button", "label" => "On", "onClick" => 'I2GOUT_Set_Status($id, true);');
-			$arrayActions[] = array("type" => "Button", "label" => "Off", "onClick" => 'I2GOUT_Set_Status($id, false);');
-			$arrayActions[] = array("type" => "Button", "label" => "Toggle Output", "onClick" => 'I2GOUT_Toggle_Status($id);');
+		
 		}
 		else {
 			$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
@@ -76,9 +60,6 @@
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin"), 0);
 		}
             	
-		// Logging setzen
-		AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Status"), $this->ReadPropertyBoolean("Logging"));
-		IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
              	//ReceiveData-Filter setzen
                 $Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*)';
 		$this->SetReceiveDataFilter($Filter);
@@ -88,13 +69,6 @@
 									  "Pin" => $this->ReadPropertyInteger("Pin"), "PreviousPin" => $this->GetBuffer("PreviousPin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 				$this->SetBuffer("PreviousPin", $this->ReadPropertyInteger("Pin"));
 				If ($Result == true) {
-					$this->Get_Status();
-					If ($this->ReadPropertyInteger("Startoption") == 0) {
-						$this->Set_Status(false);
-					}
-					elseif ($this->ReadPropertyInteger("Startoption") == 1) {
-						$this->Set_Status(true);
-					}
 					$this->SetStatus(102);
 				}
 			}
@@ -105,18 +79,6 @@
 		else {
 			$this->SetStatus(104);
 		}
-	}
-	public function RequestAction($Ident, $Value) 
-	{
-  		switch($Ident) {
-	        case "Status":
-	            If ($this->ReadPropertyBoolean("Open") == true) {
-		    	$this->SetOutput($Value);
-		    }
-	            break;
-	        default:
-	            throw new Exception("Invalid Ident");
-	    	}
 	}
 	
 	public function ReceiveData($JSONString) 
@@ -136,78 +98,13 @@
 			   	break;
 	 	}
  	}
+	
 	// Beginn der Funktionen
-	
-	// Schaltet den gewaehlten Pin
-	public function Set_Status(Bool $Value)
-	{
-		// Übergangsfunktion
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SetOutput($Value);
-		}
-	}
-	    
-	public function SetOutput(Bool $Value)
+	public function Send(String $Message)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$Value = min(1, max(0, $Value));
-			$this->SendDebug("SetOutput", "Ausfuehrung", 0);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => ($Value ^ $this->ReadPropertyBoolean("Invert")) )));
-			$this->SendDebug("SetOutput", "Ergebnis: ".(int)$Result, 0);
-			IF (!$Result) {
-				$this->SendDebug("SetOutput", "Fehler beim Setzen des Status!", 0);
-				$this->SetStatus(202);
-				return;
-			}
-			else {
-				$this->SetStatus(102);
-				SetValueBoolean($this->GetIDForIdent("Status"), ($Value ^ $this->ReadPropertyBoolean("Invert")));
-				$this->Get_Status();
-			}
-		}
-	}
-	
-	// Toggelt den Status
-	public function Toggle_Status()
-	{
-		// Übergangsfunktion
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->ToggleOutput();
-		}
-	}
-	    
-	public function ToggleOutput()
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("ToggleOutput", "Ausfuehrung", 0);
-			$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")));
-		}
-	}
-	
-	// Ermittelt den Status
-	public function Get_Status()
-	{
-		// Übergangsfunktion
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->GetOutput();
-		}
-	}
-	    
-	public function GetOutput()
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("Get_Status", "Ausfuehrung", 0);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_value", "Pin" => $this->ReadPropertyInteger("Pin") )));
-			If ($Result < 0) {
-				$this->SendDebug("GetOutput", "Fehler beim Lesen des Status!", 0);
-				$this->SetStatus(202);
-				return;
-			}
-			else {
-				$this->SetStatus(102);
-				$this->SendDebug("GetOutput", "Ergebnis: ".(int)$Result, 0);
-				SetValueBoolean($this->GetIDForIdent("Status"), ($Result ^ $this->ReadPropertyBoolean("Invert")));
-			}
+			
+			
 		}
 	}
 	
