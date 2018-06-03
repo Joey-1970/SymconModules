@@ -1,6 +1,6 @@
 <?
     // Klassendefinition
-    class IPS2GPIO_PCF8574 extends IPSModule 
+    class IPS2GPIO_SUSV extends IPSModule 
     {
 	public function Destroy() 
 	{
@@ -20,11 +20,7 @@
 		$this->RegisterPropertyInteger("DeviceBus", 1);
 		$this->RegisterPropertyInteger("Pin", -1);
 		$this->SetBuffer("PreviousPin", -1);
-		for ($i = 0; $i <= 7; $i++) {
- 	    		$this->RegisterPropertyBoolean("P".$i, false);
-			$this->RegisterPropertyBoolean("LoggingP".$i, false);
-		}	
-		$this->RegisterPropertyInteger("Startoption", 0);
+		
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GIO1_Read_Status($_IPS["TARGET"]);');
 		
@@ -32,12 +28,7 @@
 		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 10);
 		$this->DisableAction("LastInterrupt");
 		
-		for ($i = 0; $i <= 7; $i++) {
-			$this->RegisterVariableBoolean("P".$i, "P".$i, "~Switch", 10 * $i + 20);
-		}
-          	
-          	$this->RegisterVariableInteger("Value", "Value", "", 100);
-		$this->EnableAction("Value");
+		
  	}
 	
 	public function GetConfigurationForm() 
@@ -53,13 +44,8 @@
 		$arrayElements = array(); 
 		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv"); 
  			
-		$arrayOptions = array();
-		for ($i = 32; $i <= 39; $i++) {
-		    	$arrayOptions[] = array("label" => $i." dez. / 0x".strtoupper(dechex($i))."h", "value" => $i);
-		}
-		for ($i = 56; $i <= 63; $i++) {
-		    	$arrayOptions[] = array("label" => $i." dez. / 0x".strtoupper(dechex($i))."h", "value" => $i);
-		}
+		$arrayOptions[] = array("label" => "35 dez. / 0x23h", "value" => 15);
+		
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceAddress", "caption" => "Device Adresse", "options" => $arrayOptions );
 		
 		$arrayElements[] = array("type" => "Label", "label" => "I²C-Bus (Default ist 1)");
@@ -71,7 +57,7 @@
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "Device Bus", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
-		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für den Interrupt (optional)"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für die Statusänderung"); 
 		
 		$arrayOptions = array();
 		$GPIO = array();
