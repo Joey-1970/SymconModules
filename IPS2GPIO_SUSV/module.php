@@ -18,8 +18,8 @@
  	    	$this->RegisterPropertyBoolean("Open", false);
 		$this->RegisterPropertyInteger("DeviceAddress", 32);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
-		$this->RegisterPropertyInteger("Pin", -1);
-		$this->SetBuffer("PreviousPin", -1);
+		$this->RegisterPropertyInteger("Pin", 27);
+		$this->SetBuffer("PreviousPin", 27);
 		
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GIO1_Read_Status($_IPS["TARGET"]);');
@@ -72,25 +72,9 @@
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin"), 0);
 		}
 		
-		$SetTimer = false;
-		for ($i = 0; $i <= 7; $i++) {
-			If ($this->ReadPropertyBoolean("P".$i) == true) {
-				// wenn true dann Eingang, dann disable		
- 				$this->DisableAction("P".$i);
-				$SetTimer = true;
- 			}		
- 			else {		
- 				// Ausgang muss manipulierbar sein		
- 				$this->EnableAction("P".$i);			
- 			}
-		}
-		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 			// Logging setzen
-			for ($i = 0; $i <= 7; $i++) {
-				AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("P".$i), $this->ReadPropertyBoolean("LoggingP".$i)); 
-			} 
-			IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
+			
 			//ReceiveData-Filter setzen
 			$this->SetBuffer("DeviceIdent", (($this->ReadPropertyInteger("DeviceBus") << 7) + $this->ReadPropertyInteger("DeviceAddress")));
 			$Filter = '((.*"Function":"get_used_i2c".*|.*"DeviceIdent":'.$this->GetBuffer("DeviceIdent").'.*)|(.*"Function":"status".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*))';
@@ -101,7 +85,7 @@
 					$ResultPin = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
 										  "Pin" => $this->ReadPropertyInteger("Pin"), "PreviousPin" => $this->GetBuffer("PreviousPin"), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 5, "Resistance" => 0)));	
 				}
-				$this->SetBuffer("PreviousPin", $this->ReadPropertyInteger("Pin"));
+				
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 				If ($Result == true) {
 					If ($SetTimer == true) {
@@ -126,23 +110,6 @@
 		}
 	}
 	
-	public function RequestAction($Ident, $Value) 
-	{
-  		$Source = substr($Ident, 0, 1);
-		$Pin = substr($Ident, 1, 1);
-		
-		switch($Source) {
-	        case "P":
-	            $this->SetPinOutput(intval($Pin), $Value);
-	            break;
-	        case "V":
-	            $this->SetOutput($Value);
-	            break;
-	        default:
-	            throw new Exception("Invalid Ident");
-	    	}
-	}
-	
 	public function ReceiveData($JSONString) 
 	{
 	    	// Empfangene Daten vom Gateway/Splitter
@@ -150,14 +117,8 @@
 	 	switch ($data->Function) {
 			case "notify":
 			   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
-					If (($data->Value == 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-						$this->SendDebug("Notify", "Wert: ".(int)$data->Value, 0);
-						SetValueInteger($this->GetIDForIdent("LastInterrupt"), time() );
-						$this->Read_Status();
-					}
-					elseIf (($data->Value == 1) AND ($this->ReadPropertyBoolean("Open") == true)) {
-						$this->SendDebug("Notify", "Wert: ".(int)$data->Value, 0);
-					}
+					
+					
 			   	}
 			   	break;    
 			case "get_used_i2c":
@@ -209,86 +170,6 @@
 		}
 	}
 	
-	private function Setup()
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("Setup", "Ausfuehrung", 0);
-			If ($this->ReadPropertyInteger("Startoption") == 0) {
-				$Bitmask = 0;
-				for ($i = 0; $i <= 7; $i++) {
-					If ($this->ReadPropertyBoolean("P".$i) == true) {
-						// wenn true dann Eingang		
-						$Bitmask = $Bitmask + pow(2, $i);
-					}		
-				}
-				$this->SetOutput($Bitmask);
-			}
-			elseif ($this->ReadPropertyInteger("Startoption") == 1) {
-				$this->SetOutput(255);
-			}
-		}
-	}
-	
-	public function SetPinOutput(Int $Pin, Bool $Value)
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("SetPinOutput", "Ausfuehrung", 0);
-			// Setzt einen bestimmten Pin auf den vorgegebenen Wert
-			$Pin = min(7, max(0, $Pin));
-			$Value = boolval($Value);
-			// Aktuellen Status abfragen
-			//$this->Read_Status();
-			// Bitmaske erstellen
-			//$Bitmask = GetValueInteger($this->GetIDForIdent("Value"));
-			$Bitmask = intval($this->GetBuffer("Output"));
-			If ($Value == true) {
-				$Bitmask = $this->setBit($Bitmask, $Pin);
-			}
-			else {
-				$Bitmask = $this->unsetBit($Bitmask, $Pin);
-			}
-			$Bitmask = min(255, max(0, $Bitmask));
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x00, "Value" => $Bitmask)));
-			If (!$Result) {
-				$this->SendDebug("SetPinOutput", "Setzen des Ausgangs fehlerhaft!", 0);
-				$this->SetStatus(202);
-				return;
-			}
-			else {
-				$this->SetStatus(102);
-				SetValueBoolean($this->GetIDForIdent("P".$Pin), $Value);
-				$this->Read_Status();
-			}
-		}
-	}
-	
-	public function SetOutput(Int $Value)
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("SetOutput", "Ausfuehrung", 0);
-			// Setzt alle Ausgänge
-			$Value = min(255, max(0, $Value));
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8574_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x00, "Value" => $Value)));
-			If (!$Result) {
-				$this->SendDebug("SetOutput", "Setzen der Ausgaenge fehlerhaft!", 0);
-				$this->SetStatus(202);
-				return;
-			}
-			else {
-				$this->SetStatus(102);
-				$this->Read_Status();
-			}
-		}
-	}
-	
-	private function setBit($byte, $significance) { 
- 		// ein bestimmtes Bit auf 1 setzen
- 		return $byte | 1<<$significance;   
- 	} 
-	private function unsetBit($byte, $significance) {
-	    // ein bestimmtes Bit auf 0 setzen
-	    return $byte & ~(1<<$significance);
-	}
 	
 	private function Get_I2C_Ports()
 	{
