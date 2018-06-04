@@ -142,10 +142,34 @@
  	}
 	
 	// Beginn der Funktionen
+	private function Setup()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			// Firmware und Model
+			$this->Read_Status(0x22, 3);
+		}
+	}
+	    
 	public function Measurement()
 	{
-		
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			// Spannung
+			$this->Read_Status(0xD0, 3);
+			// Strom Extern
+			$this->Read_Status(0xD1, 3);
+			// Strom Batterie
+			$this->Read_Status(0xD2, 3);
+			// Batterie Spannung
+			$this->Read_Status(0xD3, 3);
+			// Batterie Status
+			$this->Read_Status(0xD4, 1);
+			// Lade-Status und Lade-Strom (max)
+			$this->Read_Status(0x35, 3);
+			// Power Status
+			$this->Read_Status(0x45, 2);
+		}
 	}
+	    
 	    
 	// Führt eine Messung aus
 	private function Read_Status(int $Register, int $Count)
