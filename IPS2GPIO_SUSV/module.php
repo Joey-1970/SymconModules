@@ -22,7 +22,7 @@
 		$this->SetBuffer("PreviousPin", 27);
 		
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
-            	$this->RegisterTimer("Messzyklus", 0, 'I2GIO1_Read_Status($_IPS["TARGET"]);');
+            	$this->RegisterTimer("Messzyklus", 0, 'I2GSUSV_Measurement($_IPS["TARGET"]);');
 		
 		// Status-Variablen anlegen
 		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 10);
@@ -96,7 +96,7 @@
 					}
 					$this->Setup();
 					// Erste Messdaten einlesen
-					$this->Read_Status();
+					$this->Measurement();
 				}
 			}
 			else {
@@ -142,8 +142,13 @@
  	}
 	
 	// Beginn der Funktionen
+	public function Measurement()
+	{
+		
+	}
+	    
 	// Führt eine Messung aus
-	public function Read_Status()
+	private function Read_Status(int $Register, int $Count)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$tries = 5;
@@ -156,10 +161,19 @@
 					$this->SetStatus(202);
 				}
 				else {
-					$this->SetStatus(102);
 					// Daten der Messung
-					
-					
+					If (is_array(unserialize($Result))) {
+						$this->SetStatus(102);
+						$DataArray = array();
+						$DataArray = unserialize($Result);
+						If ($Count > 1) {
+							$this->SendDebug("Read_Status", $DataArray[1], 0);
+						}
+						else {
+							// nur Batterie Status
+							$this->SendDebug("Read_Status", $DataArray[1], 0);
+						}
+					}
 					break;
 				}
 			$tries--;
