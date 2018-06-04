@@ -44,56 +44,18 @@
 		$arrayElements = array(); 
 		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv"); 
  			
-		$arrayOptions[] = array("label" => "35 dez. / 0x23h", "value" => 15);
-		
+		$arrayOptions[] = array("label" => "15 dez. / 0x0Fh", "value" => 15);
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceAddress", "caption" => "Device Adresse", "options" => $arrayOptions );
-		
-		$arrayElements[] = array("type" => "Label", "label" => "I²C-Bus (Default ist 1)");
-		$arrayOptions = array();
-		$DevicePorts = array();
-		$DevicePorts = unserialize($this->Get_I2C_Ports());
-		foreach($DevicePorts AS $Value => $Label) {
-			$arrayOptions[] = array("label" => $Label, "value" => $Value);
-		}
-		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "Device Bus", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
-		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für die Statusänderung"); 
-		
-		$arrayOptions = array();
-		$GPIO = array();
-		$GPIO = unserialize($this->Get_GPIO());
-		If ($this->ReadPropertyInteger("Pin") >= 0 ) {
-			$GPIO[$this->ReadPropertyInteger("Pin")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin")));
-		}
-		ksort($GPIO);
-		foreach($GPIO AS $Value => $Label) {
-			$arrayOptions[] = array("label" => $Label, "value" => $Value);
-		}
-		
-		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
-		
-		$arrayElements[] = array("type" => "Label", "label" => "Definition der Ein- und Ausgänge (aktiviert => Eingang)");
-		for ($i = 0; $i <= 7; $i++) {
-			$arrayElements[] = array("type" => "CheckBox", "name" => "P".$i, "caption" => "P".$i);
-			$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingP".$i, "caption" => "Logging P".$i." aktivieren");
-		}
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, 1 sek -> Minimum)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "Eingänge High, Ausgänge Low", "value" => 0);
-		$arrayOptions[] = array("label" => "Eingänge High, Ausgänge High", "value" => 1);		
-		$arrayElements[] = array("type" => "Select", "name" => "Startoption", "caption" => "Startoptionen", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Hinweise:");
-		$arrayElements[] = array("type" => "Label", "label" => "- die Device Adresse lautet 32 bis 39 dez (0x20h - 0x27h) bei einem PCF8574");
-		$arrayElements[] = array("type" => "Label", "label" => "- die Device Adresse lautet 56 bis 63 dez (0x38h - 0x3Fh) bei einem PCF8574A");
+		$arrayElements[] = array("type" => "Label", "label" => "- eine erfolgreiche Installation der S.USV Soft- und Hardware wird vorausgesetzt");
+		$arrayElements[] = array("type" => "Label", "label" => "- der I²C-Bus ist nicht wählbar (1)");
+		$arrayElements[] = array("type" => "Label", "label" => "- die GPIO-Nummer (Broadcom-Number) für die Statusänderung ist nicht wählbar (27)");
 		$arrayElements[] = array("type" => "Label", "label" => "- die I2C-Nutzung muss in der Raspberry Pi-Konfiguration freigegeben werden (sudo raspi-config -> Advanced Options -> I2C Enable = true)");
-		$arrayElements[] = array("type" => "Label", "label" => "- die korrekte Nutzung der GPIO ist zwingend erforderlich (GPIO-Nr. 0/1 nur beim Raspberry Pi Model B Revision 1, alle anderen GPIO-Nr. 2/3)");
-		$arrayElements[] = array("type" => "Label", "label" => "- auf den korrekten Anschluss von SDA/SCL achten");			
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayActions = array();
 		$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
