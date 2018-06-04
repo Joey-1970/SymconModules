@@ -16,7 +16,7 @@
             	parent::Create();
  		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
  	    	$this->RegisterPropertyBoolean("Open", false);
-		$this->RegisterPropertyInteger("DeviceAddress", 32);
+		$this->RegisterPropertyInteger("DeviceAddress", 15);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
 		$this->RegisterPropertyInteger("Pin", 27);
 		$this->SetBuffer("PreviousPin", 27);
