@@ -28,6 +28,12 @@
 	    	$this->RegisterProfileFloat("IPS2GPIO.mV", "Electricity", "", " mV", -100000, +100000, 0.1, 3);
 	    	$this->RegisterProfileFloat("IPS2GPIO.mA", "Electricity", "", " mA", -100000, +100000, 0.1, 3);
 		
+		$this->RegisterProfileInteger("IPS2GPIO.BatteryStatus", "Battery", "", "", 0, 2, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.BatteryStatus", 0, "Lädt", "EnergyStorage", 0x0000FF);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.BatteryStatus", 1, "Geladen", "Ok", 0x00FF00);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.BatteryStatus", 2, "Fehler", "Alert", 0xFF0000);
+		
+		
 		// Status-Variablen anlegen
 		$this->RegisterVariableFloat("Voltage", "Spannung extern", "IPS2GPIO.mV", 10);
 		$this->DisableAction("Voltage");
@@ -40,6 +46,9 @@
 		
 		$this->RegisterVariableFloat("PowerBattery", "Strom Batterie", "IPS2GPIO.mA", 10);
 		$this->DisableAction("PowerBattery");
+		
+		$this->RegisterVariableInteger("BatteryStatus", "Status Batterie", "IPS2GPIO.BatteryStatus", 10);
+		$this->DisableAction("BatteryStatus");
 		
 		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 10);
 		$this->DisableAction("LastInterrupt");
@@ -217,6 +226,23 @@
 		}
 	}
 	
+	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
+	{
+	        if (!IPS_VariableProfileExists($Name))
+	        {
+	            IPS_CreateVariableProfile($Name, 1);
+	        }
+	        else
+	        {
+	            $profile = IPS_GetVariableProfile($Name);
+	            if ($profile['ProfileType'] != 1)
+	                throw new Exception("Variable profile type does not match for profile " . $Name);
+	        }
+	        IPS_SetVariableProfileIcon($Name, $Icon);
+	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);        
+	}
+	    
 	private function RegisterProfileFloat($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits)
 	{
 	        if (!IPS_VariableProfileExists($Name))
