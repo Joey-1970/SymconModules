@@ -50,34 +50,34 @@
 		$this->RegisterVariableFloat("Firmware", "Firmware Version", "", 10);
 		$this->DisableAction("Firmware");
 		
-		$this->RegisterVariableString("Model", "USV Modell", "", 10);
+		$this->RegisterVariableString("Model", "USV Modell", "", 20);
 		$this->DisableAction("Model");
 		
-		$this->RegisterVariableFloat("Voltage", "Spannung extern", "IPS2GPIO.mV", 10);
+		$this->RegisterVariableFloat("Voltage", "Spannung extern", "IPS2GPIO.mV", 30);
 		$this->DisableAction("Voltage");
 		
-		$this->RegisterVariableFloat("PowerExtern", "Strom extern", "IPS2GPIO.mA", 10);
+		$this->RegisterVariableFloat("PowerExtern", "Strom extern", "IPS2GPIO.mA", 40);
 		$this->DisableAction("PowerExtern");
 		
-		$this->RegisterVariableFloat("BatteryVoltage", "Spannung Batterie", "IPS2GPIO.mV", 10);
+		$this->RegisterVariableFloat("BatteryVoltage", "Spannung Batterie", "IPS2GPIO.mV", 50);
 		$this->DisableAction("Voltage");
 		
-		$this->RegisterVariableFloat("PowerBattery", "Strom Batterie", "IPS2GPIO.mA", 10);
+		$this->RegisterVariableFloat("PowerBattery", "Strom Batterie", "IPS2GPIO.mA", 60);
 		$this->DisableAction("PowerBattery");
 		
-		$this->RegisterVariableInteger("BatteryStatus", "Status Batterie", "IPS2GPIO.BatteryStatus", 10);
+		$this->RegisterVariableInteger("BatteryStatus", "Status Batterie", "IPS2GPIO.BatteryStatus", 70);
 		$this->DisableAction("BatteryStatus");
 		
-		$this->RegisterVariableInteger("ChargeStatus", "Lade Status", "IPS2GPIO.ChargeStatus", 10);
+		$this->RegisterVariableInteger("ChargeStatus", "Lade Status", "IPS2GPIO.ChargeStatus", 80);
 		$this->DisableAction("ChargeStatus");
 		
-		$this->RegisterVariableInteger("ChargeCurrent", "Lade Strom", "IPS2GPIO.ChargeCurrent", 10);
+		$this->RegisterVariableInteger("ChargeCurrent", "Lade Strom", "IPS2GPIO.ChargeCurrent", 90);
 		$this->EnableAction("ChargeCurrent");
 		
-		$this->RegisterVariableInteger("PowerStatus", "Power Status", "IPS2GPIO.PowerStatus", 10);
-		$this->EnableAction("PowerStatus");
+		$this->RegisterVariableInteger("PowerStatus", "Power Status", "IPS2GPIO.PowerStatus", 100);
+		$this->DisableAction("PowerStatus");
 		
-		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 10);
+		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 110);
 		$this->DisableAction("LastInterrupt");
 		
 		
