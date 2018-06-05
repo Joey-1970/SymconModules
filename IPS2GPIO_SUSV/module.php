@@ -241,7 +241,7 @@
 							switch ($DataArray[1]) {
 								case 208:
 									// Externe Spannung
-									$Voltage = (($DataArray[3] << 8) | $DataArray[2]);
+									$Voltage = (($DataArray[2] << 8) | $DataArray[3]);
 									SetValueFloat($this->GetIDForIdent("Voltage"), $Voltage);
 									break;    
 								case 209:
@@ -256,7 +256,8 @@
 									break;
 								case 211:
 									// Batterie Spannung
-									
+									$BatteryVoltage = (($DataArray[2] << 8) | $DataArray[3]);
+									SetValueFloat($this->GetIDForIdent("BatteryVoltage"), $BatteryVoltage);
 									break;
 								case 53:
 									// Lade Status / Strom
