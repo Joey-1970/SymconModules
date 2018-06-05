@@ -42,8 +42,17 @@
 		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeCurrent", 1, "500 mA", "EnergyStorage", -1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeCurrent", 2, "100 mA", "EnergyStorage", -1);
 		
+		$this->RegisterProfileInteger("IPS2GPIO.PowerStatus", "Battery", "", "", 0, 1, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PowerStatus", 0, "Sekundär", "Plug", 0x00FF00);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PowerStatus", 1, "Primär", "Battery", 0xFF0000);
 		
 		// Status-Variablen anlegen
+		$this->RegisterVariableFloat("Firmware", "Firmware Version", "", 10);
+		$this->DisableAction("Firmware");
+		
+		$this->RegisterVariableString("Model", "USV Modell", "", 10);
+		$this->DisableAction("Model");
+		
 		$this->RegisterVariableFloat("Voltage", "Spannung extern", "IPS2GPIO.mV", 10);
 		$this->DisableAction("Voltage");
 		
