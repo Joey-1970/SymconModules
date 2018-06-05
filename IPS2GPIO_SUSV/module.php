@@ -24,6 +24,10 @@
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GSUSV_Measurement($_IPS["TARGET"]);');
 		
+		// Profil anlegen
+	    	$this->RegisterProfileFloat("IPS2GPIO.mV", "Electricity", "", " mV", -100000, +100000, 0.1, 3);
+	    	$this->RegisterProfileFloat("IPS2GPIO.mV", "Electricity", "", " mA", -100000, +100000, 0.1, 3);
+		
 		// Status-Variablen anlegen
 		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 10);
 		$this->DisableAction("LastInterrupt");
@@ -142,7 +146,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Firmware und Model
-			$this->Read_Status(0x22, 3);
+			$this->Read_Status(0x22, 4);
 		}
 	}
 	    
@@ -201,7 +205,24 @@
 		}
 	}
 	
-	
+	private function RegisterProfileFloat($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits)
+	{
+	        if (!IPS_VariableProfileExists($Name))
+	        {
+	            IPS_CreateVariableProfile($Name, 2);
+	        }
+	        else
+	        {
+	            $profile = IPS_GetVariableProfile($Name);
+	            if ($profile['ProfileType'] != 2)
+	                throw new Exception("Variable profile type does not match for profile " . $Name);
+	        }
+	        IPS_SetVariableProfileIcon($Name, $Icon);
+	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
+	        IPS_SetVariableProfileDigits($Name, $Digits);
+	}
+	    
 	private function Get_I2C_Ports()
 	{
 		If ($this->HasActiveParent() == true) {
