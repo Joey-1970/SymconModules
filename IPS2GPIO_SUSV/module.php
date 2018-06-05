@@ -303,6 +303,36 @@
 						$DataArray = unserialize($Result);
 						If ($Count > 1) {
 							$this->SendDebug("Read_Status", $DataArray[1], 0);
+							switch ($DataArray[1]) {
+								case 208:
+									// Externe Spannung
+									
+									break;    
+								case 209:
+									// Externer Strom
+									
+									break;
+								case 210:
+									// Batterie Strom
+									
+									break;
+								case 211:
+									// Batterie Spannung
+									
+									break;
+								case 53:
+									// Lade Status / Strom
+									
+									break;
+								case 69:
+									// Batterie Spannung
+									
+									break;
+								case 34:
+									// Firmware/Model
+									
+									break;
+							}
 						}
 						else {
 							// nur Batterie Status
