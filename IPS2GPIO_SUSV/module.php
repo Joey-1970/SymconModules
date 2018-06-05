@@ -241,12 +241,13 @@
 							switch ($DataArray[1]) {
 								case 208:
 									// Externe Spannung
-									$Voltage = (($DataArray[2] << 8) + $DataArray[3]) / 100;
+									$Voltage = (($DataArray[3] << 8) | $DataArray[2]);
 									SetValueFloat($this->GetIDForIdent("Voltage"), $Voltage);
 									break;    
 								case 209:
 									// Externer Strom
-									
+									$PowerExtern = (($DataArray[2] << 8) | $DataArray[3]);
+									SetValueFloat($this->GetIDForIdent("PowerExtern"), $PowerExtern);
 									break;
 								case 210:
 									// Batterie Strom
