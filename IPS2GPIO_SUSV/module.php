@@ -70,7 +70,7 @@
 		$this->DisableAction("BatteryStatus");
 		
 		$this->RegisterVariableInteger("ChargeStatus", "Lade Status", "IPS2GPIO.ChargeStatus", 80);
-		$this->DisableAction("ChargeStatus");
+		$this->EnableAction("ChargeStatus");
 		
 		$this->RegisterVariableInteger("ChargeCurrent", "Lade Strom", "IPS2GPIO.ChargeCurrent", 90);
 		$this->EnableAction("ChargeCurrent");
@@ -172,7 +172,7 @@
 		$this->DisableAction("BatteryStatus");
 		
 		$this->RegisterVariableInteger("ChargeStatus", "Lade Status", "IPS2GPIO.ChargeStatus", 80);
-		$this->DisableAction("ChargeStatus");
+		$this->EnableAction("ChargeStatus");
 		
 		$this->RegisterVariableInteger("ChargeCurrent", "Lade Strom", "IPS2GPIO.ChargeCurrent", 90);
 		$this->EnableAction("ChargeCurrent");
