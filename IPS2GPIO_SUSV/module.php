@@ -246,12 +246,13 @@
 									break;    
 								case 209:
 									// Externer Strom
-									$PowerExtern = (($DataArray[2] << 8) | $DataArray[3]);
+									$PowerExtern = (($DataArray[2] << 8) | $DataArray[3]) / 100;
 									SetValueFloat($this->GetIDForIdent("PowerExtern"), $PowerExtern);
 									break;
 								case 210:
 									// Batterie Strom
-									
+									$PowerBattery = (($DataArray[2] << 8) | $DataArray[3]) / 100;
+									SetValueFloat($this->GetIDForIdent("PowerBattery"), $PowerBattery);
 									break;
 								case 211:
 									// Batterie Spannung
