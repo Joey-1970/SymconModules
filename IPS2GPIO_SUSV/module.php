@@ -26,9 +26,21 @@
 		
 		// Profil anlegen
 	    	$this->RegisterProfileFloat("IPS2GPIO.mV", "Electricity", "", " mV", -100000, +100000, 0.1, 3);
-	    	$this->RegisterProfileFloat("IPS2GPIO.mV", "Electricity", "", " mA", -100000, +100000, 0.1, 3);
+	    	$this->RegisterProfileFloat("IPS2GPIO.mA", "Electricity", "", " mA", -100000, +100000, 0.1, 3);
 		
 		// Status-Variablen anlegen
+		$this->RegisterVariableFloat("Voltage", "Spannung extern", "IPS2GPIO.mV", 10);
+		$this->DisableAction("Voltage");
+		
+		$this->RegisterVariableFloat("PowerExtern", "Strom extern", "IPS2GPIO.mA", 10);
+		$this->DisableAction("PowerExtern");
+		
+		$this->RegisterVariableFloat("BatteryVoltage", "Spannung Batterie", "IPS2GPIO.mV", 10);
+		$this->DisableAction("Voltage");
+		
+		$this->RegisterVariableFloat("PowerBattery", "Strom Batterie", "IPS2GPIO.mA", 10);
+		$this->DisableAction("PowerBattery");
+		
 		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 10);
 		$this->DisableAction("LastInterrupt");
 		
