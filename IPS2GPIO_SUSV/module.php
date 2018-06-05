@@ -24,6 +24,7 @@
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GSUSV_Measurement($_IPS["TARGET"]);');
 		
+		/*
 		// Profil anlegen
 	    	$this->RegisterProfileFloat("IPS2GPIO.mV", "Electricity", "", " mV", -100000, +100000, 0.1, 3);
 	    	$this->RegisterProfileFloat("IPS2GPIO.mA", "Electricity", "", " mA", -100000, +100000, 0.1, 3);
@@ -40,7 +41,7 @@
 		$this->RegisterProfileInteger("IPS2GPIO.ChargeCurrent", "Battery", "", "", 0, 2, 1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeCurrent", 0, "1000 mA", "EnergyStorage", -1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeCurrent", 1, "500 mA", "EnergyStorage", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeCurrent", 2, "100 mA", "EnergyStorage", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeCurrent", 2, "300 mA", "EnergyStorage", -1);
 		
 		$this->RegisterProfileInteger("IPS2GPIO.PowerStatus", "Battery", "", "", 0, 1, 1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.PowerStatus", 0, "Sekundär", "Plug", 0x00FF00);
@@ -80,7 +81,7 @@
 		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 110);
 		$this->DisableAction("LastInterrupt");
 		
-		
+		*/
  	}
 	
 	public function GetConfigurationForm() 
@@ -123,6 +124,68 @@
 		If (intval($this->GetBuffer("PreviousPin")) <> $this->ReadPropertyInteger("Pin")) {
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin"), 0);
 		}
+		
+		//*************************
+		
+		// Profil anlegen
+	    	$this->RegisterProfileFloat("IPS2GPIO.mV", "Electricity", "", " mV", -100000, +100000, 0.1, 3);
+	    	$this->RegisterProfileFloat("IPS2GPIO.mA", "Electricity", "", " mA", -100000, +100000, 0.1, 3);
+		
+		$this->RegisterProfileInteger("IPS2GPIO.BatteryStatus", "Battery", "", "", 0, 2, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.BatteryStatus", 0, "Lädt", "EnergyStorage", 0x0000FF);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.BatteryStatus", 1, "Geladen", "Ok", 0x00FF00);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.BatteryStatus", 2, "Fehler", "Alert", 0xFF0000);
+		
+		$this->RegisterProfileInteger("IPS2GPIO.ChargeStatus", "Battery", "", "", 0, 1, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeStatus", 0, "Deactiviert", "Close", 0xFF0000);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeStatus", 1, "Aktiviert", "Ok", 0x00FF00);
+		
+		$this->RegisterProfileInteger("IPS2GPIO.ChargeCurrent", "Battery", "", "", 0, 2, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeCurrent", 0, "1000 mA", "EnergyStorage", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeCurrent", 1, "500 mA", "EnergyStorage", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeCurrent", 2, "300 mA", "EnergyStorage", -1);
+		
+		$this->RegisterProfileInteger("IPS2GPIO.PowerStatus", "Battery", "", "", 0, 1, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PowerStatus", 0, "Sekundär", "Plug", 0x00FF00);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PowerStatus", 1, "Primär", "Battery", 0xFF0000);
+		
+		// Status-Variablen anlegen
+		$this->RegisterVariableFloat("Firmware", "Firmware Version", "", 10);
+		$this->DisableAction("Firmware");
+		
+		$this->RegisterVariableString("Model", "USV Modell", "", 20);
+		$this->DisableAction("Model");
+		
+		$this->RegisterVariableFloat("Voltage", "Spannung extern", "IPS2GPIO.mV", 30);
+		$this->DisableAction("Voltage");
+		
+		$this->RegisterVariableFloat("PowerExtern", "Strom extern", "IPS2GPIO.mA", 40);
+		$this->DisableAction("PowerExtern");
+		
+		$this->RegisterVariableFloat("BatteryVoltage", "Spannung Batterie", "IPS2GPIO.mV", 50);
+		$this->DisableAction("Voltage");
+		
+		$this->RegisterVariableFloat("PowerBattery", "Strom Batterie", "IPS2GPIO.mA", 60);
+		$this->DisableAction("PowerBattery");
+		
+		$this->RegisterVariableInteger("BatteryStatus", "Status Batterie", "IPS2GPIO.BatteryStatus", 70);
+		$this->DisableAction("BatteryStatus");
+		
+		$this->RegisterVariableInteger("ChargeStatus", "Lade Status", "IPS2GPIO.ChargeStatus", 80);
+		$this->DisableAction("ChargeStatus");
+		
+		$this->RegisterVariableInteger("ChargeCurrent", "Lade Strom", "IPS2GPIO.ChargeCurrent", 90);
+		$this->EnableAction("ChargeCurrent");
+		
+		$this->RegisterVariableInteger("PowerStatus", "Power Status", "IPS2GPIO.PowerStatus", 100);
+		$this->DisableAction("PowerStatus");
+		
+		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 110);
+		$this->DisableAction("LastInterrupt");
+		
+		//***************************
+		
+		
 		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 			// Logging setzen
