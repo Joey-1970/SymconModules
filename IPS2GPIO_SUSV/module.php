@@ -74,6 +74,9 @@
 		$this->RegisterVariableInteger("ChargeCurrent", "Lade Strom", "IPS2GPIO.ChargeCurrent", 10);
 		$this->EnableAction("ChargeCurrent");
 		
+		$this->RegisterVariableInteger("PowerStatus", "Power Status", "IPS2GPIO.PowerStatus", 10);
+		$this->EnableAction("PowerStatus");
+		
 		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 10);
 		$this->DisableAction("LastInterrupt");
 		
