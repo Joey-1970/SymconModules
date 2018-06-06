@@ -256,7 +256,7 @@
 									break;
 								case 211:
 									// Batterie Spannung
-									$BatteryVoltage = (($DataArray[2] << 8) | $DataArray[3] / 1000);
+									$BatteryVoltage = (($DataArray[2] << 8) | $DataArray[3]) / 1000;
 									SetValueFloat($this->GetIDForIdent("BatteryVoltage"), $BatteryVoltage);
 									break;
 								case 53:
