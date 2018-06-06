@@ -25,7 +25,7 @@
             	$this->RegisterTimer("Messzyklus", 0, 'I2GSUSV_Measurement($_IPS["TARGET"]);');
 		
 		// Profil anlegen
-	    	$this->RegisterProfileFloat("IPS2GPIO.mV", "Electricity", "", " mV", -100000, +100000, 0.1, 3);
+	    	$this->RegisterProfileFloat("IPS2GPIO.V", "Electricity", "", " V", -100000, +100000, 0.1, 3);
 	    	$this->RegisterProfileFloat("IPS2GPIO.mA", "Electricity", "", " mA", -100000, +100000, 0.1, 3);
 		
 		$this->RegisterProfileInteger("IPS2GPIO.BatteryStatus", "Battery", "", "", 0, 2, 1);
@@ -53,13 +53,13 @@
 		$this->RegisterVariableString("Model", "USV Modell", "", 20);
 		$this->DisableAction("Model");
 		
-		$this->RegisterVariableFloat("Voltage", "Spannung extern", "IPS2GPIO.mV", 30);
+		$this->RegisterVariableFloat("Voltage", "Spannung extern", "IPS2GPIO.V", 30);
 		$this->DisableAction("Voltage");
 		
 		$this->RegisterVariableFloat("PowerExtern", "Strom extern", "IPS2GPIO.mA", 40);
 		$this->DisableAction("PowerExtern");
 		
-		$this->RegisterVariableFloat("BatteryVoltage", "Spannung Batterie", "IPS2GPIO.mV", 50);
+		$this->RegisterVariableFloat("BatteryVoltage", "Spannung Batterie", "IPS2GPIO.V", 50);
 		$this->DisableAction("Voltage");
 		
 		$this->RegisterVariableFloat("PowerBattery", "Strom Batterie", "IPS2GPIO.mA", 60);
@@ -261,15 +261,27 @@
 									break;
 								case 53:
 									// Lade Status / Strom
-									
+									$ChargeStatus = $DataArray[2];
+									SetValueInteger($this->GetIDForIdent("ChargeStatus"), $ChargeStatus);
+									$ChargeCurrent = $DataArray[3];
+									SetValueInteger($this->GetIDForIdent("ChargeCurrent"), $ChargeCurrent);
 									break;
 								case 69:
-									// Batterie Spannung
-									
+									// Power Status
+									$PowerStatus = $DataArray[2];
+									SetValueInteger($this->GetIDForIdent("BatteryStatus"), $BatteryStatus);
 									break;
 								case 34:
 									// Firmware/Model
-									
+									$Firmware = floatval($DataArray[2]  + ($DataArray[3] / 100));
+									SetValueFloat($this->GetIDForIdent("Firmware"), $Firmware);
+									$Model = $DataArray[4];
+									If ($Model == 0) {
+										SetValueString($this->GetIDForIdent("Firmware"), "S.USV Advanced");
+									}
+									else {
+										SetValueString($this->GetIDForIdent("Firmware"), "S.USV Advanced");
+									}
 									break;
 							}
 						}
