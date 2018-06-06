@@ -269,7 +269,7 @@
 								case 69:
 									// Power Status
 									$PowerStatus = $DataArray[2];
-									SetValueInteger($this->GetIDForIdent("BatteryStatus"), $BatteryStatus);
+									SetValueInteger($this->GetIDForIdent("PowerStatus"), $PowerStatus);
 									break;
 								case 34:
 									// Firmware/Model
