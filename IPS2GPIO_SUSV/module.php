@@ -277,10 +277,10 @@
 									SetValueFloat($this->GetIDForIdent("Firmware"), $Firmware);
 									$Model = $DataArray[4];
 									If ($Model == 0) {
-										SetValueString($this->GetIDForIdent("Firmware"), "S.USV Advanced");
+										SetValueString($this->GetIDForIdent("Model"), "S.USV Advanced");
 									}
 									else {
-										SetValueString($this->GetIDForIdent("Firmware"), "S.USV Advanced");
+										SetValueString($this->GetIDForIdent("Model"), "S.USV Basic");
 									}
 									break;
 							}
