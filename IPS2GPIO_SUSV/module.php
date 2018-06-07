@@ -163,7 +163,7 @@
 	 	switch ($data->Function) {
 			case "notify":
 			   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
-					
+					// Pinlevel "low" bedeutet, dass die Primärspannung anliegt - insofern alles okay. Die USV zieht den Pin auf "high", wenn sie auf den Akku umschaltet.
 					
 			   	}
 			   	break;    
