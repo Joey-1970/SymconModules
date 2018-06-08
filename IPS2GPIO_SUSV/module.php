@@ -289,7 +289,7 @@
 						}
 						else {
 							// nur Batterie Status
-							SetValueInteger($this->GetIDForIdent("BatteryStatus"), $DataArray[2]);
+							SetValueInteger($this->GetIDForIdent("BatteryStatus"), $DataArray[1]);
 						}
 					}
 					break;
