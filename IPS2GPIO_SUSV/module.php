@@ -288,9 +288,11 @@
 							}
 						}
 						else {
-							// nur Batterie Status
-							SetValueInteger($this->GetIDForIdent("BatteryStatus"), $DataArray[1]);
-							$this->SendDebug("Read_Status", "Batterie Status: ".$DataArray[1], 0);
+							If ($DataArray[1] == 212) {
+								// nur Batterie Status
+								SetValueInteger($this->GetIDForIdent("BatteryStatus"), $DataArray[2]);
+								$this->SendDebug("Read_Status", "Batterie Status: ".$DataArray[2], 0);
+							}
 						}
 					}
 					break;
