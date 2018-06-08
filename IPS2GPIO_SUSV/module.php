@@ -221,6 +221,7 @@
 	private function Read_Status(int $Register, int $Count)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			IPS_Sleep(50);
 			$tries = 5;
 			do {
 				$this->SendDebug("Read_Status", "Ausfuehrung", 0);
