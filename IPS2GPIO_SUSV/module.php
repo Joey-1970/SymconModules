@@ -237,7 +237,7 @@
 						$DataArray = array();
 						$DataArray = unserialize($Result);
 						If ($Count > 1) {
-							$this->SendDebug("Read_Status", $DataArray[1], 0);
+							//$this->SendDebug("Read_Status", $DataArray[1], 0);
 							switch ($DataArray[1]) {
 								case 208:
 									// Externe Spannung
@@ -290,6 +290,7 @@
 						else {
 							// nur Batterie Status
 							SetValueInteger($this->GetIDForIdent("BatteryStatus"), $DataArray[1]);
+							$this->SendDebug("Read_Status", "Batterie Status: ".$DataArray[1], 0);
 						}
 					}
 					break;
