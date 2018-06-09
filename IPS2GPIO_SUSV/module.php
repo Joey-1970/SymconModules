@@ -208,7 +208,7 @@
 			// Batterie Spannung
 			$this->Read_Status(0xD3, 3);
 			// Batterie Status
-			$this->Read_Status(0xD4, 1);
+			$this->Read_Status(0xD4, 2);
 			// Lade-Status und Lade-Strom (max)
 			$this->Read_Status(0x35, 3);
 			// Power Status
@@ -262,6 +262,11 @@
 									$BatteryVoltage = (($DataArray[3] << 8) | $DataArray[2]) / 1000;
 									SetValueFloat($this->GetIDForIdent("BatteryVoltage"), $BatteryVoltage);
 									break;
+								case 212:
+									// Batterie Status
+									SetValueInteger($this->GetIDForIdent("BatteryStatus"), $DataArray[2]);
+									$this->SendDebug("Read_Status", "Batterie Status: ".$DataArray[2], 0);
+									break;
 								case 53:
 									// Lade Status / Strom
 									$ChargeStatus = $DataArray[2];
@@ -289,11 +294,13 @@
 							}
 						}
 						else {
+							/*
 							If ($DataArray[1] == 212) {
 								// nur Batterie Status
 								SetValueInteger($this->GetIDForIdent("BatteryStatus"), $DataArray[2]);
 								$this->SendDebug("Read_Status", "Batterie Status: ".$DataArray[2], 0);
 							}
+							*/
 						}
 					}
 					break;
