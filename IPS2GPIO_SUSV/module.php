@@ -164,7 +164,14 @@
 			case "notify":
 			   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
 					// Pinlevel "low" bedeutet, dass die Primärspannung anliegt - insofern alles okay. Die USV zieht den Pin auf "high", wenn sie auf den Akku umschaltet.
-					
+					If (($data->Value == 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+						$this->SendDebug("Notify", "Wert: ".(int)$data->Value." Umschaltung auf Primärversorgung", 0);
+					}
+					elseIf (($data->Value == 1) AND ($this->ReadPropertyBoolean("Open") == true)) {
+						$this->SendDebug("Notify", "Wert: ".(int)$data->Value." Umschaltung auf Sekundärversorgung!", 0);
+					}
+					SetValueInteger($this->GetIDForIdent("LastInterrupt"), time() );
+					$this->Measurement();
 			   	}
 			   	break;    
 			case "get_used_i2c":
