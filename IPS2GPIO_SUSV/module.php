@@ -28,6 +28,10 @@
 	    	$this->RegisterProfileFloat("IPS2GPIO.V", "Electricity", "", " V", -100000, +100000, 0.1, 3);
 	    	$this->RegisterProfileFloat("IPS2GPIO.mA", "Electricity", "", " mA", -100000, +100000, 0.1, 3);
 		
+		$this->RegisterProfileInteger("IPS2GPIO.SUSVModel", "EnergyStorage", "", "", 0, 1, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.SUSVModel", 0, "S.USV Advanced", "EnergyStorage", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.SUSVModel", 1, "S.USV Basic", "EnergyStorage", -1);
+		
 		$this->RegisterProfileInteger("IPS2GPIO.BatteryStatus", "Battery", "", "", 0, 2, 1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.BatteryStatus", 0, "Lädt", "EnergyStorage", 0x0000FF);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.BatteryStatus", 1, "Geladen", "Ok", 0x00FF00);
@@ -50,7 +54,7 @@
 		$this->RegisterVariableFloat("Firmware", "Firmware Version", "", 10);
 		$this->DisableAction("Firmware");
 		
-		$this->RegisterVariableString("Model", "USV Modell", "", 20);
+		$this->RegisterVariableInteger("Model", "USV Modell", "", 20);
 		$this->DisableAction("Model");
 		
 		$this->RegisterVariableFloat("Voltage", "Spannung extern", "IPS2GPIO.V", 30);
@@ -251,6 +255,7 @@
 									// Externe Spannung
 									//$Voltage = (($DataArray[2] << 8) | $DataArray[3]) / 1000;
 									$Voltage = (($DataArray[3] << 8) | $DataArray[2]) / 1000;
+									//If (($Voltage > 4) AND ($Voltage < 6)) {
 									SetValueFloat($this->GetIDForIdent("Voltage"), $Voltage);
 									break;    
 								case 209:
@@ -291,12 +296,7 @@
 									$Firmware = floatval($DataArray[2]  + ($DataArray[3] / 100));
 									SetValueFloat($this->GetIDForIdent("Firmware"), $Firmware);
 									$Model = $DataArray[4];
-									If ($Model == 0) {
-										SetValueString($this->GetIDForIdent("Model"), "S.USV Advanced");
-									}
-									else {
-										SetValueString($this->GetIDForIdent("Model"), "S.USV Basic");
-									}
+									SetValueInteger($this->GetIDForIdent("Model"), $Model);
 									break;
 							}
 						}
