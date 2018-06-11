@@ -72,16 +72,19 @@
 		$this->RegisterVariableInteger("BatteryStatus", "Status Batterie", "IPS2GPIO.BatteryStatus", 70);
 		$this->DisableAction("BatteryStatus");
 		
-		$this->RegisterVariableInteger("ChargeStatus", "Lade Status", "IPS2GPIO.ChargeStatus", 80);
+		$this->RegisterVariableInteger("BatteryCapacity", "Kapazität Batterie", "~Battery.100", 80);
+		$this->DisableAction("BatteryCapacity");
+		
+		$this->RegisterVariableInteger("ChargeStatus", "Lade Status", "IPS2GPIO.ChargeStatus", 90);
 		$this->EnableAction("ChargeStatus");
 		
-		$this->RegisterVariableInteger("ChargeCurrent", "Lade Strom", "IPS2GPIO.ChargeCurrent", 90);
+		$this->RegisterVariableInteger("ChargeCurrent", "Lade Strom", "IPS2GPIO.ChargeCurrent", 100);
 		$this->EnableAction("ChargeCurrent");
 		
-		$this->RegisterVariableInteger("PowerStatus", "Power Status", "IPS2GPIO.PowerStatus", 100);
+		$this->RegisterVariableInteger("PowerStatus", "Power Status", "IPS2GPIO.PowerStatus", 110);
 		$this->DisableAction("PowerStatus");
 		
-		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 110);
+		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 120);
 		$this->DisableAction("LastInterrupt");
  	}
 	
@@ -307,6 +310,10 @@
 									//$BatteryVoltage = (($DataArray[2] << 8) | $DataArray[3]) / 1000;
 									$BatteryVoltage = (($DataArray[3] << 8) | $DataArray[2]) / 1000;
 									SetValueFloat($this->GetIDForIdent("BatteryVoltage"), $BatteryVoltage);
+									// Batterie Kapazität
+									$BatteryCapacity = (($BatteryVoltage - 3) / 1.2) * 100;
+									$BatteryCapacity = min(100, max(0, $BatteryCapacity));
+									SetValueInteger($this->GetIDForIdent("BatteryCapacity"), $BatteryCapacity);
 									break;
 								case 212:
 									// Batterie Status
