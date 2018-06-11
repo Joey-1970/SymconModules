@@ -203,7 +203,9 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Firmware und Model
-			$this->Read_Status(0x22, 4);
+			$this->Pre_Read_Status(0x22, 4);
+			// Firmware und Model
+			$this->Read_Status(0x22, 4, 100);
 		}
 	}
 	    
@@ -211,30 +213,72 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Spannung
-			$this->Read_Status(0xD0, 3);
+			$this->Pre_Read_Status(0xD0, 3);
+			// Spannung
+			$this->Read_Status(0xD0, 3, 100);
+			
 			// Strom Extern
-			$this->Read_Status(0xD1, 3);
+			$this->Pre_Read_Status(0xD1, 3);
+			// Strom Extern
+			$this->Read_Status(0xD1, 3, 100);
+			
 			// Strom Batterie
-			$this->Read_Status(0xD2, 3);
+			$this->Pre_Read_Status(0xD2, 3);
+			// Strom Batterie
+			$this->Read_Status(0xD2, 3, 100);
+			
 			// Batterie Spannung
-			$this->Read_Status(0xD3, 3);
+			$this->Pre_Read_Status(0xD3, 3);
 			// Batterie Spannung
-			$this->Read_Status(0xD3, 3);
+			$this->Read_Status(0xD3, 3, 100);
+			
 			// Batterie Status
-			$this->Read_Status(0xD4, 2);
+			$this->Pre_Read_Status(0xD4, 2);
+			// Batterie Status
+			$this->Read_Status(0xD4, 2, 100);
+			
 			// Lade-Status und Lade-Strom (max)
-			$this->Read_Status(0x35, 3);
+			$this->Pre_Read_Status(0x35, 3);
+			// Lade-Status und Lade-Strom (max)
+			$this->Read_Status(0x35, 3, 100);
+			
 			// Power Status
-			$this->Read_Status(0x45, 2);
+			$this->Pre_Read_Status(0x45, 2);
+			// Power Status
+			$this->Read_Status(0x45, 2, 100);
 		}
 	}
 	    
 	    
 	// Führt eine Messung aus
-	private function Read_Status(int $Register, int $Count)
+	private function Pre_Read_Status(int $Register, int $Count)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			IPS_Sleep(100);
+			$tries = 5;
+			do {
+				$this->SendDebug("Read_Status", "Ausfuehrung", 0);
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_SUSV_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $Register, "Count" => $Count)));
+
+				If ($Result < 0) {
+					$this->SendDebug("Read_Status", "Fehler beim Einlesen der Werte!", 0);
+					$this->SetStatus(202);
+				}
+				else {
+					// Daten der Messung
+					If (is_array(unserialize($Result))) {
+						$this->SetStatus(102);
+					break;
+				}
+			$tries--;
+			} while ($tries);  
+		}
+	}    
+	    
+	    
+	private function Read_Status(int $Register, int $Count, int $Wait)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			IPS_Sleep($Wait);
 			$tries = 5;
 			do {
 				$this->SendDebug("Read_Status", "Ausfuehrung", 0);
