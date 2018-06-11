@@ -206,8 +206,6 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Firmware und Model
-			$this->Pre_Read_Status(0x22, 4);
-			// Firmware und Model
 			$this->Read_Status(0x22, 4, 100);
 		}
 	}
@@ -245,7 +243,7 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$tries = 4;
 			do {
-				$this->SendDebug("Pre_Read_Status", "Ausfuehrung", 0);
+				//$this->SendDebug("Pre_Read_Status", "Ausfuehrung", 0);
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_SUSV_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $Register, "Count" => $Count)));
 
 				If ($Result < 0) {
