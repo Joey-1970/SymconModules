@@ -57,7 +57,7 @@
 		$this->RegisterVariableInteger("Model", "USV Modell", "IPS2GPIO.SUSVModel", 20);
 		$this->DisableAction("Model");
 		
-		$this->RegisterVariableFloat("Voltage", "Spannung extern", "IPS2GPIO.V", 30);
+		$this->RegisterVariableFloat("Voltage", "Spannung", "IPS2GPIO.V", 30);
 		$this->DisableAction("Voltage");
 		
 		$this->RegisterVariableFloat("PowerExtern", "Strom extern", "IPS2GPIO.mA", 40);
