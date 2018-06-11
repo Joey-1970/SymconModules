@@ -219,10 +219,10 @@
 			$this->Read_Status(0xD1, 3, 100);
 			
 			// Strom Batterie
-			$this->Read_Status(0xD2, 3, 100);
+			$this->Read_Status(0xD2, 3, 200);
 			
 			// Batterie Spannung
-			$this->Read_Status(0xD3, 3, 100);
+			$this->Read_Status(0xD3, 3, 200);
 			
 			// Batterie Status
 			$this->Read_Status(0xD4, 2, 100);
