@@ -253,6 +253,7 @@
 					// Daten der Messung
 					If (is_array(unserialize($Result))) {
 						$this->SetStatus(102);
+					}
 					break;
 				}
 			$tries--;
