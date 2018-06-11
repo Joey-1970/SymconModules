@@ -218,6 +218,8 @@
 			$this->Read_Status(0xD2, 3);
 			// Batterie Spannung
 			$this->Read_Status(0xD3, 3);
+			// Batterie Spannung
+			$this->Read_Status(0xD3, 3);
 			// Batterie Status
 			$this->Read_Status(0xD4, 2);
 			// Lade-Status und Lade-Strom (max)
@@ -232,7 +234,7 @@
 	private function Read_Status(int $Register, int $Count)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			IPS_Sleep(80);
+			IPS_Sleep(100);
 			$tries = 5;
 			do {
 				$this->SendDebug("Read_Status", "Ausfuehrung", 0);
