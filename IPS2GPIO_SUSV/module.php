@@ -240,7 +240,7 @@
 	private function Pre_Read_Status(int $Register, int $Count)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$tries = 5;
+			$tries = 4;
 			do {
 				$this->SendDebug("Pre_Read_Status", "Ausfuehrung", 0);
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_SUSV_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => $Register, "Count" => $Count)));
@@ -254,7 +254,7 @@
 					If (is_array(unserialize($Result))) {
 						$this->SetStatus(102);
 					}
-					break;
+					//break;
 				}
 			$tries--;
 			} while ($tries);  
