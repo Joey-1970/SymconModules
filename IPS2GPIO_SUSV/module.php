@@ -213,37 +213,23 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Spannung
-			$this->Pre_Read_Status(0xD0, 3);
-			// Spannung
 			$this->Read_Status(0xD0, 3, 100);
 			
-			// Strom Extern
-			$this->Pre_Read_Status(0xD1, 3);
 			// Strom Extern
 			$this->Read_Status(0xD1, 3, 100);
 			
 			// Strom Batterie
-			$this->Pre_Read_Status(0xD2, 3);
-			// Strom Batterie
 			$this->Read_Status(0xD2, 3, 100);
 			
-			// Batterie Spannung
-			$this->Pre_Read_Status(0xD3, 3);
 			// Batterie Spannung
 			$this->Read_Status(0xD3, 3, 100);
 			
 			// Batterie Status
-			$this->Pre_Read_Status(0xD4, 2);
-			// Batterie Status
 			$this->Read_Status(0xD4, 2, 100);
 			
 			// Lade-Status und Lade-Strom (max)
-			$this->Pre_Read_Status(0x35, 3);
-			// Lade-Status und Lade-Strom (max)
 			$this->Read_Status(0x35, 3, 100);
 			
-			// Power Status
-			$this->Pre_Read_Status(0x45, 2);
 			// Power Status
 			$this->Read_Status(0x45, 2, 100);
 		}
@@ -278,6 +264,7 @@
 	private function Read_Status(int $Register, int $Count, int $Wait)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->Pre_Read_Status($Register, $Count);
 			IPS_Sleep($Wait);
 			$tries = 5;
 			do {
