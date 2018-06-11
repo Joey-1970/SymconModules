@@ -38,7 +38,7 @@
 		IPS_SetVariableProfileAssociation("IPS2GPIO.BatteryStatus", 2, "Fehler", "Alert", 0xFF0000);
 		
 		$this->RegisterProfileInteger("IPS2GPIO.ChargeStatus", "Battery", "", "", 0, 1, 1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeStatus", 0, "Deactiviert", "Close", 0xFF0000);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeStatus", 0, "Deaktiviert", "Close", 0xFF0000);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeStatus", 1, "Aktiviert", "Ok", 0x00FF00);
 		
 		$this->RegisterProfileInteger("IPS2GPIO.ChargeCurrent", "Battery", "", "", 0, 2, 1);
@@ -47,8 +47,8 @@
 		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeCurrent", 2, "300 mA", "EnergyStorage", -1);
 		
 		$this->RegisterProfileInteger("IPS2GPIO.PowerStatus", "Battery", "", "", 0, 1, 1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.PowerStatus", 0, "Sekundär", "Plug", 0x00FF00);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.PowerStatus", 1, "Primär", "Battery", 0xFF0000);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PowerStatus", 0, "Sekundär", "Battery", 0xFF0000);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PowerStatus", 1, "Primär", "Plug", 0x00FF00);
 		
 		// Status-Variablen anlegen
 		$this->RegisterVariableFloat("Firmware", "Firmware Version", "", 10);
@@ -311,7 +311,7 @@
 									$BatteryVoltage = (($DataArray[3] << 8) | $DataArray[2]) / 1000;
 									SetValueFloat($this->GetIDForIdent("BatteryVoltage"), $BatteryVoltage);
 									// Batterie Kapazität
-									$BatteryCapacity = (($BatteryVoltage - 3) / 1.2) * 100;
+									$BatteryCapacity = (($BatteryVoltage - 3) / 1.15) * 100;
 									$BatteryCapacity = min(100, max(0, $BatteryCapacity));
 									SetValueInteger($this->GetIDForIdent("BatteryCapacity"), $BatteryCapacity);
 									break;
