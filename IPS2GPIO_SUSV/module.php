@@ -43,9 +43,9 @@
 		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeStatus", 1, "Aktiviert", "Ok", 0x00FF00);
 		
 		$this->RegisterProfileInteger("IPS2GPIO.ChargeCurrent", "Battery", "", "", 0, 2, 0);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeCurrent", 0, "1000 mA", "EnergyStorage", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeCurrent", 1, "500 mA", "EnergyStorage", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeCurrent", 2, "300 mA", "EnergyStorage", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeCurrent", 0, "1000 mA", "Battery", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeCurrent", 1, "500 mA", "Battery", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeCurrent", 2, "300 mA", "Battery", -1);
 		
 		$this->RegisterProfileInteger("IPS2GPIO.PowerStatus", "Battery", "", "", 0, 1, 1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.PowerStatus", 0, "Sekundär", "Battery", 0xFF0000);
@@ -341,8 +341,14 @@
 									break;
 								case 212:
 									// Batterie Status
-									SetValueInteger($this->GetIDForIdent("BatteryStatus"), $DataArray[2]);
-									$this->SendDebug("Read_Status", "Batterie Status: ".$DataArray[2], 0);
+									$BatteryStatus = $DataArray[2];
+									If ($BatteryStatus <= 3) {
+										SetValueInteger($this->GetIDForIdent("BatteryStatus"), $BatteryStatus);
+										$this->SendDebug("Read_Status", "Batterie Status: ".$BatteryStatus, 0);
+									}
+									else {
+										$this->SendDebug("Read_Status", "Batterie Status: unplausibler Wert ".$BatteryStatus, 0);
+									}
 									break;
 								case 53:
 									// Lade Status / Strom
