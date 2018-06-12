@@ -170,7 +170,7 @@
 	            	If ($Value == 0) {
 			     	$this->Write_Status(0x27, 1);
 		    	}
-		    	else ($Value == 1) {
+		    	elseif ($Value == 1) {
 				$this->Write_Status(0x29, 1);
 			}
 	            	break;
