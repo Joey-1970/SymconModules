@@ -168,14 +168,18 @@
   		switch($Ident) {
 	        case "ChargeStatus":
 	            	If ($Value == 0) {
-			     	$this->Write_Status(0x27, 1);
+			     	$this->Write_Status(0x27, 0);
 		    	}
 		    	elseif ($Value == 1) {
-				$this->Write_Status(0x29, 1);
+				$this->Write_Status(0x29, 0);
 			}
+			// Lade-Status und Lade-Strom (max)
+			$this->Read_Status(0x35, 3, 100);
 	            	break;
 	        case "ChargeCurrent":
 	            	$this->Write_Status(0x37, $Value);
+			// Lade-Status und Lade-Strom (max)
+			$this->Read_Status(0x35, 3, 100);
 	            	break;
 	        default:
 	            	throw new Exception("Invalid Ident");
@@ -307,26 +311,28 @@
 							switch ($DataArray[1]) {
 								case 208:
 									// Externe Spannung
-									//$Voltage = (($DataArray[2] << 8) | $DataArray[3]) / 1000;
 									$Voltage = (($DataArray[3] << 8) | $DataArray[2]) / 1000;
-									//If (($Voltage > 4) AND ($Voltage < 6)) {
 									SetValueFloat($this->GetIDForIdent("Voltage"), $Voltage);
+									$this->SendDebug("Read_Status", "Spannung: ". $Voltage, 0);
 									break;    
 								case 209:
 									// Externer Strom
 									$PowerExtern = (($DataArray[2] << 8) | $DataArray[3]) / 100;
 									SetValueFloat($this->GetIDForIdent("PowerExtern"), $PowerExtern);
+									$this->SendDebug("Read_Status", "Externer Strom: ". $PowerExtern, 0);
 									break;
 								case 210:
 									// Batterie Strom
 									$PowerBattery = (($DataArray[2] << 8) | $DataArray[3]) / 100;
 									SetValueFloat($this->GetIDForIdent("PowerBattery"), $PowerBattery);
+									$this->SendDebug("Read_Status", "Batterie Strom: ". $PowerBattery, 0);
 									break;
 								case 211:
 									// Batterie Spannung
 									//$BatteryVoltage = (($DataArray[2] << 8) | $DataArray[3]) / 1000;
 									$BatteryVoltage = (($DataArray[3] << 8) | $DataArray[2]) / 1000;
 									SetValueFloat($this->GetIDForIdent("BatteryVoltage"), $BatteryVoltage);
+									$this->SendDebug("Read_Status", "Batterie Spannung: ". $BatteryVoltage, 0);
 									// Batterie Kapazität
 									$BatteryCapacity = (($BatteryVoltage - 3) / 1.15) * 100;
 									$BatteryCapacity = min(100, max(0, $BatteryCapacity));
@@ -341,13 +347,16 @@
 									// Lade Status / Strom
 									$ChargeStatus = $DataArray[2];
 									SetValueInteger($this->GetIDForIdent("ChargeStatus"), $ChargeStatus);
+									$this->SendDebug("Read_Status", "Lade Status: ". $ChargeStatus, 0);
 									$ChargeCurrent = $DataArray[3];
 									SetValueInteger($this->GetIDForIdent("ChargeCurrent"), $ChargeCurrent);
+									$this->SendDebug("Read_Status", "Lade Strom: ". $ChargeCurrent, 0);
 									break;
 								case 69:
 									// Power Status
 									$PowerStatus = $DataArray[2];
 									SetValueInteger($this->GetIDForIdent("PowerStatus"), $PowerStatus);
+									$this->SendDebug("Read_Status", "Status Spannung: ". $PowerStatus, 0);
 									break;
 								case 34:
 									// Firmware/Model
