@@ -250,7 +250,7 @@
 			$this->Read_Status(0xD3, 3, 300);
 			
 			// Batterie Status
-			$this->Read_Status(0xD4, 2, 300);
+			$this->Read_Status(0xD4, 2, 350);
 			
 			// Lade-Status und Lade-Strom (max)
 			$this->Read_Status(0x35, 3, 100);
