@@ -26,7 +26,7 @@
 		
 		// Profil anlegen
 	    	$this->RegisterProfileFloat("IPS2GPIO.V", "Electricity", "", " V", -100000, +100000, 0.1, 3);
-	    	$this->RegisterProfileFloat("IPS2GPIO.mA", "Electricity", "", " mA", -100000, +100000, 0.1, 3);
+	    	$this->RegisterProfileFloat("IPS2GPIO.SUSVmA", "Electricity", "", " mA", -100000, +100000, 0.1, 0);
 		
 		$this->RegisterProfileInteger("IPS2GPIO.SUSVModel", "Information", "", "", 0, 1, 1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.SUSVModel", 0, "S.USV Advanced", "Information", -1);
@@ -61,13 +61,13 @@
 		$this->RegisterVariableFloat("Voltage", "Spannung", "IPS2GPIO.V", 30);
 		$this->DisableAction("Voltage");
 		
-		$this->RegisterVariableFloat("PowerExtern", "Strom extern", "IPS2GPIO.mA", 40);
+		$this->RegisterVariableFloat("PowerExtern", "Strom extern", "IPS2GPIO.SUSVmA", 40);
 		$this->DisableAction("PowerExtern");
 		
 		$this->RegisterVariableFloat("BatteryVoltage", "Spannung Batterie", "IPS2GPIO.V", 50);
 		$this->DisableAction("Voltage");
 		
-		$this->RegisterVariableFloat("PowerBattery", "Strom Batterie", "IPS2GPIO.mA", 60);
+		$this->RegisterVariableFloat("PowerBattery", "Strom Batterie", "IPS2GPIO.SUSVmA", 60);
 		$this->DisableAction("PowerBattery");
 		
 		$this->RegisterVariableInteger("BatteryStatus", "Status Batterie", "IPS2GPIO.BatteryStatus", 70);
