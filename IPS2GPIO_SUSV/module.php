@@ -167,13 +167,18 @@
 	{
   		switch($Ident) {
 	        case "ChargeStatus":
-	            //$this->Set_Status($Value);
-	            break;
+	            	If ($Value == 0) {
+			     	$this->Write_Status(0x27, 1);
+		    	}
+		    	else ($Value == 1) {
+				$this->Write_Status(0x29, 1);
+			}
+	            	break;
 	        case "ChargeCurrent":
-	            //$this->Set_Intensity($Value);
-	            break;
+	            	$this->Write_Status(0x37, $Value);
+	            	break;
 	        default:
-	            throw new Exception("Invalid Ident");
+	            	throw new Exception("Invalid Ident");
 	    }
 	}
 	    
