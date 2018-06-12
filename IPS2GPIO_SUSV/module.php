@@ -320,13 +320,13 @@
 									break;    
 								case 209:
 									// Externer Strom
-									$PowerExtern = (($DataArray[3] << 8) | $DataArray[2]) / 100;
+									$PowerExtern = (($DataArray[3] << 8) | $DataArray[2]);
 									SetValueFloat($this->GetIDForIdent("PowerExtern"), $PowerExtern);
 									$this->SendDebug("Read_Status", "Externer Strom: ". $PowerExtern, 0);
 									break;
 								case 210:
 									// Batterie Strom
-									$PowerBattery = (($DataArray[3] << 8) | $DataArray[2]) / 100;
+									$PowerBattery = (($DataArray[3] << 8) | $DataArray[2]);
 									SetValueFloat($this->GetIDForIdent("PowerBattery"), $PowerBattery);
 									$this->SendDebug("Read_Status", "Batterie Strom: ". $PowerBattery, 0);
 									break;
