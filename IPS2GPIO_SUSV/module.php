@@ -163,6 +163,20 @@
 		}
 	}
 	
+	public function RequestAction($Ident, $Value) 
+	{
+  		switch($Ident) {
+	        case "ChargeStatus":
+	            //$this->Set_Status($Value);
+	            break;
+	        case "ChargeCurrent":
+	            //$this->Set_Intensity($Value);
+	            break;
+	        default:
+	            throw new Exception("Invalid Ident");
+	    }
+	}
+	    
 	public function ReceiveData($JSONString) 
 	{
 	    	// Empfangene Daten vom Gateway/Splitter
@@ -237,7 +251,7 @@
 	}
 	    
 	    
-	// Führt eine Messung aus
+	// Führt eine Messung aus aber ohne das Ergebnis zu verwerten
 	private function Pre_Read_Status(int $Register, int $Count)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
@@ -356,6 +370,29 @@
 		}
 	}
 	
+	private function Write_Status(int $Register, int $Value)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$tries = 5;
+			do {
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_SUSV_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $Register, 
+											  "Value" => $Value )));
+				If (!$Result) {
+					$this->SendDebug("Write_Status", "Byte setzen fehlerhaft!", 0);
+					$this->SetStatus(202);
+				}
+				else {
+					$this->SendDebug("Write_Status", "Byte erfolgreich gesetzt", 0);
+					$this->SetStatus(102);
+					break;
+				}
+			$tries--;
+			} while ($tries);  
+		}
+	}        
+	    
+	    
+	    
 	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
 	{
 	        if (!IPS_VariableProfileExists($Name))
