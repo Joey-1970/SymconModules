@@ -28,20 +28,21 @@
 	    	$this->RegisterProfileFloat("IPS2GPIO.V", "Electricity", "", " V", -100000, +100000, 0.1, 3);
 	    	$this->RegisterProfileFloat("IPS2GPIO.mA", "Electricity", "", " mA", -100000, +100000, 0.1, 3);
 		
-		$this->RegisterProfileInteger("IPS2GPIO.SUSVModel", "EnergyStorage", "", "", 0, 1, 1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.SUSVModel", 0, "S.USV Advanced", "EnergyStorage", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.SUSVModel", 1, "S.USV Basic", "EnergyStorage", -1);
+		$this->RegisterProfileInteger("IPS2GPIO.SUSVModel", "Information", "", "", 0, 1, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.SUSVModel", 0, "S.USV Advanced", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.SUSVModel", 1, "S.USV Basic", "Information", -1);
 		
-		$this->RegisterProfileInteger("IPS2GPIO.BatteryStatus", "Battery", "", "", 0, 2, 1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.BatteryStatus", 0, "Lädt", "EnergyStorage", 0x0000FF);
+		$this->RegisterProfileInteger("IPS2GPIO.BatteryStatus", "Battery", "", "", 0, 3, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.BatteryStatus", 0, "Lädt", "Battery", 0x0000FF);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.BatteryStatus", 1, "Geladen", "Ok", 0x00FF00);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.BatteryStatus", 2, "Fehler", "Alert", 0xFF0000);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.BatteryStatus", 3, "Deaktiviert", "Alert", 0xFF0000);
 		
-		$this->RegisterProfileInteger("IPS2GPIO.ChargeStatus", "Battery", "", "", 0, 1, 1);
+		$this->RegisterProfileInteger("IPS2GPIO.ChargeStatus", "Battery", "", "", 0, 1, 0);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeStatus", 0, "Deaktiviert", "Close", 0xFF0000);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeStatus", 1, "Aktiviert", "Ok", 0x00FF00);
 		
-		$this->RegisterProfileInteger("IPS2GPIO.ChargeCurrent", "Battery", "", "", 0, 2, 1);
+		$this->RegisterProfileInteger("IPS2GPIO.ChargeCurrent", "Battery", "", "", 0, 2, 0);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeCurrent", 0, "1000 mA", "EnergyStorage", -1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeCurrent", 1, "500 mA", "EnergyStorage", -1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.ChargeCurrent", 2, "300 mA", "EnergyStorage", -1);
@@ -346,7 +347,12 @@
 								case 53:
 									// Lade Status / Strom
 									$ChargeStatus = $DataArray[2];
-									SetValueInteger($this->GetIDForIdent("ChargeStatus"), $ChargeStatus);
+									If ($ChargeStatus == 1) {
+										SetValueInteger($this->GetIDForIdent("ChargeStatus"), $ChargeStatus);
+									}
+									else {
+										SetValueInteger($this->GetIDForIdent("ChargeStatus"), 0);
+									}
 									$this->SendDebug("Read_Status", "Lade Status: ". $ChargeStatus, 0);
 									$ChargeCurrent = $DataArray[3];
 									SetValueInteger($this->GetIDForIdent("ChargeCurrent"), $ChargeCurrent);
