@@ -176,6 +176,8 @@
 			}
 			// Lade-Status und Lade-Strom (max)
 			$this->Read_Status(0x35, 3, 100);
+			// Batterie Status
+			$this->Read_Status(0xD4, 2, 350);
 	            	break;
 	        case "ChargeCurrent":
 	            	$this->Write_Status(0x37, $Value);
