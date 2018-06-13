@@ -291,7 +291,7 @@
 	private function Read_Status(int $Register, int $Count, int $Wait)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->Pre_Read_Status($Register, $Count);
+			//$this->Pre_Read_Status($Register, $Count);
 			//$this->Write_Status($Register, 0x00);
 			IPS_Sleep($Wait);
 			$tries = 5;
