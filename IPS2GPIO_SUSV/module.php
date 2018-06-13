@@ -240,7 +240,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Spannung
-			$this->Read_Status(0xD0, 3, 100);
+			$this->Read_Status(0xD0, 3, 200);
 			
 			// Strom Extern
 			$this->Read_Status(0xD1, 3, 300);
@@ -252,13 +252,13 @@
 			$this->Read_Status(0xD3, 3, 300);
 			
 			// Batterie Status
-			$this->Read_Status(0xD4, 2, 450);
+			$this->Read_Status(0xD4, 2, 500);
 			
 			// Lade-Status und Lade-Strom (max)
-			$this->Read_Status(0x35, 3, 100);
+			$this->Read_Status(0x35, 3, 150);
 			
 			// Power Status
-			$this->Read_Status(0x45, 2, 100);
+			$this->Read_Status(0x45, 2, 150);
 		}
 	}   
 	    
