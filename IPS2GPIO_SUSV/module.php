@@ -252,7 +252,7 @@
 			$this->Read_Status(0xD3, 3, 300);
 			
 			// Batterie Status
-			$this->Read_Status(0xD4, 2, 350);
+			$this->Read_Status(0xD4, 2, 400);
 			
 			// Lade-Status und Lade-Strom (max)
 			$this->Read_Status(0x35, 3, 100);
@@ -260,8 +260,7 @@
 			// Power Status
 			$this->Read_Status(0x45, 2, 100);
 		}
-	}
-	    
+	}   
 	    
 	// Führt eine Messung aus aber ohne das Ergebnis zu verwerten
 	private function Pre_Read_Status(int $Register, int $Count)
@@ -292,7 +291,8 @@
 	private function Read_Status(int $Register, int $Count, int $Wait)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->Pre_Read_Status($Register, $Count);
+			//$this->Pre_Read_Status($Register, $Count);
+			$this->Write_Status($Register, 0x00);
 			IPS_Sleep($Wait);
 			$tries = 5;
 			do {
@@ -380,15 +380,7 @@
 									break;
 							}
 						}
-						else {
-							/*
-							If ($DataArray[1] == 212) {
-								// nur Batterie Status
-								SetValueInteger($this->GetIDForIdent("BatteryStatus"), $DataArray[2]);
-								$this->SendDebug("Read_Status", "Batterie Status: ".$DataArray[2], 0);
-							}
-							*/
-						}
+						
 					}
 					break;
 				}
@@ -405,11 +397,11 @@
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_SUSV_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $Register, 
 											  "Value" => $Value )));
 				If (!$Result) {
-					$this->SendDebug("Write_Status", "Byte setzen fehlerhaft!", 0);
+					$this->SendDebug("Write_Status", "Byte ".$Register." setzen fehlerhaft!", 0);
 					$this->SetStatus(202);
 				}
 				else {
-					$this->SendDebug("Write_Status", "Byte erfolgreich gesetzt", 0);
+					//$this->SendDebug("Write_Status", "Byte erfolgreich gesetzt", 0);
 					$this->SetStatus(102);
 					break;
 				}
