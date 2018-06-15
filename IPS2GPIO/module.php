@@ -1274,9 +1274,14 @@ class IPS2GPIO_IO extends IPSModule
 		   	//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle")));
 		   	$this->CommandClientSocket(pack("L*", 82, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
 		   	break;
-		    
-		    // Raspberry Pi Kommunikation
-		    case "get_RPi_connect":
+		// IR-Kommunikation
+		case "IR_Remote":
+			//WVAG 	28 	0 	0 	12*X 	gpioPulse_t pulse[X]
+			//$Result = $this->CommandClientSocket(pack("L*", 28, 0, 0, 12 * X, 8, 4, 0).$Command, 16);
+
+			break:
+		// Raspberry Pi Kommunikation
+		case "get_RPi_connect":
 		   	// SSH Connection
 			If ($data->IsArray == false) {
 				// wenn es sich um ein einzelnes Kommando handelt
@@ -1291,7 +1296,8 @@ class IPS2GPIO_IO extends IPSModule
 				$this->SendDataToChildren(json_encode(Array("DataID" => "{8D44CA24-3B35-4918-9CBD-85A28C0C8917}", "Function"=>"set_RPi_connect", "InstanceID" => $data->InstanceID, "CommandNumber" => $data->CommandNumber, "Result"=>utf8_encode($Result), "IsArray"=>true  )));
 			}
 			break;
-		    // 1-Wire
+		
+		// 1-Wire
 		case "get_1wire_devices":
 			If ($this->GetBuffer("1Wire_Configured") == 0) {
 				$PinUsed = array();
