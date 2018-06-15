@@ -1281,7 +1281,7 @@ class IPS2GPIO_IO extends IPSModule
 			//WVAG 	28 	0 	0 	12*X 	gpioPulse_t pulse[X]
 			$Result = $this->CommandClientSocket(pack("L*", 28, 0, 0, 12 * count($PulseArray), ...$PulseArray), 16);
 			
-			break:
+			break;
 		// Raspberry Pi Kommunikation
 		case "get_RPi_connect":
 		   	// SSH Connection
