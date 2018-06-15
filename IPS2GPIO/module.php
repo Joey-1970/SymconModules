@@ -1276,9 +1276,11 @@ class IPS2GPIO_IO extends IPSModule
 		   	break;
 		// IR-Kommunikation
 		case "IR_Remote":
+			$PulseArray = array();
+			$PulseArray = unserialize($data->Pulse);
 			//WVAG 	28 	0 	0 	12*X 	gpioPulse_t pulse[X]
-			//$Result = $this->CommandClientSocket(pack("L*", 28, 0, 0, 12 * X, 8, 4, 0).$Command, 16);
-
+			$Result = $this->CommandClientSocket(pack("L*", 28, 0, 0, 12 * count($PulseArray), ...$PulseArray), 16);
+			
 			break:
 		// Raspberry Pi Kommunikation
 		case "get_RPi_connect":
@@ -1969,8 +1971,17 @@ class IPS2GPIO_IO extends IPSModule
            			}
 		            	break;
 			case "27":
-           			//IPS_LogMessage("IPS2GPIO Notify","gestoppt");
 				$this->SendDebug("Waveforms", "geloescht", 0);
+		            	break;
+			case "28":
+				If ($response[4] >= 0) {
+					$this->SendDebug("Pulse", "Anzahl: ".$response[4], 0);
+           				$Result = $response[4];
+           			}
+           			else {
+           				$Result = -1;
+					$this->SendDebug("Pulse", "Fehlermeldung: ".$this->GetErrorText(abs($response[4])), 0);
+           			}
 		            	break;
 			case "29":
            			If ($response[4] >= 0) {
