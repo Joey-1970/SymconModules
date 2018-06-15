@@ -100,7 +100,58 @@
  	}
 	
 	// Beginn der Funktionen
-	public function Send(String $Message)
+	private function RC5()
+	{
+		/*
+		class RC5:
+		   """
+		   """
+
+		   def __init__(self, pi, gpio, address=0):
+
+		      self._pi = pi
+		      self._gpio = gpio
+		      self._address = address&31
+		      self._toggle = 0
+
+		      self._bip = bip(pi, gpio, 36000, 889, 889, True)
+
+		   def set_address(self, address):
+		      self._address = address&31
+
+		   def send_raw(self, data, bits, repeats=1):
+
+		      print(bin(data), bits, repeats)
+
+		      chain = self._bip.format(data, bits)
+
+		      #print(chain)
+
+		      for i in range(repeats):
+			 self._pi.wave_chain(chain)
+			 time.sleep(0.1)
+
+		   def send(self, command, repeats=1):
+
+		      command &= 63
+
+		      if self._toggle:
+			 self._toggle = 0
+		      else:
+			 self._toggle = 1
+
+		      data = (3<<12) | (self._toggle<<11) | (self._address<<6) | command
+
+		      self.send_raw(data, 14, repeats)
+
+		   def cancel(self):
+		      self._bip.cancel()
+		     */
+	}
+	    
+	    
+	    
+	    public function Send(String $Message)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			
