@@ -113,8 +113,10 @@
 			$sofar = $sofar + $on;
 			$off = $target - $sofar;
 			$sofar = $sofar + $off;
-			array_push($wf, array(1 << $gpio, 0, $on));
-			array_push($wf, array (0, 1 << $gpio, $off));
+			array_push($wf, 1 << $gpio, 0, $on);
+			array_push($wf, 0, 1 << $gpio, $off);
+			//array_push($wf, array(1 << $gpio, 0, $on));
+			//array_push($wf, array (0, 1 << $gpio, $off));
 		}
 		Return $wf;
 	}
