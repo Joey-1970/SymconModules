@@ -1280,7 +1280,18 @@ class IPS2GPIO_IO extends IPSModule
 			$PulseArray = unserialize($data->Pulse);
 			//WVAG 	28 	0 	0 	12*X 	gpioPulse_t pulse[X]
 			$Result = $this->CommandClientSocket(pack("L*", 28, 0, 0, 12 * (count($PulseArray) / 3), ...$PulseArray), 16);
-			
+			// WVCRE 	49 	0 	0 	0
+			If ($Result > 0) {
+				$WaveID = $this->CommandClientSocket(pack("L*", 49, 0, 0, 0), 16);
+				If ($WaveID >= 0) {
+					// WVTX 	51 	wave_id 	0 	0
+					$Result = $this->CommandClientSocket(pack("L*", 51, $WaveID, 0, 0), 16);
+					If ($Result >= 0) {
+						// WVDEL 	50 	wave_id 	0 	0
+						$this->CommandClientSocket(pack("L*", 50, $WaveID, 0, 0), 16);
+					}
+				}
+			}
 			break;
 		// Raspberry Pi Kommunikation
 		case "get_RPi_connect":
