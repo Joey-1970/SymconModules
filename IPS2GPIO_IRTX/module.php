@@ -137,15 +137,26 @@
 		
 	private function IR_Send_Raw($Data, $Bits, $Repeats)
 	{
-		//$Chain = self._bip.format(data, bits)
+		$Chain = $this->IR_BIP_Format($Data, $Bits);
 
-     		for ($i = 0; $i <= $Repeats; $c++) {
+     		for ($i = 0; $i <= $Repeats; $i++) {
 			//self._pi.wave_chain(chain)
 			IPS_Sleep(100);
 		}
 	}
       
-
+	private function IR_BIP_Format($Data, $Bits)
+	{
+		$Chain = array();
+		
+		for ($i = $Bits - 1; $i <= -1; $i--) {
+			//$Chain = $Chain + self._bit[($Data >> $i) & 1]
+		}
+	return $Chain;
+	}
+	 
+     
+     
 
 	
 	public function Test()
