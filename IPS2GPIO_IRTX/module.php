@@ -135,7 +135,15 @@
 		$this->IR_Send_Raw($Data, 14, $Repeats);
 	}
 		
-	
+	private function IR_Send_Raw($Data, $Bits, $Repeats)
+	{
+		//$Chain = self._bip.format(data, bits)
+
+     		for ($i = 0; $i <= $Repeats; $c++) {
+			//self._pi.wave_chain(chain)
+			IPS_Sleep(100);
+		}
+	}
       
 
 
