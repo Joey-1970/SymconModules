@@ -115,12 +115,31 @@
 			$sofar = $sofar + $off;
 			array_push($wf, 1 << $gpio, 0, $on);
 			array_push($wf, 0, 1 << $gpio, $off);
-			//array_push($wf, array(1 << $gpio, 0, $on));
-			//array_push($wf, array (0, 1 << $gpio, $off));
 		}
 		Return $wf;
 	}
-	    
+	
+	public function IR_Send($Command, $Repeats)
+	{
+		$Address = $this->GetBuffer("Address");
+		$Toggle = $this->GetBuffer("Toggle");
+		$Command = $Command & 63;
+		if ($Toggle) {
+			$Toggle = 0;
+		}
+	      	else {
+			$Toggle = 1;
+		}
+		$this->SetBuffer("Toggle", $Toggle);
+		$Data = (3 << 12) | ($Toggle << 11) | ($Address << 6) | $Command;
+		$this->IR_Send_Raw($Data, 14, $Repeats);
+	}
+		
+	
+      
+
+
+	
 	public function Test()
 	{
 		$gpio = $this->ReadPropertyInteger("Pin");
