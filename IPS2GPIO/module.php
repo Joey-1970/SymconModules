@@ -1301,7 +1301,7 @@ class IPS2GPIO_IO extends IPSModule
 			// WVCRE 	49 	0 	0 	0
 			If ($Result > 0) {
 				// Ermittle Wave ID
-				$Result =  = $this->CommandClientSocket(pack("L*", 49, 0, 0, 0), 16);
+				$Result = $this->CommandClientSocket(pack("L*", 49, 0, 0, 0), 16);
 			}
 			break;
 		// Raspberry Pi Kommunikation
