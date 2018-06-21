@@ -240,6 +240,8 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("owDeviceAddress_0", 0);
 			$this->SetBuffer("owDeviceAddress_1", 0);
 			
+			$this->SetBuffer("IR_RC5_Toggle", 0);
+			
 			$ParentID = $this->GetParentID();
 		        // Änderung an den untergeordneten Instanzen
 		        $this->RegisterMessage($this->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
@@ -1305,6 +1307,44 @@ class IPS2GPIO_IO extends IPSModule
 			}
 			break;
 		case "IR_Remote_RC5":
+			$Address = intval($data->Address);
+			$Command = intval($data->Command);
+			$GPIO = intval($data->GPIO);
+			$Toggle = $this->GetBuffer("IR_RC5_Toggle");
+				
+			// WVNEW - Initialise a new waveform
+			$this->CommandClientSocket(pack("L*", 53, 0, 0, 0), 16);
+			$Mark = array();
+			$Mark = $this->IR_Carrier($GPIO, 36000, 889, 0.5);
+			//WVAG 	28 	0 	0 	12*X 	gpioPulse_t pulse[X]
+			$Result = $this->CommandClientSocket(pack("L*", 28, 0, 0, 12 * (count($Mark) / 3), ...$Mark), 16);
+			If ($Result > 0) {
+				// WVCRE - Create a waveform
+				$Mark_ID = $this->CommandClientSocket(pack("L*", 49, 0, 0, 0), 16);
+				
+				$Space = array();
+				$Space = (0, 0, 889);
+				$Result = $this->CommandClientSocket(pack("L*", 28, 0, 0, 12 * (count($Space) / 3), ...$Space), 16);
+				If ($Result > 0) {
+					// WVCRE - Create a waveform
+					$Space_ID = $this->CommandClientSocket(pack("L*", 49, 0, 0, 0), 16);
+					$Bit = array();
+					$Bit = ($Mark_ID, $Space_ID, $Space_ID, $Mark_ID);
+					
+					IF ($Toggle == 1) {
+						$Toggle = 0;
+					}
+					else {
+						$Toggle = 1;
+					}
+					$this->SetBuffer("Toggle", $Toggle);
+					$Data = (3 << 12) | ($Toggle << 11) | ($Address << 6) | $Command;
+					
+				
+				}
+				
+			}
+
 				
 			break;
 		// Raspberry Pi Kommunikation
@@ -3875,6 +3915,25 @@ class IPS2GPIO_IO extends IPSModule
 		$SerialNumber = sprintf("%X", $this->GetBuffer("owDeviceAddress_0")).sprintf("%X", $this->GetBuffer("owDeviceAddress_1"));
 		$this->SendDebug("OWRead_2438", "OneWire Device Address = ".$SerialNumber." Temperatur = ".$Celsius." Spannung = ".$Voltage." Strom = ".$Current, 0);
 	return array($Celsius, $Voltage, $Current);
+	}
+	
+	private function IR_Carrier($gpio, $frequency, $micros, $dutycycle)
+	{
+		// Generate cycles of carrier on gpio with frequency and dutycycle.
+		$wf = array();
+		$cycle = 1000000 / $frequency;
+		$cycles = intval(round($micros/$cycle));
+		$on = intval(round($cycle * $dutycycle));
+		$sofar = 0;
+		for ($c = 0; $c <= $cycles; $c++) {
+			$target = intval(round(($c+1) * $cycle));
+			$sofar = $sofar + $on;
+			$off = $target - $sofar;
+			$sofar = $sofar + $off;
+			array_push($wf, 1 << $gpio, 0, $on);
+			array_push($wf, 0, 1 << $gpio, $off);
+		}
+		Return $wf;
 	}
 	
 }
