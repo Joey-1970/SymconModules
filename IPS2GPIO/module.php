@@ -1304,6 +1304,9 @@ class IPS2GPIO_IO extends IPSModule
 				$Result = $this->CommandClientSocket(pack("L*", 49, 0, 0, 0), 16);
 			}
 			break;
+		case "IR_Remote_RC5":
+				
+			break;
 		// Raspberry Pi Kommunikation
 		case "get_RPi_connect":
 		   	// SSH Connection
