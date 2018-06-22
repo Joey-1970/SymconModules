@@ -1310,6 +1310,7 @@ class IPS2GPIO_IO extends IPSModule
 			$Address = intval($data->Address);
 			$Command = intval($data->Command);
 			$GPIO = intval($data->GPIO);
+			$Repeats = intval($data->Repeats);
 			$Toggle = $this->GetBuffer("IR_RC5_Toggle");
 				
 			// WVNEW - Initialise a new waveform
@@ -1340,6 +1341,15 @@ class IPS2GPIO_IO extends IPSModule
 					$this->SetBuffer("Toggle", $Toggle);
 					$Data = (3 << 12) | ($Toggle << 11) | ($Address << 6) | $Command;
 					
+					$Chain = array();
+					for ($i = 14 - 1; $i > -1; $i--) {
+						$Chain[] = $Bit[($Data >> $i) & 1];
+					}
+					for ($i = 0; $i <= $Repeats; $i++) {
+						//WVCHA bvs - Transmits a chain of waveforms
+						//WVCHA 93 0 0 X uint8_t data[X]
+						$Result = $this->CommandClientSocket(pack("L*", 93, 0, 0, count($Chain[]), ...$Mark), 16);
+					}
 				
 				}
 				
