@@ -1330,7 +1330,7 @@ class IPS2GPIO_IO extends IPSModule
 					// WVCRE - Create a waveform
 					$Space_ID = $this->CommandClientSocket(pack("L*", 49, 0, 0, 0), 16);
 					$Bit = array();
-					$Bit = ($Mark_ID, $Space_ID, $Space_ID, $Mark_ID);
+					$Bit = [$Mark_ID, $Space_ID, $Space_ID, $Mark_ID];
 					
 					IF ($Toggle == 1) {
 						$Toggle = 0;
