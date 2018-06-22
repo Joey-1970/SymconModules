@@ -1348,7 +1348,9 @@ class IPS2GPIO_IO extends IPSModule
 					for ($i = 0; $i <= $Repeats; $i++) {
 						//WVCHA bvs - Transmits a chain of waveforms
 						//WVCHA 93 0 0 X uint8_t data[X]
-						$Result = $this->CommandClientSocket(pack("L*", 93, 0, 0, count($Chain[]), ...$Mark), 16);
+						$Result = $this->CommandClientSocket(pack("LLLLC*", 93, 0, 0, count($Chain), ...$Chain), 16);
+	
+					
 					}
 				
 				}
@@ -2342,9 +2344,18 @@ class IPS2GPIO_IO extends IPSModule
 					IPS_LogMessage("IPS2GPIO Check Servo Pulsewidth","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
           			}
   		            	break;
-		        case "97":
+		        case "93":
            			If ($response[4] >= 0) {
-           				//IPS_LogMessage("IPS2GPIO GlitchFilter","gesetzt");
+           				$this->SendDebug("WaveChain", "erfolgreich", 0);
+           			}
+           			else {
+					IPS_LogMessage("IPS2GPIO WaveChain","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
+          			}
+  		            	break;
+			
+			case "97":
+           			If ($response[4] >= 0) {
+           				$this->SendDebug("GlitchFilter", "gesetzt", 0);
            			}
            			else {
            				IPS_LogMessage("IPS2GPIO GlitchFilter","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
