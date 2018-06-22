@@ -1349,7 +1349,7 @@ class IPS2GPIO_IO extends IPSModule
 						//WVCHA bvs - Transmits a chain of waveforms
 						//WVCHA 93 0 0 X uint8_t data[X]
 						$Result = $this->CommandClientSocket(pack("LLLLC*", 93, 0, 0, count($Chain), ...$Chain), 16);
-	
+						IPS_Sleep(100);
 					
 					}
 				
