@@ -1324,7 +1324,7 @@ class IPS2GPIO_IO extends IPSModule
 				$Mark_ID = $this->CommandClientSocket(pack("L*", 49, 0, 0, 0), 16);
 				
 				$Space = array();
-				$Space = (0, 0, 889);
+				$Space = [0, 0, 889];
 				$Result = $this->CommandClientSocket(pack("L*", 28, 0, 0, 12 * (count($Space) / 3), ...$Space), 16);
 				If ($Result > 0) {
 					// WVCRE - Create a waveform
