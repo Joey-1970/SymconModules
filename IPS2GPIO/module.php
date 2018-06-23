@@ -1295,17 +1295,7 @@ class IPS2GPIO_IO extends IPSModule
 				}
 			}
 			break;
-		case "IR_Remote_GetWaveID":
-			$PulseArray = array();
-			$PulseArray = unserialize($data->Pulse);
-			//WVAG 	28 	0 	0 	12*X 	gpioPulse_t pulse[X]
-			$Result = $this->CommandClientSocket(pack("L*", 28, 0, 0, 12 * (count($PulseArray) / 3), ...$PulseArray), 16);
-			// WVCRE 	49 	0 	0 	0
-			If ($Result > 0) {
-				// Ermittle Wave ID
-				$Result = $this->CommandClientSocket(pack("L*", 49, 0, 0, 0), 16);
-			}
-			break;
+		
 		case "IR_Remote_RC5":
 			$Address = intval($data->Address);
 			$Command = intval($data->Command);
@@ -1352,7 +1342,10 @@ class IPS2GPIO_IO extends IPSModule
 						IPS_Sleep(100);
 					
 					}
-				
+					// WVDEL wid - Delete selected waveform
+					// WVDEL 	50 	wave_id 	0 	0
+					$this->CommandClientSocket(pack("L*", 50, $Mark_ID, 0, 0), 16);
+					$this->CommandClientSocket(pack("L*", 50, $Space_ID, 0, 0), 16);
 				}
 				
 			}
