@@ -1346,8 +1346,14 @@ class IPS2GPIO_IO extends IPSModule
 					// WVDEL 	50 	wave_id 	0 	0
 					$this->CommandClientSocket(pack("L*", 50, $Mark_ID, 0, 0), 16);
 					$this->CommandClientSocket(pack("L*", 50, $Space_ID, 0, 0), 16);
+					$Result = true;
 				}
-				
+				else {
+					$Result = false;
+				}
+			}
+			else {
+				$Result = false;
 			}
 
 				
