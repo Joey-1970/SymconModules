@@ -100,62 +100,15 @@
  	}
 	
 	// Beginn der Funktionen
-	/*
-	private function IR_Carrier($gpio, $frequency, $micros, $dutycycle)
+	public function RC5(Int $Address, Int $Command, Int $Repeats)
 	{
-		// Generate cycles of carrier on gpio with frequency and dutycycle.
-		$wf = array();
-		$cycle = 1000000 / $frequency;
-		$cycles = intval(round($micros/$cycle));
-		$on = intval(round($cycle * $dutycycle));
-		$sofar = 0;
-		for ($c = 0; $c <= $cycles; $c++) {
-			$target = intval(round(($c+1) * $cycle));
-			$sofar = $sofar + $on;
-			$off = $target - $sofar;
-			$sofar = $sofar + $off;
-			array_push($wf, 1 << $gpio, 0, $on);
-			array_push($wf, 0, 1 << $gpio, $off);
-		}
-		Return $wf;
-	}
-	
-	public function IR_Send($Command, $Repeats)
-	{
-		$Address = $this->GetBuffer("Address");
-		$Toggle = $this->GetBuffer("Toggle");
+		$GPIO = $this->ReadPropertyInteger("Pin");
+		$Address = $Address & 31;
 		$Command = $Command & 63;
-		if ($Toggle) {
-			$Toggle = 0;
-		}
-	      	else {
-			$Toggle = 1;
-		}
-		$this->SetBuffer("Toggle", $Toggle);
-		$Data = (3 << 12) | ($Toggle << 11) | ($Address << 6) | $Command;
-		$this->IR_Send_Raw($Data, 14, $Repeats);
-	}
+		$Repeats = min(10, max(1, $Repeats));
 		
-	private function IR_Send_Raw($Data, $Bits, $Repeats)
-	{
-		$Chain = $this->IR_BIP_Format($Data, $Bits);
-
-     		for ($i = 0; $i <= $Repeats; $i++) {
-			//self._pi.wave_chain(chain)
-			IPS_Sleep(100);
-		}
+		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "IR_Remote_RC5", "GPIO" => $GPIO, "Address" => $Address, "Command" => $Command, "Repeats" => 5 )));
 	}
-      
-	private function IR_BIP_Format($Data, $Bits)
-	{
-		$Chain = array();
-		
-		for ($i = $Bits - 1; $i <= -1; $i--) {
-			//$Chain = $Chain + self._bit[($Data >> $i) & 1]
-		}
-	return $Chain;
-	}
-	*/
      
      
 
