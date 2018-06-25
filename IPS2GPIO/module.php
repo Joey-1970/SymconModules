@@ -241,6 +241,7 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("owDeviceAddress_1", 0);
 			
 			$this->SetBuffer("IR_RC5_Toggle", 0);
+			$this->SetBuffer("IR_RC5X_Toggle", 0);
 			
 			$ParentID = $this->GetParentID();
 		        // Änderung an den untergeordneten Instanzen
@@ -1276,26 +1277,8 @@ class IPS2GPIO_IO extends IPSModule
 		   	//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle")));
 		   	$this->CommandClientSocket(pack("L*", 82, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
 		   	break;
-		// IR-Kommunikation
-		case "IR_Remote":
-			$PulseArray = array();
-			$PulseArray = unserialize($data->Pulse);
-			//WVAG 	28 	0 	0 	12*X 	gpioPulse_t pulse[X]
-			$Result = $this->CommandClientSocket(pack("L*", 28, 0, 0, 12 * (count($PulseArray) / 3), ...$PulseArray), 16);
-			// WVCRE 	49 	0 	0 	0
-			If ($Result > 0) {
-				$WaveID = $this->CommandClientSocket(pack("L*", 49, 0, 0, 0), 16);
-				If ($WaveID >= 0) {
-					// WVTX 	51 	wave_id 	0 	0
-					$Result = $this->CommandClientSocket(pack("L*", 51, $WaveID, 0, 0), 16);
-					If ($Result >= 0) {
-						// WVDEL 	50 	wave_id 	0 	0
-						$this->CommandClientSocket(pack("L*", 50, $WaveID, 0, 0), 16);
-					}
-				}
-			}
-			break;
 		
+		// IR-Kommunikation
 		case "IR_Remote_RC5":
 			$Address = intval($data->Address);
 			$Command = intval($data->Command);
@@ -1328,8 +1311,76 @@ class IPS2GPIO_IO extends IPSModule
 					else {
 						$Toggle = 1;
 					}
-					$this->SetBuffer("Toggle", $Toggle);
+					$this->SetBuffer("IR_RC5_Toggle", $Toggle);
 					$Data = (3 << 12) | ($Toggle << 11) | ($Address << 6) | $Command;
+					
+					$Chain = array();
+					for ($i = 14 - 1; $i > -1; $i--) {
+						$Chain[] = $Bit[($Data >> $i) & 1];
+					}
+					for ($i = 0; $i <= $Repeats; $i++) {
+						//WVCHA bvs - Transmits a chain of waveforms
+						//WVCHA 93 0 0 X uint8_t data[X]
+						$Result = $this->CommandClientSocket(pack("LLLLC*", 93, 0, 0, count($Chain), ...$Chain), 16);
+						IPS_Sleep(100);
+					
+					}
+					// WVDEL wid - Delete selected waveform
+					// WVDEL 	50 	wave_id 	0 	0
+					$this->CommandClientSocket(pack("L*", 50, $Mark_ID, 0, 0), 16);
+					$this->CommandClientSocket(pack("L*", 50, $Space_ID, 0, 0), 16);
+					$Result = true;
+				}
+				else {
+					$Result = false;
+				}
+			}
+			else {
+				$Result = false;
+			}	
+			break;
+		case "IR_Remote_RC5X":
+			$Address = intval($data->Address);
+			$Command = intval($data->Command);
+			$GPIO = intval($data->GPIO);
+			$Repeats = intval($data->Repeats);
+			$Toggle = $this->GetBuffer("IR_RC5X_Toggle");
+				
+			// WVNEW - Initialise a new waveform
+			$this->CommandClientSocket(pack("L*", 53, 0, 0, 0), 16);
+			$Mark = array();
+			$Mark = $this->IR_Carrier($GPIO, 36000, 889, 0.5);
+			//WVAG 	28 	0 	0 	12*X 	gpioPulse_t pulse[X]
+			$Result = $this->CommandClientSocket(pack("L*", 28, 0, 0, 12 * (count($Mark) / 3), ...$Mark), 16);
+			If ($Result > 0) {
+				// WVCRE - Create a waveform
+				$Mark_ID = $this->CommandClientSocket(pack("L*", 49, 0, 0, 0), 16);
+				
+				$Space = array();
+				$Space = [0, 0, 889];
+				$Result = $this->CommandClientSocket(pack("L*", 28, 0, 0, 12 * (count($Space) / 3), ...$Space), 16);
+				If ($Result > 0) {
+					// WVCRE - Create a waveform
+					$Space_ID = $this->CommandClientSocket(pack("L*", 49, 0, 0, 0), 16);
+					$Bit = array();
+					$Bit = [$Mark_ID, $Space_ID, $Space_ID, $Mark_ID];
+					
+					IF ($Toggle == 1) {
+						$Toggle = 0;
+					}
+					else {
+						$Toggle = 1;
+					}
+					$this->SetBuffer("IR_RC5X_Toggle", $Toggle);
+					
+					If ($Command & 64) {
+						$Field = 0;
+					}
+					else {
+						$Field = 1;
+					}
+					
+					$Data = (1 << 13) | ($Field << 12) | ($Toggle << 11) | ($Address << 6) | $Command;
 					
 					$Chain = array();
 					for ($i = 14 - 1; $i > -1; $i--) {
