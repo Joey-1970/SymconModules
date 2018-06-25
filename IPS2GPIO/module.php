@@ -276,6 +276,7 @@ class IPS2GPIO_IO extends IPSModule
 			}
 	
 			If (($this->ConnectionTest()) AND ($this->ReadPropertyBoolean("Open") == true))  {
+				$this->SetSummary("IP: ".$this->ReadPropertyString('IPAddress'));
 				$this->SendDebug("ApplyChanges", "Starte Vorbereitung", 0);
 				If (GetValueBoolean($this->GetIDForIdent("PigpioStatus")) == false) {
 					SetValueBoolean($this->GetIDForIdent("PigpioStatus"), true);
