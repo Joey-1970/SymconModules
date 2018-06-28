@@ -42,6 +42,8 @@
 		
 		$arrayActions = array();
 		If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+			$arrayActions[] = array("type" => "Button", "label" => "On", "onClick" => 'I2GIRTX_LEDTest($id, true);');
+			$arrayActions[] = array("type" => "Button", "label" => "Off", "onClick" => 'I2GIRTX_LEDTest($id, false);');
 		
 		}
 		else {
@@ -103,39 +105,54 @@
 	public function RC5(Int $Address, Int $Command, Int $Repeats)
 	{
 		$Result = false;
-		$GPIO = $this->ReadPropertyInteger("Pin");
-		$Address = $Address & 31;
-		$Command = $Command & 63;
-		$Repeats = min(10, max(1, $Repeats));
-		
-		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "IR_Remote_RC5", "GPIO" => $GPIO, "Address" => $Address, "Command" => $Command, "Repeats" => $Repeats )));
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("RC5", "Ausfuehrung", 0);
+			$GPIO = $this->ReadPropertyInteger("Pin");
+			$Address = $Address & 31;
+			$Command = $Command & 63;
+			$Repeats = min(10, max(1, $Repeats));
+
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "IR_Remote_RC5", "GPIO" => $GPIO, "Address" => $Address, "Command" => $Command, "Repeats" => $Repeats )));
+		}
 	Return $Result;
 	}
 	    
 	public function RC5X(Int $Address, Int $Command, Int $Repeats)
 	{
 		$Result = false;
-		$GPIO = $this->ReadPropertyInteger("Pin");
-		$Address = $Address & 31;
-		$Command = $Command & 127;
-		$Repeats = min(10, max(1, $Repeats));
-		
-		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "IR_Remote_RC5X", "GPIO" => $GPIO, "Address" => $Address, "Command" => $Command, "Repeats" => $Repeats )));
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("RC5X", "Ausfuehrung", 0);
+			$GPIO = $this->ReadPropertyInteger("Pin");
+			$Address = $Address & 31;
+			$Command = $Command & 127;
+			$Repeats = min(10, max(1, $Repeats));
+
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "IR_Remote_RC5X", "GPIO" => $GPIO, "Address" => $Address, "Command" => $Command, "Repeats" => $Repeats )));
+		}
 	Return $Result;
 	}
      
      
 
 	
-	public function Test()
-	{
-		$GPIO = $this->ReadPropertyInteger("Pin");
-		//$Test = array();
-		//$Test = $this->IR_Carrier($gpio, 36000, 889, 0.5);
-		
-		$this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "IR_Remote_RC5", "GPIO" => $GPIO, "Address" => 1, "Command" => 1, "Repeats" => 5 )));
-	}
 	
+	public function LEDTest(Bool $Value)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$Value = min(1, max(0, $Value));
+			$this->SendDebug("LEDTest", "Ausfuehrung", 0);
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value )));
+			$this->SendDebug("LEDTest", "Ergebnis: ".(int)$Result, 0);
+			IF (!$Result) {
+				$this->SendDebug("LEDTest", "Fehler beim Setzen des Status!", 0);
+				$this->SetStatus(202);
+				return;
+			}
+			else {
+				$this->SetStatus(102);
+			}
+		}
+	}
 	
 	private function Get_GPIO()
 	{
