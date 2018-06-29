@@ -42,6 +42,7 @@
 		
 		$arrayActions = array();
 		If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+			$arrayActions[] = array("type" => "Label", "label" => "IR-LED Test"); 
 			$arrayActions[] = array("type" => "Button", "label" => "On", "onClick" => 'I2GIRTX_LEDTest($id, true);');
 			$arrayActions[] = array("type" => "Button", "label" => "Off", "onClick" => 'I2GIRTX_LEDTest($id, false);');
 		
@@ -106,6 +107,10 @@
 	{
 		$Result = false;
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$LEDStatus = $this->GetBuffer("LEDStatus");
+			If ($LEDStatus == 1) {
+				$this->LEDTest(false);
+			}
 			$this->SendDebug("RC5", "Ausfuehrung", 0);
 			$GPIO = $this->ReadPropertyInteger("Pin");
 			$Address = $Address & 31;
@@ -121,6 +126,10 @@
 	{
 		$Result = false;
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$LEDStatus = $this->GetBuffer("LEDStatus");
+			If ($LEDStatus == 1) {
+				$this->LEDTest(false);
+			}
 			$this->SendDebug("RC5X", "Ausfuehrung", 0);
 			$GPIO = $this->ReadPropertyInteger("Pin");
 			$Address = $Address & 31;
@@ -142,13 +151,16 @@
 			$Value = min(1, max(0, $Value));
 			$this->SendDebug("LEDTest", "Ausfuehrung", 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value )));
-			$this->SendDebug("LEDTest", "Ergebnis: ".(int)$Result, 0);
+			
 			IF (!$Result) {
 				$this->SendDebug("LEDTest", "Fehler beim Setzen des Status!", 0);
+				$this->SetBuffer("LEDStatus", 0);
 				$this->SetStatus(202);
 				return;
 			}
 			else {
+				$this->SendDebug("LEDTest", "Ergebnis: ".(int)$Result, 0);
+				$this->SetBuffer("LEDStatus", (int)$Result);
 				$this->SetStatus(102);
 			}
 		}
