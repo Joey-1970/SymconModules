@@ -160,7 +160,7 @@
 			}
 			else {
 				$this->SendDebug("LEDTest", "Ergebnis: ".(int)$Result, 0);
-				$this->SetBuffer("LEDStatus", (int)$Result);
+				$this->SetBuffer("LEDStatus", intval($Value));
 				$this->SetStatus(102);
 			}
 		}
