@@ -534,8 +534,10 @@
 				return;
 			}
 			else {
-				$this->SetStatus(102);
-				$this->SendDebug("ReadData", "Status-Bit: ".$Result, 0);
+				If (is_array(unserialize($Result)) == true) {
+					$this->SetStatus(102);
+					$this->SendDebug("ReadData", "Status-Bit: ".$Result[1], 0);
+				}
 			}
 			
 			
