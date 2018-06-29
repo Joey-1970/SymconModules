@@ -269,7 +269,7 @@
 			// Messwerte aktualisieren
 			$CalibrateData = array();
 			If (is_array(unserialize($this->GetBuffer("CalibrateData"))) == false) {
-				$this->SendDebug("Measurement", "Kalibrirungsdaten nicht korrekt!", 0);
+				$this->SendDebug("Measurement", "Kalibrierungsdaten nicht korrekt!", 0);
 				$this->ReadCalibrateData();
 			}
 			$CalibrateData = unserialize($this->GetBuffer("CalibrateData"));
@@ -526,6 +526,18 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			// Liest die Messdaten ein
 			$this->SendDebug("ReadData", "Ausfuehrung", 0);
+			
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_read_block", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0xF3, "Count" => 1)));
+			If ($Result < 0) {
+				$this->SendDebug("ReadData", "Fehler bei der Statusermittung", 0);
+				$this->SetStatus(202);
+				return;
+			}
+			else {
+				$this->SetStatus(102);
+				$this->SendDebug("ReadData", "Status-Bit: ".$Result, 0);
+			}
+			
 			
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_read_block", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F7"), "Count" => 8)));
 			If ($Result < 0) {
