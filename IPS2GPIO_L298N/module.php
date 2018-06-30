@@ -146,7 +146,9 @@
 		SetValueInteger($this->GetIDForIdent("Motor_1"), 1);
 		SetValueInteger($this->GetIDForIdent("Motor_2"), 1);
 		
-             	//ReceiveData-Filter setzen
+             	$this->SetSummary("GPIO: ".$this->ReadPropertyInteger("Pin_1L").", ".$this->ReadPropertyInteger("Pin_1R").", ".$this->ReadPropertyInteger("Pin_2L").", ".$this->ReadPropertyInteger("Pin_2R"));
+		
+		//ReceiveData-Filter setzen
 		$Filter = '((.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_1L").'.*)|(.*"Pin":'.$this->ReadPropertyInteger("Pin_1R").'.*|.*"Pin":'.$this->ReadPropertyInteger("Pin_2L").'.*)|(.*"Pin":'.$this->ReadPropertyInteger("Pin_2R").'.*))';
 		$this->SetReceiveDataFilter($Filter);
 
