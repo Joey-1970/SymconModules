@@ -95,8 +95,7 @@
 		$DevicePorts = unserialize($this->Get_I2C_Ports());
 		$this->SetSummary("DA: 0x".dechex($this->ReadPropertyInteger("DeviceAddress"))." DB: ".$DevicePorts[$this->ReadPropertyInteger("DeviceBus")]);
 
-		
-		//ReceiveData-Filter setzen
+		// ReceiveData-Filter setzen
 		$this->SetBuffer("DeviceIdent", (($this->ReadPropertyInteger("DeviceBus") << 7) + $this->ReadPropertyInteger("DeviceAddress")));
 		$Filter = '((.*"Function":"get_used_i2c".*|.*"InstanceID":'.$this->InstanceID.'.*)|.*"Function":"status".*)';
 		$this->SetReceiveDataFilter($Filter);
