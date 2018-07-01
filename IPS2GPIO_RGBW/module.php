@@ -142,6 +142,9 @@
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel W - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_W")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_W"), 0);
 		}
            	
+		// Summary setzen
+		$this->SetSummary("GPIO: ".$this->ReadPropertyInteger("Pin_R").", ".$this->ReadPropertyInteger("Pin_G").", ".$this->ReadPropertyInteger("Pin_B").", ".$this->ReadPropertyInteger("Pin_W"));
+		
           	//ReceiveData-Filter setzen
           	$Filter = '((.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_R").'.*)|(.*"Pin":'.$this->ReadPropertyInteger("Pin_G").'.*|.*"Pin":'.$this->ReadPropertyInteger("Pin_B").'.*)|(.*"Pin":'.$this->ReadPropertyInteger("Pin_W").'.*))';
 		$this->SetReceiveDataFilter($Filter);
