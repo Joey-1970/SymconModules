@@ -165,6 +165,9 @@
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel TxD - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_TxD")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_TxD"), 0);
 		}
 		
+		// Summary setzen
+		$this->SetSummary("GPIO RxD: ".$this->ReadPropertyInteger("Pin_RxD")." GPIO TxD: ".$this->ReadPropertyInteger("Pin_TxD"));
+		
 		$this->SetBuffer("Update", false);
 		$this->SetBuffer("FileName", "");
 		$this->SetBuffer("FileSize", 0);
