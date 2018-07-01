@@ -89,7 +89,10 @@
 		$OWDeviceArray = Array();
 		$this->SetBuffer("OWDeviceArray", serialize($OWDeviceArray));
 		
-		//ReceiveData-Filter setzen
+		// Summary setzen
+		$this->SetSummary("SC: ".$this->ReadPropertyString("DeviceAddress"));
+		
+		// ReceiveData-Filter setzen
 		$Filter = '((.*"Function":"status".*|.*"InstanceID":'.$this->InstanceID.'.*)|.*"Function":"get_start_trigger".*)';
 		$this->SetReceiveDataFilter($Filter);
 		
