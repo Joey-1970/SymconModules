@@ -98,13 +98,16 @@
 		$OWDeviceArray = Array();
 		$this->SetBuffer("OWDeviceArray", serialize($OWDeviceArray));
 		
-		//ReceiveData-Filter setzen
+		// Summary setzen
+		$this->SetSummary($this->ReadPropertyString("DeviceAddress"));
+		
+		// ReceiveData-Filter setzen
 		$Filter = '((.*"Function":"status".*|.*"InstanceID":'.$this->InstanceID.'.*)|.*"Function":"get_start_trigger".*)';
 		$this->SetReceiveDataFilter($Filter);
 
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {			
 			If ($this->ReadPropertyBoolean("Open") == true) {	
-								$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_OWDevices", "DeviceSerial" => $this->ReadPropertyString("DeviceAddress"), "InstanceID" => $this->InstanceID)));		
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_OWDevices", "DeviceSerial" => $this->ReadPropertyString("DeviceAddress"), "InstanceID" => $this->InstanceID)));		
 				If ($Result == true) {
 					$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
 					$this->Setup();
