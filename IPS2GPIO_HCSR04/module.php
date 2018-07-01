@@ -113,13 +113,16 @@
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_O")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_O"), 0);
 		}
 
-	            // Logging setzen
-		    AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Distance"), $this->ReadPropertyBoolean("Logging"));
-		    IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
+	        // Logging setzen
+		AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Distance"), $this->ReadPropertyBoolean("Logging"));
+		IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
+		
+		// Summary setzen
+		$this->SetSummary("GPIO In: ".$this->ReadPropertyInteger("Pin_I")." GPIO Out: ".$this->ReadPropertyInteger("Pin_O"));
 
-	            //ReceiveData-Filter setzen
-		    $Filter = '((.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_I").'.*)|.*"Pin":'.$this->ReadPropertyInteger("Pin_O").'.*)';
-		    $this->SetReceiveDataFilter($Filter);
+		//ReceiveData-Filter setzen
+		$Filter = '((.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_I").'.*)|.*"Pin":'.$this->ReadPropertyInteger("Pin_O").'.*)';
+		$this->SetReceiveDataFilter($Filter);
 			
 		    If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 				If (($this->ReadPropertyInteger("Pin_I") >= 0) AND ($this->ReadPropertyInteger("Pin_O") >= 0) AND ($this->ReadPropertyBoolean("Open") == true) ) {
