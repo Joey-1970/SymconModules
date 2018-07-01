@@ -133,13 +133,15 @@
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel TxD - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_TxD")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_TxD"), 0);
 		}
 		
+		// Summary setzen
+		$this->SetSummary("GPIO RxD: ".$this->ReadPropertyInteger("Pin_RxD")." GPIO TxD: ".$this->ReadPropertyInteger("Pin_TxD"));
+
         	If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 			// Logging setzen
 			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("PM25"), $this->ReadPropertyBoolean("Logging"));
 			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("PM10"), $this->ReadPropertyBoolean("Logging"));
 			IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
 			
-			$this->SetSummary("GPIO RxD: ".$this->ReadPropertyInteger("Pin_RxD")." GPIO TxD: ".$this->ReadPropertyInteger("Pin_TxD"));
 
 			// den Handle für dieses Gerät ermitteln
 			If (($this->ReadPropertyInteger("Pin_RxD") >= 0) AND ($this->ReadPropertyInteger("Pin_TxD") >= 0) AND ($this->ReadPropertyBoolean("Open") == true) ) {
