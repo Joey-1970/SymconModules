@@ -118,7 +118,7 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayValues[] = array("ServiceTyp" => "Shell Zugriff", "ServiceStatus" => $ServiceArray["Shell Zugriff"]["Status"], "rowColor" => $ServiceArray["Shell Zugriff"]["Color"]);
 		$arrayValues[] = array("ServiceTyp" => "PIGPIO Server", "ServiceStatus" => $ServiceArray["PIGPIO Server"]["Status"], "rowColor" => $ServiceArray["PIGPIO Server"]["Color"]);
 		$arrayValues[] = array("ServiceTyp" => "1-Wire-Server", "ServiceStatus" => $ServiceArray["1-Wire-Server"]["Status"], "rowColor" => $ServiceArray["1-Wire-Server"]["Color"]);
-		$arrayElements[] = array("type" => "List", "name" => "Raspi_Config", "caption" => "Konfiguration", "rowCount" => 5, "add" => false, "delete" => false, "sort" => $arraySort, "columns" => $arrayColumns, "values" => $arrayValues);
+		$arrayElements[] = array("type" => "List", "name" => "Raspi_Config", "caption" => "Konfiguration", "rowCount" => 5, "add" => false, "delete" => false, "sort" => "", "columns" => $arrayColumns, "values" => $arrayValues);
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");		
 		// Tabelle für die gefundenen I²C-Devices
 		$arraySort = array();
@@ -145,7 +145,7 @@ class IPS2GPIO_IO extends IPSModule
 				for ($i = 0; $i < Count($DeviceArray); $i++) {
 					$arrayValues[] = array("DeviceTyp" => $DeviceArray[$i][0], "DeviceAddress" => $DeviceArray[$i][1], "DeviceBus" => $DeviceArray[$i][2], "InstanceID" => $DeviceArray[$i][3], "DeviceStatus" => $DeviceArray[$i][4], "rowColor" => $DeviceArray[$i][5]);
 				}
-				$arrayElements[] = array("type" => "List", "name" => "I2C_Devices", "caption" => "I²C-Devices", "rowCount" => 5, "add" => false, "delete" => false, "sort" => $arraySort, "columns" => $arrayColumns, "values" => $arrayValues);
+				$arrayElements[] = array("type" => "List", "name" => "I2C_Devices", "caption" => "I²C-Devices", "rowCount" => 5, "add" => false, "delete" => false, "sort" => "", "columns" => $arrayColumns, "values" => $arrayValues);
 				$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 			}
 			else {
@@ -162,7 +162,7 @@ class IPS2GPIO_IO extends IPSModule
 					for ($i = 0; $i < Count($OWDeviceArray); $i++) {
 						$arrayOWValues[] = array("DeviceTyp" => $OWDeviceArray[$i][0], "DeviceSerial" => $OWDeviceArray[$i][1], "InstanceID" => $OWDeviceArray[$i][2], "DeviceStatus" => $OWDeviceArray[$i][3], "rowColor" => $OWDeviceArray[$i][4]);
 					}
-					$arrayElements[] = array("type" => "List", "name" => "OW_Devices", "caption" => "1-Wire-Devices", "rowCount" => 5, "add" => false, "delete" => false, "sort" => $arraySort, "columns" => $arrayOWColumns, "values" => $arrayOWValues);
+					$arrayElements[] = array("type" => "List", "name" => "OW_Devices", "caption" => "1-Wire-Devices", "rowCount" => 5, "add" => false, "delete" => false, "sort" => "", "columns" => $arrayOWColumns, "values" => $arrayOWValues);
 					$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 				}
 				else {
