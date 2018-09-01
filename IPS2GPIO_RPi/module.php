@@ -294,10 +294,13 @@
 						If (count($LineOneArray) >= 8) {
 							$this->SendDebug(__CLASS__ . '::' . __FUNCTION__, "LineOneArray=" . print_r($LineOneArray, true), 0);
 							// Idle = idle + iowait
-							$Idle = floatval($LineOneArray[3]) + floatval($LineOneArray[4]);
+							//$Idle = floatval($LineOneArray[3]) + floatval($LineOneArray[4]);
+							$Idle = intval($LineOneArray[3]) + intval($LineOneArray[4]);
 							$this->SendDebug("IPS2GPIO RPi", "idle=$LineOneArray[3], iowait=$LineOneArray[4] => Idle=$Idle", 0);
 							// NonIdle = user+nice+system+irq+softrig+steal
-							$NonIdle = floatval($LineOneArray[0]) + floatval($LineOneArray[1]) + floatval($LineOneArray[2]) + floatval($LineOneArray[5]) + floatval($LineOneArray[6]) + floatval($LineOneArray[7]);
+							//$NonIdle = floatval($LineOneArray[0]) + floatval($LineOneArray[1]) + floatval($LineOneArray[2]) + floatval($LineOneArray[5]) + floatval($LineOneArray[6]) + floatval($LineOneArray[7]);
+							$NonIdle = intval($LineOneArray[0]) + intval($LineOneArray[1]) + intval($LineOneArray[2]) + intval($LineOneArray[5]) + intval($LineOneArray[6]) + intval($LineOneArray[7]);
+
 							$this->SendDebug(__CLASS__ . '::' . __FUNCTION__, "user=$LineOneArray[0], nice=$LineOneArray[1], system=$LineOneArray[2], irq=$LineOneArray[5], softrig=$LineOneArray[6], steal=$LineOneArray[7] => NonIdle=$NonIdle", 0);
 							// Total = Idle + NonIdle
 							$Total = $Idle + $NonIdle;
