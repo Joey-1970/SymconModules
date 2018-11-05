@@ -2042,7 +2042,7 @@ class IPS2GPIO_IO extends IPSModule
            				$this->SendDebug("WatchDog", "gesetzt", 0);
            			}
            			else {
-           				IPS_LogMessage("GeCoS_IO WatchDog","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
+           				IPS_LogMessage("IPS2GPIO WatchDog","Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
 					$this->SendDebug("WatchDog", "Fehlermeldung: ".$this->GetErrorText(abs($response[4])), 0);
            			}
 		            	break;
@@ -2088,7 +2088,7 @@ class IPS2GPIO_IO extends IPSModule
 			case "26":
            			If ($response[4] >= 0 ) {
 					SetValueInteger($this->GetIDForIdent("SoftwareVersion"), $response[4]);
-					If ($response[4] < 67 ) {
+					If ($response[4] < 68 ) {
 						IPS_LogMessage("IPS2GPIO PIGPIO Software Version","Bitte neuste PIGPIO-Software installieren!");
 						$this->SendDebug("PIGPIO Version", "Bitte neuste PIGPIO-Software installieren!", 0);
 					}
