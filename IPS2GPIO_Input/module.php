@@ -126,7 +126,9 @@
 						SetValueBoolean($this->GetIDForIdent("Trigger"), true);
 			   			If ($this->ReadPropertyInteger("TriggerScript") > 0) {
 			   				$this->SendDebug("Notify", "Triggerskript ausfuehren", 0);
-							IPS_RunScript($this->ReadPropertyInteger("TriggerScript"));
+							//IPS_RunScript($this->ReadPropertyInteger("TriggerScript"));
+							IPS_RunScriptEx($this->ReadPropertyInteger("TriggerScript"), Array("ID" => $this->InstanceID));
+
 			   			}
 						$this->SendDebug("Notify", "Trigger zuruecksetzen", 0);
 			   			SetValueBoolean($this->GetIDForIdent("Trigger"), false);
@@ -137,7 +139,8 @@
 						SetValueBoolean($this->GetIDForIdent("Toggle"), !GetValueBoolean($this->GetIDForIdent("Toggle")));
 			   			If ($this->ReadPropertyInteger("ToggleScript") > 0) {
 			   				$this->SendDebug("Notify", "Toggleskript ausfuehren", 0);
-							IPS_RunScript($this->ReadPropertyInteger("ToggleScript"));
+							//IPS_RunScript($this->ReadPropertyInteger("ToggleScript"));
+							IPS_RunScriptEx($this->ReadPropertyInteger("ToggleScript"), Array("ID" => $this->InstanceID));
 			   			}
 			   		}
 			   		// Status setzen
