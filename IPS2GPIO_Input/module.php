@@ -127,7 +127,7 @@
 			   			If ($this->ReadPropertyInteger("TriggerScript") > 0) {
 			   				$this->SendDebug("Notify", "Triggerskript ausfuehren", 0);
 							//IPS_RunScript($this->ReadPropertyInteger("TriggerScript"));
-							IPS_RunScriptEx($this->ReadPropertyInteger("TriggerScript"), Array("ID" => $this->InstanceID));
+							IPS_RunScriptEx($this->ReadPropertyInteger("TriggerScript"), Array("InstanceID" => $this->InstanceID));
 
 			   			}
 						$this->SendDebug("Notify", "Trigger zuruecksetzen", 0);
@@ -140,7 +140,7 @@
 			   			If ($this->ReadPropertyInteger("ToggleScript") > 0) {
 			   				$this->SendDebug("Notify", "Toggleskript ausfuehren", 0);
 							//IPS_RunScript($this->ReadPropertyInteger("ToggleScript"));
-							IPS_RunScriptEx($this->ReadPropertyInteger("ToggleScript"), Array("ID" => $this->InstanceID));
+							IPS_RunScriptEx($this->ReadPropertyInteger("ToggleScript"), Array("InstanceID" => $this->InstanceID));
 			   			}
 			   		}
 			   		// Status setzen
