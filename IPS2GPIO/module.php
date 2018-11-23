@@ -11,7 +11,8 @@ class IPS2GPIO_IO extends IPSModule
 	public function __destruct()
 	{
 		if ($this->Socket) {
-		    	socket_close($this->Socket);
+		    	// Schliessen des Sockets
+			socket_close($this->Socket);
 		}
 	} 
 
