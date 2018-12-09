@@ -561,6 +561,7 @@
 			$ConfigArray = array();
 			$ConfigArray[0] = $Config;
 			$ConfigArray[1] = $Config;
+			$BaseConfig = $Config;
 			// Adressen 0A 0B
 			$tries = 5;
 			do {
@@ -615,12 +616,16 @@
 			$ConfigArray[9] = 0; // Adresse 09
 			$this->SendDebug("Setup", "Interrupt-Referenzwert-Byte A/B = 0", 0);
 			
+			// Erneunt Basiskonfig-Byte mit übertragen
+			$ConfigArray[10] = $BaseConfig; // Adresse 0A
+			$ConfigArray[11] = $BaseConfig; // Adresse 0B
+			
 			// Pull-Up-Byte ermitteln
 			$GPAPU = $this->GetConfigByte("GPAPU");
-			$ConfigArray[10] = $GPAPU; // Adresse 0C
+			$ConfigArray[12] = $GPAPU; // Adresse 0C
 			
 			$GPBPU = $this->GetConfigByte("GPBPU");
-			$ConfigArray[11] = $GPBPU; // Adresse 0D
+			$ConfigArray[13] = $GPBPU; // Adresse 0D
 			$this->SendDebug("Setup", "Pull-up-Byte A: ".$GPAPU." Pull-up-Byte B: ".$GPBPU, 0);
 			$tries = 5;
 			do {
