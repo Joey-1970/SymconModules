@@ -383,7 +383,7 @@
 	return $GPIO;
 	}
 	    
-	private function HasActiveParent()
+	protected function HasActiveParent()
     	{
 		$Instance = @IPS_GetInstance($this->InstanceID);
 		if ($Instance['ConnectionID'] > 0)
