@@ -719,7 +719,7 @@
 	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);        
 	}
 	
-	private function HasActiveParent()
+	protected function HasActiveParent()
     	{
 		$Instance = @IPS_GetInstance($this->InstanceID);
 		if ($Instance['ConnectionID'] > 0)
