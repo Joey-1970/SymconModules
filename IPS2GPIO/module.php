@@ -1947,6 +1947,12 @@ class IPS2GPIO_IO extends IPSModule
 				}
 				IPS_SemaphoreLeave("ClientSocket");
 			}
+			If ($buf == 0) {
+				$this->SendDebug("CommandClientSocket", "Fehler beim Datenempfang!", 0);
+				return;
+			}
+			
+			
 			// Anfragen mit variabler Rückgabelänge
 			$CmdVarLen = array(43, 56, 67, 70, 73, 75, 80, 88, 91, 92, 106, 109);
 			$MessageArray = unpack("L*", $buf);
