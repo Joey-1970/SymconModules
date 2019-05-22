@@ -201,7 +201,6 @@ class IPS2GPIO_IO extends IPSModule
 		parent::ApplyChanges();
 		
 		// Nachrichten abonnieren
-		// Kernel
 	        $this->RegisterMessage(0, 10100); // Alle Kernelmessages (10103 muss im MessageSink ausgewertet werden.)
 		
 		If (IPS_GetKernelRunlevel() == 10103) {
