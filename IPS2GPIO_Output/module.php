@@ -190,6 +190,14 @@
 		}
 	}
 	
+	public function SendTrigger(int $Duration)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("SendTrigger", "Ausfuehrung", 0);
+			//$this->Set_Status(!GetValueBoolean($this->GetIDForIdent("Status")));
+		}
+	}  
+	    
 	// Ermittelt den Status
 	public function Get_Status()
 	{
