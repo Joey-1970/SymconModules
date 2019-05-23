@@ -1949,7 +1949,7 @@ class IPS2GPIO_IO extends IPSModule
 			}
 			If ($buf == 0) {
 				$this->SendDebug("CommandClientSocket", "Fehler beim Datenempfang!", 0);
-				return;
+				//return;
 			}
 			
 			
