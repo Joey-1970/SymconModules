@@ -469,6 +469,15 @@ class IPS2GPIO_IO extends IPSModule
 		    		$Result = $this->CommandClientSocket(pack("L*", 4, $data->Pin, $data->Value, 0), 16);
 		    	}
 		        break;
+		case "set_trigger_value":
+		    	// Schaltet den Pin
+		    	If ($data->Pin >= 0) {
+		    		//IPS_LogMessage("IPS2GPIO SetValue Parameter : ",$data->Pin." , ".$data->Value); 
+		    		$Result = $this->CommandClientSocket(pack("L*", 4, $data->Pin, true, 0), 16);
+				IPS_Sleep ($data->Duration);
+				$Result = $this->CommandClientSocket(pack("L*", 4, $data->Pin, false, 0), 16);
+		    	}
+		        break;
 		case "set_trigger":
 		    	// Setzt einen Trigger
 		    	If ($data->Pin >= 0) {
@@ -1947,11 +1956,6 @@ class IPS2GPIO_IO extends IPSModule
 				}
 				IPS_SemaphoreLeave("ClientSocket");
 			}
-			If ($buf == 0) {
-				$this->SendDebug("CommandClientSocket", "Fehler beim Datenempfang!", 0);
-				//return;
-			}
-			
 			
 			// Anfragen mit variabler Rückgabelänge
 			$CmdVarLen = array(43, 56, 67, 70, 73, 75, 80, 88, 91, 92, 106, 109);
