@@ -473,9 +473,9 @@ class IPS2GPIO_IO extends IPSModule
 		    	// Schaltet den Pin
 		    	If ($data->Pin >= 0) {
 		    		//IPS_LogMessage("IPS2GPIO SetValue Parameter : ",$data->Pin." , ".$data->Value); 
-		    		$Result = $this->CommandClientSocket(pack("L*", 4, $data->Pin, true, 0), 16);
+		    		$Result = $this->CommandClientSocket(pack("L*", 4, $data->Pin, false, 0), 16);
 				IPS_Sleep ($data->Duration);
-				$Result = $this->CommandClientSocket(pack("L*", 4, $data->Pin, false, 0), 16);
+				$Result = $this->CommandClientSocket(pack("L*", 4, $data->Pin, true, 0), 16);
 		    	}
 		        break;
 		case "set_trigger":
