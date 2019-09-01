@@ -866,6 +866,7 @@
 			$air_quality_score = abs($HumScore + $GasScore);
 			//$this->SendDebug("AirQuality", "air_quality_score: ".$air_quality_score, 0);
 			$air_quality_score = (100 - $air_quality_score) * 5;
+			$air_quality_score = $air_quality_score * 0.75;
 			$this->SendDebug("AirQuality", "air_quality_score: ".$air_quality_score, 0);
 			// Umrechnung für die Air-Qualität-Anzeige
 			$air_quality_score = max(0, min(500, $air_quality_score));
