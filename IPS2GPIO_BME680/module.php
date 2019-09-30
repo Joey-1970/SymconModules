@@ -871,7 +871,7 @@
 			//$this->SendDebug("AirQuality", "air_quality_score: ".$air_quality_score, 0);
 			$air_quality_score = (100 - $air_quality_score) * 5;
 			$AQ_CorrectionFactor = $this->ReadPropertyFloat("AQ_CorrectionFactor");
-			
+			$AQ_CorrectionFactor = max(0, min(1, $AQ_CorrectionFactor));
 			$air_quality_score = $air_quality_score * $AQ_CorrectionFactor;
 			$this->SendDebug("AirQuality", "air_quality_score: ".$air_quality_score, 0);
 			// Umrechnung für die Air-Qualität-Anzeige
