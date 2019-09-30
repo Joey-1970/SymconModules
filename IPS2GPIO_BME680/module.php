@@ -37,6 +37,7 @@
 		$this->RegisterPropertyInteger("HeaterProfileSetpoint", 0);
 		$this->RegisterPropertyInteger("HeaterTemp", 320);
 		$this->RegisterPropertyInteger("HeaterDur", 150);
+		$this->RegisterPropertyFloat("AQ_CorrectionFactor", 1.00);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GBME680_Measurement($_IPS["TARGET"]);');
 		$CalibrateData = array();
 		$this->SetBuffer("CalibrateData", serialize($CalibrateData));
@@ -182,6 +183,9 @@
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "HeaterTemp", "caption" => "Temp. °C");
 		$arrayElements[] = array("type" => "Label", "label" => "Gas Messungdauer (0 - 4032ms)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "HeaterDur", "caption" => "ms");
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "Label", "label" => "Experimentell: Air Quality Korrekturfaktor (0 - 1)");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "AQ_CorrectionFactor", "caption" => "Faktor", "digits" => 2);
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Hinweise:");
 		$arrayElements[] = array("type" => "Label", "label" => "- die Device Adresse lautet 118 dez (0x76h) bei SDO an GND");
@@ -866,7 +870,9 @@
 			$air_quality_score = abs($HumScore + $GasScore);
 			//$this->SendDebug("AirQuality", "air_quality_score: ".$air_quality_score, 0);
 			$air_quality_score = (100 - $air_quality_score) * 5;
-			$air_quality_score = $air_quality_score * 0.75;
+			$AQ_CorrectionFactor = $this->ReadPropertyFloat("AQ_CorrectionFactor");
+			
+			$air_quality_score = $air_quality_score * $AQ_CorrectionFactor;
 			$this->SendDebug("AirQuality", "air_quality_score: ".$air_quality_score, 0);
 			// Umrechnung für die Air-Qualität-Anzeige
 			$air_quality_score = max(0, min(500, $air_quality_score));
