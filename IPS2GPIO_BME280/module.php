@@ -374,10 +374,20 @@
 					$af = pow(10,5) * 18.016 / 8314.3 * $dd / ($Temp + 273.15);
 				
 					// Taupunkttemperatur
-					SetValueFloat($this->GetIDForIdent("DewPointTemperature"), round($td, 2));
+					if (is_numeric($td)) {
+						SetValueFloat($this->GetIDForIdent("DewPointTemperature"), round($td, 2));
+					}
+					else {
+						SetValueFloat($this->GetIDForIdent("DewPointTemperature"), 0);
+					}
 
 					// Absolute Feuchtigkeit
-					SetValueFloat($this->GetIDForIdent("HumidityAbs"), round($af, 2));
+					if (is_numeric($af)) {
+						SetValueFloat($this->GetIDForIdent("HumidityAbs"), round($af, 2));
+					}
+					else {
+						SetValueFloat($this->GetIDForIdent("HumidityAbs"), 0);
+					}
 					
 					// Relativen Luftdruck
 					$Altitude = $this->ReadPropertyInteger("Altitude");
