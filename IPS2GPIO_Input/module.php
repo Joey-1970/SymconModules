@@ -102,6 +102,8 @@
 				If ($Result == true) {
 					$this->SetStatus(102);
 				}
+				// Initiale Abfrage des aktuellen Status
+				$this->GetInput();
 			}
 			else {
 				$this->SetStatus(104);
@@ -160,6 +162,24 @@
 	 	}
  	}
 	
+	public function GetInput()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("GetInput", "Ausfuehrung", 0);
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_value", "Pin" => $this->ReadPropertyInteger("Pin") )));
+			If ($Result < 0) {
+				$this->SendDebug("GetInput", "Fehler beim Lesen des Status!", 0);
+				$this->SetStatus(202);
+				return;
+			}
+			else {
+				$this->SetStatus(102);
+				$this->SendDebug("GetInput", "Ergebnis: ".(int)$Result, 0);
+				SetValueBoolean($this->GetIDForIdent("Status"), $Result);
+			}
+		}
+	}    
+	    
 	private function Get_GPIO()
 	{
 		If ($this->HasActiveParent() == true) {
