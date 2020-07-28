@@ -490,6 +490,7 @@ class IPS2GPIO_IO extends IPSModule
 		    	If ($data->Pin >= 0) {
 		        	//IPS_LogMessage("IPS2GPIO SetTrigger Parameter : ",$data->Pin." , ".$data->Time);
 		        	$Result = $this->CommandClientSocket(pack("L*", 8, $data->Pin, $data->Value, 0), 16);
+				$this->SendDebug("ForwardData - set_servo", "Wert: ".$Result, 0);
 		    	}
 		        break;
 		case "get_servo":
@@ -497,6 +498,8 @@ class IPS2GPIO_IO extends IPSModule
 		    	If ($data->Pin >= 0) {
 		        	//IPS_LogMessage("IPS2GPIO SetTrigger Parameter : ",$data->Pin." , ".$data->Time);
 				$Result = $this->CommandClientSocket(pack("L*", 84, $data->Pin, 0, 0), 16);
+				$this->SendDebug("ForwardData", "get_servo Wert: ".$Result, 0);
+				$this->SendDebug("ForwardData - get_servo", "Wert: ".$Result, 0);
 		    	}
 		        break;
 				
