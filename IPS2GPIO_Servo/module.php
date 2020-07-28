@@ -53,7 +53,9 @@
 		$arrayElements[] = array("type" => "Label", "label" => "ACHTUNG: Falsche Werte können zur Beschädigung des Servo führen!");
 		$arrayActions = array();
 		If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-			//$arrayActions[] = array("type" => "Button", "label" => "Toggle Output", "onClick" => 'I2GOUT_Toggle_Status($id);');
+			$arrayActions = array(); 
+			$arrayActions[] = array("type" => "Label", "label" => "Test Center"); 
+			$arrayActions[] = array("type" => "TestCenter", "name" => "TestCenter");
 		}
 		else {
 			$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
