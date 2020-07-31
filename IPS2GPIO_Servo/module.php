@@ -2,6 +2,14 @@
     // Klassendefinition
     class IPS2GPIO_Servo extends IPSModule 
     {
+	public function Destroy() 
+	{
+		//Never delete this line!
+		parent::Destroy();
+		$this->SetTimerInterval("Shutdown", 0);
+	}  
+	    
+	    
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
@@ -13,7 +21,9 @@
 		$this->RegisterPropertyInteger("most_anti_clockwise", 500);
 		$this->RegisterPropertyInteger("midpoint", 1500);
 		$this->RegisterPropertyInteger("most_clockwise", 2500);
+		$this->RegisterPropertyInteger("Shutdown", 500);
  	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+		$this->RegisterTimer("Shutdown", 0, 'I2GServo_Shutdown($_IPS["TARGET"]);');
 		
 		// Status-Variablen anlegen
 		$this->RegisterVariableInteger("Output", "Ausgang", "~Intensity.100", 10);
@@ -31,8 +41,8 @@
 		$arrayStatus[] = array("code" => 202, "icon" => "error", "caption" => "GPIO-Kommunikationfehler!");
 		
 		$arrayElements = array(); 
-		$arrayElements[] = array("name" => "Open", "type" => "CheckBox",  "caption" => "Aktiv"); 
- 		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number)"); 
+		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv"); 
+ 		$arrayElements[] = array("type" => "Label", "caption" => "Angabe der GPIO-Nummer (Broadcom-Number)"); 
   		
 		$arrayOptions = array();
 		$GPIO = array();
@@ -45,12 +55,16 @@
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
-		$arrayElements[] = array("type" => "Label", "label" => "Angabe der Microsekunden bei 50 Hz:"); 
-		$arrayElements[] = array("name" => "most_anti_clockwise", "type" => "NumberSpinner",  "caption" => "Max. Links (ms)"); 
-		$arrayElements[] = array("name" => "midpoint", "type" => "NumberSpinner",  "caption" => "Mittelstellung (ms)"); 
-		$arrayElements[] = array("name" => "most_clockwise", "type" => "NumberSpinner",  "caption" => "Max. Rechts (ms)");
-		$arrayElements[] = array("type" => "Label", "label" => "ACHTUNG: Falsche Werte können zur Beschädigung des Servo führen!");
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("type" => "Label", "caption" => "Angabe der Microsekunden bei 50 Hz"); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "most_anti_clockwise", "caption" => "Max. Links (ms)", "minimum" => 0); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "midpoint", "caption" => "Mittelstellung (ms)", "minimum" => 0); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "most_clockwise", "caption" => "Max. Rechts (ms)", "minimum" => 0);
+		$arrayElements[] = array("type" => "Label", "caption" => "Zeit bis zur Abschaltung in Microsekunden (0 = keine automatische Abschaltung)"); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Shutdown", "caption" => "Abschaltung (ms)", "minimum" => 0); 
+		$arrayElements[] = array("type" => "Label", "caption" => "ACHTUNG: Falsche Werte können zur Beschädigung des Servo führen!");
+		
+		
 		$arrayActions = array();
 		If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 			$arrayActions = array(); 
@@ -79,6 +93,8 @@
 		//ReceiveData-Filter setzen
                 $Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*)';
 		$this->SetReceiveDataFilter($Filter);
+		
+		$this->SetTimerInterval("Shutdown", 0);
 		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
 			If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
@@ -141,6 +157,8 @@
 			$this->SendDebug("SetOutput", "Ausfuehrung", 0);
 			$Left = $this->ReadPropertyInteger("most_anti_clockwise");
 			$Right = $this->ReadPropertyInteger("most_clockwise");
+			$Shutdown = $this->ReadPropertyInteger("Shutdown");
+			
 			$Value = min(100, max(0, $Value));
 			
 			$Value = intval(($Value * ($Right - $Left) / 100) + $Left);
@@ -156,15 +174,31 @@
 				SetValueInteger($this->GetIDForIdent("Output"), $Output);
 				$this->GetOutput();
 			}
+			
+			If ($Shutdown > 0) {
+				$this->SetTimerInterval("Shutdown", $Shutdown);
+			}
+			/*
 			IPS_Sleep(500);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => 0)));
 			If (!$Result) {
 				$this->SendDebug("SetOutput", "Fehler beim Ausschalten!", 0);
 				$this->SetStatus(202);
 			}
+			*/
 		}
 	}
 	  
+	public function Shutdown()
+	{
+		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => 0)));
+			If (!$Result) {
+				$this->SendDebug("Shutdown", "Fehler beim Ausschalten!", 0);
+				$this->SetStatus(202);
+			}
+		$this->SetTimerInterval("Shutdown", 0);
+	}
+	    
 	public function GetOutput()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
