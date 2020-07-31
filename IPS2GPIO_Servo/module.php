@@ -170,7 +170,8 @@
 			}
 			else {
 				$this->SetStatus(102);
-				$Output = ($Value / ($Right - $Left)) * 100;
+				//$Output = ($Value / ($Right - $Left)) * 100;
+				$Output = (($Value - $Left)/ ($Right - $Left)) * 100;
 				SetValueInteger($this->GetIDForIdent("Output"), $Output);
 				$this->GetOutput();
 			}
