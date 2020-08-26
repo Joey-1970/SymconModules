@@ -147,10 +147,11 @@ class IPS2GPIO_IO extends IPSModule
 					$arrayValues[] = array("DeviceTyp" => $DeviceArray[$i][0], "DeviceAddress" => $DeviceArray[$i][1], "DeviceBus" => $DeviceArray[$i][2], "InstanceID" => $DeviceArray[$i][3], "DeviceStatus" => $DeviceArray[$i][4], "rowColor" => $DeviceArray[$i][5]);
 				}
 				$arrayElements[] = array("type" => "List", "name" => "I2C_Devices", "caption" => "I²C-Devices", "rowCount" => 5, "add" => false, "delete" => false, "sort" => $arraySort, "columns" => $arrayColumns, "values" => $arrayValues);
-				$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+				$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");
 			}
 			else {
 				$arrayElements[] = array("type" => "Label", "label" => "Es wurden keine I²C-Devices gefunden.");
+				$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");
 			}
 			
 			If ($this->GetBuffer("OW_Handle") >= 0) {
@@ -164,13 +165,13 @@ class IPS2GPIO_IO extends IPSModule
 						$arrayOWValues[] = array("DeviceTyp" => $OWDeviceArray[$i][0], "DeviceSerial" => $OWDeviceArray[$i][1], "InstanceID" => $OWDeviceArray[$i][2], "DeviceStatus" => $OWDeviceArray[$i][3], "rowColor" => $OWDeviceArray[$i][4]);
 					}
 					$arrayElements[] = array("type" => "List", "name" => "OW_Devices", "caption" => "1-Wire-Devices", "rowCount" => 5, "add" => false, "delete" => false, "sort" => $arraySort, "columns" => $arrayOWColumns, "values" => $arrayOWValues);
-					$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+					$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");
 				}
 				else {
 					$arrayElements[] = array("type" => "Label", "label" => "Es wurden keine 1-Wire-Devices gefunden.");
+					$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");
 				}
 			}
-			$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		}
 		$arrayElements[] = array("type" => "Label", "label" => "Wird ein Audio Hat wie z.B. Hifiberry parallel verwendet, muss diese Option gewählt werden.");
 		$arrayElements[] = array("type" => "Label", "label" => "Die Nutzung von PWM (Dimmer, RGB, RGBW usw.) ist dann nicht möglich!");
