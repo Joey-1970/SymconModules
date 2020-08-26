@@ -172,11 +172,6 @@ class IPS2GPIO_IO extends IPSModule
 			}
 			$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		}
-		If (($this->ConnectionTest()) AND ($this->ReadPropertyBoolean("Open") == true)) {
-			$arrayElements[] = array("type" => "Label", "label" => "Führt einen Restart des PIGPIO aus:");
-			$arrayElements[] = array("type" => "Button", "label" => "PIGPIO Restart", "onClick" => 'I2G_PIGPIOD_Restart($id);');
-			$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		}
 		$arrayElements[] = array("type" => "Label", "label" => "Wird ein Audio Hat wie z.B. Hifiberry parallel verwendet, muss diese Option gewählt werden.");
 		$arrayElements[] = array("type" => "Label", "label" => "Die Nutzung von PWM (Dimmer, RGB, RGBW usw.) ist dann nicht möglich!");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "AudioDAC", "caption" => "Vorhanden");
@@ -188,7 +183,6 @@ class IPS2GPIO_IO extends IPSModule
 			If ($this->ConnectionTest() == true) {
 				$arrayActions[] = array("type" => "Label", "caption" => "Führt einen Restart des PIGPIO aus:");
 				$arrayActions[] = array("type" => "Button", "label" => "PIGPIO Restart", "onClick" => 'I2G_PIGPIOD_Restart($id);');
-				$arrayActions[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");
 			}
 		}
 		else {
