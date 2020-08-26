@@ -184,8 +184,12 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayElements[] = array("type" => "CheckBox", "name" => "AutoRestart", "caption" => "Auto Restart");	
 		
 		$arrayActions = array();
-		If ($this->ReadPropertyBoolean("Open") == true) {   
-			$arrayActions[] = array("type" => "Label", "label" => "Aktuell sind keine Testfunktionen definiert");
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			If ($this->ConnectionTest() == true) {
+				$arrayActions[] = array("type" => "Label", "caption" => "Führt einen Restart des PIGPIO aus:");
+				$arrayActions[] = array("type" => "Button", "label" => "PIGPIO Restart", "onClick" => 'I2G_PIGPIOD_Restart($id);');
+				$arrayActions[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");
+			}
 		}
 		else {
 			$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
