@@ -94,7 +94,7 @@
 				}
 				break;
 			case "status":
-			   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
+			   	If ($data->Pin == 4) {
 			   		$this->SetStatus($data->Status);
 			   	}
 			   	break;
