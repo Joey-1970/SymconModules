@@ -3867,14 +3867,16 @@ class IPS2GPIO_IO extends IPSModule
 			} 
 			else {
             			//$this->SendDebug("OWReadByte", "Read Status Byte: ".$Data, 0);
-            			if ($Data[0] & 0x01) { // 1-Wire Busy bit
-                			//server.log("One-Wire bus is busy");
-                			if ($loopcount > 100) {
-                    				$this->SendDebug("OWReadByte", "One-Wire busy for too long", 0);
-                    				return -1;
-                			}
-                			IPS_Sleep(10); //Wait, try again
-            			} 
+            			If (is_array($Data) == true) {
+					if ($Data[0] & 0x01) { // 1-Wire Busy bit
+						//server.log("One-Wire bus is busy");
+						if ($loopcount > 100) {
+							$this->SendDebug("OWReadByte", "One-Wire busy for too long", 0);
+							return -1;
+						}
+						IPS_Sleep(10); //Wait, try again
+					} 
+				}
 				else {
 					//server.log("One-Wire bus is idle");
 					break;
