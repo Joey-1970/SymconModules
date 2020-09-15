@@ -32,9 +32,10 @@
 		$arrayStatus[] = array("code" => 200, "icon" => "error", "caption" => "Instanz ist fehlerhaft"); 
 		
 		$arrayElements = array(); 
+		$arrayElements[] = array("type" => "Label", "caption" => "WIRD DEMNäCHST ENTFERNT. ERSATZ: Modul IPS2OWFS"); 
 		$arrayElements[] = array("name" => "Open", "type" => "CheckBox",  "caption" => "Aktiv"); 
- 		$arrayElements[] = array("type" => "Label", "label" => "GPIO 4 (Pin 7) ist dafür ausschließlich zu verwenden"); 
-  		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, 15 sek -> Minimum)"); 
+ 		$arrayElements[] = array("type" => "Label", "caption" => "GPIO 4 (Pin 7) ist dafür ausschließlich zu verwenden"); 
+  		$arrayElements[] = array("type" => "Label", "caption" => "Wiederholungszyklus in Sekunden (0 -> aus, 15 sek -> Minimum)"); 
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Messzyklus (sek)");
  		
 		$SensorArray = unserialize(GetValueString($this->GetIDForIdent("SensorArray")));
