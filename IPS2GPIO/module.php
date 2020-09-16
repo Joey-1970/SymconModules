@@ -1918,11 +1918,12 @@ class IPS2GPIO_IO extends IPSModule
 				}
 
 				// Message senden
-				if( ! socket_send ($this->Socket, $message, strlen($message), 0))
+				if (!@socket_send($this->Socket, $message, strlen($message), 0))
 				{
 					$errorcode = socket_last_error();
 					$errormsg = socket_strerror($errorcode);
 					IPS_LogMessage("IPS2GPIO Socket", "Fehler beim Senden ".$errorcode." ".$errormsg);
+					$this->SendDebug("CommandClientSocket", "Fehler beim Senden ".$errorcode." ".$errormsg, 0);
 					IPS_SemaphoreLeave("ClientSocket");
 					return;
 				}
