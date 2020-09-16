@@ -1962,18 +1962,22 @@ class IPS2GPIO_IO extends IPSModule
 			// Anfragen mit variabler Rückgabelänge
 			$CmdVarLen = array(43, 56, 67, 70, 73, 75, 80, 88, 91, 92, 106, 109);
 			$MessageArray = unpack("L*", $buf);
-			$Command = $MessageArray[1];
-			//IPS_LogMessage("IPS2GPIO ReceiveData", "Command: ".$Command);
-			If (in_array($Command, $CmdVarLen)) {
-				$Result = $this->ClientResponse($buf);
-				//IPS_LogMessage("IPS2GPIO ReceiveData", strlen($buf)." Zeichen");
-			}
-			// Standardantworten
-			elseIf ((strlen($buf) == 16) OR ((strlen($buf) / 16) == intval(strlen($buf) / 16))) {
-				$DataArray = str_split($buf, 16);
-				//IPS_LogMessage("IPS2GPIO ReceiveData", strlen($buf)." Zeichen");
-				for ($i = 0; $i < Count($DataArray); $i++) {
-					$Result = $this->ClientResponse($DataArray[$i]);
+			If (is_array($MessageArray) == true) {
+				If (isset($MessageArray[1]) == true) {
+					$Command = $MessageArray[1];
+					//IPS_LogMessage("IPS2GPIO ReceiveData", "Command: ".$Command);
+					If (in_array($Command, $CmdVarLen)) {
+						$Result = $this->ClientResponse($buf);
+						//IPS_LogMessage("IPS2GPIO ReceiveData", strlen($buf)." Zeichen");
+					}
+					// Standardantworten
+					elseIf ((strlen($buf) == 16) OR ((strlen($buf) / 16) == intval(strlen($buf) / 16))) {
+						$DataArray = str_split($buf, 16);
+						//IPS_LogMessage("IPS2GPIO ReceiveData", strlen($buf)." Zeichen");
+						for ($i = 0; $i < Count($DataArray); $i++) {
+							$Result = $this->ClientResponse($DataArray[$i]);
+						}
+					}
 				}
 			}
 			else {
