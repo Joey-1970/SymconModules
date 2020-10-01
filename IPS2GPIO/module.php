@@ -20,6 +20,7 @@ class IPS2GPIO_IO extends IPSModule
 	{
 	    	// Diese Zeile nicht entfernen
 	    	parent::Create();
+		$this->RegisterMessage(0, IPS_KERNELSTARTED);
 	    
 	    	// Modul-Eigenschaftserstellung
 	    	$this->RegisterPropertyBoolean("Open", false);
@@ -198,11 +199,8 @@ class IPS2GPIO_IO extends IPSModule
 	{
 		//Never delete this line!
 		parent::ApplyChanges();
-		
-		// Nachrichten abonnieren
-	        $this->RegisterMessage(0, 10100); // Alle Kernelmessages (10103 muss im MessageSink ausgewertet werden.)
-		
-		If (IPS_GetKernelRunlevel() == 10103) {
+				
+		If (IPS_GetKernelRunlevel() == KR_READY) {
 			$this->SetBuffer("ModuleReady", 0);
 			$this->SetBuffer("Handle", -1);
 			$this->SetBuffer("HardwareRev", 0);
@@ -363,10 +361,9 @@ class IPS2GPIO_IO extends IPSModule
     	{
         IPS_LogMessage("IPS2GPIO MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
 		switch ($Message) {
-			case 10100:
-				If ($Data[0] == 10103) {
-					$this->ApplyChanges();
-				}
+			case 10001:
+				// IPS_KERNELSTARTED
+				$this->ApplyChanges();
 				break;
 			case 11101:
 				IPS_LogMessage("IPS2GPIO MessageSink", "Instanz ".$SenderID." wurde verbunden");
