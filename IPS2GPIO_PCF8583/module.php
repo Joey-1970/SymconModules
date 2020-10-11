@@ -248,6 +248,8 @@
 			}
 			
 			// Zähler zurücksetzen
+			$this->SetCounter(0, 0, 0);
+			/*
 			$CounterValueArray = array();
 			$CounterValueArray = array(0, 0, 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write_array", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 0x01, 
@@ -263,6 +265,7 @@
 				$this->SetBuffer("CounterOldValue", 0);
 				SetValueInteger($this->GetIDForIdent("CounterDifference"), 0);
 			}
+			*/
 			
 			// Alarm Kontrolle an Andresse x08 setzen
 			If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyInteger("AlarmValue") > 0)) {
@@ -584,7 +587,43 @@
 			
 		}
 	}     														
-																
+	
+
+	private function SetCounter(int $Value01, int $Value02, int $Value03)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("SetCounter", "Ausfuehrung", 0);
+			$Bitmask = 0xE0;
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x00, "Value" => $Bitmask)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "Ruecksetzen der Config fehlerhaft!", 0);
+				$this->SetStatus(202);
+				$this->SetTimerInterval("Messzyklus", 0);
+				return;
+			}
+			else {
+				// Zähler zurücksetzen
+				$CounterValueArray = array();
+				$CounterValueArray = array($Value01, $Value02, $Value03);
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write_array", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 0x01, 
+												  "Parameter" => serialize($CounterValueArray) )));	
+				If (!$Result) {
+					$this->SendDebug("Setup", "Setzen des Counterwertes fehlerhaft!", 0);
+					$this->SetStatus(202);
+					$this->SetTimerInterval("Messzyklus", 0);
+					return;
+				}
+				else {
+					$this->SetStatus(102);
+					$this->SetBuffer("CounterOldValue", 0);
+					SetValueInteger($this->GetIDForIdent("CounterDifference"), 0);
+				}				
+			}
+			
+		}
+	}        
+	    
+	    
 	private function Get_I2C_Ports()
 	{
 		If ($this->HasActiveParent() == true) {
