@@ -424,10 +424,14 @@
 						$MeasurementData = unserialize($Result);
 						
 						$this->SendDebug("GetCounter", "Rohergebnis: ".$MeasurementData[3]." ".$MeasurementData[2]." ".$MeasurementData[1], 0);
+						$Test = intval($MeasurementData[3].$MeasurementData[2].$MeasurementData[1]);
+						$this->SendDebug("GetCounter", "BCD Ergebnis: ".$Test, 0);
+						
 						
 						// Berechnung des Wertes Darstellung BCD
 						$CounterValue = 0;
 						for ($i = 1; $i <= 3; $i++) {
+							
 							$CounterValue = $CounterValue + ($MeasurementData[$i] & 15) * pow(10, ($i + $i - 2));
 							$CounterValue = $CounterValue + (($MeasurementData[$i] & 240) >> 4) * pow(10, ($i + $i - 1));
 						}
