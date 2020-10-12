@@ -650,8 +650,8 @@
 				// Zähler zurücksetzen
 				$CounterValueArray = array();
 				$CounterValueArray = array($Value01, $Value02, $Value03);
-				//$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write_array", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 0x01, 
-				//	"Parameter" => serialize($CounterValueArray) )));	
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write_array", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 0x01, 
+					"Parameter" => serialize($CounterValueArray) )));	
 				
 				If (!$Result) {
 					$this->SendDebug("Setup", "Setzen des Counterwertes fehlerhaft!", 0);
