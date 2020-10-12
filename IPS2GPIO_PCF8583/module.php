@@ -375,7 +375,7 @@
 					$this->SendDebug("Setup", "Setzen der Config fehlerhaft!", 0);
 					$this->SetStatus(202);
 					$this->SetTimerInterval("Messzyklus", 0);
-					return;
+					break;
 				}
 				else {
 					$this->SetStatus(102);
@@ -391,6 +391,17 @@
 				}
 				else {
 					If (is_array(unserialize($Result)) == true) {
+						
+						
+						$Bitmask = 0x24;
+						$Result_2 = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x00, "Value" => $Bitmask)));
+						If (!$Result_2) {
+							$this->SendDebug("GetCounter", "Ruecksetzen der Config fehlerhaft!", 0);
+							$this->SetStatus(202);
+							$this->SetTimerInterval("Messzyklus", 0);
+							break;
+						}
+						
 						$this->SetStatus(102);
 						$MeasurementData = array();
 						$MeasurementData = unserialize($Result);
@@ -621,7 +632,7 @@
 			else {
 				// Zähler zurücksetzen
 				$CounterValueArray = array();
-				$CounterValueArray = array($Value01, $Value02, $Value03);
+				$CounterValueArray = array($Value01, $Value02, $Value03, 0x24);
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write_array", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 0x01, 
 												  "Parameter" => serialize($CounterValueArray) )));	
 				If (!$Result) {
