@@ -220,7 +220,7 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Setup", "Ausfuehrung", 0);
 			
-			
+			/*
 			$Bitmask = 0x00;
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x00, "Value" => $Bitmask)));
 			If (!$Result) {
@@ -246,7 +246,7 @@
 			else {
 				$this->SetStatus(102);
 			}
-			
+			*/
 			// Zähler zurücksetzen
 			$this->SetCounter(0, 0, 0);
 			/*
@@ -267,6 +267,7 @@
 			}
 			*/
 			
+			/*
 			// Alarm Kontrolle an Andresse x08 setzen
 			If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyInteger("AlarmValue") > 0)) {
 				// Interrupt setzen
@@ -353,6 +354,7 @@
 			else {
 				$this->SetStatus(102);
 			}
+			*/
 			
 			$this->GetAlarmValue();
 			// Erste Messdaten einlesen
