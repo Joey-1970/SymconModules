@@ -426,7 +426,7 @@
 						$this->SendDebug("GetCounter", "Rohergebnis: ".$MeasurementData[3]." ".$MeasurementData[2]." ".$MeasurementData[1], 0);
 						
 		
-						$Test = intval(sprintf("%02d", $MeasurementData[3]).sprintf("%02d", $MeasurementData[2]).sprintf("%02d", $MeasurementData[1]));
+						$Test = intval(sprintf("%02d", dechex($MeasurementData[3])).sprintf("%02d", dechex($MeasurementData[2])).sprintf("%02d", dechex($MeasurementData[1])));
 						$this->SendDebug("GetCounter", "BCD Ergebnis: ".$Test, 0);
 						
 						
