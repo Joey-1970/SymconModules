@@ -395,6 +395,8 @@
 						$MeasurementData = array();
 						$MeasurementData = unserialize($Result);
 						
+						$this->SendDebug("GetCounter", "Rohergebnis: ".$MeasurementData[3]." ".$MeasurementData[2]." ".$MeasurementData[1], 0);
+						
 						// Berechnung des Wertes Darstellung BCD
 						$CounterValue = 0;
 						for ($i = 1; $i <= 3; $i++) {
