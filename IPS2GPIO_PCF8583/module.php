@@ -108,7 +108,7 @@
 		
 		$arrayActions = array();
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$arrayActions[] = array("type" => "Button", "label" => "Zähler Reset", "onClick" => 'IPS_RequestAction($_IPS["TARGET"], "CounterReset", 0);');
+			$arrayActions[] = array("type" => "Button", "label" => "Zähler Reset", "onClick" => 'RequestAction($_IPS["TARGET"], "CounterReset");');
 		}
 		else {
 			$arrayActions[] = array("type" => "Label", "caption" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
