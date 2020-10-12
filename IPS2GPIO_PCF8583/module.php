@@ -451,7 +451,7 @@
 						SetValueFloat($this->GetIDForIdent("PulseMinute"), $PulseMinute);
 						$this->SetBuffer("CounterOldTime", $MeasurementTime);
 						
-						$this->GetTimerValue();									
+						//$this->GetTimerValue();									
 																
 						break;
 					}
