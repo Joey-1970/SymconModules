@@ -108,13 +108,10 @@
 		
 		$arrayActions = array();
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			If ($this->ConnectionTest() == true) {
-				$arrayActions[] = array("type" => "Label", "caption" => "Führt einen Restart des PIGPIO aus:");
-				$arrayActions[] = array("type" => "Button", "label" => "PIGPIO Restart", "onClick" => 'IPS_RequestAction($_IPS["TARGET"], "CounterReset");');
-			}
+			$arrayActions[] = array("type" => "Button", "label" => "Zähler Reset", "onClick" => 'IPS_RequestAction($_IPS["TARGET"], "CounterReset");');
 		}
 		else {
-			$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
+			$arrayActions[] = array("type" => "Label", "caption" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
 		}		
  		return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements, "actions" => $arrayActions)); 		 
  	}       
