@@ -649,9 +649,10 @@
 			else {
 				// Zähler zurücksetzen
 				$CounterValueArray = array();
-				$CounterValueArray = array($Value01, $Value02, $Value03, 0x24);
-				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write_array", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 0x01, 
-												  "Parameter" => serialize($CounterValueArray) )));	
+				$CounterValueArray = array($Value01, $Value02, $Value03);
+				//$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write_array", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 0x01, 
+				//	"Parameter" => serialize($CounterValueArray) )));	
+				
 				If (!$Result) {
 					$this->SendDebug("Setup", "Setzen des Counterwertes fehlerhaft!", 0);
 					$this->SetStatus(202);
@@ -659,6 +660,11 @@
 					return;
 				}
 				else {
+					$Bitmask = 0xE0;
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x00, "Value" => $Bitmask)));
+			
+					
+					
 					$this->SetStatus(102);
 					$this->SetBuffer("CounterOldValue", 0);
 					SetValueInteger($this->GetIDForIdent("CounterDifference"), 0);
