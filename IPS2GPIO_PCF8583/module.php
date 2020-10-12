@@ -235,141 +235,11 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Setup", "Ausfuehrung", 0);
 			
-			/*
-			$Bitmask = 0x00;
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x00, "Value" => $Bitmask)));
-			If (!$Result) {
-				$this->SendDebug("Setup", "Ruecksetzen der Config fehlerhaft!", 0);
-				$this->SetStatus(202);
-				$this->SetTimerInterval("Messzyklus", 0);
-				return;
-			}
-			else {
-				$this->SetStatus(102);
-			}
 			
 			
-			// PCF8583 zum Schreiben vorbereiten
-			$Bitmask = 0xE0;
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x00, "Value" => $Bitmask)));
-			If (!$Result) {
-				$this->SendDebug("Setup", "Setzen der Config fehlerhaft!", 0);
-				$this->SetStatus(202);
-				$this->SetTimerInterval("Messzyklus", 0);
-				return;
-			}
-			else {
-				$this->SetStatus(102);
-			}
-			*/
 			// Zähler zurücksetzen
 			$this->SetCounter(0, 0, 0);
-			/*
-			$CounterValueArray = array();
-			$CounterValueArray = array(0, 0, 0);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write_array", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 0x01, 
-											  "Parameter" => serialize($CounterValueArray) )));	
-			If (!$Result) {
-				$this->SendDebug("Setup", "Setzen des Counterwertes fehlerhaft!", 0);
-				$this->SetStatus(202);
-				$this->SetTimerInterval("Messzyklus", 0);
-				return;
-			}
-			else {
-				$this->SetStatus(102);
-				$this->SetBuffer("CounterOldValue", 0);
-				SetValueInteger($this->GetIDForIdent("CounterDifference"), 0);
-			}
-			*/
 			
-			/*
-			// Alarm Kontrolle an Andresse x08 setzen
-			If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyInteger("AlarmValue") > 0)) {
-				// Interrupt setzen
-				$Bitmask = 0x90;
-			}
-			else {
-				$Bitmask = 0x10;
-			}
-			$CounterInterrupt = $this->ReadPropertyInteger("CounterInterrupt");
-			If ($CounterInterrupt == 0) {
-				$Bitmask = $Bitmask | $CounterInterrupt;
-			}
-			else {
-				//$Bitmask = $Bitmask | $CounterInterrupt | (1 << 6) | 1 << 3;
-				$Bitmask = $Bitmask | 72 | $CounterInterrupt;
-			}
-			$this->SendDebug("Setup", "Alarmregister: ".$Bitmask, 0);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x08, "Value" => $Bitmask)));
-			If (!$Result) {
-				$this->SendDebug("Setup", "Setzen der Alarm-Config fehlerhaft!", 0);
-				$this->SetStatus(202);
-				$this->SetTimerInterval("Messzyklus", 0);
-				return;
-			}
-			else {
-				$this->SetStatus(102);
-			}
-			
-			// Alarmwert setzen
-			$AlarmValue =  $this->ReadPropertyInteger("AlarmValue");
-			$AlarmValueArray = array();
-	
-			$AlarmValue = min(pow(2, 23), max(0, $AlarmValue));
-			$AlarmValueArray = unpack("C*", pack("L", $AlarmValue));
-			unset ($AlarmValueArray[4]);
-			$this->SendDebug("Setup", "Alarmwert: ".$AlarmValue, 0);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write_array", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 0x09, 
-											  "Parameter" => serialize($AlarmValueArray) )));	
-			If (!$Result) {
-				$this->SendDebug("Setup", "Setzen des Alarmwertes fehlerhaft!", 0);
-				$this->SetStatus(202);
-				$this->SetTimerInterval("Messzyklus", 0);
-				return;
-			}
-			else {
-				$this->SetStatus(102);
-			}
-			
-			// Timerwert setzen
-			$TimerValue =  0;
-			$TimerValueArray = array();
-			$TimerValueArray[0] = $TimerValue;
-			$this->SendDebug("Setup", "Timerwert: ".$TimerValue, 0);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write_array", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => 0x0F, 
-											  "Parameter" => serialize($TimerValueArray) )));	
-			If (!$Result) {
-				$this->SendDebug("Setup", "Setzen des Timerwertes fehlerhaft!", 0);
-				$this->SetStatus(202);
-				$this->SetTimerInterval("Messzyklus", 0);
-				return;
-			}
-			else {
-				$this->SetStatus(102);
-			}
-			
-			// Counter Einstellungen beenden
-			// Kontroll und Status Register an Adresse x00 setzen
-			If ($this->ReadPropertyInteger("Pin") >= 0) {
-				// Interrupt setzen
-				$Interrupt = 1 << 2;
-			}
-			else {
-				$Interrupt = 0 << 2;
-			}
-			$CounterMode = 2 << 4;
-			$Bitmask = $CounterMode | $Interrupt;
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x00, "Value" => $Bitmask)));
-			If (!$Result) {
-				$this->SendDebug("Setup", "Setzen der Config fehlerhaft!", 0);
-				$this->SetStatus(202);
-				$this->SetTimerInterval("Messzyklus", 0);
-				return;
-			}
-			else {
-				$this->SetStatus(102);
-			}
-			*/
 			
 			$this->GetAlarmValue();
 			// Erste Messdaten einlesen
@@ -423,22 +293,15 @@
 						$MeasurementData = array();
 						$MeasurementData = unserialize($Result);
 						
-						$this->SendDebug("GetCounter", "Rohergebnis: ".$MeasurementData[3]." ".$MeasurementData[2]." ".$MeasurementData[1], 0);
-						
-		
-						$Test = intval(sprintf("%02d", dechex($MeasurementData[3])).sprintf("%02d", dechex($MeasurementData[2])).sprintf("%02d", dechex($MeasurementData[1])));
-						$this->SendDebug("GetCounter", "BCD Ergebnis: ".$Test, 0);
-						
+						//$this->SendDebug("GetCounter", "Rohergebnis: ".$MeasurementData[3]." ".$MeasurementData[2]." ".$MeasurementData[1], 0);
 						
 						// Berechnung des Wertes Darstellung BCD
 						$CounterValue = 0;
-						for ($i = 1; $i <= 3; $i++) {
-							
-							$CounterValue = $CounterValue + ($MeasurementData[$i] & 15) * pow(10, ($i + $i - 2));
-							$CounterValue = $CounterValue + (($MeasurementData[$i] & 240) >> 4) * pow(10, ($i + $i - 1));
-						}
-						$this->SendDebug("GetCounter", "Ergebnis BCD: ".$CounterValue, 0);									
-						SetValueInteger($this->GetIDForIdent("CounterValue"), $CounterValue);
+						$CounterValue = intval(sprintf("%02d", dechex($MeasurementData[3])).sprintf("%02d", dechex($MeasurementData[2])).sprintf("%02d", dechex($MeasurementData[1])));
+						//$this->SendDebug("GetCounter", "BCD Ergebnis: ".$Test, 0);
+						
+						$this->SendDebug("GetCounter", "Ergebnis: ".$CounterValue, 0);									
+						$this->SetValue("CounterValue", $CounterValue);
 						
 						// Zählerdifferenz berechnen
 						$CounterOldValue = intval($this->GetBuffer("CounterOldValue"));
