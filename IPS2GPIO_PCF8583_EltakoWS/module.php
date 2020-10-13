@@ -14,7 +14,7 @@
  	    	$this->RegisterPropertyInteger("DeviceAddress", 80);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
 		$this->RegisterPropertyInteger("Messzyklus", 60);
-		$this->RegisterTimer("Messzyklus", 0, 'I2GPCF8583_GetCounter($_IPS["TARGET"]);');
+		$this->RegisterTimer("Messzyklus", 0, 'I2GPCF8583EltakoWS_GetCounter($_IPS["TARGET"]);');
 		
 		// Profile anlegen
 		$this->RegisterProfileFloat("IPS2GPIO.PCF8583", "Intensity", "", " Imp./min", 0, 1000, 0.1, 1);
@@ -61,7 +61,7 @@
 				
 		$arrayActions = array();
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$arrayActions[] = array("type" => "Button", "label" => "Zähler Reset", "onClick" => 'I2GPCF8583_SetCounter($id, 0, 0, 0);');
+			$arrayActions[] = array("type" => "Button", "label" => "Zähler Reset", "onClick" => 'I2GPCF8583EltakoWS_SetCounter($id, 0, 0, 0);');
 		}
 		else {
 			$arrayActions[] = array("type" => "Label", "caption" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
