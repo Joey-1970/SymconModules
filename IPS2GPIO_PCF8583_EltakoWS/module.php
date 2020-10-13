@@ -224,6 +224,18 @@
 							}
 							$this->SetValue("PulseMinute", $PulseMinute);
 							$this->SetBuffer("CounterOldTime", $MeasurementTime);
+							
+							// Impulse/Sekunde = 3 x Windgeschwindigkeit - 2
+							$PulseSecond = $PulseMinute / 60;
+							
+							$WindSpeed_ms = ($PulseSecond + 2) / 3;
+							$this->SetValue("WindSpeed_ms", $WindSpeed_ms);							
+							
+							$WindSpeed_kmh = $WindSpeed_ms * 3.6;
+							$this->SetValue("WindSpeed_kmh", $WindSpeed_kmh);	
+							
+							$RotationMinute = $PulseMinute / 2;
+							$this->SetValue("RotationMinute", $RotationMinute);								
 							break;
 						}
 					}
