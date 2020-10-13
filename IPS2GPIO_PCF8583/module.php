@@ -274,41 +274,42 @@
 							$this->SetTimerInterval("Messzyklus", 0);
 							break;
 						}
-						
-						$this->SetStatus(102);
-						$MeasurementData = array();
-						$MeasurementData = unserialize($Result);
-						
-						//$this->SendDebug("GetCounter", "Rohergebnis: ".$MeasurementData[3]." ".$MeasurementData[2]." ".$MeasurementData[1], 0);
-						
-						// Berechnung des Wertes Darstellung BCD
-						$CounterValue = 0;
-						$CounterValue = intval(sprintf("%02d", dechex($MeasurementData[3])).sprintf("%02d", dechex($MeasurementData[2])).sprintf("%02d", dechex($MeasurementData[1])));
-						//$this->SendDebug("GetCounter", "BCD Ergebnis: ".$Test, 0);
-						
-						$this->SendDebug("GetCounter", "Ergebnis: ".$CounterValue, 0);									
-						$this->SetValue("CounterValue", $CounterValue);
-						
-						// Zählerdifferenz berechnen
-						$CounterOldValue = intval($this->GetBuffer("CounterOldValue"));
-						$CounterDifference = $CounterValue - $CounterOldValue;
-						SetValueInteger($this->GetIDForIdent("CounterDifference"), $CounterDifference);
-						$this->SetBuffer("CounterOldValue", $CounterValue);
-						
-						// Zeitdifferenz berechnen und Impulse/Minute ausgeben
-						$MeasurementTime = time();
-						$CounterOldTime = intval($this->GetBuffer("CounterOldTime"));
-						$TimeDifference = $MeasurementTime - $CounterOldTime;
-						$PulseMinute = 0;
-						If ($TimeDifference > 0) {
-							$PulseMinute = 60 / $TimeDifference * $CounterDifference;
+						else {
+							$this->SetStatus(102);
+							$MeasurementData = array();
+							$MeasurementData = unserialize($Result);
+
+							//$this->SendDebug("GetCounter", "Rohergebnis: ".$MeasurementData[3]." ".$MeasurementData[2]." ".$MeasurementData[1], 0);
+
+							// Berechnung des Wertes Darstellung BCD
+							$CounterValue = 0;
+							$CounterValue = intval(sprintf("%02d", dechex($MeasurementData[3])).sprintf("%02d", dechex($MeasurementData[2])).sprintf("%02d", dechex($MeasurementData[1])));
+							//$this->SendDebug("GetCounter", "BCD Ergebnis: ".$Test, 0);
+
+							$this->SendDebug("GetCounter", "Ergebnis: ".$CounterValue, 0);									
+							$this->SetValue("CounterValue", $CounterValue);
+
+							// Zählerdifferenz berechnen
+							$CounterOldValue = intval($this->GetBuffer("CounterOldValue"));
+							$CounterDifference = $CounterValue - $CounterOldValue;
+							SetValueInteger($this->GetIDForIdent("CounterDifference"), $CounterDifference);
+							$this->SetBuffer("CounterOldValue", $CounterValue);
+
+							// Zeitdifferenz berechnen und Impulse/Minute ausgeben
+							$MeasurementTime = time();
+							$CounterOldTime = intval($this->GetBuffer("CounterOldTime"));
+							$TimeDifference = $MeasurementTime - $CounterOldTime;
+							$PulseMinute = 0;
+							If ($TimeDifference > 0) {
+								$PulseMinute = 60 / $TimeDifference * $CounterDifference;
+							}
+							$this->SetValue("PulseMinute", $PulseMinute);
+							$this->SetBuffer("CounterOldTime", $MeasurementTime);
+
+							//$this->GetTimerValue();									
+
+							break;
 						}
-						SetValueFloat($this->GetIDForIdent("PulseMinute"), $PulseMinute);
-						$this->SetBuffer("CounterOldTime", $MeasurementTime);
-						
-						//$this->GetTimerValue();									
-																
-						break;
 					}
 				}
 			$tries--;
