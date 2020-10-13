@@ -109,7 +109,6 @@
 		$arrayActions = array();
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$arrayActions[] = array("type" => "Button", "label" => "Zähler Reset", "onClick" => 'I2GPCF8583_SetCounter($id, 0, 0, 0);');
-			$arrayActions[] = array("type" => "Button", "label" => "Zähler Reset", "onClick" => 'RequestAction($id, "CounterReset");');
 		}
 		else {
 			$arrayActions[] = array("type" => "Label", "caption" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
@@ -530,7 +529,7 @@
 						$this->SendDebug("SetCounter", "Reset erfolgreich!", 0);
 						$this->SetStatus(102);
 						$this->SetBuffer("CounterOldValue", 0);
-						SetValueInteger($this->GetIDForIdent("CounterDifference"), 0);
+						$this->SetValue("CounterDifference", 0);
 					}
 				}				
 			}
