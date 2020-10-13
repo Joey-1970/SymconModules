@@ -17,22 +17,21 @@
 		$this->RegisterTimer("Messzyklus", 0, 'I2GPCF8583EltakoWS_GetCounter($_IPS["TARGET"]);');
 		
 		// Profile anlegen
-		$this->RegisterProfileFloat("IPS2GPIO.PCF8583", "Intensity", "", " Imp./min", 0, 1000, 0.1, 1);
-		//$this->RegisterProfileFloat("IPS2GPIO.PCF8583", "Intensity", "", " Imp./min", 0, 1000, 0.1, 1);
-		//$this->RegisterProfileFloat("IPS2GPIO.PCF8583", "Intensity", "", " Imp./min", 0, 1000, 0.1, 1);
+		$this->RegisterProfileFloat("IPS2GPIO.PulseMinute", "Intensity", "", " Imp./min", 0, 100, 0.1, 1);
+		$this->RegisterProfileFloat("IPS2GPIO.RotationMinute", "Intensity", "", " Umd./min", 0, 3000, 0.1, 1);
 		
 		//Status-Variablen anlegen		
 		$this->RegisterVariableInteger("CounterValue", "Zählwert", "", 10);
 		
 		$this->RegisterVariableInteger("CounterDifference", "Zählwert-Differenz", "", 20);
 		
-		$this->RegisterVariableFloat("PulseMinute", "Impulse/Minute", "IPS2GPIO.PCF8583", 30);
+		$this->RegisterVariableFloat("PulseMinute", "Impulse/Minute", "IPS2GPIO.PulseMinute", 30);
 		
-		$this->RegisterVariableInteger("RevolutionsMinute", "Umdrehungen/Minute", "", 40);
+		$this->RegisterVariableInteger("RotationMinute", "Umdrehungen/Minute", "IPS2GPIO.RotationMinute", 40);
 		
-		$this->RegisterVariableFloat("WindSpeed_kmh", "Windgeschwindigkeit km/h", "", 50);
+		$this->RegisterVariableFloat("WindSpeed_kmh", "Windgeschwindigkeit km/h", "~WindSpeed.kmh", 50);
 		
-		$this->RegisterVariableFloat("WindSpeed_ms", "Windgeschwindigkeit m/s", "", 60); 	
+		$this->RegisterVariableFloat("WindSpeed_ms", "Windgeschwindigkeit m/s", "~WindSpeed.ms", 60); 	
 	}
  	
 	public function GetConfigurationForm() 
