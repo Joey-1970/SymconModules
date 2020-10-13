@@ -2,14 +2,6 @@
     // Klassendefinition
     class IPS2GPIO_PCF8583 extends IPSModule 
     {
-	public function Destroy() 
-	{
-		//Never delete this line!
-		parent::Destroy();
-		$this->SetTimerInterval("Messzyklus", 0);
-		$this->SetTimerInterval("Interrupt", 0);
-	}
-	    
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
@@ -29,23 +21,18 @@
 		$this->RegisterTimer("Messzyklus", 0, 'I2GPCF8583_GetCounter($_IPS["TARGET"]);');
 		$this->RegisterPropertyInteger("Interrupt", 0);
 		$this->RegisterTimer("Interrupt", 0, 'I2GPCF8583_ResetInterrupt($_IPS["TARGET"]);');
-		$this->RegisterPropertyBoolean("Logging", false);
 		
 		// Profile anlegen
 		$this->RegisterProfileFloat("IPS2GPIO.PCF8583", "Intensity", "", " Imp./min", 0, 1000, 0.1, 1);
 		
 		//Status-Variablen anlegen
 		$this->RegisterVariableInteger("LastInterrupt", "Letzte Meldung", "~UnixTimestamp", 10);
-		$this->DisableAction("LastInterrupt");
 		
 		$this->RegisterVariableInteger("CounterValue", "Zählwert", "", 20);
-		$this->DisableAction("CounterValue");
 		
-		$this->RegisterVariableInteger("CounterDifference", "Zählwert-Differenz", "", 40);
-		$this->DisableAction("CounterDifference");
+		$this->RegisterVariableInteger("CounterDifference", "Zählwert-Differenz", "", 30);
 		
-		$this->RegisterVariableFloat("PulseMinute", "Impulse/Minute", "IPS2GPIO.PCF8583", 50);
-		$this->DisableAction("PulseMinute");
+		$this->RegisterVariableFloat("PulseMinute", "Impulse/Minute", "IPS2GPIO.PCF8583", 40);
         }
  	
 	public function GetConfigurationForm() 
@@ -76,8 +63,8 @@
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "Device Bus", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
-		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für den Interrupt (optional)"); 
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("type" => "Label", "caption" => "Angabe der GPIO-Nummer (Broadcom-Number) für den Interrupt (optional)"); 
 		$arrayOptions = array();
 		$GPIO = array();
 		$GPIO = unserialize($this->Get_GPIO());
@@ -89,8 +76,8 @@
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
-		$arrayElements[] = array("type" => "Label", "label" => "Fix-Wert bei dem ein Interrupt ausgelöst werden soll (optional)");
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("type" => "Label", "caption" => "Fix-Wert bei dem ein Interrupt ausgelöst werden soll (optional)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "AlarmValue",  "caption" => "Alarm Wert");
 		$arrayElements[] = array("type" => "Label", "label" => "Interrupt-Auslösung nach Zählerwert (optional)"); 
 		$arrayOptions = array();
@@ -100,12 +87,10 @@
 		$arrayOptions[] = array("label" => "Jeder 1.000.000", "value" => 3);
 		$arrayOptions[] = array("label" => "Jeder 100.000.000", "value" => 4);
 		$arrayElements[] = array("type" => "Select", "name" => "CounterInterrupt", "caption" => "Impulse", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
-		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus) (optional)");
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("type" => "Label", "caption" => "Wiederholungszyklus in Sekunden (0 -> aus) (optional)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
-		$arrayElements[] = array("type" => "CheckBox", "name" => "Logging", "caption" => "Logging aktivieren"); 
-		
+				
 		$arrayActions = array();
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$arrayActions[] = array("type" => "Button", "label" => "Zähler Reset", "onClick" => 'I2GPCF8583_SetCounter($id, 0, 0, 0);');
@@ -142,15 +127,11 @@
 			IPS_SetVariableProfileAssociation("IPS2GPIO.Pulse", 1, "Impuls", "Flag", 0xFF0000);
 			
 			$this->RegisterVariableInteger("Pulse", "Impuls", "IPS2GPIO.Pulse", 30);
-			$this->DisableAction("Pulse");
+			
 			IPS_SetHidden($this->GetIDForIdent("Pulse"), false);
 			
-			SetValueInteger($this->GetIDForIdent("Pulse"), 0);
-			
-			// Logging setzen
-			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("CounterValue"), $this->ReadPropertyBoolean("Logging"));
-			IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
-			
+			$this->SetValue("Pulse", 0);
+						
 			If ($this->ReadPropertyBoolean("Open") == true) {
 				If ($this->ReadPropertyInteger("Pin") >= 0) {
 					$ResultPin = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
