@@ -79,7 +79,6 @@
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "caption" => "Fix-Wert bei dem ein Interrupt ausgelöst werden soll (optional)");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "AlarmValue",  "caption" => "Alarm Wert");
 		$arrayElements[] = array("type" => "Label", "label" => "Interrupt-Auslösung nach Zählerwert (optional)"); 
