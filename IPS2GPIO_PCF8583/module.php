@@ -166,7 +166,15 @@
 				
 				If (($ResultI2C == true) AND ($ResultPin == true)) {
 					$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
-					$this->Setup();
+					
+					// Zähler zurücksetzen
+					$this->SetCounter(0, 0, 0);					
+					
+					// Erste Messung durchführen
+					$StartTime = time();
+					$this->SetBuffer("CounterOldTime", $StartTime);
+					$this->GetCounter();	
+					
 				}
 			}
 			else {
@@ -230,25 +238,6 @@
  	}
 	
 	// Beginn der Funktionen
-	private function Setup()
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("Setup", "Ausfuehrung", 0);
-			
-			
-			
-			// Zähler zurücksetzen
-			$this->SetCounter(0, 0, 0);
-			
-			
-			$this->GetAlarmValue();
-			// Erste Messdaten einlesen
-			$StartTime = time();
-			$this->SetBuffer("CounterOldTime", $StartTime);
-			$this->GetCounter();	
-		}
-	}    
-	
 	public function GetCounter()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
@@ -267,9 +256,7 @@
 				else {
 					$this->SetStatus(102);
 				}				
-				
-				
-				
+								
 				$CounterValue =  0;
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x01, "Count" => 3)));
 				If ($Result < 0) {
@@ -279,11 +266,10 @@
 				else {
 					If (is_array(unserialize($Result)) == true) {
 						
-						
 						$Bitmask = 0x24;
 						$Result_2 = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x00, "Value" => $Bitmask)));
 						If (!$Result_2) {
-							$this->SendDebug("GetCounter", "Ruecksetzen der Config fehlerhaft!", 0);
+							$this->SendDebug("GetCounter", "Setzen der Config fehlerhaft!", 0);
 							$this->SetStatus(202);
 							$this->SetTimerInterval("Messzyklus", 0);
 							break;
