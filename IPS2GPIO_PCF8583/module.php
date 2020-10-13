@@ -109,6 +109,7 @@
 		$arrayActions = array();
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$arrayActions[] = array("type" => "Button", "label" => "Zähler Reset", "onClick" => 'I2GPCF8583_SetCounter($id, 0, 0, 0);');
+			$arrayActions[] = array("type" => "Button", "label" => "Zähler Reset", "onClick" => 'RequestAction($id, "CounterReset");');
 		}
 		else {
 			$arrayActions[] = array("type" => "Label", "caption" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
@@ -292,7 +293,7 @@
 							// Zählerdifferenz berechnen
 							$CounterOldValue = intval($this->GetBuffer("CounterOldValue"));
 							$CounterDifference = $CounterValue - $CounterOldValue;
-							SetValueInteger($this->GetIDForIdent("CounterDifference"), $CounterDifference);
+							$this->SetValue("CounterDifference", $CounterDifference);
 							$this->SetBuffer("CounterOldValue", $CounterValue);
 
 							// Zeitdifferenz berechnen und Impulse/Minute ausgeben
