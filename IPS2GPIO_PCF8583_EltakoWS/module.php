@@ -248,6 +248,9 @@
 							$PulseSecond = $PulseMinute / 60;
 							
 							$WindSpeed_ms = ($PulseSecond + 2) / 3;
+							If ($WindSpeed_ms < 0) {
+								$WindSpeed_ms = 0;
+							}
 							$this->SetValue("WindSpeed_ms", $WindSpeed_ms);							
 							
 							$WindSpeed_kmh = $WindSpeed_ms * 3.6;
