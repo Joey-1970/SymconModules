@@ -20,6 +20,12 @@
 		$this->RegisterProfileFloat("IPS2GPIO.PulseMinute", "Intensity", "", " Imp./min", 0, 100, 0.1, 1);
 		$this->RegisterProfileFloat("IPS2GPIO.RotationMinute", "Intensity", "", " Umd./min", 0, 3000, 0.1, 1);
 		
+		$this->RegisterProfileInteger("IPS2GPIO.BeautfortText", "Information", "", "", 0, 3, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 0, "kein", "Information", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 1, "Geräusch Level zu hoch", "Graph", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 2, "Störer detektiert", "Graph", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 3, "Blitz detektiert", "Electricity", -1);		
+		
 		//Status-Variablen anlegen		
 		$this->RegisterVariableInteger("CounterValue", "Zählwert", "", 10);
 		
@@ -32,6 +38,10 @@
 		$this->RegisterVariableFloat("WindSpeed_kmh", "Windgeschwindigkeit km/h", "~WindSpeed.kmh", 50);
 		
 		$this->RegisterVariableFloat("WindSpeed_ms", "Windgeschwindigkeit m/s", "~WindSpeed.ms", 60); 	
+		
+		$this->RegisterVariableInteger("Beaufort", "Windstärke/Beaufort", "", 70);
+		
+		$this->RegisterVariableInteger("Beaufort", "Bezeichnung/Beaufort", "", 80);	
 	}
  	
 	public function GetConfigurationForm() 
