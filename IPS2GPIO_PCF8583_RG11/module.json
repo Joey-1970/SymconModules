@@ -1,0 +1,14 @@
+{
+  "id": "{3D84F93F-1BB4-5AE8-0ED0-ECA4C171382E}",
+  "name": "IPS2GPIO_PCF8583_RG11",
+  "type": 3,
+  "vendor": "JP-IPS-Modules",
+  "aliases":
+  [
+    "IPS2GPIO_PCF8583_RG11"
+  ],
+  "parentRequirements": ["{A0DAAF26-4A2D-4350-963E-CC02E74BD414}"],
+  "childRequirements": [],
+  "implemented": ["{8D44CA24-3B35-4918-9CBD-85A28C0C8917}"],
+  "prefix": "I2GPCF8583RG11"
+}
