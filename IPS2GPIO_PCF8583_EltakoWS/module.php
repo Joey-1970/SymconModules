@@ -42,7 +42,7 @@
 		
 		$this->RegisterVariableFloat("PulseMinute", "Impulse/Minute", "IPS2GPIO.PulseMinute", 30);
 		
-		$this->RegisterVariableInteger("RotationMinute", "Umdrehungen/Minute", "IPS2GPIO.RotationMinute", 40);
+		$this->RegisterVariableFloat("RotationMinute", "Umdrehungen/Minute", "IPS2GPIO.RotationMinute", 40);
 		
 		$this->RegisterVariableFloat("WindSpeed_kmh", "Windgeschwindigkeit km/h", "~WindSpeed.kmh", 50);
 		
