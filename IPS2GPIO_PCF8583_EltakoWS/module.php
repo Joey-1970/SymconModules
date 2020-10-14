@@ -248,9 +248,11 @@
 							$PulseSecond = $PulseMinute / 60;
 							
 							If ($PulseSecond < 2) {
-								$PulseSecond = 2;
+								$WindSpeed_ms = 0;
 							}
-							$WindSpeed_ms = ($PulseSecond + 2) / 3;
+							else {
+								$WindSpeed_ms = ($PulseSecond + 2) / 3;
+							}
 							
 							$this->SetValue("WindSpeed_ms", $WindSpeed_ms);							
 							
