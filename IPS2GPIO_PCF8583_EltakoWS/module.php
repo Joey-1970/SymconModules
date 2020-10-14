@@ -345,7 +345,7 @@
 			}
     		}
 		$this->SetValue("Beaufort", $BeaufortSpeed);
-		$this->SetValue("BeaufortDescription", $BeaufortDescription);	
+		$this->SetValue("BeaufortDescription", $BeaufortSpeed);	
 		
     		return [$BeaufortDescription, $BeaufortSpeed];
 	}    
