@@ -240,7 +240,7 @@
 
 							$PulseSecond = 0;
 							If ($TimeDifference > 0) {
-								$PulseSecond = $CounterDifference / $CounterDifference;
+								$PulseSecond = $CounterDifference / $TimeDifference;
 							}
 							
 							$this->SetValue("PulseMinute", $PulseSecond * 60);
@@ -261,8 +261,6 @@
 							
 							$WindSpeed_kmh = $WindSpeed_ms * 3.6;
 							$this->SetValue("WindSpeed_kmh", $WindSpeed_kmh);	
-							
-							
 							
 							$this->getBeaufort($WindSpeed_ms);
 							
