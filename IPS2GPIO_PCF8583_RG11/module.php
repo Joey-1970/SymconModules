@@ -15,6 +15,7 @@
 		$this->RegisterPropertyInteger("DeviceBus", 1);
 		$this->RegisterPropertyInteger("Messzyklus", 60);
 		$this->RegisterTimer("Messzyklus", 0, 'I2GPCF8583RG11_GetCounter($_IPS["TARGET"]);');
+		$this->RegisterPropertyInteger("PulseSetBoolean", 60);
 		
 		// Profile anlegen
 		$this->RegisterProfileFloat("IPS2GPIO.PCF8583", "Intensity", "", " Imp./min", 0, 1000, 0.1, 1);
@@ -25,6 +26,8 @@
 		$this->RegisterVariableInteger("CounterDifference", "Zählwert-Differenz", "", 20);
 		
 		$this->RegisterVariableFloat("PulseMinute", "Impulse/Minute", "IPS2GPIO.PCF8583", 30);
+		
+		$this->RegisterVariableBoolean("is_Raining", "Regen", "~Switch", 50);
         }
  	
 	public function GetConfigurationForm() 
@@ -58,7 +61,10 @@
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "caption" => "Wiederholungszyklus in Sekunden (0 -> aus) (optional)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");		
-				
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("type" => "Label", "caption" => "Wert bei dem die Boolean-Variable gesetzt werden soll");
+		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Impulse", "minimum" => 1,);
+		
 		$arrayActions = array();
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$arrayActions[] = array("type" => "Button", "label" => "Zähler Reset", "onClick" => 'I2GPCF8583RG11_SetCounter($id, 0, 0, 0);');
@@ -211,12 +217,22 @@
 							$MeasurementTime = time();
 							$CounterOldTime = intval($this->GetBuffer("CounterOldTime"));
 							$TimeDifference = $MeasurementTime - $CounterOldTime;
-							$PulseMinute = 0;
+							
+							$PulseSecond = 0;
 							If ($TimeDifference > 0) {
-								$PulseMinute = 60 / $TimeDifference * $CounterDifference;
+								$PulseSecond = $CounterDifference / $TimeDifference;
 							}
-							$this->SetValue("PulseMinute", $PulseMinute);
+							
+							$this->SetValue("PulseMinute", $PulseSecond * 60);
 							$this->SetBuffer("CounterOldTime", $MeasurementTime);
+							
+							$PulseSetBoolean = $this->ReadPropertyInteger("PulseSetBoolean");
+							If ($PulseSecond * 60 >= $PulseSetBoolean) {
+								$this->SetValue("is_Raining", true);
+							}
+							else {
+								$this->SetValue("is_Raining", false);
+							}
 							break;
 						}
 					}
