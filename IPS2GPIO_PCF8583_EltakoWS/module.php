@@ -227,26 +227,26 @@
 							$this->SendDebug("GetCounter", "Ergebnis: ".$CounterValue, 0);									
 							$this->SetValue("CounterValue", $CounterValue);
 
+							// Zeitdifferenz berechnen und Impulse/Minute ausgeben
+							$MeasurementTime = time();
+							$CounterOldTime = intval($this->GetBuffer("CounterOldTime"));
+							$TimeDifference = $MeasurementTime - $CounterOldTime;
+							
 							// Zählerdifferenz berechnen
 							$CounterOldValue = intval($this->GetBuffer("CounterOldValue"));
 							$CounterDifference = $CounterValue - $CounterOldValue;
 							$this->SetValue("CounterDifference", $CounterDifference);
 							$this->SetBuffer("CounterOldValue", $CounterValue);
 
-							// Zeitdifferenz berechnen und Impulse/Minute ausgeben
-							$MeasurementTime = time();
-							$CounterOldTime = intval($this->GetBuffer("CounterOldTime"));
-							$TimeDifference = $MeasurementTime - $CounterOldTime;
-							$PulseMinute = 0;
+							$PulseSecond = 0;
 							If ($TimeDifference > 0) {
-								$PulseMinute = 60 / $TimeDifference * $CounterDifference;
+								$PulseSecond = $CounterDifference / $CounterDifference;
 							}
-							$this->SetValue("PulseMinute", $PulseMinute);
+							
+							$this->SetValue("PulseMinute", $PulseSecond * 60);
 							$this->SetBuffer("CounterOldTime", $MeasurementTime);
 							
 							// Impulse/Sekunde = 3 x Windgeschwindigkeit - 2
-							$PulseSecond = $PulseMinute / 60;
-							
 							If ($PulseSecond < 2) {
 								$WindSpeed_ms = 0;
 							}
