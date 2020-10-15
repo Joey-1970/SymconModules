@@ -246,6 +246,9 @@
 							$this->SetValue("PulseMinute", $PulseSecond * 60);
 							$this->SetBuffer("CounterOldTime", $MeasurementTime);
 							
+							$RotationMinute = ($PulseSecond * 60) / 2;
+							$this->SetValue("RotationMinute", $RotationMinute);
+							
 							// Impulse/Sekunde = 3 x Windgeschwindigkeit - 2
 							If ($PulseSecond < 2) {
 								$WindSpeed_ms = 0;
@@ -259,8 +262,7 @@
 							$WindSpeed_kmh = $WindSpeed_ms * 3.6;
 							$this->SetValue("WindSpeed_kmh", $WindSpeed_kmh);	
 							
-							$RotationMinute = ($PulseSecond * 60) / 2;
-							$this->SetValue("RotationMinute", $RotationMinute);
+							
 							
 							$this->getBeaufort($WindSpeed_ms);
 							
