@@ -63,7 +63,7 @@
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");		
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "caption" => "Wert bei dem die Boolean-Variable gesetzt werden soll");
-		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Impulse", "minimum" => 1,);
+		$arrayElements[] = array("type" => "IntervalBox", "name" => "PulseSetBoolean", "caption" => "Impulse", "minimum" => 1,);
 		
 		$arrayActions = array();
 		If ($this->ReadPropertyBoolean("Open") == true) {
