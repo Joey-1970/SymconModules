@@ -235,6 +235,7 @@
 							// Zählerdifferenz berechnen
 							$CounterOldValue = intval($this->GetBuffer("CounterOldValue"));
 							$CounterDifference = $CounterValue - $CounterOldValue;
+							$CounterDifference = max($CounterDifference, 0); 
 							$this->SetValue("CounterDifference", $CounterDifference);
 							$this->SetBuffer("CounterOldValue", $CounterValue);
 
@@ -242,7 +243,6 @@
 							If ($TimeDifference > 0) {
 								$PulseSecond = $CounterDifference / $TimeDifference;
 							}
-							
 							$this->SetValue("PulseMinute", $PulseSecond * 60);
 							$this->SetBuffer("CounterOldTime", $MeasurementTime);
 							
