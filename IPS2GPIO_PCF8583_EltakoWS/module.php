@@ -259,7 +259,7 @@
 							$WindSpeed_kmh = $WindSpeed_ms * 3.6;
 							$this->SetValue("WindSpeed_kmh", $WindSpeed_kmh);	
 							
-							$RotationMinute = $PulseMinute / 2;
+							$RotationMinute = ($PulseSecond * 60) / 2;
 							$this->SetValue("RotationMinute", $RotationMinute);
 							
 							$this->getBeaufort($WindSpeed_ms);
