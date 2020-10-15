@@ -250,7 +250,7 @@
 							$this->SetValue("RotationMinute", $RotationMinute);
 							
 							// Impulse/Sekunde = 3 x Windgeschwindigkeit - 2
-							If ($PulseSecond = 0) {
+							If ($PulseSecond == 0) {
 								$WindSpeed_ms = 0;
 							}
 							elseif (($PulseSecond > 0) AND ($PulseSecond < 2)) {
