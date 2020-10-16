@@ -17,7 +17,7 @@
 		$this->RegisterTimer("Messzyklus", 0, 'I2GPCF8583EltakoWS_GetCounter($_IPS["TARGET"]);');
 		
 		// Profile anlegen
-		$this->RegisterProfileFloat("IPS2GPIO.PulseMinute", "Intensity", "", " Imp./min", 0, 100, 0.1, 1);
+		$this->RegisterProfileFloat("IPS2GPIO.Pulse_EltakoWS", "Intensity", "", " Imp./min", 0, 6000, 0.1, 1);
 		$this->RegisterProfileFloat("IPS2GPIO.RotationMinute", "Intensity", "", " Umd./min", 0, 3000, 0.1, 1);
 		
 		$this->RegisterProfileInteger("IPS2GPIO.BeautfortText", "WindSpeed", "", "", 0, 12, 1);
@@ -40,7 +40,7 @@
 		
 		$this->RegisterVariableInteger("CounterDifference", "Zählwert-Differenz", "", 20);
 		
-		$this->RegisterVariableFloat("PulseMinute", "Impulse/Minute", "IPS2GPIO.PulseMinute", 30);
+		$this->RegisterVariableFloat("PulseMinute", "Impulse/Minute", "IPS2GPIO.Pulse_EltakoWS", 30);
 		
 		$this->RegisterVariableFloat("RotationMinute", "Umdrehungen/Minute", "IPS2GPIO.RotationMinute", 40);
 		
