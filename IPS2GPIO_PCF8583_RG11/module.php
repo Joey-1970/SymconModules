@@ -257,10 +257,6 @@
 								$this->SetValue("is_Raining", false);
 							}
 							
-							$this->RegisterPropertyInteger("PulseSetLightRain", 150);
-		$this->RegisterPropertyInteger("PulseSetModerateRain", 200);
-		$this->RegisterPropertyInteger("PulseSetStrongRain", 250);
-		$this->RegisterPropertyInteger("PulseSetVeryStrongRain", 300);
 							$Rain = 0;
 							If (($PulseSecond * 60) < $this->ReadPropertyInteger("PulseSetLightRain") ) {
 								$Rain = 0;
