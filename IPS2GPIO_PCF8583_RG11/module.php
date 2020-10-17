@@ -15,7 +15,13 @@
 		$this->RegisterPropertyInteger("DeviceBus", 1);
 		$this->RegisterPropertyInteger("Messzyklus", 60);
 		$this->RegisterTimer("Messzyklus", 0, 'I2GPCF8583RG11_GetCounter($_IPS["TARGET"]);');
-		$this->RegisterPropertyInteger("PulseSetBoolean", 60);
+		$this->RegisterPropertyInteger("PulseSetBoolean", 50);
+		$this->RegisterPropertyInteger("PulseSetNoRain", 100);
+		$this->RegisterPropertyInteger("PulseSetLightRain", 150);
+		$this->RegisterPropertyInteger("PulseSetModerateRain", 200);
+		$this->RegisterPropertyInteger("PulseSetStrongRain", 250);
+		$this->RegisterPropertyInteger("PulseSetVeryStrongRain", 300);
+		
 		
 		// Profile anlegen
 		$this->RegisterProfileFloat("IPS2GPIO.Pulse_RG11", "Intensity", "", " Imp./min", 0, 300, 0.1, 1);
