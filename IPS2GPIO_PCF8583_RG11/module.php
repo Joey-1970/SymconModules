@@ -20,6 +20,13 @@
 		// Profile anlegen
 		$this->RegisterProfileFloat("IPS2GPIO.Pulse_RG11", "Intensity", "", " Imp./min", 0, 300, 0.1, 1);
 		
+		$this->RegisterProfileInteger("IPS2GPIO.Rain", "Rainfall", "", "", 0, 4, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.Rain", 0, "Kein Regen", "Information", 0x00FF00);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.Rain", 1, "Leichter Regen", "Rainfall", 0xFFFF00);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.Rain", 2, "Mäßiger Regen", "Rainfall", 0xFF8000);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.Rain", 3, "Starker Regen", "Warning", 0xFF0000);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.Rain", 4, "Sehr starker Regen", "Warning", 0xB40404);
+		
 		//Status-Variablen anlegen		
 		$this->RegisterVariableInteger("CounterValue", "Zählwert", "", 10);
 		
@@ -28,6 +35,9 @@
 		$this->RegisterVariableFloat("PulseMinute", "Impulse/Minute", "IPS2GPIO.Pulse_RG11", 30);
 		
 		$this->RegisterVariableBoolean("is_Raining", "Regen", "~Switch", 50);
+		
+		$this->RegisterVariableInteger("Rain", "IPS2GPIO.Rain", "", 60);
+		
         }
  	
 	public function GetConfigurationForm() 
@@ -341,6 +351,23 @@
 	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
 	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
 	        IPS_SetVariableProfileDigits($Name, $Digits);
+	}
+	    
+	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
+	{
+	        if (!IPS_VariableProfileExists($Name))
+	        {
+	            IPS_CreateVariableProfile($Name, 1);
+	        }
+	        else
+	        {
+	            $profile = IPS_GetVariableProfile($Name);
+	            if ($profile['ProfileType'] != 1)
+	                throw new Exception("Variable profile type does not match for profile " . $Name);
+	        }
+	        IPS_SetVariableProfileIcon($Name, $Icon);
+	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);        
 	}
 }
 ?>
