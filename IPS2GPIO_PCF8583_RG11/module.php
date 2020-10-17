@@ -16,7 +16,6 @@
 		$this->RegisterPropertyInteger("Messzyklus", 60);
 		$this->RegisterTimer("Messzyklus", 0, 'I2GPCF8583RG11_GetCounter($_IPS["TARGET"]);');
 		$this->RegisterPropertyInteger("PulseSetBoolean", 50);
-		$this->RegisterPropertyInteger("PulseSetNoRain", 100);
 		$this->RegisterPropertyInteger("PulseSetLightRain", 150);
 		$this->RegisterPropertyInteger("PulseSetModerateRain", 200);
 		$this->RegisterPropertyInteger("PulseSetStrongRain", 250);
@@ -80,6 +79,14 @@
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "caption" => "Wert bei dem die Boolean-Variable gesetzt werden soll");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "PulseSetBoolean", "caption" => "Impulse", "minimum" => 1,);
+		$arrayElements[] = array("type" => "Label", "caption" => "Wert bei dem die Assoziations-Variable auf leichter Regen gesetzt werden soll");
+		$arrayElements[] = array("type" => "IntervalBox", "name" => "PulseSetLightRain", "caption" => "Impulse", "minimum" => 1,);
+		$arrayElements[] = array("type" => "Label", "caption" => "Wert bei dem die Assoziations-Variable auf moderater Regen gesetzt werden soll");
+		$arrayElements[] = array("type" => "IntervalBox", "name" => "PulseSetModerateRain", "caption" => "Impulse", "minimum" => 1,);
+		$arrayElements[] = array("type" => "Label", "caption" => "Wert bei dem die Assoziations-Variable auf starker Regen gesetzt werden soll");
+		$arrayElements[] = array("type" => "IntervalBox", "name" => "PulseSetStrongRain", "caption" => "Impulse", "minimum" => 1,);
+		$arrayElements[] = array("type" => "Label", "caption" => "Wert bei dem die Assoziations-Variable auf sehr starker Regen gesetzt werden soll");
+		$arrayElements[] = array("type" => "IntervalBox", "name" => "PulseSetVeryStrongRain", "caption" => "Impulse", "minimum" => 1,);
 		
 		$arrayActions = array();
 		If ($this->ReadPropertyBoolean("Open") == true) {
