@@ -256,6 +256,30 @@
 							else {
 								$this->SetValue("is_Raining", false);
 							}
+							
+							$this->RegisterPropertyInteger("PulseSetLightRain", 150);
+		$this->RegisterPropertyInteger("PulseSetModerateRain", 200);
+		$this->RegisterPropertyInteger("PulseSetStrongRain", 250);
+		$this->RegisterPropertyInteger("PulseSetVeryStrongRain", 300);
+							$Rain = 0;
+							If (($PulseSecond * 60) < $this->ReadPropertyInteger("PulseSetLightRain") ) {
+								$Rain = 0;
+							}
+							elseif (($PulseSecond * 60) < $this->ReadPropertyInteger("PulseSetModerateRain") ) {
+								$Rain = 1;
+							}
+							elseif (($PulseSecond * 60) < $this->ReadPropertyInteger("PulseSetStrongRain") ) {
+								$Rain = 2;
+							}
+							elseif (($PulseSecond * 60) < $this->ReadPropertyInteger("PulseSetVeryStrongRain") ) {
+								$Rain = 3;
+							}
+							else {
+								$Rain = 4;
+							}
+							$this->SetValue("Rain", $Rain);
+							
+							
 							break;
 						}
 					}
