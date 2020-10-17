@@ -41,7 +41,7 @@
 		
 		$this->RegisterVariableBoolean("is_Raining", "Regen", "~Switch", 50);
 		
-		$this->RegisterVariableInteger("Rain", "IPS2GPIO.Rain", "", 60);
+		$this->RegisterVariableInteger("Rain", "Regen Klassifizierung", "IPS2GPIO.Rain", 60);
 		
         }
  	
