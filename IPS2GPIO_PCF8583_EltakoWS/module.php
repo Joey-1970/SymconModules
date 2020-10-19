@@ -21,7 +21,7 @@
 		$this->RegisterProfileFloat("IPS2GPIO.RotationMinute", "Intensity", "", " Umd./min", 0, 3000, 0.1, 1);
 		
 		$this->RegisterProfileInteger("IPS2GPIO.BeautfortText", "WindSpeed", "", "", 0, 12, 1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 0, "Windstille/Flaute", "WindSpeed", 0x00FF00);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 0, "Windstille/Flaute", "WindSpeed", -1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 1, "Leiser Zug", "WindSpeed", 0x00FF00);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 2, "leichte Brise", "WindSpeed", 0x00FF00);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 3, "Schwache Briset", "WindSpeed", 0xFFFF00);
@@ -266,6 +266,12 @@
 							$this->SetValue("WindSpeed_kmh", $WindSpeed_kmh);	
 							
 							$this->getBeaufort($WindSpeed_ms);
+							
+							If ($CounterValue > 999900) {
+								$this->SendDebug("GetCounter", "Zaehlerwert > 999900, Zaehler wird zurueckgesetzt", 0);
+								// Zähler zurücksetzen
+								$this->SetCounter(0, 0, 0);	
+							}
 							
 							break;
 						}
