@@ -257,10 +257,13 @@
 							
 							$PulseSetBoolean = $this->ReadPropertyInteger("PulseSetBoolean");
 							If ($PulseSecond * 60 >= $PulseSetBoolean) {
-								$this->SetValue("is_Raining", true);
+								$is_Raining = true;
 							}
 							else {
-								$this->SetValue("is_Raining", false);
+								$is_Raining = false;
+							}
+							If ($this->GetValue("is_Raining") <> $is_Raining) {
+								$this->SetValue("is_Raining", $is_Raining);
 							}
 							
 							$Rain = 0;
@@ -279,8 +282,9 @@
 							else {
 								$Rain = 4;
 							}
-							$this->SetValue("Rain", $Rain);
-							
+							If ($this->GetValue("Rain") <> $Rain) {
+								$this->SetValue("Rain", $Rain);
+							}
 							
 							If ($CounterValue > 999900) {
 								$this->SendDebug("GetCounter", "Zaehlerwert > 999900, Zaehler wird zurueckgesetzt", 0);
