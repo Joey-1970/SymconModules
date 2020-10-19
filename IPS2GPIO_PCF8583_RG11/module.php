@@ -224,7 +224,7 @@
 							
 							// Zeitdifferenz berechnen und Impulse/Minute ausgeben
 							$MeasurementTime = microtime();
-							$CounterOldTime = intval($this->GetBuffer("CounterOldTime"));
+							$CounterOldTime = floatval($this->GetBuffer("CounterOldTime"));
 							$TimeDifference = $MeasurementTime - $CounterOldTime;
 							
 							// Berechnung des Wertes Darstellung BCD
