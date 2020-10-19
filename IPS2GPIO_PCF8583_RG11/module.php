@@ -233,6 +233,7 @@
 							// Zählerdifferenz berechnen
 							$CounterOldValue = intval($this->GetBuffer("CounterOldValue"));
 							$CounterDifference = $CounterValue - $CounterOldValue;
+							$CounterDifference = max($CounterDifference, 0); 
 							$this->SetValue("CounterDifference", $CounterDifference);
 							$this->SetBuffer("CounterOldValue", $CounterValue);
 
