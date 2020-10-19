@@ -125,7 +125,7 @@
 					$this->SetCounter(0, 0, 0);					
 					
 					// Erste Messung durchführen
-					$StartTime = time();
+					$StartTime = microtime();
 					$this->SetBuffer("CounterOldTime", $StartTime);
 					$this->GetCounter();	
 					
@@ -221,7 +221,12 @@
 							$MeasurementData = unserialize($Result);
 
 							//$this->SendDebug("GetCounter", "Rohergebnis: ".$MeasurementData[3]." ".$MeasurementData[2]." ".$MeasurementData[1], 0);
-
+							
+							// Zeitdifferenz berechnen und Impulse/Minute ausgeben
+							$MeasurementTime = microtime();
+							$CounterOldTime = intval($this->GetBuffer("CounterOldTime"));
+							$TimeDifference = $MeasurementTime - $CounterOldTime;
+							
 							// Berechnung des Wertes Darstellung BCD
 							$CounterValue = 0;
 							$CounterValue = intval(sprintf("%02d", dechex($MeasurementData[3])).sprintf("%02d", dechex($MeasurementData[2])).sprintf("%02d", dechex($MeasurementData[1])));
@@ -236,11 +241,6 @@
 							$CounterDifference = max($CounterDifference, 0); 
 							$this->SetValue("CounterDifference", $CounterDifference);
 							$this->SetBuffer("CounterOldValue", $CounterValue);
-
-							// Zeitdifferenz berechnen und Impulse/Minute ausgeben
-							$MeasurementTime = time();
-							$CounterOldTime = intval($this->GetBuffer("CounterOldTime"));
-							$TimeDifference = $MeasurementTime - $CounterOldTime;
 							
 							$PulseSecond = 0;
 							If ($TimeDifference > 0) {
