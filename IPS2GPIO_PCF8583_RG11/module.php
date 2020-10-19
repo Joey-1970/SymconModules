@@ -233,21 +233,26 @@
 							//$this->SendDebug("GetCounter", "BCD Ergebnis: ".$Test, 0);
 
 							$this->SendDebug("GetCounter", "Ergebnis: ".$CounterValue, 0);									
-							$this->SetValue("CounterValue", $CounterValue);
+							If ($this->GetValue("CounterValue") <> $CounterValue) {
+								$this->SetValue("CounterValue", $CounterValue);
+							}
 
 							// Zählerdifferenz berechnen
 							$CounterOldValue = intval($this->GetBuffer("CounterOldValue"));
 							$CounterDifference = $CounterValue - $CounterOldValue;
 							$CounterDifference = max($CounterDifference, 0); 
-							$this->SetValue("CounterDifference", $CounterDifference);
+							If ($this->GetValue("CounterDifference") <> $CounterDifference) {
+								$this->SetValue("CounterDifference", $CounterDifference);
+							}
 							$this->SetBuffer("CounterOldValue", $CounterValue);
 							
 							$PulseSecond = 0;
 							If ($TimeDifference > 0) {
 								$PulseSecond = $CounterDifference / $TimeDifference;
 							}
-							
-							$this->SetValue("PulseMinute", $PulseSecond * 60);
+							If ($this->GetValue("PulseMinute") <> $PulseSecond * 60) {
+								$this->SetValue("PulseMinute", $PulseSecond * 60);
+							}
 							$this->SetBuffer("CounterOldTime", $MeasurementTime);
 							
 							$PulseSetBoolean = $this->ReadPropertyInteger("PulseSetBoolean");
@@ -332,7 +337,9 @@
 						$this->SendDebug("SetCounter", "Reset erfolgreich!", 0);
 						$this->SetStatus(102);
 						$this->SetBuffer("CounterOldValue", 0);
-						$this->SetValue("CounterDifference", 0);
+						If ($this->GetValue("CounterDifference") <> 0) {
+							$this->SetValue("CounterDifference", 0);
+						}
 						$this->GetCounter();
 					}
 				}				
