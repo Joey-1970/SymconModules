@@ -125,7 +125,7 @@
 					$this->SetCounter(0, 0, 0);					
 					
 					// Erste Messung durchführen
-					$StartTime = microtime();
+					$StartTime = microtime(true);
 					$this->SetBuffer("CounterOldTime", $StartTime);
 					$this->GetCounter();	
 					
@@ -223,7 +223,7 @@
 							//$this->SendDebug("GetCounter", "Rohergebnis: ".$MeasurementData[3]." ".$MeasurementData[2]." ".$MeasurementData[1], 0);
 							
 							// Zeitdifferenz berechnen und Impulse/Minute ausgeben
-							$MeasurementTime = microtime();
+							$MeasurementTime = microtime(true);
 							$CounterOldTime = floatval($this->GetBuffer("CounterOldTime"));
 							$TimeDifference = $MeasurementTime - $CounterOldTime;
 							
