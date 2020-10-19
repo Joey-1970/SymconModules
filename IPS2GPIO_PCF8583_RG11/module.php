@@ -26,7 +26,7 @@
 		$this->RegisterProfileFloat("IPS2GPIO.Pulse_RG11", "Intensity", "", " Imp./min", 0, 300, 0.1, 1);
 		
 		$this->RegisterProfileInteger("IPS2GPIO.Rain", "Rainfall", "", "", 0, 4, 1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.Rain", 0, "Kein Regen", "Information", 0x00FF00);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.Rain", 0, "Kein Regen", "Information", -1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.Rain", 1, "Leichter Regen", "Rainfall", 0xFFFF00);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.Rain", 2, "Mäßiger Regen", "Rainfall", 0xFF8000);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.Rain", 3, "Starker Regen", "Warning", 0xFF0000);
@@ -276,6 +276,12 @@
 							}
 							$this->SetValue("Rain", $Rain);
 							
+							
+							If ($CounterValue > 999900) {
+								$this->SendDebug("GetCounter", "Zaehlerwert > 999900, Zaehler wird zurueckgesetzt", 0);
+								// Zähler zurücksetzen
+								$this->SetCounter(0, 0, 0);	
+							}
 							
 							break;
 						}
