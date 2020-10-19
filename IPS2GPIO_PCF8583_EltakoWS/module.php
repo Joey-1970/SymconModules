@@ -253,10 +253,10 @@
 							If ($PulseSecond == 0) {
 								$WindSpeed_ms = 0;
 							}
-							elseif (($PulseSecond > 0) AND ($PulseSecond < 2)) {
-								$WindSpeed_ms = 1;
+							elseif (($PulseSecond > 0) AND ($PulseSecond < 4)) {
+								$WindSpeed_ms = $PulseSecond / 2;
 							}
-							elseif ($PulseSecond >= 2) {
+							elseif ($PulseSecond >= 4) {
 								$WindSpeed_ms = ($PulseSecond + 2) / 3;
 							}
 							
