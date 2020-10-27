@@ -24,7 +24,7 @@
 		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 0, "Windstille/Flaute", "WindSpeed", -1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 1, "Leiser Zug", "WindSpeed", 0x00FF00);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 2, "leichte Brise", "WindSpeed", 0x00FF00);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 3, "Schwache Briset", "WindSpeed", 0xFFFF00);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 3, "Schwache Brise", "WindSpeed", 0xFFFF00);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 4, "Mäßige Brise", "WindSpeed", 0xFFFF00);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 5, "Frische Brise", "WindSpeed", 0xFFFF00);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 6, "Starker Wind", "WindSpeed", 0xFF8000);
