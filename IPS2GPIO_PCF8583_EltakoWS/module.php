@@ -353,7 +353,7 @@
 			   ['windstaerke' => 3, 'beschreibung' => 'schwache Brise', 'minwert' => 3.4  ],
 			   ['windstaerke' => 4, 'beschreibung' => 'mäßige Brise', 'minwert' => 5.5  ],
 			   ['windstaerke' => 5, 'beschreibung' => 'frische Brise', 'minwert' => 8.0  ],
-			   ['windstaerke' => 6, 'beschreibung' => 'staker Wind', 'minwert' => 10.8  ],
+			   ['windstaerke' => 6, 'beschreibung' => 'starker Wind', 'minwert' => 10.8  ],
 			   ['windstaerke' => 7, 'beschreibung' => 'steifer Wind', 'minwert' => 12.9  ],
 			   ['windstaerke' => 8, 'beschreibung' => 'stürmische Wind', 'minwert' => 17.2  ],
 			   ['windstaerke' => 9, 'beschreibung' => 'Sturm', 'minwert' => 20.8  ],
@@ -365,7 +365,6 @@
     		$BeaufortSpeed = 0;
     		foreach ($arrBeaufort as $wind) {
         		if ($wind['minwert'] <= $WindSpeed_ms) {
-            			$BeaufortDescription = $wind['beschreibung'];
             			$BeaufortSpeed = $wind['windstaerke'];
         		} 
 			else {
