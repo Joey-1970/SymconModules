@@ -181,6 +181,7 @@
 	// Beginn der Funktionen
 	public function GetCounter()
 	{
+		$CounterValue =  0;
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$tries = 5;
 			do {
@@ -198,7 +199,6 @@
 					$this->SetStatus(102);
 				}				
 								
-				$CounterValue =  0;
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x01, "Count" => 3)));
 				If ($Result < 0) {
 					$this->SendDebug("GetCounter", "Fehler bei der Datenermittung", 0);
