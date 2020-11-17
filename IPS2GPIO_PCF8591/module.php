@@ -1,14 +1,7 @@
 <?
     // Klassendefinition
     class IPS2GPIO_PCF8591 extends IPSModule 
-    {
-	public function Destroy() 
-	{
-		//Never delete this line!
-		parent::Destroy();
-		$this->SetTimerInterval("Messzyklus", 0);
-	}
-	    
+    {  
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
@@ -20,9 +13,7 @@
 		$this->RegisterPropertyInteger("DeviceBus", 1);
 		for ($i = 0; $i <= 3; $i++) {
  	    		$this->RegisterPropertyBoolean("Ain".$i, true);
- 	    		$this->RegisterPropertyBoolean("LoggingAin".$i, false);
 		}
- 	    	$this->RegisterPropertyBoolean("LoggingOut", false);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GAD1_Measurement($_IPS["TARGET"]);');
 		
@@ -67,9 +58,7 @@
 		$arrayElements[] = array("type" => "Label", "label" => "Genutzte Eingänge");
 		for ($i = 0; $i <= 3; $i++) {
 			$arrayElements[] = array("type" => "CheckBox", "name" => "Ain".$i, "caption" => "Ain".$i);
-			$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingAin".$i, "caption" => "Logging Ain".$i." aktivieren");
 		}
-		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingOut", "caption" => "Logging Output aktivieren");
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, 1 sek -> Minimum)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
@@ -106,13 +95,6 @@
 		$this->SetReceiveDataFilter($Filter);
 		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
-			// Logging setzen
-			for ($i = 0; $i <= 3; $i++) {
-				AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Channel_".$i), $this->ReadPropertyBoolean("LoggingAin".$i)); 
-			} 
-			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Output"), $this->ReadPropertyBoolean("LoggingOut")); 
-			IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
-
 			If ($this->ReadPropertyBoolean("Open") == true) {
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 				If ($Result == true) {
