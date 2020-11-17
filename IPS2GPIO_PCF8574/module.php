@@ -1,14 +1,7 @@
 <?
     // Klassendefinition
     class IPS2GPIO_PCF8574 extends IPSModule 
-    {
-	public function Destroy() 
-	{
-		//Never delete this line!
-		parent::Destroy();
-		$this->SetTimerInterval("Messzyklus", 0);
-	}
-	    
+    {   
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
@@ -22,7 +15,6 @@
 		$this->SetBuffer("PreviousPin", -1);
 		for ($i = 0; $i <= 7; $i++) {
  	    		$this->RegisterPropertyBoolean("P".$i, false);
-			$this->RegisterPropertyBoolean("LoggingP".$i, false);
 		}	
 		$this->RegisterPropertyInteger("Startoption", 0);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
@@ -90,7 +82,6 @@
 		$arrayElements[] = array("type" => "Label", "label" => "Definition der Ein- und Ausgänge (aktiviert => Eingang)");
 		for ($i = 0; $i <= 7; $i++) {
 			$arrayElements[] = array("type" => "CheckBox", "name" => "P".$i, "caption" => "P".$i);
-			$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingP".$i, "caption" => "Logging P".$i." aktivieren");
 		}
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, 1 sek -> Minimum)");
@@ -147,13 +138,7 @@
 		$Filter = '((.*"Function":"get_used_i2c".*|.*"DeviceIdent":'.$this->GetBuffer("DeviceIdent").'.*)|(.*"Function":"status".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*))';
 		$this->SetReceiveDataFilter($Filter);
 		
-		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
-			// Logging setzen
-			for ($i = 0; $i <= 7; $i++) {
-				AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("P".$i), $this->ReadPropertyBoolean("LoggingP".$i)); 
-			} 
-			IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
-					
+		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
 			If ($this->ReadPropertyBoolean("Open") == true) {
 				If ($this->ReadPropertyInteger("Pin") >= 0) {
 					$ResultPin = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
