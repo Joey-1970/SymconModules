@@ -1,14 +1,7 @@
 <?
     // Klassendefinition
     class IPS2GPIO_iAQ extends IPSModule 
-    {
-	public function Destroy() 
-	{
-		//Never delete this line!
-		parent::Destroy();
-		$this->SetTimerInterval("Messzyklus", 0);
-	}
-	    
+    {  
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
@@ -19,8 +12,6 @@
 		$this->RegisterPropertyInteger("DeviceAddress", 90);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
- 	    	$this->RegisterPropertyBoolean("LoggingCO2", false);
-		$this->RegisterPropertyBoolean("LoggingTVOC", false);
           	$this->RegisterTimer("Messzyklus", 0, 'I2GiAQ_Measurement($_IPS["TARGET"]);');
 		
 		// Profil anlegen
@@ -73,9 +64,6 @@
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, 1 sek -> Minimum)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
-		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingCO2", "caption" => "Logging CO2 aktivieren");
-		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingTVOC", "caption" => "Logging TVOC aktivieren");
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Hinweise:");
 		$arrayElements[] = array("type" => "Label", "label" => "- die Device Adresse lautet 90 dez (0x5Ah)");
 		$arrayElements[] = array("type" => "Label", "label" => "- die I2C-Nutzung muss in der Raspberry Pi-Konfiguration freigegeben werden (sudo raspi-config -> Advanced Options -> I2C Enable = true)");
@@ -106,11 +94,6 @@
 		$this->SetReceiveDataFilter($Filter);
 		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
-			// Logging setzen
-			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("CO2"), $this->ReadPropertyBoolean("LoggingCO2"));
-			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("TVOC"), $this->ReadPropertyBoolean("LoggingTVOC"));
-			IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
-			
 			If ($this->ReadPropertyBoolean("Open") == true) {
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 				If ($Result == true) {
