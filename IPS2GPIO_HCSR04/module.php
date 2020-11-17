@@ -2,13 +2,6 @@
     // Klassendefinition
     class IPS2GPIO_HCSR04 extends IPSModule 
     {
-	public function Destroy() 
-	{
-		//Never delete this line!
-		parent::Destroy();
-		$this->SetTimerInterval("Messzyklus", 0);
-	}
-	    
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
@@ -23,7 +16,6 @@
 		$this->SetBuffer("PreviousPin_O", -1);
 		$this->RegisterPropertyInteger("PUL", 0);
 		$this->RegisterPropertyInteger("Messzyklus", 5);
-		$this->RegisterPropertyBoolean("Logging", false);
 		$this->RegisterTimer("Messzyklus", 0, 'I2GSR4_Measurement($_IPS["TARGET"]);');
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 		
@@ -83,8 +75,6 @@
 		$arrayOptions[] = array("label" => "Pull-Up", "value" => 2);		
 		$arrayElements[] = array("type" => "Select", "name" => "PUL", "caption" => "Widerstand setzen", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		$arrayElements[] = array("type" => "CheckBox", "name" => "Logging", "caption" => "Logging aktivieren"); 
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Hinweise:"); 
 		$arrayElements[] = array("type" => "Label", "label" => "- ein Distanz Wert von 999,99cm wird als Maximum-Ergebnis angezeigt");
 		$arrayElements[] = array("type" => "Label", "label" => "- VCC an Pin 2 (5 Volt)");
@@ -112,11 +102,7 @@
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_I")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_I"), 0);
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_O")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_O"), 0);
 		}
-
-	        // Logging setzen
-		AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Distance"), $this->ReadPropertyBoolean("Logging"));
-		IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
-		
+	
 		// Summary setzen
 		$this->SetSummary("GPIO In: ".$this->ReadPropertyInteger("Pin_I")." GPIO Out: ".$this->ReadPropertyInteger("Pin_O"));
 
