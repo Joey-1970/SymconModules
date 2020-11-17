@@ -748,12 +748,10 @@
 		SetValueFloat($this->GetIDForIdent("PressureRel"), round($PressureRel / 100, 2));
 
 		// Luftdruck Trends
-		If ($this->ReadPropertyBoolean("LoggingPres") == true) {
-			SetValueFloat($this->GetIDForIdent("PressureTrend1h"), $this->PressureTrend(1));
-			SetValueFloat($this->GetIDForIdent("PressureTrend3h"), $this->PressureTrend(3));
-			SetValueFloat($this->GetIDForIdent("PressureTrend12h"), $this->PressureTrend(12));
-			SetValueFloat($this->GetIDForIdent("PressureTrend24h"), $this->PressureTrend(24));
-		}
+		SetValueFloat($this->GetIDForIdent("PressureTrend1h"), $this->PressureTrend(1));
+		SetValueFloat($this->GetIDForIdent("PressureTrend3h"), $this->PressureTrend(3));
+		SetValueFloat($this->GetIDForIdent("PressureTrend12h"), $this->PressureTrend(12));
+		SetValueFloat($this->GetIDForIdent("PressureTrend24h"), $this->PressureTrend(24));
 	}
 				
 	private function bme680_set_sensor_mode()
