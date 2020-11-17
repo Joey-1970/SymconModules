@@ -2,14 +2,6 @@
     // Klassendefinition
     class IPS2GPIO_L298N extends IPSModule 
     {
-	public function Destroy() 
-	{
-		//Never delete this line!
-		parent::Destroy();
-		$this->SetTimerInterval("RunningTime_1", 0);
-		$this->SetTimerInterval("RunningTime_2", 0);
-	}
-	    
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
