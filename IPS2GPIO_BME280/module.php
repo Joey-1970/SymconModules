@@ -21,9 +21,6 @@
 		$this->RegisterPropertyInteger("DeviceAddress", 118);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
- 	    	$this->RegisterPropertyBoolean("LoggingTemp", false);
- 	    	$this->RegisterPropertyBoolean("LoggingHum", false);
- 	    	$this->RegisterPropertyBoolean("LoggingPres", false);
  	    	$this->RegisterPropertyInteger("OSRS_T", 1);
  	    	$this->RegisterPropertyInteger("OSRS_H", 1);
  	    	$this->RegisterPropertyInteger("OSRS_P", 1);
@@ -107,20 +104,16 @@
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, 1 sek -> Minimum)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
-		$arrayElements[] = array("type" => "Label", "label" => "Korrektur des Luftdrucks nach Hohenangabe");
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("type" => "Label", "caption" => "Korrektur des Luftdrucks nach Hohenangabe");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Altitude", "caption" => "Höhe über NN (m)");
-		$arrayElements[] = array("type" => "Label", "label" => "Optionale Angabe von Quellen");
+		$arrayElements[] = array("type" => "Label", "caption" => "Optionale Angabe von Quellen");
 		$arrayElements[] = array("type" => "SelectVariable", "name" => "Temperature_ID", "caption" => "Temperatur (extern)");
 		$arrayElements[] = array("type" => "SelectVariable", "name" => "Humidity_ID", "caption" => "Luftfeuchtigkeit (extern)");
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingTemp", "caption" => "Logging Temperatur aktivieren");
-		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingHum", "caption" => "Logging Luftfeuchtigkeit aktivieren");
-		$arrayElements[] = array("type" => "CheckBox", "name" => "LoggingPres", "caption" => "Logging Luftdruck aktivieren");
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		$arrayElements[] = array("type" => "Label", "label" => "An den folgenden Werten muss in der Regel nichts verändert werden");
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "Label", "caption" => "An den folgenden Werten muss in der Regel nichts verändert werden");
 		
-		$arrayElements[] = array("type" => "Label", "label" => "Oversampling Temperatur (Default: x1)");
+		$arrayElements[] = array("type" => "Label", "caption" => "Oversampling Temperatur (Default: x1)");
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "0 (aus)", "value" => 0);
 		$arrayOptions[] = array("label" => "x1 (Default)", "value" => 1);
@@ -130,7 +123,7 @@
 		$arrayOptions[] = array("label" => "x16", "value" => 5);
 		$arrayElements[] = array("type" => "Select", "name" => "OSRS_T", "caption" => "Oversampling", "options" => $arrayOptions );
 		
-		$arrayElements[] = array("type" => "Label", "label" => "Oversampling Luftfeuchtigkeit (Default: x1)");
+		$arrayElements[] = array("type" => "Label", "caption" => "Oversampling Luftfeuchtigkeit (Default: x1)");
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "0 (aus)", "value" => 0);
 		$arrayOptions[] = array("label" => "x1 (Default)", "value" => 1);
@@ -140,7 +133,7 @@
 		$arrayOptions[] = array("label" => "x16", "value" => 5);
 		$arrayElements[] = array("type" => "Select", "name" => "OSRS_H", "caption" => "Oversampling", "options" => $arrayOptions );
 
-		$arrayElements[] = array("type" => "Label", "label" => "Oversampling Luftdruck (Default: x1)");
+		$arrayElements[] = array("type" => "Label", "caption" => "Oversampling Luftdruck (Default: x1)");
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "0 (aus)", "value" => 0);
 		$arrayOptions[] = array("label" => "x1 (Default)", "value" => 1);
@@ -209,12 +202,6 @@
 		$this->SetReceiveDataFilter($Filter);
 
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
-			// Logging setzen
-			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Temperature"), $this->ReadPropertyBoolean("LoggingTemp"));
-			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Pressure"), $this->ReadPropertyBoolean("LoggingPres"));
-			AC_SetLoggingStatus(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0], $this->GetIDForIdent("Humidity"), $this->ReadPropertyBoolean("LoggingHum"));
-			IPS_ApplyChanges(IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0]);
-			
 			If ($this->ReadPropertyBoolean("Open") == true) {
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 				If ($Result == true) {
