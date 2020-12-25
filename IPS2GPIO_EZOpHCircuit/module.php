@@ -140,8 +140,47 @@
 			$MessageArray = (unpack("C*", $Message));
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_EZOphCircuit_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Parameter" => serialize($MessageArray) )));
 			$this->SendDebug("SetLEDState", "Ergebnis: ".$Result, 0);
+			If (!$Result) {
+				$this->SendDebug("Setup", "SetLEDState setzen fehlerhaft!", 0);
+				$this->SetStatus(202);
+				return false;
+			}
+		return true;
+		}
+	}
+	    
+	public function GetLEDState()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("GetLEDState", "Ausfuehrung", 0);
+			$Message = "L,?";
+			$MessageArray = (unpack("C*", $Message));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_EZOphCircuit_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Parameter" => serialize($MessageArray) )));
+			$this->SendDebug("GetLEDState", "Ergebnis: ".$Result, 0);
+			If (!$Result) {
+				$this->SendDebug("Setup", "SetLEDState setzen fehlerhaft!", 0);
+				$this->SetStatus(202);
+				return false;
+			}
+			else {
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_EZOphCircuit_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "DataCount" => 4 )));
+				$this->SendDebug("GetLEDState", "Ergebnis: ".$Result, 0);
+				If (!$Result) {
+					$this->SendDebug("Setup", "GetLEDState lesen fehlerhaft!", 0);
+					$this->SetStatus(202);
+					return false;
+				}
+			}
+		return true;
 		}
 	}	
+	  
+	/*
+	255 no data to send
+	254 still processing, not ready
+	2 syntax error
+	1 successful request
+	*/
 	    
 	private function Get_I2C_Ports()
 	{
