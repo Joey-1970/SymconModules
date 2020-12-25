@@ -165,10 +165,14 @@
 			else {
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_EZOphCircuit_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Count" => 4 )));
 				$this->SendDebug("GetLEDState", "Ergebnis: ".$Result, 0);
-				If (!$Result) {
+				If ($Result < 0) {
 					$this->SendDebug("Setup", "GetLEDState lesen fehlerhaft!", 0);
 					$this->SetStatus(202);
 					return false;
+				}
+				else {
+					$this->SetStatus(102);
+					$ResultData = unserialize($Result);
 				}
 			}
 		return true;
