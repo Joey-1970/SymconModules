@@ -925,6 +925,16 @@ class IPS2GPIO_IO extends IPSModule
 									  $data->Value_1, $data->Value_2, $data->Value_3, $data->Value_4), 16);
 			}
 			break;  
+		case "i2c_EZOphCircuit_write": 
+			// I2CWI h r bvs - smb Write I2C Block Data
+			If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
+				$this->SetI2CBus(intval($data->DeviceIdent));
+				$ParameterArray = array();
+				$ParameterArray = unserialize($data->Parameter);
+				$Result = $this->CommandClientSocket(pack("LLLLC*", 68, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, count($ParameterArray), 
+									  ...$ParameterArray), 16);
+			}
+			break;
 		case "i2c_write_4_byte":
 			// I2CWB h r bv - smb Write Byte Data: write byte to register  	
 			If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
