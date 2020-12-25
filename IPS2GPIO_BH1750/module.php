@@ -2,13 +2,6 @@
     // Klassendefinition
     class IPS2GPIO_BH1750 extends IPSModule 
     {
-	public function Destroy() 
-	{
-		//Never delete this line!
-		parent::Destroy();
-		$this->SetTimerInterval("Messzyklus", 0);
-	}
-	    
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
@@ -30,10 +23,8 @@
 		
 		//Status-Variablen anlegen
 		$this->RegisterVariableFloat("Illuminance", "Illuminance", "IPS2GPIO.lx", 10);
-		$this->DisableAction("Illuminance");
 		
 		$this->RegisterVariableBoolean("Hysteresis", "Hysteresis", "~Switch", 20);
-		$this->DisableAction("Hysteresis");
         }
 	    
 	public function GetConfigurationForm() 
