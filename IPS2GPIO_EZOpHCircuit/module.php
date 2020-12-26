@@ -18,7 +18,7 @@
 	    			
 		
 		//Status-Variablen anlegen
-		$this->RegisterVariableInteger("Firmware", "Firmware", "", 10);
+		$this->RegisterVariableFloat("Firmware", "Firmware", "", 10);
 		
 		$this->RegisterVariableFloat("LED", "LED", "~Switch", 20);
 		$this->EnableAction("LED");
@@ -193,6 +193,7 @@
 					$ResultData = unserialize($Result);
 					$ResultString = implode(array_map("chr", $ResultData)); 
 					$this->SendDebug("GetLEDState", "Ergebnis: ".$ResultString, 0);
+					$this->ReadResult($ResultString);
 				}
 			}
 		return true;
@@ -226,11 +227,31 @@
 					$ResultData = unserialize($Result);
 					$ResultString = implode(array_map("chr", $ResultData)); 
 					$this->SendDebug("GetFirmware", "Ergebnis: ".$ResultString, 0);
+					$this->ReadResult($ResultString);
 				}
 			}
 		return true;
 		}
 	}    
+	
+	private function ReadResult($ResultString)
+	{
+		$ResultParts = explode(",", $ResultString);
+		switch ($ResultParts[0]) {
+			case "L":
+				$this->SendDebug("ReadResult", "LED", 0);
+				$this->SetValue("LED", boolval($ResultParts[0]);
+				break;
+			case "i":
+				$this->SendDebug("ReadResult", "Device Information", 0);
+				$this->SetValue("Firmware", floatval($ResultParts[2]);
+				break;
+			
+			default:
+			    throw new Exception("Invalid Ident");
+	    	}
+		
+	}
 	    
 	/*
 	255 no data to send
