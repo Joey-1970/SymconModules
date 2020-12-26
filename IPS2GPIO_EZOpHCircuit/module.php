@@ -240,11 +240,11 @@
 		switch ($ResultParts[0]) {
 			case "L":
 				$this->SendDebug("ReadResult", "LED", 0);
-				$this->SetValue("LED", boolval($ResultParts[0]);
+				$this->SetValue("LED", boolval($ResultParts[0]));
 				break;
 			case "i":
 				$this->SendDebug("ReadResult", "Device Information", 0);
-				$this->SetValue("Firmware", floatval($ResultParts[2]);
+				$this->SetValue("Firmware", floatval($ResultParts[2]));
 				break;
 			
 			default:
