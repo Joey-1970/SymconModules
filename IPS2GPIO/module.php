@@ -50,16 +50,12 @@ class IPS2GPIO_IO extends IPSModule
 		
 		// Statusvariablen anlegen
 		$this->RegisterVariableString("Hardware", "Hardware", "", 10);
-		$this->DisableAction("Hardware");
 
 		$this->RegisterVariableInteger("SoftwareVersion", "SoftwareVersion", "", 20);
-		$this->DisableAction("SoftwareVersion");
 
 		$this->RegisterVariableInteger("LastKeepAlive", "Letztes Keep Alive", "~UnixTimestamp", 30);
-		$this->DisableAction("LastKeepAlive");
 
 		$this->RegisterVariableBoolean("PigpioStatus", "Pigpio Status", "~Alert.Reversed", 40);
-		$this->DisableAction("PigpioStatus");
 	}
   	
 	public function GetConfigurationForm() 
