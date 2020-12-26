@@ -922,12 +922,12 @@ class IPS2GPIO_IO extends IPSModule
 			}
 			break;  
 		case "i2c_EZOphCircuit_write": 
-			// I2CWI h r bvs - smb Write I2C Block Data
+			// I2CWD h bvs - i2c Write device
 			If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
 				$this->SetI2CBus(intval($data->DeviceIdent));
 				$ParameterArray = array();
 				$ParameterArray = unserialize($data->Parameter);
-				$Result = $this->CommandClientSocket(pack("LLLLC*", 68, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, count($ParameterArray), 
+				$Result = $this->CommandClientSocket(pack("LLLLC*", 57, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), 0, count($ParameterArray), 
 									  ...$ParameterArray), 16);
 			}
 			break;
@@ -2286,7 +2286,15 @@ class IPS2GPIO_IO extends IPSModule
 		            	else {
            				IPS_LogMessage("IPS2GPIO I2C Read Bytes","Handle: ".$response[2]." Fehlermeldung: ".$this->GetErrorText(abs($response[4])));
            			}
-				break; 
+				break;
+			case "57":
+           			If ($response[4] >= 0) {
+					$Result = true;
+				}
+				else {
+					$Result = false;
+				}
+		            	break;
 			case "59":
            			If ($response[4] >= 0) {
            				//IPS_LogMessage("IPS2GPIO I2C Read Byte Handle","Handle: ".$response[2]." Value: ".$response[4]);
