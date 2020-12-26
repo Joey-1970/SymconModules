@@ -175,7 +175,7 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_EZOphCircuit_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Parameter" => serialize($MessageArray) )));
 			$this->SendDebug("GetLEDState", "Ergebnis: ".$Result, 0);
 			If (!$Result) {
-				$this->SendDebug("Setup", "SetLEDState setzen fehlerhaft!", 0);
+				$this->SendDebug("Setup", "GetLEDState setzen fehlerhaft!", 0);
 				$this->SetStatus(202);
 				return false;
 			}
@@ -189,13 +189,49 @@
 				}
 				else {
 					$this->SetStatus(102);
+					$ResultData = array();
 					$ResultData = unserialize($Result);
+					$ResultString = implode(array_map("chr", $ResultData)); 
+					$this->SendDebug("GetLEDState", "Ergebnis: ".$ResultString, 0);
 				}
 			}
 		return true;
 		}
 	}	
-	  
+	
+	public function GetFirmware()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("GetFirmware", "Ausfuehrung", 0);
+			$Message = "i";
+			$MessageArray = (unpack("C*", $Message));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_EZOphCircuit_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Parameter" => serialize($MessageArray) )));
+			$this->SendDebug("GetFirmware", "Ergebnis: ".$Result, 0);
+			If (!$Result) {
+				$this->SendDebug("Setup", "GetFirmware setzen fehlerhaft!", 0);
+				$this->SetStatus(202);
+				return false;
+			}
+			else {
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_EZOphCircuit_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Count" => 10 )));
+				$this->SendDebug("GetFirmware", "Ergebnis: ".$Result, 0);
+				If ($Result < 0) {
+					$this->SendDebug("Setup", "GetFirmware lesen fehlerhaft!", 0);
+					$this->SetStatus(202);
+					return false;
+				}
+				else {
+					$this->SetStatus(102);
+					$ResultData = array();
+					$ResultData = unserialize($Result);
+					$ResultString = implode(array_map("chr", $ResultData)); 
+					$this->SendDebug("GetFirmware", "Ergebnis: ".$ResultString, 0);
+				}
+			}
+		return true;
+		}
+	}    
+	    
 	/*
 	255 no data to send
 	254 still processing, not ready
