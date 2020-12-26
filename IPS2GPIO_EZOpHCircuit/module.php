@@ -20,7 +20,7 @@
 		//Status-Variablen anlegen
 		$this->RegisterVariableFloat("Firmware", "Firmware", "", 10);
 		
-		$this->RegisterVariableFloat("LED", "LED", "~Switch", 20);
+		$this->RegisterVariableBoolean("LED", "LED", "~Switch", 20);
 		$this->EnableAction("LED");
         }
 	    
