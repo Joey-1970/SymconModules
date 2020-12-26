@@ -15,9 +15,13 @@
             	$this->RegisterTimer("Messzyklus", 0, 'EZOpHCircuit_Measurement($_IPS["TARGET"]);');
 		
 		// Profil anlegen
-	    	
-		//Status-Variablen anlegen
+	    			
 		
+		//Status-Variablen anlegen
+		$this->RegisterVariableInteger("Firmware", "Firmware", "", 10);
+		
+		$this->RegisterVariableFloat("LED", "LED", "~Switch", 20);
+		$this->EnableAction("LED");
         }
 	    
 	public function GetConfigurationForm() 
@@ -53,8 +57,9 @@
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		
 		
-		$arrayActions = array();
-		$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
+		$arrayActions = array(); 
+		$arrayActions[] = array("type" => "Label", "label" => "Test Center"); 
+		$arrayActions[] = array("type" => "TestCenter", "name" => "TestCenter");
 		
  		return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements, "actions" => $arrayActions)); 		 
  	}  
@@ -121,6 +126,18 @@
 			   	break;
 	 	}
  	}
+	    
+	public function RequestAction($Ident, $Value) 
+	{
+  		switch($Ident) {
+			case "LED":
+				$this->SetLEDState($Value);
+				break;
+
+			default:
+			    throw new Exception("Invalid Ident");
+	    	}
+	}
 	// Beginn der Funktionen
 
 	// Führt eine Messung aus
@@ -132,7 +149,7 @@
 		}
 	}	
 	    
-	public function SetLEDState(bool $State)
+	public function SetLEDState(bool $State)			
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("SetLEDState", "Ausfuehrung", 0);
