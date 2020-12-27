@@ -146,7 +146,7 @@
 		}
 	}
 	    
-	privat function Write(string $Message)
+	private function Write(string $Message)
 	{
 		$MessageArray = (unpack("C*", $Message));
 		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_EZOphCircuit_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Parameter" => serialize($MessageArray) )));
@@ -160,7 +160,27 @@
 			return true;
 		}
 	}
-	    
+	
+	private function Read(int $DataCount)
+	{
+		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_EZOphCircuit_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Count" => $DataCount )));
+		$this->SendDebug("Read", "Ergebnis: ".$Result, 0);
+		If ($Result < 0) {
+			$this->SendDebug("Read", "Lesevorgang fehlerhaft!", 0);
+			$this->SetStatus(202);
+			return false;
+		}
+		else {
+			$this->SetStatus(102);
+			$ResultData = array();
+			$ResultData = unserialize($Result);
+			$ResultString = implode(array_map("chr", $ResultData)); 
+			$this->SendDebug("Read", "Ergebnis: ".$ResultString, 0);
+			$this->ReadResult($ResultString);
+			return true;
+		}
+	}
+	   
 	public function SetLEDState(bool $State)			
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
@@ -181,21 +201,9 @@
 				return false;
 			}
 			else {
+				$Result = $this->Read(10);
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_EZOphCircuit_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Count" => 4 )));
-				$this->SendDebug("GetLEDState", "Ergebnis: ".$Result, 0);
-				If ($Result < 0) {
-					$this->SendDebug("Setup", "GetLEDState lesen fehlerhaft!", 0);
-					$this->SetStatus(202);
-					return false;
-				}
-				else {
-					$this->SetStatus(102);
-					$ResultData = array();
-					$ResultData = unserialize($Result);
-					$ResultString = implode(array_map("chr", $ResultData)); 
-					$this->SendDebug("GetLEDState", "Ergebnis: ".$ResultString, 0);
-					$this->ReadResult($ResultString);
-				}
+				
 			}
 		return true;
 		}
