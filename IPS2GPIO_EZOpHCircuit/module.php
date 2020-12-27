@@ -138,29 +138,36 @@
 	}
 	// Beginn der Funktionen
 
-	// Führt eine Messung aus
 	public function Measurement()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Measurement", "Ausfuehrung", 0);
 			
 		}
-	}	
+	}
+	    
+	privat function Write(string $Message)
+	{
+		$MessageArray = (unpack("C*", $Message));
+		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_EZOphCircuit_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Parameter" => serialize($MessageArray) )));
+		$this->SendDebug("Write", "Ergebnis: ".$Result, 0);
+		If (!$Result) {
+			$this->SendDebug("Setup", "Schreibvorgang fehlerhaft!", 0);
+			$this->SetStatus(202);
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
 	    
 	public function SetLEDState(bool $State)			
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("SetLEDState", "Ausfuehrung", 0);
 			$Message = "L,".intval($State);
-			$MessageArray = (unpack("C*", $Message));
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_EZOphCircuit_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Parameter" => serialize($MessageArray) )));
-			$this->SendDebug("SetLEDState", "Ergebnis: ".$Result, 0);
-			If (!$Result) {
-				$this->SendDebug("Setup", "SetLEDState setzen fehlerhaft!", 0);
-				$this->SetStatus(202);
-				return false;
-			}
-		return true;
+			$Result = $this->Write($Message);
+		return $Result;
 		}
 	}
 	    
@@ -169,12 +176,8 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("GetLEDState", "Ausfuehrung", 0);
 			$Message = "L,?";
-			$MessageArray = (unpack("C*", $Message));
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_EZOphCircuit_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Parameter" => serialize($MessageArray) )));
-			$this->SendDebug("GetLEDState", "Ergebnis: ".$Result, 0);
-			If (!$Result) {
-				$this->SendDebug("Setup", "GetLEDState setzen fehlerhaft!", 0);
-				$this->SetStatus(202);
+			$Result = $this->Write($Message);
+			If ($Result == false) {
 				return false;
 			}
 			else {
@@ -203,12 +206,8 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("GetFirmware", "Ausfuehrung", 0);
 			$Message = "i";
-			$MessageArray = (unpack("C*", $Message));
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_EZOphCircuit_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Parameter" => serialize($MessageArray) )));
-			$this->SendDebug("GetFirmware", "Ergebnis: ".$Result, 0);
-			If (!$Result) {
-				$this->SendDebug("Setup", "GetFirmware setzen fehlerhaft!", 0);
-				$this->SetStatus(202);
+			$Result = $this->Write($Message);
+			If ($Result == false) {
 				return false;
 			}
 			else {
@@ -236,11 +235,11 @@
 	{
 		$ResultParts = explode(",", $ResultString);
 		switch ($ResultParts[0]) {
-			case "L":
+			case "?L":
 				$this->SendDebug("ReadResult", "LED", 0);
 				$this->SetValue("LED", boolval($ResultParts[1]));
 				break;
-			case "i":
+			case "?i":
 				$this->SendDebug("ReadResult", "Device Information", 0);
 				$this->SetValue("Firmware", floatval($ResultParts[2]));
 				break;
