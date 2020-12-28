@@ -7,6 +7,8 @@
         {
             	// Diese Zeile nicht löschen.
             	parent::Create();
+		$this->RegisterMessage(0, IPS_KERNELSTARTED);
+		
  	    	$this->RegisterPropertyBoolean("Open", false);
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
  	    	$this->RegisterPropertyInteger("DeviceAddress", 99);
@@ -78,7 +80,6 @@
 		$Filter = '((.*"Function":"get_used_i2c".*|.*"DeviceIdent":'.$this->GetBuffer("DeviceIdent").'.*)|.*"Function":"status".*)';
 		$this->SetReceiveDataFilter($Filter);
 
-		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 			
 			If ($this->ReadPropertyBoolean("Open") == true) {
@@ -136,6 +137,18 @@
 			    throw new Exception("Invalid Ident");
 	    	}
 	}
+	    
+	public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
+    	{
+		switch ($Message) {
+			case 10001:
+				// IPS_KERNELSTARTED
+				$this->ApplyChanges();
+				break;
+			
+		}
+    	}     
+	    
 	// Beginn der Funktionen
 
 	public function Measurement()
