@@ -200,7 +200,14 @@
 			$this->SendDebug("SetLEDState", "Ausfuehrung", 0);
 			$Message = "L,".intval($State);
 			$Result = $this->Write($Message);
-		return $Result;
+			If ($Result == false) {
+				return false;
+			}
+			else {
+				IPS_Sleep(300);
+				$Result = $this->Read(1);
+				return $Result;
+			}
 		}
 	}
 	    
@@ -221,6 +228,8 @@
 		}
 	}	
 	
+	    
+	    
 	public function GetFirmware()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
@@ -231,21 +240,9 @@
 				return false;
 			}
 			else {
-				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_EZOphCircuit_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Count" => 10 )));
-				$this->SendDebug("GetFirmware", "Ergebnis: ".$Result, 0);
-				If ($Result < 0) {
-					$this->SendDebug("Setup", "GetFirmware lesen fehlerhaft!", 0);
-					$this->SetStatus(202);
-					return false;
-				}
-				else {
-					$this->SetStatus(102);
-					$ResultData = array();
-					$ResultData = unserialize($Result);
-					$ResultString = implode(array_map("chr", $ResultData)); 
-					$this->SendDebug("GetFirmware", "Ergebnis: ".$ResultString, 0);
-					$this->ReadResult($ResultString);
-				}
+				IPS_Sleep(300);
+				$Result = $this->Read(10);
+				return $Result;
 			}
 		return true;
 		}
@@ -253,6 +250,7 @@
 	
 	private function ReadResult($ResultString)
 	{
+		$this->SendDebug("ReadResult", $ResultString, 0);
 		$ResultParts = explode(",", $ResultString);
 		switch ($ResultParts[0]) {
 			case "?L":
