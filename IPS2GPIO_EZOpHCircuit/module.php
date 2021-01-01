@@ -186,6 +186,7 @@
 		else {
 			$this->SetStatus(102);
 			$ResultData = array();
+			$this->SendDebug("Read", "Roh-Ergebnis: ".$Result, 0);
 			$ResultData = unserialize($Result);
 			$ResultString = implode(array_map("chr", $ResultData)); 
 			$this->SendDebug("Read", "Ergebnis: ".$ResultString, 0);
@@ -193,7 +194,14 @@
 			return true;
 		}
 	}
-	   
+	
+	/*
+	255 no data to send
+	254 still processing, not ready
+	2 syntax error
+	1 successful request
+	*/
+	  
 	public function SetLEDState(bool $State)			
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
@@ -268,12 +276,7 @@
 		
 	}
 	    
-	/*
-	255 no data to send
-	254 still processing, not ready
-	2 syntax error
-	1 successful request
-	*/
+
 	    
 	private function Get_I2C_Ports()
 	{
