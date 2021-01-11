@@ -73,7 +73,7 @@
 		$arrayElements[] = array("type" => "CheckBox", "name" => "ExtendedpHScale", "caption" => "Erweiterte pH-Skala aktivieren"); 
 		$arrayActions = array(); 
 		
-		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung mittlerer Wert (pH 7)", "onClick" => "EZOpHCircuit_CalibrationMidpoint($id);"); 
+		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung mittlerer Wert (pH 7)", "onClick" => "EZOpHCircuit_CalibrationMidpoint($_IPS["TARGET"]);"); 
 		//{ "type": "Button", "caption": "An", "onClick": "echo $id;" } 7 4 10
 		
 		$arrayActions[] = array("type" => "Label", "label" => "Test Center"); 
