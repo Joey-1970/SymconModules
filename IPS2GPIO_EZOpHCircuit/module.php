@@ -213,7 +213,7 @@
 			}
 			else {
 				IPS_Sleep(300);
-				$Result = $this->Read(1);
+				$Result = $this->Read(2);
 				return $Result;
 			}
 		}
@@ -269,9 +269,10 @@
 				$this->SendDebug("ReadResult", "Device Information", 0);
 				$this->SetValue("Firmware", floatval($ResultParts[2]));
 				break;
-			
+			/*
 			default:
 			    throw new Exception("Invalid Ident");
+			*/
 	    	}
 		
 	}
