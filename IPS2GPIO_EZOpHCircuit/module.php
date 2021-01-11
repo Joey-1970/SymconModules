@@ -293,7 +293,7 @@
 				
 			case "Calibration":
 				$this->SendDebug("ReadResult", "Calibration", 0);
-				$this->SetValue("Calibration", boolval($ResultParts[1]));
+				$this->SetValue("Calibration", intval($ResultParts[1]));
 				break;
 
 			/*
