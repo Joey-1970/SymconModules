@@ -249,7 +249,7 @@
 			}
 			else {
 				IPS_Sleep(300);
-				$Result = $this->Read(10);
+				$Result = $this->Read(12);
 				return $Result;
 			}
 		return true;
