@@ -257,7 +257,7 @@
 				
 			case "pH":
 				$this->SendDebug("ReadResult", "pH", 0);
-				$this->SetValue("pH", $ResultParts[1]);
+				$this->SetValue("pH", $ResultParts[0]);
 				break;
 				
 			case "Status":
