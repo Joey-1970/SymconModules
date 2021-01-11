@@ -15,6 +15,7 @@
 		$this->RegisterPropertyInteger("DeviceBus", 1);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
 		$this->RegisterPropertyInteger("TemperatureID", 0);
+		$this->RegisterPropertyBoolean("ExtendedpHScale", false);
             	$this->RegisterTimer("Messzyklus", 0, 'EZOpHCircuit_Measurement($_IPS["TARGET"]);');
 		
 		// Profil anlegen
@@ -69,7 +70,7 @@
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "SelectVariable", "name" => "TemperatureID", "caption" => "Temperatur (Kompensation)");
-		
+		$arrayElements[] = array("type" => "CheckBox", "name" => "ExtendedpHScale", "caption" => "Erweiterte pH-Skala aktivieren"); 
 		$arrayActions = array(); 
 		$arrayActions[] = array("type" => "Label", "label" => "Test Center"); 
 		$arrayActions[] = array("type" => "TestCenter", "name" => "TestCenter");
