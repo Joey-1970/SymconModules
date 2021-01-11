@@ -93,7 +93,7 @@
 					// LED Status
 					$this->GetLEDState();
 					// Erste Messdaten einlesen
-					$this->Measurement();
+					$this->GetpHValue();
 				}
 			}
 			else {
@@ -157,14 +157,6 @@
 	    
 	// Beginn der Funktionen
 
-	public function Measurement()
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("Measurement", "Ausfuehrung", 0);
-			
-		}
-	}
-	    
 	private function Write(string $Message)
 	{
 		$MessageArray = (unpack("C*", $Message));
