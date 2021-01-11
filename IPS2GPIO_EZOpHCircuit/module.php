@@ -22,7 +22,7 @@
 		//Status-Variablen anlegen
 		$this->RegisterVariableString("DeviceType", "Device Typ", "", 10);
 		$this->RegisterVariableString("Firmware", "Firmware", "", 20);
-		$this->RegisterVariableFloat("pH", "pH", "", 30);
+		$this->RegisterVariableFloat("pH", "pH", "~Liquid.pH.F", 30);
 		
 		$this->RegisterVariableBoolean("LED", "LED", "~Switch", 20);
 		$this->EnableAction("LED");
@@ -221,7 +221,36 @@
 			return true;
 		}
 	}
-	  
+	
+	private function ReadResult($ResultString)
+	{
+		$this->SendDebug("ReadResult", $ResultString, 0);
+		$ResultParts = explode(",", $ResultString);
+		switch ($ResultParts[0]) {
+			case "?L":
+				$this->SendDebug("ReadResult", "LED", 0);
+				$this->SetValue("LED", boolval($ResultParts[1]));
+				break;
+
+			case "?I":
+				$this->SendDebug("ReadResult", "Device Information", 0);
+				$this->SetValue("DeviceType", $ResultParts[1]);
+				$this->SetValue("Firmware", $ResultParts[2]);
+				break;
+				
+			case "R":
+				$this->SendDebug("ReadResult", "pH", 0);
+				$this->SetValue("pH", $ResultParts[1]);
+				break;
+
+			/*
+			default:
+			    throw new Exception("Invalid Ident");
+			*/
+	    	}
+		
+	}    
+	    
 	public function SetLEDState(bool $State)			
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
@@ -258,9 +287,7 @@
 			}
 		}
 	}	
-	
-	    
-	    
+	  
 	public function GetFirmware()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
@@ -279,30 +306,22 @@
 		}
 	}    
 	
-	private function ReadResult($ResultString)
+	public function GetpHValue()
 	{
-		$this->SendDebug("ReadResult", $ResultString, 0);
-		$ResultParts = explode(",", $ResultString);
-		switch ($ResultParts[0]) {
-			case "?L":
-				$this->SendDebug("ReadResult", "LED", 0);
-				$this->SetValue("LED", boolval($ResultParts[1]));
-				break;
-
-			case "?I":
-				$this->SendDebug("ReadResult", "Device Information", 0);
-				$this->SetValue("DeviceType", $ResultParts[1]);
-				$this->SetValue("Firmware", $ResultParts[2]);
-				break;
-			/*
-			default:
-			    throw new Exception("Invalid Ident");
-			*/
-	    	}
-		
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("GetLEDState", "Ausfuehrung", 0);
+			$Message = "R";
+			$Result = $this->Write($Message);
+			If ($Result == false) {
+				return false;
+			}
+			else {
+				IPS_Sleep(900);
+				$Result = $this->Read(7);
+				return $Result;
+			}
+		}
 	}
-	    
-
 	    
 	private function Get_I2C_Ports()
 	{
