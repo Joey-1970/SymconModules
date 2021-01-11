@@ -20,7 +20,7 @@
 	    			
 		
 		//Status-Variablen anlegen
-		$this->RegisterVariableFloat("Firmware", "Firmware", "", 10);
+		$this->RegisterVariableString("Firmware", "Firmware", "", 10);
 		
 		$this->RegisterVariableBoolean("LED", "LED", "~Switch", 20);
 		$this->EnableAction("LED");
@@ -283,7 +283,7 @@
 
 			case "?I":
 				$this->SendDebug("ReadResult", "Device Information", 0);
-				$this->SetValue("Firmware", floatval($ResultParts[2]));
+				$this->SetValue("Firmware", $ResultParts[2]);
 				break;
 			/*
 			default:
