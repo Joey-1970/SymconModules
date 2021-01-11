@@ -208,29 +208,29 @@
 			If (count($ResultData) > 0) {
 				$ResultString = implode(array_map("chr", $ResultData)); 
 				$this->SendDebug("Read", "Ergebnis: ".$ResultString, 0);
-				$this->ReadResult($ResultString);
+				$this->ReadResult($Function, $ResultString);
 			}
 			return true;
 		}
 	}
 	
-	private function ReadResult($ResultString)
+	private function ReadResult(string $Function, string $ResultString)
 	{
 		$this->SendDebug("ReadResult", $ResultString, 0);
 		$ResultParts = explode(",", $ResultString);
-		switch ($ResultParts[0]) {
-			case "?L":
+		switch ($Function) {
+			case "LED":
 				$this->SendDebug("ReadResult", "LED", 0);
 				$this->SetValue("LED", boolval($ResultParts[1]));
 				break;
 
-			case "?I":
+			case "FW":
 				$this->SendDebug("ReadResult", "Device Information", 0);
 				$this->SetValue("DeviceType", $ResultParts[1]);
 				$this->SetValue("Firmware", $ResultParts[2]);
 				break;
 				
-			case "R":
+			case "pH":
 				$this->SendDebug("ReadResult", "pH", 0);
 				$this->SetValue("pH", $ResultParts[1]);
 				break;
