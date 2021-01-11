@@ -172,7 +172,7 @@
 		}
 	}
 	
-	private function Read(int $DataCount)
+	private function Read(string $Function, int $DataCount)
 	{
 		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_EZOphCircuit_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Count" => $DataCount )));
 		$this->SendDebug("Read", "Ergebnis: ".$Result, 0);
