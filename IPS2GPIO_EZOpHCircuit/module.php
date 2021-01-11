@@ -21,20 +21,27 @@
 		// Profil anlegen
 		$this->RegisterProfileFloat("IPS2GPIO.V", "Electricity", "", " V", -100000, +100000, 0.1, 3);		
 		
-		$this->RegisterProfileInteger("IPS2GPIO.Restart", "Battery", "", "", 0, 3, 1);
+		$this->RegisterProfileInteger("IPS2GPIO.Restart", "Information", "", "", 0, 5, 1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.Restart", 0, "powered off", "", -1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.Restart", 1, "software reset", "", -1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.Restart", 2, "brown out", "", -1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.Restart", 3, "watchdog", "", -1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.Restart", 4, "unknown", "", -1);	
 		
+		$this->RegisterProfileInteger("IPS2GPIO.Calibration", "Gauge", "", "", 0, 4, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.Calibration", 0, "Keine", "Warning", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.Calibration", 1, "Ein-Punkt-Kalibrierung", "", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.Calibration", 2, "Zwei-Punkt-Kalibrierung", "", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.Calibration", 3, "Drei-Punkt-Kalibrierung", "", -1);	
+		
 		//Status-Variablen anlegen
 		$this->RegisterVariableString("DeviceType", "Device Typ", "", 10);
 		$this->RegisterVariableString("Firmware", "Firmware", "", 20);
-		$this->RegisterVariableInteger("Restart", "Restart", "IPS2GPIO.Restart", 30);
+		$this->RegisterVariableInteger("Restart", "Letzter Neustart", "IPS2GPIO.Restart", 30);
 		$this->RegisterVariableFloat("Voltage", "Volt", "IPS2GPIO.V", 40);
 		$this->RegisterVariableFloat("pH", "pH", "~Liquid.pH.F", 50);
-		$this->RegisterVariableFloat("Temperature", "Temperatur", "~Temperature", 50);
+		$this->RegisterVariableFloat("Temperature", "Temperatur", "~Temperature", 60);
+		$this->RegisterVariableInteger("Calibration", "Kalibration", "IPS2GPIO.Calibration", 70);
 		
 		$this->RegisterVariableBoolean("LED", "LED", "~Switch", 20);
 		$this->EnableAction("LED");
@@ -123,6 +130,8 @@
 					$this->GetStatus();
 					// Skala setzen
 					$this->SetpHScale($this->ReadPropertyBoolean("ExtendedpHScale"));	
+					// Kalibrierung prüfen
+					$this->GetCalibration();
 					// Erste Messdaten einlesen
 					$this->GetpHValue();
 				}
@@ -284,7 +293,7 @@
 				
 			case "Calibration":
 				$this->SendDebug("ReadResult", "Calibration", 0);
-				//$this->SetValue("LED", boolval($ResultParts[1]));
+				$this->SetValue("Calibration", boolval($ResultParts[1]));
 				break;
 
 			/*
