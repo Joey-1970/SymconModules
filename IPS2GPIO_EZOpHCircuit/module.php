@@ -14,6 +14,7 @@
  	    	$this->RegisterPropertyInteger("DeviceAddress", 99);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
+		$this->RegisterPropertyInteger("TemperatureID", 0);
             	$this->RegisterTimer("Messzyklus", 0, 'EZOpHCircuit_Measurement($_IPS["TARGET"]);');
 		
 		// Profil anlegen
@@ -32,6 +33,7 @@
 		$this->RegisterVariableInteger("Restart", "Restart", "IPS2GPIO.Restart", 30);
 		$this->RegisterVariableFloat("Voltage", "Volt", "IPS2GPIO.V", 40);
 		$this->RegisterVariableFloat("pH", "pH", "~Liquid.pH.F", 50);
+		$this->RegisterVariableFloat("Temperature", "Temperatur", "~Temperature", 50);
 		
 		$this->RegisterVariableBoolean("LED", "LED", "~Switch", 20);
 		$this->EnableAction("LED");
@@ -66,7 +68,7 @@
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, 1 sek -> Minimum)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
-		
+		$arrayElements[] = array("type" => "SelectVariable", "name" => "TemperatureID", "caption" => "Temperatur (Kompensation)");
 		
 		$arrayActions = array(); 
 		$arrayActions[] = array("type" => "Label", "label" => "Test Center"); 
@@ -92,6 +94,14 @@
 		$this->SetReceiveDataFilter($Filter);
 
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
+			
+			// Registrierung für die Änderung der Ist-Temperatur
+			If ($this->ReadPropertyInteger("TemperatureID") > 0) {
+				$this->RegisterMessage($this->ReadPropertyInteger("TemperatureID"), 10603);
+			}
+			else {
+				$this->SetValue("Temperature", 25);
+			}
 			
 			If ($this->ReadPropertyBoolean("Open") == true) {
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
@@ -162,7 +172,11 @@
 				// IPS_KERNELSTARTED
 				$this->ApplyChanges();
 				break;
-			
+			case 10603:
+				// Änderung der Kompesations-Temperatur, die Temperatur aus dem angegebenen Sensor in das Modul kopieren
+				If ($SenderID == $this->ReadPropertyInteger("TemperatureID")) {
+					$this->SetValue("Temperature", GetValueFloat($this->ReadPropertyInteger("ActualTemperatureID")) );
+				}
 		}
     	}     
 	    
@@ -319,16 +333,32 @@
 	public function GetpHValue()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("GetpHValue", "Ausfuehrung", 0);
-			$Message = "R";
-			$Result = $this->Write($Message);
-			If ($Result == false) {
-				return false;
+			If ($this->ReadPropertyInteger("TemperatureID") == 0) {
+				$this->SendDebug("GetpHValue", "Ausfuehrung ohne Temperaturkompensation", 0);
+				$Message = "R";
+				$Result = $this->Write($Message);
+				If ($Result == false) {
+					return false;
+				}
+				else {
+					IPS_Sleep(900);
+					$Result = $this->Read("pH", 7);
+					return $Result;
+				}
 			}
 			else {
-				IPS_Sleep(900);
-				$Result = $this->Read("pH", 7);
-				return $Result;
+				$this->SendDebug("GetpHValue", "Ausfuehrung mit Temperaturkompensation", 0);
+				$Temperature = $this->GetValue("Temperature");
+				$Message = "RT,".$Temperature;
+				$Result = $this->Write($Message);
+				If ($Result == false) {
+					return false;
+				}
+				else {
+					IPS_Sleep(900);
+					$Result = $this->Read("pH", 7);
+					return $Result;
+				}
 			}
 		}
 	}
