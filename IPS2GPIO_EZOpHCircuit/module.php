@@ -90,7 +90,8 @@
 					$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
 					// Firmware und Device-Typ einlesen
 					$this->GetFirmware();
-					
+					// LED Status
+					$this->GetLEDState();
 					// Erste Messdaten einlesen
 					$this->Measurement();
 				}
