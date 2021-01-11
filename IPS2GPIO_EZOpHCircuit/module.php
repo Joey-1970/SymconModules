@@ -22,7 +22,9 @@
 		//Status-Variablen anlegen
 		$this->RegisterVariableString("DeviceType", "Device Typ", "", 10);
 		$this->RegisterVariableString("Firmware", "Firmware", "", 20);
-		$this->RegisterVariableFloat("pH", "pH", "~Liquid.pH.F", 30);
+		$this->RegisterVariableString("Restart", "Restart", "", 30);
+		$this->RegisterVariableFloat("Voltage", "Volt", "", 40);
+		$this->RegisterVariableFloat("pH", "pH", "~Liquid.pH.F", 50);
 		
 		$this->RegisterVariableBoolean("LED", "LED", "~Switch", 20);
 		$this->EnableAction("LED");
@@ -92,6 +94,8 @@
 					$this->GetFirmware();
 					// LED Status
 					$this->GetLEDState();
+					// Status
+					$this->GetStatus();
 					// Erste Messdaten einlesen
 					$this->GetpHValue();
 				}
@@ -234,6 +238,12 @@
 				$this->SendDebug("ReadResult", "pH", 0);
 				$this->SetValue("pH", $ResultParts[1]);
 				break;
+				
+			case "Status":
+				$this->SendDebug("ReadResult", "Status", 0);
+				$this->SetValue("Restart", $ResultParts[1]);
+				$this->SetValue("Voltage", $ResultParts[2]);
+				break;
 
 			/*
 			default:
@@ -301,7 +311,7 @@
 	public function GetpHValue()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("GetLEDState", "Ausfuehrung", 0);
+			$this->SendDebug("GetpHValue", "Ausfuehrung", 0);
 			$Message = "R";
 			$Result = $this->Write($Message);
 			If ($Result == false) {
@@ -310,6 +320,23 @@
 			else {
 				IPS_Sleep(900);
 				$Result = $this->Read("pH", 7);
+				return $Result;
+			}
+		}
+	}
+	    
+	public function GetStatus()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("GetStatus", "Ausfuehrung", 0);
+			$Message = "Status";
+			$Result = $this->Write($Message);
+			If ($Result == false) {
+				return false;
+			}
+			else {
+				IPS_Sleep(300);
+				$Result = $this->Read("Status", 17);
 				return $Result;
 			}
 		}
