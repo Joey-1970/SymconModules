@@ -199,7 +199,7 @@
 			$ResultQualityArray = array(1 => "Successful request", 2 => "Syntax Error", 254 => "Still processing, not ready", 255 => "No data to send");
 			$FirstByte = array_shift($ResultData);
 			if (array_key_exists($FirstByte, $ResultQualityArray)) {
-				$this->SendDebug("Read", "Ergebnis: ".$ResultQualityArray[$ResultQuality], 0);
+				$this->SendDebug("Read", "Ergebnis: ".$ResultQualityArray[$FirstByte], 0);
 			}
 			else {
 				$this->SendDebug("Read", "Das Ergebnisbyte hat einen unbekannten Status!", 0);
