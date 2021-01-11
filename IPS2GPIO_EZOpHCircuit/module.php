@@ -267,6 +267,11 @@
 				$this->SetValue("Restart", array_search($ResultParts[1], $RestartArray));
 				$this->SetValue("Voltage", $ResultParts[2]);
 				break;
+				
+			case "pHScale":
+				$this->SendDebug("ReadResult", "pHScale", 0);
+				//$this->SetValue("LED", boolval($ResultParts[1]));
+				break;
 
 			/*
 			default:
@@ -380,6 +385,43 @@
 			}
 		}
 	}
+	    
+	public function SetpHScale(bool $State)			
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("SetpHScale", "Ausfuehrung", 0);
+			$Message = "pHext,".intval($State);
+			$Result = $this->Write($Message);
+			If ($Result == false) {
+				return false;
+			}
+			else {
+				IPS_Sleep(300);
+				$Result = $this->Read("pHScale", 2);
+				If ($Result == true) {
+					$this->GetpHScale();
+				}
+				return $Result;
+			}
+		}
+	}
+	    
+	public function GetpHScale()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("GetpHScale", "Ausfuehrung", 0);
+			$Message = "pHext,?";
+			$Result = $this->Write($Message);
+			If ($Result == false) {
+				return false;
+			}
+			else {
+				IPS_Sleep(300);
+				$Result = $this->Read("pHScale", 10);
+				return $Result;
+			}
+		}
+	}	
 	
 	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
 	{
