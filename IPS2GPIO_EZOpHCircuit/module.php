@@ -16,7 +16,7 @@
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
 		$this->RegisterPropertyInteger("TemperatureID", 0);
 		$this->RegisterPropertyBoolean("ExtendedpHScale", false);
-            	$this->RegisterTimer("Messzyklus", 0, 'EZOpHCircuit_Measurement($_IPS["TARGET"]);');
+            	$this->RegisterTimer("Messzyklus", 0, 'EZOpHCircuit_GetpHValue($_IPS["TARGET"]);');
 		
 		// Profil anlegen
 		$this->RegisterProfileFloat("IPS2GPIO.V", "Electricity", "", " V", -100000, +100000, 0.1, 3);		
