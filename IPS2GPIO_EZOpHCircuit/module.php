@@ -194,6 +194,7 @@
 			$ResultData = array();
 			$this->SendDebug("Read", "Roh-Ergebnis: ".$Result, 0);
 			$ResultData = unserialize($Result);
+			
 			// erstes Element enthält das grundsätzliche Ergebnis
 			$ResultQualityArray = array(1 => "Successful request", 2 => "Syntax Error", 254 => "Still processing, not ready", 255 => "No data to send");
 			$ResultQuality = array_shift($ResultData);
@@ -202,26 +203,24 @@
 			}
 			else {
 				$this->SendDebug("Read", "Das Ergebnisbyte hat einen unbekannten Status!", 0);
+				return false;
 			}
+			
 			// letztes Element muss 0 sein
 			$LastByte = array_pop($ResultData);
 			If ($LastByte <> 0) {
 				$this->SendDebug("Read", "Letztes Byte ist ungleich 0!", 0);
+				return false;
 			}
 			
-			$ResultString = implode(array_map("chr", $ResultData)); 
-			$this->SendDebug("Read", "Ergebnis: ".$ResultString, 0);
-			$this->ReadResult($ResultString);
+			If (count($ResultData) > 0) {
+				$ResultString = implode(array_map("chr", $ResultData)); 
+				$this->SendDebug("Read", "Ergebnis: ".$ResultString, 0);
+				$this->ReadResult($ResultString);
+			}
 			return true;
 		}
 	}
-	
-	/*
-	255 no data to send
-	254 still processing, not ready
-	2 syntax error
-	1 successful request
-	*/
 	  
 	public function SetLEDState(bool $State)			
 	{
@@ -235,6 +234,9 @@
 			else {
 				IPS_Sleep(300);
 				$Result = $this->Read(2);
+				If ($Result == true) {
+					$this->GetLEDState();
+				}
 				return $Result;
 			}
 		}
