@@ -175,7 +175,7 @@
 			case 10603:
 				// Änderung der Kompesations-Temperatur, die Temperatur aus dem angegebenen Sensor in das Modul kopieren
 				If ($SenderID == $this->ReadPropertyInteger("TemperatureID")) {
-					$this->SetValue("Temperature", GetValueFloat($this->ReadPropertyInteger("ActualTemperatureID")) );
+					$this->SetValue("Temperature", GetValueFloat($this->ReadPropertyInteger("TemperatureID")) );
 				}
 		}
     	}     
