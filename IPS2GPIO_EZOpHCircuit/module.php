@@ -114,6 +114,8 @@
 					$this->GetLEDState();
 					// Status
 					$this->GetStatus();
+					// Skala setzen
+					$this->SetpHScale($this->ReadPropertyBoolean("ExtendedpHScale"));	
 					// Erste Messdaten einlesen
 					$this->GetpHValue();
 				}
