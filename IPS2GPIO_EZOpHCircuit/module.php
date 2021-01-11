@@ -72,6 +72,10 @@
 		$arrayElements[] = array("type" => "SelectVariable", "name" => "TemperatureID", "caption" => "Temperatur (Kompensation)");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "ExtendedpHScale", "caption" => "Erweiterte pH-Skala aktivieren"); 
 		$arrayActions = array(); 
+		
+		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung mittlerer Wert (pH 7)", "onClick" => "EZOpHCircuit_CalibrationMidpoint($id);"); 
+		//{ "type": "Button", "caption": "An", "onClick": "echo $id;" } 7 4 10
+		
 		$arrayActions[] = array("type" => "Label", "label" => "Test Center"); 
 		$arrayActions[] = array("type" => "TestCenter", "name" => "TestCenter");
 		
@@ -423,7 +427,26 @@
 				return $Result;
 			}
 		}
-	}	
+	}
+	    
+	public function CalibrationMidpoint()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("CalibrationMidpoint", "Ausfuehrung", 0);
+			/*
+			$Message = "pHext,?";
+			$Result = $this->Write($Message);
+			If ($Result == false) {
+				return false;
+			}
+			else {
+				IPS_Sleep(300);
+				$Result = $this->Read("pHScale", 10);
+				return $Result;
+			}
+			*/
+		}
+	}
 	
 	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
 	{
