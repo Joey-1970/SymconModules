@@ -254,7 +254,7 @@
 			}
 			else {
 				IPS_Sleep(300);
-				$Result = $this->Read(2);
+				$Result = $this->Read("LED", 2);
 				If ($Result == true) {
 					$this->GetLEDState();
 				}
@@ -274,7 +274,7 @@
 			}
 			else {
 				IPS_Sleep(300);
-				$Result = $this->Read(6);
+				$Result = $this->Read("LED", 6);
 				return $Result;
 			}
 		}
@@ -291,7 +291,7 @@
 			}
 			else {
 				IPS_Sleep(300);
-				$Result = $this->Read(12);
+				$Result = $this->Read("FW", 12);
 				return $Result;
 			}
 		return true;
@@ -309,7 +309,7 @@
 			}
 			else {
 				IPS_Sleep(900);
-				$Result = $this->Read(7);
+				$Result = $this->Read("pH", 7);
 				return $Result;
 			}
 		}
