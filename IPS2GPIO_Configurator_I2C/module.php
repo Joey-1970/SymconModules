@@ -121,16 +121,15 @@
 				     "BME280" => "{64E6464A-664C-46DE-B49F-8629497ED56F}", "BME680" => "{54EBA6FB-A557-4CB9-B384-933D6F5155B6}", "BMP180" => "{9D970308-36E7-428D-8AC0-D8C1496DDCCA}");
 		$BusArray = array("I²C-Bus 0", "I²C-Bus 0", "MUX I²C-Bus 0", "MUX I²C-Bus 1", "MUX I²C-Bus 2", "MUX I²C-Bus 3", "MUX I²C-Bus 4", "MUX I²C-Bus 5", "MUX I²C-Bus 6", "MUX I²C-Bus 7",);
 		
-		// Bus fehlt noch
-		// BME und andere Bausteine fehlen noch
-		if ((array_key_exists($Type, $TypeArray)) AND (array_key_exists($Bus, $BusArray))) {
+		// Bausteine fehlen noch
+		if ((array_key_exists($Type, $TypeArray)) AND (in_array($Bus, $BusArray))) {
 			$guid = $DeviceArray[$Type];
 			// Modulinstanzen suchen
 			$InstanceArray = array();
 			$InstanceArray = @(IPS_GetInstanceListByModuleID($guid));
 			If (is_array($InstanceArray)) {
 				foreach($InstanceArray as $Module) {
-					If ((IPS_GetProperty($Module, "DeviceAddress") == $Address) AND (IPS_GetProperty($Module, "DeviceBus") == $Bus)) {
+					If ((IPS_GetProperty($Module, "DeviceAddress") == $Address) AND (IPS_GetProperty($Module, "DeviceBus") == array_search($Bus, $BusArray))) {
 						$this->SendDebug("GetDeviceInstanceID", "Gefundene Instanz: ".$Module, 0);
 						$Result = $Module;
 						break;
