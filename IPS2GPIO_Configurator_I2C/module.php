@@ -27,10 +27,10 @@
 
 		// Tabelle für die gefundenen I²C-Devices
 		$arraySort = array();
-		$arraySort = array("column" => "DeviceAddress", "direction" => "ascending");
+		$arraySort = array("column" => "DeviceTyp", "direction" => "ascending");
 		$arrayColumns = array();
-		$arrayColumns[] = array("caption" => "Typ", "name" => "DeviceTyp", "width" => "120px", "add" => "");
-		$arrayColumns[] = array("caption" => "Adresse", "name" => "DeviceAddress", "width" => "60px", "add" => "");
+		$arrayColumns[] = array("caption" => "Typ", "name" => "DeviceTyp", "width" => "200px", "add" => "");
+		$arrayColumns[] = array("caption" => "Adresse", "name" => "DeviceAddress", "width" => "100px", "add" => "");
 		$arrayColumns[] = array("caption" => "Bus", "name" => "DeviceBus", "width" => "auto", "add" => "");
 		
 		$Category = $this->ReadPropertyInteger("Category");
@@ -56,7 +56,6 @@
 			//$arrayValues[] = array("Typ" => $DeviceArray[$i]["Typ"], "Adresse" => $DeviceArray[$i]["Adresse"], "DeviceBus" => $DeviceArray[$i]["Bus"],
 			//		       "instanceID" => $DeviceArray[$i]["InstanceID"], 
 			//		       "create" => $arrayCreate);
-			$this->SendDebug("Liste", $DeviceArray[$i]["Typ"], 0);
 			$arrayValues[] = array("DeviceTyp" => $DeviceArray[$i]["Typ"], "DeviceAddress" => $DeviceArray[$i]["Adresse"], "DeviceBus" => $DeviceArray[$i]["Bus"],
 					       "instanceID" => $DeviceArray[$i]["InstanceID"]);
 		}
