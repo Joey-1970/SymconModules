@@ -54,7 +54,7 @@
 			//$arrayCreate[] = array("moduleID" => "{47286CAD-187A-6D88-89F0-BDA50CBF712F}", "location" => $RootNames, 
 			//		       "configuration" => array("StationID" => $StationArray[$i]["StationsID"], "Timer_1" => 10));
 			$arrayValues[] = array("Typ" => $DeviceArray[$i]["Typ"], "Adresse" => $DeviceArray[$i]["Adresse"], "Bus" => $DeviceArray[$i]["Bus"],
-					       "instanceID" => $StationArray[$i]["InstanceID"], 
+					       "instanceID" => $DeviceArray[$i]["InstanceID"], 
 					       "create" => $arrayCreate);
 		}
 		
@@ -100,7 +100,7 @@
 				$DeviceArray[$i]["InstanceID"] = 0; //$this->GetStationInstanceID($Stations->id);
 				$i = $i + 1;
 			}
-			$this->SendDebug("GetData", "DeviceArray: ".serialize($StationArray), 0);
+			$this->SendDebug("GetData", "DeviceArray: ".serialize($DeviceArray), 0);
 		}
 		else {
 			$this->SetStatus(202);
