@@ -27,7 +27,7 @@
 
 		// Tabelle für die gefundenen I²C-Devices
 		$arraySort = array();
-		$arraySort = array("column" => "DeviceTyp", "direction" => "ascending");
+		$arraySort = array("column" => "Adresse", "direction" => "ascending");
 		$arrayColumns = array();
 		$arrayColumns[] = array("caption" => "Typ", "name" => "DeviceTyp", "width" => "120px", "add" => "");
 		$arrayColumns[] = array("caption" => "Adresse", "name" => "DeviceAddress", "width" => "60px", "add" => "");
