@@ -506,7 +506,6 @@ class IPS2GPIO_IO extends IPSModule
 					$Result = false;
 				}
 		        break;
-		$DeviceArray = unserialize($this->SearchI2CDevices());
 		case "set_usedpin":
 		   	If ($this->GetBuffer("ModuleReady") == 1) {
 				If ($data->Pin >= 0) {
@@ -931,7 +930,7 @@ class IPS2GPIO_IO extends IPSModule
 									  $data->Value_1, $data->Value_2, $data->Value_3, $data->Value_4), 16);
 			}
 			break;  
-		case "i2c_EZOphCircuit_write": 
+		case "i2c_EZOCircuit_write": 
 			// I2CWD h bvs - i2c Write device
 			If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
 				$this->SetI2CBus(intval($data->DeviceIdent));
@@ -941,7 +940,7 @@ class IPS2GPIO_IO extends IPSModule
 									  ...$ParameterArray), 16);
 			}
 			break;
-		case "i2c_EZOphCircuit_read":
+		case "i2c_EZOCircuit_read":
 		   	If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
 				$this->SetI2CBus(intval($data->DeviceIdent));
 		   		$Result = $this->CommandClientSocket(pack("L*", 56, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Count, 0), 16 + ($data->Count));
@@ -1003,16 +1002,6 @@ class IPS2GPIO_IO extends IPSModule
 		   		$Result = $this->CommandClientSocket(pack("L*", 61, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 0), 16);
 		   	}
 		   	break;
-		case "i2c_SSD1306_write": 
-			// I2CWI h r bvs - smb Write I2C Block Data
-			If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
-				$this->SetI2CBus(intval($data->DeviceIdent));
-				$ParameterArray = array();
-				$ParameterArray = unserialize($data->Parameter);
-				$Result = $this->CommandClientSocket(pack("LLLLC*", 68, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, count($ParameterArray), 
-									  ...$ParameterArray), 16);
-			}
-			break;
 		case "i2c_DS3231_write": 
 			// I2CWI h r bvs - smb Write I2C Block Data
 			If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
@@ -1029,24 +1018,6 @@ class IPS2GPIO_IO extends IPSModule
 		   		$Result = $this->CommandClientSocket(pack("L*", 67, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 4, $data->Count), 16 + ($data->Count));
 		   	}
 			break;  
-		case "i2c_APDS9960_read":
-		   	If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
-				$this->SetI2CBus(intval($data->DeviceIdent));
-		   		$Result = $this->CommandClientSocket(pack("L*", 67, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 4, $data->Count), 16 + ($data->Count));
-		   	}
-			break;   
-		case "i2c_APDS9960_write":
-		   	If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
-				$this->SetI2CBus(intval($data->DeviceIdent));
-		   		$Result = $this->CommandClientSocket(pack("L*", 62, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 4, $data->Value), 16);
-		   	}
-		   	break;
-		case "i2c_APDS9960_read_byte":
-		   	If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
-				$this->SetI2CBus(intval($data->DeviceIdent));
-		   		$Result = $this->CommandClientSocket(pack("L*", 61, $this->GetI2C_DeviceHandle(intval($data->DeviceIdent)), $data->Register, 0), 16);
-		   	}
-		   	break;
 		case "i2c_SUSV_read":
 		   	If ($this->GetI2C_DeviceHandle(intval($data->DeviceIdent)) >= 0) {
 				$this->SetI2CBus(intval($data->DeviceIdent));
@@ -1200,76 +1171,6 @@ class IPS2GPIO_IO extends IPSModule
 				}
 			}
 			break;
-		case "open_bb_serial_gps":
-	   		If ($this->GetBuffer("ModuleReady") == 1) {
-				If ($this->GetBuffer("Serial_GPS_Configured") == 0) {
-					$PinUsed = array();
-					$PinUsed = unserialize($this->GetBuffer("PinUsed"));
-					// GPIO RxD als Input konfigurieren
-					$this->CommandClientSocket(pack("L*", 0, (int)$data->Pin_RxD, 0, 0), 16);
-					$PinUsed[(int)$data->Pin_RxD] = $data->InstanceID; 
-					$this->SetBuffer("Serial_GPS_RxD", (int)$data->Pin_RxD);
-					// GPIO TxD als Output konfigurieren
-					$this->CommandClientSocket(pack("L*", 0, (int)$data->Pin_TxD, 1, 0), 16);
-					$PinUsed[(int)$data->Pin_TxD] = $data->InstanceID; 
-					$this->SendDebug("GPIO", "Mode der GPIO fuer Seriellen Bus gesetzt", 0);
-					$this->SetBuffer("PinUsed", serialize($PinUsed));
-					
-					// SLRC u - Close GPIO for bit bang serial data	
-					$this->CommandClientSocket(pack("L*", 44, (int)$data->Pin_RxD, 0, 0), 16);
-					
-					//SLRO u b db - Open GPIO for bit bang serial data
-					$this->CommandClientSocket(pack("L*", 42, (int)$data->Pin_RxD, $data->Baud, 4, 8), 16);
-					// Event setzen für den seriellen Anschluss
-					$Handle = $this->GetBuffer("Handle");
-					If ($Handle >= 0) {
-						$this->CommandClientSocket(pack("L*", 115, $Handle, pow(2, (int)$data->Pin_RxD), 0), 16);
-					}
-					$this->SetBuffer("Serial_GPS_Configured", 1);
-				}
-				
-				// Messages einrichten
-				$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
-				$this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
-				$Result = true;
-			}
-			else {
-				$Result = false;
-			}
-	   		break;	
-		case "open_bb_serial_ptlb10ve":
-	   		If ($this->GetBuffer("ModuleReady") == 1) {
-				If ($this->GetBuffer("Serial_PTLB10VE_Configured") == 0) {
-					$PinUsed = array();
-					$PinUsed = unserialize($this->GetBuffer("PinUsed"));
-					// GPIO RxD als Input konfigurieren
-					$this->CommandClientSocket(pack("L*", 0, (int)$data->Pin_RxD, 0, 0), 16);
-					$PinUsed[(int)$data->Pin_RxD] = $data->InstanceID; 
-					$this->SetBuffer("Serial_PTLB10VE_RxD", (int)$data->Pin_RxD);
-					// GPIO TxD als Output konfigurieren
-					$this->CommandClientSocket(pack("L*", 0, (int)$data->Pin_TxD, 1, 0), 16);
-					$this->SetBuffer("Serial_PTLB10VE_TxD", (int)$data->Pin_TxD);
-					$PinUsed[(int)$data->Pin_TxD] = $data->InstanceID; 
-					$this->SendDebug("GPIO", "Mode der GPIO fuer Seriellen Bus gesetzt", 0);
-					$this->SetBuffer("PinUsed", serialize($PinUsed));
-					
-					// SLRC u - Close GPIO for bit bang serial data	
-					$this->CommandClientSocket(pack("L*", 44, (int)$data->Pin_RxD, 0, 0), 16);
-					
-					//SLRO u b db - Open GPIO for bit bang serial data
-					$this->CommandClientSocket(pack("L*", 42, (int)$data->Pin_RxD, $data->Baud, 4, 8), 16);
-					$this->SetBuffer("Serial_PTLB10VE_Configured", 1);
-				}
-				
-				// Messages einrichten
-				$this->RegisterMessage($data->InstanceID, 11101); // Instanz wurde verbunden (InstanceID vom Parent)
-				$this->RegisterMessage($data->InstanceID, 11102); // Instanz wurde getrennt (InstanceID vom Parent)
-				$Result = true;
-			}
-			else {
-				$Result = false;
-			}
-	   		break;	
 		case "open_bb_serial_sds011":
 	   		If ($this->GetBuffer("ModuleReady") == 1) {
 				If ($this->GetBuffer("Serial_SDS011_Configured") == 0) {
@@ -1310,138 +1211,7 @@ class IPS2GPIO_IO extends IPSModule
 		   	//IPS_LogMessage("IPS2GPIO Check Bytes Serial", "Handle: ".GetValueInteger($this->GetIDForIdent("Serial_Handle")));
 		   	$this->CommandClientSocket(pack("L*", 82, $this->GetBuffer("Serial_Handle"), 0, 0), 16);
 		   	break;
-		
-		// IR-Kommunikation
-		case "IR_Remote_RC5":
-			$Address = intval($data->Address);
-			$Command = intval($data->Command);
-			$GPIO = intval($data->GPIO);
-			$Repeats = intval($data->Repeats);
-			$Toggle = $this->GetBuffer("IR_RC5_Toggle");
-				
-			// WVNEW - Initialise a new waveform
-			$this->CommandClientSocket(pack("L*", 53, 0, 0, 0), 16);
-			$Mark = array();
-			$Mark = $this->IR_Carrier($GPIO, 36000, 889, 0.5);
-			//WVAG 	28 	0 	0 	12*X 	gpioPulse_t pulse[X]
-			$Result = $this->CommandClientSocket(pack("L*", 28, 0, 0, 12 * (count($Mark) / 3), ...$Mark), 16);
-			If ($Result > 0) {
-				// WVCRE - Create a waveform
-				$Mark_ID = $this->CommandClientSocket(pack("L*", 49, 0, 0, 0), 16);
-				
-				$Space = array();
-				$Space = [0, 0, 889];
-				$Result = $this->CommandClientSocket(pack("L*", 28, 0, 0, 12 * (count($Space) / 3), ...$Space), 16);
-				If ($Result > 0) {
-					// WVCRE - Create a waveform
-					$Space_ID = $this->CommandClientSocket(pack("L*", 49, 0, 0, 0), 16);
-					$Bit = array();
-					$Bit = [$Mark_ID, $Space_ID, $Space_ID, $Mark_ID];
-					
-					IF ($Toggle == 1) {
-						$Toggle = 0;
-					}
-					else {
-						$Toggle = 1;
-					}
-					$this->SetBuffer("IR_RC5_Toggle", $Toggle);
-					$Data = (3 << 12) | ($Toggle << 11) | ($Address << 6) | $Command;
-					
-					$Chain = array();
-					for ($i = 14 - 1; $i > -1; $i--) {
-						$Chain[] = $Bit[($Data >> $i) & 1];
-					}
-					for ($i = 0; $i <= $Repeats; $i++) {
-						//WVCHA bvs - Transmits a chain of waveforms
-						//WVCHA 93 0 0 X uint8_t data[X]
-						$Result = $this->CommandClientSocket(pack("LLLLC*", 93, 0, 0, count($Chain), ...$Chain), 16);
-						IPS_Sleep(100);
-					
-					}
-					// WVDEL wid - Delete selected waveform
-					// WVDEL 	50 	wave_id 	0 	0
-					$this->CommandClientSocket(pack("L*", 50, $Mark_ID, 0, 0), 16);
-					$this->CommandClientSocket(pack("L*", 50, $Space_ID, 0, 0), 16);
-					$Result = true;
-				}
-				else {
-					$Result = false;
-				}
-			}
-			else {
-				$Result = false;
-			}	
-			break;
-		case "IR_Remote_RC5X":
-			$Address = intval($data->Address);
-			$Command = intval($data->Command);
-			$GPIO = intval($data->GPIO);
-			$Repeats = intval($data->Repeats);
-			$Toggle = $this->GetBuffer("IR_RC5X_Toggle");
-				
-			// WVNEW - Initialise a new waveform
-			$this->CommandClientSocket(pack("L*", 53, 0, 0, 0), 16);
-			$Mark = array();
-			$Mark = $this->IR_Carrier($GPIO, 36000, 889, 0.5);
-			//WVAG 	28 	0 	0 	12*X 	gpioPulse_t pulse[X]
-			$Result = $this->CommandClientSocket(pack("L*", 28, 0, 0, 12 * (count($Mark) / 3), ...$Mark), 16);
-			If ($Result > 0) {
-				// WVCRE - Create a waveform
-				$Mark_ID = $this->CommandClientSocket(pack("L*", 49, 0, 0, 0), 16);
-				
-				$Space = array();
-				$Space = [0, 0, 889];
-				$Result = $this->CommandClientSocket(pack("L*", 28, 0, 0, 12 * (count($Space) / 3), ...$Space), 16);
-				If ($Result > 0) {
-					// WVCRE - Create a waveform
-					$Space_ID = $this->CommandClientSocket(pack("L*", 49, 0, 0, 0), 16);
-					$Bit = array();
-					$Bit = [$Mark_ID, $Space_ID, $Space_ID, $Mark_ID];
-					
-					IF ($Toggle == 1) {
-						$Toggle = 0;
-					}
-					else {
-						$Toggle = 1;
-					}
-					$this->SetBuffer("IR_RC5X_Toggle", $Toggle);
-					
-					If ($Command & 64) {
-						$Field = 0;
-					}
-					else {
-						$Field = 1;
-					}
-					
-					$Data = (1 << 13) | ($Field << 12) | ($Toggle << 11) | ($Address << 6) | $Command;
-					
-					$Chain = array();
-					for ($i = 14 - 1; $i > -1; $i--) {
-						$Chain[] = $Bit[($Data >> $i) & 1];
-					}
-					for ($i = 0; $i <= $Repeats; $i++) {
-						//WVCHA bvs - Transmits a chain of waveforms
-						//WVCHA 93 0 0 X uint8_t data[X]
-						$Result = $this->CommandClientSocket(pack("LLLLC*", 93, 0, 0, count($Chain), ...$Chain), 16);
-						IPS_Sleep(100);
-					
-					}
-					// WVDEL wid - Delete selected waveform
-					// WVDEL 	50 	wave_id 	0 	0
-					$this->CommandClientSocket(pack("L*", 50, $Mark_ID, 0, 0), 16);
-					$this->CommandClientSocket(pack("L*", 50, $Space_ID, 0, 0), 16);
-					$Result = true;
-				}
-				else {
-					$Result = false;
-				}
-			}
-			else {
-				$Result = false;
-			}
-
-				
-			break;
+	
 		// Raspberry Pi Kommunikation
 		case "get_RPi_connect":
 		   	// SSH Connection
