@@ -102,15 +102,6 @@
 		$this->SetReceiveDataFilter($Filter);
 
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
-			
-			// Registrierung für die Änderung der Ist-Temperatur
-			If ($this->ReadPropertyInteger("TemperatureID") > 0) {
-				$this->RegisterMessage($this->ReadPropertyInteger("TemperatureID"), 10603);
-			}
-			else {
-				$this->SetValue("Temperature", 25);
-			}
-			
 			If ($this->ReadPropertyBoolean("Open") == true) {
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 				If ($Result == true) {
