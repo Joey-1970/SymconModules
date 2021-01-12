@@ -84,7 +84,7 @@
 		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung mittlerer Wert (pH 7)", "onClick" => 'EZOpHCircuit_CalibrationMidpoint($id);'); 
 		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung mittlerer Wert (pH 4)", "onClick" => 'EZOpHCircuit_CalibrationLowpoint($id);'); 
 		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung mittlerer Wert (pH 10)", "onClick" => 'EZOpHCircuit_CalibrationHighpoint($id);'); 
-		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung löschen", "onClick" => 'EZOpHCircuit_CalibrationClean($id);'); 
+		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung löschen", "onClick" => 'EZOpHCircuit_CalibrationClear($id);'); 
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayActions[] = array("type" => "Label", "caption" => "Test Center"); 
 		$arrayActions[] = array("type" => "TestCenter", "name" => "TestCenter");
@@ -295,11 +295,8 @@
 				$this->SendDebug("ReadResult", "Calibration", 0);
 				$this->SetValue("Calibration", intval($ResultParts[1]));
 				break;
-
-			/*
 			default:
 			    throw new Exception("Invalid Ident");
-			*/
 	    	}
 		
 	}    
@@ -497,10 +494,10 @@
 		}
 	}
 	    
-	public function CalibrationClean()
+	public function CalibrationClear()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("CalibrationClean", "Ausfuehrung", 0);
+			$this->SendDebug("CalibrationClear", "Ausfuehrung", 0);
 			$Message = "Cal,clear";
 			$Result = $this->Write($Message);
 			If ($Result == false) {
@@ -508,7 +505,7 @@
 			}
 			else {
 				IPS_Sleep(300);
-				$Result = $this->Read("CalClean", 2);
+				$Result = $this->Read("CalClear", 2);
 				return $Result;
 			}
 		}
