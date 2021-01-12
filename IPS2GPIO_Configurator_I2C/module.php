@@ -24,6 +24,20 @@
 		$arrayElements[] = array("type" => "Label", "caption" => "UNVOLLSTÄNDIGE FUNKTION!");
 		$arrayElements[] = array("type" => "SelectCategory", "name" => "Category", "caption" => "Zielkategorie");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		
+		/*
+		// Tabelle für die gefundenen I²C-Devices
+		$arraySort = array();
+		$arraySort = array("column" => "DeviceTyp", "direction" => "ascending");
+		$arrayColumns = array();
+		$arrayColumns[] = array("label" => "Typ", "name" => "DeviceTyp", "width" => "120px", "add" => "");
+		$arrayColumns[] = array("label" => "Adresse", "name" => "DeviceAddress", "width" => "60px", "add" => "");
+		$arrayColumns[] = array("label" => "Bus", "name" => "DeviceBus", "width" => "60px", "add" => "");
+		$arrayColumns[] = array("label" => "Instanz ID", "name" => "InstanceID", "width" => "70px", "add" => "");
+		$arrayColumns[] = array("label" => "Status", "name" => "DeviceStatus", "width" => "auto", "add" => "");	
+		*/
+		
+		
 		// *************
 		$arraySort = array();
 		$arraySort = array("column" => "Brand", "direction" => "ascending");
