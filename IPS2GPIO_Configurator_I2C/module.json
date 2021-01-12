@@ -1,0 +1,14 @@
+{
+  "id": "{F150F625-401A-C495-0949-2509E5D1AB79}",
+  "name": "IPS2GPIO_Configurator_I2C",
+  "type": 3,
+  "vendor": "JP-IPS-Modules",
+  "aliases":
+  [
+    "IPS2GPIO_Configurator_I2C"
+  ],
+  "parentRequirements": ["{A0DAAF26-4A2D-4350-963E-CC02E74BD414}"],
+  "childRequirements": [],
+  "implemented": ["{8D44CA24-3B35-4918-9CBD-85A28C0C8917}"],
+  "prefix": "I2GConfiguratorI2C"
+}
