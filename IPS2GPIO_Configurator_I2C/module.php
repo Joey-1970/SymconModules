@@ -114,20 +114,23 @@
 	function GetDeviceInstanceID(string $Type, int $Address, string $Bus)
 	{
 		$Result = 0;
-		$DeviceArray = array("AS3935" => "{BC292F9B-7CAB-4195-A85D-A6228B521E08}", "S.USV" => "{E6955943-F7F1-48CD-979D-45EEDCF91629}", "PCF8574" => "{E1E9F012-A15A-4C05-834E-7893DFE34526}",
+		$TypeArray = array("AS3935" => "{BC292F9B-7CAB-4195-A85D-A6228B521E08}", "S.USV" => "{E6955943-F7F1-48CD-979D-45EEDCF91629}", "PCF8574" => "{E1E9F012-A15A-4C05-834E-7893DFE34526}",
 				     "PCF8591" => "{A2E052CE-055C-4249-A536-7082B233B583}", "PCF8583" => "{95276FA0-4847-411E-B700-2E5F1866A7F6}", "GeCoS PWM16Out" => "{2ED6393D-E9A6-4C68-824C-90530EDDCE5C}",
 				     "GeCoS RGBW" => "{3AB26B93-0DD1-4F5C-AFC8-1C3A855F7D14}", "iAQ" => "{1ABC9D19-31BF-4482-8FE0-6D3843D1D77A}", "BH1750" => "{C3884BB9-1D68-4AF7-B73E-357D810042A7}",
-				     "EZO ORP" => "{51401510-EBA1-2C99-5B39-3C0C9C9758B6}", "EZO PH" => "{4D846905-0066-AB5D-F997-DC01CB1D975E}", "MCP3424" => "{0EBA825C-47AD-4BC6-AC0D-1ADF9CD55AB2}");
+				     "EZO ORP" => "{51401510-EBA1-2C99-5B39-3C0C9C9758B6}", "EZO PH" => "{4D846905-0066-AB5D-F997-DC01CB1D975E}", "MCP3424" => "{0EBA825C-47AD-4BC6-AC0D-1ADF9CD55AB2}",
+				     "BME280" => "{64E6464A-664C-46DE-B49F-8629497ED56F}", "BME680" => "{54EBA6FB-A557-4CB9-B384-933D6F5155B6}", "BMP180" => "{9D970308-36E7-428D-8AC0-D8C1496DDCCA}");
+		$BusArray = array("I²C-Bus 0", "I²C-Bus 0", "MUX I²C-Bus 0", "MUX I²C-Bus 1", "MUX I²C-Bus 2", "MUX I²C-Bus 3", "MUX I²C-Bus 4", "MUX I²C-Bus 5", "MUX I²C-Bus 6", "MUX I²C-Bus 7",);
+		
 		// Bus fehlt noch
 		// BME und andere Bausteine fehlen noch
-		if (array_key_exists($Type, $DeviceArray)) {
+		if ((array_key_exists($Type, $TypeArray)) AND (array_key_exists($Bus, $BusArray))) {
 			$guid = $DeviceArray[$Type];
 			// Modulinstanzen suchen
 			$InstanceArray = array();
 			$InstanceArray = @(IPS_GetInstanceListByModuleID($guid));
 			If (is_array($InstanceArray)) {
 				foreach($InstanceArray as $Module) {
-					If (strtolower(IPS_GetProperty($Module, "DeviceAddress")) == $Address) {
+					If ((IPS_GetProperty($Module, "DeviceAddress") == $Address) AND (IPS_GetProperty($Module, "DeviceBus") == $Bus)) {
 						$this->SendDebug("GetDeviceInstanceID", "Gefundene Instanz: ".$Module, 0);
 						$Result = $Module;
 						break;
