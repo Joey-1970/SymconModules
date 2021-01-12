@@ -121,7 +121,6 @@
 			$this->SetStatus(202);
 			$this->SendDebug("GetData", "Fehler bei der Datenermittlung!", 0);
 		}
-		*/
 	return serialize($DeviceArray);
 	}
 	
