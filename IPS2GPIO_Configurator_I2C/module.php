@@ -27,7 +27,7 @@
 
 		// Tabelle für die gefundenen I²C-Devices
 		$arraySort = array();
-		$arraySort = array("column" => "Adresse", "direction" => "ascending");
+		$arraySort = array("column" => "DeviceAddress", "direction" => "ascending");
 		$arrayColumns = array();
 		$arrayColumns[] = array("caption" => "Typ", "name" => "DeviceTyp", "width" => "120px", "add" => "");
 		$arrayColumns[] = array("caption" => "Adresse", "name" => "DeviceAddress", "width" => "60px", "add" => "");
@@ -53,11 +53,11 @@
 			$arrayCreate = array();
 			//$arrayCreate[] = array("moduleID" => "{47286CAD-187A-6D88-89F0-BDA50CBF712F}", "location" => $RootNames, 
 			//		       "configuration" => array("StationID" => $StationArray[$i]["StationsID"], "Timer_1" => 10));
-			//$arrayValues[] = array("Typ" => $DeviceArray[$i]["Typ"], "Adresse" => $DeviceArray[$i]["Adresse"], "Bus" => $DeviceArray[$i]["Bus"],
+			//$arrayValues[] = array("Typ" => $DeviceArray[$i]["Typ"], "Adresse" => $DeviceArray[$i]["Adresse"], "DeviceBus" => $DeviceArray[$i]["Bus"],
 			//		       "instanceID" => $DeviceArray[$i]["InstanceID"], 
 			//		       "create" => $arrayCreate);
 			$this->SendDebug("Liste", $DeviceArray[$i]["Typ"], 0);
-			$arrayValues[] = array("Typ" => $DeviceArray[$i]["Typ"], "Adresse" => $DeviceArray[$i]["Adresse"], "Bus" => $DeviceArray[$i]["Bus"],
+			$arrayValues[] = array("DeviceTyp" => $DeviceArray[$i]["Typ"], "DeviceAddress" => $DeviceArray[$i]["Adresse"], "DeviceBus" => $DeviceArray[$i]["Bus"],
 					       "instanceID" => $DeviceArray[$i]["InstanceID"]);
 		}
 		
