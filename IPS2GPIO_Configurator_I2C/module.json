@@ -1,7 +1,7 @@
 {
   "id": "{F150F625-401A-C495-0949-2509E5D1AB79}",
   "name": "IPS2GPIO_Configurator_I2C",
-  "type": 3,
+  "type": 4,
   "vendor": "JP-IPS-Modules",
   "aliases":
   [
