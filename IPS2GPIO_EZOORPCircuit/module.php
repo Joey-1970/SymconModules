@@ -264,24 +264,19 @@
 				$this->SetValue("DeviceType", $ResultParts[1]);
 				$this->SetValue("Firmware", $ResultParts[2]);
 				break;
-			/*	
-			case "pH":
-				$this->SendDebug("ReadResult", "pH", 0);
+			
+			case "ORP":
+				$this->SendDebug("ReadResult", "ORP", 0);
 				$this->SetValue("pH", $ResultParts[0]);
 				break;
-			*/	
+				
 			case "Status":
 				$this->SendDebug("ReadResult", "Status", 0);
 				$RestartArray = array("P", "S", "B", "W", "U");
 				$this->SetValue("Restart", array_search($ResultParts[1], $RestartArray));
 				$this->SetValue("Voltage", $ResultParts[2]);
 				break;
-			/*	
-			case "pHScale":
-				$this->SendDebug("ReadResult", "pHScale", 0);
-				//$this->SetValue("LED", boolval($ResultParts[1]));
-				break;
-			*/	
+				
 			case "Calibration":
 				$this->SendDebug("ReadResult", "Calibration", 0);
 				$this->SetValue("Calibration", intval($ResultParts[1]));
@@ -358,7 +353,7 @@
 			}
 			else {
 				IPS_Sleep(900);
-				$Result = $this->Read("pH", 7);
+				$Result = $this->Read("ORP", 7);
 				return $Result;
 			}
 		}
@@ -386,14 +381,14 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Calibration", "Ausfuehrung", 0);
-			$Message = "Cal,low,4.00";
+			$Message = "Cal,".$Value;
 			$Result = $this->Write($Message);
 			If ($Result == false) {
 				return false;
 			}
 			else {
 				IPS_Sleep(900);
-				$Result = $this->Read("CalLow", 2);
+				$Result = $this->Read("Cal", 2);
 				return $Result;
 			}
 		}
