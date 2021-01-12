@@ -3118,6 +3118,9 @@ class IPS2GPIO_IO extends IPSModule
 			$SearchArray[] = $i;
 			$DeviceName[] = "iAQ";
 		}
+		// EZO ORP
+		$SearchArray[] = 98;
+		$DeviceName[] = "EZO ORP";
 		// EZO PH
 		$SearchArray[] = 99;
 		$DeviceName[] = "EZO PH";
