@@ -14,12 +14,12 @@
  	    	$this->RegisterPropertyInteger("DeviceAddress", 98);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
-		$this->RegisterPropertyInteger("TemperatureID", 0);
-		$this->RegisterPropertyBoolean("ExtendedpHScale", false);
-            	$this->RegisterTimer("Messzyklus", 0, 'EZOpHCircuit_GetpHValue($_IPS["TARGET"]);');
+            	$this->RegisterTimer("Messzyklus", 0, 'EZOORPCircuit_GetORPValue($_IPS["TARGET"]);');
 		
 		// Profil anlegen
-		$this->RegisterProfileFloat("IPS2GPIO.V", "Electricity", "", " V", -100000, +100000, 0.1, 3);		
+		$this->RegisterProfileFloat("IPS2GPIO.V", "Electricity", "", " V", -100000, +100000, 0.1, 3);
+		
+		$this->RegisterProfileFloat("IPS2GPIO.mV", "Electricity", "", " mV", -100000, +100000, 0.1, 3);
 		
 		$this->RegisterProfileInteger("IPS2GPIO.Restart", "Information", "", "", 0, 5, 1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.Restart", 0, "powered off", "", -1);
@@ -28,20 +28,13 @@
 		IPS_SetVariableProfileAssociation("IPS2GPIO.Restart", 3, "watchdog", "", -1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.Restart", 4, "unknown", "", -1);	
 		
-		$this->RegisterProfileInteger("IPS2GPIO.Calibration", "Gauge", "", "", 0, 4, 1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.Calibration", 0, "Keine", "Warning", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.Calibration", 1, "Ein-Punkt-Kalibrierung", "", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.Calibration", 2, "Zwei-Punkt-Kalibrierung", "", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.Calibration", 3, "Drei-Punkt-Kalibrierung", "", -1);	
-		
 		//Status-Variablen anlegen
 		$this->RegisterVariableString("DeviceType", "Device Typ", "", 10);
 		$this->RegisterVariableString("Firmware", "Firmware", "", 20);
 		$this->RegisterVariableInteger("Restart", "Letzter Neustart", "IPS2GPIO.Restart", 30);
 		$this->RegisterVariableFloat("Voltage", "Volt", "IPS2GPIO.V", 40);
-		//$this->RegisterVariableFloat("pH", "pH", "~Liquid.pH.F", 50);
-		//$this->RegisterVariableFloat("Temperature", "Temperatur", "~Temperature", 60);
-		$this->RegisterVariableInteger("Calibration", "Kalibration", "IPS2GPIO.Calibration", 70);
+		$this->RegisterVariableFloat("mV", "mV", "IPS2GPIO.mV", 50);
+		$this->RegisterVariableInteger("Calibration", "Kalibration", "IPS2GPIO.Calibration", 60);
 		
 		$this->RegisterVariableBoolean("LED", "LED", "~Switch", 20);
 		$this->EnableAction("LED");
@@ -83,10 +76,6 @@
 		$arrayActions[] = array("type" => "Label", "caption" => "Wichtiger Hinweis: Bitte dazu die Bedienungsanleitung beachten!"); 
 		
 		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung mittlerer Wert (pH 7)", "onClick" => 'EZOOPRCircuit_Calibration($id);'); 
-		/*
-		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung mittlerer Wert (pH 4)", "onClick" => 'EZOpHCircuit_CalibrationLowpoint($id);'); 
-		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung mittlerer Wert (pH 10)", "onClick" => 'EZOpHCircuit_CalibrationHighpoint($id);'); 
-		*/
 		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung löschen", "onClick" => 'EZOOPRCircuit_CalibrationClear($id);'); 
 
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
@@ -297,11 +286,8 @@
 				$this->SendDebug("ReadResult", "Calibration", 0);
 				$this->SetValue("Calibration", intval($ResultParts[1]));
 				break;
-
-			/*
 			default:
 			    throw new Exception("Invalid Ident");
-			*/
 	    	}
 		
 	}    
@@ -361,36 +347,19 @@
 		}
 	}    
 	
-	/*
-	public function GetpHValue()
+	public function GetORPValue()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			If ($this->ReadPropertyInteger("TemperatureID") == 0) {
-				$this->SendDebug("GetpHValue", "Ausfuehrung ohne Temperaturkompensation", 0);
-				$Message = "R";
-				$Result = $this->Write($Message);
-				If ($Result == false) {
-					return false;
-				}
-				else {
-					IPS_Sleep(900);
-					$Result = $this->Read("pH", 7);
-					return $Result;
-				}
+			$this->SendDebug("GetORPValue", "Ausfuehrung", 0);
+			$Message = "R";
+			$Result = $this->Write($Message);
+			If ($Result == false) {
+				return false;
 			}
 			else {
-				$this->SendDebug("GetpHValue", "Ausfuehrung mit Temperaturkompensation", 0);
-				$Temperature = $this->GetValue("Temperature");
-				$Message = "RT,".$Temperature;
-				$Result = $this->Write($Message);
-				If ($Result == false) {
-					return false;
-				}
-				else {
-					IPS_Sleep(900);
-					$Result = $this->Read("pH", 7);
-					return $Result;
-				}
+				IPS_Sleep(900);
+				$Result = $this->Read("pH", 7);
+				return $Result;
 			}
 		}
 	}
