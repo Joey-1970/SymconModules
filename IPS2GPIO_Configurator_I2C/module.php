@@ -88,21 +88,21 @@
 	private function GetData()
 	{
 		$DeviceArray = array();
-		/*
-		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{6ADD0473-D761-A2BF-63BE-CFE279089F5A}", 
-			"Function" => "GetAreaInformation", "InstanceID" => $this->InstanceID, "Lat" => $Lat, "Long" => $Long, "Radius" => $Radius )));
+		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "getI2CDeviceArray")));
+
 		If ($Result <> false) {
 			$this->SetStatus(102);
 			$this->SendDebug("GetData", $Result, 0);
-			//$this->ShowResult($Result);
+			/*
 			$ResultArray = array();
 			$ResultArray = json_decode($Result);
+			
 			// Fehlerbehandlung
 			If (boolval($ResultArray->ok) == false) {
 				$this->SendDebug("ShowResult", "Fehler bei der Datenermittlung: ".utf8_encode($ResultArray->message), 0);
 				return;
 			}
-
+			
 			$i = 0;
 			foreach($ResultArray->stations as $Stations) {
 				$StationArray[$i]["Brand"] = ucwords(strtolower($Stations->brand));
@@ -115,7 +115,7 @@
 				$i = $i + 1;
 			}
 			$this->SendDebug("GetData", "TankstellenArray: ".serialize($StationArray), 0);
-
+			*/
 		}
 		else {
 			$this->SetStatus(202);
