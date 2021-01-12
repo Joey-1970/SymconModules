@@ -39,8 +39,8 @@
 		$this->RegisterVariableString("Firmware", "Firmware", "", 20);
 		$this->RegisterVariableInteger("Restart", "Letzter Neustart", "IPS2GPIO.Restart", 30);
 		$this->RegisterVariableFloat("Voltage", "Volt", "IPS2GPIO.V", 40);
-		$this->RegisterVariableFloat("pH", "pH", "~Liquid.pH.F", 50);
-		$this->RegisterVariableFloat("Temperature", "Temperatur", "~Temperature", 60);
+		//$this->RegisterVariableFloat("pH", "pH", "~Liquid.pH.F", 50);
+		//$this->RegisterVariableFloat("Temperature", "Temperatur", "~Temperature", 60);
 		$this->RegisterVariableInteger("Calibration", "Kalibration", "IPS2GPIO.Calibration", 70);
 		
 		$this->RegisterVariableBoolean("LED", "LED", "~Switch", 20);
@@ -76,17 +76,19 @@
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, 1 sek -> Minimum)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
-		$arrayElements[] = array("type" => "SelectVariable", "name" => "TemperatureID", "caption" => "Temperatur (Kompensation)");
-		$arrayElements[] = array("type" => "CheckBox", "name" => "ExtendedpHScale", "caption" => "Erweiterte pH-Skala aktivieren"); 
+		//$arrayElements[] = array("type" => "SelectVariable", "name" => "TemperatureID", "caption" => "Temperatur (Kompensation)");
+		//$arrayElements[] = array("type" => "CheckBox", "name" => "ExtendedpHScale", "caption" => "Erweiterte pH-Skala aktivieren"); 
 		
 		$arrayActions = array(); 
 		$arrayActions[] = array("type" => "Label", "caption" => "Wichtiger Hinweis: Bitte dazu die Bedienungsanleitung beachten!"); 
+		
+		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung mittlerer Wert (pH 7)", "onClick" => 'EZOOPRCircuit_Calibration($id);'); 
 		/*
-		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung mittlerer Wert (pH 7)", "onClick" => 'EZOpHCircuit_CalibrationMidpoint($id);'); 
 		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung mittlerer Wert (pH 4)", "onClick" => 'EZOpHCircuit_CalibrationLowpoint($id);'); 
 		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung mittlerer Wert (pH 10)", "onClick" => 'EZOpHCircuit_CalibrationHighpoint($id);'); 
-		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung löschen", "onClick" => 'EZOpHCircuit_CalibrationClean($id);'); 
 		*/
+		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung löschen", "onClick" => 'EZOOPRCircuit_CalibrationClear($id);'); 
+
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayActions[] = array("type" => "Label", "caption" => "Test Center"); 
 		$arrayActions[] = array("type" => "TestCenter", "name" => "TestCenter");
@@ -130,8 +132,6 @@
 					$this->GetLEDState();
 					// Status
 					$this->GetStatus();
-					// Skala setzen
-					$this->SetpHScale($this->ReadPropertyBoolean("ExtendedpHScale"));	
 					// Kalibrierung prüfen
 					$this->GetCalibration();
 					// Erste Messdaten einlesen
@@ -275,24 +275,24 @@
 				$this->SetValue("DeviceType", $ResultParts[1]);
 				$this->SetValue("Firmware", $ResultParts[2]);
 				break;
-				
+			/*	
 			case "pH":
 				$this->SendDebug("ReadResult", "pH", 0);
 				$this->SetValue("pH", $ResultParts[0]);
 				break;
-				
+			*/	
 			case "Status":
 				$this->SendDebug("ReadResult", "Status", 0);
 				$RestartArray = array("P", "S", "B", "W", "U");
 				$this->SetValue("Restart", array_search($ResultParts[1], $RestartArray));
 				$this->SetValue("Voltage", $ResultParts[2]);
 				break;
-				
+			/*	
 			case "pHScale":
 				$this->SendDebug("ReadResult", "pHScale", 0);
 				//$this->SetValue("LED", boolval($ResultParts[1]));
 				break;
-				
+			*/	
 			case "Calibration":
 				$this->SendDebug("ReadResult", "Calibration", 0);
 				$this->SetValue("Calibration", intval($ResultParts[1]));
@@ -361,6 +361,7 @@
 		}
 	}    
 	
+	/*
 	public function GetpHValue()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
@@ -393,6 +394,7 @@
 			}
 		}
 	}
+	*/
 	    
 	public function GetStatus()
 	{
@@ -410,65 +412,11 @@
 			}
 		}
 	}
-	    
-	public function SetpHScale(bool $State)			
+	
+	public function Calibration()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("SetpHScale", "Ausfuehrung", 0);
-			$Message = "pHext,".intval($State);
-			$Result = $this->Write($Message);
-			If ($Result == false) {
-				return false;
-			}
-			else {
-				IPS_Sleep(300);
-				$Result = $this->Read("pHScale", 2);
-				If ($Result == true) {
-					$this->GetpHScale();
-				}
-				return $Result;
-			}
-		}
-	}
-	    
-	public function GetpHScale()
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("GetpHScale", "Ausfuehrung", 0);
-			$Message = "pHext,?";
-			$Result = $this->Write($Message);
-			If ($Result == false) {
-				return false;
-			}
-			else {
-				IPS_Sleep(300);
-				$Result = $this->Read("pHScale", 10);
-				return $Result;
-			}
-		}
-	}
-	    
-	public function CalibrationMidpoint()
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("CalibrationMidpoint", "Ausfuehrung", 0);
-			$Message = "Cal,mid,7.00";
-			$Result = $this->Write($Message);
-			If ($Result == false) {
-				return false;
-			}
-			else {
-				IPS_Sleep(900);
-				$Result = $this->Read("CalMid", 2);
-				return $Result;
-			}
-		}
-	}
-	    
-	public function CalibrationLowpoint()
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("CalibrationLowpoint", "Ausfuehrung", 0);
+			$this->SendDebug("Calibration", "Ausfuehrung", 0);
 			$Message = "Cal,low,4.00";
 			$Result = $this->Write($Message);
 			If ($Result == false) {
@@ -482,27 +430,10 @@
 		}
 	}
 	    
-	public function CalibrationHighpoint()
+	public function CalibrationClear()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("CalibrationHighpoint", "Ausfuehrung", 0);
-			$Message = "Cal,mid,10.00";
-			$Result = $this->Write($Message);
-			If ($Result == false) {
-				return false;
-			}
-			else {
-				IPS_Sleep(900);
-				$Result = $this->Read("CalHigh", 2);
-				return $Result;
-			}
-		}
-	}
-	    
-	public function CalibrationClean()
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("CalibrationClean", "Ausfuehrung", 0);
+			$this->SendDebug("CalibrationClear", "Ausfuehrung", 0);
 			$Message = "Cal,clear";
 			$Result = $this->Write($Message);
 			If ($Result == false) {
@@ -510,7 +441,7 @@
 			}
 			else {
 				IPS_Sleep(300);
-				$Result = $this->Read("CalClean", 2);
+				$Result = $this->Read("CalClear", 2);
 				return $Result;
 			}
 		}
