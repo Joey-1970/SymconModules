@@ -498,8 +498,13 @@ class IPS2GPIO_IO extends IPSModule
 		    
 		// interne Kommunikation
 		case "getI2CDeviceArray":
-		    	// I2C-Bus nach vorhandenen Devices durchsuchen
-		    		$Result = $this->SearchI2CDevices();
+		    		// I2C-Bus nach vorhandenen Devices durchsuchen
+				If (($this->ConnectionTest()) AND ($this->ReadPropertyBoolean("Open") == true))  {
+		    			$Result = $this->SearchI2CDevices();
+				}
+				else {
+					$Result = false;
+				}
 		        break;
 		$DeviceArray = unserialize($this->SearchI2CDevices());
 		case "set_usedpin":
