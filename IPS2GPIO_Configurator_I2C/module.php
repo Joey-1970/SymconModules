@@ -56,6 +56,7 @@
 			//$arrayValues[] = array("Typ" => $DeviceArray[$i]["Typ"], "Adresse" => $DeviceArray[$i]["Adresse"], "Bus" => $DeviceArray[$i]["Bus"],
 			//		       "instanceID" => $DeviceArray[$i]["InstanceID"], 
 			//		       "create" => $arrayCreate);
+			$this->SendDebug("Liste", $DeviceArray[$i]["Typ"], 0);
 			$arrayValues[] = array("Typ" => $DeviceArray[$i]["Typ"], "Adresse" => $DeviceArray[$i]["Adresse"], "Bus" => $DeviceArray[$i]["Bus"],
 					       "instanceID" => $DeviceArray[$i]["InstanceID"]);
 		}
