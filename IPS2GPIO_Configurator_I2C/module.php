@@ -24,30 +24,17 @@
 		$arrayElements[] = array("type" => "Label", "caption" => "UNVOLLSTÄNDIGE FUNKTION!");
 		$arrayElements[] = array("type" => "SelectCategory", "name" => "Category", "caption" => "Zielkategorie");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		
-		/*
+
 		// Tabelle für die gefundenen I²C-Devices
 		$arraySort = array();
 		$arraySort = array("column" => "DeviceTyp", "direction" => "ascending");
 		$arrayColumns = array();
-		$arrayColumns[] = array("label" => "Typ", "name" => "DeviceTyp", "width" => "120px", "add" => "");
-		$arrayColumns[] = array("label" => "Adresse", "name" => "DeviceAddress", "width" => "60px", "add" => "");
-		$arrayColumns[] = array("label" => "Bus", "name" => "DeviceBus", "width" => "60px", "add" => "");
-		$arrayColumns[] = array("label" => "Instanz ID", "name" => "InstanceID", "width" => "70px", "add" => "");
-		$arrayColumns[] = array("label" => "Status", "name" => "DeviceStatus", "width" => "auto", "add" => "");	
-		*/
+		$arrayColumns[] = array("caption" => "Typ", "name" => "DeviceTyp", "width" => "120px", "add" => "");
+		$arrayColumns[] = array("caption" => "Adresse", "name" => "DeviceAddress", "width" => "60px", "add" => "");
+		$arrayColumns[] = array("caption" => "Bus", "name" => "DeviceBus", "width" => "60px", "add" => "");
+		$arrayColumns[] = array("caption" => "Instanz ID", "name" => "InstanceID", "width" => "70px", "add" => "");
+		$arrayColumns[] = array("caption" => "Status", "name" => "DeviceStatus", "width" => "auto", "add" => "");	
 		
-		
-		// *************
-		$arraySort = array();
-		$arraySort = array("column" => "Brand", "direction" => "ascending");
-		
-		$arrayColumns = array();
-		$arrayColumns[] = array("caption" => "Marke", "name" => "Brand", "width" => "100px", "visible" => true);
-		$arrayColumns[] = array("caption" => "Name", "name" => "Name", "width" => "250px", "visible" => true);
-		$arrayColumns[] = array("caption" => "Strasse", "name" => "Street", "width" => "200px", "visible" => true);
-		$arrayColumns[] = array("caption" => "Ort", "name" => "Place", "width" => "auto", "visible" => true);
-		// *************
 		$Category = $this->ReadPropertyInteger("Category");
 		$RootNames = [];
 		$RootId = $Category;
@@ -58,19 +45,21 @@
 		    	$RootId = IPS_GetParent($RootId);
 			}
 		$RootNames = array_reverse($RootNames);
-		// *************		
-		$StationArray = array();
+	
+		$DeviceArray = array();
 		If ($this->HasActiveParent() == true) {
-			$StationArray = unserialize($this->GetData());
+			$DeviceArray = unserialize($this->GetData());
 		}
 		$arrayValues = array();
 		for ($i = 0; $i < Count($StationArray); $i++) {
 			$arrayCreate = array();
+			/*
 			$arrayCreate[] = array("moduleID" => "{47286CAD-187A-6D88-89F0-BDA50CBF712F}", "location" => $RootNames, 
 					       "configuration" => array("StationID" => $StationArray[$i]["StationsID"], "Timer_1" => 10));
 			$arrayValues[] = array("Brand" => $StationArray[$i]["Brand"], "Name" => $StationArray[$i]["Name"], "Street" => $StationArray[$i]["Street"],
 					       "Place" => $StationArray[$i]["Place"], "name" => $StationArray[$i]["Name"], "instanceID" => $StationArray[$i]["InstanceID"], 
 					       "create" => $arrayCreate);
+			*/
 		}
 		
 		$arrayElements[] = array("type" => "Configurator", "name" => "I2CDevices", "caption" => "I2C Devices", "rowCount" => 10, "delete" => false, "sort" => $arraySort, "columns" => $arrayColumns, "values" => $arrayValues);
@@ -98,57 +87,50 @@
 	// Beginn der Funktionen
 	private function GetData()
 	{
-		$locationObject = json_decode($this->ReadPropertyString('Location'), true);
-		$Lat = $locationObject['latitude'];
-		$Long = $locationObject['longitude']; 
-		$Radius = $this->ReadPropertyFloat("Radius");
-		$Radius = min(25, max(0, $Radius));
-		$StationArray = array();
-		If (($Lat <> 0) AND ($Long <> 0) AND ($Radius > 0)) {
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{6ADD0473-D761-A2BF-63BE-CFE279089F5A}", 
-				"Function" => "GetAreaInformation", "InstanceID" => $this->InstanceID, "Lat" => $Lat, "Long" => $Long, "Radius" => $Radius )));
-			If ($Result <> false) {
-				$this->SetStatus(102);
-				$this->SendDebug("GetData", $Result, 0);
-				//$this->ShowResult($Result);
-				$ResultArray = array();
-				$ResultArray = json_decode($Result);
-				// Fehlerbehandlung
-				If (boolval($ResultArray->ok) == false) {
-					$this->SendDebug("ShowResult", "Fehler bei der Datenermittlung: ".utf8_encode($ResultArray->message), 0);
-					return;
-				}
-				
-				$i = 0;
-				foreach($ResultArray->stations as $Stations) {
-					$StationArray[$i]["Brand"] = ucwords(strtolower($Stations->brand));
-					$StationArray[$i]["Name"] = ucwords(strtolower($Stations->name));
-					$StationArray[$i]["Street"] = ucwords(strtolower($Stations->street));
-					$StationArray[$i]["Place"] = ucwords(strtolower($Stations->place));
-					$StationArray[$i]["StationsID"] = $Stations->id;
-					$StationArray[$i]["InstanceID"] = $this->GetStationInstanceID($Stations->id);
+		$DeviceArray = array();
+		/*
+		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{6ADD0473-D761-A2BF-63BE-CFE279089F5A}", 
+			"Function" => "GetAreaInformation", "InstanceID" => $this->InstanceID, "Lat" => $Lat, "Long" => $Long, "Radius" => $Radius )));
+		If ($Result <> false) {
+			$this->SetStatus(102);
+			$this->SendDebug("GetData", $Result, 0);
+			//$this->ShowResult($Result);
+			$ResultArray = array();
+			$ResultArray = json_decode($Result);
+			// Fehlerbehandlung
+			If (boolval($ResultArray->ok) == false) {
+				$this->SendDebug("ShowResult", "Fehler bei der Datenermittlung: ".utf8_encode($ResultArray->message), 0);
+				return;
+			}
 
-					$i = $i + 1;
-				}
-				$this->SendDebug("GetData", "TankstellenArray: ".serialize($StationArray), 0);
-				
+			$i = 0;
+			foreach($ResultArray->stations as $Stations) {
+				$StationArray[$i]["Brand"] = ucwords(strtolower($Stations->brand));
+				$StationArray[$i]["Name"] = ucwords(strtolower($Stations->name));
+				$StationArray[$i]["Street"] = ucwords(strtolower($Stations->street));
+				$StationArray[$i]["Place"] = ucwords(strtolower($Stations->place));
+				$StationArray[$i]["StationsID"] = $Stations->id;
+				$StationArray[$i]["InstanceID"] = $this->GetStationInstanceID($Stations->id);
+
+				$i = $i + 1;
 			}
-			else {
-				$this->SetStatus(202);
-				$this->SendDebug("GetData", "Fehler bei der Datenermittlung!", 0);
-			}
+			$this->SendDebug("GetData", "TankstellenArray: ".serialize($StationArray), 0);
+
 		}
 		else {
-			$this->SendDebug("GetDataUpdate", "Keine Koordinaten verfügbar!", 0);
+			$this->SetStatus(202);
+			$this->SendDebug("GetData", "Fehler bei der Datenermittlung!", 0);
 		}
-	return serialize($StationArray);
+		*/
+	return serialize($DeviceArray);
 	}
 	
-	function GetStationInstanceID(string $StationID)
+	function GetDeviceInstanceID(string $DeviceID)
 	{
-		$guid = "{47286CAD-187A-6D88-89F0-BDA50CBF712F}";
+		//$guid = "{47286CAD-187A-6D88-89F0-BDA50CBF712F}";
 	    	$Result = 0;
-	    	// Modulinstanzen suchen
+	    	/*
+		// Modulinstanzen suchen
 	    	$InstanceArray = array();
 	    	$InstanceArray = @(IPS_GetInstanceListByModuleID($guid));
 	    	If (is_array($InstanceArray)) {
@@ -163,6 +145,7 @@
 				}
 			}
 		}
+		*/
 	return $Result;
 	}
 }
