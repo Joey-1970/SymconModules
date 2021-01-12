@@ -31,9 +31,7 @@
 		$arrayColumns = array();
 		$arrayColumns[] = array("caption" => "Typ", "name" => "DeviceTyp", "width" => "120px", "add" => "");
 		$arrayColumns[] = array("caption" => "Adresse", "name" => "DeviceAddress", "width" => "60px", "add" => "");
-		$arrayColumns[] = array("caption" => "Bus", "name" => "DeviceBus", "width" => "60px", "add" => "");
-		$arrayColumns[] = array("caption" => "Instanz ID", "name" => "InstanceID", "width" => "70px", "add" => "");
-		$arrayColumns[] = array("caption" => "Status", "name" => "DeviceStatus", "width" => "auto", "add" => "");	
+		$arrayColumns[] = array("caption" => "Bus", "name" => "DeviceBus", "width" => "auto", "add" => "");
 		
 		$Category = $this->ReadPropertyInteger("Category");
 		$RootNames = [];
@@ -53,13 +51,11 @@
 		$arrayValues = array();
 		for ($i = 0; $i < Count($DeviceArray); $i++) {
 			$arrayCreate = array();
-			/*
-			$arrayCreate[] = array("moduleID" => "{47286CAD-187A-6D88-89F0-BDA50CBF712F}", "location" => $RootNames, 
-					       "configuration" => array("StationID" => $StationArray[$i]["StationsID"], "Timer_1" => 10));
-			$arrayValues[] = array("Brand" => $StationArray[$i]["Brand"], "Name" => $StationArray[$i]["Name"], "Street" => $StationArray[$i]["Street"],
-					       "Place" => $StationArray[$i]["Place"], "name" => $StationArray[$i]["Name"], "instanceID" => $StationArray[$i]["InstanceID"], 
+			//$arrayCreate[] = array("moduleID" => "{47286CAD-187A-6D88-89F0-BDA50CBF712F}", "location" => $RootNames, 
+			//		       "configuration" => array("StationID" => $StationArray[$i]["StationsID"], "Timer_1" => 10));
+			$arrayValues[] = array("Typ" => $DeviceArray[$i]["Typ"], "Adresse" => $DeviceArray[$i]["Adresse"], "Bus" => $DeviceArray[$i]["Bus"],
+					       "instanceID" => $StationArray[$i]["InstanceID"], 
 					       "create" => $arrayCreate);
-			*/
 		}
 		
 		$arrayElements[] = array("type" => "Configurator", "name" => "I2CDevices", "caption" => "I2C Devices", "rowCount" => 10, "delete" => false, "sort" => $arraySort, "columns" => $arrayColumns, "values" => $arrayValues);
@@ -93,29 +89,18 @@
 		If ($Result <> false) {
 			$this->SetStatus(102);
 			$this->SendDebug("GetData", $Result, 0);
-			/*
 			$ResultArray = array();
-			$ResultArray = json_decode($Result);
-			
-			// Fehlerbehandlung
-			If (boolval($ResultArray->ok) == false) {
-				$this->SendDebug("ShowResult", "Fehler bei der Datenermittlung: ".utf8_encode($ResultArray->message), 0);
-				return;
-			}
+			$ResultArray = unserialize($Result);
 			
 			$i = 0;
-			foreach($ResultArray->stations as $Stations) {
-				$StationArray[$i]["Brand"] = ucwords(strtolower($Stations->brand));
-				$StationArray[$i]["Name"] = ucwords(strtolower($Stations->name));
-				$StationArray[$i]["Street"] = ucwords(strtolower($Stations->street));
-				$StationArray[$i]["Place"] = ucwords(strtolower($Stations->place));
-				$StationArray[$i]["StationsID"] = $Stations->id;
-				$StationArray[$i]["InstanceID"] = $this->GetStationInstanceID($Stations->id);
-
+			foreach($ResultArray as $Device) {
+				$DeviceArray[$i]["Typ"] = $Device[0];
+				$DeviceArray[$i]["Adresse"] = $Device[1];
+				$DeviceArray[$i]["Bus"] = $Device[2];
+				$DeviceArray[$i]["InstanceID"] = 0; //$this->GetStationInstanceID($Stations->id);
 				$i = $i + 1;
 			}
-			$this->SendDebug("GetData", "TankstellenArray: ".serialize($StationArray), 0);
-			*/
+			$this->SendDebug("GetData", "DeviceArray: ".serialize($StationArray), 0);
 		}
 		else {
 			$this->SetStatus(202);
