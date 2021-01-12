@@ -110,7 +110,7 @@
 					// Kalibrierung prüfen
 					$this->GetCalibration();
 					// Erste Messdaten einlesen
-					$this->GetpHValue();
+					$this->GetORPValue();
 				}
 			}
 			else {
