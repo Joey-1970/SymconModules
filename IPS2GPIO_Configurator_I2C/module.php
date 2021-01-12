@@ -53,9 +53,11 @@
 			$arrayCreate = array();
 			//$arrayCreate[] = array("moduleID" => "{47286CAD-187A-6D88-89F0-BDA50CBF712F}", "location" => $RootNames, 
 			//		       "configuration" => array("StationID" => $StationArray[$i]["StationsID"], "Timer_1" => 10));
+			//$arrayValues[] = array("Typ" => $DeviceArray[$i]["Typ"], "Adresse" => $DeviceArray[$i]["Adresse"], "Bus" => $DeviceArray[$i]["Bus"],
+			//		       "instanceID" => $DeviceArray[$i]["InstanceID"], 
+			//		       "create" => $arrayCreate);
 			$arrayValues[] = array("Typ" => $DeviceArray[$i]["Typ"], "Adresse" => $DeviceArray[$i]["Adresse"], "Bus" => $DeviceArray[$i]["Bus"],
-					       "instanceID" => $DeviceArray[$i]["InstanceID"], 
-					       "create" => $arrayCreate);
+					       "instanceID" => $DeviceArray[$i]["InstanceID"]);
 		}
 		
 		$arrayElements[] = array("type" => "Configurator", "name" => "I2CDevices", "caption" => "I2C Devices", "rowCount" => 10, "delete" => false, "sort" => $arraySort, "columns" => $arrayColumns, "values" => $arrayValues);
