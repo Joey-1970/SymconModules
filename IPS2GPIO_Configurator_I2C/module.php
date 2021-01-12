@@ -90,7 +90,7 @@
 
 		If ($Result <> false) {
 			$this->SetStatus(102);
-			$this->SendDebug("GetData", $Result, 0);
+			//$this->SendDebug("GetData", $Result, 0);
 			$ResultArray = array();
 			$ResultArray = unserialize($Result);
 			
@@ -129,6 +129,7 @@
 			$InstanceArray = @(IPS_GetInstanceListByModuleID($guid));
 			If (is_array($InstanceArray)) {
 				foreach($InstanceArray as $Module) {
+					$this->SendDebug("GetDeviceInstanceID", "Adresse: ".$Address." Bus: ".array_search($Bus, $BusArray), 0);
 					If ((IPS_GetProperty($Module, "DeviceAddress") == $Address) AND (IPS_GetProperty($Module, "DeviceBus") == array_search($Bus, $BusArray))) {
 						$this->SendDebug("GetDeviceInstanceID", "Gefundene Instanz: ".$Module, 0);
 						$Result = $Module;
