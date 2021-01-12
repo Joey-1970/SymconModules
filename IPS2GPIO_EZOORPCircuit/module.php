@@ -181,7 +181,7 @@
 	private function Write(string $Message)
 	{
 		$MessageArray = (unpack("C*", $Message));
-		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_EZOphCircuit_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Parameter" => serialize($MessageArray) )));
+		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_EZOCircuit_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Parameter" => serialize($MessageArray) )));
 		$this->SendDebug("Write", "Ergebnis: ".$Result, 0);
 		If (!$Result) {
 			$this->SendDebug("Setup", "Schreibvorgang fehlerhaft!", 0);
@@ -195,7 +195,7 @@
 	
 	private function Read(string $Function, int $DataCount)
 	{
-		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_EZOphCircuit_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Count" => $DataCount )));
+		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_EZOCircuit_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Count" => $DataCount )));
 		$this->SendDebug("Read", "Ergebnis: ".$Result, 0);
 		If ($Result < 0) {
 			$this->SendDebug("Read", "Lesevorgang fehlerhaft!", 0);
