@@ -253,7 +253,7 @@
 			
 			case "ORP":
 				$this->SendDebug("ReadResult", "ORP", 0);
-				$this->SetValue("pH", $ResultParts[0]);
+				$this->SetValue("mV", $ResultParts[0]);
 				break;
 				
 			case "Status":
