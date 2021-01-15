@@ -213,9 +213,6 @@
 					$Resolution = ($Configuration & 12) >> 2;
 					$Channel = ($Configuration & 96) >> 5;
 					$ReadyBit = ($Configuration & 128) >> 7;
-					
-					$this->SendDebug("Measurement", "Byte 0 = ".$MeasurementData[0], 0);
-					
 					//IPS_LogMessage("IPS2GPIO MCP", "Anzahl Daten: ".count($MeasurementData)." Verst: ".$Amplifier." Aufl:: ".$Resolution." RDY:".$ReadyBit);
 					If ($ReadyBit == false) {
 						switch ($Resolution) {
