@@ -321,7 +321,7 @@
 			}
 			else {
 				IPS_Sleep(300);
-				$Result = $this->Read("FW", 12);
+				$Result = $this->Read("FW", 13);
 				return $Result;
 			}
 		return true;
