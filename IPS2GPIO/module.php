@@ -31,7 +31,9 @@ class IPS2GPIO_IO extends IPSModule
 		$this->RegisterPropertyInteger("OW", 0);
 		$this->RegisterPropertyInteger("I2C0", 0);
 		$this->RegisterPropertyString("Raspi_Config", "");
-		$this->RegisterPropertyString("I2C_Devices", "");
+		
+		//$this->RegisterPropertyString("I2C_Devices", "");
+		
 		$this->RegisterPropertyString("OW_Devices", "");
 		$this->RegisterPropertyBoolean("Multiplexer", false);
 		$this->RegisterPropertyBoolean("AutoRestart", true);
@@ -118,6 +120,8 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayValues[] = array("ServiceTyp" => "1-Wire-Server", "ServiceStatus" => $ServiceArray["1-Wire-Server"]["Status"], "rowColor" => $ServiceArray["1-Wire-Server"]["Color"]);
 		$arrayElements[] = array("type" => "List", "name" => "Raspi_Config", "caption" => "Konfiguration", "rowCount" => 5, "add" => false, "delete" => false, "sort" => $arraySort, "columns" => $arrayColumns, "values" => $arrayValues);
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");		
+		
+		/*
 		// Tabelle für die gefundenen I²C-Devices
 		$arraySort = array();
 		$arraySort = array("column" => "DeviceTyp", "direction" => "ascending");
@@ -126,7 +130,9 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayColumns[] = array("label" => "Adresse", "name" => "DeviceAddress", "width" => "60px", "add" => "");
 		$arrayColumns[] = array("label" => "Bus", "name" => "DeviceBus", "width" => "60px", "add" => "");
 		$arrayColumns[] = array("label" => "Instanz ID", "name" => "InstanceID", "width" => "70px", "add" => "");
-		$arrayColumns[] = array("label" => "Status", "name" => "DeviceStatus", "width" => "auto", "add" => "");		
+		$arrayColumns[] = array("label" => "Status", "name" => "DeviceStatus", "width" => "auto", "add" => "");	
+		*/
+		
 		// Tabelle für die gefundenen 1-Wire-Devices
 		$arrayOWColumns = array();
 		$arrayOWColumns[] = array("label" => "Typ", "name" => "DeviceTyp", "width" => "120px", "add" => "");
@@ -135,6 +141,7 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayOWColumns[] = array("label" => "Status", "name" => "DeviceStatus", "width" => "auto", "add" => "");
 		
 		If (($this->ConnectionTest()) AND ($this->ReadPropertyBoolean("Open") == true) AND ($this->GetBuffer("I2C_Enabled") == 1)) {
+			/*
 			// I²C-Devices einlesen und in das Values-Array kopieren
 			$DeviceArray = array();
 			$DeviceArray = unserialize($this->SearchI2CDevices());
@@ -150,7 +157,7 @@ class IPS2GPIO_IO extends IPSModule
 				$arrayElements[] = array("type" => "Label", "label" => "Es wurden keine I²C-Devices gefunden.");
 				$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");
 			}
-			
+			*/
 			If ($this->GetBuffer("OW_Handle") >= 0) {
 				// 1-Wire-Devices einlesen und in das Values-Array kopieren
 				$OWDeviceArray = array();
@@ -235,8 +242,8 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SetBuffer("owDeviceAddress_0", 0);
 			$this->SetBuffer("owDeviceAddress_1", 0);
 			
-			$this->SetBuffer("IR_RC5_Toggle", 0);
-			$this->SetBuffer("IR_RC5X_Toggle", 0);
+			//$this->SetBuffer("IR_RC5_Toggle", 0);
+			//$this->SetBuffer("IR_RC5X_Toggle", 0);
 			
 			$ParentID = $this->GetParentID();
 		        // Änderung an den untergeordneten Instanzen
