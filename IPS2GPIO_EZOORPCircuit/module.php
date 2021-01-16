@@ -343,6 +343,9 @@
 			else {
 				IPS_Sleep(900);
 				$Result = $this->Read("ORP", 7);
+				If ($Result == true) {
+					$this->GetStatus();
+				}
 				return $Result;
 			}
 		}
@@ -377,6 +380,9 @@
 			else {
 				IPS_Sleep(900);
 				$Result = $this->Read("Cal", 2);
+				If ($Result == true) {
+					$this->GetCalibration();
+				}
 				return $Result;
 			}
 		}
@@ -394,6 +400,9 @@
 			else {
 				IPS_Sleep(300);
 				$Result = $this->Read("CalClear", 2);
+				If ($Result == true) {
+					$this->GetCalibration();
+				}
 				return $Result;
 			}
 		}
