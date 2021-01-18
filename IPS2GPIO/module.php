@@ -2995,7 +2995,7 @@ class IPS2GPIO_IO extends IPSModule
 		If (($DeviceAddress == 118) OR ($DeviceAddress == 119)) {
 			// BME280/680
 			// Lesen der ChipID
-			$Result = $this->CommandClientSocket(pack("L*", 61, $Handle, hexdec("D0"), 0), 16);
+			$Result = $this->CommandClientSocket(pack("L*", 61, $Handle, 0xD0), 0), 16);
 			If ($Result < 0) {
 				$this->SendDebug("I2CDeviceSpecification", "Fehler beim Einlesen der BME Chip ID", 0);
 			}
@@ -3011,27 +3011,17 @@ class IPS2GPIO_IO extends IPSModule
 				}
 			}
 		}
-		If ($DeviceAddress == 104) {
-			// MCP3424|DS3231
-			//$Result = $this->CommandClientSocket(pack("L*", 67, $Handle, $data->Register, 4, $data->Count), 16 + ($data->Count));
-
-			/*
-			$Result = $this->CommandClientSocket(pack("L*", 61, $Handle, hexdec("D0"), 0), 16);
+		elseif ($DeviceAddress == 104) {
+			// Unterscheidung MCP3424|DS3231
+			// DS3231 lesen
+			$Result = $this->CommandClientSocket(pack("L*", 67, $Handle, 0x00, 4, 7, 16 + 7);
+			$this->SendDebug("I2CDeviceSpecification", "Ergebnis des Test-Lesen (MCP3424|DS3231): ".$Result, 0);
 			If ($Result < 0) {
-				$this->SendDebug("I2CDeviceSpecification", "Fehler beim Einlesen der BME Chip ID", 0);
+				$DeviceName = "MCP3424";
 			}
 			else {
-				If ($Result == 96) {
-					$DeviceName = "BME280";
-				}
-				elseif ($Result == 97) {
-					$DeviceName = "BME680";
-				}
-				elseif ($Result == 85) {
-					$DeviceName = "BMP180";
-				}
+				$DeviceName = "DS3231";
 			}
-			*/
 		}
 		/*
 		elseIf (($DeviceAddress >= 32) AND ($DeviceAddress <= 39)) {
