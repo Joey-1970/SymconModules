@@ -3018,7 +3018,6 @@ class IPS2GPIO_IO extends IPSModule
 			$this->SendDebug("I2CDeviceSpecification", "Ergebnis des Test-Lesen (MCP3424|DS3231): ".$Result, 0);
 			If ($Result < 0) {
 				$this->SendDebug("I2CDeviceSpecification", "Fehler beim Einlesen der MCP3424|DS3231 Daten", 0);
-				//$DeviceName = "MCP3424";
 			}
 			else {
 				If (is_array(unserialize($Result))) {
@@ -3034,7 +3033,8 @@ class IPS2GPIO_IO extends IPSModule
 						If (is_array(unserialize($Result))) {
 							$DataArray = unserialize($Result);
 							$Sec_2 = $DataArray[1] & 127;
-							If ($Sec_1 = $Sec_2) {
+							$this->SendDebug("I2CDeviceSpecification", "Einlesen der MCP3424|DS3231 Daten: ".$Sec_1." - ".$Sec_2, 0);
+							If ($Sec_1 == $Sec_2) {
 								$DeviceName = "MCP3424";
 							}
 							else {
