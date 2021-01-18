@@ -2995,7 +2995,7 @@ class IPS2GPIO_IO extends IPSModule
 		If (($DeviceAddress == 118) OR ($DeviceAddress == 119)) {
 			// BME280/680
 			// Lesen der ChipID
-			$Result = $this->CommandClientSocket(pack("L*", 61, $Handle, 0xD0), 0), 16);
+			$Result = $this->CommandClientSocket(pack("L*", 61, $Handle, 0xD0, 0), 16);
 			If ($Result < 0) {
 				$this->SendDebug("I2CDeviceSpecification", "Fehler beim Einlesen der BME Chip ID", 0);
 			}
