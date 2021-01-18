@@ -3014,13 +3014,35 @@ class IPS2GPIO_IO extends IPSModule
 		elseif ($DeviceAddress == 104) {
 			// Unterscheidung MCP3424|DS3231
 			// DS3231 lesen
-			$Result = $this->CommandClientSocket(pack("L*", 67, $Handle, 0x00, 4, 7), 16 + 7);
+			$Result = $this->CommandClientSocket(pack("L*", 67, $Handle, 0x00, 4, 1), 16 + 1);
 			$this->SendDebug("I2CDeviceSpecification", "Ergebnis des Test-Lesen (MCP3424|DS3231): ".$Result, 0);
 			If ($Result < 0) {
-				$DeviceName = "MCP3424";
+				$this->SendDebug("I2CDeviceSpecification", "Fehler beim Einlesen der MCP3424|DS3231 Daten", 0);
+				//$DeviceName = "MCP3424";
 			}
 			else {
-				$DeviceName = "DS3231";
+				If (is_array(unserialize($Result))) {
+					$DataArray = unserialize($Result);
+					$Sec_1 = $DataArray[1] & 127;
+					IPS_Sleep(1000);
+					$Result = $this->CommandClientSocket(pack("L*", 67, $Handle, 0x00, 4, 1), 16 + 1);
+					$this->SendDebug("I2CDeviceSpecification", "Ergebnis des Test-Lesen (MCP3424|DS3231): ".$Result, 0);
+					If ($Result < 0) {
+						$this->SendDebug("I2CDeviceSpecification", "Fehler beim Einlesen der MCP3424|DS3231 Daten", 0);
+					}
+					else {
+						If (is_array(unserialize($Result))) {
+							$DataArray = unserialize($Result);
+							$Sec_2 = $DataArray[1] & 127;
+							If ($Sec_1 = $Sec_2) {
+								$DeviceName = "MCP3424";
+							}
+							else {
+								$DeviceName = "DS3231";
+							}
+						}
+					}
+				}
 			}
 		}
 		/*
