@@ -3014,7 +3014,7 @@ class IPS2GPIO_IO extends IPSModule
 		elseif ($DeviceAddress == 104) {
 			// Unterscheidung MCP3424|DS3231
 			// DS3231 lesen
-			$Result = $this->CommandClientSocket(pack("L*", 67, $Handle, 0x00, 4, 7, 16 + 7);
+			$Result = $this->CommandClientSocket(pack("L*", 67, $Handle, 0x00, 4, 7), 16 + 7);
 			$this->SendDebug("I2CDeviceSpecification", "Ergebnis des Test-Lesen (MCP3424|DS3231): ".$Result, 0);
 			If ($Result < 0) {
 				$DeviceName = "MCP3424";
