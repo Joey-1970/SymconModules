@@ -3011,6 +3011,28 @@ class IPS2GPIO_IO extends IPSModule
 				}
 			}
 		}
+		If ($DeviceAddress == 104) {
+			// MCP3424|DS3231
+			//$Result = $this->CommandClientSocket(pack("L*", 67, $Handle, $data->Register, 4, $data->Count), 16 + ($data->Count));
+
+			/*
+			$Result = $this->CommandClientSocket(pack("L*", 61, $Handle, hexdec("D0"), 0), 16);
+			If ($Result < 0) {
+				$this->SendDebug("I2CDeviceSpecification", "Fehler beim Einlesen der BME Chip ID", 0);
+			}
+			else {
+				If ($Result == 96) {
+					$DeviceName = "BME280";
+				}
+				elseif ($Result == 97) {
+					$DeviceName = "BME680";
+				}
+				elseif ($Result == 85) {
+					$DeviceName = "BMP180";
+				}
+			}
+			*/
+		}
 		/*
 		elseIf (($DeviceAddress >= 32) AND ($DeviceAddress <= 39)) {
 			// PCF8574/BH1750/MCP23017
