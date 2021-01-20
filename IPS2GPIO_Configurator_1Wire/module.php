@@ -1,6 +1,6 @@
 <?
     // Klassendefinition
-    class IPS2GPIO_Configurator_I2C extends IPSModule 
+    class IPS2GPIO_Configurator_1Wire extends IPSModule 
     {
 	    
 	// Überschreibt die interne IPS_Create($id) Funktion
