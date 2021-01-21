@@ -513,6 +513,15 @@ class IPS2GPIO_IO extends IPSModule
 					$Result = false;
 				}
 		        break;
+		case "get1WDeviceArray":
+		    		// 1W-Bus nach vorhandenen Devices durchsuchen
+				If (($this->ConnectionTest()) AND ($this->ReadPropertyBoolean("Open") == true))  {
+		    			$Result = $this->OWSearchStart();
+				}
+				else {
+					$Result = false;
+				}
+		        break;		
 		case "set_usedpin":
 		   	If ($this->GetBuffer("ModuleReady") == 1) {
 				If ($data->Pin >= 0) {
@@ -3194,16 +3203,17 @@ class IPS2GPIO_IO extends IPSModule
 	
 	public function OWSearchStart()
 	{
+		$this->SetBuffer("owLastDevice", 0);
+		$this->SetBuffer("owLastDiscrepancy", 0);
+		$this->SetBuffer("owDeviceAddress_0", 0xFFFFFFFF);
+		$this->SetBuffer("owDeviceAddress_1", 0xFFFFFFFF);
+		$OWDeviceArray = Array();
+		$this->SetBuffer("OWDeviceArray", serialize($OWDeviceArray));
+		$Result = 1;
+		$SearchNumber = 0;
+		
 		if (IPS_SemaphoreEnter("OW", 3000))
-			{
-			$this->SetBuffer("owLastDevice", 0);
-			$this->SetBuffer("owLastDiscrepancy", 0);
-			$this->SetBuffer("owDeviceAddress_0", 0xFFFFFFFF);
-			$this->SetBuffer("owDeviceAddress_1", 0xFFFFFFFF);
-			$OWDeviceArray = Array();
-			$this->SetBuffer("OWDeviceArray", serialize($OWDeviceArray));
-			$Result = 1;
-			$SearchNumber = 0;
+		{
 			while($Result == 1) {
 				$Result = $this->OWSearch($SearchNumber);
 				$SearchNumber++;
@@ -3212,7 +3222,8 @@ class IPS2GPIO_IO extends IPSModule
 		}
 		else {
 			$this->SendDebug("OWSearchStart", "Semaphore Abbruch", 0);
-		}	
+		}
+	return serialize($OWDeviceArray);
 	}
 	
 	private function DS2482Reset() 
