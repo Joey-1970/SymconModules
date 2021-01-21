@@ -45,7 +45,7 @@
 	
 		$DeviceArray = array();
 		If ($this->HasActiveParent() == true) {
-			//$DeviceArray = unserialize($this->GetData());
+			$DeviceArray = unserialize($this->GetData());
 		}
 		
 		$arrayValues = array();
