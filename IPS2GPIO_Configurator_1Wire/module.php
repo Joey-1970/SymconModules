@@ -25,12 +25,12 @@
 		$arrayElements[] = array("type" => "SelectCategory", "name" => "Category", "caption" => "Zielkategorie");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 
-		// Tabelle für die gefundenen I²C-Devices
+		// Tabelle für die gefundenen 1Wire-Devices
 		$arraySort = array();
 		$arraySort = array("column" => "DeviceTyp", "direction" => "ascending");
 		$arrayColumns = array();
 		$arrayColumns[] = array("caption" => "Typ", "name" => "DeviceTyp", "width" => "200px", "add" => "");
-		$arrayColumns[] = array("caption" => "Adresse", "name" => "DeviceSerial", "width" => "200px", "add" => "");
+		$arrayColumns[] = array("caption" => "Seriennummer", "name" => "DeviceSerial", "width" => "200px", "add" => "");
 		
 		$Category = $this->ReadPropertyInteger("Category");
 		$RootNames = [];
