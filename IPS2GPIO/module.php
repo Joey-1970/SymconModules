@@ -2971,10 +2971,10 @@ class IPS2GPIO_IO extends IPSModule
 						$DeviceArray[$k][0] = $this->I2CDeviceSpecification($DeviceName[$i], $Handle, $SearchArray[$i]);
 						$DeviceArray[$k][1] = $SearchArray[$i];
 						$DeviceArray[$k][2] = $DevicePorts[$j];
-						$DeviceArray[$k][3] = 0;
-						$DeviceArray[$k][4] = "OK";
+						//$DeviceArray[$k][3] = 0;
+						//$DeviceArray[$k][4] = "OK";
 						// Farbe gelb für erreichbare aber nicht registrierte Instanzen
-						$DeviceArray[$k][5] = "#FFFF00";
+						//$DeviceArray[$k][5] = "#FFFF00";
 						$k = $k + 1;
 						//IPS_LogMessage("GeCoS_IO I2C-Suche","Ergebnis: ".$DeviceName[$i]." DeviceAddresse: ".$SearchArray[$i]." an Bus: ".($j - 4));
 					}
@@ -3838,25 +3838,6 @@ class IPS2GPIO_IO extends IPSModule
 		$SerialNumber = sprintf("%X", $this->GetBuffer("owDeviceAddress_0")).sprintf("%X", $this->GetBuffer("owDeviceAddress_1"));
 		$this->SendDebug("OWRead_2438", "OneWire Device Address = ".$SerialNumber." Temperatur = ".$Celsius." Spannung = ".$Voltage." Strom = ".$Current, 0);
 	return array($Celsius, $Voltage, $Current);
-	}
-	
-	private function IR_Carrier($gpio, $frequency, $micros, $dutycycle)
-	{
-		// Generate cycles of carrier on gpio with frequency and dutycycle.
-		$wf = array();
-		$cycle = 1000000 / $frequency;
-		$cycles = intval(round($micros/$cycle));
-		$on = intval(round($cycle * $dutycycle));
-		$sofar = 0;
-		for ($c = 0; $c <= $cycles; $c++) {
-			$target = intval(round(($c+1) * $cycle));
-			$sofar = $sofar + $on;
-			$off = $target - $sofar;
-			$sofar = $sofar + $off;
-			array_push($wf, 1 << $gpio, 0, $on);
-			array_push($wf, 0, 1 << $gpio, $off);
-		}
-		Return $wf;
 	}
 	
 }
