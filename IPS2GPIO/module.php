@@ -3224,7 +3224,7 @@ class IPS2GPIO_IO extends IPSModule
 		else {
 			$this->SendDebug("OWSearchStart", "Semaphore Abbruch", 0);
 		}
-	return serialize($OWDeviceArray);
+	return $this->GetBuffer("OWDeviceArray");
 	}
 	
 	private function DS2482Reset() 
