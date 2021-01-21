@@ -123,8 +123,7 @@ class IPS2GPIO_IO extends IPSModule
 		
 		/*
 		// Tabelle für die gefundenen I²C-Devices
-		$arraySort = array();
-		$arraySort = array("column" => "DeviceTyp", "direction" => "ascending");
+		
 		$arrayColumns = array();
 		$arrayColumns[] = array("label" => "Typ", "name" => "DeviceTyp", "width" => "120px", "add" => "");
 		$arrayColumns[] = array("label" => "Adresse", "name" => "DeviceAddress", "width" => "60px", "add" => "");
@@ -134,6 +133,8 @@ class IPS2GPIO_IO extends IPSModule
 		*/
 		
 		// Tabelle für die gefundenen 1-Wire-Devices
+		$arraySort = array();
+		$arraySort = array("column" => "DeviceTyp", "direction" => "ascending");
 		$arrayOWColumns = array();
 		$arrayOWColumns[] = array("label" => "Typ", "name" => "DeviceTyp", "width" => "120px", "add" => "");
 		$arrayOWColumns[] = array("label" => "Serien-Nr.", "name" => "DeviceSerial", "width" => "120px", "add" => "");
