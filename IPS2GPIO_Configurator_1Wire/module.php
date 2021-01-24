@@ -99,17 +99,16 @@
 			$this->SendDebug("GetData", $Result, 0);
 			$ResultArray = array();
 			$ResultArray = unserialize($Result);
-			/*
+
 			$i = 0;
 			foreach($ResultArray as $Device) {
 				$DeviceArray[$i]["Typ"] = $Device[0];
 				$DeviceArray[$i]["Adresse"] = $Device[1];
-				$DeviceArray[$i]["Bus"] = $Device[2];
-				$DeviceArray[$i]["InstanceID"] = $this->GetDeviceInstanceID($Device[0], $Device[1], $Device[2]);
+				$DeviceArray[$i]["InstanceID"] = 0; //$this->GetDeviceInstanceID($Device[0], $Device[1], $Device[2]);
 				$i = $i + 1;
 			}
 			$this->SendDebug("GetData", "DeviceArray: ".serialize($DeviceArray), 0);
-			*/
+
 		}
 		else {
 			$this->SetStatus(202);
