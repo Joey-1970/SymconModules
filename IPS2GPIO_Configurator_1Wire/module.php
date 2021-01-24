@@ -117,7 +117,7 @@
 	return serialize($DeviceArray);
 	}
 	
-	function GetDeviceInstanceID(string $Type, int $Address, string $Bus)
+	function GetDeviceInstanceID(string $Type, int $Address)
 	{
 		$Result = 0;
 		$TypeArray = array("AS3935" => "{BC292F9B-7CAB-4195-A85D-A6228B521E08}", "S.USV" => "{E6955943-F7F1-48CD-979D-45EEDCF91629}", "PCF8574" => "{E1E9F012-A15A-4C05-834E-7893DFE34526}",
@@ -126,32 +126,7 @@
 				     "EZO ORP" => "{51401510-EBA1-2C99-5B39-3C0C9C9758B6}", "EZO PH" => "{4D846905-0066-AB5D-F997-DC01CB1D975E}", "MCP3424" => "{0EBA825C-47AD-4BC6-AC0D-1ADF9CD55AB2}",
 				     "BME280" => "{64E6464A-664C-46DE-B49F-8629497ED56F}", "BME680" => "{54EBA6FB-A557-4CB9-B384-933D6F5155B6}", "BMP180" => "{9D970308-36E7-428D-8AC0-D8C1496DDCCA}",
 				     "DS3231" => "{EA8A9345-DC36-4D40-8AA9-BB07329AAF7B}");
-		$BusArray = array("I²C-Bus 0", "I²C-Bus 1", "MUX I²C-Bus 0", "MUX I²C-Bus 1", "MUX I²C-Bus 2", "MUX I²C-Bus 3", "MUX I²C-Bus 4", "MUX I²C-Bus 5", "MUX I²C-Bus 6", "MUX I²C-Bus 7",);
-		
-		/*
-		// Bausteine fehlen noch
-		// MCP3424|DS3231
-		$SearchArray[] = 104;
-		$DeviceName[] = "MCP3424|DS3231";
-		
-		// PCF8574
-		for ($i = 32; $i <= 34; $i++) {
-			$SearchArray[] = $i;
-			$DeviceName[] = "PCF8574|MCP23017";
-		}
-		
-		// BH1750
-		$SearchArray[] = 35;
-		$DeviceName[] = "BH1750|MCP23017";
-		
-		// PCF8574
-		for ($i = 36; $i <= 39; $i++) {
-			$SearchArray[] = $i;
-			$DeviceName[] = "PCF8574|MCP23017";
-		}
-		*/
-		
-		
+			
 		if ((array_key_exists($Type, $TypeArray)) AND (in_array($Bus, $BusArray))) {
 			$guid = $TypeArray[$Type];
 			// Modulinstanzen suchen
@@ -159,7 +134,7 @@
 			$InstanceArray = @(IPS_GetInstanceListByModuleID($guid));
 			If (is_array($InstanceArray)) {
 				foreach($InstanceArray as $Module) {
-					If ((IPS_GetProperty($Module, "DeviceAddress") == $Address) AND (IPS_GetProperty($Module, "DeviceBus") == array_search($Bus, $BusArray))) {
+					If (IPS_GetProperty($Module, "DeviceAddress") == $Address) {
 						$this->SendDebug("GetDeviceInstanceID", "Gefundene Instanz: ".$Module, 0);
 						$Result = $Module;
 						break;
