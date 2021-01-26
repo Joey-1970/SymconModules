@@ -160,7 +160,7 @@
 		
 		
 		if ((array_key_exists($Type, $TypeArray)) AND (in_array($Bus, $BusArray))) {
-			$guid = $this->TypeArray[$Type];
+			$guid = $TypeArray[$Type];
 			// Modulinstanzen suchen
 			$InstanceArray = array();
 			$InstanceArray = @(IPS_GetInstanceListByModuleID($guid));
