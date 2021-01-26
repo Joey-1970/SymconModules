@@ -66,7 +66,7 @@
 		for ($i = 0; $i < Count($DeviceArray); $i++) {
 			If (array_key_exists($DeviceArray[$i]["Typ"], $this->$TypeArray)) {
 				$arrayCreate = array();
-				$GUID = $TypeArray[$DeviceArray[$i]["Typ"]];
+				$GUID = $this->TypeArray[$DeviceArray[$i]["Typ"]];
 				$Bus = array_search($DeviceArray[$i]["Bus"], $this->$BusArray);
 				$arrayCreate[] = array("moduleID" => $GUID, "location" => $RootNames, 
 					       "configuration" => array("DeviceAddress" => $DeviceArray[$i]["Adresse"], "DeviceBus" => $Bus));
@@ -168,7 +168,7 @@
 		
 		
 		if ((array_key_exists($Type, $this->$TypeArray)) AND (in_array($Bus, $this->$BusArray))) {
-			$guid = $TypeArray[$Type];
+			$guid = $this->TypeArray[$Type];
 			// Modulinstanzen suchen
 			$InstanceArray = array();
 			$InstanceArray = @(IPS_GetInstanceListByModuleID($guid));
