@@ -2,12 +2,12 @@
     // Klassendefinition
     class IPS2GPIO_Configurator_I2C extends IPSModule 
     {
-	private $TypeArray = array("AS3935" => "{BC292F9B-7CAB-4195-A85D-A6228B521E08}", "S.USV" => "{E6955943-F7F1-48CD-979D-45EEDCF91629}", "PCF8574" => "{E1E9F012-A15A-4C05-834E-7893DFE34526}",
+	private TypeArray = array("AS3935" => "{BC292F9B-7CAB-4195-A85D-A6228B521E08}", "S.USV" => "{E6955943-F7F1-48CD-979D-45EEDCF91629}", "PCF8574" => "{E1E9F012-A15A-4C05-834E-7893DFE34526}",
 				     "PCF8591" => "{A2E052CE-055C-4249-A536-7082B233B583}", "PCF8583" => "{95276FA0-4847-411E-B700-2E5F1866A7F6}", "GeCoS PWM16Out" => "{2ED6393D-E9A6-4C68-824C-90530EDDCE5C}",
 				     "GeCoS RGBW" => "{3AB26B93-0DD1-4F5C-AFC8-1C3A855F7D14}", "iAQ" => "{1ABC9D19-31BF-4482-8FE0-6D3843D1D77A}", "BH1750" => "{C3884BB9-1D68-4AF7-B73E-357D810042A7}",
 				     "EZO ORP" => "{51401510-EBA1-2C99-5B39-3C0C9C9758B6}", "EZO PH" => "{4D846905-0066-AB5D-F997-DC01CB1D975E}", "MCP3424" => "{0EBA825C-47AD-4BC6-AC0D-1ADF9CD55AB2}",
 				     "BME280" => "{64E6464A-664C-46DE-B49F-8629497ED56F}", "BME680" => "{54EBA6FB-A557-4CB9-B384-933D6F5155B6}", "BMP180" => "{9D970308-36E7-428D-8AC0-D8C1496DDCCA}");
-	private $BusArray = array("I²C-Bus 0", "I²C-Bus 1", "MUX I²C-Bus 0", "MUX I²C-Bus 1", "MUX I²C-Bus 2", "MUX I²C-Bus 3", "MUX I²C-Bus 4", "MUX I²C-Bus 5", "MUX I²C-Bus 6", "MUX I²C-Bus 7",);
+	private BusArray = array("I²C-Bus 0", "I²C-Bus 1", "MUX I²C-Bus 0", "MUX I²C-Bus 1", "MUX I²C-Bus 2", "MUX I²C-Bus 3", "MUX I²C-Bus 4", "MUX I²C-Bus 5", "MUX I²C-Bus 6", "MUX I²C-Bus 7",);
    
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
@@ -64,10 +64,10 @@
 		*/
 		$arrayValues = array();
 		for ($i = 0; $i < Count($DeviceArray); $i++) {
-			If (array_key_exists($DeviceArray[$i]["Typ"], $this->$TypeArray)) {
+			If (array_key_exists($DeviceArray[$i]["Typ"], $this->TypeArray)) {
 				$arrayCreate = array();
 				$GUID = $this->TypeArray[$DeviceArray[$i]["Typ"]];
-				$Bus = array_search($DeviceArray[$i]["Bus"], $this->$BusArray);
+				$Bus = array_search($DeviceArray[$i]["Bus"], $this->BusArray);
 				$arrayCreate[] = array("moduleID" => $GUID, "location" => $RootNames, 
 					       "configuration" => array("DeviceAddress" => $DeviceArray[$i]["Adresse"], "DeviceBus" => $Bus));
 				$arrayValues[] = array("DeviceTyp" => $DeviceArray[$i]["Typ"], "DeviceAddress" => $DeviceArray[$i]["Adresse"], "DeviceBus" => $DeviceArray[$i]["Bus"],
@@ -167,14 +167,14 @@
 		*/
 		
 		
-		if ((array_key_exists($Type, $this->$TypeArray)) AND (in_array($Bus, $this->$BusArray))) {
+		if ((array_key_exists($Type, $this->TypeArray)) AND (in_array($Bus, $this->BusArray))) {
 			$guid = $this->TypeArray[$Type];
 			// Modulinstanzen suchen
 			$InstanceArray = array();
 			$InstanceArray = @(IPS_GetInstanceListByModuleID($guid));
 			If (is_array($InstanceArray)) {
 				foreach($InstanceArray as $Module) {
-					If ((IPS_GetProperty($Module, "DeviceAddress") == $Address) AND (IPS_GetProperty($Module, "DeviceBus") == array_search($Bus, $this->$BusArray))) {
+					If ((IPS_GetProperty($Module, "DeviceAddress") == $Address) AND (IPS_GetProperty($Module, "DeviceBus") == array_search($Bus, $this->BusArray))) {
 						$this->SendDebug("GetDeviceInstanceID", "Gefundene Instanz: ".$Module, 0);
 						$Result = $Module;
 						break;
