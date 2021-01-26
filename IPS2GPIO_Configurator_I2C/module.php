@@ -64,10 +64,10 @@
 		*/
 		$arrayValues = array();
 		for ($i = 0; $i < Count($DeviceArray); $i++) {
-			If (array_key_exists($DeviceArray[$i]["Typ"], $TypeArray)) {
+			If (array_key_exists($DeviceArray[$i]["Typ"], $this->$TypeArray)) {
 				$arrayCreate = array();
 				$GUID = $TypeArray[$DeviceArray[$i]["Typ"]];
-				$Bus = array_search($DeviceArray[$i]["Bus"], $BusArray);
+				$Bus = array_search($DeviceArray[$i]["Bus"], $this->$BusArray);
 				$arrayCreate[] = array("moduleID" => $GUID, "location" => $RootNames, 
 					       "configuration" => array("DeviceAddress" => $DeviceArray[$i]["Adresse"], "DeviceBus" => $Bus));
 				$arrayValues[] = array("DeviceTyp" => $DeviceArray[$i]["Typ"], "DeviceAddress" => $DeviceArray[$i]["Adresse"], "DeviceBus" => $DeviceArray[$i]["Bus"],
@@ -167,14 +167,14 @@
 		*/
 		
 		
-		if ((array_key_exists($Type, $TypeArray)) AND (in_array($Bus, $BusArray))) {
+		if ((array_key_exists($Type, $this->$TypeArray)) AND (in_array($Bus, $this->$BusArray))) {
 			$guid = $TypeArray[$Type];
 			// Modulinstanzen suchen
 			$InstanceArray = array();
 			$InstanceArray = @(IPS_GetInstanceListByModuleID($guid));
 			If (is_array($InstanceArray)) {
 				foreach($InstanceArray as $Module) {
-					If ((IPS_GetProperty($Module, "DeviceAddress") == $Address) AND (IPS_GetProperty($Module, "DeviceBus") == array_search($Bus, $BusArray))) {
+					If ((IPS_GetProperty($Module, "DeviceAddress") == $Address) AND (IPS_GetProperty($Module, "DeviceBus") == array_search($Bus, $this->$BusArray))) {
 						$this->SendDebug("GetDeviceInstanceID", "Gefundene Instanz: ".$Module, 0);
 						$Result = $Module;
 						break;
