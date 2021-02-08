@@ -28,12 +28,20 @@
 		IPS_SetVariableProfileAssociation("IPS2GPIO.Restart", 3, "watchdog", "", -1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.Restart", 4, "unknown", "", -1);	
 		
+		$this->RegisterProfileInteger("IPS2GPIO.CalibrationPMP", "Gauge", "", "", 0, 4, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.Calibration", 0, "Keine", "Warning", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.Calibration", 1, "Fixes Volumen", "", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.Calibration", 2, "Volumen/Zeit", "", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.Calibration", 3, "Fixes Volumen & Volumen/Zeit", "", -1);	
+		
 		//Status-Variablen anlegen
 		$this->RegisterVariableString("DeviceType", "Device Typ", "", 10);
 		$this->RegisterVariableString("Firmware", "Firmware", "", 20);
 		$this->RegisterVariableInteger("Restart", "Letzter Neustart", "IPS2GPIO.Restart", 30);
-		$this->RegisterVariableFloat("Voltage", "Volt", "IPS2GPIO.V", 40);
-		$this->RegisterVariableFloat("PumpVoltage", "Volt", "IPS2GPIO.V", 50);
+		$this->RegisterVariableFloat("Voltage", "Volt Elektronik", "IPS2GPIO.V", 40);
+		$this->RegisterVariableFloat("PumpVoltage", "Volt Pumpe", "IPS2GPIO.V", 50);
+		
+		$this->RegisterVariableInteger("Calibration", "Kalibration", "IPS2GPIO.CalibrationPMP", 70);
 		
 		$this->RegisterVariableBoolean("LED", "LED", "~Switch", 20);
 		$this->EnableAction("LED");
@@ -269,10 +277,9 @@
 				$this->SetValue("Calibration", intval($ResultParts[1]));
 				break;
 				
-				
 			case "PumpVoltage":
 				$this->SendDebug("ReadResult", "PumpVoltage", 0);
-				$this->SetValue("PumpVoltage", intval($ResultParts[1]));
+				$this->SetValue("PumpVoltage", $ResultParts[1]);
 				break;
 			default:
 			    throw new Exception("Invalid Ident");
