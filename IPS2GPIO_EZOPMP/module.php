@@ -14,7 +14,7 @@
  	    	$this->RegisterPropertyInteger("DeviceAddress", 103);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
-            	$this->RegisterTimer("Messzyklus", 0, 'EZOPMP_GetORPValue($_IPS["TARGET"]);');
+            	$this->RegisterTimer("Messzyklus", 0, 'EZOPMP_GetDispensedVolume($_IPS["TARGET"]);');
 		
 		// Profil anlegen
 		$this->RegisterProfileFloat("IPS2GPIO.V", "Electricity", "", " V", -100000, +100000, 0.1, 3);
@@ -40,7 +40,7 @@
 		$this->RegisterVariableInteger("Restart", "Letzter Neustart", "IPS2GPIO.Restart", 30);
 		$this->RegisterVariableFloat("Voltage", "Volt Elektronik", "IPS2GPIO.V", 40);
 		$this->RegisterVariableFloat("PumpVoltage", "Volt Pumpe", "IPS2GPIO.V", 50);
-		
+		$this->RegisterVariableFloat("DispensedVolume", "Abgegebene Menge", "IPS2GPIO.ml", 60);
 		$this->RegisterVariableInteger("Calibration", "Kalibration", "IPS2GPIO.CalibrationPMP", 70);
 		
 		$this->RegisterVariableBoolean("LED", "LED", "~Switch", 20);
@@ -122,7 +122,7 @@
 					// Kalibrierung prüfen
 					$this->GetCalibration();
 					// Erste Messdaten einlesen
-					//$this->GetORPValue();
+					$this->GetDispensedVolume();
 				}
 			}
 			else {
@@ -279,6 +279,11 @@
 				$this->SendDebug("ReadResult", "PumpVoltage", 0);
 				$this->SetValue("PumpVoltage", $ResultParts[1]);
 				break;
+				
+			case "DispensedVolume":
+				$this->SendDebug("ReadResult", "DispensedVolume", 0);
+				$this->SetValue("DispensedVolume", $ResultParts[1]);
+				break;
 			default:
 			    throw new Exception("Invalid Ident");
 	    	}
@@ -375,6 +380,26 @@
 		}
 	}
 	
+	public function GetDispensedVolume()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("GetDispensedVolume", "Ausfuehrung", 0);
+			$Message = "R";
+			$Result = $this->Write($Message);
+			If ($Result == false) {
+				return false;
+			}
+			else {
+				IPS_Sleep(300);
+				$Result = $this->Read("DispensedVolume", 7);
+				If ($Result == true) {
+					$this->GetStatus();
+				}
+				return $Result;
+			}
+		}
+	}    
+	    
 	public function Calibration(float $Value)
 	{
 		// Eventuell muss hier das Komma in einen Punkt umgewandelt werden?
