@@ -257,11 +257,6 @@
 				$this->SetValue("DeviceType", $ResultParts[1]);
 				$this->SetValue("Firmware", $ResultParts[2]);
 				break;
-			
-			case "ORP":
-				$this->SendDebug("ReadResult", "ORP", 0);
-				$this->SetValue("mV", $ResultParts[0]);
-				break;
 				
 			case "Status":
 				$this->SendDebug("ReadResult", "Status", 0);
