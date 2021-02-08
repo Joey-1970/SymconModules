@@ -78,12 +78,10 @@
 		
 		$arrayActions = array(); 
 		$arrayActions[] = array("type" => "Label", "caption" => "Wichtiger Hinweis: Bitte dazu die Bedienungsanleitung beachten!"); 
-		/*
 		$ArrayRowLayout = array();
-		$ArrayRowLayout[] = array("type" => "Button", "caption" => "Kalibrierung", "onClick" => 'EZOOPRCircuit_Calibration($id, $Value);'); 
-		$ArrayRowLayout[] = array("type" => "NumberSpinner", "name" => "Value", "caption" => "Wert");
+		$ArrayRowLayout[] = array("type" => "Button", "caption" => "Kalibrierung", "onClick" => 'EZOPMP_Calibration($id, $Value);'); 
+		$ArrayRowLayout[] = array("type" => "NumberSpinner", "name" => "Value", "caption" => "Wert", "digits" => 2, "minimum" => 0);
 		$arrayActions[] = array("type" => "RowLayout", "items" => $ArrayRowLayout);
-		*/
 		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung löschen", "onClick" => 'EZOPMP_CalibrationClear($id);'); 
 		$arrayActions[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayActions[] = array("type" => "Label", "caption" => "Test Center"); 
@@ -379,6 +377,8 @@
 	
 	public function Calibration(float $Value)
 	{
+		// Eventuell muss hier das Komma in einen Punkt umgewandelt werden?
+		
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Calibration", "Ausfuehrung", 0);
 			$Message = "Cal,".$Value;
