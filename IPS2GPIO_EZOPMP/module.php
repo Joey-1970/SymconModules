@@ -17,11 +17,10 @@
             	$this->RegisterTimer("Messzyklus", 0, 'EZOPMP_GetORPValue($_IPS["TARGET"]);');
 		
 		// Profil anlegen
-		/*
 		$this->RegisterProfileFloat("IPS2GPIO.V", "Electricity", "", " V", -100000, +100000, 0.1, 3);
 		
-		$this->RegisterProfileFloat("IPS2GPIO.mV", "Electricity", "", " mV", -100000, +100000, 0.1, 3);
-		*/
+		$this->RegisterProfileFloat("IPS2GPIO.ml", "ErlenmeyerFlask", "", " ml", -100000, +100000, 0.1, 2);
+		
 		$this->RegisterProfileInteger("IPS2GPIO.Restart", "Information", "", "", 0, 5, 1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.Restart", 0, "powered off", "", -1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.Restart", 1, "software reset", "", -1);
@@ -33,11 +32,9 @@
 		$this->RegisterVariableString("DeviceType", "Device Typ", "", 10);
 		$this->RegisterVariableString("Firmware", "Firmware", "", 20);
 		$this->RegisterVariableInteger("Restart", "Letzter Neustart", "IPS2GPIO.Restart", 30);
-		/*
 		$this->RegisterVariableFloat("Voltage", "Volt", "IPS2GPIO.V", 40);
-		$this->RegisterVariableFloat("mV", "mV", "IPS2GPIO.mV", 50);
-		$this->RegisterVariableInteger("Calibration", "Kalibration", "IPS2GPIO.Calibration", 60);
-		*/
+		$this->RegisterVariableFloat("VoltagePump", "Volt", "IPS2GPIO.V", 50);
+		
 		$this->RegisterVariableBoolean("LED", "LED", "~Switch", 20);
 		$this->EnableAction("LED");
         }
@@ -329,29 +326,24 @@
 		return true;
 		}
 	}    
-	
-	public function GetORPValue()
+	    
+	public function GetPumpVoltage()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			
-			return;
-			
-			$this->SendDebug("GetORPValue", "Ausfuehrung", 0);
-			$Message = "R";
+			$this->SendDebug("GetPumpVoltage", "Ausfuehrung", 0);
+			$Message = "PV,?";
 			$Result = $this->Write($Message);
 			If ($Result == false) {
 				return false;
 			}
 			else {
-				IPS_Sleep(900);
-				$Result = $this->Read("ORP", 7);
-				If ($Result == true) {
-					$this->GetStatus();
-				}
+				IPS_Sleep(300);
+				$Result = $this->Read("FW", 13);
 				return $Result;
 			}
+		return true;
 		}
-	}
+	}    
 	    
 	public function GetStatus()
 	{
