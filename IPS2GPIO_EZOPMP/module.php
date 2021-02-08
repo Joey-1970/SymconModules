@@ -29,10 +29,10 @@
 		IPS_SetVariableProfileAssociation("IPS2GPIO.Restart", 4, "unknown", "", -1);	
 		
 		$this->RegisterProfileInteger("IPS2GPIO.CalibrationPMP", "Gauge", "", "", 0, 4, 1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.Calibration", 0, "Keine", "Warning", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.Calibration", 1, "Fixes Volumen", "", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.Calibration", 2, "Volumen/Zeit", "", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.Calibration", 3, "Fixes Volumen & Volumen/Zeit", "", -1);	
+		IPS_SetVariableProfileAssociation("IPS2GPIO.CalibrationPMP", 0, "Keine", "Warning", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.CalibrationPMP", 1, "Fixes Volumen", "", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.CalibrationPMP", 2, "Volumen/Zeit", "", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.CalibrationPMP", 3, "Fixes Volumen & Volumen/Zeit", "", -1);	
 		
 		//Status-Variablen anlegen
 		$this->RegisterVariableString("DeviceType", "Device Typ", "", 10);
