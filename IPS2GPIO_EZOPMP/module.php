@@ -33,7 +33,7 @@
 		$this->RegisterVariableString("Firmware", "Firmware", "", 20);
 		$this->RegisterVariableInteger("Restart", "Letzter Neustart", "IPS2GPIO.Restart", 30);
 		$this->RegisterVariableFloat("Voltage", "Volt", "IPS2GPIO.V", 40);
-		$this->RegisterVariableFloat("VoltagePump", "Volt", "IPS2GPIO.V", 50);
+		$this->RegisterVariableFloat("PumpVoltage", "Volt", "IPS2GPIO.V", 50);
 		
 		$this->RegisterVariableBoolean("LED", "LED", "~Switch", 20);
 		$this->EnableAction("LED");
@@ -111,6 +111,8 @@
 					$this->GetLEDState();
 					// Status
 					$this->GetStatus();
+					// Pump Voltage
+					$this->GetPumpVoltage();
 					// Kalibrierung prüfen
 					$this->GetCalibration();
 					// Erste Messdaten einlesen
@@ -266,6 +268,12 @@
 				$this->SendDebug("ReadResult", "Calibration", 0);
 				$this->SetValue("Calibration", intval($ResultParts[1]));
 				break;
+				
+				
+			case "PumpVoltage":
+				$this->SendDebug("ReadResult", "PumpVoltage", 0);
+				$this->SetValue("PumpVoltage", intval($ResultParts[1]));
+				break;
 			default:
 			    throw new Exception("Invalid Ident");
 	    	}
@@ -338,7 +346,7 @@
 			}
 			else {
 				IPS_Sleep(300);
-				$Result = $this->Read("FW", 13);
+				$Result = $this->Read("PumpVoltage", 11);
 				return $Result;
 			}
 		return true;
