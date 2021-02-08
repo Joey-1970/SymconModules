@@ -1,6 +1,6 @@
 <?
     // Klassendefinition
-    class IPS2GPIO_EZOORPCircuit extends IPSModule 
+    class IPS2GPIO_EZOPMP extends IPSModule 
     {
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
@@ -11,16 +11,17 @@
 		
  	    	$this->RegisterPropertyBoolean("Open", false);
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
- 	    	$this->RegisterPropertyInteger("DeviceAddress", 98);
+ 	    	$this->RegisterPropertyInteger("DeviceAddress", 103);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
-            	$this->RegisterTimer("Messzyklus", 0, 'EZOORPCircuit_GetORPValue($_IPS["TARGET"]);');
+            	$this->RegisterTimer("Messzyklus", 0, 'EZOPMP_GetORPValue($_IPS["TARGET"]);');
 		
 		// Profil anlegen
+		/*
 		$this->RegisterProfileFloat("IPS2GPIO.V", "Electricity", "", " V", -100000, +100000, 0.1, 3);
 		
 		$this->RegisterProfileFloat("IPS2GPIO.mV", "Electricity", "", " mV", -100000, +100000, 0.1, 3);
-		
+		*/
 		$this->RegisterProfileInteger("IPS2GPIO.Restart", "Information", "", "", 0, 5, 1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.Restart", 0, "powered off", "", -1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.Restart", 1, "software reset", "", -1);
@@ -32,10 +33,11 @@
 		$this->RegisterVariableString("DeviceType", "Device Typ", "", 10);
 		$this->RegisterVariableString("Firmware", "Firmware", "", 20);
 		$this->RegisterVariableInteger("Restart", "Letzter Neustart", "IPS2GPIO.Restart", 30);
+		/*
 		$this->RegisterVariableFloat("Voltage", "Volt", "IPS2GPIO.V", 40);
 		$this->RegisterVariableFloat("mV", "mV", "IPS2GPIO.mV", 50);
 		$this->RegisterVariableInteger("Calibration", "Kalibration", "IPS2GPIO.Calibration", 60);
-		
+		*/
 		$this->RegisterVariableBoolean("LED", "LED", "~Switch", 20);
 		$this->EnableAction("LED");
         }
@@ -52,7 +54,7 @@
 		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv"); 
  		
 		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "98 dez. / 0x62h", "value" => 98);
+		$arrayOptions[] = array("label" => "103 dez. / 0x67h", "value" => 103);
 
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceAddress", "caption" => "Device Adresse", "options" => $arrayOptions );
 		
@@ -70,6 +72,7 @@
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
 		
 		$arrayActions = array(); 
+		/*
 		$arrayActions[] = array("type" => "Label", "caption" => "Wichtiger Hinweis: Bitte dazu die Bedienungsanleitung beachten!"); 
 		$ArrayRowLayout = array();
 		$ArrayRowLayout[] = array("type" => "Button", "caption" => "Kalibrierung", "onClick" => 'EZOOPRCircuit_Calibration($id, $Value);'); 
@@ -77,6 +80,7 @@
 		$arrayActions[] = array("type" => "RowLayout", "items" => $ArrayRowLayout);
 		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung löschen", "onClick" => 'EZOOPRCircuit_CalibrationClear($id);'); 
 		$arrayActions[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+		*/
 		$arrayActions[] = array("type" => "Label", "caption" => "Test Center"); 
 		$arrayActions[] = array("type" => "TestCenter", "name" => "TestCenter");
 		
@@ -113,7 +117,7 @@
 					// Kalibrierung prüfen
 					$this->GetCalibration();
 					// Erste Messdaten einlesen
-					$this->GetORPValue();
+					//$this->GetORPValue();
 				}
 			}
 			else {
@@ -334,6 +338,9 @@
 	public function GetORPValue()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			
+			return;
+			
 			$this->SendDebug("GetORPValue", "Ausfuehrung", 0);
 			$Message = "R";
 			$Result = $this->Write($Message);
