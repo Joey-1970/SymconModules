@@ -35,8 +35,8 @@
 		IPS_SetVariableProfileAssociation("IPS2GPIO.CalibrationPMP", 3, "Fixes Volumen & Volumen/Zeit", "", -1);	
 		
 		$this->RegisterProfileInteger("IPS2GPIO.PumpState", "Gauge", "", "", 0, 4, 0);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.PumpState", 0, "unbekannt", "Warning", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.PumpState", 1, "Stop", "", -1);	
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PumpState", 0, "Stop", "", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PumpState", 1, "Start", "", -1);
 		
 		//Status-Variablen anlegen
 		$this->RegisterVariableString("DeviceType", "Device Typ", "", 10);
@@ -314,7 +314,7 @@
 			
 			case "StopDispensing":
 				$this->SendDebug("ReadResult", "StopDispensing", 0);
-				$this->SetValue("PumpStateSwitch", 1);
+				$this->SetValue("PumpStateSwitch", 0);
 				break;
 				
 			case "PausePumpState":
@@ -328,6 +328,7 @@
 				
 			case "StartDispensing":
 				$this->SendDebug("ReadResult", "StartDispensing", 0);
+				$this->SetValue("PumpStateSwitch", 1);
 				$this->SetValue("PumpState", boolval($ResultParts[2]));				
 				break;
 				
