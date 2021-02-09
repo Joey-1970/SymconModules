@@ -388,6 +388,9 @@
 			else {
 				IPS_Sleep(300);
 				$Result = $this->Read("Status", 17);
+				If ($Result == true) {
+					$this->GetPumpVoltage();
+				}
 				return $Result;
 			}
 		}
@@ -443,7 +446,7 @@
 			}
 			else {
 				IPS_Sleep(300);
-				$Result = $this->Read("TotalDispensedVolume", 14);
+				$Result = $this->Read("AbsoluteDispensedVolume", 14);
 				return $Result;
 			}
 		}
