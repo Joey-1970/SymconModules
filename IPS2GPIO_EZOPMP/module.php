@@ -534,22 +534,66 @@
 		}
 	}	    
 	
-	public function StartDispensing(Int $Milliliters, Int $Minute, bool $Direction) // $Direction true = normal, false = reverse
+	public function StartDispensing(Int $Milliliters, Int $Minute, Int $Direction) // $Direction true = normal, false = reverse
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("StartDispensing", "Ausfuehrung", 0);
-			$Message = "X";
+			If (($Milliliters == 0) AND ($Minute == 0) AND ($Direction == true)) { 
+				// Continuous dispensing normal
+				$Message = "D,*";
+			}
+			elseif (($Milliliters == 0) AND ($Minute == 0) AND ($Direction == false)) { 
+				// Continuous dispensing reverse
+				$Message = "D,-*";
+			}
+			elseif (($Milliliters > 0) AND ($Minute == 0) AND ($Direction == true)) { 
+				// Volume dispensing normal
+				$Message = "D,".$Milliliters;
+			}
+			elseif (($Milliliters > 0) AND ($Minute == 0) AND ($Direction == false)) { 
+				// Volume dispensing normal
+				$Message = "D,-".$Milliliters;
+			}
+			elseif (($Milliliters > 0) AND ($Minute > 0) AND ($Direction == true)) { 
+				// Dose over time dispensing normal
+				$Message = "D,".$Milliliters.",".$Minute;
+			}
+			elseif (($Milliliters > 0) AND ($Minute > 0) AND ($Direction == false)) { 
+				// Dose over time dispensing normal
+				$Message = "D,-".$Milliliters.",".$Minute;
+			}
+			
 			$Result = $this->Write($Message);
 			If ($Result == false) {
 				return false;
 			}
 			else {
 				IPS_Sleep(300);
-				$Result = $this->Read("StopDispensing", 13);
+				$Result = $this->Read("StartDispensing", 2);
+				If ($Result == true) {
+					$this->GetDispensingState();
+				}
 				return $Result;
 			}
 		}
 	}          
+	
+	public function GetDispensingState()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("GetDispensingState", "Ausfuehrung", 0);
+			$Message = "D,?";
+			$Result = $this->Write($Message);
+			If ($Result == false) {
+				return false;
+			}
+			else {
+				IPS_Sleep(300);
+				$Result = $this->Read("DispensingState", 13);
+				return $Result;
+			}
+		}
+	}	     
 	    
 	public function Calibration(float $Value)
 	{
