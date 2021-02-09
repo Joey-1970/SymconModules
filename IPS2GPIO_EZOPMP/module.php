@@ -41,6 +41,8 @@
 		$this->RegisterVariableFloat("Voltage", "Volt Elektronik", "IPS2GPIO.V", 40);
 		$this->RegisterVariableFloat("PumpVoltage", "Volt Pumpe", "IPS2GPIO.V", 50);
 		$this->RegisterVariableFloat("DispensedVolume", "Abgegebene Menge", "IPS2GPIO.ml", 60);
+		$this->RegisterVariableFloat("TotalDispensedVolume", "Total abgegebene Menge", "IPS2GPIO.ml", 60);
+		$this->RegisterVariableFloat("AbsoluteDispensedVolume", "Absolut abgegebene Menge", "IPS2GPIO.ml", 60);
 		$this->RegisterVariableInteger("Calibration", "Kalibration", "IPS2GPIO.CalibrationPMP", 70);
 		
 		$this->RegisterVariableBoolean("LED", "LED", "~Switch", 20);
@@ -284,6 +286,17 @@
 				$this->SendDebug("ReadResult", "DispensedVolume", 0);
 				$this->SetValue("DispensedVolume", floatval($ResultParts[0]));
 				break;
+				
+			case "TotalDispensedVolume":
+				$this->SendDebug("ReadResult", "TotalDispensedVolume", 0);
+				$this->SetValue("TotalDispensedVolume", floatval($ResultParts[1]));
+				break;
+				
+			case "AbsoluteDispensedVolume":
+				$this->SendDebug("ReadResult", "AbsoluteDispensedVolume", 0);
+				$this->SetValue("AbsoluteDispensedVolume", floatval($ResultParts[1]));
+				break;
+				
 			default:
 			    throw new Exception("Invalid Ident");
 	    	}
@@ -393,12 +406,48 @@
 				IPS_Sleep(300);
 				$Result = $this->Read("DispensedVolume", 7);
 				If ($Result == true) {
+					$this->GetTotalDispensedVolume();
+					$this->GetAbsoluteDispensedVolume();
 					$this->GetStatus();
 				}
 				return $Result;
 			}
 		}
 	}    
+	
+	public function GetTotalDispensedVolume()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("GetTotalDispensedVolume", "Ausfuehrung", 0);
+			$Message = "TV,?";
+			$Result = $this->Write($Message);
+			If ($Result == false) {
+				return false;
+			}
+			else {
+				IPS_Sleep(300);
+				$Result = $this->Read("TotalDispensedVolume", 13);
+				return $Result;
+			}
+		}
+	}        
+	    
+	public function GetAbsoluteDispensedVolume()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("GetAbsoluteDispensedVolume", "Ausfuehrung", 0);
+			$Message = "ATV,?";
+			$Result = $this->Write($Message);
+			If ($Result == false) {
+				return false;
+			}
+			else {
+				IPS_Sleep(300);
+				$Result = $this->Read("TotalDispensedVolume", 14);
+				return $Result;
+			}
+		}
+	}        
 	    
 	public function Calibration(float $Value)
 	{
