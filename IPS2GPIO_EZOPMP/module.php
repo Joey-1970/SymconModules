@@ -533,6 +533,23 @@
 			}
 		}
 	}	    
+	
+	public function StartDispensing(Int $Milliliters, Int $Minute, bool $Direction) // $Direction true = normal, false = reverse
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("StartDispensing", "Ausfuehrung", 0);
+			$Message = "X";
+			$Result = $this->Write($Message);
+			If ($Result == false) {
+				return false;
+			}
+			else {
+				IPS_Sleep(300);
+				$Result = $this->Read("StopDispensing", 13);
+				return $Result;
+			}
+		}
+	}          
 	    
 	public function Calibration(float $Value)
 	{
