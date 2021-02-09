@@ -183,7 +183,7 @@
 			case "PausePumpState":
 				$this->PauseDispensing();
 				break;
-			case "PumpState":
+			case "PumpStateSwitch":
 				If ($Value == 0) {
 					// Stop
 					$this->StopDispensing();
