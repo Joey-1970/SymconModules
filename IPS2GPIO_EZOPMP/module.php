@@ -184,11 +184,14 @@
 				$this->PauseDispensing();
 				break;
 			case "PumpState":
-				If ($Value == 1) {
+				If ($Value == 0) {
 					// Stop
 					$this->StopDispensing();
 				}
-				
+				If ($Value == 1) {
+					// Start
+					$this->StartDispensing(0, 0, true);
+				}
 				break;
 			default:
 			    throw new Exception("Invalid Ident");
