@@ -36,9 +36,7 @@
 		
 		$this->RegisterProfileInteger("IPS2GPIO.PumpState", "Gauge", "", "", 0, 4, 1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.PumpState", 0, "unbekannt", "Warning", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.PumpState", 1, "Start", "", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.PumpState", 2, "Pause", "", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.PumpState", 3, "Stop", "", -1);	
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PumpState", 1, "Stop", "", -1);	
 		
 		//Status-Variablen anlegen
 		$this->RegisterVariableString("DeviceType", "Device Typ", "", 10);
@@ -186,17 +184,10 @@
 				break;
 			case "PumpState":
 				If ($Value == 1) {
-					// Start
-					//$this->StartDispensing();
-				}
-				elseif ($Value == 2) {
-					// Pause
-					$this->PauseDispensing();
-				}
-				elseif ($Value == 3) {
 					// Stop
 					$this->StopDispensing();
 				}
+				
 				break;
 			default:
 			    throw new Exception("Invalid Ident");
@@ -322,22 +313,16 @@
 			
 			case "StopDispensing":
 				$this->SendDebug("ReadResult", "StopDispensing", 0);
-				$this->SetValue("PumpState", 3);
+				$this->SetValue("PumpState", 1);
 				break;
 				
-			case "PauseDispensing":
-				$this->SendDebug("ReadResult", "PauseDispensing", 0);
-				$this->SetValue("PumpState", 2);
-				break;
-				
-			case "PauseState":
-				$this->SendDebug("ReadResult", "PauseState", 0);
-				$this->SetValue("PauseState", boolval($ResultParts[1]));
+			case "PausePumpState":
+				$this->SendDebug("ReadResult", "PausePumpState", 0);
+				$this->SetValue("PausePumpState", boolval($ResultParts[1]));
 				break;
 			
-			case "StartDispensing":
-				$this->SendDebug("ReadResult", "StartDispensing", 0);
-				$this->SetValue("PumpState", 1);
+			case "PauseDispensing":
+				$this->SendDebug("ReadResult", "PauseDispensing", 0);
 				break;
 				
 			default:
@@ -543,7 +528,7 @@
 			}
 			else {
 				IPS_Sleep(300);
-				$Result = $this->Read("PauseState", 6);
+				$Result = $this->Read("PausePumpState", 6);
 				return $Result;
 			}
 		}
