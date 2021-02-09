@@ -471,7 +471,7 @@
 			}
 			else {
 				IPS_Sleep(300);
-				$Result = $this->Read("TotalDispensedVolume", 13);
+				$Result = $this->Read("TotalDispensedVolume", 16);
 				return $Result;
 			}
 		}
@@ -488,7 +488,7 @@
 			}
 			else {
 				IPS_Sleep(300);
-				$Result = $this->Read("AbsoluteDispensedVolume", 14);
+				$Result = $this->Read("AbsoluteDispensedVolume", 16);
 				return $Result;
 			}
 		}
