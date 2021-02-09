@@ -34,7 +34,7 @@
 		IPS_SetVariableProfileAssociation("IPS2GPIO.CalibrationPMP", 2, "Volumen/Zeit", "", -1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.CalibrationPMP", 3, "Fixes Volumen & Volumen/Zeit", "", -1);	
 		
-		$this->RegisterProfileInteger("IPS2GPIO.PumpState", "Gauge", "", "", 0, 4, 1);
+		$this->RegisterProfileInteger("IPS2GPIO.PumpState", "Gauge", "", "", 0, 4, 0);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.PumpState", 0, "unbekannt", "Warning", -1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.PumpState", 1, "Stop", "", -1);	
 		
@@ -508,7 +508,7 @@
 			}
 			else {
 				IPS_Sleep(300);
-				$Result = $this->Read("PauseDispensing", 13);
+				$Result = $this->Read("PauseDispensing", 2);
 				If ($Result == true) {
 					$this->GetPauseState();
 				}
