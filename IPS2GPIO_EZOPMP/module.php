@@ -132,6 +132,8 @@
 					$this->GetStatus();
 					// Pump Voltage
 					$this->GetPumpVoltage();
+					// Pumpen Status
+					$this->GetDispensingState();
 					// Kalibrierung prüfen
 					$this->GetCalibration();
 					// Erste Messdaten einlesen
@@ -432,6 +434,7 @@
 				$Result = $this->Read("Status", 17);
 				If ($Result == true) {
 					$this->GetPumpVoltage();
+					$this->GetDispensingState();
 				}
 				return $Result;
 			}
@@ -506,6 +509,9 @@
 			else {
 				IPS_Sleep(300);
 				$Result = $this->Read("StopDispensing", 13);
+				If ($Result == true) {
+					$this->GetDispensingState();
+				}
 				return $Result;
 			}
 		}
@@ -543,6 +549,9 @@
 			else {
 				IPS_Sleep(300);
 				$Result = $this->Read("PausePumpState", 6);
+				If ($Result == true) {
+					$this->GetDispensingState();
+				}
 				return $Result;
 			}
 		}
