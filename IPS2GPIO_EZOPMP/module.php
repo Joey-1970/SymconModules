@@ -501,7 +501,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("PauseDispensing", "Ausfuehrung", 0);
-			$Message = "p";
+			$Message = "P";
 			$Result = $this->Write($Message);
 			If ($Result == false) {
 				return false;
