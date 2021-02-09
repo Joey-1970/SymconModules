@@ -34,6 +34,12 @@
 		IPS_SetVariableProfileAssociation("IPS2GPIO.CalibrationPMP", 2, "Volumen/Zeit", "", -1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.CalibrationPMP", 3, "Fixes Volumen & Volumen/Zeit", "", -1);	
 		
+		$this->RegisterProfileInteger("IPS2GPIO.PumpState", "Gauge", "", "", 0, 4, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PumpState", 0, "unbekannt", "Warning", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PumpState", 1, "Start", "", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PumpState", 2, "Pause", "", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.PumpState", 3, "Stop", "", -1);	
+		
 		//Status-Variablen anlegen
 		$this->RegisterVariableString("DeviceType", "Device Typ", "", 10);
 		$this->RegisterVariableString("Firmware", "Firmware", "", 20);
@@ -41,11 +47,17 @@
 		$this->RegisterVariableFloat("Voltage", "Volt Elektronik", "IPS2GPIO.V", 40);
 		$this->RegisterVariableFloat("PumpVoltage", "Volt Pumpe", "IPS2GPIO.V", 50);
 		$this->RegisterVariableFloat("DispensedVolume", "Abgegebene Menge", "IPS2GPIO.ml", 60);
-		$this->RegisterVariableFloat("TotalDispensedVolume", "Total abgegebene Menge", "IPS2GPIO.ml", 60);
-		$this->RegisterVariableFloat("AbsoluteDispensedVolume", "Absolut abgegebene Menge", "IPS2GPIO.ml", 60);
-		$this->RegisterVariableInteger("Calibration", "Kalibration", "IPS2GPIO.CalibrationPMP", 70);
+		$this->RegisterVariableFloat("TotalDispensedVolume", "Total abgegebene Menge", "IPS2GPIO.ml", 70);
+		$this->RegisterVariableFloat("AbsoluteDispensedVolume", "Absolut abgegebene Menge", "IPS2GPIO.ml", 80);
+		$this->RegisterVariableInteger("PumpState", "Status Pumpe", "IPS2GPIO.PumpState", 90);
+		$this->EnableAction("PumpState");
 		
-		$this->RegisterVariableBoolean("LED", "LED", "~Switch", 20);
+		$this->RegisterVariableInteger("Calibration", "Kalibration", "IPS2GPIO.CalibrationPMP", 100);
+		
+		$this->RegisterVariableBoolean("PausePumpState", "Pumpen Pause", "~Switch", 110);
+		$this->EnableAction("PausePumpState");
+		
+		$this->RegisterVariableBoolean("LED", "LED", "~Switch", 120);
 		$this->EnableAction("LED");
         }
 	    
@@ -169,7 +181,23 @@
 			case "LED":
 				$this->SetLEDState($Value);
 				break;
-
+			case "PausePumpState":
+				$this->PauseDispensing();
+				break;
+			case "PumpState":
+				If ($Value == 1) {
+					// Start
+					//$this->StartDispensing();
+				}
+				elseif ($Value == 2) {
+					// Pause
+					$this->PauseDispensing();
+				}
+				elseif ($Value == 3) {
+					// Stop
+					$this->StopDispensing();
+				}
+				break;
 			default:
 			    throw new Exception("Invalid Ident");
 	    	}
@@ -182,11 +210,6 @@
 				// IPS_KERNELSTARTED
 				$this->ApplyChanges();
 				break;
-			case 10603:
-				// Änderung der Kompesations-Temperatur, die Temperatur aus dem angegebenen Sensor in das Modul kopieren
-				If ($SenderID == $this->ReadPropertyInteger("TemperatureID")) {
-					$this->SetValue("Temperature", GetValueFloat($this->ReadPropertyInteger("TemperatureID")) );
-				}
 		}
     	}     
 	    
@@ -295,6 +318,26 @@
 			case "AbsoluteDispensedVolume":
 				$this->SendDebug("ReadResult", "AbsoluteDispensedVolume", 0);
 				$this->SetValue("AbsoluteDispensedVolume", floatval($ResultParts[1]));
+				break;
+			
+			case "StopDispensing":
+				$this->SendDebug("ReadResult", "StopDispensing", 0);
+				$this->SetValue("PumpState", 3);
+				break;
+				
+			case "PauseDispensing":
+				$this->SendDebug("ReadResult", "PauseDispensing", 0);
+				$this->SetValue("PumpState", 2);
+				break;
+				
+			case "PauseState":
+				$this->SendDebug("ReadResult", "PauseState", 0);
+				$this->SetValue("PauseState", boolval($ResultParts[1]));
+				break;
+			
+			case "StartDispensing":
+				$this->SendDebug("ReadResult", "StartDispensing", 0);
+				$this->SetValue("PumpState", 1);
 				break;
 				
 			default:
@@ -451,6 +494,60 @@
 			}
 		}
 	}        
+	
+	public function StopDispensing()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("StopDispensing", "Ausfuehrung", 0);
+			$Message = "X";
+			$Result = $this->Write($Message);
+			If ($Result == false) {
+				return false;
+			}
+			else {
+				IPS_Sleep(300);
+				$Result = $this->Read("StopDispensing", 13);
+				return $Result;
+			}
+		}
+	}       
+	    
+	public function PauseDispensing()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("PauseDispensing", "Ausfuehrung", 0);
+			$Message = "P";
+			$Result = $this->Write($Message);
+			If ($Result == false) {
+				return false;
+			}
+			else {
+				IPS_Sleep(300);
+				$Result = $this->Read("PauseDispensing", 13);
+				If ($Result == true) {
+					$this->GetPauseState();
+				}
+				return $Result;
+			}
+		}
+	}         
+	
+	public function GetPauseState()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("GetPauseState", "Ausfuehrung", 0);
+			$Message = "P,?";
+			$Result = $this->Write($Message);
+			If ($Result == false) {
+				return false;
+			}
+			else {
+				IPS_Sleep(300);
+				$Result = $this->Read("PauseState", 6);
+				return $Result;
+			}
+		}
+	}	    
 	    
 	public function Calibration(float $Value)
 	{
