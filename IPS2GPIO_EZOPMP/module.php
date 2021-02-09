@@ -44,18 +44,19 @@
 		$this->RegisterVariableInteger("Restart", "Letzter Neustart", "IPS2GPIO.Restart", 30);
 		$this->RegisterVariableFloat("Voltage", "Volt Elektronik", "IPS2GPIO.V", 40);
 		$this->RegisterVariableFloat("PumpVoltage", "Volt Pumpe", "IPS2GPIO.V", 50);
-		$this->RegisterVariableFloat("DispensedVolume", "Abgegebene Menge", "IPS2GPIO.ml", 60);
-		$this->RegisterVariableFloat("TotalDispensedVolume", "Total abgegebene Menge", "IPS2GPIO.ml", 70);
-		$this->RegisterVariableFloat("AbsoluteDispensedVolume", "Absolut abgegebene Menge", "IPS2GPIO.ml", 80);
-		$this->RegisterVariableInteger("PumpState", "Status Pumpe", "IPS2GPIO.PumpState", 90);
-		$this->EnableAction("PumpState");
-		
-		$this->RegisterVariableInteger("Calibration", "Kalibration", "IPS2GPIO.CalibrationPMP", 100);
-		
-		$this->RegisterVariableBoolean("PausePumpState", "Pumpen Pause", "~Switch", 110);
+		$this->RegisterVariableBoolean("PumpState", "Status Pumpe", "~Switch", 60);
+		$this->RegisterVariableInteger("PumpStateSwitch", "Status Pumpe", "IPS2GPIO.PumpState", 70);
+		$this->EnableAction("PumpStateSwitch");
+		$this->RegisterVariableBoolean("PausePumpState", "Pumpen Pause", "~Switch", 80);
 		$this->EnableAction("PausePumpState");
+		$this->RegisterVariableFloat("DispensedVolume", "Abgegebene Menge", "IPS2GPIO.ml", 90);
+		$this->RegisterVariableFloat("TotalDispensedVolume", "Total abgegebene Menge", "IPS2GPIO.ml", 100);
+		$this->RegisterVariableFloat("AbsoluteDispensedVolume", "Absolut abgegebene Menge", "IPS2GPIO.ml", 110);
+		$this->RegisterVariableInteger("Calibration", "Kalibration", "IPS2GPIO.CalibrationPMP", 120);
 		
-		$this->RegisterVariableBoolean("LED", "LED", "~Switch", 120);
+		
+		
+		$this->RegisterVariableBoolean("LED", "LED", "~Switch", 130);
 		$this->EnableAction("LED");
         }
 	    
@@ -313,7 +314,7 @@
 			
 			case "StopDispensing":
 				$this->SendDebug("ReadResult", "StopDispensing", 0);
-				$this->SetValue("PumpState", 1);
+				$this->SetValue("PumpStateSwitch", 1);
 				break;
 				
 			case "PausePumpState":
@@ -323,6 +324,11 @@
 			
 			case "PauseDispensing":
 				$this->SendDebug("ReadResult", "PauseDispensing", 0);
+				break;
+				
+			case "StartDispensing":
+				$this->SendDebug("ReadResult", "StartDispensing", 0);
+				$this->SetValue("PumpState", boolval($ResultParts[2]));				
 				break;
 				
 			default:
