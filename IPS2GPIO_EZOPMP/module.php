@@ -277,12 +277,12 @@
 				
 			case "PumpVoltage":
 				$this->SendDebug("ReadResult", "PumpVoltage", 0);
-				$this->SetValue("PumpVoltage", $ResultParts[1]);
+				$this->SetValue("PumpVoltage", floatval($ResultParts[1]));
 				break;
 				
 			case "DispensedVolume":
 				$this->SendDebug("ReadResult", "DispensedVolume", 0);
-				$this->SetValue("DispensedVolume", $ResultParts[1]);
+				$this->SetValue("DispensedVolume", floatval($ResultParts[0]));
 				break;
 			default:
 			    throw new Exception("Invalid Ident");
