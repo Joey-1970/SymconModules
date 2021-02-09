@@ -337,7 +337,7 @@
 				break;
 				
 			case "DispensingState":
-				$this->SendDebug("ReadResult", "DispensingState", 0);
+				$this->SendDebug("ReadResult", "DispensingState: ".boolval($ResultParts[2]), 0);
 				$this->SetValue("PumpState", boolval($ResultParts[2]));				
 				break;
 				
