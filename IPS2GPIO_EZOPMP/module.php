@@ -338,7 +338,7 @@
 				
 			case "DispensingState":
 				$this->SendDebug("ReadResult", "DispensingState: ".intval($ResultParts[2]), 0);
-				$this->SetValue("PumpState", boolval($ResultParts[2]));				
+				$this->SetValue("PumpState", boolval(intval($ResultParts[2])));				
 				break;
 				
 			default:
