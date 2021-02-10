@@ -346,6 +346,7 @@
 				
 			case "ResetDispensedVolume":
 				$this->SendDebug("ReadResult", "ResetDispensedVolume", 0);
+				$this->SetValue("ResetDispensedVolume", false);
 				break;
 				
 			default:
@@ -508,9 +509,11 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("ResetDispensedVolume", "Ausfuehrung", 0);
+			$this->SetValue("ResetDispensedVolume", true);
 			$Message = "clear";
 			$Result = $this->Write($Message);
 			If ($Result == false) {
+				$this->SetValue("ResetDispensedVolume", false);
 				return false;
 			}
 			else {
