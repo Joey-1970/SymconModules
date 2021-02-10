@@ -523,6 +523,7 @@
 					$this->GetTotalDispensedVolume();
 					$this->GetAbsoluteDispensedVolume();
 				}
+				$this->SetValue("ResetDispensedVolume", false);
 				return $Result;
 			}
 		}
