@@ -52,11 +52,10 @@
 		$this->RegisterVariableFloat("DispensedVolume", "Abgegebene Menge", "IPS2GPIO.ml", 90);
 		$this->RegisterVariableFloat("TotalDispensedVolume", "Total abgegebene Menge", "IPS2GPIO.ml", 100);
 		$this->RegisterVariableFloat("AbsoluteDispensedVolume", "Absolut abgegebene Menge", "IPS2GPIO.ml", 110);
-		$this->RegisterVariableInteger("Calibration", "Kalibration", "IPS2GPIO.CalibrationPMP", 120);
-		
-		
-		
-		$this->RegisterVariableBoolean("LED", "LED", "~Switch", 130);
+		$this->RegisterVariableBoolean("ResetDispensedVolume", "Reset Mengen", "~Switch", 120);
+		$this->EnableAction("ResetDispensedVolume");
+		$this->RegisterVariableInteger("Calibration", "Kalibration", "IPS2GPIO.CalibrationPMP", 130);
+		$this->RegisterVariableBoolean("LED", "LED", "~Switch", 140);
 		$this->EnableAction("LED");
         }
 	    
@@ -195,6 +194,10 @@
 					$this->StartDispensing(0, 0, true);
 				}
 				break;
+			case "ResetDispensedVolume":
+				$this->ResetDispensedVolume();
+				break;
+				
 			default:
 			    throw new Exception("Invalid Ident");
 	    	}
@@ -339,6 +342,10 @@
 			case "DispensingState":
 				$this->SendDebug("ReadResult", "DispensingState: ".intval($ResultParts[2]), 0);
 				$this->SetValue("PumpState", boolval(intval($ResultParts[2])));				
+				break;
+				
+			case "ResetDispensedVolume":
+				$this->SendDebug("ReadResult", "ResetDispensedVolume", 0);
 				break;
 				
 			default:
@@ -492,6 +499,27 @@
 			else {
 				IPS_Sleep(300);
 				$Result = $this->Read("AbsoluteDispensedVolume", 16);
+				return $Result;
+			}
+		}
+	} 
+	    
+	public function ResetDispensedVolume()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("ResetDispensedVolume", "Ausfuehrung", 0);
+			$Message = "clear";
+			$Result = $this->Write($Message);
+			If ($Result == false) {
+				return false;
+			}
+			else {
+				IPS_Sleep(300);
+				$Result = $this->Read("ResetDispensedVolume", 2);
+				If ($Result == true) {
+					$this->GetTotalDispensedVolume();
+					$this->GetAbsoluteDispensedVolume();
+				}
 				return $Result;
 			}
 		}
