@@ -543,6 +543,8 @@
 				$Result = $this->Read("StopDispensing", 13);
 				If ($Result == true) {
 					$this->GetDispensingState();
+					$this->GetTotalDispensedVolume();
+					$this->GetAbsoluteDispensedVolume();
 				}
 				return $Result;
 			}
