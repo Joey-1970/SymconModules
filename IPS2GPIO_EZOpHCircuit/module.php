@@ -34,16 +34,22 @@
 		IPS_SetVariableProfileAssociation("IPS2GPIO.Calibration", 2, "Zwei-Punkt-Kalibrierung", "", -1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.Calibration", 3, "Drei-Punkt-Kalibrierung", "", -1);	
 		
+		$this->RegisterProfileInteger("IPS2GPIO.pH_Rating", "Gauge", "", "", 0, 4, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.pH_Rating", 0, "Zu Niedrig", "Warning", 0xFF0000);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.pH_Rating", 1, "Ideal", "Ok", 0x00FF00);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.pH_Rating", 2, "Zu Hoch", "Warning", 0xFF0000);
+		
 		//Status-Variablen anlegen
 		$this->RegisterVariableString("DeviceType", "Device Typ", "", 10);
 		$this->RegisterVariableString("Firmware", "Firmware", "", 20);
 		$this->RegisterVariableInteger("Restart", "Letzter Neustart", "IPS2GPIO.Restart", 30);
 		$this->RegisterVariableFloat("Voltage", "Volt", "IPS2GPIO.V", 40);
 		$this->RegisterVariableFloat("pH", "pH", "~Liquid.pH.F", 50);
-		$this->RegisterVariableFloat("Temperature", "Temperatur", "~Temperature", 60);
-		$this->RegisterVariableInteger("Calibration", "Kalibration", "IPS2GPIO.Calibration", 70);
+		$this->RegisterVariableInteger("pH_Rating", "pH Bewertung", "IPS2GPIO.pH_Rating", 60);
+		$this->RegisterVariableFloat("Temperature", "Temperatur", "~Temperature", 70);
+		$this->RegisterVariableInteger("Calibration", "Kalibration", "IPS2GPIO.Calibration", 80);
 		
-		$this->RegisterVariableBoolean("LED", "LED", "~Switch", 20);
+		$this->RegisterVariableBoolean("LED", "LED", "~Switch", 90);
 		$this->EnableAction("LED");
         }
 	    
@@ -276,6 +282,15 @@
 			case "pH":
 				$this->SendDebug("ReadResult", "pH", 0);
 				$this->SetValue("pH", $ResultParts[0]);
+				If ($ResultParts[0] < 7.2) {
+					$this->SetValue("pH_Rating", 0);
+				}
+				elseif ($ResultParts[0] > 7.6) {
+					$this->SetValue("pH_Rating", 2);
+				}
+				else {
+					$this->SetValue("pH_Rating", 1);
+				}
 				break;
 				
 			case "Status":
