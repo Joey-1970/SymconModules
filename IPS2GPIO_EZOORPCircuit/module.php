@@ -28,13 +28,18 @@
 		IPS_SetVariableProfileAssociation("IPS2GPIO.Restart", 3, "watchdog", "", -1);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.Restart", 4, "unknown", "", -1);	
 		
+		$this->RegisterProfileInteger("IPS2GPIO.ORP_Rating", "Gauge", "", "", 0, 4, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.ORP_Rating", 0, "Zu Niedrig", "Warning", 0xFF0000);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.ORP_Rating", 1, "Ideal", "Ok", 0x00FF00);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.ORP_Rating", 2, "Zu Hoch", "Warning", 0xFF0000);
+		
 		//Status-Variablen anlegen
 		$this->RegisterVariableString("DeviceType", "Device Typ", "", 10);
 		$this->RegisterVariableString("Firmware", "Firmware", "", 20);
 		$this->RegisterVariableInteger("Restart", "Letzter Neustart", "IPS2GPIO.Restart", 30);
 		$this->RegisterVariableFloat("Voltage", "Volt", "IPS2GPIO.V", 40);
 		$this->RegisterVariableFloat("ORP", "OPR", "IPS2GPIO.mV", 50);
-		
+		$this->RegisterVariableInteger("ORP_Rating", "ORP Bewertung", "IPS2GPIO.ORP_Rating", 60);
 		$this->RegisterVariableInteger("Calibration", "Kalibration", "IPS2GPIO.Calibration", 70);
 		
 		$this->RegisterVariableBoolean("LED", "LED", "~Switch", 80);
@@ -256,6 +261,15 @@
 			case "ORP":
 				$this->SendDebug("ReadResult", "ORP", 0);
 				$this->SetValue("ORP", $ResultParts[0]);
+				If ($ResultParts[0] < 700) {
+					$this->SetValue("ORP_Rating", 0);
+				}
+				elseif ($ResultParts[0] > 800) {
+					$this->SetValue("ORP_Rating", 2);
+				}
+				else {
+					$this->SetValue("ORP_Rating", 1);
+				}
 				break;
 				
 			case "Status":
