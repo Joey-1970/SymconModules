@@ -34,9 +34,10 @@
 		$this->RegisterVariableInteger("Restart", "Letzter Neustart", "IPS2GPIO.Restart", 30);
 		$this->RegisterVariableFloat("Voltage", "Volt", "IPS2GPIO.V", 40);
 		$this->RegisterVariableFloat("ORP", "OPR", "IPS2GPIO.mV", 50);
-		$this->RegisterVariableInteger("Calibration", "Kalibration", "IPS2GPIO.Calibration", 60);
 		
-		$this->RegisterVariableBoolean("LED", "LED", "~Switch", 20);
+		$this->RegisterVariableInteger("Calibration", "Kalibration", "IPS2GPIO.Calibration", 70);
+		
+		$this->RegisterVariableBoolean("LED", "LED", "~Switch", 80);
 		$this->EnableAction("LED");
         }
 	    
