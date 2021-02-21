@@ -60,8 +60,7 @@
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "Device Bus", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
-		$arrayElements[] = array("type" => "Label", "caption" => "Wiederholungszyklus in Sekunden (0 -> aus) (optional)");
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Messzyklus", "caption" => "Sekunden", "minimum" => 0);		
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Messzyklus", "caption" => "Wiederholungszyklus in Sekunden (0 -> aus) (optional)", "minimum" => 0);	
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseLiterManuel", "caption" => "Impulse pro Liter laut Datenblatt", "minimum" => 1);	
 		$arrayActions = array();
 		If ($this->ReadPropertyBoolean("Open") == true) {
@@ -230,31 +229,10 @@
 							}
 							$this->SetBuffer("CounterOldTime", $MeasurementTime);
 							
-							$RotationMinute = ($PulseSecond * 60) / 2;
-							If ($this->GetValue("RotationMinute") <> $RotationMinute) {
-								$this->SetValue("RotationMinute", $RotationMinute);
-							}
+							// hier muss die Umrechnung aus Impulsen in Liter rein
 							
-							// Impulse/Sekunde = 3 x Windgeschwindigkeit - 2
-							If ($PulseSecond == 0) {
-								$WindSpeed_ms = 0;
-							}
-							elseif (($PulseSecond > 0) AND ($PulseSecond < 4)) {
-								$WindSpeed_ms = $PulseSecond / 2;
-							}
-							elseif ($PulseSecond >= 4) {
-								$WindSpeed_ms = ($PulseSecond + 2) / 3;
-							}
-							If ($this->GetValue("WindSpeed_ms") <> $WindSpeed_ms) {
-								$this->SetValue("WindSpeed_ms", $WindSpeed_ms);
-							}					
-							
-							$WindSpeed_kmh = $WindSpeed_ms * 3.6;
-							If ($this->GetValue("WindSpeed_kmh") <> $WindSpeed_kmh) {
-								$this->SetValue("WindSpeed_kmh", $WindSpeed_kmh);
-							}	
-							
-							$this->getBeaufort($WindSpeed_ms);
+										
+
 							
 							If ($CounterValue > 999900) {
 								$this->SendDebug("GetCounter", "Zaehlerwert > 999900, Zaehler wird zurueckgesetzt", 0);
@@ -321,45 +299,7 @@
 			
 		}
 	}        
-	
-	private function getBeaufort(float $WindSpeed_ms) 
-	{
-    		$arrBeaufort = array (
-			   ['windstaerke' => 0, 'beschreibung' => 'Windstille', 'minwert' => 0  ],
-			   ['windstaerke' => 1, 'beschreibung' => 'leiser Zug', 'minwert' => 0.3  ],
-			   ['windstaerke' => 2, 'beschreibung' => 'leichte Brise', 'minwert' => 1.6  ],
-			   ['windstaerke' => 3, 'beschreibung' => 'schwache Brise', 'minwert' => 3.4  ],
-			   ['windstaerke' => 4, 'beschreibung' => 'mäßige Brise', 'minwert' => 5.5  ],
-			   ['windstaerke' => 5, 'beschreibung' => 'frische Brise', 'minwert' => 8.0  ],
-			   ['windstaerke' => 6, 'beschreibung' => 'starker Wind', 'minwert' => 10.8  ],
-			   ['windstaerke' => 7, 'beschreibung' => 'steifer Wind', 'minwert' => 12.9  ],
-			   ['windstaerke' => 8, 'beschreibung' => 'stürmische Wind', 'minwert' => 17.2  ],
-			   ['windstaerke' => 9, 'beschreibung' => 'Sturm', 'minwert' => 20.8  ],
-			   ['windstaerke' => 10, 'beschreibung' => 'schwerer Sturm', 'minwert' => 24.5  ],
-			   ['windstaerke' => 11, 'beschreibung' => 'orkanartiger Sturm', 'minwert' => 28.5  ],
-			   ['windstaerke' => 12, 'beschreibung' => 'Orkan', 'minwert' => 32.7  ] );
-
-    		$BeaufortDescription = "";
-    		$BeaufortSpeed = 0;
-    		foreach ($arrBeaufort as $wind) {
-        		if ($wind['minwert'] <= $WindSpeed_ms) {
-            			$BeaufortSpeed = $wind['windstaerke'];
-        		} 
-			else {
-				break;
-			}
-    		}
-		If ($this->GetValue("Beaufort") <> $BeaufortSpeed) {
-			$this->SetValue("Beaufort", $BeaufortSpeed);
-		}
-		If ($this->GetValue("BeaufortDescription") <> $BeaufortSpeed) {
-			$this->SetValue("BeaufortDescription", $BeaufortSpeed);
-		}
-		
-    		return [$BeaufortDescription, $BeaufortSpeed];
-	}    
-	
-	    
+	 
 	private function Get_I2C_Ports()
 	{
 		If ($this->HasActiveParent() == true) {
