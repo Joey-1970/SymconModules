@@ -74,8 +74,7 @@
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "Device Bus", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
-		$arrayElements[] = array("type" => "Label", "caption" => "Wiederholungszyklus in Sekunden (0 -> aus) (optional)");
-		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");		
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Messzyklus", "caption" => "Wiederholungszyklus in Sekunden (0 -> aus) (optional)", "minimum" => 0);	
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "caption" => "Wert bei dem die Boolean-Variable gesetzt werden soll");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "PulseSetBoolean", "caption" => "Impulse", "minimum" => 1,);
