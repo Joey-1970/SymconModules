@@ -229,11 +229,12 @@
 							}
 							$this->SetBuffer("CounterOldTime", $MeasurementTime);
 							
-							// hier muss die Umrechnung aus Impulsen in Liter rein
-							
-										
+							$PulseLiterManuel = $this->ReadPropertyBoolean("PulseLiterManuel");
+							$LiterMinute = $CounterDifference / $PulseLiterManuel;
+							If ($this->GetValue("LiterMinute") <> $LiterMinute) {
+								$this->SetValue("LiterMinute", $LiterMinute);
+							}
 
-							
 							If ($CounterValue > 999900) {
 								$this->SendDebug("GetCounter", "Zaehlerwert > 999900, Zaehler wird zurueckgesetzt", 0);
 								// Zähler zurücksetzen
