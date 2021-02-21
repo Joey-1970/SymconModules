@@ -1,6 +1,6 @@
 <?
     // Klassendefinition
-    class IPS2GPIO_PCF8583_EltakoWS extends IPSModule 
+    class IPS2GPIO_PCF8583_Durchfluss extends IPSModule 
     {
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
@@ -14,26 +14,12 @@
  	    	$this->RegisterPropertyInteger("DeviceAddress", 80);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
 		$this->RegisterPropertyInteger("Messzyklus", 60);
-		$this->RegisterTimer("Messzyklus", 0, 'I2GPCF8583EltakoWS_GetCounter($_IPS["TARGET"]);');
+		$this->RegisterPropertyInteger("PulseLiterManuel", 1000);
+		$this->RegisterTimer("Messzyklus", 0, 'I2GPCF8583Durchfluss_GetCounter($_IPS["TARGET"]);');
 		
 		// Profile anlegen
-		$this->RegisterProfileFloat("IPS2GPIO.Pulse_EltakoWS", "Intensity", "", " Imp./min", 0, 6000, 0.1, 1);
-		$this->RegisterProfileFloat("IPS2GPIO.RotationMinute", "Intensity", "", " Umd./min", 0, 3000, 0.1, 1);
-		
-		$this->RegisterProfileInteger("IPS2GPIO.BeautfortText", "WindSpeed", "", "", 0, 12, 1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 0, "Windstille/Flaute", "WindSpeed", -1);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 1, "Leiser Zug", "WindSpeed", 0x00FF00);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 2, "leichte Brise", "WindSpeed", 0x00FF00);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 3, "Schwache Brise", "WindSpeed", 0xFFFF00);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 4, "Mäßige Brise", "WindSpeed", 0xFFFF00);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 5, "Frische Brise", "WindSpeed", 0xFFFF00);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 6, "Starker Wind", "WindSpeed", 0xFF8000);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 7, "Steifer Wind", "WindSpeed", 0xFF8000);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 8, "Stürmischer Wind", "WindSpeed", 0xFF0000);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 9, "Sturm", "WindSpeed", 0xFF0000);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 10, "Schwerer Sturm", "WindSpeed", 0xFF0000);
-		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 11, "Orkanartiger Sturm", "WindSpeed", 0xB40404);	
-		IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 12, "Orkan", "WindSpeed", 0xB40404);		
+		$this->RegisterProfileFloat("IPS2GPIO.Pulse_Durchfluss", "Intensity", "", " Imp./min", 0, 10000, 0.1, 1);
+		$this->RegisterProfileFloat("IPS2GPIO.Durchfluss", "Intensity", "", " l/min", 0, 10, 0.1, 1);		
 		
 		//Status-Variablen anlegen		
 		$this->RegisterVariableInteger("CounterValue", "Zählwert", "", 10);
@@ -42,15 +28,7 @@
 		
 		$this->RegisterVariableFloat("PulseMinute", "Impulse/Minute", "IPS2GPIO.Pulse_EltakoWS", 30);
 		
-		$this->RegisterVariableFloat("RotationMinute", "Umdrehungen/Minute", "IPS2GPIO.RotationMinute", 40);
-		
-		$this->RegisterVariableFloat("WindSpeed_kmh", "Windgeschwindigkeit km/h", "~WindSpeed.kmh", 50);
-		
-		$this->RegisterVariableFloat("WindSpeed_ms", "Windgeschwindigkeit m/s", "~WindSpeed.ms", 60); 	
-		
-		$this->RegisterVariableInteger("Beaufort", "Windstärke/Beaufort", "", 70);
-		
-		$this->RegisterVariableInteger("BeaufortDescription", "Bezeichnung/Beaufort", "IPS2GPIO.BeautfortText", 80);	
+		$this->RegisterVariableFloat("LiterMinute", "Liter/Minute", "IPS2GPIO.Durchfluss", 40); 	
 	}
  	
 	public function GetConfigurationForm() 
@@ -83,11 +61,11 @@
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "Device Bus", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "caption" => "Wiederholungszyklus in Sekunden (0 -> aus) (optional)");
-		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");		
-				
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Messzyklus", "caption" => "Sekunden", "minimum" => 0);		
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseLiterManuel", "caption" => "Impulse pro Liter laut Datenblatt", "minimum" => 1);	
 		$arrayActions = array();
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$arrayActions[] = array("type" => "Button", "label" => "Zähler Reset", "onClick" => 'I2GPCF8583EltakoWS_SetCounter($id, 0, 0, 0);');
+			$arrayActions[] = array("type" => "Button", "label" => "Zähler Reset", "onClick" => 'I2GPCF8583Durchfluss_SetCounter($id, 0, 0, 0);');
 		}
 		else {
 			$arrayActions[] = array("type" => "Label", "caption" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
