@@ -72,8 +72,9 @@
 		$arrayElements[] = array("type" => "Label", "caption" => "- auf den korrekten Anschluss von SDA/SCL achten");
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 
-		$arrayActions = array();
-		$arrayActions[] = array("type" => "Label", "caption" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
+		$arrayActions = array(); 
+		$arrayActions[] = array("type" => "Label", "label" => "Test Center"); 
+		$arrayActions[] = array("type" => "TestCenter", "name" => "TestCenter");
 		
  		return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements, "actions" => $arrayActions)); 		 
  	}   
