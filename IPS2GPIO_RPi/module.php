@@ -264,23 +264,27 @@
 					case "0":
 						// GPU Temperatur
 						$Result = floatval(substr($ResultArray[key($ResultArray)], 5, -2));
-						SetValueFloat($this->GetIDForIdent("TemperaturGPU"), $Result);
+						$Result = min(200, max(-20, $Result));
+						$this->SetValue("TemperaturGPU", $Result);
 						break;
 
 					case "1":
 						// CPU Temperatur
 						$Result = floatval(intval($ResultArray[key($ResultArray)]) / 1000);
-						SetValueFloat($this->GetIDForIdent("TemperaturCPU"), $Result);
+						$Result = min(200, max(-20, $Result));						
+						$this->SetValue("TemperaturCPU", $Result);
 						break;
 					case "2":
 						// CPU Spannung
 						$Result = floatval(substr($ResultArray[key($ResultArray)], 5, -1));
-						SetValueFloat($this->GetIDForIdent("VoltageCPU"), $Result);
+						$Result = min(10, max(0, $Result));							
+						$this->SetValue("VoltageCPU", $Result);
 						break;
 					case "3":
 						// ARM Frequenz
 						$Result = intval(substr($ResultArray[key($ResultArray)], 14))/1000000;
-						SetValueFloat($this->GetIDForIdent("ARM_Frequenzy"), $Result);
+						$Result = min(2500, max(0, $Result));						
+						$this->SetValue("ARM_Frequenzy", $Result);
 						break;
 					case "4":
 						// CPU Auslastung über proc/stat
