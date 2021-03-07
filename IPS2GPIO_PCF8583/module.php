@@ -13,6 +13,7 @@
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
  	    	$this->RegisterPropertyInteger("DeviceAddress", 80);
 		$this->RegisterPropertyInteger("DeviceBus", 1);
+		$this->RegisterPropertyInteger("Function", 0);
 		$this->RegisterPropertyInteger("Messzyklus", 60);
 		$this->RegisterTimer("Messzyklus", 0, 'I2GPCF8583_GetCounter($_IPS["TARGET"]);');
 		
@@ -57,7 +58,18 @@
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "Device Bus", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Messzyklus", "caption" => "Wiederholungszyklus in Sekunden (0 -> aus) (optional)", "minimum" => 0);			
-				
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+		
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "Standard", "value" => 0);
+		$arrayOptions[] = array("label" => "Eltako WS", "value" => 1);
+		$arrayOptions[] = array("label" => "RG 11 Regensensor", "value" => 2);
+		$arrayOptions[] = array("label" => "Durchfluss-Sensor", "value" => 3);
+		
+		$arrayElements[] = array("type" => "Select", "name" => "Function", "caption" => "Funktionsauswahl", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+
+		
 		$arrayActions = array();
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$arrayActions[] = array("type" => "Button", "label" => "Zähler Reset", "onClick" => 'I2GPCF8583_SetCounter($id, 0, 0, 0);');
