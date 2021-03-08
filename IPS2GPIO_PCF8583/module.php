@@ -66,7 +66,7 @@
 		$arrayOptions[] = array("label" => "RG 11 Regensensor", "value" => 2);
 		$arrayOptions[] = array("label" => "Durchfluss-Sensor", "value" => 3);
 		
-		$arrayElements[] = array("type" => "Select", "name" => "Function", "caption" => "Funktionsauswahl", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Select", "name" => "Function", "caption" => "Funktionsauswahl", "options" => $arrayOptions, "onChange" => 'IPS_RequestAction($id,"ChangeFunction",$Function);'  );
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		
 		If ($this->ReadPropertyInteger("Function") == 0) {
@@ -254,6 +254,55 @@
 			case "CounterReset":
 			   	$this->SetCounter(0, 0, 0);
 			    	break;
+				
+				
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetBoolean", "caption" => "Impulse bei dem die Boolean-Variable gesetzt werden soll", "minimum" => 1, "visible" => false);
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetLightRain", "caption" => "Impulse bei dem die Assoziations-Variable auf leichter Regen gesetzt werden soll", "minimum" => 1, "visible" => false);
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetModerateRain", "caption" => "Impulse bei dem die Assoziations-Variable auf moderater Regen gesetzt werden soll", "minimum" => 1, "visible" => false);
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetStrongRain", "caption" => "Impulse bei dem die Assoziations-Variable auf starker Regen gesetzt werden soll", "minimum" => 1, "visible" => false);
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetVeryStrongRain", "caption" => "Impulse bei dem die Assoziations-Variable auf sehr starker Regen gesetzt werden soll", "minimum" => 1, "visible" => false);
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseLiterManuel", "caption" => "Impulse pro Liter laut Datenblatt", "minimum" => 1, "visible" => false);	
+				
+				
+				
+			case "ChangeFunction":
+				$this->SendDebug("RequestAction", "ChangeFunction - Wert: ".$Value, 0);
+				switch($Value) {
+					case 0: // Standard
+						$this->UpdateFormField('PulseSetBoolean', 'visible', false);
+						$this->UpdateFormField('PulseSetLightRain', 'visible', false);
+						$this->UpdateFormField('PulseSetModerateRain', 'visible', false);
+						$this->UpdateFormField('PulseSetStrongRain', 'visible', false);
+						$this->UpdateFormField('PulseSetVeryStrongRain', 'visible', false);
+						$this->UpdateFormField('PulseLiterManuel', 'visible', false);					
+						break;
+					case 1: // Eltako WS
+						$this->UpdateFormField('PulseSetBoolean', 'visible', false);
+						$this->UpdateFormField('PulseSetLightRain', 'visible', false);
+						$this->UpdateFormField('PulseSetModerateRain', 'visible', false);
+						$this->UpdateFormField('PulseSetStrongRain', 'visible', false);
+						$this->UpdateFormField('PulseSetVeryStrongRain', 'visible', false);
+						$this->UpdateFormField('PulseLiterManuel', 'visible', false);
+						break;
+					case 2: // RG11 Regensensor
+						$this->UpdateFormField('PulseSetBoolean', 'visible', true);
+						$this->UpdateFormField('PulseSetLightRain', 'visible', true);
+						$this->UpdateFormField('PulseSetModerateRain', 'visible', true);
+						$this->UpdateFormField('PulseSetStrongRain', 'visible', true);
+						$this->UpdateFormField('PulseSetVeryStrongRain', 'visible', true);
+						$this->UpdateFormField('PulseLiterManuel', 'visible', false);					
+						break;
+					case 3: // Durchfluss-Sensor
+						$this->UpdateFormField('PulseSetBoolean', 'visible', false);
+						$this->UpdateFormField('PulseSetLightRain', 'visible', false);
+						$this->UpdateFormField('PulseSetModerateRain', 'visible', false);
+						$this->UpdateFormField('PulseSetStrongRain', 'visible', false);
+						$this->UpdateFormField('PulseSetVeryStrongRain', 'visible', false);
+						$this->UpdateFormField('PulseLiterManuel', 'visible', true);
+						break;
+				}
+			break;	
+				
 			
 			default:
 			    throw new Exception("Invalid Ident");
