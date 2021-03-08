@@ -22,9 +22,7 @@
 		
 		//Status-Variablen anlegen		
 		$this->RegisterVariableInteger("CounterValue", "Zählwert", "", 10);
-		
 		$this->RegisterVariableInteger("CounterDifference", "Zählwert-Differenz", "", 20);
-		
 		$this->RegisterVariableFloat("PulseMinute", "Impulse/Minute", "IPS2GPIO.PCF8583", 30);
         }
  	
@@ -85,7 +83,47 @@
         {
             	// Diese Zeile nicht löschen
             	parent::ApplyChanges();
+		
+		If ($this->ReadPropertyInteger("Function") == 0) {
+			// Standard
+		}
+		elseif ($this->ReadPropertyInteger("Function") == 1) {
+			// Eltako WS
 			
+			// Profile anlegen
+			$this->RegisterProfileFloat("IPS2GPIO.Pulse_EltakoWS", "Intensity", "", " Imp./min", 0, 6000, 0.1, 1);
+			$this->RegisterProfileFloat("IPS2GPIO.RotationMinute", "Intensity", "", " Umd./min", 0, 3000, 0.1, 1);
+
+			$this->RegisterProfileInteger("IPS2GPIO.BeautfortText", "WindSpeed", "", "", 0, 12, 1);
+			IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 0, "Windstille/Flaute", "WindSpeed", -1);
+			IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 1, "Leiser Zug", "WindSpeed", 0x00FF00);
+			IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 2, "leichte Brise", "WindSpeed", 0x00FF00);
+			IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 3, "Schwache Brise", "WindSpeed", 0xFFFF00);
+			IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 4, "Mäßige Brise", "WindSpeed", 0xFFFF00);
+			IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 5, "Frische Brise", "WindSpeed", 0xFFFF00);
+			IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 6, "Starker Wind", "WindSpeed", 0xFF8000);
+			IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 7, "Steifer Wind", "WindSpeed", 0xFF8000);
+			IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 8, "Stürmischer Wind", "WindSpeed", 0xFF0000);
+			IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 9, "Sturm", "WindSpeed", 0xFF0000);
+			IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 10, "Schwerer Sturm", "WindSpeed", 0xFF0000);
+			IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 11, "Orkanartiger Sturm", "WindSpeed", 0xB40404);	
+			IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 12, "Orkan", "WindSpeed", 0xB40404);
+			
+			//Status-Variablen anlegen	
+			$this->RegisterVariableFloat("RotationMinute", "Umdrehungen/Minute", "IPS2GPIO.RotationMinute", 40);
+			$this->RegisterVariableFloat("WindSpeed_kmh", "Windgeschwindigkeit km/h", "~WindSpeed.kmh", 50);
+			$this->RegisterVariableFloat("WindSpeed_ms", "Windgeschwindigkeit m/s", "~WindSpeed.ms", 60); 	
+			$this->RegisterVariableInteger("Beaufort", "Windstärke/Beaufort", "", 70);
+			$this->RegisterVariableInteger("BeaufortDescription", "Bezeichnung/Beaufort", "IPS2GPIO.BeautfortText", 80);	
+		}
+		elseif ($this->ReadPropertyInteger("Function") == 2) {
+			// RG11 Regensensor
+		}		
+		elseif ($this->ReadPropertyInteger("Function") == 3) {
+			// Durchfluss-Sensor
+		}
+		
+		
 		// Summary setzen
 		$DevicePorts = array();
 		$DevicePorts = unserialize($this->Get_I2C_Ports());
