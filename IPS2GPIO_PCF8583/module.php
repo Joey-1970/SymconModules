@@ -16,14 +16,16 @@
 		$this->RegisterPropertyInteger("Function", 0);
 		$this->RegisterPropertyInteger("Messzyklus", 60);
 		$this->RegisterTimer("Messzyklus", 0, 'I2GPCF8583_GetCounter($_IPS["TARGET"]);');
-		
-		// Profile anlegen
-		$this->RegisterProfileFloat("IPS2GPIO.PCF8583", "Intensity", "", " Imp./min", 0, 1000, 0.1, 1);
+		$this->RegisterPropertyInteger("PulseSetBoolean", 50);
+		$this->RegisterPropertyInteger("PulseSetLightRain", 150);
+		$this->RegisterPropertyInteger("PulseSetModerateRain", 200);
+		$this->RegisterPropertyInteger("PulseSetStrongRain", 250);
+		$this->RegisterPropertyInteger("PulseSetVeryStrongRain", 300);
 		
 		//Status-Variablen anlegen		
 		$this->RegisterVariableInteger("CounterValue", "Zählwert", "", 10);
 		$this->RegisterVariableInteger("CounterDifference", "Zählwert-Differenz", "", 20);
-		$this->RegisterVariableFloat("PulseMinute", "Impulse/Minute", "IPS2GPIO.PCF8583", 30);
+		
         }
  	
 	public function GetConfigurationForm() 
@@ -86,13 +88,20 @@
 		
 		If ($this->ReadPropertyInteger("Function") == 0) {
 			// Standard
+			
+			// Profile anlegen
+			$this->RegisterProfileFloat("IPS2GPIO.PCF8583_Pulse", "Intensity", "", " Imp./min", 0, 1000, 0.1, 1);
+			
+			//Status-Variablen anlegen	
+			$this->RegisterVariableFloat("PulseMinute", "Impulse/Minute", "IPS2GPIO.PCF8583", 30);
+			
 		}
 		elseif ($this->ReadPropertyInteger("Function") == 1) {
 			// Eltako WS
 			
 			// Profile anlegen
-			$this->RegisterProfileFloat("IPS2GPIO.Pulse_EltakoWS", "Intensity", "", " Imp./min", 0, 6000, 0.1, 1);
-			$this->RegisterProfileFloat("IPS2GPIO.RotationMinute", "Intensity", "", " Umd./min", 0, 3000, 0.1, 1);
+			$this->RegisterProfileFloat("IPS2GPIO.PCF8583_Pulse_EltakoWS", "Intensity", "", " Imp./min", 0, 6000, 0.1, 1);
+			$this->RegisterProfileFloat("IPS2GPIO.PCF8583_RotationMinute", "Intensity", "", " Umd./min", 0, 3000, 0.1, 1);
 
 			$this->RegisterProfileInteger("IPS2GPIO.BeautfortText", "WindSpeed", "", "", 0, 12, 1);
 			IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 0, "Windstille/Flaute", "WindSpeed", -1);
@@ -109,8 +118,9 @@
 			IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 11, "Orkanartiger Sturm", "WindSpeed", 0xB40404);	
 			IPS_SetVariableProfileAssociation("IPS2GPIO.BeautfortText", 12, "Orkan", "WindSpeed", 0xB40404);
 			
-			//Status-Variablen anlegen	
-			$this->RegisterVariableFloat("RotationMinute", "Umdrehungen/Minute", "IPS2GPIO.RotationMinute", 40);
+			//Status-Variablen anlegen
+			$this->RegisterVariableFloat("PulseMinute", "Impulse/Minute", "IPS2GPIO.PCF8583_Pulse_EltakoWS", 30);
+			$this->RegisterVariableFloat("RotationMinute", "Umdrehungen/Minute", "IPS2GPIO.PCF8583_RotationMinute", 40);
 			$this->RegisterVariableFloat("WindSpeed_kmh", "Windgeschwindigkeit km/h", "~WindSpeed.kmh", 50);
 			$this->RegisterVariableFloat("WindSpeed_ms", "Windgeschwindigkeit m/s", "~WindSpeed.ms", 60); 	
 			$this->RegisterVariableInteger("Beaufort", "Windstärke/Beaufort", "", 70);
@@ -118,9 +128,31 @@
 		}
 		elseif ($this->ReadPropertyInteger("Function") == 2) {
 			// RG11 Regensensor
+			
+			// Profile anlegen
+			$this->RegisterProfileFloat("IPS2GPIO.PCF8583_Pulse_RG11", "Intensity", "", " Imp./min", 0, 300, 0.1, 1);
+
+			$this->RegisterProfileInteger("IPS2GPIO.Rain", "Rainfall", "", "", 0, 4, 1);
+			IPS_SetVariableProfileAssociation("IPS2GPIO.Rain", 0, "Kein Regen", "Information", -1);
+			IPS_SetVariableProfileAssociation("IPS2GPIO.Rain", 1, "Leichter Regen", "Rainfall", 0xFFFF00);
+			IPS_SetVariableProfileAssociation("IPS2GPIO.Rain", 2, "Mäßiger Regen", "Rainfall", 0xFF8000);
+			IPS_SetVariableProfileAssociation("IPS2GPIO.Rain", 3, "Starker Regen", "Warning", 0xFF0000);
+			IPS_SetVariableProfileAssociation("IPS2GPIO.Rain", 4, "Sehr starker Regen", "Warning", 0xB40404);
+			
+			$this->RegisterVariableFloat("PulseMinute", "Impulse/Minute", "IPS2GPIO.PCF8583_Pulse_RG11", 30);
+			$this->RegisterVariableBoolean("is_Raining", "Regen", "~Switch", 50);
+			$this->RegisterVariableInteger("Rain", "Regen Klassifizierung", "IPS2GPIO.Rain", 60);
 		}		
 		elseif ($this->ReadPropertyInteger("Function") == 3) {
 			// Durchfluss-Sensor
+			
+			// Profile anlegen
+			$this->RegisterProfileFloat("IPS2GPIO.PCF8583_Pulse_Durchfluss", "Intensity", "", " Imp./min", 0, 10000, 0.1, 1);
+			$this->RegisterProfileFloat("IPS2GPIO.PCF8583_Durchfluss", "Intensity", "", " l/min", 0, 10, 0.1, 1);
+			
+			//Status-Variablen anlegen		
+			$this->RegisterVariableFloat("PulseMinute", "Impulse/Minute", "IPS2GPIO.PCF8583_Pulse_Durchfluss", 30);
+			$this->RegisterVariableFloat("LiterMinute", "Liter/Minute", "IPS2GPIO.PCF8583_Durchfluss", 40); 			
 		}
 		
 		
