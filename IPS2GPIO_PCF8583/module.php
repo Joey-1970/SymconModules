@@ -72,19 +72,56 @@
 		If ($this->ReadPropertyInteger("Function") == 0) {
 			// Standard
 			
+			// unsichtbar
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetBoolean", "caption" => "Impulse bei dem die Boolean-Variable gesetzt werden soll", "minimum" => 1, "visible" => false);
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetLightRain", "caption" => "Impulse bei dem die Assoziations-Variable auf leichter Regen gesetzt werden soll", "minimum" => 1, "visible" => false);
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetModerateRain", "caption" => "Impulse bei dem die Assoziations-Variable auf moderater Regen gesetzt werden soll", "minimum" => 1, "visible" => false);
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetStrongRain", "caption" => "Impulse bei dem die Assoziations-Variable auf starker Regen gesetzt werden soll", "minimum" => 1, "visible" => false);
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetVeryStrongRain", "caption" => "Impulse bei dem die Assoziations-Variable auf sehr starker Regen gesetzt werden soll", "minimum" => 1, "visible" => false);
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseLiterManuel", "caption" => "Impulse pro Liter laut Datenblatt", "minimum" => 1, "visible" => false);	
+
+			
 			
 		}
 		elseif ($this->ReadPropertyInteger("Function") == 1) {
 			// Eltako WS
 			
+			// unsichtbar
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetBoolean", "caption" => "Impulse bei dem die Boolean-Variable gesetzt werden soll", "minimum" => 1, "visible" => false);
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetLightRain", "caption" => "Impulse bei dem die Assoziations-Variable auf leichter Regen gesetzt werden soll", "minimum" => 1, "visible" => false);
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetModerateRain", "caption" => "Impulse bei dem die Assoziations-Variable auf moderater Regen gesetzt werden soll", "minimum" => 1, "visible" => false);
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetStrongRain", "caption" => "Impulse bei dem die Assoziations-Variable auf starker Regen gesetzt werden soll", "minimum" => 1, "visible" => false);
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetVeryStrongRain", "caption" => "Impulse bei dem die Assoziations-Variable auf sehr starker Regen gesetzt werden soll", "minimum" => 1, "visible" => false);
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseLiterManuel", "caption" => "Impulse pro Liter laut Datenblatt", "minimum" => 1, "visible" => false);	
+			
 		}
 		elseif ($this->ReadPropertyInteger("Function") == 2) {
 			// RG11 Regensensor
+			
+			// unsichtbar
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseLiterManuel", "caption" => "Impulse pro Liter laut Datenblatt", "minimum" => 1, "visible" => false);	
+			
+			// sichtbar
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetBoolean", "caption" => "Impulse bei dem die Boolean-Variable gesetzt werden soll", "minimum" => 1, "visible" => true);
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetLightRain", "caption" => "Impulse bei dem die Assoziations-Variable auf leichter Regen gesetzt werden soll", "minimum" => 1, "visible" => true);
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetModerateRain", "caption" => "Impulse bei dem die Assoziations-Variable auf moderater Regen gesetzt werden soll", "minimum" => 1, "visible" => true);
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetStrongRain", "caption" => "Impulse bei dem die Assoziations-Variable auf starker Regen gesetzt werden soll", "minimum" => 1, "visible" => true);
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetVeryStrongRain", "caption" => "Impulse bei dem die Assoziations-Variable auf sehr starker Regen gesetzt werden soll", "minimum" => 1, "visible" => true);
 			
 		}
 		elseif ($this->ReadPropertyInteger("Function") == 3) {
 			// Durchfluss-Sensor
 			
+			// unsichtbar
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetBoolean", "caption" => "Impulse bei dem die Boolean-Variable gesetzt werden soll", "minimum" => 1, "visible" => false);
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetLightRain", "caption" => "Impulse bei dem die Assoziations-Variable auf leichter Regen gesetzt werden soll", "minimum" => 1, "visible" => false);
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetModerateRain", "caption" => "Impulse bei dem die Assoziations-Variable auf moderater Regen gesetzt werden soll", "minimum" => 1, "visible" => false);
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetStrongRain", "caption" => "Impulse bei dem die Assoziations-Variable auf starker Regen gesetzt werden soll", "minimum" => 1, "visible" => false);
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetVeryStrongRain", "caption" => "Impulse bei dem die Assoziations-Variable auf sehr starker Regen gesetzt werden soll", "minimum" => 1, "visible" => false);
+
+			// sichtbar
+			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseLiterManuel", "caption" => "Impulse pro Liter laut Datenblatt", "minimum" => 1, "visible" => true);	
+
 		}
 		
 		$arrayActions = array();
