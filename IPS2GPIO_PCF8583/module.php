@@ -248,17 +248,7 @@
 			case "CounterReset":
 			   	$this->SetCounter(0, 0, 0);
 			    	break;
-				
-				
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetBoolean", "caption" => "Impulse bei dem die Boolean-Variable gesetzt werden soll", "minimum" => 1, "visible" => false);
-			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetLightRain", "caption" => "Impulse bei dem die Assoziations-Variable auf leichter Regen gesetzt werden soll", "minimum" => 1, "visible" => false);
-			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetModerateRain", "caption" => "Impulse bei dem die Assoziations-Variable auf moderater Regen gesetzt werden soll", "minimum" => 1, "visible" => false);
-			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetStrongRain", "caption" => "Impulse bei dem die Assoziations-Variable auf starker Regen gesetzt werden soll", "minimum" => 1, "visible" => false);
-			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetVeryStrongRain", "caption" => "Impulse bei dem die Assoziations-Variable auf sehr starker Regen gesetzt werden soll", "minimum" => 1, "visible" => false);
-			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseLiterManuel", "caption" => "Impulse pro Liter laut Datenblatt", "minimum" => 1, "visible" => false);	
-				
-				
-				
+			
 			case "ChangeFunction":
 				$this->SendDebug("RequestAction", "ChangeFunction - Wert: ".$Value, 0);
 				switch($Value) {
