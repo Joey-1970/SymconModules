@@ -68,7 +68,24 @@
 		
 		$arrayElements[] = array("type" => "Select", "name" => "Function", "caption" => "Funktionsauswahl", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
-
+		
+		If ($this->ReadPropertyInteger("Function") == 0) {
+			// Standard
+			
+			
+		}
+		elseif ($this->ReadPropertyInteger("Function") == 1) {
+			// Eltako WS
+			
+		}
+		elseif ($this->ReadPropertyInteger("Function") == 2) {
+			// RG11 Regensensor
+			
+		}
+		elseif ($this->ReadPropertyInteger("Function") == 3) {
+			// Durchfluss-Sensor
+			
+		}
 		
 		$arrayActions = array();
 		If ($this->ReadPropertyBoolean("Open") == true) {
