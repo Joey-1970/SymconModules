@@ -357,36 +357,129 @@
 							break;
 						}
 						else {
-							$this->SetStatus(102);
+							$$this->SetStatus(102);
 							$MeasurementData = array();
 							$MeasurementData = unserialize($Result);
 
 							//$this->SendDebug("GetCounter", "Rohergebnis: ".$MeasurementData[3]." ".$MeasurementData[2]." ".$MeasurementData[1], 0);
-
+							
+							// Zeitdifferenz berechnen und Impulse/Minute ausgeben
+							$MeasurementTime = microtime(true);
+							$CounterOldTime = floatval($this->GetBuffer("CounterOldTime"));
+							$TimeDifference = $MeasurementTime - $CounterOldTime;
+							
 							// Berechnung des Wertes Darstellung BCD
 							$CounterValue = 0;
 							$CounterValue = intval(sprintf("%02d", dechex($MeasurementData[3])).sprintf("%02d", dechex($MeasurementData[2])).sprintf("%02d", dechex($MeasurementData[1])));
 							//$this->SendDebug("GetCounter", "BCD Ergebnis: ".$Test, 0);
 
 							$this->SendDebug("GetCounter", "Ergebnis: ".$CounterValue, 0);									
-							$this->SetValue("CounterValue", $CounterValue);
+							If ($this->GetValue("CounterValue") <> $CounterValue) {
+								$this->SetValue("CounterValue", $CounterValue);
+							}
 
 							// Zählerdifferenz berechnen
 							$CounterOldValue = intval($this->GetBuffer("CounterOldValue"));
 							$CounterDifference = $CounterValue - $CounterOldValue;
-							$this->SetValue("CounterDifference", $CounterDifference);
-							$this->SetBuffer("CounterOldValue", $CounterValue);
-
-							// Zeitdifferenz berechnen und Impulse/Minute ausgeben
-							$MeasurementTime = time();
-							$CounterOldTime = intval($this->GetBuffer("CounterOldTime"));
-							$TimeDifference = $MeasurementTime - $CounterOldTime;
-							$PulseMinute = 0;
-							If ($TimeDifference > 0) {
-								$PulseMinute = 60 / $TimeDifference * $CounterDifference;
+							$CounterDifference = max($CounterDifference, 0); 
+							If ($this->GetValue("CounterDifference") <> $CounterDifference) {
+								$this->SetValue("CounterDifference", $CounterDifference);
 							}
-							$this->SetValue("PulseMinute", $PulseMinute);
+							$this->SetBuffer("CounterOldValue", $CounterValue);
+							
+							$PulseSecond = 0;
+							If ($TimeDifference > 0) {
+								$PulseSecond = $CounterDifference / $TimeDifference;
+							}
+							If ($this->GetValue("PulseMinute") <> $PulseSecond * 60) {
+								$this->SetValue("PulseMinute", $PulseSecond * 60);
+							}
 							$this->SetBuffer("CounterOldTime", $MeasurementTime);
+							
+							
+							If ($this->ReadPropertyInteger("Function") == 0) {
+								// Standard
+								
+							}
+							elseif ($this->ReadPropertyInteger("Function") == 1) {
+								// Eltako WS
+								
+								$RotationMinute = ($PulseSecond * 60) / 2;
+								If ($this->GetValue("RotationMinute") <> $RotationMinute) {
+									$this->SetValue("RotationMinute", $RotationMinute);
+								}
+
+								// Impulse/Sekunde = 3 x Windgeschwindigkeit - 2
+								If ($PulseSecond == 0) {
+									$WindSpeed_ms = 0;
+								}
+								elseif (($PulseSecond > 0) AND ($PulseSecond < 4)) {
+									$WindSpeed_ms = $PulseSecond / 2;
+								}
+								elseif ($PulseSecond >= 4) {
+									$WindSpeed_ms = ($PulseSecond + 2) / 3;
+								}
+								If ($this->GetValue("WindSpeed_ms") <> $WindSpeed_ms) {
+									$this->SetValue("WindSpeed_ms", $WindSpeed_ms);
+								}					
+
+								$WindSpeed_kmh = $WindSpeed_ms * 3.6;
+								If ($this->GetValue("WindSpeed_kmh") <> $WindSpeed_kmh) {
+									$this->SetValue("WindSpeed_kmh", $WindSpeed_kmh);
+								}	
+
+								$this->getBeaufort($WindSpeed_ms);
+							}
+							elseif ($this->ReadPropertyInteger("Function") == 2) {
+								// RG11 Regensensor
+								
+								$PulseSetBoolean = $this->ReadPropertyInteger("PulseSetBoolean");
+								If ($PulseSecond * 60 >= $PulseSetBoolean) {
+									$is_Raining = true;
+								}
+								else {
+									$is_Raining = false;
+								}
+								If ($this->GetValue("is_Raining") <> $is_Raining) {
+									$this->SetValue("is_Raining", $is_Raining);
+								}
+
+								$Rain = 0;
+								If (($PulseSecond * 60) < $this->ReadPropertyInteger("PulseSetLightRain") ) {
+									$Rain = 0;
+								}
+								elseif (($PulseSecond * 60) < $this->ReadPropertyInteger("PulseSetModerateRain") ) {
+									$Rain = 1;
+								}
+								elseif (($PulseSecond * 60) < $this->ReadPropertyInteger("PulseSetStrongRain") ) {
+									$Rain = 2;
+								}
+								elseif (($PulseSecond * 60) < $this->ReadPropertyInteger("PulseSetVeryStrongRain") ) {
+									$Rain = 3;
+								}
+								else {
+									$Rain = 4;
+								}
+								If ($this->GetValue("Rain") <> $Rain) {
+									$this->SetValue("Rain", $Rain);
+								}
+							}		
+							elseif ($this->ReadPropertyInteger("Function") == 3) {
+								// Durchfluss-Sensor
+								
+								$PulseLiterManuel = $this->ReadPropertyBoolean("PulseLiterManuel");
+								$LiterMinute = $CounterDifference / $PulseLiterManuel;
+								If ($this->GetValue("LiterMinute") <> $LiterMinute) {
+									$this->SetValue("LiterMinute", $LiterMinute);
+								}
+							}	
+							
+							If ($CounterValue > 999900) {
+								$this->SendDebug("GetCounter", "Zaehlerwert > 999900, Zaehler wird zurueckgesetzt", 0);
+								// Zähler zurücksetzen
+								$this->SetCounter(0, 0, 0);	
+							}
+							
 							break;
 						}
 					}
