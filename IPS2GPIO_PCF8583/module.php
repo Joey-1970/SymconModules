@@ -70,7 +70,6 @@
 		$arrayOptions[] = array("label" => "Durchfluss-Sensor", "value" => 3);
 		
 		$arrayElements[] = array("type" => "Select", "name" => "Function", "caption" => "Funktionsauswahl", "options" => $arrayOptions, "onChange" => 'IPS_RequestAction($id,"ChangeFunction",$Function);'  );
-		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		
 		If ($this->ReadPropertyInteger("Function") == 0) {
 			// Standard
