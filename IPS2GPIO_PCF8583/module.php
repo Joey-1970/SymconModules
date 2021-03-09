@@ -16,11 +16,14 @@
 		$this->RegisterPropertyInteger("Function", 0);
 		$this->RegisterPropertyInteger("Messzyklus", 60);
 		$this->RegisterTimer("Messzyklus", 0, 'I2GPCF8583_GetCounter($_IPS["TARGET"]);');
+		// RG11 Regensensor
 		$this->RegisterPropertyInteger("PulseSetBoolean", 50);
 		$this->RegisterPropertyInteger("PulseSetLightRain", 150);
 		$this->RegisterPropertyInteger("PulseSetModerateRain", 200);
 		$this->RegisterPropertyInteger("PulseSetStrongRain", 250);
 		$this->RegisterPropertyInteger("PulseSetVeryStrongRain", 300);
+		// Durchfluss-Sensor
+		$this->RegisterPropertyInteger("PulseLiterManuel", 1000);
 		
 		//Status-Variablen anlegen		
 		$this->RegisterVariableInteger("CounterValue", "Zählwert", "", 10);
