@@ -538,6 +538,42 @@
 		}
 	}        
 	    
+	rivate function getBeaufort(float $WindSpeed_ms) 
+	{
+    		$arrBeaufort = array (
+			   ['windstaerke' => 0, 'beschreibung' => 'Windstille', 'minwert' => 0  ],
+			   ['windstaerke' => 1, 'beschreibung' => 'leiser Zug', 'minwert' => 0.3  ],
+			   ['windstaerke' => 2, 'beschreibung' => 'leichte Brise', 'minwert' => 1.6  ],
+			   ['windstaerke' => 3, 'beschreibung' => 'schwache Brise', 'minwert' => 3.4  ],
+			   ['windstaerke' => 4, 'beschreibung' => 'mäßige Brise', 'minwert' => 5.5  ],
+			   ['windstaerke' => 5, 'beschreibung' => 'frische Brise', 'minwert' => 8.0  ],
+			   ['windstaerke' => 6, 'beschreibung' => 'starker Wind', 'minwert' => 10.8  ],
+			   ['windstaerke' => 7, 'beschreibung' => 'steifer Wind', 'minwert' => 12.9  ],
+			   ['windstaerke' => 8, 'beschreibung' => 'stürmische Wind', 'minwert' => 17.2  ],
+			   ['windstaerke' => 9, 'beschreibung' => 'Sturm', 'minwert' => 20.8  ],
+			   ['windstaerke' => 10, 'beschreibung' => 'schwerer Sturm', 'minwert' => 24.5  ],
+			   ['windstaerke' => 11, 'beschreibung' => 'orkanartiger Sturm', 'minwert' => 28.5  ],
+			   ['windstaerke' => 12, 'beschreibung' => 'Orkan', 'minwert' => 32.7  ] );
+
+    		$BeaufortDescription = "";
+    		$BeaufortSpeed = 0;
+    		foreach ($arrBeaufort as $wind) {
+        		if ($wind['minwert'] <= $WindSpeed_ms) {
+            			$BeaufortSpeed = $wind['windstaerke'];
+        		} 
+			else {
+				break;
+			}
+    		}
+		If ($this->GetValue("Beaufort") <> $BeaufortSpeed) {
+			$this->SetValue("Beaufort", $BeaufortSpeed);
+		}
+		If ($this->GetValue("BeaufortDescription") <> $BeaufortSpeed) {
+			$this->SetValue("BeaufortDescription", $BeaufortSpeed);
+		}
+		
+    		return [$BeaufortDescription, $BeaufortSpeed];
+	}  
 	    
 	private function Get_I2C_Ports()
 	{
