@@ -538,7 +538,7 @@
 		}
 	}        
 	    
-	rivate function getBeaufort(float $WindSpeed_ms) 
+	private function getBeaufort(float $WindSpeed_ms) 
 	{
     		$arrBeaufort = array (
 			   ['windstaerke' => 0, 'beschreibung' => 'Windstille', 'minwert' => 0  ],
