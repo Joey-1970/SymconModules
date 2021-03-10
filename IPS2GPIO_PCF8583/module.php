@@ -357,7 +357,7 @@
 							break;
 						}
 						else {
-							$$this->SetStatus(102);
+							$this->SetStatus(102);
 							$MeasurementData = array();
 							$MeasurementData = unserialize($Result);
 
