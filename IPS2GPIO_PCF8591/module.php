@@ -13,6 +13,7 @@
 		$this->RegisterPropertyInteger("DeviceBus", 1);
 		for ($i = 0; $i <= 3; $i++) {
  	    		$this->RegisterPropertyBoolean("Ain".$i, true);
+			$this->RegisterPropertyInteger("Function_".$i, 0);
 		}
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GAD1_Measurement($_IPS["TARGET"]);');
