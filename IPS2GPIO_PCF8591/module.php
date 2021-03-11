@@ -56,8 +56,24 @@
 		$arrayElements[] = array("type" => "Select", "name" => "DeviceBus", "caption" => "Device Bus", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "caption" => "Genutzte Eingänge");
+		
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "Standard", "value" => 0);
+		$arrayOptions[] = array("label" => "Druck-Sensor", "value" => 1);
+
+		
 		for ($i = 0; $i <= 3; $i++) {
 			$arrayElements[] = array("type" => "CheckBox", "name" => "Ain".$i, "caption" => "Ain".$i);
+			$arrayElements[] = array("type" => "Select", "name" => "Function_".$i, "caption" => "Funktionsauswahl", "options" => $arrayOptions, "onChange" => 'IPS_RequestAction($id,"ChangeFunction",$Function);'  );
+			If ($this->ReadPropertyInteger("Function") == 0) {
+				// Standard
+				
+			}
+			elseif ($this->ReadPropertyInteger("Function") == 1) {
+				// Druck-Sensor
+				
+			}
+			
 		}
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Messzyklus", "caption" => "Wiederholungszyklus in Sekunden (0 -> aus) (optional)", "minimum" => 0);	
 
@@ -121,6 +137,32 @@
 	        case "Output":
 	            $this->SetOutput($Value);
 	            break;
+				
+		case "ChangeFunction":
+				$this->SendDebug("RequestAction", "ChangeFunction - Wert: ".$Value, 0);
+				switch($Value) {
+					case 0: // Standard
+						/*
+						$this->UpdateFormField('PulseSetBoolean', 'visible', false);
+						$this->UpdateFormField('PulseSetLightRain', 'visible', false);
+						$this->UpdateFormField('PulseSetModerateRain', 'visible', false);
+						$this->UpdateFormField('PulseSetStrongRain', 'visible', false);
+						$this->UpdateFormField('PulseSetVeryStrongRain', 'visible', false);
+						$this->UpdateFormField('PulseLiterManuel', 'visible', false);	
+						*/
+						break;
+					case 1: // Druck-Sensor
+						/*
+						$this->UpdateFormField('PulseSetBoolean', 'visible', false);
+						$this->UpdateFormField('PulseSetLightRain', 'visible', false);
+						$this->UpdateFormField('PulseSetModerateRain', 'visible', false);
+						$this->UpdateFormField('PulseSetStrongRain', 'visible', false);
+						$this->UpdateFormField('PulseSetVeryStrongRain', 'visible', false);
+						$this->UpdateFormField('PulseLiterManuel', 'visible', false);
+						*/
+						break;
+				}
+			break;	
 	        default:
 	            throw new Exception("Invalid Ident");
 	    	}
