@@ -151,8 +151,8 @@
 				$this->SetOutput($Value);
 				break;
 
-			case preg_match('/ChangeFunction.*/', $Input) ? $Input : !$Input:
-				$Input = intval(substr($Message, -1)); // der Eingang der geändert werden soll
+			case preg_match('/ChangeFunction.*/', $Ident) ? $Ident : !$Ident:
+				$Input = intval(substr($Ident, -1)); // der Eingang der geändert werden soll
 				$Function = $Value; // die Funktion die der Eingang haben soll
 				$this->SendDebug("RequestAction", "ChangeFunction - Input: ".$Input." Funktion: ".$Function, 0);
 				
