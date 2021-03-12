@@ -67,7 +67,7 @@
 		
 		for ($i = 0; $i <= 3; $i++) {
 			$arrayElements[] = array("type" => "CheckBox", "name" => "Ain".$i, "caption" => "Ain".$i);
-			$arrayElements[] = array("type" => "Select", "name" => "Function_".$i, "caption" => "Funktionsauswahl", "options" => $arrayOptions, "onChange" => 'IPS_RequestAction($id,"ChangeFunction",$Function_0);'  );
+			$arrayElements[] = array("type" => "Select", "name" => "Function_".$i, "caption" => "Funktionsauswahl", "options" => $arrayOptions, "onChange" => 'IPS_RequestAction($id,"ChangeFunction","Function_"' . $i .');'  );
 			If ($this->ReadPropertyInteger("Function_".$i) == 0) {
 				// Standard
 				
