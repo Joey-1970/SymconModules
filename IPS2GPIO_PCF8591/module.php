@@ -152,20 +152,17 @@
 				
 		case "ChangeFunction":
 				$this->SendDebug("RequestAction", "ChangeFunction - Wert: ".$Value, 0);
+				$i = intval(substr($Ident, -1));
 				switch($Value) {
 					case 0: // Standard
-						for ($i = 0; $i <= 3; $i++) {
-							$this->UpdateFormField('PressureSensorMinVoltage_'.$i, 'visible', false);
-							$this->UpdateFormField('PressureSensorMaxVoltage_'.$i, 'visible', false);
-							$this->UpdateFormField('MaxPressure_'.$i, 'visible', false);
-						}
+						$this->UpdateFormField('PressureSensorMinVoltage_'.$i, 'visible', false);
+						$this->UpdateFormField('PressureSensorMaxVoltage_'.$i, 'visible', false);
+						$this->UpdateFormField('MaxPressure_'.$i, 'visible', false);
 						break;
 					case 1: // Druck-Sensor
-						for ($i = 0; $i <= 3; $i++) {
-							$this->UpdateFormField('PressureSensorMinVoltage_'.$i, 'visible', true);
-							$this->UpdateFormField('PressureSensorMaxVoltage_'.$i, 'visible', true);
-							$this->UpdateFormField('MaxPressure_'.$i, 'visible', true);
-						}
+						$this->UpdateFormField('PressureSensorMinVoltage_'.$i, 'visible', true);
+						$this->UpdateFormField('PressureSensorMaxVoltage_'.$i, 'visible', true);
+						$this->UpdateFormField('MaxPressure_'.$i, 'visible', true);
 						break;
 				}
 			break;	
