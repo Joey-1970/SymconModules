@@ -14,6 +14,9 @@
 		for ($i = 0; $i <= 3; $i++) {
  	    		$this->RegisterPropertyBoolean("Ain".$i, true);
 			$this->RegisterPropertyInteger("Function_".$i, 0);
+			$this->RegisterPropertyFloat("PressureSensorMinVoltage_".$i, 0.5);
+			$this->RegisterPropertyFloat("PressureSensorMaxVoltage_".$i, 4.5);
+			$this->RegisterPropertyFloat("MaxPressure_".$i, 2);
 		}
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GAD1_Measurement($_IPS["TARGET"]);');
@@ -68,10 +71,19 @@
 			If ($this->ReadPropertyInteger("Function") == 0) {
 				// Standard
 				
+				// unsichtbar
+				$arrayElements[] = array("type" => "NumberSpinner", "name" => "PressureSensorMinVoltage_".$i, "caption" => "Mindest Spannung Messbereich", "minimum" => 0, "visible" => false);	
+				$arrayElements[] = array("type" => "NumberSpinner", "name" => "PressureSensorMaxVoltage_".$i, "caption" => "Maximal Spannung Messbereich", "minimum" => 0, "visible" => false);	
+				$arrayElements[] = array("type" => "NumberSpinner", "name" => "MaxPressure_".$i, "caption" => "Maximal Druck Messbereich", "minimum" => 1, "visible" => false);	
+
 			}
 			elseif ($this->ReadPropertyInteger("Function") == 1) {
 				// Druck-Sensor
 				
+				// sichtbar
+				$arrayElements[] = array("type" => "NumberSpinner", "name" => "PressureSensorMinVoltage_".$i, "caption" => "Mindest Spannung Messbereich", "minimum" => 0, "visible" => true);	
+				$arrayElements[] = array("type" => "NumberSpinner", "name" => "PressureSensorMaxVoltage_".$i, "caption" => "Maximal Spannung Messbereich", "minimum" => 0, "visible" => true);	
+				$arrayElements[] = array("type" => "NumberSpinner", "name" => "MaxPressure_".$i, "caption" => "Maximal Druck Messbereich", "minimum" => 1, "visible" => true);	
 			}
 			
 		}
@@ -142,24 +154,18 @@
 				$this->SendDebug("RequestAction", "ChangeFunction - Wert: ".$Value, 0);
 				switch($Value) {
 					case 0: // Standard
-						/*
-						$this->UpdateFormField('PulseSetBoolean', 'visible', false);
-						$this->UpdateFormField('PulseSetLightRain', 'visible', false);
-						$this->UpdateFormField('PulseSetModerateRain', 'visible', false);
-						$this->UpdateFormField('PulseSetStrongRain', 'visible', false);
-						$this->UpdateFormField('PulseSetVeryStrongRain', 'visible', false);
-						$this->UpdateFormField('PulseLiterManuel', 'visible', false);	
-						*/
+						for ($i = 0; $i <= 3; $i++) {
+							$this->UpdateFormField('PressureSensorMinVoltage_'.$i, 'visible', false);
+							$this->UpdateFormField('PressureSensorMaxVoltage_'.$i, 'visible', false);
+							$this->UpdateFormField('MaxPressure_'.$i, 'visible', false);
+						}
 						break;
 					case 1: // Druck-Sensor
-						/*
-						$this->UpdateFormField('PulseSetBoolean', 'visible', false);
-						$this->UpdateFormField('PulseSetLightRain', 'visible', false);
-						$this->UpdateFormField('PulseSetModerateRain', 'visible', false);
-						$this->UpdateFormField('PulseSetStrongRain', 'visible', false);
-						$this->UpdateFormField('PulseSetVeryStrongRain', 'visible', false);
-						$this->UpdateFormField('PulseLiterManuel', 'visible', false);
-						*/
+						for ($i = 0; $i <= 3; $i++) {
+							$this->UpdateFormField('PressureSensorMinVoltage_'.$i, 'visible', true);
+							$this->UpdateFormField('PressureSensorMaxVoltage_'.$i, 'visible', true);
+							$this->UpdateFormField('MaxPressure_'.$i, 'visible', true);
+						}
 						break;
 				}
 			break;	
