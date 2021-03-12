@@ -67,7 +67,7 @@
 		
 		for ($i = 0; $i <= 3; $i++) {
 			$arrayElements[] = array("type" => "CheckBox", "name" => "Ain".$i, "caption" => "Ain".$i);
-			$arrayElements[] = array("type" => "Select", "name" => "Function_".$i, "caption" => "Funktionsauswahl", "options" => $arrayOptions, "onChange" => 'IPS_RequestAction($id,"ChangeFunction",'.serialize(array($i, ${'Function_'.$i})).';)');
+			$arrayElements[] = array("type" => "Select", "name" => "Function_".$i, "caption" => "Funktionsauswahl", "options" => $arrayOptions, "onChange" => 'IPS_RequestAction($id,"ChangeFunction", ${'Function_'.$i}'."_".$i.';)');
 			If ($this->ReadPropertyInteger("Function_".$i) == 0) {
 				// Standard
 				
@@ -152,9 +152,9 @@
 				
 		case "ChangeFunction":
 				$this->SendDebug("RequestAction", "ChangeFunction - Wert: ".$Value, 0);
-				$Values = unserialize($Value);
-				$Input = $Values[0]; // der Eingang der geändert werden soll
-				$Function = $Values[1]; // die Funktion die der Eingang haben soll
+				//$Values = unserialize($Value);
+				$Input = 0; //$Values[0]; // der Eingang der geändert werden soll
+				$Function = 0; //$Values[1]; // die Funktion die der Eingang haben soll
 				$this->SendDebug("RequestAction", "ChangeFunction - Input: ".$Input." Funktion: ".$Function, 0);
 				
 				switch($Function) {
