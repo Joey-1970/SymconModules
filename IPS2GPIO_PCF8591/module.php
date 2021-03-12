@@ -68,7 +68,7 @@
 		for ($i = 0; $i <= 3; $i++) {
 			$arrayElements[] = array("type" => "CheckBox", "name" => "Ain".$i, "caption" => "Ain".$i);
 			$arrayElements[] = array("type" => "Select", "name" => "Function_".$i, "caption" => "Funktionsauswahl", "options" => $arrayOptions, "onChange" => 'IPS_RequestAction($id,"ChangeFunction",$Function);'  );
-			If ($this->ReadPropertyInteger("Function") == 0) {
+			If ($this->ReadPropertyInteger("Function_".$i) == 0) {
 				// Standard
 				
 				// unsichtbar
@@ -77,7 +77,7 @@
 				$arrayElements[] = array("type" => "NumberSpinner", "name" => "MaxPressure_".$i, "caption" => "Maximal Druck Messbereich", "minimum" => 1, "visible" => false);	
 
 			}
-			elseif ($this->ReadPropertyInteger("Function") == 1) {
+			elseif ($this->ReadPropertyInteger("Function_".$i) == 1) {
 				// Druck-Sensor
 				
 				// sichtbar
