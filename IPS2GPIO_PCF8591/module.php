@@ -67,7 +67,7 @@
 		
 		for ($i = 0; $i <= 3; $i++) {
 			$arrayElements[] = array("type" => "CheckBox", "name" => "Ain".$i, "caption" => "Ain".$i);
-			$arrayElements[] = array("type" => "Select", "name" => "Function_".$i, "caption" => "Funktionsauswahl", "options" => $arrayOptions, "onChange" => 'IPS_RequestAction($id,"ChangeFunction",'.serialize(array(${'Function_'.$i}, $i)).';)');
+			$arrayElements[] = array("type" => "Select", "name" => "Function_".$i, "caption" => "Funktionsauswahl", "options" => $arrayOptions, "onChange" => 'IPS_RequestAction($id,"ChangeFunction",'.serialize(array($i, ${'Function_'.$i})).';)');
 			If ($this->ReadPropertyInteger("Function_".$i) == 0) {
 				// Standard
 				
@@ -152,17 +152,21 @@
 				
 		case "ChangeFunction":
 				$this->SendDebug("RequestAction", "ChangeFunction - Wert: ".$Value, 0);
-				$i = intval(substr($Ident, -1));
-				switch($Value) {
+				$Values = unserialize($Value);
+				$Input = $Values[0]; // der Eingang der geändert werden soll
+				$Function = $Values[1]; // die Funktion die der Eingang haben soll
+				$this->SendDebug("RequestAction", "ChangeFunction - Input: ".$Input." Funktion: ".$Function, 0);
+				
+				switch($Function) {
 					case 0: // Standard
-						$this->UpdateFormField('PressureSensorMinVoltage_'.$i, 'visible', false);
-						$this->UpdateFormField('PressureSensorMaxVoltage_'.$i, 'visible', false);
-						$this->UpdateFormField('MaxPressure_'.$i, 'visible', false);
+						$this->UpdateFormField('PressureSensorMinVoltage_'.$Input, 'visible', false);
+						$this->UpdateFormField('PressureSensorMaxVoltage_'.$Input, 'visible', false);
+						$this->UpdateFormField('MaxPressure_'.$Input, 'visible', false);
 						break;
 					case 1: // Druck-Sensor
-						$this->UpdateFormField('PressureSensorMinVoltage_'.$i, 'visible', true);
-						$this->UpdateFormField('PressureSensorMaxVoltage_'.$i, 'visible', true);
-						$this->UpdateFormField('MaxPressure_'.$i, 'visible', true);
+						$this->UpdateFormField('PressureSensorMinVoltage_'.$Input, 'visible', true);
+						$this->UpdateFormField('PressureSensorMaxVoltage_'.$Input, 'visible', true);
+						$this->UpdateFormField('MaxPressure_'.$Input, 'visible', true);
 						break;
 				}
 			break;	
