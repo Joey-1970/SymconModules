@@ -21,6 +21,9 @@
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
             	$this->RegisterTimer("Messzyklus", 0, 'I2GAD1_Measurement($_IPS["TARGET"]);');
 		
+		// Profile anlegen
+		$this->RegisterProfileFloat("IPS2GPIO.PCF8591_Pressure", "Gauge", "", " bar", 0, 10, 0.1, 1);
+		
 		// Status-Variablen anlegen
 		for ($i = 0; $i <= 3; $i++) {
 			$this->RegisterVariableInteger("Channel_".$i, "Channel ".$i, "~Intensity.255", $i * 10 + 10);
@@ -125,9 +128,6 @@
 			}
 			elseif ($this->ReadPropertyInteger("Function_".$i) == 1) {
 				// Druck-Sensor
-				
-				// Profile anlegen
-				$this->RegisterProfileFloat("IPS2GPIO.PCF8591_Pressure", "Gauge", "", " bar", 0, 10, 0.1, 1);
 				
 				// Statusvariablen anlegen
 				$this->RegisterVariableFloat("Pressure_".$i, "Druckmessung ".$i, "IPS2GPIO.PCF8591_Pressure", $i * 10 + 60);
