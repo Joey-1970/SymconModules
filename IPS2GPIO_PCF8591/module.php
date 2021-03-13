@@ -104,7 +104,6 @@
 		$arrayElements[] = array("type" => "Label", "caption" => "- die I2C-Nutzung muss in der Raspberry Pi-Konfiguration freigegeben werden (sudo raspi-config -> Advanced Options -> I2C Enable = true)");
 		$arrayElements[] = array("type" => "Label", "caption" => "- die korrekte Nutzung der GPIO ist zwingend erforderlich (GPIO-Nr. 0/1 nur beim Raspberry Pi Model B Revision 1, alle anderen GPIO-Nr. 2/3)");
 		$arrayElements[] = array("type" => "Label", "caption" => "- auf den korrekten Anschluss von SDA/SCL achten");
-		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 
 		$arrayActions = array(); 
 		$arrayActions[] = array("type" => "Label", "label" => "Test Center"); 
@@ -118,6 +117,24 @@
         {
             	// Diese Zeile nicht löschen
             	parent::ApplyChanges();
+		
+		for ($i = 0; $i <= 3; $i++) {
+			If ($this->ReadPropertyInteger("Function_".$i) == 0) {
+				// Standard
+				
+			}
+			elseif ($this->ReadPropertyInteger("Function_".$i) == 1) {
+				// Druck-Sensor
+				
+				// Profile anlegen
+				$this->RegisterProfileFloat("IPS2GPIO.PCF8591_Pressure", "Gauge", "", " bar", 0, 10, 0.1, 1);
+				
+				// Statusvariablen anlegen
+				$this->RegisterVariableFloat("Pressure_".$i, "Druckmessung ".$i, "IPS2GPIO.PCF8591_Pressure", $i * 10 + 60);
+				
+			}
+		}
+		
 		
 		// Summary setzen
 		$DevicePorts = array();
@@ -280,6 +297,24 @@
 			$I2C_Ports = serialize($DevicePorts);
 		}
 	return $I2C_Ports;
+	} 
+	    
+	private function RegisterProfileFloat($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits)
+	{
+	        if (!IPS_VariableProfileExists($Name))
+	        {
+	            IPS_CreateVariableProfile($Name, 2);
+	        }
+	        else
+	        {
+	            $profile = IPS_GetVariableProfile($Name);
+	            if ($profile['ProfileType'] != 2)
+	                throw new Exception("Variable profile type does not match for profile " . $Name);
+	        }
+	        IPS_SetVariableProfileIcon($Name, $Icon);
+	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
+	        IPS_SetVariableProfileDigits($Name, $Digits);
 	}    
 }
 ?>
