@@ -73,18 +73,21 @@
 				// Standard
 				
 				// unsichtbar
-				$arrayElements[] = array("type" => "NumberSpinner", "name" => "PressureSensorMinVoltage_".$i, "caption" => "Mindest Spannung Messbereich", "minimum" => 0, "visible" => false);	
-				$arrayElements[] = array("type" => "NumberSpinner", "name" => "PressureSensorMaxVoltage_".$i, "caption" => "Maximal Spannung Messbereich", "minimum" => 0, "visible" => false);	
-				$arrayElements[] = array("type" => "NumberSpinner", "name" => "MaxPressure_".$i, "caption" => "Maximal Druck Messbereich", "minimum" => 1, "visible" => false);	
-
+				$ArrayRowLayout = array();
+				$ArrayRowLayout[] = array("type" => "NumberSpinner", "name" => "PressureSensorMinVoltage_".$i, "caption" => "Mindest Spannung Messbereich", "minimum" => 0, "suffix" => "V", "digits" => 1, "visible" => false);	
+				$ArrayRowLayout[] = array("type" => "NumberSpinner", "name" => "PressureSensorMaxVoltage_".$i, "caption" => "Maximal Spannung Messbereich", "minimum" => 0, "suffix" => "V", "digits" => 1, "visible" => false);	
+				$ArrayRowLayout[] = array("type" => "NumberSpinner", "name" => "MaxPressure_".$i, "caption" => "Maximal Druck Messbereich", "minimum" => 1, "suffix" => "bar", "digits" => 1, "visible" => false);
+				$arrayElements[] = array("type" => "RowLayout", "items" => $ArrayRowLayout, "visible" => false);
 			}
 			elseif ($this->ReadPropertyInteger("Function_".$i) == 1) {
 				// Druck-Sensor
 				
 				// sichtbar
-				$arrayElements[] = array("type" => "NumberSpinner", "name" => "PressureSensorMinVoltage_".$i, "caption" => "Mindest Spannung Messbereich", "minimum" => 0, "visible" => true);	
-				$arrayElements[] = array("type" => "NumberSpinner", "name" => "PressureSensorMaxVoltage_".$i, "caption" => "Maximal Spannung Messbereich", "minimum" => 0, "visible" => true);	
-				$arrayElements[] = array("type" => "NumberSpinner", "name" => "MaxPressure_".$i, "caption" => "Maximal Druck Messbereich", "minimum" => 1, "visible" => true);	
+				$ArrayRowLayout = array();
+				$ArrayRowLayout[] = array("type" => "NumberSpinner", "name" => "PressureSensorMinVoltage_".$i, "caption" => "Mindest Spannung Messbereich", "minimum" => 0, "suffix" => "V", "digits" => 1, "visible" => true);	
+				$ArrayRowLayout[]= array("type" => "NumberSpinner", "name" => "PressureSensorMaxVoltage_".$i, "caption" => "Maximal Spannung Messbereich", "minimum" => 0, "suffix" => "V", "digits" => 1, "visible" => true);	
+				$ArrayRowLayout[] = array("type" => "NumberSpinner", "name" => "MaxPressure_".$i, "caption" => "Maximal Druck Messbereich", "minimum" => 1, "suffix" => "bar", "digits" => 1, "visible" => true);	
+				$arrayElements[] = array("type" => "RowLayout", "items" => $ArrayRowLayout, "visible" => true);
 			}
 			
 		}
