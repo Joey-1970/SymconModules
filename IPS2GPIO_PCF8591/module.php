@@ -66,9 +66,11 @@
 
 		
 		for ($i = 0; $i <= 3; $i++) {
-			$arrayElements[] = array("type" => "CheckBox", "name" => "Ain".$i, "caption" => "Ain".$i);
-																					//  'IPS_RequestAction($id,"ChangeFunction",$Function);');
-			$arrayElements[] = array("type" => "Select", "name" => "Function_".$i, "caption" => "Funktionsauswahl", "options" => $arrayOptions, "onChange" => 'IPS_RequestAction($id,"ChangeFunction_'.$i.'", $Function_'.$i.');');
+			$ArrayRowLayout = array();
+			$ArrayRowLayout[] = array("type" => "CheckBox", "name" => "Ain".$i, "caption" => "Ain".$i);																		//  'IPS_RequestAction($id,"ChangeFunction",$Function);');
+			$ArrayRowLayout[] = array("type" => "Select", "name" => "Function_".$i, "caption" => "Funktionsauswahl", "options" => $arrayOptions, "onChange" => 'IPS_RequestAction($id,"ChangeFunction_'.$i.'", $Function_'.$i.');');
+			$arrayElements[] = array("type" => "RowLayout", "name" => "Headline_".$i, "items" => $ArrayRowLayout, "visible" => true);
+			
 			If ($this->ReadPropertyInteger("Function_".$i) == 0) {
 				// Standard
 				
