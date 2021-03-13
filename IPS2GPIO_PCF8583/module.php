@@ -105,7 +105,6 @@
 			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetModerateRain", "caption" => "Impulse/Minute: moderater Regen", "minimum" => 1, "visible" => true);
 			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetStrongRain", "caption" => "Impulse/Minute: starker Regen", "minimum" => 1, "visible" => true);
 			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseSetVeryStrongRain", "caption" => "Impulse/Minute: sehr starker Regen", "minimum" => 1, "visible" => true);
-			$arrayElements[] = array("type" => "NumberSpinner", "name" => "PulseLiterManuel", "caption" => "Impulse/Liter laut Datenblatt", "minimum" => 1, "visible" => true);	
 		}
 		elseif ($this->ReadPropertyInteger("Function") == 3) {
 			// Durchfluss-Sensor
