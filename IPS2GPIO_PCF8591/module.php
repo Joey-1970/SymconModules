@@ -274,13 +274,20 @@
 							// Druck berechnen
 							$Pressure = $MaxPressure / $MaxScaleValue * ($Result - $NormalMinValue);
 							
-							$this->SetValue("Pressure_".$i, $Pressure);
+							If ($this->GetValue("Pressure_".$i) <> $Pressure) {
+								$this->SetValue("Pressure_".$i, $Pressure);
+							}
 						}
 					}
 				}
 				else {
 					If ($this->GetValue("Channel_".$i) <> 0) {
 						$this->SetValue("Channel_".$i, 0);
+					}
+					If ($this->ReadPropertyInteger("Function_".$i) == 1) {
+						If ($this->GetValue("Pressure_".$i) <> 0) {
+							$this->SetValue("Pressure_".$i, 0);
+						}
 					}
 				}
 			}
