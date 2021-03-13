@@ -251,6 +251,30 @@
 						If ($this->GetValue("Channel_".$i) <> $Result) {
 							$this->SetValue("Channel_".$i, $Result);
 						}
+						If ($this->ReadPropertyInteger("Function_".$i) == 1) {
+							$PressureSensorMinVoltage = $this->ReadPropertyFloat("PressureSensorMinVoltage_".$i);
+							$PressureSensorMaxVoltage = $this->ReadPropertyFloat("PressureSensorMaxVoltage_".$i);
+							$MaxPressure = $this->ReadPropertyFloat("MaxPressure_".$i);
+							// Berechnung der Skala
+							$NormalMinValue = intval((255 / 5) * $PressureSensorMinVoltage);
+							$NormalMaxValue = intval((255 / 5) * $PressureSensorMaxVoltage);
+							
+							// Plausibiltitätsprüfung
+							If ($Result < $NormalMinValue) {
+								$this->SendDebug("Measurement", "Ergebnis für Drucksensor ".$i." ist kleiner als die erwartete Minimalspannung!", 0);
+							}
+							If ($Result > $NormalMaxValue) {
+								$this->SendDebug("Measurement", "Ergebnis für Drucksensor ".$i." ist groesser als die erwartete Maximalspannung!", 0);
+							}
+							
+							// Messbereich neu skalieren
+							$MaxScaleValue = $NormalMaxValue - $NormalMinValue;
+							
+							// Druck berechnen
+							$Pressure = $MaxPressure / $MaxScaleValue * ($Result - $NormalMinValue);
+							
+							$this->SetValue("Pressure_".$i, $Pressure);
+						}
 					}
 				}
 				else {
