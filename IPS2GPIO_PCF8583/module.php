@@ -404,6 +404,9 @@
 							elseif ($this->ReadPropertyInteger("Function") == 1) {
 								// Eltako WS
 								
+								// Plausibilitätsbegrenzung
+								$PulseSecond = min(6000, max(0, $PulseSecond));
+								
 								$RotationMinute = ($PulseSecond * 60) / 2;
 								If ($this->GetValue("RotationMinute") <> $RotationMinute) {
 									$this->SetValue("RotationMinute", $RotationMinute);
@@ -432,6 +435,9 @@
 							}
 							elseif ($this->ReadPropertyInteger("Function") == 2) {
 								// RG11 Regensensor
+								
+								// Plausibilitätsbegrenzung
+								$PulseSecond = min(300, max(0, $PulseSecond));
 								
 								$PulseSetBoolean = $this->ReadPropertyInteger("PulseSetBoolean");
 								If ($PulseSecond * 60 >= $PulseSetBoolean) {
