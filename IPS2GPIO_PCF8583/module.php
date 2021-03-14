@@ -405,7 +405,7 @@
 								// Eltako WS
 								
 								// Plausibilitätsbegrenzung
-								$PulseSecond = min(6000, max(0, $PulseSecond));
+								$PulseSecond = min(100, max(0, $PulseSecond));
 								
 								$RotationMinute = ($PulseSecond * 60) / 2;
 								If ($this->GetValue("RotationMinute") <> $RotationMinute) {
