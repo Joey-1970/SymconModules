@@ -437,7 +437,7 @@
 								// RG11 Regensensor
 								
 								// Plausibilitätsbegrenzung
-								$PulseSecond = min(300, max(0, $PulseSecond));
+								$PulseSecond = min(10, max(0, $PulseSecond));
 								
 								$PulseSetBoolean = $this->ReadPropertyInteger("PulseSetBoolean");
 								If ($PulseSecond * 60 >= $PulseSetBoolean) {
