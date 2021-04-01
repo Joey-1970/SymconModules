@@ -42,8 +42,8 @@
 		$this->RegisterVariableString("DeviceType", "Device Typ", "", 10);
 		$this->RegisterVariableString("Firmware", "Firmware", "", 20);
 		$this->RegisterVariableInteger("Restart", "Letzter Neustart", "IPS2GPIO.Restart", 30);
-		$this->RegisterVariableFloat("Voltage", "Volt Elektronik", "IPS2GPIO.V", 40);
-		$this->RegisterVariableFloat("PumpVoltage", "Volt Pumpe", "IPS2GPIO.V", 50);
+		$this->RegisterVariableFloat("Voltage", "Spannung Elektronik", "IPS2GPIO.V", 40);
+		$this->RegisterVariableFloat("PumpVoltage", "Spannung Pumpe", "IPS2GPIO.V", 50);
 		$this->RegisterVariableBoolean("PumpState", "Status Pumpe", "~Switch", 60);
 		$this->RegisterVariableInteger("PumpStateSwitch", "Status Pumpe", "IPS2GPIO.PumpState", 70);
 		$this->EnableAction("PumpStateSwitch");
