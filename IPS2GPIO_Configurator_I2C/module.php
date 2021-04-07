@@ -60,7 +60,7 @@
 				$arrayCreate = array();
 				$GUID = $TypeArray[$DeviceArray[$i]["Typ"]];
 				$Bus = array_search($DeviceArray[$i]["Bus"], $BusArray);
-				$arrayCreate[] = array("moduleID" => $GUID, "location" => $RootNames, 
+				$arrayCreate = array("moduleID" => $GUID, "location" => $RootNames, 
 					       "configuration" => array("DeviceAddress" => $DeviceArray[$i]["Adresse"], "DeviceBus" => $Bus));
 				$arrayValues[] = array("DeviceTyp" => $DeviceArray[$i]["Typ"], "DeviceAddress" => $DeviceArray[$i]["Adresse"], "DeviceBus" => $DeviceArray[$i]["Bus"],
 					       "instanceID" => $DeviceArray[$i]["InstanceID"], "create" => $arrayCreate);
