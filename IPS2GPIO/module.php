@@ -3094,6 +3094,7 @@ class IPS2GPIO_IO extends IPSModule
 				$Response = true;
 			}
 			else {
+				$this->SendDebug("SearchSpecialI2CDevices", "Device nicht gefunden auf Bus: 1 Adresse: ".$DeviceAddress." Ergebnis des Test-Lesen: ".$this->GetErrorText($Result), 0);
 				$Response = false;
 			}
 			// Handle löschen
