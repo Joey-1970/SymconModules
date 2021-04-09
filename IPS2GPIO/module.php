@@ -79,31 +79,22 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Detaillierung der genutzten I²C-Schnittstelle:");
 		
-		If ($this->ConnectionTest() == true) {
-			$arrayOptions = array();
-			$arrayOptions[] = array("label" => "Kein MUX", "value" => 0);
-			$arrayOptions[] = array("label" => "TCA9548a Adr. 112/0x70", "value" => 1);
-			$arrayOptions[] = array("label" => "PCA9542 Adr. 112/0x70", "value" => 2);
-			$arrayElements[] = array("type" => "Select", "name" => "MUX", "caption" => "MUX-Auswahl", "options" => $arrayOptions );
-		}
-		else {
-			$arrayElements[] = array("type" => "Label", "label" => "Es wurde kein MUX gefunden.");
-		}
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "Kein MUX", "value" => 0);
+		$arrayOptions[] = array("label" => "TCA9548a Adr. 112/0x70", "value" => 1);
+		$arrayOptions[] = array("label" => "PCA9542 Adr. 112/0x70", "value" => 2);
+		$arrayElements[] = array("type" => "Select", "name" => "MUX", "caption" => "MUX-Auswahl", "options" => $arrayOptions );
+		
 		$arrayOptions = array();
 		$arrayElements[] = array("type" => "Label", "label" => "Nutzung der I²C-Schnittstelle 0:");
 		$arrayOptions[] = array("label" => "Nein", "value" => 0);
 		$arrayOptions[] = array("label" => "Ja", "value" => 1);
 		$arrayElements[] = array("type" => "Select", "name" => "I2C0", "caption" => "I²C 0", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		If (($this->ConnectionTest()) AND ($this->SearchSpecialI2CDevices(24) == true))  {
-			$arrayOptions = array();
-			$arrayOptions[] = array("label" => "Kein DS2482", "value" => 0);
-			$arrayOptions[] = array("label" => "DS2482 Adr. 24/0x18", "value" => 1);
-			$arrayElements[] = array("type" => "Select", "name" => "OW", "caption" => "1-Wire Auswahl", "options" => $arrayOptions );
-		}
-		else {
-			$arrayElements[] = array("type" => "Label", "label" => "Es wurde kein DS2482 gefunden.");
-		}
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "Kein DS2482", "value" => 0);
+		$arrayOptions[] = array("label" => "DS2482 Adr. 24/0x18", "value" => 1);
+		$arrayElements[] = array("type" => "Select", "name" => "OW", "caption" => "1-Wire Auswahl", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Analyse der Raspberry Pi Konfiguration:");
 		$arraySort = array();
@@ -121,17 +112,6 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayElements[] = array("type" => "List", "name" => "Raspi_Config", "caption" => "Konfiguration", "rowCount" => 5, "add" => false, "delete" => false, "sort" => $arraySort, "columns" => $arrayColumns, "values" => $arrayValues);
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");		
 		
-		/*
-		// Tabelle für die gefundenen I²C-Devices
-		
-		$arrayColumns = array();
-		$arrayColumns[] = array("label" => "Typ", "name" => "DeviceTyp", "width" => "120px", "add" => "");
-		$arrayColumns[] = array("label" => "Adresse", "name" => "DeviceAddress", "width" => "60px", "add" => "");
-		$arrayColumns[] = array("label" => "Bus", "name" => "DeviceBus", "width" => "60px", "add" => "");
-		$arrayColumns[] = array("label" => "Instanz ID", "name" => "InstanceID", "width" => "70px", "add" => "");
-		$arrayColumns[] = array("label" => "Status", "name" => "DeviceStatus", "width" => "auto", "add" => "");	
-		*/
-		
 		// Tabelle für die gefundenen 1-Wire-Devices
 		$arraySort = array();
 		$arraySort = array("column" => "DeviceTyp", "direction" => "ascending");
@@ -142,23 +122,6 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayOWColumns[] = array("label" => "Status", "name" => "DeviceStatus", "width" => "auto", "add" => "");
 		
 		If (($this->ConnectionTest()) AND ($this->ReadPropertyBoolean("Open") == true) AND ($this->GetBuffer("I2C_Enabled") == 1)) {
-			/*
-			// I²C-Devices einlesen und in das Values-Array kopieren
-			$DeviceArray = array();
-			$DeviceArray = unserialize($this->SearchI2CDevices());
-			$arrayValues = array();
-			If (count($DeviceArray , COUNT_RECURSIVE) >= 4) {
-				for ($i = 0; $i < Count($DeviceArray); $i++) {
-					$arrayValues[] = array("DeviceTyp" => $DeviceArray[$i][0], "DeviceAddress" => $DeviceArray[$i][1], "DeviceBus" => $DeviceArray[$i][2], "InstanceID" => $DeviceArray[$i][3], "DeviceStatus" => $DeviceArray[$i][4], "rowColor" => $DeviceArray[$i][5]);
-				}
-				$arrayElements[] = array("type" => "List", "name" => "I2C_Devices", "caption" => "I²C-Devices", "rowCount" => 5, "add" => false, "delete" => false, "sort" => $arraySort, "columns" => $arrayColumns, "values" => $arrayValues);
-				$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");
-			}
-			else {
-				$arrayElements[] = array("type" => "Label", "label" => "Es wurden keine I²C-Devices gefunden.");
-				$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");
-			}
-			*/
 			If ($this->GetBuffer("OW_Handle") >= 0) {
 				// 1-Wire-Devices einlesen und in das Values-Array kopieren
 				$OWDeviceArray = array();
@@ -189,6 +152,12 @@ class IPS2GPIO_IO extends IPSModule
 			If ($this->ConnectionTest() == true) {
 				$arrayActions[] = array("type" => "Label", "caption" => "Führt einen Restart des PIGPIO aus:");
 				$arrayActions[] = array("type" => "Button", "label" => "PIGPIO Restart", "onClick" => 'I2G_PIGPIOD_Restart($id);');
+				
+				$arrayActions[] = array("type" => "Label", "caption" => "Testet die Verbindung zum MUX:");
+				$arrayActions[] = array("type" => "Button", "label" => "MUX Test", "onClick" => 'I2G_PIGPIOD_SearchSpecialI2CDevices($id, 112);');
+				
+				$arrayActions[] = array("type" => "Label", "caption" => "Testet die Verbindung zum DS2482/1-Wire:");
+				$arrayActions[] = array("type" => "Button", "label" => "DS2482 Test", "onClick" => 'I2G_PIGPIOD_SearchSpecialI2CDevices($id, 24);');
 			}
 		}
 		else {
@@ -3076,7 +3045,7 @@ class IPS2GPIO_IO extends IPSModule
 	Return $DeviceName;
 	}
 
-	private function SearchSpecialI2CDevices(Int $DeviceAddress)
+	public function SearchSpecialI2CDevices(Int $DeviceAddress)
 	{
 		$Response = false;		
 		$this->SetBuffer("I2CSearch", 1);
@@ -3091,10 +3060,12 @@ class IPS2GPIO_IO extends IPSModule
 
 			If ($Result >= 0) {
 				$this->SendDebug("SearchSpecialI2CDevices", "Device gefunden auf Bus: 1 Adresse: ".$DeviceAddress." Ergebnis des Test-Lesen: ".$Result, 0);
+				Echo "Device gefunden auf Bus: 1 Adresse: ".$DeviceAddress;
 				$Response = true;
 			}
 			else {
 				$this->SendDebug("SearchSpecialI2CDevices", "Device nicht gefunden auf Bus: 1 Adresse: ".$DeviceAddress." Ergebnis des Test-Lesen: ".$this->GetErrorText(abs($Result)), 0);
+				echo "Device nicht gefunden auf Bus: 1 Adresse: ".$DeviceAddress." Ergebnis des Test-Lesen: ".$this->GetErrorText(abs($Result));
 				$Response = false;
 			}
 			// Handle löschen
