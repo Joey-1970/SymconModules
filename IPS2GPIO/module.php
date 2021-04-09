@@ -154,10 +154,10 @@ class IPS2GPIO_IO extends IPSModule
 				$arrayActions[] = array("type" => "Button", "label" => "PIGPIO Restart", "onClick" => 'I2G_PIGPIOD_Restart($id);');
 				
 				$arrayActions[] = array("type" => "Label", "caption" => "Testet die Verbindung zum MUX:");
-				$arrayActions[] = array("type" => "Button", "label" => "MUX Test", "onClick" => 'I2G_PIGPIOD_SearchSpecialI2CDevices($id, 112);');
+				$arrayActions[] = array("type" => "Button", "label" => "MUX Test", "onClick" => 'I2G_SearchSpecialI2CDevices($id, 112);');
 				
 				$arrayActions[] = array("type" => "Label", "caption" => "Testet die Verbindung zum DS2482/1-Wire:");
-				$arrayActions[] = array("type" => "Button", "label" => "DS2482 Test", "onClick" => 'I2G_PIGPIOD_SearchSpecialI2CDevices($id, 24);');
+				$arrayActions[] = array("type" => "Button", "label" => "DS2482 Test", "onClick" => 'I2G_SearchSpecialI2CDevices($id, 24);');
 			}
 		}
 		else {
