@@ -90,10 +90,9 @@ class IPS2GPIO_IO extends IPSModule
 		$ArrayRowLayout[] = array("type" => "Select", "name" => "MUX", "caption" => "MUX-Auswahl", "options" => $arrayOptions );
 		
 		$arrayOptions = array();
-		$arrayElements[] = array("type" => "Label", "caption" => "Nutzung der I²C-Schnittstelle 0:");
 		$arrayOptions[] = array("label" => "Nein", "value" => 0);
 		$arrayOptions[] = array("label" => "Ja", "value" => 1);
-		$ArrayRowLayout[] = array("type" => "Select", "name" => "I2C0", "caption" => "I²C 0", "options" => $arrayOptions );
+		$ArrayRowLayout[] = array("type" => "Select", "name" => "I2C0", "caption" => "Nutzung der I²C-Schnittstelle 0", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "RowLayout", "items" => $ArrayRowLayout);
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");
 		$arrayOptions = array();
