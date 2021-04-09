@@ -70,33 +70,38 @@ class IPS2GPIO_IO extends IPSModule
 		
 		$arrayElements = array(); 
 		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv");
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");
  		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "IPAddress", "caption" => "IP");
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		$arrayElements[] = array("type" => "Label", "label" => "Zugriffsdaten des Raspberry Pi SSH:");
-		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "User", "caption" => "User");
-		$arrayElements[] = array("type" => "PasswordTextBox", "name" => "Password", "caption" => "Password");
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		$arrayElements[] = array("type" => "Label", "label" => "Detaillierung der genutzten I²C-Schnittstelle:");
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "Label", "caption" => "Zugriffsdaten des Raspberry Pi SSH:");
 		
+		$ArrayRowLayout = array();
+		$ArrayRowLayout[] = array("type" => "ValidationTextBox", "name" => "User", "caption" => "User");
+		$ArrayRowLayout[] = array("type" => "PasswordTextBox", "name" => "Password", "caption" => "Password");
+		$arrayElements[] = array("type" => "RowLayout", "items" => $ArrayRowLayout);		
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "Label", "caption" => "Detaillierung der genutzten I²C-Schnittstelle:");
+		
+		$ArrayRowLayout = array();
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "Kein MUX", "value" => 0);
 		$arrayOptions[] = array("label" => "TCA9548a Adr. 112/0x70", "value" => 1);
 		$arrayOptions[] = array("label" => "PCA9542 Adr. 112/0x70", "value" => 2);
-		$arrayElements[] = array("type" => "Select", "name" => "MUX", "caption" => "MUX-Auswahl", "options" => $arrayOptions );
+		$ArrayRowLayout[] = array("type" => "Select", "name" => "MUX", "caption" => "MUX-Auswahl", "options" => $arrayOptions );
 		
 		$arrayOptions = array();
-		$arrayElements[] = array("type" => "Label", "label" => "Nutzung der I²C-Schnittstelle 0:");
+		$arrayElements[] = array("type" => "Label", "caption" => "Nutzung der I²C-Schnittstelle 0:");
 		$arrayOptions[] = array("label" => "Nein", "value" => 0);
 		$arrayOptions[] = array("label" => "Ja", "value" => 1);
-		$arrayElements[] = array("type" => "Select", "name" => "I2C0", "caption" => "I²C 0", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		$ArrayRowLayout[] = array("type" => "Select", "name" => "I2C0", "caption" => "I²C 0", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "RowLayout", "items" => $ArrayRowLayout);
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "Kein DS2482", "value" => 0);
 		$arrayOptions[] = array("label" => "DS2482 Adr. 24/0x18", "value" => 1);
 		$arrayElements[] = array("type" => "Select", "name" => "OW", "caption" => "1-Wire Auswahl", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		$arrayElements[] = array("type" => "Label", "label" => "Analyse der Raspberry Pi Konfiguration:");
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "Label", "caption" => "Analyse der Raspberry Pi Konfiguration:");
 		$arraySort = array();
 		$arraySort = array("column" => "ServiceTyp", "direction" => "ascending");
 		$arrayColumns = array();
@@ -141,10 +146,10 @@ class IPS2GPIO_IO extends IPSModule
 				}
 			}
 		}
-		$arrayElements[] = array("type" => "Label", "label" => "Wird ein Audio Hat wie z.B. Hifiberry parallel verwendet, muss diese Option gewählt werden.");
-		$arrayElements[] = array("type" => "Label", "label" => "Die Nutzung von PWM (Dimmer, RGB, RGBW usw.) ist dann nicht möglich!");
+		$arrayElements[] = array("type" => "Label", "caption" => "Wird ein Audio Hat wie z.B. Hifiberry parallel verwendet, muss diese Option gewählt werden.");
+		$arrayElements[] = array("type" => "Label", "caption" => "Die Nutzung von PWM (Dimmer, RGB, RGBW usw.) ist dann nicht möglich!");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "AudioDAC", "caption" => "Vorhanden");
-		$arrayElements[] = array("type" => "Label", "label" => "Führt einen automatischen Restart des PIGPIO aus:");
+		$arrayElements[] = array("type" => "Label", "caption" => "Führt einen automatischen Restart des PIGPIO aus:");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "AutoRestart", "caption" => "Auto Restart");	
 		
 		$arrayActions = array();
@@ -161,7 +166,7 @@ class IPS2GPIO_IO extends IPSModule
 			}
 		}
 		else {
-			$arrayActions[] = array("type" => "Label", "label" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
+			$arrayActions[] = array("type" => "Label", "caption" => "Diese Funktionen stehen erst nach Eingabe und Übernahme der erforderlichen Daten zur Verfügung!");
 		}
 		
  		return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements, "actions" => $arrayActions)); 		 
