@@ -144,7 +144,7 @@ class IPS2GPIO_IO extends IPSModule
 		$arrayElements[] = array("type" => "Label", "label" => "Wird ein Audio Hat wie z.B. Hifiberry parallel verwendet, muss diese Option gewählt werden.");
 		$arrayElements[] = array("type" => "Label", "label" => "Die Nutzung von PWM (Dimmer, RGB, RGBW usw.) ist dann nicht möglich!");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "AudioDAC", "caption" => "Vorhanden");
-		$arrayElements[] = array("type" => "Label", "label" => "Führt einen automatischren Restart des PIGPIO aus:");
+		$arrayElements[] = array("type" => "Label", "label" => "Führt einen automatischen Restart des PIGPIO aus:");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "AutoRestart", "caption" => "Auto Restart");	
 		
 		$arrayActions = array();
