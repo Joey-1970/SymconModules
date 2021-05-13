@@ -333,7 +333,7 @@
 				If (!$Result) {
 					$this->SendDebug("Setup", "Setzen der Config fehlerhaft!", 0);
 					$this->SetStatus(202);
-					$this->SetTimerInterval("Messzyklus", 0);
+					//$this->SetTimerInterval("Messzyklus", 0);
 					break;
 				}
 				else {
@@ -353,7 +353,7 @@
 						If (!$Result_2) {
 							$this->SendDebug("GetCounter", "Setzen der Config fehlerhaft!", 0);
 							$this->SetStatus(202);
-							$this->SetTimerInterval("Messzyklus", 0);
+							//$this->SetTimerInterval("Messzyklus", 0);
 							break;
 						}
 						else {
