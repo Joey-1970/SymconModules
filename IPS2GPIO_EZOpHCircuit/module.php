@@ -87,8 +87,8 @@
 		$arrayActions = array(); 
 		$arrayActions[] = array("type" => "Label", "caption" => "Wichtiger Hinweis: Bitte dazu die Bedienungsanleitung beachten!"); 
 		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung mittlerer Wert (pH 7)", "onClick" => 'EZOpHCircuit_CalibrationMidpoint($id);'); 
-		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung mittlerer Wert (pH 4)", "onClick" => 'EZOpHCircuit_CalibrationLowpoint($id);'); 
-		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung mittlerer Wert (pH 10)", "onClick" => 'EZOpHCircuit_CalibrationHighpoint($id);'); 
+		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung niedrigen Wert (pH 4)", "onClick" => 'EZOpHCircuit_CalibrationLowpoint($id);'); 
+		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung hohen Wert (pH 10)", "onClick" => 'EZOpHCircuit_CalibrationHighpoint($id);'); 
 		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung löschen", "onClick" => 'EZOpHCircuit_CalibrationClear($id);'); 
 		$arrayActions[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayActions[] = array("type" => "Label", "caption" => "Test Center"); 
