@@ -38,7 +38,7 @@
 		$this->RegisterVariableString("Firmware", "Firmware", "", 20);
 		$this->RegisterVariableInteger("Restart", "Letzter Neustart", "IPS2GPIO.Restart", 30);
 		$this->RegisterVariableFloat("Voltage", "Volt", "IPS2GPIO.V", 40);
-		$this->RegisterVariableFloat("ORP", "OPR", "IPS2GPIO.mV", 50);
+		$this->RegisterVariableFloat("ORP", "ORP", "IPS2GPIO.mV", 50);
 		$this->RegisterVariableFloat("Deviation", "Abweichung", "", 55);
 		$this->RegisterVariableInteger("ORP_Rating", "ORP Bewertung", "IPS2GPIO.ORP_Rating", 60);
 		$this->RegisterVariableInteger("Calibration", "Kalibration", "IPS2GPIO.Calibration", 70);
@@ -262,7 +262,7 @@
 			case "ORP":
 				$this->SendDebug("ReadResult", "ORP", 0);
 				$this->SetValue("ORP", $ResultParts[0]);
-				$this->SetValue("Deviation", $ResultParts[0] - 750);
+				$this->SetValue("Deviation", round($ResultParts[0] - 750, 1));
 				If ($ResultParts[0] < 700) {
 					$this->SetValue("ORP_Rating", 0);
 				}
