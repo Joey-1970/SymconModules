@@ -77,7 +77,7 @@
 		$arrayActions = array(); 
 		$arrayActions[] = array("type" => "Label", "caption" => "Wichtiger Hinweis: Bitte dazu die Bedienungsanleitung beachten!"); 
 		$ArrayRowLayout = array();
-		$ArrayRowLayout[] = array("type" => "Button", "caption" => "Kalibrierung", "onClick" => 'EZOOPRCircuit_Calibration($id, $Value);'); 
+		$ArrayRowLayout[] = array("type" => "Button", "caption" => "Kalibrierung", "onClick" => 'EZOOPRCircuit_Calibration($id, 475);'); 
 		$ArrayRowLayout[] = array("type" => "NumberSpinner", "name" => "Value", "caption" => "Wert");
 		$arrayActions[] = array("type" => "RowLayout", "items" => $ArrayRowLayout);
 		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung löschen", "onClick" => 'EZOOPRCircuit_CalibrationClear($id);'); 
