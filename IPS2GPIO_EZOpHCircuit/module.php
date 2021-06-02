@@ -16,6 +16,9 @@
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
 		$this->RegisterPropertyInteger("TemperatureID", 0);
 		$this->RegisterPropertyBoolean("ExtendedpHScale", false);
+		$this->RegisterPropertyFloat("MidpHValue", 7.0);
+		$this->RegisterPropertyFloat("HighpHValue", 10.0);
+		$this->RegisterPropertyFloat("LowpHValue", 4.0);
             	$this->RegisterTimer("Messzyklus", 0, 'EZOpHCircuit_GetpHValue($_IPS["TARGET"]);');
 		
 		// Profil anlegen
@@ -86,9 +89,16 @@
 		
 		$arrayActions = array(); 
 		$arrayActions[] = array("type" => "Label", "caption" => "Wichtiger Hinweis: Bitte dazu die Bedienungsanleitung beachten!"); 
-		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung mittlerer Wert (pH 7)", "onClick" => 'EZOpHCircuit_CalibrationMidpoint($id);'); 
-		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung niedrigen Wert (pH 4)", "onClick" => 'EZOpHCircuit_CalibrationLowpoint($id);'); 
-		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung hohen Wert (pH 10)", "onClick" => 'EZOpHCircuit_CalibrationHighpoint($id);'); 
+		
+		$arrayActions[] = array("type" => "NumberSpinner", "name" => "MidpHValue", "caption" => "Wert der mittleren Kalbrierungsflüssigkeit", "suffix" => "pH", "minimum" => 6, "maximum" => 8, "digits" => 2);
+		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung mittlerer Wert (um pH 7)", "onClick" => 'EZOpHCircuit_CalibrationMidpoint($id, $MidpHValue);'); 
+		
+		$arrayActions[] = array("type" => "NumberSpinner", "name" => "LowpHValue", "caption" => "Wert der niedrigen Kalbrierungsflüssigkeit", "suffix" => "pH", "minimum" => 3, "maximum" => 5, "digits" => 2);
+		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung niedrigen Wert (um pH 4)", "onClick" => 'EZOpHCircuit_CalibrationLowpoint($id, $LowpHValue);');
+		
+		$arrayActions[] = array("type" => "NumberSpinner", "name" => "HighpHValue", "caption" => "Wert der hohen Kalbrierungsflüssigkeit", "suffix" => "pH", "minimum" => 9, "maximum" => 11, "digits" => 2);
+		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung hohen Wert (um pH 10)", "onClick" => 'EZOpHCircuit_CalibrationHighpoint($id, $MHighpHValue);'); 
+		
 		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung löschen", "onClick" => 'EZOpHCircuit_CalibrationClear($id);'); 
 		$arrayActions[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayActions[] = array("type" => "Label", "caption" => "Test Center"); 
@@ -460,11 +470,12 @@
 		}
 	}
 	    
-	public function CalibrationMidpoint()
+	public function CalibrationMidpoint($phValue)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("CalibrationMidpoint", "Ausfuehrung", 0);
-			$Message = "Cal,mid,7.00";
+			$pHValueFormated = number_format($phValue, 2, '.', '');
+			$Message = "Cal,mid,".$pHValueFormated;
 			$Result = $this->Write($Message);
 			If ($Result == false) {
 				return false;
@@ -480,11 +491,12 @@
 		}
 	}
 	    
-	public function CalibrationLowpoint()
+	public function CalibrationLowpoint($phValue)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("CalibrationLowpoint", "Ausfuehrung", 0);
-			$Message = "Cal,low,4.00";
+			$pHValueFormated = number_format($phValue, 2, '.', '');
+			$Message = "Cal,low,".$pHValueFormated;
 			$Result = $this->Write($Message);
 			If ($Result == false) {
 				return false;
@@ -500,11 +512,12 @@
 		}
 	}
 	    
-	public function CalibrationHighpoint()
+	public function CalibrationHighpoint($phValue)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("CalibrationHighpoint", "Ausfuehrung", 0);
-			$Message = "Cal,mid,10.00";
+			$pHValueFormated = number_format($phValue, 2, '.', '');
+			$Message = "Cal,mid,".$pHValueFormated;
 			$Result = $this->Write($Message);
 			If ($Result == false) {
 				return false;
