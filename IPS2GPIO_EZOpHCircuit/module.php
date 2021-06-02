@@ -19,6 +19,7 @@
 		$this->RegisterPropertyFloat("MidpHValue", 7.0);
 		$this->RegisterPropertyFloat("HighpHValue", 10.0);
 		$this->RegisterPropertyFloat("LowpHValue", 4.0);
+		
             	$this->RegisterTimer("Messzyklus", 0, 'EZOpHCircuit_GetpHValue($_IPS["TARGET"]);');
 		
 		// Profil anlegen
@@ -48,6 +49,7 @@
 		$this->RegisterVariableInteger("Restart", "Letzter Neustart", "IPS2GPIO.Restart", 30);
 		$this->RegisterVariableFloat("Voltage", "Volt", "IPS2GPIO.V", 40);
 		$this->RegisterVariableFloat("pH", "pH", "~Liquid.pH.F", 50);
+		$this->RegisterVariableFloat("Deviation", "Abweichung", "", 55);
 		$this->RegisterVariableInteger("pH_Rating", "pH Bewertung", "IPS2GPIO.pH_Rating", 60);
 		$this->RegisterVariableFloat("Temperature", "Temperatur", "~Temperature", 70);
 		$this->RegisterVariableInteger("Calibration", "Kalibration", "IPS2GPIO.Calibration", 80);
