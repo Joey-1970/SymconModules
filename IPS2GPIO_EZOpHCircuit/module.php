@@ -476,6 +476,7 @@
 			$this->SendDebug("CalibrationMidpoint", "Ausfuehrung", 0);
 			$pHValueFormated = number_format($phValue, 2, '.', '');
 			$Message = "Cal,mid,".$pHValueFormated;
+			$this->SendDebug("CalibrationMidpoint", $Message, 0);
 			$Result = $this->Write($Message);
 			If ($Result == false) {
 				return false;
@@ -497,6 +498,7 @@
 			$this->SendDebug("CalibrationLowpoint", "Ausfuehrung", 0);
 			$pHValueFormated = number_format($phValue, 2, '.', '');
 			$Message = "Cal,low,".$pHValueFormated;
+			$this->SendDebug("CalibrationLowpoint", $Message, 0);
 			$Result = $this->Write($Message);
 			If ($Result == false) {
 				return false;
@@ -518,6 +520,7 @@
 			$this->SendDebug("CalibrationHighpoint", "Ausfuehrung", 0);
 			$pHValueFormated = number_format($phValue, 2, '.', '');
 			$Message = "Cal,mid,".$pHValueFormated;
+			$this->SendDebug("CalibrationHighpoint", $Message, 0);
 			$Result = $this->Write($Message);
 			If ($Result == false) {
 				return false;
