@@ -292,7 +292,7 @@
 			case "pH":
 				$this->SendDebug("ReadResult", "pH", 0);
 				$this->SetValue("pH", $ResultParts[0]);
-				$this->SetValue("Deviation", $ResultParts[0] - 7.4);
+				$this->SetValue("Deviation", round($ResultParts[0] - 7.4, 1));
 				If ($ResultParts[0] < 7.2) {
 					$this->SetValue("pH_Rating", 0);
 				}
