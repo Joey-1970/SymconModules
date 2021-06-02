@@ -86,19 +86,17 @@
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "SelectVariable", "name" => "TemperatureID", "caption" => "Temperatur (Kompensation)");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "ExtendedpHScale", "caption" => "Erweiterte pH-Skala aktivieren"); 
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("type" => "Label", "caption" => "Voreinstellungen für die Kalbrierung"); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "MidpHValue", "caption" => "Wert der mittleren Kalbrierungsflüssigkeit", "suffix" => "pH", "minimum" => 6, "maximum" => 8, "digits" => 2);
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "LowpHValue", "caption" => "Wert der niedrigen Kalbrierungsflüssigkeit", "suffix" => "pH", "minimum" => 3, "maximum" => 5, "digits" => 2);
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "HighpHValue", "caption" => "Wert der hohen Kalbrierungsflüssigkeit", "suffix" => "pH", "minimum" => 9, "maximum" => 11, "digits" => 2);
 		
 		$arrayActions = array(); 
-		$arrayActions[] = array("type" => "Label", "caption" => "Wichtiger Hinweis: Bitte dazu die Bedienungsanleitung beachten!"); 
-		
-		$arrayActions[] = array("type" => "NumberSpinner", "name" => "MidpHValue", "caption" => "Wert der mittleren Kalbrierungsflüssigkeit", "suffix" => "pH", "minimum" => 6, "maximum" => 8, "digits" => 2);
+		$arrayActions[] = array("type" => "Label", "caption" => "Wichtiger Hinweis: Bitte dazu die Bedienungsanleitung und die Einstellungen im Modul beachten!"); 
 		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung mittlerer Wert (um pH 7)", "onClick" => 'EZOpHCircuit_CalibrationMidpoint($id, $MidpHValue);'); 
-		
-		$arrayActions[] = array("type" => "NumberSpinner", "name" => "LowpHValue", "caption" => "Wert der niedrigen Kalbrierungsflüssigkeit", "suffix" => "pH", "minimum" => 3, "maximum" => 5, "digits" => 2);
 		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung niedrigen Wert (um pH 4)", "onClick" => 'EZOpHCircuit_CalibrationLowpoint($id, $LowpHValue);');
-		
-		$arrayActions[] = array("type" => "NumberSpinner", "name" => "HighpHValue", "caption" => "Wert der hohen Kalbrierungsflüssigkeit", "suffix" => "pH", "minimum" => 9, "maximum" => 11, "digits" => 2);
 		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung hohen Wert (um pH 10)", "onClick" => 'EZOpHCircuit_CalibrationHighpoint($id, $MHighpHValue);'); 
-		
 		$arrayActions[] = array("type" => "Button", "caption" => "Kalibrierung löschen", "onClick" => 'EZOpHCircuit_CalibrationClear($id);'); 
 		$arrayActions[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayActions[] = array("type" => "Label", "caption" => "Test Center"); 
