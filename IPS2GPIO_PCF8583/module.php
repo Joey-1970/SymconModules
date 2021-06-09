@@ -474,7 +474,8 @@
 								// Durchfluss-Sensor
 								
 								$PulseLiterManuel = $this->ReadPropertyInteger("PulseLiterManuel");
-								$LiterMinute = $CounterDifference / $PulseLiterManuel;
+								$PulseMinute = $this->GetValue("PulseMinute");
+								$LiterMinute = $PulseMinute / $PulseLiterManuel;
 								If ($this->GetValue("LiterMinute") <> $LiterMinute) {
 									$this->SetValue("LiterMinute", $LiterMinute);
 								}
