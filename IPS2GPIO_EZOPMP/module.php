@@ -654,8 +654,6 @@
 	    
 	public function Calibration(float $Value)
 	{
-		// Eventuell muss hier das Komma in einen Punkt umgewandelt werden?
-		
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Calibration", "Ausfuehrung", 0);
 			$Message = "Cal,".$Value;
@@ -726,7 +724,7 @@
 			}
 			else {
 				$this->SendDebug("SetI2CAddress", "Ausfuehrung erfolgreich", 0);
-				return $Result;
+				return true;
 			}
 		}
 	}
