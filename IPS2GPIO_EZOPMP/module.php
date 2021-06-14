@@ -713,7 +713,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("SetI2CAddress", "Ausfuehrung", 0);
-			If (($Address < 1) AND ($Address > 127)) {
+			If (($Address < 1) OR ($Address > 127)) {
 				$this->SendDebug("SetI2CAddress", "I2C-Adresse muss zwischen 1 und 127 sein!", 0);
 				return false;
 			}
