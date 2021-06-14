@@ -576,6 +576,26 @@
 			}
 		}
 	}
+	    
+	public function SetI2CAddress(int $Address)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("SetI2CAddress", "Ausfuehrung", 0);
+			If (($Address < 1) OR ($Address > 127)) {
+				$this->SendDebug("SetI2CAddress", "I2C-Adresse muss zwischen 1 und 127 sein!", 0);
+				return false;
+			}
+			$Message = "I2C,".$Address;
+			$Result = $this->Write($Message);
+			If ($Result == false) {
+				return false;
+			}
+			else {
+				$this->SendDebug("SetI2CAddress", "Ausfuehrung erfolgreich", 0);
+				return true;
+			}
+		}
+	}
 	
 	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
 	{
