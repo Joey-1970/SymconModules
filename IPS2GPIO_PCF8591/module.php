@@ -22,7 +22,7 @@
             	$this->RegisterTimer("Messzyklus", 0, 'I2GAD1_Measurement($_IPS["TARGET"]);');
 		
 		// Profile anlegen
-		$this->RegisterProfileFloat("IPS2GPIO.PCF8591_Pressure", "Gauge", "", " bar", 0, 10, 0.1, 1);
+		$this->RegisterProfileFloat("IPS2GPIO.PCF8591_Pressure", "Gauge", "", " bar", 0, 10, 0.1, 2);
 		
 		// Status-Variablen anlegen
 		for ($i = 0; $i <= 3; $i++) {
