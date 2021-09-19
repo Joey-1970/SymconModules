@@ -33,6 +33,12 @@
 		IPS_SetVariableProfileAssociation("IPS2GPIO.ORP_Rating", 1, "Ideal", "Ok", 0x00FF00);
 		IPS_SetVariableProfileAssociation("IPS2GPIO.ORP_Rating", 2, "Zu Hoch", "Warning", 0xFF0000);
 		
+		$this->RegisterProfileInteger("IPS2GPIO.Calibration", "Gauge", "", "", 0, 4, 1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.Calibration", 0, "Keine", "Warning", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.Calibration", 1, "Ein-Punkt-Kalibrierung", "", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.Calibration", 2, "Zwei-Punkt-Kalibrierung", "", -1);
+		IPS_SetVariableProfileAssociation("IPS2GPIO.Calibration", 3, "Drei-Punkt-Kalibrierung", "", -1);	
+		
 		//Status-Variablen anlegen
 		$this->RegisterVariableString("DeviceType", "Device Typ", "", 10);
 		$this->RegisterVariableString("Firmware", "Firmware", "", 20);
@@ -124,11 +130,29 @@
 			else {
 				$this->SetTimerInterval("Messzyklus", 0);
 				$this->SetStatus(104);
+				$this->SetValue("LED", false);
+				$this->SetValue("DeviceType", "unbekannt");
+				$this->SetValue("Firmware", "unbekannt");
+				$this->SetValue("ORP", 0);
+				$this->SetValue("Deviation", 0);
+				$this->SetValue("ORP_Rating", 0);
+				$this->SetValue("Restart", 4);
+				$this->SetValue("Voltage", 0);
+				$this->SetValue("Calibration", 0);
 			}	
 		}
 		else {
 			$this->SetTimerInterval("Messzyklus", 0);
 			$this->SetStatus(104);
+			$this->SetValue("LED", false);
+			$this->SetValue("DeviceType", "unbekannt");
+			$this->SetValue("Firmware", "unbekannt");
+			$this->SetValue("ORP", 0);
+			$this->SetValue("Deviation", 0);
+			$this->SetValue("ORP_Rating", 0);
+			$this->SetValue("Restart", 4);
+			$this->SetValue("Voltage", 0);
+			$this->SetValue("Calibration", 0);
 		}
 	}
 	
