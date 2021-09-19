@@ -154,11 +154,31 @@
 			else {
 				$this->SetTimerInterval("Messzyklus", 0);
 				$this->SetStatus(104);
+				$this->SetValue("LED", false);
+				$this->SetValue("DeviceType", "unbekannt");
+				$this->SetValue("Firmware", "unbekannt");
+				$this->SetValue("pH", 0);
+				$this->SetValue("Deviation", 0);
+				$this->SetValue("pH_Rating", 0);
+				$this->SetValue("Restart", 4);
+				$this->SetValue("Voltage", 0);
+				$this->SetValue("Calibration", 0);
 			}	
 		}
 		else {
 			$this->SetTimerInterval("Messzyklus", 0);
 			$this->SetStatus(104);
+			$this->SetTimerInterval("Messzyklus", 0);
+			$this->SetStatus(104);
+			$this->SetValue("LED", false);
+			$this->SetValue("DeviceType", "unbekannt");
+			$this->SetValue("Firmware", "unbekannt");
+			$this->SetValue("pH", 0);
+			$this->SetValue("Deviation", 0);
+			$this->SetValue("pH_Rating", 0);
+			$this->SetValue("Restart", 4);
+			$this->SetValue("Voltage", 0);
+			$this->SetValue("Calibration", 0);
 		}
 	}
 	
