@@ -123,11 +123,11 @@
 		$Filter = '((.*"Function":"get_used_i2c".*|.*"DeviceIdent":'.$this->GetBuffer("DeviceIdent").'.*)|.*"Function":"status".*)';
 		$this->SetReceiveDataFilter($Filter);
 
-		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
+		If ((IPS_GetKernelRunlevel() == KR_READY) AND ($this->HasActiveParent() == true)) {
 			
 			// Registrierung für die Änderung der Ist-Temperatur
 			If ($this->ReadPropertyInteger("TemperatureID") > 0) {
-				$this->RegisterMessage($this->ReadPropertyInteger("TemperatureID"), 10603);
+				$this->RegisterMessage($this->ReadPropertyInteger("TemperatureID"), VM_UPDATE);
 			}
 			else {
 				$this->SetValue("Temperature", 25);
@@ -222,11 +222,11 @@
 	public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     	{
 		switch ($Message) {
-			case 10001:
+			case IPS_KERNELSTARTED:
 				// IPS_KERNELSTARTED
 				$this->ApplyChanges();
 				break;
-			case 10603:
+			case VM_UPDATE:
 				// Änderung der Kompesations-Temperatur, die Temperatur aus dem angegebenen Sensor in das Modul kopieren
 				If ($SenderID == $this->ReadPropertyInteger("TemperatureID")) {
 					$this->SetValue("Temperature", GetValueFloat($this->ReadPropertyInteger("TemperatureID")) );
