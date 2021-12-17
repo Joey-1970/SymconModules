@@ -314,11 +314,15 @@ class IPS2GPIO_IO extends IPSModule
 					$this->CommandClientSocket(pack("L*", 19, $Handle, $this->CalcBitmask(), 0), 16);
 				}
 					
-				$this->SetStatus(102);
+				If ($this->GetStatus() <> 102) {
+					$this->SetStatus(102);
+				}
 				
 			}
 			else {
-				$this->SetStatus(104);
+				If ($this->GetStatus() <> 104) {
+					$this->SetStatus(104);
+				}
 				$this->SetBuffer("ModuleReady", 0);
 			}
 		}
@@ -1631,11 +1635,15 @@ class IPS2GPIO_IO extends IPSModule
 		    switch($Ident) {
 		        case "Open":
 		            If ($Value = True) {
-		            		$this->SetStatus(101);
+		            		If ($this->GetStatus() <> 102) {
+						$this->SetStatus(102);
+					}
 		            		$this->ConnectionTest();
 		            	}
 		 	   else {
-		 	   		$this->SetStatus(104);
+		 	   		If ($this->GetStatus() <> 104) {
+						$this->SetStatus(104);
+					}
 		 	   	}
 		            //Neuen Wert in die Statusvariable schreiben
 		            SetValue($this->GetIDForIdent($Ident), $Value);
@@ -1690,7 +1698,9 @@ class IPS2GPIO_IO extends IPSModule
 						$this->SendDebug("CommandClientSocket", "Fehler beim Verbindungsaufbau ".$errno." ".$errstr, 0);
 						// Testballon an IPS-ClientSocket
 						$this->ClientSocket(pack("L*", 99, 0, 0, 0));						
-						$this->SetStatus(201);
+						If ($this->GetStatus() <> 200) {
+							$this->SetStatus(200);
+						}
 						IPS_SemaphoreLeave("ClientSocket");
 						return $Result;
 					}
@@ -2498,14 +2508,18 @@ class IPS2GPIO_IO extends IPSModule
 						If (GetValueBoolean($this->GetIDForIdent("PigpioStatus")) == true) {
 							SetValueBoolean($this->GetIDForIdent("PigpioStatus"), false);
 						}
-						$this->SetStatus(104);
+						If ($this->GetStatus() <> 104) {
+							$this->SetStatus(104);
+						}
 					}
 					else {
 						fclose($status);
 						//IPS_LogMessage("IPS2GPIO Netzanbindung: ","Port ist geöffnet");
 						$this->SendDebug("Netzanbindung", "Port ist geoeffnet", 0);
 						$result = true;
-						$this->SetStatus(102);
+						If ($this->GetStatus() <> 102) {
+							$this->SetStatus(102);
+						}
 					}
 	   			}
 	   			else {
@@ -2513,7 +2527,9 @@ class IPS2GPIO_IO extends IPSModule
 					//IPS_LogMessage("IPS2GPIO Netzanbindung: ","Port ist geöffnet");
 					$this->SendDebug("Netzanbindung", "Port ist geoeffnet", 0);
 					$result = true;
-					$this->SetStatus(102);
+					If ($this->GetStatus() <> 102) {
+						$this->SetStatus(102);
+					}
 	   			}
 		}
 		else {
@@ -2522,7 +2538,9 @@ class IPS2GPIO_IO extends IPSModule
 			If (GetValueBoolean($this->GetIDForIdent("PigpioStatus")) == true) {
 				SetValueBoolean($this->GetIDForIdent("PigpioStatus"), false);
 			}
-			$this->SetStatus(104);
+			If ($this->GetStatus() <> 104) {
+				$this->SetStatus(104);
+			}
 		}
 	return $result;
 	}
