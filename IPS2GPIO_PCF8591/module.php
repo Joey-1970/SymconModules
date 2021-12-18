@@ -158,12 +158,16 @@
 			}
 			else {
 				$this->SetTimerInterval("Messzyklus", 0);
-				$this->SetStatus(104);
+				If ($this->GetStatus() <> 104) {
+					$this->SetStatus(104);
+				}
 			}
 		}
 		else {
 			$this->SetTimerInterval("Messzyklus", 0);
-			$this->SetStatus(104);
+			If ($this->GetStatus() <> 104) {
+				$this->SetStatus(104);
+			}
 		}
 	}
 	
@@ -236,7 +240,9 @@
 					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8591_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("40")|($i & 3) )));
 					If ($Result < 0) {
 						$this->SendDebug("Measurement", "Einlesen der Werte fehlerhaft!", 0);
-						$this->SetStatus(202);
+						If ($this->GetStatus() <> 202) {
+							$this->SetStatus(202);
+						}
 						return;
 					}
 
@@ -244,11 +250,15 @@
 					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8591_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("40")|($i & 3) )));
 					If ($Result < 0) {
 						$this->SendDebug("Measurement", "Einlesen der Werte fehlerhaft!", 0);
-						$this->SetStatus(202);
+						If ($this->GetStatus() <> 202) {
+							$this->SetStatus(202);
+						}
 						return;
 					}
 					else {
-						$this->SetStatus(102);
+						If ($this->GetStatus() <> 102) {
+							$this->SetStatus(102);
+						}
 						If ($this->GetValue("Channel_".$i) <> $Result) {
 							$this->SetValue("Channel_".$i, $Result);
 						}
@@ -302,10 +312,14 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8591_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("40"), "Value" => $Value)));
 			If (!$Result) {
 				$this->SendDebug("SetOutput", "Setzen des Ausgangs fehlerhaft!", 0);
-				$this->SetStatus(202);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
 			}
 			else {
-				$this->SetStatus(102);
+				If ($this->GetStatus() <> 102) {
+					$this->SetStatus(102);
+				}
 				//Neuen Wert in die Statusvariable schreiben
 	            		If ($this->GetValue("Output") <> $Value) {
 					$this->SetValue("Output", $Value);
