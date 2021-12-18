@@ -153,7 +153,9 @@
 			}
 			else {
 				$this->SetTimerInterval("Messzyklus", 0);
-				$this->SetStatus(104);
+				If ($this->GetStatus() <> 104) {
+					$this->SetStatus(104);
+				}
 				$this->SetValue("LED", false);
 				$this->SetValue("DeviceType", "unbekannt");
 				$this->SetValue("Firmware", "unbekannt");
@@ -167,7 +169,9 @@
 		}
 		else {
 			$this->SetTimerInterval("Messzyklus", 0);
-			$this->SetStatus(104);
+			If ($this->GetStatus() <> 104) {
+				$this->SetStatus(104);
+			}
 			$this->SetTimerInterval("Messzyklus", 0);
 			$this->SetStatus(104);
 			$this->SetValue("LED", false);
@@ -243,7 +247,9 @@
 		$this->SendDebug("Write", "Ergebnis: ".$Result, 0);
 		If (!$Result) {
 			$this->SendDebug("Setup", "Schreibvorgang fehlerhaft!", 0);
-			$this->SetStatus(202);
+			If ($this->GetStatus() <> 202) {
+				$this->SetStatus(202);
+			}
 			return false;
 		}
 		else {
@@ -257,11 +263,15 @@
 		$this->SendDebug("Read", "Ergebnis: ".$Result, 0);
 		If ($Result < 0) {
 			$this->SendDebug("Read", "Lesevorgang fehlerhaft!", 0);
-			$this->SetStatus(202);
+			If ($this->GetStatus() <> 202) {
+				$this->SetStatus(202);
+			}
 			return false;
 		}
 		else {
-			$this->SetStatus(102);
+			If ($this->GetStatus() <> 102) {
+				$this->SetStatus(102);
+			}
 			$ResultData = array();
 			$this->SendDebug("Read", "Roh-Ergebnis: ".$Result, 0);
 			$ResultData = unserialize($Result);
