@@ -235,12 +235,16 @@
 			}
 			else {
 				$this->SetTimerInterval("Messzyklus", 0);
-				$this->SetStatus(104);
+				If ($this->GetStatus() <> 104) {
+					$this->SetStatus(104);
+				}
 			}	
 		}
 		else {
 			$this->SetTimerInterval("Messzyklus", 0);
-			$this->SetStatus(104);
+			If ($this->GetStatus() <> 104) {
+				$this->SetStatus(104);
+			}
 		}
 	}
 	
@@ -332,18 +336,24 @@
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x00, "Value" => $Bitmask)));
 				If (!$Result) {
 					$this->SendDebug("Setup", "Setzen der Config fehlerhaft!", 0);
-					$this->SetStatus(202);
+					If ($this->GetStatus() <> 202) {
+						$this->SetStatus(202);
+					}
 					//$this->SetTimerInterval("Messzyklus", 0);
 					break;
 				}
 				else {
-					$this->SetStatus(102);
+					If ($this->GetStatus() <> 102) {
+						$this->SetStatus(102);
+					}
 				}				
 								
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x01, "Count" => 3)));
 				If ($Result < 0) {
 					$this->SendDebug("GetCounter", "Fehler bei der Datenermittung", 0);
-					$this->SetStatus(202);
+					If ($this->GetStatus() <> 202) {
+						$this->SetStatus(202);
+					}
 				}
 				else {
 					If (is_array(unserialize($Result)) == true) {
@@ -352,12 +362,16 @@
 						$Result_2 = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x00, "Value" => $Bitmask)));
 						If (!$Result_2) {
 							$this->SendDebug("GetCounter", "Setzen der Config fehlerhaft!", 0);
-							$this->SetStatus(202);
+							If ($this->GetStatus() <> 202) {
+								$this->SetStatus(202);
+							}
 							//$this->SetTimerInterval("Messzyklus", 0);
 							break;
 						}
 						else {
-							$this->SetStatus(102);
+							If ($this->GetStatus() <> 102) {
+								$this->SetStatus(102);
+							}
 							$MeasurementData = array();
 							$MeasurementData = unserialize($Result);
 
@@ -505,7 +519,9 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCF8583_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x00, "Value" => $Bitmask)));
 			If (!$Result) {
 				$this->SendDebug("SetCounter", "Einleitung des Reset fehlerhaft!", 0);
-				$this->SetStatus(202);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
 				$this->SetTimerInterval("Messzyklus", 0);
 				return;
 			}
@@ -518,7 +534,9 @@
 				
 				If (!$Result) {
 					$this->SendDebug("Setup", "Setzen des Counterwertes fehlerhaft!", 0);
-					$this->SetStatus(202);
+					If ($this->GetStatus() <> 202) {
+						$this->SetStatus(202);
+					}
 					$this->SetTimerInterval("Messzyklus", 0);
 					return;
 				}
@@ -528,13 +546,17 @@
 					
 					If (!$Result) {
 						$this->SendDebug("SetCounter", "Abschluss des Reset fehlerhaft!", 0);
-						$this->SetStatus(202);
+						If ($this->GetStatus() <> 202) {
+							$this->SetStatus(202);
+						}
 						$this->SetTimerInterval("Messzyklus", 0);
 						return;
 					}
 					else {
 						$this->SendDebug("SetCounter", "Reset erfolgreich!", 0);
-						$this->SetStatus(102);
+						If ($this->GetStatus() <> 102) {
+							$this->SetStatus(102);
+						}
 						$this->SetBuffer("CounterOldValue", 0);
 						$this->SetValue("CounterDifference", 0);
 						$this->GetCounter();
