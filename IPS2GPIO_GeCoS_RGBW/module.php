@@ -114,15 +114,21 @@
 				If ($Result == true) {
 					// Setup
 					$this->Setup();
-					$this->SetStatus(102);
+					If ($this->GetStatus() <> 102) {
+						$this->SetStatus(102);
+					}
 				}
 			}
 			else {
-				$this->SetStatus(104);
+				If ($this->GetStatus() <> 104) {
+					$this->SetStatus(104);
+				}
 			}	
 		}
 		else {
-			$this->SetStatus(104);
+			If ($this->GetStatus() <> 104) {
+				$this->SetStatus(104);
+			}
 		}	
 	}
 	
@@ -212,10 +218,14 @@
 										  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
 			If (!$Result) {
 				$this->SendDebug("SetOutputPinValue", "Daten setzen fehlerhaft!", 0);
-				$this->SetStatus(202);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
 			}
 			else {
-				$this->SetStatus(102);
+				If ($this->GetStatus() <> 102) {
+					$this->SetStatus(102);
+				}
 				// Ausgang abfragen
 				$this->GetOutput($StartAddress + 2);
 			}
@@ -271,10 +281,14 @@
 										  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
 					If (!$Result) {
 						$this->SendDebug("SetOutputPinStatus", "Daten setzen fehlerhaft!", 0);
-						$this->SetStatus(202);
+						If ($this->GetStatus() <> 202) {
+							$this->SetStatus(202);
+						}
 					}					
 					else {
-						$this->SetStatus(102);
+						If ($this->GetStatus() <> 102) {
+							$this->SetStatus(102);
+						}
 						// Ausgang abfragen
 						$this->GetOutput($StartAddress + 2);
 					}
@@ -312,10 +326,14 @@
 										  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit_R, "Value_4" => $H_Bit_R, "Value_5" => 0, "Value_6" => 0, "Value_7" => $L_Bit_G, "Value_8" => $H_Bit_G, "Value_9" => 0, "Value_10" => 0, "Value_11" => $L_Bit_B, "Value_12" => $H_Bit_B)));
 					If (!$Result) {
 						$this->SendDebug("SetOutputPinStatus", "Daten setzen fehlerhaft!", 0);
-						$this->SetStatus(202);
+						If ($this->GetStatus() <> 202) {
+							$this->SetStatus(202);
+						}
 					}
 					else {
-						$this->SetStatus(102);
+						If ($this->GetStatus() <> 102) {
+							$this->SetStatus(102);
+						}
 						// Ausgang abfragen
 						$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Read_Group", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress + 2)));
 						$RGB = unserialize($Result);
@@ -367,10 +385,14 @@
 										  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
 				If (!$Result) {
 					$this->SendDebug("ToggleOutputPinStatus", "Daten setzen fehlerhaft!", 0);
-					$this->SetStatus(202);
+					If ($this->GetStatus() <> 202) {
+						$this->SetStatus(202);
+					}
 				}
 				else {
-					$this->SetStatus(102);
+					If ($this->GetStatus() <> 102) {
+						$this->SetStatus(102);
+					}
 					// Ausgang abfragen
 					$this->GetOutput($StartAddress + 2);
 				}
@@ -404,10 +426,14 @@
 
 				If (!$Result) {
 					$this->SendDebug("ToggleOutputPinStatus", "Daten setzen fehlerhaft!", 0);
-					$this->SetStatus(202);
+					If ($this->GetStatus() <> 202) {
+						$this->SetStatus(202);
+					}
 				}
 				else {
-					$this->SetStatus(102);
+					If ($this->GetStatus() <> 102) {
+						$this->SetStatus(102);
+					}
 					// Ausgang abfragen
 					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Read_Group", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress + 2)));
 					$RGB = unserialize($Result);
@@ -464,10 +490,14 @@
 										  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
 					If (!$Result) {
 						$this->SendDebug("WFadeIn", "Daten setzen fehlerhaft!", 0);
-						$this->SetStatus(202);
+						If ($this->GetStatus() <> 202) {
+							$this->SetStatus(202);
+						}
 					}
 					else {
-						$this->SetStatus(102);
+						If ($this->GetStatus() <> 102) {
+							$this->SetStatus(102);
+						}
 						If (GetValueBoolean($this->GetIDForIdent("Status_W_".$Group)) == false) {
 							SetValueBoolean($this->GetIDForIdent("Status_W_".$Group), true);
 						}
@@ -497,7 +527,9 @@
 					$Result = $this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => $R, "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => $G, "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => $B)));
 					If (!$Result) {
 						$this->SendDebug("FadeIn", "Fehler beim Schreiben des Wertes!", 0);
-						$this->SetStatus(202);
+						If ($this->GetStatus() <> 202) {
+							$this->SetStatus(202);
+						}
 						return; 
 					}
 				}
@@ -533,7 +565,9 @@
 						  "Pin_W" => $this->ReadPropertyInteger("Pin_W"), "Value_W" => $W )));
 					If (!$Result) {
 						$this->SendDebug("FadeIn", "Fehler beim Schreiben des Wertes!", 0);
-						$this->SetStatus(202);
+						If ($this->GetStatus() <> 202) {
+							$this->SetStatus(202);
+						}
 						return; 
 					}
 				}
@@ -590,10 +624,14 @@
 										  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit, "Value_4" => $H_Bit)));
 					If (!$Result) {
 						$this->SendDebug("WFadeOut", "Daten setzen fehlerhaft!", 0);
-						$this->SetStatus(202);
+						If ($this->GetStatus() <> 202) {
+							$this->SetStatus(202);
+						}
 					}
 					else {
-						$this->SetStatus(102);
+						If ($this->GetStatus() <> 102) {
+							$this->SetStatus(102);
+						}
 						If (GetValueBoolean($this->GetIDForIdent("Status_W_".$Group)) == false) {
 							SetValueBoolean($this->GetIDForIdent("Status_W_".$Group), true);
 						}
@@ -624,7 +662,9 @@
 					$Result = $this->SendDataToParent(json_encode(Array("DataID" => "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_PWM_dutycycle_RGB", "Pin_R" => $this->ReadPropertyInteger("Pin_R"), "Value_R" => $R, "Pin_G" => $this->ReadPropertyInteger("Pin_G"), "Value_G" => $G, "Pin_B" => $this->ReadPropertyInteger("Pin_B"), "Value_B" => $B)));
 					If (!$Result) {
 						$this->SendDebug("FadeOut", "Fehler beim Schreiben des Wertes!", 0);
-						$this->SetStatus(202);
+						If ($this->GetStatus() <> 202) {
+							$this->SetStatus(202);
+						}
 						return; 
 					}
 				}
@@ -660,7 +700,9 @@
 						  "Pin_W" => $this->ReadPropertyInteger("Pin_W"), "Value_W" => $W )));
 					If (!$Result) {
 						$this->SendDebug("FadeOut", "Fehler beim Schreiben des Wertes!", 0);
-						$this->SetStatus(202);
+						If ($this->GetStatus() <> 202) {
+							$this->SetStatus(202);
+						}
 						return; 
 					}
 				}
@@ -842,10 +884,14 @@
 					  "Value_1" => 0, "Value_2" => 0, "Value_3" => $L_Bit_R, "Value_4" => $H_Bit_R, "Value_5" => 0, "Value_6" => 0, "Value_7" => $L_Bit_G, "Value_8" => $H_Bit_G, "Value_9" => 0, "Value_10" => 0, "Value_11" => $L_Bit_B, "Value_12" => $H_Bit_B)));
 			If (!$Result) {
 				$this->SendDebug("SetOutputPinColor", "Daten setzen fehlerhaft!", 0);
-				$this->SetStatus(202);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
 			}
 			else {
-				$this->SetStatus(102);
+				If ($this->GetStatus() <> 102) {
+					$this->SetStatus(102);
+				}
 				// Ausgang abfragen
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Read_Group", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $StartAddress + 2)));
 				$RGB = unserialize($Result);
@@ -866,10 +912,14 @@
 
 			If (($Result_Mode < 0) OR ($Result_PreScale < 0)) {
 				$this->SendDebug("Setup", "Lesen der Konfiguration fehlerhaft!", 0);
-				$this->SetStatus(202);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
 			}
 			else {
-				$this->SetStatus(102);
+				If ($this->GetStatus() <> 102) {
+					$this->SetStatus(102);
+				}
 				If (($Result_Mode == 4) AND ($Result_PreScale == 50)) {
 					$this->SendDebug("Setup", "Lesen der Konfiguration erfolgreich, keine Erneuerung notwendig.", 0);
 				}
@@ -914,7 +964,9 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_PCA9685_Read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "InstanceID" => $this->InstanceID, "Register" => $Register)));
 			if (($Result === NULL) OR ($Result < 0) OR ($Result > 65536)) {// Falls der Splitter einen Fehler hat und 'nichts' zurückgibt.
-				$this->SetStatus(202);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
 				$this->SetBuffer("ErrorCounter", ($this->GetBuffer("ErrorCounter") + 1));
 				$this->SendDebug("GetOutput", "Keine gueltige Antwort: ".$Result, 0);
 				IPS_LogMessage("GeCoS_RGBW", "GetOutput: Keine gueltige Antwort: ".$Result);
@@ -923,7 +975,9 @@
 				}
 			}
 			else {
-				$this->SetStatus(102);
+				If ($this->GetStatus() <> 102) {
+					$this->SetStatus(102);
+				}
 				$this->SendDebug("GetOutput", "Ergebnis: ".$Result, 0);
 				$this->SetStatusVariables($Register, $Result);
 				$this->SetBuffer("ErrorCounter", 0);
