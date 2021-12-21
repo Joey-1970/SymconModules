@@ -1666,7 +1666,7 @@ class IPS2GPIO_IO extends IPSModule
 		$Result = -999;
 		$buf = 0;
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
-			if (IPS_SemaphoreEnter("ClientSocket", 2000))
+			if (IPS_SemaphoreEnter("ClientSocket", 3000))
 			{
 				if (!$this->Socket)
 				{
