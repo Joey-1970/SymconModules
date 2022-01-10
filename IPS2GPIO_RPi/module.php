@@ -197,11 +197,11 @@
 			$this->SendDebug("Measurement_1", "Ausfuehrung", 0);
 			$CommandArray = Array();
 			// GPU Temperatur
-			$CommandArray[0] = "/opt/vc/bin/vcgencmd measure_temp";
+			$CommandArray[0] = "vcgencmd measure_temp";
 			// CPU Temperatur
 			$CommandArray[1] = "cat /sys/class/thermal/thermal_zone0/temp";
 			// Spannung
-			$CommandArray[2] = "/opt/vc/bin/vcgencmd measure_volts";
+			$CommandArray[2] = "vcgencmd measure_volts";
 			// ARM Frequenz
 			$CommandArray[3] = "vcgencmd measure_clock arm";
 			// CPU Auslastung über /proc/stat
