@@ -125,6 +125,7 @@
 
 		If ((IPS_GetKernelRunlevel() == KR_READY) AND ($this->HasActiveParent() == true)) {
 			
+			$this->SendDebug("ApplyChanges", "Startbedingungen erfuellt", 0);
 			// Registrierung für die Änderung der Ist-Temperatur
 			If ($this->ReadPropertyInteger("TemperatureID") > 0) {
 				$this->RegisterMessage($this->ReadPropertyInteger("TemperatureID"), VM_UPDATE);
@@ -134,15 +135,17 @@
 			}
 			
 			If ($this->ReadPropertyBoolean("Open") == true) {
+				$this->SendDebug("ApplyChanges", "Aktivitaet positiv", 0);
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 				If ($Result == true) {
+					$this->SendDebug("ApplyChanges", "Adresse erreichbar", 0);
 					$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
 					// Firmware und Device-Typ einlesen bvbvb
 					$this->GetFirmware();
 					// LED Status
 					$this->GetLEDState();
 					// Status
-					$this->GetStatus();
+					$this->GetStatusInformation();
 					// Skala setzen
 					$this->SetpHScale($this->ReadPropertyBoolean("ExtendedpHScale"));	
 					// Kalibrierung prüfen
@@ -152,6 +155,7 @@
 				}
 			}
 			else {
+				$this->SendDebug("ApplyChanges", "Aktivitaet negativ", 0);
 				$this->SetTimerInterval("Messzyklus", 0);
 				If ($this->GetStatus() <> 104) {
 					$this->SetStatus(104);
@@ -168,6 +172,7 @@
 			}	
 		}
 		else {
+			$this->SendDebug("ApplyChanges", "Startbedingungen nicht erfuellt", 0);
 			$this->SetTimerInterval("Messzyklus", 0);
 			If ($this->GetStatus() <> 104) {
 				$this->SetStatus(104);
@@ -445,7 +450,7 @@
 		}
 	}
 	    
-	public function GetStatus()
+	public function GetStatusInformation()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("GetStatus", "Ausfuehrung", 0);
