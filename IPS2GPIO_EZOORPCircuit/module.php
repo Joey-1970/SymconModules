@@ -120,7 +120,7 @@
 					// LED Status
 					$this->GetLEDState();
 					// Status
-					$this->GetStatus();
+					$this->GetStatusInformation();
 					// Kalibrierung prüfen
 					$this->GetCalibration();
 					// Erste Messdaten einlesen
@@ -388,14 +388,14 @@
 				IPS_Sleep(900);
 				$Result = $this->Read("ORP", 7);
 				If ($Result == true) {
-					$this->GetStatus();
+					$this->GetStatusInformation();
 				}
 				return $Result;
 			}
 		}
 	}
 	    
-	public function GetStatus()
+	public function GetStatusInformation()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("GetStatus", "Ausfuehrung", 0);
