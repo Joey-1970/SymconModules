@@ -442,7 +442,7 @@
 					IPS_Sleep(900);
 					$Result = $this->Read("pH", 7);
 					If ($Result == true) {
-						$this->GetStatus();
+						$this->GetStatusInformation();
 					}
 					return $Result;
 				}
