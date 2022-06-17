@@ -172,8 +172,6 @@
 			If ($this->GetStatus() <> 104) {
 				$this->SetStatus(104);
 			}
-			$this->SetTimerInterval("Messzyklus", 0);
-			$this->SetStatus(104);
 			$this->SetValue("LED", false);
 			$this->SetValue("DeviceType", "unbekannt");
 			$this->SetValue("Firmware", "unbekannt");
