@@ -131,7 +131,7 @@
 					// Trigger kurzzeitig setzen
 			   		If (intval($data->Value) == $this->ReadPropertyBoolean("ActionValue") ) {
 			   			$this->SendDebug("Notify", "Trigger setzen mit Wert: ".intval($data->Value), 0);
-						SetValue("Trigger", true);
+						$this->SetValue("Trigger", true);
 			   			If ($this->ReadPropertyInteger("TriggerScript") > 0) {
 			   				$this->SendDebug("Notify", "Triggerskript ausfuehren", 0);
 							//IPS_RunScript($this->ReadPropertyInteger("TriggerScript"));
@@ -139,12 +139,12 @@
 
 			   			}
 						$this->SendDebug("Notify", "Trigger zuruecksetzen", 0);
-			   			SetValue("Trigger", false);
+			   			$this->SetValue("Trigger", false);
 			   		}
 			   		// Toggle-Variable
 			   		If ((GetValueBoolean($this->GetIDForIdent("Status")) == false) and (intval($data->Value) == true)) {
 			   			$this->SendDebug("Notify", "Toggle setzen", 0);
-						SetValue("Toggle", !GetValue("Toggle"));
+						$this->SetValue("Toggle", !GetValue("Toggle"));
 			   			If ($this->ReadPropertyInteger("ToggleScript") > 0) {
 			   				$this->SendDebug("Notify", "Toggleskript ausfuehren", 0);
 							//IPS_RunScript($this->ReadPropertyInteger("ToggleScript"));
@@ -152,7 +152,7 @@
 			   			}
 			   		}
 			   		// Status setzen
-			   		SetValue("Status", $data->Value);
+			   		$this->SetValue("Status", $data->Value);
 					$this->GetInput();
 			   	}
 			   	break;
@@ -186,7 +186,7 @@
 					$this->SetStatus(102);
 				}
 				$this->SendDebug("GetInput", "Ergebnis: ".(int)$Result, 0);
-				SetValue("Status", boolval($Result));
+				$this->SetValue("Status", boolval($Result));
 			}
 		}
 	}    
