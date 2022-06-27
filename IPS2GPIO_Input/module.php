@@ -186,7 +186,7 @@
 					$this->SetStatus(102);
 				}
 				$this->SendDebug("GetInput", "Ergebnis: ".(int)$Result, 0);
-				SetValue("Status", $Result);
+				SetValue("Status", boolval($Result));
 			}
 		}
 	}    
