@@ -144,7 +144,7 @@
 			   		// Toggle-Variable
 			   		If ((GetValueBoolean($this->GetIDForIdent("Status")) == false) and (intval($data->Value) == true)) {
 			   			$this->SendDebug("Notify", "Toggle setzen", 0);
-						$this->SetValue("Toggle", !GetValue("Toggle"));
+						$this->SetValue("Toggle", !$this->GetValue("Toggle"));
 			   			If ($this->ReadPropertyInteger("ToggleScript") > 0) {
 			   				$this->SendDebug("Notify", "Toggleskript ausfuehren", 0);
 							//IPS_RunScript($this->ReadPropertyInteger("ToggleScript"));
