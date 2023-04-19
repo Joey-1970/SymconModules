@@ -15,12 +15,6 @@
 		$this->RegisterPropertyInteger("DeviceBus", 1);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
 		$this->RegisterTimer("Messzyklus", 0, 'ADXL345_Measurement($_IPS["TARGET"]);');
-		
-		// Profil anlegen
-		
-		
-		//Status-Variablen anlegen
-		
         }
 	    
 	public function GetConfigurationForm() 
@@ -65,6 +59,24 @@
         {
             	// Diese Zeile nicht löschen
             	parent::ApplyChanges();
+		
+		// Profil anlegen
+		
+		
+		//Status-Variablen anlegen
+		$this->RegisterVariableBoolean("Calibration", "Kalibrierung", "~Switch", 10);
+		$this->EnableAction("Calibration");
+		
+		$this->RegisterVariableFloat("X_Axis", "X-Achse", "", 20);
+		$this->EnableAction("X_Axis");
+		
+		$this->RegisterVariableFloat("Y_Axis", "Y-Achse", "", 30);
+		$this->EnableAction("Y_Axis");
+		
+		$this->RegisterVariableFloat("Z_Axis", "Z-Achse", "", 40);
+		$this->EnableAction("Z_Axis");
+		
+		
 		
 		// Summary setzen
 		$DevicePorts = array();
@@ -178,7 +190,9 @@
 						$zAxis = $zAxis / 256.0;
 
 						$this->SendDebug("Measurement", "Ergebnis x: ".$xAxis." y: ".$yAxis." z: ".$zAxis, 0);
-						//SetValueInteger($this->GetIDForIdent("RTC_Timestamp"), $Timestamp);
+						$this->SetValue("X_Axis", $xAxis);
+						$this->SetValue("Y_Axis", $yAxis);
+						$this->SetValue("Z_Axis", $zAxis);
 						
 						
 						break;
