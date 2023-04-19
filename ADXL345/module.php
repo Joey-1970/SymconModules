@@ -143,7 +143,51 @@
     	}     
 	    
 	// Beginn der Funktionen
+	public function Measurement()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Measurement", "Ausfuehrung", 0);
+			
+			$tries = 3;
+			do {
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_ADXL345_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x32, "Count" => 6)));
+				If ($Result < 0) {
+					$this->SendDebug("Measurement", "Einlesen der Werte fehlerhaft!", 0);
+					$this->SetStatus(202);
+				}
+				else {
+					
+					If (is_array(unserialize($Result))) {
+						$this->SetStatus(102);
+						$DataArray = array();
+						// $DataArray[1] - X-Axis Data 0
+						// $DataArray[2] - X-Axis Data 1
+						// $DataArray[3] - Y-Axis Data 0
+						// $DataArray[4] - Y-Axis Data 1
+						// $DataArray[5] - Z-Axis Data 0
+						// $DataArray[6] - Z-Axis Data 1
+						$DataArray = unserialize($Result);
+						// Ergebnis sichern
+						$xAxis = (($DataArray[2] & 0xff) << 8) | ($DataArray[1] & 0xff);
+						$yAxis = (($DataArray[4] & 0xff) << 8) | ($DataArray[3] & 0xff);
+						$zAxis = (($DataArray[6] & 0xff) << 8) | ($DataArray[5] & 0xff);
+						
+						$xAxis = $xAxis / 256.0;
+						$yAxis = $yAxis / 256.0;
+						$zAxis = $zAxis / 256.0;
 
+						$this->SendDebug("Measurement", "Ergebnis x: ".$xAxis." y: ".$yAxis." z: ".$zAxis, 0);
+						//SetValueInteger($this->GetIDForIdent("RTC_Timestamp"), $Timestamp);
+						
+						
+						break;
+					}
+				}
+			$tries--;
+			} while ($tries);  
+		}
+	}
+	
 	    
 	    
 	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
