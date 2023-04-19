@@ -68,13 +68,10 @@
 		$this->EnableAction("Calibration");
 		
 		$this->RegisterVariableFloat("X_Axis", "X-Achse", "", 20);
-		$this->EnableAction("X_Axis");
 		
 		$this->RegisterVariableFloat("Y_Axis", "Y-Achse", "", 30);
-		$this->EnableAction("Y_Axis");
 		
 		$this->RegisterVariableFloat("Z_Axis", "Z-Achse", "", 40);
-		$this->EnableAction("Z_Axis");
 		
 		
 		
