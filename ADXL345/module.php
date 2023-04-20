@@ -182,9 +182,9 @@
 						$yAxis = (($DataArray[4] & 0xff) << 8) | ($DataArray[3] & 0xff);
 						$zAxis = (($DataArray[6] & 0xff) << 8) | ($DataArray[5] & 0xff);
 						
-						$xAxis = $xAxis / 256.0;
-						$yAxis = $yAxis / 256.0;
-						$zAxis = $zAxis / 256.0;
+						$xAxis = bin16dec($xAxis) / 256.0;
+						$yAxis = bin16dec($yAxis) / 256.0;
+						$zAxis = bin16dec($zAxis) / 256.0;
 
 						$this->SendDebug("Measurement", "Ergebnis x: ".$xAxis." y: ".$yAxis." z: ".$zAxis, 0);
 						$this->SetValue("X_Axis", $xAxis);
@@ -200,7 +200,27 @@
 		}
 	}
 	
+	private function bin16dec($dec) 
+	{
+	    	// converts 16bit binary number string to integer using two's complement
+	    	$BinString = decbin($dec);
+		$DecNumber = bindec($BinString) & 0xFFFF; // only use bottom 16 bits
+	    	If (0x8000 & $DecNumber) {
+			$DecNumber = - (0x010000 - $DecNumber);
+	    	}
+	return $DecNumber;
+	}  
 	    
+	private function bin8dec($dec) 
+	{
+	    	// converts 8bit binary number string to integer using two's complement
+	    	$BinString = decbin($dec);
+		$DecNumber = bindec($BinString) & 0xFF; // only use bottom 16 bits
+	    	If (0x80 & $DecNumber) {
+			$DecNumber = - (0x0100 - $DecNumber);
+	    	}
+	return $DecNumber;
+	}        
 	    
 	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
 	{
