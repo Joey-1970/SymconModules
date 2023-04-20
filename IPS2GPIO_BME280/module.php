@@ -610,7 +610,7 @@
 	    
 	private function bin16dec($dec) 
 	{
-	    	// converts 8bit binary number string to integer using two's complement
+	    	// converts 16bit binary number string to integer using two's complement
 	    	$BinString = decbin($dec);
 		$DecNumber = bindec($BinString) & 0xFFFF; // only use bottom 16 bits
 	    	If (0x8000 & $DecNumber) {
@@ -621,7 +621,7 @@
 	    
 	private function bin8dec($dec) 
 	{
-	    	// converts 16bit binary number string to integer using two's complement
+	    	// converts 8bit binary number string to integer using two's complement
 	    	$BinString = decbin($dec);
 		$DecNumber = bindec($BinString) & 0xFF; // only use bottom 16 bits
 	    	If (0x80 & $DecNumber) {
