@@ -259,9 +259,9 @@
 						$yAxis = (($DataArray[4] & 0xff) << 8) | ($DataArray[3] & 0xff);
 						$zAxis = (($DataArray[6] & 0xff) << 8) | ($DataArray[5] & 0xff);
 						
-						$xAxis = bin16dec($xAxis) / 256.0;
-						$yAxis = bin16dec($yAxis) / 256.0;
-						$zAxis = bin16dec($zAxis) / 256.0;
+						$xAxis = $this->bin16dec($xAxis) / 256.0;
+						$yAxis = $this->bin16dec($yAxis) / 256.0;
+						$zAxis = $this->bin16dec($zAxis) / 256.0;
 
 						$this->SendDebug("Measurement", "Ergebnis x: ".$xAxis." y: ".$yAxis." z: ".$zAxis, 0);
 						$this->SetValue("X_Axis", $xAxis);
