@@ -194,17 +194,6 @@
 				}
 			}
 			
-			// Minimalkombination nach dem Beispiel von Boris
-			$DATA_FORMAT = 0x08;
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_ADXL345_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x31, "Value" => $DATA_FORMAT)));
-			If (!$Result) {
-				$this->SendDebug("Setup", "DATA_FORMAT setzen fehlerhaft!", 0);
-				If ($this->GetStatus() <> 202) {
-					$this->SetStatus(202);
-				}
-				return;
-			}
-			
 			// pi.i2c_write_byte_data(h, 0x2d, 0)  # POWER_CTL reset.
    			// pi.i2c_write_byte_data(h, 0x2d, 8)  # POWER_CTL measure.
    			// pi.i2c_write_byte_data(h, 0x31, 0)  # DATA_FORMAT reset.
@@ -240,7 +229,10 @@
 				return;
 			}
 			
-			$DATA_FORMAT = 11; // resolution
+			$RangeSetting = $this->ReadPropertyInteger("RangeSetting");
+			$Full_Res = 1;
+			$DATA_FORMAT = ($Full_Res << 3)|$RangeSetting;
+			//$DATA_FORMAT = 11; // resolution
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_ADXL345_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x31, "Value" => $DATA_FORMAT)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "DATA_FORMAT setzen fehlerhaft!", 0);
@@ -249,44 +241,6 @@
 				}
 				return;
 			}
-			
-			/*
-			$osrs_t = $this->ReadPropertyInteger("OSRS_T"); // Oversampling Measure temperature x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
-			$osrs_p = $this->ReadPropertyInteger("OSRS_P"); // Oversampling Measure pressure x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
-			$osrs_h = $this->ReadPropertyInteger("OSRS_H"); // Oversampling Measure humidity x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
-			$mode = $this->ReadPropertyInteger("Mode"); // 0 = Power Off (Sleep Mode), x01 und x10 Force Mode, 11 Normal Mode
-			$t_sb = $this->ReadPropertyInteger("SB_T"); // StandBy Time: dec: 0 (0.5ms) - 5 (1000ms), 6 (10ms), 7 (20ms)
-			$filter = $this->ReadPropertyInteger("IIR_Filter"); // IIR-Filter 0-> off - 2, 4, 8, 16 (dec: 0 (off) - 4)
-			$spi3w_en = 0;
-
-			$ctrl_meas_reg = (($osrs_t << 5)|($osrs_p << 2)|$mode);
-			$config_reg = (($t_sb << 5)|($filter << 2)|$spi3w_en);
-			$ctrl_hum_reg = $osrs_h;
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F2"), "Value" => $ctrl_hum_reg)));
-			If (!$Result) {
-				$this->SendDebug("Setup", "ctrl_hum_reg setzen fehlerhaft!", 0);
-				If ($this->GetStatus() <> 202) {
-					$this->SetStatus(202);
-				}
-				return;
-			}
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F4"), "Value" => $ctrl_meas_reg)));
-			If (!$Result) {
-				$this->SendDebug("Setup", "ctrl_meas_reg setzen fehlerhaft!", 0);
-				If ($this->GetStatus() <> 202) {
-					$this->SetStatus(202);
-				}
-				return;
-			}
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F5"), "Value" => $config_reg)));
-			If (!$Result) {
-				$this->SendDebug("Setup", "config_reg setzen fehlerhaft!", 0);
-				If ($this->GetStatus() <> 202) {
-					$this->SetStatus(202);
-				}
-				return;
-			}
-			*/
 			
 		}
 	}
@@ -326,9 +280,12 @@
 						
 						$this->SendDebug("Measurement", "Roh-Ergebnis x: ".$xAxis." y: ".$yAxis." z: ".$zAxis, 0);
 						
-						$xAxis = $this->bin16dec($xAxis) / 256.0;
-						$yAxis = $this->bin16dec($yAxis) / 256.0;
-						$zAxis = $this->bin16dec($zAxis) / 256.0;
+						$RangeSetting = $this->ReadPropertyInteger("RangeSetting");
+						$RangeFactorArray = [256, 128, 64, 32];
+						
+						$xAxis = $this->bin16dec($xAxis) / $RangeFactorArray[$RangeSetting];
+						$yAxis = $this->bin16dec($yAxis) / $RangeFactorArray[$RangeSetting];
+						$zAxis = $this->bin16dec($zAxis) / $RangeFactorArray[$RangeSetting];
 
 						$this->SendDebug("Measurement", "Ergebnis x: ".$xAxis." y: ".$yAxis." z: ".$zAxis, 0);
 						$this->SetValue("X_Axis", $xAxis);
