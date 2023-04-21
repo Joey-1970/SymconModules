@@ -3033,6 +3033,22 @@ class IPS2GPIO_IO extends IPSModule
 				}
 			}
 		}
+		elseIf ($DeviceAddress == 83) {
+			// ADXL345/GeCoS PWM16Out
+			// Lesen der ChipID
+			$Result = $this->CommandClientSocket(pack("L*", 61, $Handle, 0x00, 0), 16);
+			If ($Result < 0) {
+				$this->SendDebug("I2CDeviceSpecification", "Fehler beim Einlesen der ADXL345 Chip ID", 0);
+			}
+			else {
+				If ($Result == 0xE5) {
+					$DeviceName = "ADXL345";
+				}
+				else {
+					$DeviceName = "GeCoS PWM16Out";
+				}
+			}
+		}
 		elseif ($DeviceAddress == 104) {
 			// Unterscheidung MCP3424|DS3231
 			// DS3231 lesen
