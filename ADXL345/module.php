@@ -189,6 +189,18 @@
 					$this->SendDebug("Setup", "Laut Chip ID ist es kein ADXL345!", 0);
 				}
 			}
+			
+			// Minimalkombination nach dem Beispiel von Boris
+			$DATA_FORMAT = 0x08;
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_ADXL345_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x31, "Value" => $DATA_FORMAT)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "DATA_FORMAT setzen fehlerhaft!", 0);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
+				return;
+			}
+			
 			/*
 			$osrs_t = $this->ReadPropertyInteger("OSRS_T"); // Oversampling Measure temperature x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
 			$osrs_p = $this->ReadPropertyInteger("OSRS_P"); // Oversampling Measure pressure x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
