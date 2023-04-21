@@ -231,8 +231,8 @@
 			
 			$RangeSetting = $this->ReadPropertyInteger("RangeSetting");
 			$Full_Res = 1;
-			$DATA_FORMAT = ($Full_Res << 3)|$RangeSetting;
-			//$DATA_FORMAT = 11; // resolution
+			//$DATA_FORMAT = ($Full_Res << 3)|$RangeSetting;
+			$DATA_FORMAT = 11; // resolution
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_ADXL345_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x31, "Value" => $DATA_FORMAT)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "DATA_FORMAT setzen fehlerhaft!", 0);
@@ -280,7 +280,7 @@
 						
 						$this->SendDebug("Measurement", "Roh-Ergebnis x: ".$xAxis." y: ".$yAxis." z: ".$zAxis, 0);
 						
-						$RangeSetting = $this->ReadPropertyInteger("RangeSetting");
+						$RangeSetting = 0; //$this->ReadPropertyInteger("RangeSetting");
 						$RangeFactorArray = [256, 128, 64, 32];
 						
 						$xAxis = $this->bin16dec($xAxis) / $RangeFactorArray[$RangeSetting];
