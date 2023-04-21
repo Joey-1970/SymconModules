@@ -15,6 +15,7 @@
 		$this->RegisterPropertyInteger("DeviceBus", 1);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
 		$this->RegisterTimer("Messzyklus", 0, 'ADXL345_Measurement($_IPS["TARGET"]);');
+		$this->RegisterPropertyInteger("RangeSetting", 0);
         }
 	    
 	public function GetConfigurationForm() 
@@ -46,6 +47,15 @@
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Wiederholungszyklus in Sekunden (0 -> aus, 1 sek -> Minimum)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Messzyklus", "caption" => "Sekunden");
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+
+		$arrayElements[] = array("type" => "Label", "label" => "Range Setting"); 
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "±2 g", "value" => 0);
+		$arrayOptions[] = array("label" => "±4 g", "value" => 1);
+		$arrayOptions[] = array("label" => "±8 g", "value" => 2);
+		$arrayOptions[] = array("label" => "±16 g", "value" => 3);
+		$arrayElements[] = array("type" => "Select", "name" => "RangeSetting", "caption" => "Range Setting", "options" => $arrayOptions );
 		
 		$arrayActions = array(); 
 		$arrayActions[] = array("type" => "Label", "caption" => "Test Center"); 
