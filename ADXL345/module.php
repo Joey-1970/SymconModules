@@ -64,14 +64,17 @@
 		
 		
 		//Status-Variablen anlegen
-		$this->RegisterVariableBoolean("Calibration", "Kalibrierung", "~Switch", 10);
+		$this->RegisterVariableInteger("ChipID", "Chip ID", "", 10);
+		$this->DisableAction("ChipID");
+		
+		$this->RegisterVariableBoolean("Calibration", "Kalibrierung", "~Switch", 20);
 		$this->EnableAction("Calibration");
 		
-		$this->RegisterVariableFloat("X_Axis", "X-Achse", "", 20);
+		$this->RegisterVariableFloat("X_Axis", "X-Achse", "", 30);
 		
-		$this->RegisterVariableFloat("Y_Axis", "Y-Achse", "", 30);
+		$this->RegisterVariableFloat("Y_Axis", "Y-Achse", "", 40);
 		
-		$this->RegisterVariableFloat("Z_Axis", "Z-Achse", "", 40);
+		$this->RegisterVariableFloat("Z_Axis", "Z-Achse", "", 50);
 		
 		
 		
@@ -90,7 +93,10 @@
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_used_i2c", "DeviceAddress" => $this->ReadPropertyInteger("DeviceAddress"), "DeviceBus" => $this->ReadPropertyInteger("DeviceBus"), "InstanceID" => $this->InstanceID)));
 				If ($Result == true) {
 					$this->SetTimerInterval("Messzyklus", ($this->ReadPropertyInteger("Messzyklus") * 1000));
-					
+					// Parameterdaten zum Baustein senden
+					$this->Setup();
+					// Erste Messdaten einlesen
+					$this->Measurement();
 				}
 			}
 			else {
@@ -132,11 +138,9 @@
 	public function RequestAction($Ident, $Value) 
 	{
   		switch($Ident) {
-			/*
-			case "LED":
-				$this->SetLEDState($Value);
+			case "Calibration":
+				//$this->SetLEDState($Value);
 				break;
-			*/
 			default:
 			    throw new Exception("Invalid Ident");
 	    	}
@@ -153,6 +157,69 @@
     	}     
 	    
 	// Beginn der Funktionen
+	private function Setup()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Setup", "Ausfuehrung", 0);
+			// Lesen der ChipID
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_ADXL345_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x00)));
+			If ($Result < 0) {
+				$this->SendDebug("Setup", "Fehler beim Einlesen der Chip ID", 0);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
+				return;
+			}
+			else {
+				If ($this->GetStatus() <> 102) {
+					$this->SetStatus(102);
+				}
+				$this->SetValue("ChipID", $Result);
+				If ($Result <> 0xE5) {
+					$this->SendDebug("Setup", "Laut Chip ID ist es kein ADXL345!", 0);
+				}
+			}
+			/*
+			$osrs_t = $this->ReadPropertyInteger("OSRS_T"); // Oversampling Measure temperature x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
+			$osrs_p = $this->ReadPropertyInteger("OSRS_P"); // Oversampling Measure pressure x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
+			$osrs_h = $this->ReadPropertyInteger("OSRS_H"); // Oversampling Measure humidity x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
+			$mode = $this->ReadPropertyInteger("Mode"); // 0 = Power Off (Sleep Mode), x01 und x10 Force Mode, 11 Normal Mode
+			$t_sb = $this->ReadPropertyInteger("SB_T"); // StandBy Time: dec: 0 (0.5ms) - 5 (1000ms), 6 (10ms), 7 (20ms)
+			$filter = $this->ReadPropertyInteger("IIR_Filter"); // IIR-Filter 0-> off - 2, 4, 8, 16 (dec: 0 (off) - 4)
+			$spi3w_en = 0;
+
+			$ctrl_meas_reg = (($osrs_t << 5)|($osrs_p << 2)|$mode);
+			$config_reg = (($t_sb << 5)|($filter << 2)|$spi3w_en);
+			$ctrl_hum_reg = $osrs_h;
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F2"), "Value" => $ctrl_hum_reg)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "ctrl_hum_reg setzen fehlerhaft!", 0);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
+				return;
+			}
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F4"), "Value" => $ctrl_meas_reg)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "ctrl_meas_reg setzen fehlerhaft!", 0);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
+				return;
+			}
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_BME280_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => hexdec("F5"), "Value" => $config_reg)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "config_reg setzen fehlerhaft!", 0);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
+				return;
+			}
+			*/
+			
+		}
+	}
+	    
 	public function Measurement()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
@@ -160,7 +227,7 @@
 			
 			$tries = 3;
 			do {
-				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_ADXL345_read", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x32, "Count" => 6)));
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_ADXL345_read_block", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x32, "Count" => 6)));
 				If ($Result < 0) {
 					$this->SendDebug("Measurement", "Einlesen der Werte fehlerhaft!", 0);
 					$this->SetStatus(202);
