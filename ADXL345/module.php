@@ -205,6 +205,51 @@
 				return;
 			}
 			
+			// pi.i2c_write_byte_data(h, 0x2d, 0)  # POWER_CTL reset.
+   			// pi.i2c_write_byte_data(h, 0x2d, 8)  # POWER_CTL measure.
+   			// pi.i2c_write_byte_data(h, 0x31, 0)  # DATA_FORMAT reset.
+   			// pi.i2c_write_byte_data(h, 0x31, 11) # DATA_FORMAT full res +/- 16g.
+			
+			$POWER_CTL = 0; // reset
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_ADXL345_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x2d, "Value" => $POWER_CTL)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "POWER_CTL reset setzen fehlerhaft!", 0);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
+				return;
+			}
+			
+			$POWER_CTL = 8; // measure
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_ADXL345_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x2d, "Value" => $POWER_CTL)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "POWER_CTL measure setzen fehlerhaft!", 0);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
+				return;
+			}
+			
+			$DATA_FORMAT = 0; // reset
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_ADXL345_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x31, "Value" => $DATA_FORMAT)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "DATA_FORMAT reset fehlerhaft!", 0);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
+				return;
+			}
+			
+			$DATA_FORMAT = 11; // resolution
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_ADXL345_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x31, "Value" => $DATA_FORMAT)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "DATA_FORMAT setzen fehlerhaft!", 0);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
+				return;
+			}
+			
 			/*
 			$osrs_t = $this->ReadPropertyInteger("OSRS_T"); // Oversampling Measure temperature x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
 			$osrs_p = $this->ReadPropertyInteger("OSRS_P"); // Oversampling Measure pressure x1, x2, x4, x8, x16 (dec: 0 (off), 1, 2, 3, 4)
