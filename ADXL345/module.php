@@ -111,12 +111,16 @@
 			}
 			else {
 				$this->SetTimerInterval("Messzyklus", 0);
-				$this->SetStatus(104);
+				If ($this->GetStatus() <> 104) {
+					$this->SetStatus(104);
+				}
 			}	
 		}
 		else {
 			$this->SetTimerInterval("Messzyklus", 0);
-			$this->SetStatus(104);
+			If ($this->GetStatus() <> 104) {
+				$this->SetStatus(104);
+			}
 		}
 	}
 	
@@ -252,12 +256,16 @@
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_ADXL345_read_block", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x32, "Count" => 6)));
 				If ($Result < 0) {
 					$this->SendDebug("Measurement", "Einlesen der Werte fehlerhaft!", 0);
-					$this->SetStatus(202);
+					If ($this->GetStatus() <> 202) {
+						$this->SetStatus(202);
+					}
 				}
 				else {
 					
 					If (is_array(unserialize($Result))) {
-						$this->SetStatus(102);
+						If ($this->GetStatus() <> 102) {
+							$this->SetStatus(102);
+						}
 						$DataArray = array();
 						// $DataArray[1] - X-Axis Data 0
 						// $DataArray[2] - X-Axis Data 1
