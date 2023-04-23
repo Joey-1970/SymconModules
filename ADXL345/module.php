@@ -15,6 +15,7 @@
 		$this->RegisterPropertyInteger("DeviceBus", 1);
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
 		$this->RegisterTimer("Messzyklus", 0, 'ADXL345_Measurement($_IPS["TARGET"]);');
+		$this->RegisterPropertyBoolean("FullResolution", true);
 		$this->RegisterPropertyInteger("RangeSetting", 0);
 		$this->RegisterPropertyInteger("DataRate", 10);
         }
@@ -50,6 +51,8 @@
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Messzyklus", "caption" => "Sekunden", "minimum" => 0);
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 
+		$arrayElements[] = array("type" => "CheckBox", "name" => "FullResolution", "caption" => "Full Resolution"); 
+		
 		$arrayElements[] = array("type" => "Label", "label" => "Range Setting (g)"); 
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "±2", "value" => 0);
@@ -256,9 +259,9 @@
 			}
 			
 			$RangeSetting = $this->ReadPropertyInteger("RangeSetting");
-			$Full_Res = 1;
-			//$DATA_FORMAT = ($Full_Res << 3)|$RangeSetting;
-			$DATA_FORMAT = 11; // resolution
+			$Full_Res = $this->ReadPropertyBoolean("FullResolution");
+			$DATA_FORMAT = ($Full_Res << 3)|$RangeSetting;
+			//$DATA_FORMAT = 11; // resolution
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_ADXL345_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x31, "Value" => $DATA_FORMAT)));
 			If (!$Result) {
 				$this->SendDebug("Setup", "DATA_FORMAT setzen fehlerhaft!", 0);
@@ -315,12 +318,18 @@
 						
 						$this->SendDebug("Measurement", "Roh-Ergebnis x: ".$xRaw." y: ".$yRaw." z: ".$zRaw, 0);
 						
-						$RangeSetting = 0; //$this->ReadPropertyInteger("RangeSetting");
-						$RangeFactorArray = [256, 128, 64, 32];
+						If ($this->ReadPropertyBoolean("FullResolution") == true) {
+							$RangeDevisor = 256;
+						}
+						else {
+							$RangeSetting = $this->ReadPropertyInteger("RangeSetting");
+							$RangeFactorArray = [256, 128, 64, 32];
+							$RangeDevisor = $RangeFactorArray[$RangeSetting];
+						}
 						
-						$xRaw = $this->bin16dec($xRaw) / $RangeFactorArray[$RangeSetting];
-						$yRaw = $this->bin16dec($yRaw) / $RangeFactorArray[$RangeSetting];
-						$zRaw = $this->bin16dec($zRaw) / $RangeFactorArray[$RangeSetting];
+						$xRaw = $this->bin16dec($xRaw) / $RangeDevisor;
+						$yRaw = $this->bin16dec($yRaw) / $RangeDevisor;
+						$zRaw = $this->bin16dec($zRaw) / $RangeDevisor;
 
 						$this->SendDebug("Measurement", "Ergebnis nach Zweierkomplement x: ".$xRaw." y: ".$yRaw." z: ".$zRaw, 0);
 						
