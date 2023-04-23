@@ -71,7 +71,8 @@
             	parent::ApplyChanges();
 		
 		// Profil anlegen
-		
+		$this->RegisterProfileFloat("ADXL345.acceleration", "Move", "", "g", 0, 100, 0.01, 2);
+		$this->RegisterProfileFloat("ADXL345.degrees", "Winddirection", "°", "", 0, 360, 0.01, 2);
 		
 		//Status-Variablen anlegen
 		$this->RegisterVariableInteger("ChipID", "Chip ID", "", 10);
@@ -80,13 +81,17 @@
 		$this->RegisterVariableBoolean("Calibration", "Kalibrierung", "~Switch", 20);
 		$this->EnableAction("Calibration");
 		
-		$this->RegisterVariableFloat("X_Axis", "X-Achse", "", 30);
+		$this->RegisterVariableFloat("X_Axis", "X-Achse", "ADXL345.acceleration", 30);
 		
-		$this->RegisterVariableFloat("Y_Axis", "Y-Achse", "", 40);
+		$this->RegisterVariableFloat("Y_Axis", "Y-Achse", "ADXL345.acceleration", 40);
 		
-		$this->RegisterVariableFloat("Z_Axis", "Z-Achse", "", 50);
+		$this->RegisterVariableFloat("Z_Axis", "Z-Achse", "ADXL345.acceleration", 50);
 		
+		$this->RegisterVariableFloat("X_Angle", "X-Winkel", "ADXL345.degrees", 35);
 		
+		$this->RegisterVariableFloat("Y_Angle", "Y-Winkel", "ADXL345.degrees", 45);
+		
+		$this->RegisterVariableFloat("Z_Angle", "Z-Winkel", "ADXL345.degrees", 55);
 		
 		// Summary setzen
 		$DevicePorts = array();
@@ -274,26 +279,46 @@
 						// $DataArray[6] - Z-Axis Data 1
 						$DataArray = unserialize($Result);
 						// Ergebnis sichern
-						$xAxis = (($DataArray[2] & 0xff) << 8) | ($DataArray[1] & 0xff);
-						$yAxis = (($DataArray[4] & 0xff) << 8) | ($DataArray[3] & 0xff);
-						$zAxis = (($DataArray[6] & 0xff) << 8) | ($DataArray[5] & 0xff);
+						$xRaw = (($DataArray[2] & 0xff) << 8) | ($DataArray[1] & 0xff);
+						$yRaw = (($DataArray[4] & 0xff) << 8) | ($DataArray[3] & 0xff);
+						$zRaw = (($DataArray[6] & 0xff) << 8) | ($DataArray[5] & 0xff);
 						
-						$this->SendDebug("Measurement", "Roh-Ergebnis x: ".$xAxis." y: ".$yAxis." z: ".$zAxis, 0);
+						$this->SendDebug("Measurement", "Roh-Ergebnis x: ".$xRaw." y: ".$yRaw." z: ".$zRaw, 0);
 						
 						$RangeSetting = 0; //$this->ReadPropertyInteger("RangeSetting");
 						$RangeFactorArray = [256, 128, 64, 32];
 						
-						$xAxis = $this->bin16dec($xAxis) / $RangeFactorArray[$RangeSetting];
-						$yAxis = $this->bin16dec($yAxis) / $RangeFactorArray[$RangeSetting];
-						$zAxis = $this->bin16dec($zAxis) / $RangeFactorArray[$RangeSetting];
+						$xRaw = $this->bin16dec($xRaw) / $RangeFactorArray[$RangeSetting];
+						$yRaw = $this->bin16dec($yRaw) / $RangeFactorArray[$RangeSetting];
+						$zRaw = $this->bin16dec($zRaw) / $RangeFactorArray[$RangeSetting];
 
-						$this->SendDebug("Measurement", "Ergebnis x: ".$xAxis." y: ".$yAxis." z: ".$zAxis, 0);
-						$this->SetValue("X_Axis", $xAxis);
-						$this->SetValue("Y_Axis", $yAxis);
-						$this->SetValue("Z_Axis", $zAxis);
+						$this->SendDebug("Measurement", "Ergebnis nach Zweierkomplement x: ".$xRaw." y: ".$yRaw." z: ".$zRaw, 0);
+						
+						// Korrektur der Werte (ToDo)
+						
+						$xCorr = $xRaw;
+						$yCorr = $yRaw;
+						$zCorr = $zRaw;
+						
+						$this->SetValue("X_Axis", $xCorr);
+						$this->SetValue("Y_Axis", $yCorr);
+						$this->SetValue("Z_Axis", $zCorr);
 						
 						
-						break;
+						// Berechnung der Winkel
+						$xCorr = min(1, Max($xCorr, -1));
+						$xAngle = (asin($xCorr.x)) * 57.296;
+						
+						$yCorr = min(1, Max($yCorr, -1));
+						$yAngle = (asin($yCorr.x)) * 57.296;
+						
+						$zCorr = min(1, Max($zCorr, -1));
+						$zAngle = (asin($zCorr.x)) * 57.296;
+						
+						$this->SetValue("X_Angle", $xAngle);
+						$this->SetValue("Y_Angle", $yAngle);
+						$this->SetValue("Z_Angle", $zAngle);
+   
 					}
 				}
 			$tries--;
