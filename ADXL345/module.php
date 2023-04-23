@@ -18,6 +18,10 @@
 		$this->RegisterPropertyBoolean("FullResolution", true);
 		$this->RegisterPropertyInteger("RangeSetting", 0);
 		$this->RegisterPropertyInteger("DataRate", 10);
+		
+		$this->RegisterAttributeFloat("xOffset", 0.0);
+		$this->RegisterAttributeFloat("yOffset", 0.0);
+		$this->RegisterAttributeFloat("zOffset", 0.0);
         }
 	    
 	public function GetConfigurationForm() 
@@ -367,7 +371,46 @@
 	
 	private function Calibration()
 	{
-	    	
+	    	If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Calibration", "Ausfuehrung", 0);
+			$this->SetValue("Calibration", true);
+			
+			// Die aktuellen Offset-Werte einlesen
+			$xOffset = $this->ReadAttributeFloat("xOffset");
+			$yOffset = $this->ReadAttributeFloat("yOffset");
+			$zOffset = $this->ReadAttributeFloat("zOffset");
+			
+			$this->SendDebug("Calibration", "xOffset: ".$xOffset, 0);
+			
+			// Die aktuellen um den Offset korrgierten Werte einlesen
+			$xCorr = $this->getValue("X_Axis");
+			$yCorr = $this->getValue("Y_Axis");
+			$zCorr = $this->getValue("Z_Axis");
+			
+			$this->SendDebug("Calibration", "xCorr: ".$xCorr, 0);
+			
+			// Den um den Offset bereinigten Wert berechnen
+			$xRaw = $xCorr + $xOffset;
+			$yRaw = $yCorr + $yOffset;
+			$zRaw = $zCorr + $zOffset;
+			
+			$this->SendDebug("Calibration", "xRaw: ".$xRaw, 0);
+			
+			// Die Differenz zwischen dem Roh-Wert und 0 berechnen
+			$xNewOffset = 0 - $xRaw;
+			$yNewOffset = 0 - $yRaw;
+			$zNewOffset = 0 - $zRaw;
+			
+			$this->SendDebug("Calibration", "xNewOffset: ".$xNewOffset, 0);
+						
+			// Den neuen Wert sichern
+			$this->SetAttributeFloat("xOffset", $xNewOffset);
+			$this->SetAttributeFloat("yOffset", $yNewOffset);
+			$this->SetAttributeFloat("zOffset", $zNewOffset);
+			
+			
+			$this->SetValue("Calibration", false);
+		}
 	return;
 	}    
 	    
