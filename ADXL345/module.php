@@ -1,4 +1,6 @@
 <?
+    // https://github.com/wollewald/ADXL345_WE/blob/main/src/ADXL345_WE.cpp
+
     // Klassendefinition
     class ADXL345 extends IPSModule 
     {
