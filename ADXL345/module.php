@@ -365,7 +365,7 @@
 		}
 	}
 	
-	private function Calibration();
+	private function Calibration()
 	{
 	    	
 	return;
