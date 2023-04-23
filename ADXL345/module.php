@@ -338,10 +338,14 @@
 						$this->SendDebug("Measurement", "Ergebnis nach Zweierkomplement x: ".$xRaw." y: ".$yRaw." z: ".$zRaw, 0);
 						
 						// Korrektur der Werte (ToDo)
+						// Die aktuellen Offset-Werte einlesen
+						$xOffset = $this->ReadAttributeFloat("xOffset");
+						$yOffset = $this->ReadAttributeFloat("yOffset");
+						$zOffset = $this->ReadAttributeFloat("zOffset");
 						
-						$xCorr = $xRaw;
-						$yCorr = $yRaw;
-						$zCorr = $zRaw;
+						$xCorr = $xRaw + $xOffset;
+						$yCorr = $yRaw + $yOffset;
+						$zCorr = $zRaw + $zOffset;
 						
 						$this->SetValue("X_Axis", $xCorr);
 						$this->SetValue("Y_Axis", $yCorr);
