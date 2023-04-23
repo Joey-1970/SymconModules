@@ -418,6 +418,7 @@
 			$this->WriteAttributeFloat("yOffset", $yNewOffset);
 			$this->WriteAttributeFloat("zOffset", $zNewOffset);
 			
+			$this->Measurement();
 			
 			$this->SetValue("Calibration", false);
 		}
@@ -435,6 +436,7 @@
 			$this->WriteAttributeFloat("yOffset", 0);
 			$this->WriteAttributeFloat("zOffset", 0);
 			
+			$this->Measurement();
 			
 			$this->SetValue("ResetCalibration", false);
 		}
