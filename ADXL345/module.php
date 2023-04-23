@@ -400,9 +400,9 @@
 			$this->SendDebug("Calibration", "xCorr: ".$xCorr, 0);
 			
 			// Den um den Offset bereinigten Wert berechnen
-			$xRaw = $xCorr + $xOffset;
-			$yRaw = $yCorr + $yOffset;
-			$zRaw = $zCorr + $zOffset;
+			$xRaw = $xCorr + ($xOffset * -1);
+			$yRaw = $yCorr + ($yOffset * -1);
+			$zRaw = $zCorr + ($zOffset * -1);
 			
 			$this->SendDebug("Calibration", "xRaw: ".$xRaw, 0);
 			
