@@ -72,7 +72,7 @@
 		
 		// Profil anlegen
 		$this->RegisterProfileFloat("ADXL345.acceleration", "Move", "", "g", 0, 100, 0.01, 2);
-		$this->RegisterProfileFloat("ADXL345.degrees", "Winddirection", "°", "", 0, 360, 0.01, 2);
+		$this->RegisterProfileFloat("ADXL345.degrees", "Winddirection", "", "°", 0, 360, 0.01, 2);
 		
 		//Status-Variablen anlegen
 		$this->RegisterVariableInteger("ChipID", "Chip ID", "", 10);
@@ -307,13 +307,13 @@
 						
 						// Berechnung der Winkel
 						$xCorr = min(1, Max($xCorr, -1));
-						$xAngle = (asin($xCorr.x)) * 57.296;
+						$xAngle = (asin($xCorr)) * 57.296;
 						
 						$yCorr = min(1, Max($yCorr, -1));
-						$yAngle = (asin($yCorr.x)) * 57.296;
+						$yAngle = (asin($yCorr)) * 57.296;
 						
 						$zCorr = min(1, Max($zCorr, -1));
-						$zAngle = (asin($zCorr.x)) * 57.296;
+						$zAngle = (asin($zCorr)) * 57.296;
 						
 						$this->SetValue("X_Angle", $xAngle);
 						$this->SetValue("Y_Angle", $yAngle);
