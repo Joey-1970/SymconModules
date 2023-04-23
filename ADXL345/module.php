@@ -16,6 +16,7 @@
  	    	$this->RegisterPropertyInteger("Messzyklus", 60);
 		$this->RegisterTimer("Messzyklus", 0, 'ADXL345_Measurement($_IPS["TARGET"]);');
 		$this->RegisterPropertyInteger("RangeSetting", 0);
+		$this->RegisterPropertyInteger("DataRate", 10);
         }
 	    
 	public function GetConfigurationForm() 
@@ -49,13 +50,33 @@
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Messzyklus", "caption" => "Sekunden", "minimum" => 0);
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 
-		$arrayElements[] = array("type" => "Label", "label" => "Range Setting"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Range Setting (g)"); 
 		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "±2 g", "value" => 0);
-		$arrayOptions[] = array("label" => "±4 g", "value" => 1);
-		$arrayOptions[] = array("label" => "±8 g", "value" => 2);
-		$arrayOptions[] = array("label" => "±16 g", "value" => 3);
+		$arrayOptions[] = array("label" => "±2", "value" => 0);
+		$arrayOptions[] = array("label" => "±4", "value" => 1);
+		$arrayOptions[] = array("label" => "±8", "value" => 2);
+		$arrayOptions[] = array("label" => "±16", "value" => 3);
 		$arrayElements[] = array("type" => "Select", "name" => "RangeSetting", "caption" => "Range Setting", "options" => $arrayOptions );
+		
+		$arrayElements[] = array("type" => "Label", "label" => "Data Rate (Hz)"); 
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "3200", "value" => 15);
+		$arrayOptions[] = array("label" => "1600", "value" => 14);
+		$arrayOptions[] = array("label" => "800", "value" => 13);
+		$arrayOptions[] = array("label" => "400", "value" => 12);
+		$arrayOptions[] = array("label" => "200", "value" => 11);
+		$arrayOptions[] = array("label" => "100", "value" => 10);
+		$arrayOptions[] = array("label" => "50", "value" => 9);
+		$arrayOptions[] = array("label" => "25", "value" => 8);
+		$arrayOptions[] = array("label" => "12.5", "value" => 7);
+		$arrayOptions[] = array("label" => "6.25", "value" => 6);
+		$arrayOptions[] = array("label" => "3.13", "value" => 5);
+		$arrayOptions[] = array("label" => "1.56", "value" => 4);
+		$arrayOptions[] = array("label" => "0.78", "value" => 3);
+		$arrayOptions[] = array("label" => "0.39", "value" => 2);
+		$arrayOptions[] = array("label" => "0.20", "value" => 1);
+		$arrayOptions[] = array("label" => "0.10", "value" => 0);
+		$arrayElements[] = array("type" => "Select", "name" => "DataRate", "caption" => "Date Rate", "options" => $arrayOptions );
 		
 		$arrayActions = array(); 
 		$arrayActions[] = array("type" => "Label", "caption" => "Test Center"); 
@@ -247,6 +268,15 @@
 				return;
 			}
 			
+			$DataRate = $this->ReadPropertyInteger("DataRate");
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "i2c_ADXL345_write", "DeviceIdent" => $this->GetBuffer("DeviceIdent"), "Register" => 0x2C, "Value" => $DataRate)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "Data Rate setzen fehlerhaft!", 0);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
+				return;
+			}
 		}
 	}
 	    
