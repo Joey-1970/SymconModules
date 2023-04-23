@@ -414,9 +414,9 @@
 			$this->SendDebug("Calibration", "xNewOffset: ".$xNewOffset, 0);
 						
 			// Den neuen Wert sichern
-			$this->WriteAttributeFloat("xOffset", $xNewOffset * -1);
-			$this->WriteAttributeFloat("yOffset", $yNewOffset * -1);
-			$this->WriteAttributeFloat("zOffset", $zNewOffset * -1);
+			$this->WriteAttributeFloat("xOffset", $xNewOffset);
+			$this->WriteAttributeFloat("yOffset", $yNewOffset);
+			$this->WriteAttributeFloat("zOffset", $zNewOffset);
 			
 			
 			$this->SetValue("Calibration", false);
