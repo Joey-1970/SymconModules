@@ -182,7 +182,7 @@
 	{
   		switch($Ident) {
 			case "Calibration":
-				//$this->SetLEDState($Value);
+				$this->Calibration();
 				break;
 			default:
 			    throw new Exception("Invalid Ident");
@@ -365,6 +365,12 @@
 		}
 	}
 	
+	private function Calibration();
+	{
+	    	
+	return;
+	}    
+	    
 	private function bin16dec($dec) 
 	{
 	    	// converts 16bit binary number string to integer using two's complement
