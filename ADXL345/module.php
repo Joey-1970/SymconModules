@@ -109,6 +109,9 @@
 		$this->RegisterVariableBoolean("Calibration", "Kalibrierung", "~Switch", 20);
 		$this->EnableAction("Calibration");
 		
+		$this->RegisterVariableBoolean("ResetCalibration", "Kalibrierung resetten", "~Switch", 25);
+		$this->EnableAction("ResetCalibration");
+		
 		$this->RegisterVariableFloat("X_Axis", "X-Achse", "ADXL345.acceleration", 30);
 		
 		$this->RegisterVariableFloat("Y_Axis", "Y-Achse", "ADXL345.acceleration", 40);
@@ -187,6 +190,9 @@
   		switch($Ident) {
 			case "Calibration":
 				$this->Calibration();
+				break;
+			case "ResetCalibration":
+				$this->ResetCalibration();
 				break;
 			default:
 			    throw new Exception("Invalid Ident");
@@ -414,6 +420,23 @@
 			
 			
 			$this->SetValue("Calibration", false);
+		}
+	return;
+	}    
+	    
+	private function ResetCalibration()
+	{
+	    	If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("ResetCalibration", "Ausfuehrung", 0);
+			$this->SetValue("ResetCalibration", true);
+						
+			// Den neuen Wert sichern
+			$this->WriteAttributeFloat("xOffset", 0);
+			$this->WriteAttributeFloat("yOffset", 0);
+			$this->WriteAttributeFloat("zOffset", 0);
+			
+			
+			$this->SetValue("ResetCalibration", false);
 		}
 	return;
 	}    
