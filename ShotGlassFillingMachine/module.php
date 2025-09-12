@@ -203,7 +203,7 @@
 				}
 				//$Output = ($Value / ($Right - $Left)) * 100;
 				$Output = (($Value - $Left)/ ($Right - $Left)) * 100;
-				SetValue("Output", $Output);
+				$this->SetValue("Output", $Output);
 				$this->GetOutput();
 			}
 			
@@ -247,7 +247,7 @@
 				}
 				
 				$Output = (($Value - $Left)/ ($Right - $Left)) * 100;
-				SetValue("Output", $Output);
+				$this->SetValue("Output", $Output);
 				$this->GetOutput();
 			}
 			
@@ -286,7 +286,7 @@
 				$Left = $this->ReadPropertyInteger("most_anti_clockwise");
 				$Right = $this->ReadPropertyInteger("most_clockwise");
 				$Output = (($Result - $Left)/ ($Right - $Left)) * 100;
-				SetValue("Output", $Output);
+				$this->SetValue("Output", $Output);
 			}
 		}
 	}   
@@ -304,7 +304,7 @@
 			}
 			else {
 				$this->SetStatus(102);
-				SetValue("Output", 50);
+				$this->SetValue("Output", 50);
 				$this->GetOutput();
 				IPS_Sleep(500);
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => 0)));
