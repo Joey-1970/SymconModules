@@ -1,6 +1,6 @@
 <?
     // Klassendefinition
-    class IPS2GPIO_Servo extends IPSModule 
+    class ShotGlassFillingMachine extends IPSModule 
     {
 	public function Destroy() 
 	{
@@ -13,21 +13,21 @@
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
-            	// Diese Zeile nicht löschen.
-            	parent::Create();
-            	$this->RegisterPropertyBoolean("Open", false);
-		$this->RegisterPropertyInteger("Pin", -1);
-		$this->SetBuffer("PreviousPin", -1);
-		$this->RegisterPropertyInteger("most_anti_clockwise", 500);
-		$this->RegisterPropertyInteger("midpoint", 1500);
-		$this->RegisterPropertyInteger("most_clockwise", 2500);
-		$this->RegisterPropertyInteger("Shutdown", 500);
- 	    	$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
-		$this->RegisterTimer("Shutdown", 0, 'I2GServo_Shutdown($_IPS["TARGET"]);');
-		
-		// Status-Variablen anlegen
-		$this->RegisterVariableInteger("Output", "Ausgang", "~Intensity.100", 10);
-		$this->EnableAction("Output");
+			// Diese Zeile nicht löschen.
+			parent::Create();
+			$this->RegisterPropertyBoolean("Open", false);
+			$this->RegisterPropertyInteger("Pin", -1);
+			$this->SetBuffer("PreviousPin", -1);
+			$this->RegisterPropertyInteger("most_anti_clockwise", 500);
+			$this->RegisterPropertyInteger("midpoint", 1500);
+			$this->RegisterPropertyInteger("most_clockwise", 2500);
+			$this->RegisterPropertyInteger("Shutdown", 500);
+			$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+			$this->RegisterTimer("Shutdown", 0, 'I2GServo_Shutdown($_IPS["TARGET"]);');
+			
+			// Status-Variablen anlegen
+			$this->RegisterVariableInteger("Output", "Ausgang", "~Intensity.100", 10);
+			$this->EnableAction("Output");
         }
 	
 	public function GetConfigurationForm() 
