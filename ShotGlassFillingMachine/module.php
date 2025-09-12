@@ -25,7 +25,6 @@
 			for ($i = 1; $i <= 5; $i++) {
 				$this->RegisterPropertyInteger("Position_".$i, $i * 20);
 			}
-			$this->RegisterPropertyInteger("Position_1", 50);
 			$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 			$this->RegisterTimer("Shutdown", 0, 'ShotGlassFillingMachine_Shutdown($_IPS["TARGET"]);');
 
@@ -221,14 +220,23 @@
 			$Left = $this->ReadPropertyInteger("most_anti_clockwise");
 			$Right = $this->ReadPropertyInteger("most_clockwise");
 			$Shutdown = $this->ReadPropertyInteger("Shutdown");
+			If ($Value > 0) {
+				$Position = $this->ReadPropertyInteger("Position_".$Value);
+			}
 			
-			$Value = min(100, max(0, $Value));
+			$Value = min(5, max(0, $Value));
+
+			If ($Value == 0) {
+				$Value = $Left;
+			}
+			else {
+				$Value = intval(($Position * ($Right - $Left) / 100) + $Left);
+			}
 			
-			$Value = intval(($Value * ($Right - $Left) / 100) + $Left);
 			$this->SendDebug("SetOutput", "Errechneter Zielwert: ".$Value, 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value)));
 			If (!$Result) {
-				$this->SendDebug("SetOutput", "Fehler beim Positionieren!", 0);
+				$this->SendDebug("SetPosition", "Fehler beim Positionieren!", 0);
 				If ($this->GetStatus() <> 202) {
 					$this->SetStatus(202);
 				}
@@ -237,7 +245,7 @@
 				If ($this->GetStatus() <> 102) {
 					$this->SetStatus(102);
 				}
-				//$Output = ($Value / ($Right - $Left)) * 100;
+				
 				$Output = (($Value - $Left)/ ($Right - $Left)) * 100;
 				SetValue("Output", $Output);
 				$this->GetOutput();
