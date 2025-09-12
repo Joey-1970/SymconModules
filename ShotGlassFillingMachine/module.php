@@ -74,6 +74,7 @@
 			$GPIO[$this->ReadPropertyInteger("Pin")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin")));
 		}
 		ksort($GPIO);
+		
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
@@ -91,6 +92,43 @@
 		for ($i = 1; $i <= 5; $i++) {
 			$arrayElements[] = array("type" => "NumberSpinner", "name" => "Position_".$i, "caption" => "Position ".$i, "minimum" => 0, "maximum" => 100); 
 		}
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("type" => "Label", "caption" => "Pumpe 1"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number)"); 
+  		
+		$arrayOptions = array();
+		foreach($GPIO AS $Value => $Label) {
+			$arrayOptions[] = array("label" => $Label, "value" => $Value);
+		}
+		$arrayElements[] = array("type" => "Select", "name" => "Pin_Pump_1", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("name" => "Invert_Pump_1", "type" => "CheckBox",  "caption" => "Invertiere Anzeige");
+		$arrayElements[] = array("type" => "Label", "label" => "Status des Ausgangs nach Neustart");
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "Aus", "value" => 0);
+		$arrayOptions[] = array("label" => "An", "value" => 1);
+		$arrayOptions[] = array("label" => "undefiniert", "value" => 2);
+		$arrayElements[] = array("type" => "Select", "name" => "Startoption_Pump_1", "caption" => "Startoption", "options" => $arrayOptions );
+
+		
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("type" => "Label", "caption" => "Pumpe 2"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number)"); 
+  		
+		$arrayOptions = array();
+		foreach($GPIO AS $Value => $Label) {
+			$arrayOptions[] = array("label" => $Label, "value" => $Value);
+		}
+		$arrayElements[] = array("type" => "Select", "name" => "Pin_Pump_2", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("name" => "Invert_Pump_2", "type" => "CheckBox",  "caption" => "Invertiere Anzeige");
+		$arrayElements[] = array("type" => "Label", "label" => "Status des Ausgangs nach Neustart");
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "Aus", "value" => 0);
+		$arrayOptions[] = array("label" => "An", "value" => 1);
+		$arrayOptions[] = array("label" => "undefiniert", "value" => 2);
+		$arrayElements[] = array("type" => "Select", "name" => "Startoption_Pump_2", "caption" => "Startoption", "options" => $arrayOptions );
+		
 		
 		$arrayActions = array();
 		If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
