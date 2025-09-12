@@ -16,7 +16,7 @@
 			// Diese Zeile nicht löschen.
 			parent::Create();
 			$this->RegisterPropertyBoolean("Open", false);
-			$this->RegisterPropertyInteger("Pin", -1);
+			$this->RegisterPropertyInteger("Pin_Servo", -1);
 			$this->SetBuffer("PreviousPin", -1);
 			$this->RegisterPropertyInteger("most_anti_clockwise", 500);
 			$this->RegisterPropertyInteger("midpoint", 1500);
@@ -66,7 +66,7 @@
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
-		$arrayElements[] = array("type" => "Select", "name" => "Pin", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Select", "name" => "Pin_Servo", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "caption" => "Angabe der Microsekunden bei 50 Hz"); 
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "most_anti_clockwise", "caption" => "Max. Links (ms)", "minimum" => 0); 
@@ -104,7 +104,7 @@
 		}
 		
 		// Summary setzen
-		$this->SetSummary("GPIO: ".$this->ReadPropertyInteger("Pin"));
+		$this->SetSummary("GPIO: ".$this->ReadPropertyInteger("Pin_Servo"));
             	
 		//ReceiveData-Filter setzen
                 $Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*)';
@@ -115,8 +115,8 @@
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
 			If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
-									  "Pin" => $this->ReadPropertyInteger("Pin"), "PreviousPin" => $this->GetBuffer("PreviousPin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
-				$this->SetBuffer("PreviousPin", $this->ReadPropertyInteger("Pin"));
+									  "Pin" => $this->ReadPropertyInteger("Pin_Servo"), "PreviousPin" => $this->GetBuffer("PreviousPin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+				$this->SetBuffer("PreviousPin", $this->ReadPropertyInteger("Pin_Servo"));
 				If ($Result == true) {
 					$this->Setup();
 					If ($this->GetStatus() <> 102) {
@@ -190,7 +190,7 @@
 			
 			$Value = intval(($Value * ($Right - $Left) / 100) + $Left);
 			$this->SendDebug("SetOutput", "Errechneter Zielwert: ".$Value, 0);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value)));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_Servo"), "Value" => $Value)));
 			If (!$Result) {
 				$this->SendDebug("SetOutput", "Fehler beim Positionieren!", 0);
 				If ($this->GetStatus() <> 202) {
@@ -240,7 +240,7 @@
 			$Value = min($Right, max($Value, $Left));
 			
 			$this->SendDebug("SetOutput", "Errechneter Zielwert: ".$Value, 0);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value)));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_Servo"), "Value" => $Value)));
 			If (!$Result) {
 				$this->SendDebug("SetPosition", "Fehler beim Positionieren!", 0);
 				If ($this->GetStatus() <> 202) {
@@ -266,7 +266,7 @@
 	  
 	public function Shutdown()
 	{
-		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => 0)));
+		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_Servo"), "Value" => 0)));
 			If (!$Result) {
 				$this->SendDebug("Shutdown", "Fehler beim Ausschalten!", 0);
 				$this->SetStatus(202);
@@ -278,7 +278,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("GetOutput", "Ausfuehrung", 0);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_servo", "Pin" => $this->ReadPropertyInteger("Pin") )));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_servo", "Pin" => $this->ReadPropertyInteger("Pin_Servo") )));
 			If ($Result < 0) {
 				$this->SendDebug("GetOutput", "Fehler beim Lesen!", 0);
 				If ($this->GetStatus() <> 202) {
@@ -302,7 +302,7 @@
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Setup", "Ausfuehrung", 0);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $this->ReadPropertyInteger("midpoint"))));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_Servo"), "Value" => $this->ReadPropertyInteger("midpoint"))));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Fehler beim Stellen der Mittelstellung!", 0);
 				If ($this->GetStatus() <> 202) {
@@ -314,7 +314,7 @@
 				$this->SetValue("Output", 50);
 				$this->GetOutput();
 				IPS_Sleep(500);
-				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => 0)));
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_Servo"), "Value" => 0)));
 				If (!$Result) {
 					$this->SendDebug("Setup", "Fehler beim Ausschalten!", 0);
 				}
