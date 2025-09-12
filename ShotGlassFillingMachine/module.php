@@ -234,6 +234,8 @@
 			else {
 				$Value = intval(($Position * ($Right - $Left) / 100) + $Left);
 			}
+
+			$Value = min($Left, max(0, $Right));
 			
 			$this->SendDebug("SetOutput", "Errechneter Zielwert: ".$Value, 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value)));
