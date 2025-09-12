@@ -23,7 +23,7 @@
 			$this->RegisterPropertyInteger("most_clockwise", 2500);
 			$this->RegisterPropertyInteger("Shutdown", 500);
 			$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
-			$this->RegisterTimer("Shutdown", 0, 'I2GServo_Shutdown($_IPS["TARGET"]);');
+			$this->RegisterTimer("Shutdown", 0, 'ShotGlassFillingMachine_Shutdown($_IPS["TARGET"]);');
 			
 			// Status-Variablen anlegen
 			$this->RegisterVariableInteger("Output", "Ausgang", "~Intensity.100", 10);
