@@ -220,14 +220,16 @@
 			$Left = $this->ReadPropertyInteger("most_anti_clockwise");
 			$Right = $this->ReadPropertyInteger("most_clockwise");
 			$Shutdown = $this->ReadPropertyInteger("Shutdown");
+			
+			$Value = min(5, max(0, $Value));
 			$this->SetValue("Position", $Value);
 			If ($Value > 0) {
 				$Position = $this->ReadPropertyInteger("Position_".$Value);
 			}
 			
 			
-			$Value = min(5, max(0, $Value));
-
+			
+		
 			If ($Value == 0) {
 				$Value = $Left;
 			}
