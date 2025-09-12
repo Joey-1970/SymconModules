@@ -17,7 +17,7 @@
 			parent::Create();
 			$this->RegisterPropertyBoolean("Open", false);
 			$this->RegisterPropertyInteger("Pin_Servo", -1);
-			$this->SetBuffer("PreviousPin", -1);
+			$this->SetBuffer("PreviousPin_Servo", -1);
 			$this->RegisterPropertyInteger("most_anti_clockwise", 500);
 			$this->RegisterPropertyInteger("midpoint", 1500);
 			$this->RegisterPropertyInteger("most_clockwise", 2500);
@@ -25,6 +25,17 @@
 			for ($i = 1; $i <= 5; $i++) {
 				$this->RegisterPropertyInteger("Position_".$i, $i * 20);
 			}
+			
+			$this->RegisterPropertyInteger("Pin_Pump_1", -1);
+			$this->SetBuffer("PreviousPin_Pump_1", -1);
+			$this->RegisterPropertyBoolean("Invert_Pump_1", false);
+			$this->RegisterPropertyInteger("Startoption_Pump_1", 2);
+			
+			$this->RegisterPropertyInteger("Pin_Pump_2", -1);
+			$this->SetBuffer("PreviousPin_Pump_2", -1);
+			$this->RegisterPropertyBoolean("Invert_Pump_2", false);
+			$this->RegisterPropertyInteger("Startoption_Pump_2", 2);
+			
 			$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 			$this->RegisterTimer("Shutdown", 0, 'ShotGlassFillingMachine_Shutdown($_IPS["TARGET"]);');
 
@@ -100,23 +111,23 @@
 		// Diese Zeile nicht löschen
 		parent::ApplyChanges();
 		If (intval($this->GetBuffer("PreviousPin")) <> $this->ReadPropertyInteger("Pin")) {
-			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin"), 0);
+			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_Servo")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_Servo"), 0);
 		}
 		
 		// Summary setzen
 		$this->SetSummary("GPIO: ".$this->ReadPropertyInteger("Pin_Servo"));
             	
 		//ReceiveData-Filter setzen
-                $Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin").'.*)';
+                $Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_Servo").'.*)';
 		$this->SetReceiveDataFilter($Filter);
 		
 		$this->SetTimerInterval("Shutdown", 0);
 		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
-			If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+			If (($this->ReadPropertyInteger("Pin_Servo") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
-									  "Pin" => $this->ReadPropertyInteger("Pin_Servo"), "PreviousPin" => $this->GetBuffer("PreviousPin"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
-				$this->SetBuffer("PreviousPin", $this->ReadPropertyInteger("Pin_Servo"));
+									  "Pin" => $this->ReadPropertyInteger("Pin_Servo"), "PreviousPin" => $this->GetBuffer("PreviousPin_Servo"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+				$this->SetBuffer("PreviousPin_Servo", $this->ReadPropertyInteger("Pin_Servo"));
 				If ($Result == true) {
 					$this->Setup();
 					If ($this->GetStatus() <> 102) {
