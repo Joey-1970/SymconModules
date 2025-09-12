@@ -103,22 +103,28 @@
 				$this->SetBuffer("PreviousPin", $this->ReadPropertyInteger("Pin"));
 				If ($Result == true) {
 					$this->Setup();
-					$this->SetStatus(102);
+					If ($this->GetStatus() <> 102) {
+						$this->SetStatus(102);
+					}
 				}
 			}
 			else {
-				$this->SetStatus(104);
+				If ($this->GetStatus() <> 104) {
+					$this->SetStatus(104);
+				}
 			}
 		}
 		else {
-			$this->SetStatus(104);
+			If ($this->GetStatus() <> 104) {
+				$this->SetStatus(104);
+			}
 		}
 	}
 	public function RequestAction($Ident, $Value) 
 	{
   		switch($Ident) {
 	        case "Output":
-	            	If ($this->ReadPropertyBoolean("Open") == true) {
+	            If ($this->ReadPropertyBoolean("Open") == true) {
 		    		$this->SetOutput($Value);
 		    	}
 	            break;
@@ -129,19 +135,19 @@
 	
 	public function ReceiveData($JSONString) 
 	{
-	    	// Empfangene Daten vom Gateway/Splitter
-	    	$data = json_decode($JSONString);
+	    // Empfangene Daten vom Gateway/Splitter
+	    $data = json_decode($JSONString);
 	 	switch ($data->Function) {
 			   case "get_usedpin":
-			   	If ($this->ReadPropertyBoolean("Open") == true) {
-					$this->ApplyChanges();
-				}
-				break;
+				   	If ($this->ReadPropertyBoolean("Open") == true) {
+						$this->ApplyChanges();
+					}
+					break;
 			   case "status":
-			   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
-			   		$this->SetStatus($data->Status);
-			   	}
-			   	break;
+				   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
+				   		$this->SetStatus($data->Status);
+				   	}
+				   	break;
 			break;
 			   case "freepin":
 			   	// Funktion zum erstellen dynamischer Pulldown-Menüs
@@ -166,10 +172,14 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $Value)));
 			If (!$Result) {
 				$this->SendDebug("SetOutput", "Fehler beim Positionieren!", 0);
-				$this->SetStatus(202);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
 			}
 			else {
-				$this->SetStatus(102);
+				If ($this->GetStatus() <> 102) {
+					$this->SetStatus(102);
+				}
 				//$Output = ($Value / ($Right - $Left)) * 100;
 				$Output = (($Value - $Left)/ ($Right - $Left)) * 100;
 				SetValueInteger($this->GetIDForIdent("Output"), $Output);
@@ -179,14 +189,6 @@
 			If ($Shutdown > 0) {
 				$this->SetTimerInterval("Shutdown", $Shutdown);
 			}
-			/*
-			IPS_Sleep(500);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => 0)));
-			If (!$Result) {
-				$this->SendDebug("SetOutput", "Fehler beim Ausschalten!", 0);
-				$this->SetStatus(202);
-			}
-			*/
 		}
 	}
 	  
@@ -207,7 +209,9 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_servo", "Pin" => $this->ReadPropertyInteger("Pin") )));
 			If ($Result < 0) {
 				$this->SendDebug("GetOutput", "Fehler beim Lesen!", 0);
-				$this->SetStatus(202);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
 			}
 			else {
 				$this->SetStatus(102);
@@ -227,7 +231,9 @@
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin"), "Value" => $this->ReadPropertyInteger("midpoint"))));
 			If (!$Result) {
 				$this->SendDebug("Setup", "Fehler beim Stellen der Mittelstellung!", 0);
-				$this->SetStatus(202);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
 			}
 			else {
 				$this->SetStatus(102);
