@@ -75,13 +75,13 @@
 		$GPIO = array();
 		$GPIO = unserialize($this->Get_GPIO());
 		If ($this->ReadPropertyInteger("Pin_Servo") >= 0 ) {
-			$GPIO[$this->ReadPropertyInteger("Pin_Servo")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin")));
+			$GPIO[$this->ReadPropertyInteger("Pin_Servo")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_Servo")));
 		}
 		If ($this->ReadPropertyInteger("Pin_Pump_1") >= 0 ) {
-			$GPIO[$this->ReadPropertyInteger("Pin_Pump_1")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin")));
+			$GPIO[$this->ReadPropertyInteger("Pin_Pump_1")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_Pump_1")));
 		}
 		If ($this->ReadPropertyInteger("Pin_Pump_2") >= 0 ) {
-			$GPIO[$this->ReadPropertyInteger("Pin_Pump_2")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin")));
+			$GPIO[$this->ReadPropertyInteger("Pin_Pump_2")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_Pump_2")));
 		}
 		ksort($GPIO);
 		
