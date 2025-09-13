@@ -420,7 +420,7 @@ class ShotGlassFillingMachine extends IPSModule
 	public function SetPumpState(int $Pump, Bool $Value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$Shutdown = $this->ReadPropertyInteger("Time_Pump_".$Pump);
+			$Shutdown = $this->ReadPropertyFloat("Time_Pump_".$Pump);
 			$Value = min(1, max(0, $Value));
 			
 			$this->SendDebug("SetPumpState", "Ausfuehrung", 0);
