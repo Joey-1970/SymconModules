@@ -214,6 +214,16 @@
 		    		$this->SetPosition($Value);
 		    	}
 	            break;
+			case "State_Pump_1":
+	            If ($this->ReadPropertyBoolean("Open") == true) {
+			    	$this->SetPumpState(1, $Value);
+			    }
+	            break;
+			case "State_Pump_2":
+	            If ($this->ReadPropertyBoolean("Open") == true) {
+			    	$this->SetPumpState(2, $Value);
+			    }
+	            break;
 	        default:
 	            throw new Exception("Invalid Ident");
 	    	}
@@ -338,7 +348,7 @@
 			}
 		$this->SetTimerInterval("Shutdown", 0);
 	}
-	    
+	   
 	public function GetOutput()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
@@ -362,7 +372,53 @@
 			}
 		}
 	}   
-	
+
+	public function SetPumpState(int §Pump, Bool $Value)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$Value = min(1, max(0, $Value));
+			$this->SendDebug("SetPumpState", "Ausfuehrung", 0);
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_Pump_".$Pump), "Value" => ($Value ^ $this->ReadPropertyBoolean("Invert_Pump_".$Pump)) )));
+			$this->SendDebug("SetOutput", "Ergebnis: ".(int)$Result, 0);
+			IF (!$Result) {
+				$this->SendDebug("SetPumpState", "Fehler beim Setzen des Status!", 0);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
+				return;
+			}
+			else {
+				If ($this->GetStatus() <> 102) {
+					$this->SetStatus(102);
+				}
+				$this->SetValue("State_Pump_".$Pump, ($Value ^ $this->ReadPropertyBoolean("Invert_Pump_".$Pump)));
+				$this->GetPumpState($Pump);
+			}
+		}
+	}
+
+	public function GetPumpState(int §Pump)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("GetPumpState", "Ausfuehrung", 0);
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_value", "Pin" => $this->ReadPropertyInteger("Pin_Pump_".$Pump) )));
+			If ($Result < 0) {
+				$this->SendDebug("GetPumpState", "Fehler beim Lesen des Status!", 0);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
+				return;
+			}
+			else {
+				If ($this->GetStatus() <> 102) {
+					$this->SetStatus(102);
+				}
+				$this->SendDebug("GetPumpState", "Ergebnis: ".(int)$Result, 0);
+				$this->SetValue("State_Pump_".$Pump, ($Result ^ $this->ReadPropertyBoolean("Invert_Pump_".$Pump)));
+			}
+		}
+	}
+		
 	private function Setup()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
