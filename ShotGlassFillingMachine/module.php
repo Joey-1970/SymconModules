@@ -74,8 +74,14 @@
 		$arrayOptions = array();
 		$GPIO = array();
 		$GPIO = unserialize($this->Get_GPIO());
-		If ($this->ReadPropertyInteger("Pin") >= 0 ) {
-			$GPIO[$this->ReadPropertyInteger("Pin")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin")));
+		If ($this->ReadPropertyInteger("Pin_Servo") >= 0 ) {
+			$GPIO[$this->ReadPropertyInteger("Pin_Servo")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin")));
+		}
+		If ($this->ReadPropertyInteger("Pin_Pump_1") >= 0 ) {
+			$GPIO[$this->ReadPropertyInteger("Pin_Pump_1")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin")));
+		}
+		If ($this->ReadPropertyInteger("Pin_Pump_2") >= 0 ) {
+			$GPIO[$this->ReadPropertyInteger("Pin_Pump_2")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin")));
 		}
 		ksort($GPIO);
 		
@@ -135,7 +141,7 @@
 		
 		
 		$arrayActions = array();
-		If (($this->ReadPropertyInteger("Pin") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+		If (($this->ReadPropertyInteger("Pin_Servo") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 			$arrayActions = array(); 
 			$arrayActions[] = array("type" => "Label", "label" => "Test Center"); 
 			$arrayActions[] = array("type" => "TestCenter", "name" => "TestCenter");
