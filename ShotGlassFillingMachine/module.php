@@ -156,30 +156,42 @@
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
         public function ApplyChanges() 
         {
-		// Diese Zeile nicht löschen
-		parent::ApplyChanges();
-		If (intval($this->GetBuffer("PreviousPin")) <> $this->ReadPropertyInteger("Pin")) {
-			$this->SendDebug("ApplyChanges", "Pin-Wechsel - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_Servo")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_Servo"), 0);
-		}
+			// Diese Zeile nicht löschen
+			parent::ApplyChanges();
+			If (intval($this->GetBuffer("PreviousPin_Servo")) <> $this->ReadPropertyInteger("Pin_Servo")) {
+				$this->SendDebug("ApplyChanges", "Pin-Wechsel Servo - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_Servo")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_Servo"), 0);
+			}
+			If (intval($this->GetBuffer("PreviousPin_Pump_1")) <> $this->ReadPropertyInteger("Pin_Pump_1")) {
+				$this->SendDebug("ApplyChanges", "Pin-Wechsel Pumpe 1 - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_Pump_1")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_Pump_1"), 0);
+			}
+			If (intval($this->GetBuffer("PreviousPin_Pump_2")) <> $this->ReadPropertyInteger("Pin_Pump_2")) {
+				$this->SendDebug("ApplyChanges", "Pin-Wechsel Pumpe 2 - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_Pump_2")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_Pump_2"), 0);
+			}
 		
-		// Summary setzen
-		$this->SetSummary("GPIO: ".$this->ReadPropertyInteger("Pin_Servo"));
-            	
-		//ReceiveData-Filter setzen
-                $Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_Servo").'.*)';
-		$this->SetReceiveDataFilter($Filter);
+			// Summary setzen
+			$this->SetSummary("GPIO: ".$this->ReadPropertyInteger("Pin_Servo"));
+	            	
+			//ReceiveData-Filter setzen
+	                $Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_Servo").'.*)';
+			$this->SetReceiveDataFilter($Filter);
+			
+			$this->SetTimerInterval("Shutdown", 0);
 		
-		$this->SetTimerInterval("Shutdown", 0);
-		
-		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
-			If (($this->ReadPropertyInteger("Pin_Servo") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
-									  "Pin" => $this->ReadPropertyInteger("Pin_Servo"), "PreviousPin" => $this->GetBuffer("PreviousPin_Servo"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
-				$this->SetBuffer("PreviousPin_Servo", $this->ReadPropertyInteger("Pin_Servo"));
-				If ($Result == true) {
-					$this->Setup();
-					If ($this->GetStatus() <> 102) {
-						$this->SetStatus(102);
+			If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
+				If (($this->ReadPropertyInteger("Pin_Servo") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+										  "Pin" => $this->ReadPropertyInteger("Pin_Servo"), "PreviousPin" => $this->GetBuffer("PreviousPin_Servo"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+					$this->SetBuffer("PreviousPin_Servo", $this->ReadPropertyInteger("Pin_Servo"));
+					If ($Result == true) {
+						$this->Setup();
+						If ($this->GetStatus() <> 102) {
+							$this->SetStatus(102);
+						}
+					}
+				}
+				else {
+					If ($this->GetStatus() <> 104) {
+						$this->SetStatus(104);
 					}
 				}
 			}
@@ -188,12 +200,6 @@
 					$this->SetStatus(104);
 				}
 			}
-		}
-		else {
-			If ($this->GetStatus() <> 104) {
-				$this->SetStatus(104);
-			}
-		}
 	}
 	public function RequestAction($Ident, $Value) 
 	{
