@@ -51,6 +51,10 @@
 			$this->EnableAction("Output");
 			$this->RegisterVariableInteger("Position", "Position", "ShotGlassFillingMachine.Position", 20);
 			$this->EnableAction("Position");
+			$this->RegisterVariableBoolean("State_Pump_1", "Status Pumpe 1", "~Switch", 30);
+			$this->EnableAction("State_Pump_1");
+			$this->RegisterVariableBoolean("State_Pump_2", "Status Pumpe 2", "~Switch", 40);
+			$this->EnableAction("State_Pump_2");
         }
 	
 	public function GetConfigurationForm() 
