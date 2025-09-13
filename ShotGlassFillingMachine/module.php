@@ -117,7 +117,6 @@ class ShotGlassFillingMachine extends IPSModule
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_Pump_1", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("name" => "Invert_Pump_1", "type" => "CheckBox",  "caption" => "Invertiere Anzeige");
 		$arrayElements[] = array("type" => "Label", "label" => "Status des Ausgangs nach Neustart");
 		$arrayOptions = array();
@@ -137,7 +136,6 @@ class ShotGlassFillingMachine extends IPSModule
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_Pump_2", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("name" => "Invert_Pump_2", "type" => "CheckBox",  "caption" => "Invertiere Anzeige");
 		$arrayElements[] = array("type" => "Label", "label" => "Status des Ausgangs nach Neustart");
 		$arrayOptions = array();
