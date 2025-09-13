@@ -125,7 +125,7 @@ class ShotGlassFillingMachine extends IPSModule
 		$arrayOptions[] = array("label" => "undefiniert", "value" => 2);
 		$arrayElements[] = array("type" => "Select", "name" => "Startoption_Pump_1", "caption" => "Startoption", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "caption" => "Zeit bis zur Abschaltung in Sekunden (0 = keine automatische Abschaltung)"); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Time_Pump_1", "caption" => "Abschaltung (s)", "minimum" => 0, "maximum" => 20); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Time_Pump_1", "caption" => "Abschaltung (s)", "minimum" => 0, "maximum" => 10, "digits" => 1); 
 		
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "caption" => "Pumpe 2"); 
@@ -144,7 +144,7 @@ class ShotGlassFillingMachine extends IPSModule
 		$arrayOptions[] = array("label" => "undefiniert", "value" => 2);
 		$arrayElements[] = array("type" => "Select", "name" => "Startoption_Pump_2", "caption" => "Startoption", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "caption" => "Zeit bis zur Abschaltung in Sekunden (0 = keine automatische Abschaltung)"); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Time_Pump_2", "caption" => "Abschaltung (s)", "minimum" => 0, "maximum" => 20); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Time_Pump_2", "caption" => "Abschaltung (s)", "minimum" => 0, "maximum" => 10, "digits" => 1); 
 		
 		
 		$arrayActions = array();
