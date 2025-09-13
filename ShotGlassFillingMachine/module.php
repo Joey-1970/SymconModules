@@ -7,6 +7,8 @@ class ShotGlassFillingMachine extends IPSModule
 		//Never delete this line!
 		parent::Destroy();
 		$this->SetTimerInterval("Shutdown", 0);
+		$this->SetTimerInterval("Pump_1", 0);
+		$this->SetTimerInterval("Pump_2", 0);
 	}  
 	    
 	    
@@ -30,14 +32,18 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->SetBuffer("PreviousPin_Pump_1", -1);
 			$this->RegisterPropertyBoolean("Invert_Pump_1", false);
 			$this->RegisterPropertyInteger("Startoption_Pump_1", 2);
+			$this->RegisterPropertyFloat("Time_Pump_1", 5.0);
 			
 			$this->RegisterPropertyInteger("Pin_Pump_2", -1);
 			$this->SetBuffer("PreviousPin_Pump_2", -1);
 			$this->RegisterPropertyBoolean("Invert_Pump_2", false);
 			$this->RegisterPropertyInteger("Startoption_Pump_2", 2);
+			$this->RegisterPropertyFloat("Time_Pump_2", 5.0);
 			
 			$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 			$this->RegisterTimer("Shutdown", 0, 'ShotGlassFillingMachine_Shutdown($_IPS["TARGET"]);');
+			$this->RegisterTimer("Pump_1", 0, 'ShotGlassFillingMachine_StopPump_1($_IPS["TARGET"]);');
+			$this->RegisterTimer("Pump_2", 0, 'ShotGlassFillingMachine_StopPump_2($_IPS["TARGET"]);');
 
 			// Profile erstellen
 			$this->RegisterProfileInteger("ShotGlassFillingMachine.Position", "Information", "", "", 0, 3, 1);
@@ -119,7 +125,8 @@ class ShotGlassFillingMachine extends IPSModule
 		$arrayOptions[] = array("label" => "An", "value" => 1);
 		$arrayOptions[] = array("label" => "undefiniert", "value" => 2);
 		$arrayElements[] = array("type" => "Select", "name" => "Startoption_Pump_1", "caption" => "Startoption", "options" => $arrayOptions );
-
+		$arrayElements[] = array("type" => "Label", "caption" => "Zeit bis zur Abschaltung in Sekunden (0 = keine automatische Abschaltung)"); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Time_Pump_1", "caption" => "Abschaltung (s)", "minimum" => 0, "maximum" => 20); 
 		
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "caption" => "Pumpe 2"); 
@@ -138,6 +145,8 @@ class ShotGlassFillingMachine extends IPSModule
 		$arrayOptions[] = array("label" => "An", "value" => 1);
 		$arrayOptions[] = array("label" => "undefiniert", "value" => 2);
 		$arrayElements[] = array("type" => "Select", "name" => "Startoption_Pump_2", "caption" => "Startoption", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Label", "caption" => "Zeit bis zur Abschaltung in Sekunden (0 = keine automatische Abschaltung)"); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Time_Pump_2", "caption" => "Abschaltung (s)", "minimum" => 0, "maximum" => 20); 
 		
 		
 		$arrayActions = array();
@@ -176,6 +185,8 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->SetReceiveDataFilter($Filter);
 			
 			$this->SetTimerInterval("Shutdown", 0);
+			$this->SetTimerInterval("Pump_1", 0);
+			$this->SetTimerInterval("Pump_2", 0);
 		
 			If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
 				If (($this->ReadPropertyInteger("Pin_Servo") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
@@ -411,10 +422,12 @@ class ShotGlassFillingMachine extends IPSModule
 	public function SetPumpState(int $Pump, Bool $Value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$Shutdown = $this->ReadPropertyInteger("Time_Pump_".$Pump);
 			$Value = min(1, max(0, $Value));
+			
 			$this->SendDebug("SetPumpState", "Ausfuehrung", 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_Pump_".$Pump), "Value" => ($Value ^ $this->ReadPropertyBoolean("Invert_Pump_".$Pump)) )));
-			$this->SendDebug("SetOutput", "Ergebnis: ".(int)$Result, 0);
+			$this->SendDebug("SetPumpState", "Ergebnis: ".(int)$Result, 0);
 			IF (!$Result) {
 				$this->SendDebug("SetPumpState", "Fehler beim Setzen des Status!", 0);
 				If ($this->GetStatus() <> 202) {
@@ -427,6 +440,10 @@ class ShotGlassFillingMachine extends IPSModule
 					$this->SetStatus(102);
 				}
 				$this->SetValue("State_Pump_".$Pump, ($Value ^ $this->ReadPropertyBoolean("Invert_Pump_".$Pump)));
+
+				If (($Shutdown > 0) AND ($Value == 1)) {
+					$this->SetTimerInterval("Pump_".$Pump, $Shutdown * 1000);
+				}
 				$this->GetPumpState($Pump);
 			}
 		}
@@ -453,7 +470,25 @@ class ShotGlassFillingMachine extends IPSModule
 			}
 		}
 	}
-		
+
+	public function StopPump_1()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("StopPump_1", "Ausfuehrung", 0);
+			$this->SetPumpState(1, false);
+			$this->SetTimerInterval("Pump_1", 0);
+		}
+	}
+
+	public function StopPump_2()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("StopPump_2", "Ausfuehrung", 0);
+			$this->SetPumpState(2, false);
+			$this->SetTimerInterval("Pump_2", 0);
+		}
+	}
+	
 	private function Setup()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
