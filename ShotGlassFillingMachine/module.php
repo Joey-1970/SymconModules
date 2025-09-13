@@ -179,11 +179,44 @@ class ShotGlassFillingMachine extends IPSModule
 		
 			If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
 				If (($this->ReadPropertyInteger("Pin_Servo") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+					// Servo
 					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
 										  "Pin" => $this->ReadPropertyInteger("Pin_Servo"), "PreviousPin" => $this->GetBuffer("PreviousPin_Servo"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 					$this->SetBuffer("PreviousPin_Servo", $this->ReadPropertyInteger("Pin_Servo"));
 					If ($Result == true) {
 						$this->Setup();
+						If ($this->GetStatus() <> 102) {
+							$this->SetStatus(102);
+						}
+					}
+					// Pumpe 1
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+									  "Pin" => $this->ReadPropertyInteger("Pin_Pump_1"), "PreviousPin" => $this->GetBuffer("PreviousPin_Pump_1"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+					$this->SetBuffer("PreviousPin_Pump_1", $this->ReadPropertyInteger("Pin_Pump_1"));
+					If ($Result == true) {
+						$this->Get_Status();
+						If ($this->ReadPropertyInteger("Startoption_Pump_1") == 0) {
+							$this->SetPumpState(1, false);
+						}
+						elseif ($this->ReadPropertyInteger("Startoption_Pump_1") == 1) {
+							$this->SetPumpState(1, true);
+						}
+						If ($this->GetStatus() <> 102) {
+							$this->SetStatus(102);
+						}
+					}
+					// Pumpe 2
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+									  "Pin" => $this->ReadPropertyInteger("Pin_Pump_2"), "PreviousPin" => $this->GetBuffer("PreviousPin_Pump_2"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+					$this->SetBuffer("PreviousPin_Pump_2", $this->ReadPropertyInteger("Pin_Pump_2"));
+					If ($Result == true) {
+						$this->Get_Status();
+						If ($this->ReadPropertyInteger("Startoption_Pump_2") == 0) {
+							$this->SetPumpState(2, false);
+						}
+						elseif ($this->ReadPropertyInteger("Startoption_Pump_2") == 1) {
+							$this->SetPumpState(2, true);
+						}
 						If ($this->GetStatus() <> 102) {
 							$this->SetStatus(102);
 						}
