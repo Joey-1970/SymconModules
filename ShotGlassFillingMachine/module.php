@@ -1,7 +1,7 @@
 <?
-    // Klassendefinition
-    class ShotGlassFillingMachine extends IPSModule 
-    {
+// Klassendefinition
+class ShotGlassFillingMachine extends IPSModule 
+{
 	public function Destroy() 
 	{
 		//Never delete this line!
@@ -375,7 +375,7 @@
 		}
 	}   
 
-	public function SetPumpState(int §Pump, Bool $Value)
+	public function SetPumpState(int $Pump, Bool $Value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$Value = min(1, max(0, $Value));
@@ -399,7 +399,7 @@
 		}
 	}
 
-	public function GetPumpState(int §Pump)
+	public function GetPumpState(int $Pump)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("GetPumpState", "Ausfuehrung", 0);
