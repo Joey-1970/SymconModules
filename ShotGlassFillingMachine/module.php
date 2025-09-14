@@ -327,14 +327,29 @@ class ShotGlassFillingMachine extends IPSModule
 					}
 					break;
 			   case "status":
-				   	If ($data->Pin == $this->ReadPropertyInteger("Pin")) {
-				   		$this->SetStatus($data->Status);
+				   	If (($data->Pin == $this->ReadPropertyInteger("Pin_Servo")) 
+						OR ($data->Pin == $this->ReadPropertyInteger("Pin_Pump_1")) 
+						OR ($data->Pin == $this->ReadPropertyInteger("Pin_Pump_2")) 
+						OR ($data->Pin == $this->ReadPropertyInteger("Pin_IRSensor_1"))
+						OR ($data->Pin == $this->ReadPropertyInteger("Pin_IRSensor_2"))
+						OR ($data->Pin == $this->ReadPropertyInteger("Pin_IRSensor_3"))
+						OR ($data->Pin == $this->ReadPropertyInteger("Pin_IRSensor_4"))
+						OR ($data->Pin == $this->ReadPropertyInteger("Pin_IRSensor_5"))) {
+				   			$this->SetStatus($data->Status);
 				   	}
 				   	break;
-			break;
-			   case "freepin":
-			   	// Funktion zum erstellen dynamischer Pulldown-Menüs
+				case "notify":
+				If (($data->Pin == $this->ReadPropertyInteger("Pin_IRSensor_1"))
+						OR ($data->Pin == $this->ReadPropertyInteger("Pin_IRSensor_2"))
+						OR ($data->Pin == $this->ReadPropertyInteger("Pin_IRSensor_3"))
+						OR ($data->Pin == $this->ReadPropertyInteger("Pin_IRSensor_4"))
+						OR ($data->Pin == $this->ReadPropertyInteger("Pin_IRSensor_5"))) {
+			   		$this->SendDebug("ReceiveData", "Notify IR-Sensor ".$data->Pin, 0);
+					$this->GetIRSensor();
+			   	}
 			   	break;
+			
+			
 	 	}
  	}
 	// Beginn der Funktionen
