@@ -105,6 +105,12 @@ class ShotGlassFillingMachine extends IPSModule
 		If ($this->ReadPropertyInteger("Pin_Pump_2") >= 0 ) {
 			$GPIO[$this->ReadPropertyInteger("Pin_Pump_2")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_Pump_2")));
 		}
+		for ($i = 1; $i <= 5; $i++) {
+			If ($this->ReadPropertyInteger("Pin_IRSensor_".$i) >= 0 ) {
+				$GPIO[$this->ReadPropertyInteger("Pin_IRSensor_".$i)] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_IRSensor_".$i)));
+			}
+		}
+		
 		ksort($GPIO);
 		
 		foreach($GPIO AS $Value => $Label) {
