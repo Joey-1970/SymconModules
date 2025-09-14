@@ -535,9 +535,26 @@ class ShotGlassFillingMachine extends IPSModule
 	public function GetIRSensor()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("GetIRSensor", "Ausfuehrung", 0);
-			
-			$this->SetTimerInterval("IR_Sensor", 0);
+			for ($i = 1; $i <= 5; $i++) {
+				If ($this->ReadPropertyInteger("Pin_IRSensor".$i) >= 0) {
+					$this->SendDebug("GetInput", "Ausfuehrung für Sensor ".$i, 0);
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_value", "Pin" => $this->ReadPropertyInteger("Pin_IRSensor".$i) )));
+					If ($Result < 0) {
+						$this->SendDebug("GetInput", "Fehler beim Lesen des Status für Sensor ".$i, 0);
+						If ($this->GetStatus() <> 202) {
+							$this->SetStatus(202);
+						}
+						return;
+					}
+					else {
+						If ($this->GetStatus() <> 102) {
+							$this->SetStatus(102);
+						}
+						$this->SendDebug("GetInput", "Ergebnis: ".(int)$Result, 0);
+						$this->SetValue("State_IRSensor_".$i, boolval($Result));
+					}
+				}
+			}
 		}
 	}
 
