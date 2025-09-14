@@ -89,7 +89,7 @@ class ShotGlassFillingMachine extends IPSModule
 		
 		$arrayElements = array(); 
 		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv"); 
- 		$arrayElements[] = array("type" => "Label", "caption" => "Angabe der GPIO-Nummer (Broadcom-Number)"); 
+ 		$arrayElements[] = array("type" => "Label", "caption" => "Angabe der GPIO-Nummer (Broadcom-Number) des Servos"); 
   		
 		$arrayOptions = array();
 		$GPIO = array();
@@ -124,27 +124,18 @@ class ShotGlassFillingMachine extends IPSModule
 		}
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		// Relais 1/ Pumpe 1
-		$arrayElements[] = array("type" => "Label", "caption" => "Pumpe 1"); 
-		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number)"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für die Pumpe 1"); 
 		$arrayOptions = array();
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_Pump_1", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
-		$arrayElements[] = array("name" => "Invert_Pump_1", "type" => "CheckBox",  "caption" => "Invertiere Anzeige");
-		$arrayElements[] = array("type" => "Label", "label" => "Status des Ausgangs nach Neustart");
-		$arrayOptions = array();
-		$arrayOptions[] = array("label" => "Aus", "value" => 0);
-		$arrayOptions[] = array("label" => "An", "value" => 1);
-		$arrayOptions[] = array("label" => "undefiniert", "value" => 2);
-		$arrayElements[] = array("type" => "Select", "name" => "Startoption_Pump_1", "caption" => "Startoption", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "caption" => "Zeit bis zur Abschaltung in Sekunden (0 = keine automatische Abschaltung)"); 
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Time_Pump_1", "caption" => "Abschaltung (s)", "minimum" => 0, "maximum" => 10, "digits" => 1); 
 		
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		// Relais 2/ Pumpe 2
-		$arrayElements[] = array("type" => "Label", "caption" => "Pumpe 2"); 
-		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number)"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für die Pumpe 2"); 
 		$arrayOptions = array();
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
@@ -163,8 +154,10 @@ class ShotGlassFillingMachine extends IPSModule
 		$arrayOptions[] = array("label" => "An", "value" => 1);
 		$arrayOptions[] = array("label" => "undefiniert", "value" => 2);
 		$arrayElements[] = array("type" => "Select", "name" => "Startoption_Pump", "caption" => "Startoption", "options" => $arrayOptions );
-
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+		
 		// für die TCRT5000
+		$arrayElements[] = array("type" => "Label", "caption" => "Angabe der GPIO-Nummer (Broadcom-Number) für IR-Sensoren"); 
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
