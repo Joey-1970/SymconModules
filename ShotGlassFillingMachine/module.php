@@ -194,7 +194,11 @@ class ShotGlassFillingMachine extends IPSModule
 			If (intval($this->GetBuffer("PreviousPin_Pump_2")) <> $this->ReadPropertyInteger("Pin_Pump_2")) {
 				$this->SendDebug("ApplyChanges", "Pin-Wechsel Pumpe 2 - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_Pump_2")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_Pump_2"), 0);
 			}
-		
+			for ($i = 1; $i <= 5; $i++) {
+				If (intval($this->GetBuffer("PreviousPin_IRSensor_".$i)) <> $this->ReadPropertyInteger("Pin_IRSensor_".$i)) {
+					$this->SendDebug("ApplyChanges", "Pin-Wechsel IR-Sensor ".$i." - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_IRSensor_".$i)." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_IRSensor_".$i), 0);
+				}
+			}
 			// Summary setzen
 			$this->SetSummary("GPIO: ".$this->ReadPropertyInteger("Pin_Servo"));
 	            	
