@@ -200,7 +200,7 @@ class ShotGlassFillingMachine extends IPSModule
 	            	
 			//ReceiveData-Filter setzen
 	        // $Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_Servo").'.*)';
-			$this->SetReceiveDataFilter($Filter);
+			//$this->SetReceiveDataFilter($Filter);
 			
 			$this->SetTimerInterval("Shutdown", 0);
 			$this->SetTimerInterval("Pump_1", 0);
