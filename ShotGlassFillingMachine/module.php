@@ -270,11 +270,11 @@ class ShotGlassFillingMachine extends IPSModule
 									$this->SetStatus(102);
 								}
 							}
-							// Initiale Abfrage des aktuellen Status
-							$this->GetIRSensor();
+							
 						}
 					}
-					
+					// Initiale Abfrage des aktuellen Status
+					$this->GetIRSensor();
 				}
 				else {
 					If ($this->GetStatus() <> 104) {
