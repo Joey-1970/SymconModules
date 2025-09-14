@@ -9,6 +9,7 @@ class ShotGlassFillingMachine extends IPSModule
 		$this->SetTimerInterval("Shutdown", 0);
 		$this->SetTimerInterval("Pump_1", 0);
 		$this->SetTimerInterval("Pump_2", 0);
+		$this->SetTimerInterval("IR_Sensor", 0);
 	}  
 	    
 	    
@@ -44,7 +45,7 @@ class ShotGlassFillingMachine extends IPSModule
 
 			// für die TCRT5000
 			for ($i = 1; $i <= 5; $i++) {
-				this->RegisterPropertyInteger("Pin_IRSensor_".$i, -1);
+				$this->RegisterPropertyInteger("Pin_IRSensor_".$i, -1);
 				$this->SetBuffer("PreviousPin_IRSensor_".$i, -1);
 			}
 			
@@ -52,6 +53,7 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->RegisterTimer("Shutdown", 0, 'ShotGlassFillingMachine_Shutdown($_IPS["TARGET"]);');
 			$this->RegisterTimer("Pump_1", 0, 'ShotGlassFillingMachine_StopPump_1($_IPS["TARGET"]);');
 			$this->RegisterTimer("Pump_2", 0, 'ShotGlassFillingMachine_StopPump_2($_IPS["TARGET"]);');
+			$this->RegisterTimer("IR_Sensor", 0, 'ShotGlassFillingMachine_GetIRSensor($_IPS["TARGET"]);');
 
 			// Profile erstellen
 			$this->RegisterProfileInteger("ShotGlassFillingMachine.Position", "Information", "", "", 0, 3, 1);
@@ -507,6 +509,16 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->SetTimerInterval("Pump_2", 0);
 		}
 	}
+
+	public function GetIRSensor()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("GetIRSensor", "Ausfuehrung", 0);
+			
+			$this->SetTimerInterval("IR_Sensor", 0);
+		}
+	}
+
 	
 	private function Setup()
 	{
