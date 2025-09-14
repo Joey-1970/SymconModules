@@ -252,27 +252,16 @@ class ShotGlassFillingMachine extends IPSModule
 					// IR-Sensoren
 					for ($i = 1; $i <= 5; $i++) {
 						If (($this->ReadPropertyInteger("Pin_IRSensor_".$i) >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-								$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
-													  "Pin" => $this->ReadPropertyInteger("Pin_IRSensor_".$i), "PreviousPin" => $this->GetBuffer("PreviousPin_IRSensor_".$i), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 50, "Resistance" => 2)));
-								$this->SetBuffer("PreviousPin_IRSensor_".$i, $this->ReadPropertyInteger("Pin_IRSensor_".$i));
-								If ($Result == true) {
-									If ($this->GetStatus() <> 102) {
-										$this->SetStatus(102);
-									}
-								}
-								// Initiale Abfrage des aktuellen Status
-								$this->GetInput();
-							}
-							else {
-								If ($this->GetStatus() <> 104) {
-									$this->SetStatus(104);
+							$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+												  "Pin" => $this->ReadPropertyInteger("Pin_IRSensor_".$i), "PreviousPin" => $this->GetBuffer("PreviousPin_IRSensor_".$i), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 50, "Resistance" => 2)));
+							$this->SetBuffer("PreviousPin_IRSensor_".$i, $this->ReadPropertyInteger("Pin_IRSensor_".$i));
+							If ($Result == true) {
+								If ($this->GetStatus() <> 102) {
+									$this->SetStatus(102);
 								}
 							}
-						}
-						else {
-							If ($this->GetStatus() <> 104) {
-								$this->SetStatus(104);
-							}
+							// Initiale Abfrage des aktuellen Status
+							$this->GetIRSensor();
 						}
 					}
 					
