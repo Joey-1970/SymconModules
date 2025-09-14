@@ -27,18 +27,21 @@ class ShotGlassFillingMachine extends IPSModule
 			for ($i = 1; $i <= 5; $i++) {
 				$this->RegisterPropertyInteger("Position_".$i, $i * 20);
 			}
-			
+
+			// Relais 1/ Pumpe 1
 			$this->RegisterPropertyInteger("Pin_Pump_1", -1);
 			$this->SetBuffer("PreviousPin_Pump_1", -1);
-			$this->RegisterPropertyBoolean("Invert_Pump_1", false);
-			$this->RegisterPropertyInteger("Startoption_Pump_1", 2);
 			$this->RegisterPropertyFloat("Time_Pump_1", 5.0);
-			
+
+			// Relais 2/ Pumpe 2
 			$this->RegisterPropertyInteger("Pin_Pump_2", -1);
 			$this->SetBuffer("PreviousPin_Pump_2", -1);
-			$this->RegisterPropertyBoolean("Invert_Pump_2", false);
-			$this->RegisterPropertyInteger("Startoption_Pump_2", 2);
 			$this->RegisterPropertyFloat("Time_Pump_2", 5.0);
+
+			// für beide Relais / Pumpen
+			$this->RegisterPropertyBoolean("Invert_Pump", false);
+			$this->RegisterPropertyInteger("Startoption_Pump", 2);
+
 			
 			$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 			$this->RegisterTimer("Shutdown", 0, 'ShotGlassFillingMachine_Shutdown($_IPS["TARGET"]);');
@@ -109,9 +112,9 @@ class ShotGlassFillingMachine extends IPSModule
 			$arrayElements[] = array("type" => "NumberSpinner", "name" => "Position_".$i, "caption" => "Position ".$i, "minimum" => 0, "maximum" => 100); 
 		}
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+		// Relais 1/ Pumpe 1
 		$arrayElements[] = array("type" => "Label", "caption" => "Pumpe 1"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number)"); 
-  		
 		$arrayOptions = array();
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
@@ -128,24 +131,27 @@ class ShotGlassFillingMachine extends IPSModule
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Time_Pump_1", "caption" => "Abschaltung (s)", "minimum" => 0, "maximum" => 10, "digits" => 1); 
 		
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+		// Relais 2/ Pumpe 2
 		$arrayElements[] = array("type" => "Label", "caption" => "Pumpe 2"); 
 		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number)"); 
-  		
 		$arrayOptions = array();
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_Pump_2", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
-		$arrayElements[] = array("name" => "Invert_Pump_2", "type" => "CheckBox",  "caption" => "Invertiere Anzeige");
+		$arrayElements[] = array("type" => "Label", "caption" => "Zeit bis zur Abschaltung in Sekunden (0 = keine automatische Abschaltung)"); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Time_Pump_2", "caption" => "Abschaltung (s)", "minimum" => 0, "maximum" => 10, "digits" => 1); 
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+
+		// für beide Relais/Pumpen
+		$arrayElements[] = array("type" => "Label", "caption" => "Für beiden Pumpen"); 
+		$arrayElements[] = array("name" => "Invert_Pump", "type" => "CheckBox",  "caption" => "Invertiere Anzeige");
 		$arrayElements[] = array("type" => "Label", "label" => "Status des Ausgangs nach Neustart");
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "Aus", "value" => 0);
 		$arrayOptions[] = array("label" => "An", "value" => 1);
 		$arrayOptions[] = array("label" => "undefiniert", "value" => 2);
-		$arrayElements[] = array("type" => "Select", "name" => "Startoption_Pump_2", "caption" => "Startoption", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "caption" => "Zeit bis zur Abschaltung in Sekunden (0 = keine automatische Abschaltung)"); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Time_Pump_2", "caption" => "Abschaltung (s)", "minimum" => 0, "maximum" => 10, "digits" => 1); 
-		
+		$arrayElements[] = array("type" => "Select", "name" => "Startoption_Pump", "caption" => "Startoption", "options" => $arrayOptions );
 		
 		$arrayActions = array();
 		If (($this->ReadPropertyInteger("Pin_Servo") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
@@ -204,10 +210,10 @@ class ShotGlassFillingMachine extends IPSModule
 					$this->SetBuffer("PreviousPin_Pump_1", $this->ReadPropertyInteger("Pin_Pump_1"));
 					If ($Result == true) {
 						$this->Get_Status();
-						If ($this->ReadPropertyInteger("Startoption_Pump_1") == 0) {
+						If ($this->ReadPropertyInteger("Startoption_Pump") == 0) {
 							$this->SetPumpState(1, false);
 						}
-						elseif ($this->ReadPropertyInteger("Startoption_Pump_1") == 1) {
+						elseif ($this->ReadPropertyInteger("Startoption_Pump") == 1) {
 							$this->SetPumpState(1, true);
 						}
 						If ($this->GetStatus() <> 102) {
@@ -220,10 +226,10 @@ class ShotGlassFillingMachine extends IPSModule
 					$this->SetBuffer("PreviousPin_Pump_2", $this->ReadPropertyInteger("Pin_Pump_2"));
 					If ($Result == true) {
 						$this->Get_Status();
-						If ($this->ReadPropertyInteger("Startoption_Pump_2") == 0) {
+						If ($this->ReadPropertyInteger("Startoption_Pump") == 0) {
 							$this->SetPumpState(2, false);
 						}
-						elseif ($this->ReadPropertyInteger("Startoption_Pump_2") == 1) {
+						elseif ($this->ReadPropertyInteger("Startoption_Pump") == 1) {
 							$this->SetPumpState(2, true);
 						}
 						If ($this->GetStatus() <> 102) {
@@ -424,7 +430,7 @@ class ShotGlassFillingMachine extends IPSModule
 			$Value = min(1, max(0, $Value));
 			
 			$this->SendDebug("SetPumpState", "Ausfuehrung", 0);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_Pump_".$Pump), "Value" => ($Value ^ $this->ReadPropertyBoolean("Invert_Pump_".$Pump)) )));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_Pump_".$Pump), "Value" => ($Value ^ $this->ReadPropertyBoolean("Invert_Pump")) )));
 			$this->SendDebug("SetPumpState", "Ergebnis: ".(int)$Result, 0);
 			IF (!$Result) {
 				$this->SendDebug("SetPumpState", "Fehler beim Setzen des Status!", 0);
@@ -437,7 +443,7 @@ class ShotGlassFillingMachine extends IPSModule
 				If ($this->GetStatus() <> 102) {
 					$this->SetStatus(102);
 				}
-				$this->SetValue("State_Pump_".$Pump, ($Value ^ $this->ReadPropertyBoolean("Invert_Pump_".$Pump)));
+				$this->SetValue("State_Pump_".$Pump, ($Value ^ $this->ReadPropertyBoolean("Invert_Pump")));
 
 				If (($Shutdown > 0) AND ($Value == 1)) {
 					$this->SetTimerInterval("Pump_".$Pump, $Shutdown * 1000);
@@ -464,7 +470,7 @@ class ShotGlassFillingMachine extends IPSModule
 					$this->SetStatus(102);
 				}
 				$this->SendDebug("GetPumpState", "Ergebnis: ".(int)$Result, 0);
-				$this->SetValue("State_Pump_".$Pump, ($Result ^ $this->ReadPropertyBoolean("Invert_Pump_".$Pump)));
+				$this->SetValue("State_Pump_".$Pump, ($Result ^ $this->ReadPropertyBoolean("Invert_Pump")));
 			}
 		}
 	}
