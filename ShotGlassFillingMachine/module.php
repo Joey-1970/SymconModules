@@ -197,12 +197,13 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->SetSummary("GPIO: ".$this->ReadPropertyInteger("Pin_Servo"));
 	            	
 			//ReceiveData-Filter setzen
-	                $Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_Servo").'.*)';
+	        // $Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_Servo").'.*)';
 			$this->SetReceiveDataFilter($Filter);
 			
 			$this->SetTimerInterval("Shutdown", 0);
 			$this->SetTimerInterval("Pump_1", 0);
 			$this->SetTimerInterval("Pump_2", 0);
+			$this->SetTimerInterval("IR_Sensor", 0);
 		
 			If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
 				If (($this->ReadPropertyInteger("Pin_Servo") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
@@ -246,6 +247,33 @@ class ShotGlassFillingMachine extends IPSModule
 							$this->SetStatus(102);
 						}
 					}
+					// IR-Sensoren
+					for ($i = 1; $i <= 5; $i++) {
+						If (($this->ReadPropertyInteger("Pin_IRSensor_".$i) >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+								$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+													  "Pin" => $this->ReadPropertyInteger("Pin_IRSensor_".$i), "PreviousPin" => $this->GetBuffer("PreviousPin_IRSensor_".$i), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 50, "Resistance" => 2)));
+								$this->SetBuffer("PreviousPin_IRSensor_".$i, $this->ReadPropertyInteger("Pin_IRSensor_".$i));
+								If ($Result == true) {
+									If ($this->GetStatus() <> 102) {
+										$this->SetStatus(102);
+									}
+								}
+								// Initiale Abfrage des aktuellen Status
+								$this->GetInput();
+							}
+							else {
+								If ($this->GetStatus() <> 104) {
+									$this->SetStatus(104);
+								}
+							}
+						}
+						else {
+							If ($this->GetStatus() <> 104) {
+								$this->SetStatus(104);
+							}
+						}
+					}
+					
 				}
 				else {
 					If ($this->GetStatus() <> 104) {
