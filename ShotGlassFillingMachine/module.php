@@ -6,10 +6,12 @@ class ShotGlassFillingMachine extends IPSModule
 	{
 		//Never delete this line!
 		parent::Destroy();
+		/*
 		$this->SetTimerInterval("Shutdown", 0);
 		$this->SetTimerInterval("Pump_1", 0);
 		$this->SetTimerInterval("Pump_2", 0);
 		$this->SetTimerInterval("IR_Sensor", 0);
+		*/
 	}  
 	    
 	    
