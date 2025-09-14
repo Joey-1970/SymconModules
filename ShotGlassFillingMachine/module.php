@@ -42,6 +42,11 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->RegisterPropertyBoolean("Invert_Pump", false);
 			$this->RegisterPropertyInteger("Startoption_Pump", 2);
 
+			// für die TCRT5000
+			for ($i = 1; $i <= 5; $i++) {
+				this->RegisterPropertyInteger("Pin_IRSensor_".$i, -1);
+				$this->SetBuffer("PreviousPin_IRSensor_".$i, -1);
+			}
 			
 			$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 			$this->RegisterTimer("Shutdown", 0, 'ShotGlassFillingMachine_Shutdown($_IPS["TARGET"]);');
@@ -64,6 +69,10 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->EnableAction("State_Pump_1");
 			$this->RegisterVariableBoolean("State_Pump_2", "Status Pumpe 2", "~Switch", 40);
 			$this->EnableAction("State_Pump_2");
+			for ($i = 1; $i <= 5; $i++) {
+				$this->RegisterVariableBoolean("State_IRSensor_".$i, "Status IRSensor ".$i, "~Switch", 40 + ($i * 10));
+                $this->DisableAction("State_IRSensor_".$i);
+			}
         }
 	
 	public function GetConfigurationForm() 
@@ -152,6 +161,14 @@ class ShotGlassFillingMachine extends IPSModule
 		$arrayOptions[] = array("label" => "An", "value" => 1);
 		$arrayOptions[] = array("label" => "undefiniert", "value" => 2);
 		$arrayElements[] = array("type" => "Select", "name" => "Startoption_Pump", "caption" => "Startoption", "options" => $arrayOptions );
+
+		// für die TCRT5000
+		foreach($GPIO AS $Value => $Label) {
+			$arrayOptions[] = array("label" => $Label, "value" => $Value);
+		}
+		for ($i = 1; $i <= 5; $i++) {
+			$arrayElements[] = array("type" => "Select", "name" => "Pin_IRSensor_".$i, "caption" => "GPIO-Nr.", "options" => $arrayOptions );
+		}
 		
 		$arrayActions = array();
 		If (($this->ReadPropertyInteger("Pin_Servo") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
