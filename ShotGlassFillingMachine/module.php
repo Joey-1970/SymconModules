@@ -209,7 +209,6 @@ class ShotGlassFillingMachine extends IPSModule
 									  "Pin" => $this->ReadPropertyInteger("Pin_Pump_1"), "PreviousPin" => $this->GetBuffer("PreviousPin_Pump_1"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 					$this->SetBuffer("PreviousPin_Pump_1", $this->ReadPropertyInteger("Pin_Pump_1"));
 					If ($Result == true) {
-						$this->Get_Status();
 						If ($this->ReadPropertyInteger("Startoption_Pump") == 0) {
 							$this->SetPumpState(1, false);
 						}
@@ -225,7 +224,6 @@ class ShotGlassFillingMachine extends IPSModule
 									  "Pin" => $this->ReadPropertyInteger("Pin_Pump_2"), "PreviousPin" => $this->GetBuffer("PreviousPin_Pump_2"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
 					$this->SetBuffer("PreviousPin_Pump_2", $this->ReadPropertyInteger("Pin_Pump_2"));
 					If ($Result == true) {
-						$this->Get_Status();
 						If ($this->ReadPropertyInteger("Startoption_Pump") == 0) {
 							$this->SetPumpState(2, false);
 						}
