@@ -170,7 +170,7 @@ class ShotGlassFillingMachine extends IPSModule
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
 		for ($i = 1; $i <= 5; $i++) {
-			$arrayElements[] = array("type" => "Select", "name" => "Pin_IRSensor_".$i, "caption" => "GPIO-Nr.", "options" => $arrayOptions );
+			$arrayElements[] = array("type" => "Select", "name" => "Pin_IRSensor_".$i, "caption" => "GPIO-Nr. für Sensor Nr. ".$i, "options" => $arrayOptions );
 		}
 		
 		$arrayActions = array();
