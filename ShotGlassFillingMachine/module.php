@@ -23,10 +23,10 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->RegisterPropertyBoolean("Open", false);
 			$this->RegisterPropertyInteger("Pin_Servo", -1);
 			$this->SetBuffer("PreviousPin_Servo", -1);
-			$this->RegisterPropertyInteger("most_anti_clockwise", 500);
+			$this->RegisterPropertyInteger("most_anti_clockwise", 1000);
 			$this->RegisterPropertyInteger("midpoint", 1500);
-			$this->RegisterPropertyInteger("most_clockwise", 2500);
-			$this->RegisterPropertyInteger("Shutdown", 500);
+			$this->RegisterPropertyInteger("most_clockwise", 2000);
+			$this->RegisterPropertyInteger("Shutdown", 100);
 			for ($i = 1; $i <= 5; $i++) {
 				$this->RegisterPropertyInteger("Position_".$i, $i * 20);
 			}
@@ -119,9 +119,9 @@ class ShotGlassFillingMachine extends IPSModule
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_Servo", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "caption" => "Angabe der Microsekunden bei 50 Hz"); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "most_anti_clockwise", "caption" => "Max. Links (ms)", "minimum" => 0); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "midpoint", "caption" => "Mittelstellung (ms)", "minimum" => 0); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "most_clockwise", "caption" => "Max. Rechts (ms)", "minimum" => 0);
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "most_anti_clockwise", "caption" => "Max. Links (µs)", "minimum" => 0); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "midpoint", "caption" => "Mittelstellung (µs)", "minimum" => 0); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "most_clockwise", "caption" => "Max. Rechts (µs)", "minimum" => 0);
 		$arrayElements[] = array("type" => "Label", "caption" => "Zeit bis zur Abschaltung in Microsekunden (0 = keine automatische Abschaltung)"); 
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Shutdown", "caption" => "Abschaltung (ms)", "minimum" => 0); 
 		$arrayElements[] = array("type" => "Label", "caption" => "ACHTUNG: Falsche Werte können zur Beschädigung des Servo führen!");
