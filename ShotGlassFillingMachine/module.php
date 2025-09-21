@@ -119,9 +119,9 @@ class ShotGlassFillingMachine extends IPSModule
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_Servo", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "caption" => "Angabe der Microsekunden bei 50 Hz"); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "most_anti_clockwise", "caption" => "Max. Links (µs)", "minimum" => 0); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "most_anti_clockwise", "caption" => "Max. Links (µs) - gegen den Uhrzeigersinn", "minimum" => 0); 
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "midpoint", "caption" => "Mittelstellung (µs)", "minimum" => 0); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "most_clockwise", "caption" => "Max. Rechts (µs)", "minimum" => 0);
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "most_clockwise", "caption" => "Max. Rechts (µs) - im Uhrzeigersinn", "minimum" => 0);
 		$arrayElements[] = array("type" => "Label", "caption" => "Zeit bis zur Abschaltung in Microsekunden (0 = keine automatische Abschaltung)"); 
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Shutdown", "caption" => "Abschaltung (ms)", "minimum" => 0); 
 		$arrayElements[] = array("type" => "Label", "caption" => "ACHTUNG: Falsche Werte können zur Beschädigung des Servo führen!");
