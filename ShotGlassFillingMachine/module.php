@@ -58,7 +58,7 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->RegisterTimer("IR_Sensor", 0, 'ShotGlassFillingMachine_GetIRSensor($_IPS["TARGET"]);');
 
 			// Profile erstellen
-			$this->RegisterProfileInteger("ShotGlassFillingMachine.Position", "Information", "", "", 0, 3, 1);
+			$this->RegisterProfileInteger("ShotGlassFillingMachine.Position", "Information", "", "", 0, 5, 1);
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.Position", 0, "Ruheposition", "TurnLeft", 0x000000);
 			for ($i = 1; $i <= 5; $i++) {
 				IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.Position", $i, "Postion ".$i, "TurnRight", 0x000000);
