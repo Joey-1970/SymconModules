@@ -558,6 +558,8 @@ class ShotGlassFillingMachine extends IPSModule
 	public function GetIRSensor()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$StartButtonState = false;
+			
 			for ($i = 1; $i <= 5; $i++) {
 				If ($this->ReadPropertyInteger("Pin_IRSensor_".$i) >= 0) {
 					$this->SendDebug("GetInput", "Ausfuehrung für Sensor ".$i, 0);
@@ -567,6 +569,7 @@ class ShotGlassFillingMachine extends IPSModule
 						If ($this->GetStatus() <> 202) {
 							$this->SetStatus(202);
 						}
+						$this->DisableAction("Start");
 						return;
 					}
 					else {
@@ -575,8 +578,18 @@ class ShotGlassFillingMachine extends IPSModule
 						}
 						$this->SendDebug("GetInput", "Ergebnis: ".(int)$Result, 0);
 						$this->SetValue("State_IRSensor_".$i, boolval($Result));
+						If (boolval($Result) == false) {
+							$StartButtonState = true;
+						}
 					}
 				}
+			}
+			If ($StartButtonState == true) {
+				$this->EnableAction("Start");
+			}
+			else {
+				$this->DisableAction("Start");
+				$this->SetValue("StateText", "Es muss schon mindestens ein Glas bereitstehen!");
 			}
 		}
 	}
