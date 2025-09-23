@@ -63,6 +63,10 @@ class ShotGlassFillingMachine extends IPSModule
 			for ($i = 1; $i <= 5; $i++) {
 				IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.Position", $i, "Postion ".$i, "TurnRight", 0x000000);
 			}
+
+			$this->RegisterProfileBoolean("ShotGlassFillingMachine.ShotGlass", "Information");
+			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.ShotGlass", 0, "Glas", "Ok", 0x00FF00);
+			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.ShotGlass", 1, "kein Glas", "Close", 0xFF0000);
 			
 			// Status-Variablen anlegen
 			$this->RegisterVariableInteger("Output", "Ausgang", "~Intensity.100", 10);
@@ -74,7 +78,7 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->RegisterVariableBoolean("State_Pump_2", "Status Pumpe 2", "~Switch", 40);
 			$this->EnableAction("State_Pump_2");
 			for ($i = 1; $i <= 5; $i++) {
-				$this->RegisterVariableBoolean("State_IRSensor_".$i, "Status IRSensor ".$i, "~Switch", 40 + ($i * 10));
+				$this->RegisterVariableBoolean("State_IRSensor_".$i, "Status IRSensor ".$i, "ShotGlassFillingMachine.ShotGlass", 40 + ($i * 10));
                 $this->DisableAction("State_IRSensor_".$i);
 			}
         }
@@ -630,7 +634,22 @@ class ShotGlassFillingMachine extends IPSModule
 	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
 	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);        
 	}
-		
+
+	private function RegisterProfileBoolean($Name, $Icon)
+	{
+	        if (!IPS_VariableProfileExists($Name))
+	        {
+	            IPS_CreateVariableProfile($Name, 0);
+	        }
+	        else
+	        {
+	            $profile = IPS_GetVariableProfile($Name);
+	            if ($profile['ProfileType'] != 0)
+	                throw new Exception("Variable profile type does not match for profile " . $Name);
+	        }
+	        IPS_SetVariableProfileIcon($Name, $Icon);      
+	}
+	
 	protected function HasActiveParent()
     	{
 		$Instance = @IPS_GetInstance($this->InstanceID);
