@@ -81,6 +81,10 @@ class ShotGlassFillingMachine extends IPSModule
 				$this->RegisterVariableBoolean("State_IRSensor_".$i, "Status IRSensor ".$i, "ShotGlassFillingMachine.ShotGlass", 40 + ($i * 10));
                 $this->DisableAction("State_IRSensor_".$i);
 			}
+			$this->RegisterVariableBoolean("Start", "Start", "~Switch", 100);
+			$this->DisableAction("Start");
+			$this->RegisterVariableString("StateText", "Status", "~TextBox", 110);
+			$this->DisableAction("StateText");
         }
 	
 	public function GetConfigurationForm() 
