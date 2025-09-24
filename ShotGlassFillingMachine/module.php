@@ -59,7 +59,7 @@ class ShotGlassFillingMachine extends IPSModule
 
 			// Profile erstellen
 			$this->RegisterProfileInteger("ShotGlassFillingMachine.Position", "Information", "", "", 0, 5, 1);
-			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.Position", 0, "Ruheposition", "TurnLeft", 0x000000);
+			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.Position", 100, "Ruheposition", "TurnLeft", 0x000000);
 			for ($i = 1; $i <= 5; $i++) {
 				IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.Position", $i, "Postion ".$i, "TurnRight", 0x000000);
 			}
