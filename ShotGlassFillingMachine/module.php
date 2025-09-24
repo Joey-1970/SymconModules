@@ -319,6 +319,11 @@ class ShotGlassFillingMachine extends IPSModule
 			    	$this->SetPumpState(2, $Value);
 			    }
 	            break;
+			case "Start":
+	            If ($this->ReadPropertyBoolean("Open") == true) {
+			    	$this->Start();
+			    }
+	            break;
 	        default:
 	            throw new Exception("Invalid Ident");
 	    	}
@@ -594,6 +599,13 @@ class ShotGlassFillingMachine extends IPSModule
 		}
 	}
 
+	public function Start()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("Start", "Ausfuehrung", 0);
+			
+		}
+	}
 	
 	private function Setup()
 	{
