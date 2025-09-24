@@ -321,6 +321,7 @@ class ShotGlassFillingMachine extends IPSModule
 	            break;
 			case "Start":
 	            If ($this->ReadPropertyBoolean("Open") == true) {
+					$this->SetValue("Start", $Value);
 			    	$this->Start();
 			    }
 	            break;
