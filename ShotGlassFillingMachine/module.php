@@ -610,6 +610,7 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->SendDebug("Start", "Ausfuehrung", 0);
 			
 		}
+		$this->SetValue("Start", false);
 	}
 	
 	private function Setup()
