@@ -21,7 +21,7 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->RegisterPropertyInteger("midpoint", 1500);
 			$this->RegisterPropertyInteger("most_clockwise", 2000);
 			$this->RegisterPropertyInteger("Shutdown", 2000);
-			$this->RegisterPropertyInteger("RestingPostion", 100);
+			$this->RegisterPropertyInteger("RestingPosition", 100);
 			for ($i = 1; $i <= 5; $i++) {
 				$this->RegisterPropertyInteger("Position_".$i, $i * 20);
 			}
