@@ -372,7 +372,7 @@ class ShotGlassFillingMachine extends IPSModule
 	public function SetServo(Int $Value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("SetOutput", "Ausfuehrung", 0);
+			$this->SendDebug("SetServo", "Ausfuehrung", 0);
 			$Left = $this->ReadPropertyInteger("most_anti_clockwise");
 			$Right = $this->ReadPropertyInteger("most_clockwise");
 			$Shutdown = $this->ReadPropertyInteger("Shutdown");
@@ -380,7 +380,7 @@ class ShotGlassFillingMachine extends IPSModule
 			$Value = min(100, max(0, $Value));
 			
 			$Value = intval(($Value * ($Right - $Left) / 100) + $Left);
-			$this->SendDebug("SetOutput", "Errechneter Zielwert: ".$Value, 0);
+			$this->SendDebug("SetServo", "Errechneter Zielwert: ".$Value, 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_Servo"), "Value" => $Value)));
 			If (!$Result) {
 				$this->SendDebug("SetOutput", "Fehler beim Positionieren!", 0);
@@ -408,7 +408,7 @@ class ShotGlassFillingMachine extends IPSModule
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$NewPosition = false;
-			$this->SendDebug("SetPosition", "Ausfuehrung", 0);
+			$this->SendDebug("SetServoPosition", "Ausfuehrung", 0);
 			$Left = $this->ReadPropertyInteger("most_anti_clockwise");
 			$Right = $this->ReadPropertyInteger("most_clockwise");
 			$RestingPosition = $this->ReadPropertyInteger("RestingPosition");
@@ -435,7 +435,7 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->SendDebug("SetOutput", "Errechneter Zielwert: ".$Value, 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_Servo"), "Value" => $Value)));
 			If (!$Result) {
-				$this->SendDebug("SetPosition", "Fehler beim Positionieren!", 0);
+				$this->SendDebug("SetServoPosition", "Fehler beim Positionieren!", 0);
 				If ($this->GetStatus() <> 202) {
 					$this->SetStatus(202);
 				}
@@ -477,7 +477,7 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->SendDebug("GetOutput", "Ausfuehrung", 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_servo", "Pin" => $this->ReadPropertyInteger("Pin_Servo") )));
 			If ($Result < 0) {
-				$this->SendDebug("GetOutput", "Fehler beim Lesen!", 0);
+				$this->SendDebug("GetServo", "Fehler beim Lesen!", 0);
 				If ($this->GetStatus() <> 202) {
 					$this->SetStatus(202);
 				}
@@ -486,7 +486,7 @@ class ShotGlassFillingMachine extends IPSModule
 				If ($this->GetStatus() <> 102) {
 					$this->SetStatus(102);
 				}
-				$this->SendDebug("GetOutput", "Wert: ".$Result, 0);
+				$this->SendDebug("GetServo", "Wert: ".$Result, 0);
 				$Left = $this->ReadPropertyInteger("most_anti_clockwise");
 				$Right = $this->ReadPropertyInteger("most_clockwise");
 				$Output = (($Result - $Left)/ ($Right - $Left)) * 100;
@@ -672,8 +672,8 @@ class ShotGlassFillingMachine extends IPSModule
 			}
 			else {
 				$this->SetStatus(102);
-				$this->SetValue("Output", 50);
-				$this->GetOutput();
+				$this->SetValue("Servo", 50);
+				$this->GetServo();
 				IPS_Sleep(500);
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_Servo"), "Value" => 0)));
 				If (!$Result) {
