@@ -650,7 +650,7 @@ class ShotGlassFillingMachine extends IPSModule
 			}
 		}
 		// Die Ruhepostion anfahren
-		$this->SetPosition(0);
+		$this->SetServoPosition(0);
 		
 		$this->SetValue("Start", false);
 	}
