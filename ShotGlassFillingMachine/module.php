@@ -283,6 +283,9 @@ class ShotGlassFillingMachine extends IPSModule
 					}
 					// Initiale Abfrage des aktuellen Status
 					$this->GetIRSensor();
+
+					// Start-Button zurüchsetzen
+					$this->SetValue("Start", false);
 				}
 				else {
 					If ($this->GetStatus() <> 104) {
@@ -322,7 +325,9 @@ class ShotGlassFillingMachine extends IPSModule
 			case "Start":
 	            If ($this->ReadPropertyBoolean("Open") == true) {
 					$this->SetValue("Start", $Value);
-			    	$this->Start();
+			    	If ($Value == true) {
+						$this->Start();
+					}
 			    }
 	            break;
 	        default:
@@ -642,7 +647,9 @@ class ShotGlassFillingMachine extends IPSModule
 				$this->SendDebug("Start", "Auf Postion ".$i." ist ein Glas!", 0);
 				$NewPosition = $this->SetServoPosition($i);
 				If ($NewPosition == true) {
+					IPS_Sleep(1000); 
 					// Jetzt die Pumpe an
+					
 				}
 			}
 			else {
