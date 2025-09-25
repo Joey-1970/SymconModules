@@ -423,7 +423,7 @@ class ShotGlassFillingMachine extends IPSModule
 			
 		
 			If ($Value == 0) {
-				$Value = $RestingPosition;
+				$Value = intval(($RestingPosition * ($Right - $Left) / 100) + $Left);
 			}
 			else {
 				$Value = intval(($Position * ($Right - $Left) / 100) + $Left);
