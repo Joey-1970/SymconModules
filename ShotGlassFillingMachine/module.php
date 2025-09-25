@@ -6,12 +6,6 @@ class ShotGlassFillingMachine extends IPSModule
 	{
 		//Never delete this line!
 		parent::Destroy();
-		/*
-		$this->SetTimerInterval("Shutdown", 0);
-		$this->SetTimerInterval("Pump_1", 0);
-		$this->SetTimerInterval("Pump_2", 0);
-		$this->SetTimerInterval("IR_Sensor", 0);
-		*/
 	}  
 	    
 	    
@@ -26,7 +20,8 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->RegisterPropertyInteger("most_anti_clockwise", 1000);
 			$this->RegisterPropertyInteger("midpoint", 1500);
 			$this->RegisterPropertyInteger("most_clockwise", 2000);
-			$this->RegisterPropertyInteger("Shutdown", 100);
+			$this->RegisterPropertyInteger("Shutdown", 2000);
+			$this->RegisterPropertyInteger("RestingPostion", 100);
 			for ($i = 1; $i <= 5; $i++) {
 				$this->RegisterPropertyInteger("Position_".$i, $i * 20);
 			}
@@ -135,6 +130,7 @@ class ShotGlassFillingMachine extends IPSModule
 		$arrayElements[] = array("type" => "Label", "caption" => "ACHTUNG: Falsche Werte können zur Beschädigung des Servo führen!");
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "caption" => "Angabe der Postitionen in Prozent"); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "RestingPosition", "caption" => "Ruhe-Position", "minimum" => 0, "maximum" => 100); 
 		for ($i = 1; $i <= 5; $i++) {
 			$arrayElements[] = array("type" => "NumberSpinner", "name" => "Position_".$i, "caption" => "Position ".$i, "minimum" => 0, "maximum" => 100); 
 		}
@@ -414,6 +410,7 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->SendDebug("SetPosition", "Ausfuehrung", 0);
 			$Left = $this->ReadPropertyInteger("most_anti_clockwise");
 			$Right = $this->ReadPropertyInteger("most_clockwise");
+			$RestingPosition = $this->ReadPropertyInteger("RestingPosition");
 			$Shutdown = $this->ReadPropertyInteger("Shutdown");
 			
 			$Value = min(5, max(0, $Value));
@@ -426,7 +423,7 @@ class ShotGlassFillingMachine extends IPSModule
 			
 		
 			If ($Value == 0) {
-				$Value = $Right;
+				$Value = $RestingPosition;
 			}
 			else {
 				$Value = intval(($Position * ($Right - $Left) / 100) + $Left);
@@ -575,7 +572,7 @@ class ShotGlassFillingMachine extends IPSModule
 					$this->SendDebug("GetInput", "Ausfuehrung für Sensor ".$i, 0);
 					$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_value", "Pin" => $this->ReadPropertyInteger("Pin_IRSensor_".$i) )));
 					If ($Result < 0) {
-						$this->SendDebug("GetInput", "Fehler beim Lesen des Status für Sensor ".$i, 0);
+						$this->SendDebug("GetIRSensor", "Fehler beim Lesen des Status für Sensor ".$i, 0);
 						If ($this->GetStatus() <> 202) {
 							$this->SetStatus(202);
 						}
@@ -586,7 +583,7 @@ class ShotGlassFillingMachine extends IPSModule
 						If ($this->GetStatus() <> 102) {
 							$this->SetStatus(102);
 						}
-						$this->SendDebug("GetInput", "Ergebnis: ".(int)$Result, 0);
+						$this->SendDebug("GetIRSensor", "Ergebnis: ".(int)$Result, 0);
 						$this->SetValue("State_IRSensor_".$i, boolval($Result));
 						If (boolval($Result) == false) {
 							$StartButtonState = true;
@@ -604,12 +601,53 @@ class ShotGlassFillingMachine extends IPSModule
 		}
 	}
 
+	public function GetOneIRSensor(int $IRSensor)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$IRSensor = min(5, max(1, $IRSensor));
+			$IsGlass = false;
+			If ($this->ReadPropertyInteger("Pin_IRSensor_".$IRSensor) >= 0) {
+				$this->SendDebug("GetOneIRSensor", "Ausfuehrung für Sensor ".$IRSensor, 0);
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_value", "Pin" => $this->ReadPropertyInteger("Pin_IRSensor_".$IRSensor) )));
+				If ($Result < 0) {
+					$this->SendDebug("GetOneIRSensor", "Fehler beim Lesen des Status für Sensor ".$IRSensor, 0);
+					If ($this->GetStatus() <> 202) {
+						$this->SetStatus(202);
+					}
+					$IsGlass = false;
+				}
+				else {
+					If ($this->GetStatus() <> 102) {
+						$this->SetStatus(102);
+					}
+					$this->SendDebug("GetOneIRSensor", "Ergebnis: ".(int)$Result, 0);
+					$this->SetValue("State_IRSensor_".$IRSensor, boolval($Result));
+					$IsGlass = boolval($Result); 
+				}
+			}
+		}
+	return $IsGlass;
+	}
+
 	public function Start()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("Start", "Ausfuehrung", 0);
 			
 		}
+		for ($i = 1; $i <= 5; $i++) {
+			// Prüfen ob an Position $i ein Glas steht
+			$IsGlass = $this->GetOneIRSensor($i);
+			If ($IsGlass == true) {
+				// Fahre die Postion an
+				$this->SendDebug("Start", "Auf Postion ".$i." ist ein Glas!", 0);
+				$this->SetPosition($i);
+				// Jetzt die Pumpe an
+			}
+		}
+		// Die Ruhepostion anfahren
+		$this->SetPosition(0);
+		
 		$this->SetValue("Start", false);
 	}
 	
