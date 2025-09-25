@@ -415,14 +415,10 @@ class ShotGlassFillingMachine extends IPSModule
 			$Shutdown = $this->ReadPropertyInteger("Shutdown");
 			
 			$Value = min(5, max(0, $Value));
-			$this->SetValue("Position", $Value);
+			$this->SetValue("ServoPosition", $Value);
 			If ($Value > 0) {
 				$Position = $this->ReadPropertyInteger("Position_".$Value);
 			}
-			
-			
-			
-		
 			If ($Value == 0) {
 				$Value = intval(($RestingPosition * ($Right - $Left) / 100) + $Left);
 			}
@@ -432,7 +428,7 @@ class ShotGlassFillingMachine extends IPSModule
 
 			$Value = min($Right, max($Value, $Left));
 			
-			$this->SendDebug("SetOutput", "Errechneter Zielwert: ".$Value, 0);
+			$this->SendDebug("SetServoPosition", "Errechneter Zielwert: ".$Value, 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_Servo"), "Value" => $Value)));
 			If (!$Result) {
 				$this->SendDebug("SetServoPosition", "Fehler beim Positionieren!", 0);
