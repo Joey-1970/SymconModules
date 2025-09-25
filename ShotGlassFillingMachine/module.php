@@ -64,10 +64,10 @@ class ShotGlassFillingMachine extends IPSModule
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.ShotGlass", 1, "kein Glas", "Close", 0xFF0000);
 			
 			// Status-Variablen anlegen
-			$this->RegisterVariableInteger("Output", "Ausgang", "~Intensity.100", 10);
-			$this->EnableAction("Output");
-			$this->RegisterVariableInteger("Position", "Position", "ShotGlassFillingMachine.Position", 20);
-			$this->EnableAction("Position");
+			$this->RegisterVariableInteger("Servo", "Servo", "~Intensity.100", 10);
+			$this->EnableAction("Servo");
+			$this->RegisterVariableInteger("ServoPosition", "Servo-Position", "ShotGlassFillingMachine.Position", 20);
+			$this->EnableAction("ServoPosition");
 			$this->RegisterVariableBoolean("State_Pump_1", "Status Pumpe 1", "~Switch", 30);
 			$this->EnableAction("State_Pump_1");
 			$this->RegisterVariableBoolean("State_Pump_2", "Status Pumpe 2", "~Switch", 40);
@@ -299,14 +299,14 @@ class ShotGlassFillingMachine extends IPSModule
 	public function RequestAction($Ident, $Value) 
 	{
   		switch($Ident) {
-	        case "Output":
+	        case "Servo":
 	            If ($this->ReadPropertyBoolean("Open") == true) {
-		    		$this->SetOutput($Value);
+		    		$this->SetServo($Value);
 		    	}
 	            break;
-			case "Position":
+			case "ServoPosition":
 	            If ($this->ReadPropertyBoolean("Open") == true) {
-		    		$this->SetPosition($Value);
+		    		$this->SetServoPosition($Value);
 		    	}
 	            break;
 			case "State_Pump_1":
@@ -369,7 +369,7 @@ class ShotGlassFillingMachine extends IPSModule
 	// Beginn der Funktionen
 	
 	// Schaltet den gewaehlten Pin
-	public function SetOutput(Int $Value)
+	public function SetServo(Int $Value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("SetOutput", "Ausfuehrung", 0);
@@ -394,8 +394,8 @@ class ShotGlassFillingMachine extends IPSModule
 				}
 				//$Output = ($Value / ($Right - $Left)) * 100;
 				$Output = (($Value - $Left)/ ($Right - $Left)) * 100;
-				$this->SetValue("Output", $Output);
-				$this->GetOutput();
+				$this->SetValue("Servo", $Output);
+				$this->GetServo();
 			}
 			
 			If ($Shutdown > 0) {
@@ -404,9 +404,10 @@ class ShotGlassFillingMachine extends IPSModule
 		}
 	}
 
-	public function SetPosition(Int $Value)
+	public function SetServoPosition(Int $Value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
+			$NewPosition = false;
 			$this->SendDebug("SetPosition", "Ausfuehrung", 0);
 			$Left = $this->ReadPropertyInteger("most_anti_clockwise");
 			$Right = $this->ReadPropertyInteger("most_clockwise");
@@ -438,6 +439,7 @@ class ShotGlassFillingMachine extends IPSModule
 				If ($this->GetStatus() <> 202) {
 					$this->SetStatus(202);
 				}
+				$NewPosition = false;
 			}
 			else {
 				If ($this->GetStatus() <> 102) {
@@ -445,15 +447,16 @@ class ShotGlassFillingMachine extends IPSModule
 				}
 				
 				$Output = (($Value - $Left)/ ($Right - $Left)) * 100;
-				$this->SetValue("Output", $Output);
-				
-				$this->GetOutput();
+				$this->SetValue("Servo", $Output);
+				$NewPosition = True;
+				$this->GetServo();
 			}
 			
 			If ($Shutdown > 0) {
 				$this->SetTimerInterval("Shutdown", $Shutdown);
 			}
 		}
+	return $NewPosition;
 	}
 	  
 	public function Shutdown()
@@ -468,7 +471,7 @@ class ShotGlassFillingMachine extends IPSModule
 		$this->SetTimerInterval("Shutdown", 0);
 	}
 	   
-	public function GetOutput()
+	public function GetServo()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("GetOutput", "Ausfuehrung", 0);
@@ -487,7 +490,7 @@ class ShotGlassFillingMachine extends IPSModule
 				$Left = $this->ReadPropertyInteger("most_anti_clockwise");
 				$Right = $this->ReadPropertyInteger("most_clockwise");
 				$Output = (($Result - $Left)/ ($Right - $Left)) * 100;
-				$this->SetValue("Output", $Output);
+				$this->SetValue("Servo", $Output);
 			}
 		}
 	}   
@@ -605,7 +608,7 @@ class ShotGlassFillingMachine extends IPSModule
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$IRSensor = min(5, max(1, $IRSensor));
-			$IsGlass = false;
+			$IsGlass = true;
 			If ($this->ReadPropertyInteger("Pin_IRSensor_".$IRSensor) >= 0) {
 				$this->SendDebug("GetOneIRSensor", "Ausfuehrung für Sensor ".$IRSensor, 0);
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_value", "Pin" => $this->ReadPropertyInteger("Pin_IRSensor_".$IRSensor) )));
@@ -614,7 +617,7 @@ class ShotGlassFillingMachine extends IPSModule
 					If ($this->GetStatus() <> 202) {
 						$this->SetStatus(202);
 					}
-					$IsGlass = false;
+					$IsGlass = true;
 				}
 				else {
 					If ($this->GetStatus() <> 102) {
@@ -622,7 +625,7 @@ class ShotGlassFillingMachine extends IPSModule
 					}
 					$this->SendDebug("GetOneIRSensor", "Ergebnis: ".(int)$Result, 0);
 					$this->SetValue("State_IRSensor_".$IRSensor, boolval($Result));
-					$IsGlass = boolval($Result); 
+					$IsGlass = !boolval($Result); 
 				}
 			}
 		}
@@ -641,8 +644,10 @@ class ShotGlassFillingMachine extends IPSModule
 			If ($IsGlass == true) {
 				// Fahre die Postion an
 				$this->SendDebug("Start", "Auf Postion ".$i." ist ein Glas!", 0);
-				$this->SetPosition($i);
-				// Jetzt die Pumpe an
+				$NewPosition = $this->SetServoPosition($i);
+				If ($NewPosition == true) {
+					// Jetzt die Pumpe an
+				}
 			}
 			else {
 				$this->SendDebug("Start", "Auf Postion ".$i." ist kein Glas!", 0);
