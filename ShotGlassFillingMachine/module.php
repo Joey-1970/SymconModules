@@ -644,6 +644,9 @@ class ShotGlassFillingMachine extends IPSModule
 				$this->SetPosition($i);
 				// Jetzt die Pumpe an
 			}
+			else {
+				$this->SendDebug("Start", "Auf Postion ".$i." ist kein Glas!", 0);
+			}
 		}
 		// Die Ruhepostion anfahren
 		$this->SetPosition(0);
