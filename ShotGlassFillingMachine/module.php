@@ -287,6 +287,7 @@ class ShotGlassFillingMachine extends IPSModule
 
 					// Start-Button zurüchsetzen
 					$this->SetValue("Start", false);
+					$this->SetValue("FillingActive", false);
 				}
 				else {
 					If ($this->GetStatus() <> 104) {
