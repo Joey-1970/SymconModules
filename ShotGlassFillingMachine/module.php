@@ -366,6 +366,31 @@ class ShotGlassFillingMachine extends IPSModule
 					}
 			    }
 	            break;
+			case "ShotGlassFill_1":
+	            If ($this->ReadPropertyBoolean("Open") == true) {
+			    	$this->SetValue($Ident, $Value);
+			    }
+	            break;
+			case "ShotGlassFill_2":
+	            If ($this->ReadPropertyBoolean("Open") == true) {
+			    	$this->SetValue($Ident, $Value);
+			    }
+	            break;
+			case "ShotGlassFill_3":
+	            If ($this->ReadPropertyBoolean("Open") == true) {
+			    	$this->SetValue($Ident, $Value);
+			    }
+	            break;
+			case "ShotGlassFill_4":
+	            If ($this->ReadPropertyBoolean("Open") == true) {
+			    	$this->SetValue($Ident, $Value);
+			    }
+	            break;
+			case "ShotGlassFill_5":
+	            If ($this->ReadPropertyBoolean("Open") == true) {
+			    	$this->SetValue($Ident, $Value);
+			    }
+	            break;
 	        default:
 	            throw new Exception("Invalid Ident");
 	    	}
