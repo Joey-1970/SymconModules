@@ -721,7 +721,7 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->SendDebug("StartFilling", "Ausfuehrung", 0);
 			$this->SetValue("FillingActive", true);
 			// Schrittzähler zurücksetzen
-			$this->SetValue("FillingStep", 0);
+			$this->SetValue("FillingStep", 1);
 			// Alles in Ausgangsstellung bringen
 			$this->SetServoPosition(0);
 			$this->SetPumpState(1, false);
