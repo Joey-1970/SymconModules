@@ -607,6 +607,7 @@ class ShotGlassFillingMachine extends IPSModule
 			}
 			If ($StartButtonState == true) {
 				$this->EnableAction("Start");
+				$this->SetValue("StateText", "Der Spass kann beginnen! Drücke Start zur Befüllung...");
 			}
 			else {
 				$this->DisableAction("Start");
@@ -707,6 +708,7 @@ class ShotGlassFillingMachine extends IPSModule
 					// Ausgewählte Pumpe
 					$SelectedDrink = 1;
 					// Pumpe Starten
+					$this->SetValue("StateText", "Jetzt geht es los...");
 					$this->SetPumpState($SelectedDrink, true);
 				}
 			}
@@ -722,6 +724,7 @@ class ShotGlassFillingMachine extends IPSModule
 			// Schrittzähler zurücksetzen
 			$this->SetValue("FillingStep", 0);
 			$this->SetServoPosition(0);
+			$this->GetIRSensor();
 		}	
 	}
 	
