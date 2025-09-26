@@ -51,6 +51,7 @@ class ShotGlassFillingMachine extends IPSModule
 			// Sonstiges
 			$this->RegisterPropertyInteger("Modus", 0);
 			$this->RegisterPropertyString("PossibleDrinks", "");
+			$this->RegisterPropertyBoolean("AfterFilling", false);
 			
 			$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 			$this->RegisterTimer("Shutdown", 0, 'ShotGlassFillingMachine_Shutdown($_IPS["TARGET"]);');
@@ -337,6 +338,7 @@ class ShotGlassFillingMachine extends IPSModule
 					$this->SetValue("FillingStep", 0);
 					$this->SetValue("DrinkChoise", 0);
 					$this->SetDrink(0);
+					$this->SetValue("AfterFilling", false);
 
 					// Modus
 					If ($this->ReadPropertyInteger("Modus") == 0) {  //Produktivmodus
@@ -706,7 +708,7 @@ class ShotGlassFillingMachine extends IPSModule
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$StartButtonState = false;
-			
+			$AfterFilling = $this->GetValue("AfterFilling");
 			for ($i = 1; $i <= 5; $i++) {
 				If ($this->ReadPropertyInteger("Pin_IRSensor_".$i) >= 0) {
 					$this->SendDebug("GetInput", "Ausfuehrung für Sensor ".$i, 0);
@@ -731,12 +733,17 @@ class ShotGlassFillingMachine extends IPSModule
 					}
 				}
 			}
-			If ($StartButtonState == true) {
+			If (($StartButtonState == true) And ($AfterFilling == false)) {
 				$this->EnableAction("Start");
 				$this->SetValue("StateText", "Der Spass kann beginnen! Drücke Start zur Befüllung...");
 			}
+			elseif (($StartButtonState == true) And ($AfterFilling == true)) {
+				$this->DisableAction("Start");
+				$this->SetValue("StateText", "PROST!");
+			}
 			else {
 				$this->DisableAction("Start");
+				$this->SetValue("AfterFilling", false);
 				$this->SetValue("StateText", "Es muss schon mindestens ein Glas bereitstehen!");
 			}
 		}
@@ -822,7 +829,9 @@ class ShotGlassFillingMachine extends IPSModule
 			// Schrittzähler zurücksetzen
 			$this->SetValue("FillingStep", 0);
 			$this->SetServoPosition(0);
+			$this->SetValue("AfterFilling", true);
 			$this->GetIRSensor();
+			
 		}	
 	}
 	
