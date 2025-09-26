@@ -859,10 +859,11 @@ class ShotGlassFillingMachine extends IPSModule
 		$PossibleDrinks = json_decode($PossibleDrinksString);
 		$this->SendDebug("SetPossibleShotsAssociations", serialize($PossibleDrinks), 0);
 		
-		
+		$i = 0;
 		foreach ($PossibleDrinks as $Key => $Value) {
 			$this->SendDebug("SetPossibleShotsAssociations", $Value->Name." hinzugefuegt", 0);
-			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PossibleShots_".$this->InstanceID, $Value->Name, "Party", -1);
+			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PossibleShots_".$this->InstanceID, $i, $Value->Name, "Party", -1);
+			$i = $i + 1;
 		}
 		
 	}
