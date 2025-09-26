@@ -59,6 +59,15 @@ class ShotGlassFillingMachine extends IPSModule
 				IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.Position", $i, "Postion ".$i, "TurnRight", 0x000000);
 			}
 
+			$this->RegisterProfileInteger("ShotGlassFillingMachine.PreShotGlassFill", "Party", "", "", 0, 2, 1);
+			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PreShotGlassFill", 0, "Alle Gläser mit Getränk 1 füllen", "Party", 0x000000);
+			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PreShotGlassFill", 1, "Alle Gläser mit Getränk 2 füllen", "Party", 0x000000);
+			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PreShotGlassFill", 2, "Individuell füllen", "Party", 0x000000);
+
+			$this->RegisterProfileBoolean("ShotGlassFillingMachine.ShotGlassFill", "Party");
+			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.ShotGlassFill", 0, "Getränk 1", "Party", 0x000000);
+			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.ShotGlassFill", 1, "Getränk 2", "Party", 0x000000);
+
 			$this->RegisterProfileBoolean("ShotGlassFillingMachine.ShotGlass", "Information");
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.ShotGlass", 0, "Glas", "Ok", 0x00FF00);
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.ShotGlass", 1, "kein Glas", "Close", 0xFF0000);
@@ -81,6 +90,13 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->RegisterVariableString("StateText", "Status", "~TextBox", 110);
 			$this->RegisterVariableBoolean("FillingActive", "Befüllung aktiv", "~Switch", 120);
 			$this->RegisterVariableInteger("FillingStep", "Befüllung Schritt", "", 130);
+			$this->RegisterVariableInteger("DrinkChoise", "Befüllung wählen", "ShotGlassFillingMachine.PreShotGlassFill", 140);
+			$this->EnableAction("DrinkChoise");
+			for ($i = 1; $i <= 5; $i++) {
+				$this->RegisterVariableBoolean("ShotGlassFill_".$i, "Getränk Glas ".$i, "ShotGlassFillingMachine.ShotGlassFill", 140 + ($i * 10));
+                $this->DisableAction("ShotGlassFill_".$i);
+			}
+			
         }
 	
 	public function GetConfigurationForm() 
@@ -221,6 +237,7 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->SetTimerInterval("Pump_1", 0);
 			$this->SetTimerInterval("Pump_2", 0);
 			$this->SetTimerInterval("IR_Sensor", 0);
+			$this->SetValue("StateText", "Initialisierung...");
 		
 			If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
 				If (($this->ReadPropertyInteger("Pin_Servo") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
@@ -332,6 +349,11 @@ class ShotGlassFillingMachine extends IPSModule
 			    	If ($Value == true) {
 						$this->StartFilling();
 					}
+			    }
+	            break;
+			case "DrinkChoise":
+	            If ($this->ReadPropertyBoolean("Open") == true) {
+			    	$this->SetValue("DrinkChoise", $Value);
 			    }
 	            break;
 	        default:
