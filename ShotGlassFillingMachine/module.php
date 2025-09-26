@@ -699,16 +699,19 @@ class ShotGlassFillingMachine extends IPSModule
 			
 			If ($IsGlass == true) {
 				// Fahre die Postion an
-				$this->SendDebug("Start", "Auf Postion ".$FillingStep." ist ein Glas!", 0);
-				$NewPosition = $this->SetServoPosition($FillingStep);
-
-				// Ausgewählte Pumpe
-				$SelectedDrink = 1;
+				$this->SendDebug("FillingProcess", "Auf Postion ".$FillingStep." ist ein Glas!", 0);
 				
-				// Pumpe Starten
-				$this->SetPumpState($SelectedDrink, true);
+				$NewPosition = $this->SetServoPosition($FillingStep);
+				If ($NewPosition == true) {
+					IPS_Sleep(1000); 
+					// Ausgewählte Pumpe
+					$SelectedDrink = 1;
+					// Pumpe Starten
+					$this->SetPumpState($SelectedDrink, true);
+				}
 			}
 			else {
+				$this->SendDebug("FillingProcess", "Auf Postion ".$FillingStep." ist kein Glas!", 0);
 				// Schrittzähler um einen hochsetzen
 				$this->SetValue("FillingStep", $FillingStep + 1);
 				$this->FillingProcess();
