@@ -306,6 +306,7 @@ class ShotGlassFillingMachine extends IPSModule
 					$this->SetValue("Start", false);
 					$this->SetValue("FillingActive", false);
 					$this->SetValue("FillingStep", 0);
+					$this->SetValue("DrinkChoise", 0);
 					
 				}
 				else {
@@ -747,7 +748,7 @@ class ShotGlassFillingMachine extends IPSModule
 				If ($NewPosition == true) {
 					IPS_Sleep(1000); 
 					// Ausgewählte Pumpe
-					$SelectedDrink = 1;
+					$SelectedDrink = $this->GetValue(ShotGlassFill_".$FillingStep);
 					// Pumpe Starten
 					$this->SetValue("StateText", "Jetzt geht es los...");
 					$this->SetPumpState($SelectedDrink, true);
