@@ -15,6 +15,8 @@ class ShotGlassFillingMachine extends IPSModule
 			// Diese Zeile nicht löschen.
 			parent::Create();
 			$this->RegisterPropertyBoolean("Open", false);
+			
+			// Servo
 			$this->RegisterPropertyInteger("Pin_Servo", -1);
 			$this->SetBuffer("PreviousPin_Servo", -1);
 			$this->RegisterPropertyInteger("most_anti_clockwise", 1000);
@@ -45,6 +47,9 @@ class ShotGlassFillingMachine extends IPSModule
 				$this->RegisterPropertyInteger("Pin_IRSensor_".$i, -1);
 				$this->SetBuffer("PreviousPin_IRSensor_".$i, -1);
 			}
+
+			// Sonstiges
+			$this->RegisterPropertyInteger("Modus", 0);
 			
 			$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 			$this->RegisterTimer("Shutdown", 0, 'ShotGlassFillingMachine_Shutdown($_IPS["TARGET"]);');
@@ -74,13 +79,9 @@ class ShotGlassFillingMachine extends IPSModule
 			
 			// Status-Variablen anlegen
 			$this->RegisterVariableInteger("Servo", "Servo", "~Intensity.100", 10);
-			$this->EnableAction("Servo");
 			$this->RegisterVariableInteger("ServoPosition", "Servo-Position", "ShotGlassFillingMachine.Position", 20);
-			$this->EnableAction("ServoPosition");
 			$this->RegisterVariableBoolean("State_Pump_1", "Status Pumpe 1", "~Switch", 30);
-			$this->DisableAction("State_Pump_1");
 			$this->RegisterVariableBoolean("State_Pump_2", "Status Pumpe 2", "~Switch", 40);
-			$this->DisableAction("State_Pump_2");
 			for ($i = 1; $i <= 5; $i++) {
 				$this->RegisterVariableBoolean("State_IRSensor_".$i, "Status IRSensor ".$i, "ShotGlassFillingMachine.ShotGlass", 40 + ($i * 10));
                 $this->DisableAction("State_IRSensor_".$i);
@@ -193,6 +194,14 @@ class ShotGlassFillingMachine extends IPSModule
 		for ($i = 1; $i <= 5; $i++) {
 			$arrayElements[] = array("type" => "Select", "name" => "Pin_IRSensor_".$i, "caption" => "GPIO-Nr. für Sensor Nr. ".$i, "options" => $arrayOptions );
 		}
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+
+
+		// Sonstiges
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "Produktivmodus", "value" => 0);
+		$arrayOptions[] = array("label" => "Kalibrierungsmodus", "value" => 1);
+		$arrayElements[] = array("type" => "Select", "name" => "Modus", "caption" => "Modus", "options" => $arrayOptions );
 		
 		$arrayActions = array();
 		If (($this->ReadPropertyInteger("Pin_Servo") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
@@ -308,6 +317,20 @@ class ShotGlassFillingMachine extends IPSModule
 					$this->SetValue("FillingStep", 0);
 					$this->SetValue("DrinkChoise", 0);
 					$this->SetDrink(0);
+
+					// Modus
+					If ($this->ReadPropertyInteger("Modus") == 0) {  //Produktivmodus
+						$this->DisableAction("Servo");
+						$this->DisableAction("ServoPosition");
+						$this->DisableAction("State_Pump_1");
+						$this->DisableAction("State_Pump_2");
+					}
+					elseif ($this->ReadPropertyInteger("Modus") == 1) { // Kalibriermodus
+						$this->EnableAction("Servo");
+						$this->EnableAction("ServoPosition");
+						$this->EnableAction("State_Pump_1");
+						$this->EnableAction("State_Pump_2");
+					}
 					
 				}
 				else {
