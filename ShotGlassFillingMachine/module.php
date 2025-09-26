@@ -77,6 +77,8 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->RegisterProfileBoolean("ShotGlassFillingMachine.ShotGlass", "Information");
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.ShotGlass", 0, "Glas", "Ok", 0x00FF00);
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.ShotGlass", 1, "kein Glas", "Close", 0xFF0000);
+
+			$this->RegisterProfileInteger("ShotGlassFillingMachine.PossibleShots_".$this->InstanceID, "Party", "", "", 0, 10, 0);
 			
 			// Status-Variablen anlegen
 			$this->RegisterVariableInteger("Servo", "Servo", "~Intensity.100", 10);
