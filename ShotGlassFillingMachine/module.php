@@ -100,9 +100,9 @@ class ShotGlassFillingMachine extends IPSModule
 				$this->RegisterVariableBoolean("ShotGlassFill_".$i, "Getränk Glas ".$i, "ShotGlassFillingMachine.ShotGlassFill", 140 + ($i * 10));
                 $this->DisableAction("ShotGlassFill_".$i);
 			}
-			$this->RegisterVariableInteger("PossibleShots_1", "Shots 1", "IPS2Pioneer.RadioStations_".$this->InstanceID, 200);
+			$this->RegisterVariableInteger("PossibleShots_1", "Shots 1", "ShotGlassFillingMachine.PossibleShots_".$this->InstanceID, 200);
 			$this->EnableAction("PossibleShots_1");
-			$this->RegisterVariableInteger("PossibleShots_2", "Shots 2", "IPS2Pioneer.RadioStations_".$this->InstanceID, 210);
+			$this->RegisterVariableInteger("PossibleShots_2", "Shots 2", "ShotGlassFillingMachine.PossibleShots_".$this->InstanceID, 210);
 			$this->EnableAction("PossibleShots_2");
 			
         }
