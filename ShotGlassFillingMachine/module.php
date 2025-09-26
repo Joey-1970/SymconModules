@@ -79,7 +79,8 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->RegisterVariableBoolean("Start", "Start", "~Switch", 100);
 			$this->DisableAction("Start");
 			$this->RegisterVariableString("StateText", "Status", "~TextBox", 110);
-			$this->DisableAction("StateText");
+			$this->RegisterVariableBoolean("FillingActive", "Befüllung aktiv", "~Switch", 120);
+			$this->RegisterVariableInteger("FillingStep", "Befüllung Schritt", "", 130);
         }
 	
 	public function GetConfigurationForm() 
@@ -660,6 +661,22 @@ class ShotGlassFillingMachine extends IPSModule
 		$this->SetServoPosition(0);
 		
 		$this->SetValue("Start", false);
+	}
+
+	private function StartFilling()
+	{
+		If ($this->GetValue("FillingActive") == false) {
+			$this->SendDebug("StartFilling", "Ausfuehrung", 0);
+			$this->SetValue("FillingActive", true);
+			// Schrittzähler zurücksetzen
+			$this->SetValue("FillingStep", 0);
+			// Alles in Ausgangsstellung bringen
+			$this->SetServoPosition(0);
+			$this->SetPumpState(1, false);
+			$this->SetPumpState(2, false);
+			// Jetzt die Befüllung starten
+			$this->FillingPro();
+		}
 	}
 	
 	private function Setup()
