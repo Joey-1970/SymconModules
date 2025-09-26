@@ -675,8 +675,41 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->SetPumpState(1, false);
 			$this->SetPumpState(2, false);
 			// Jetzt die Befüllung starten
-			$this->FillingPro();
+			$this->FillingProcess();
 		}
+	}
+
+	private function FillingProcess()
+	{
+		$this->SendDebug("FillingProcess", "Ausfuehrung", 0);
+
+		$FillingStep = $this->GetValue("FillingStep");
+		
+		If ($FillingStep < 5) {
+			$IsGlass = $this->GetOneIRSensor($i);
+			
+			If ($IsGlass == true) {
+				// Fahre die Postion an
+				$this->SendDebug("Start", "Auf Postion ".$FillingStep." ist ein Glas!", 0);
+				$NewPosition = $this->SetServoPosition($FillingStep);
+
+				// Timer Setzen
+				$this->SetTimerInterval("WateringTimer", 1000 * 60 * $Duration);
+			}
+			else {
+				// Schrittzähler um einen hochsetzen
+				$this->SetValue("FillingStep", $FillingStep + 1);
+				$this->FillingProcess();
+			}
+		}
+		else {
+			$this->SetBuffer("WateringProgramm", 0);
+			SetValueBoolean($this->GetIDForIdent("ProgramActive"), false);
+			// Schrittzähler zurücksetzen
+			SetValueInteger($this->GetIDForIdent("StepCounter"), 0);
+			SetValueInteger($this->GetIDForIdent("RadioButton"), 0);
+			SetValueString($this->GetIDForIdent("ProgramStep"), "---");
+		}	
 	}
 	
 	private function Setup()
