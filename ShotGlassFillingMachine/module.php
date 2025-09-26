@@ -430,13 +430,13 @@ class ShotGlassFillingMachine extends IPSModule
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			If ($Value == 0) {
 				for ($i = 1; $i <= 5; $i++) {
-					$this->SetValue("ShotGlasasFill_".$i, false);
+					$this->SetValue("ShotGlassFill_".$i, false);
 					$this->DisableAction("ShotGlassFill_".$i);
 				}
 			}
 			elseif ($Value == 1) {
 				for ($i = 1; $i <= 5; $i++) {
-					$this->SetValue("ShotGlasasFill_".$i, true);
+					$this->SetValue("ShotGlassFill_".$i, true);
 					$this->DisableAction("ShotGlassFill_".$i);
 				}
 			}
