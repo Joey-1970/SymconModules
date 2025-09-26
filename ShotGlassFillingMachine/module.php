@@ -51,7 +51,6 @@ class ShotGlassFillingMachine extends IPSModule
 			// Sonstiges
 			$this->RegisterPropertyInteger("Modus", 0);
 			$this->RegisterPropertyString("PossibleDrinks", "");
-			$this->RegisterPropertyBoolean("AfterFilling", false);
 			
 			$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 			$this->RegisterTimer("Shutdown", 0, 'ShotGlassFillingMachine_Shutdown($_IPS["TARGET"]);');
@@ -105,7 +104,8 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->EnableAction("PossibleShots_1");
 			$this->RegisterVariableInteger("PossibleShots_2", "Shots 2", "ShotGlassFillingMachine.PossibleShots_".$this->InstanceID, 210);
 			$this->EnableAction("PossibleShots_2");
-			
+			$this->RegisterVariableBoolean("AfterFilling", "Befüllung erfolgt", "~Switch", 220);
+			$this->DisableAction("AfterFilling");
         }
 	
 	public function GetConfigurationForm() 
