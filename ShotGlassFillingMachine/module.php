@@ -644,35 +644,6 @@ class ShotGlassFillingMachine extends IPSModule
 	return $IsGlass;
 	}
 
-	public function Start()
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SendDebug("Start", "Ausfuehrung", 0);
-			
-		}
-		for ($i = 1; $i <= 5; $i++) {
-			// Prüfen ob an Position $i ein Glas steht
-			$IsGlass = $this->GetOneIRSensor($i);
-			If ($IsGlass == true) {
-				// Fahre die Postion an
-				$this->SendDebug("Start", "Auf Postion ".$i." ist ein Glas!", 0);
-				$NewPosition = $this->SetServoPosition($i);
-				If ($NewPosition == true) {
-					IPS_Sleep(1000); 
-					// Jetzt die Pumpe an
-					
-				}
-			}
-			else {
-				$this->SendDebug("Start", "Auf Postion ".$i." ist kein Glas!", 0);
-			}
-		}
-		// Die Ruhepostion anfahren
-		$this->SetServoPosition(0);
-		
-		$this->SetValue("Start", false);
-	}
-
 	private function StartFilling()
 	{
 		If ($this->GetValue("FillingActive") == false) {
@@ -695,13 +666,13 @@ class ShotGlassFillingMachine extends IPSModule
 
 		$FillingStep = $this->GetValue("FillingStep");
 		
-		If ($FillingStep < 5) {
+		If ($FillingStep <= 5) {
 			$IsGlass = $this->GetOneIRSensor($FillingStep);
 			
 			If ($IsGlass == true) {
 				// Fahre die Postion an
 				$this->SendDebug("FillingProcess", "Auf Postion ".$FillingStep." ist ein Glas!", 0);
-				
+				$this->SetValue("StateText", "Position anfahren...");
 				$NewPosition = $this->SetServoPosition($FillingStep);
 				If ($NewPosition == true) {
 					IPS_Sleep(1000); 
@@ -721,6 +692,7 @@ class ShotGlassFillingMachine extends IPSModule
 		}
 		else {
 			$this->SetValue("FillingActive", false);
+			$this->SetValue("Start", false);
 			// Schrittzähler zurücksetzen
 			$this->SetValue("FillingStep", 0);
 			$this->SetServoPosition(0);
