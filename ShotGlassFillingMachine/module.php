@@ -354,16 +354,7 @@ class ShotGlassFillingMachine extends IPSModule
 			case "DrinkChoise":
 	            If ($this->ReadPropertyBoolean("Open") == true) {
 			    	$this->SetValue("DrinkChoise", $Value);
-					If ($Value == 2) {
-						for ($i = 1; $i <= 5; $i++) {
-							$this->EnableAction("ShotGlassFill_".$i);
-						}
-					}
-					else {
-						for ($i = 1; $i <= 5; $i++) {
-							$this->DisableAction("ShotGlassFill_".$i);
-						}
-					}
+					$this->SetDrink($Value);
 			    }
 	            break;
 			case "ShotGlassFill_1":
@@ -434,7 +425,29 @@ class ShotGlassFillingMachine extends IPSModule
  	}
 	// Beginn der Funktionen
 	
-	// Schaltet den gewaehlten Pin
+	private function SetDrink($Value)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			If ($Value == 0) {
+				for ($i = 1; $i <= 5; $i++) {
+					$this->SetValue("ShotGlasasFill_".$i, false);
+					$this->DisableAction("ShotGlassFill_".$i);
+				}
+			}
+			elseif ($Value == 1) {
+				for ($i = 1; $i <= 5; $i++) {
+					$this->SetValue("ShotGlasasFill_".$i, true);
+					$this->DisableAction("ShotGlassFill_".$i);
+				}
+			}
+			elseif ($Value == 2) {
+				for ($i = 1; $i <= 5; $i++) {
+					$this->EnableAction("ShotGlassFill_".$i);
+				}
+			}
+		}
+	}
+	
 	public function SetServo(Int $Value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
