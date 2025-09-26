@@ -53,13 +53,13 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->RegisterTimer("IR_Sensor", 0, 'ShotGlassFillingMachine_GetIRSensor($_IPS["TARGET"]);');
 
 			// Profile erstellen
-			$this->RegisterProfileInteger("ShotGlassFillingMachine.Position", "Information", "", "", 0, 5, 1);
+			$this->RegisterProfileInteger("ShotGlassFillingMachine.Position", "Information", "", "", 0, 5, 0);
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.Position", 0, "Ruheposition", "TurnLeft", 0x000000);
 			for ($i = 1; $i <= 5; $i++) {
 				IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.Position", $i, "Postion ".$i, "TurnRight", 0x000000);
 			}
 
-			$this->RegisterProfileInteger("ShotGlassFillingMachine.PreShotGlassFill", "Party", "", "", 0, 2, 1);
+			$this->RegisterProfileInteger("ShotGlassFillingMachine.PreShotGlassFill", "Party", "", "", 0, 2, 0);
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PreShotGlassFill", 0, "Alle Gläser mit Getränk 1 füllen", "Party", 0x000000);
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PreShotGlassFill", 1, "Alle Gläser mit Getränk 2 füllen", "Party", 0x000000);
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PreShotGlassFill", 2, "Individuell füllen", "Party", 0x000000);
