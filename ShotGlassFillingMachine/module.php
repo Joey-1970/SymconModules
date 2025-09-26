@@ -688,7 +688,7 @@ class ShotGlassFillingMachine extends IPSModule
 		$FillingStep = $this->GetValue("FillingStep");
 		
 		If ($FillingStep < 5) {
-			$IsGlass = $this->GetOneIRSensor($i);
+			$IsGlass = $this->GetOneIRSensor($FillingStep);
 			
 			If ($IsGlass == true) {
 				// Fahre die Postion an
