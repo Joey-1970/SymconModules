@@ -288,6 +288,8 @@ class ShotGlassFillingMachine extends IPSModule
 					// Start-Button zurüchsetzen
 					$this->SetValue("Start", false);
 					$this->SetValue("FillingActive", false);
+					$this->SetValue("FillingStep", 0);
+					
 				}
 				else {
 					If ($this->GetStatus() <> 104) {
@@ -556,6 +558,7 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->SendDebug("StopPump_1", "Ausfuehrung", 0);
 			$this->SetPumpState(1, false);
 			$this->SetTimerInterval("Pump_1", 0);
+			$FillingStep = $this->GetValue("FillingStep");
 			$this->SetValue("FillingStep", $FillingStep + 1);
 			$this->FillingProcess();
 		}
@@ -567,6 +570,7 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->SendDebug("StopPump_2", "Ausfuehrung", 0);
 			$this->SetPumpState(2, false);
 			$this->SetTimerInterval("Pump_2", 0);
+			$FillingStep = $this->GetValue("FillingStep");
 			$this->SetValue("FillingStep", $FillingStep + 1);
 			$this->FillingProcess();
 		}
