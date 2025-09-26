@@ -50,6 +50,7 @@ class ShotGlassFillingMachine extends IPSModule
 
 			// Sonstiges
 			$this->RegisterPropertyInteger("Modus", 0);
+			$this->RegisterPropertyString("PossibleDrinks", "");
 			
 			$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 			$this->RegisterTimer("Shutdown", 0, 'ShotGlassFillingMachine_Shutdown($_IPS["TARGET"]);');
@@ -195,6 +196,18 @@ class ShotGlassFillingMachine extends IPSModule
 			$arrayElements[] = array("type" => "Select", "name" => "Pin_IRSensor_".$i, "caption" => "GPIO-Nr. für Sensor Nr. ".$i, "options" => $arrayOptions );
 		}
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+	
+		$arrayElements[] = array("type" => "Label", "caption" => "Shot-Auswahl");
+		$arraySort = array();
+		$arraySort = array("column" => "Name", "direction" => "ascending");
+		
+		$arrayEditName = array();
+		$arrayEditName = array("type" => "ValidationTextBox");
+			
+		$arrayColumns = array();
+		$arrayColumns[] = array("label" => "Name", "name" => "Name", "width" => "300px", "add" => "Wodka", "edit" => $arrayEditName);
+		$arrayElements[] = array("type" => "List", "name" => "PossibleDrinks", "rowCount" => 10, "add" => true, "delete" => true, "sort" => $arraySort, "columns" => $arrayColumns);
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");
 
 
 		// Sonstiges
