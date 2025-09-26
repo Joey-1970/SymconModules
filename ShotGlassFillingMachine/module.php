@@ -265,6 +265,7 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->SetTimerInterval("Pump_1", 0);
 			$this->SetTimerInterval("Pump_2", 0);
 			$this->SetTimerInterval("IR_Sensor", 0);
+			$this->SetPossibleShotsAssociations();
 			$this->SetValue("StateText", "Initialisierung...");
 		
 			If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
@@ -841,6 +842,29 @@ class ShotGlassFillingMachine extends IPSModule
 				}
 			}
 		}
+	}
+
+	private function SetPossibleShotsAssociations()
+	{
+		// Aktuelles Profil aufräumen
+		$this->SendDebug("SetPossibleShotsAssociations", "Ausfuehrung", 0);
+		$ProfilArray = Array();
+		$ProfilArray = IPS_GetVariableProfile("ShotGlassFillingMachine.PossibleShots_".$this->InstanceID);
+		foreach ($ProfilArray["Associations"] as $Association)
+		{
+			@IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PossibleShots_".$this->InstanceID, $Association["Value"], "", "", -1);
+		}
+		
+		$PossibleDrinksString = $this->ReadPropertyString("PossibleDrinks");
+		$PossibleDrinks = json_decode($PossibleDrinksString);
+		$this->SendDebug("SetPossibleShotsAssociations", serialize($PossibleDrinks), 0);
+		
+		
+		foreach ($PossibleDrinks as $Key => $Value) {
+			$this->SendDebug("SetPossibleShotsAssociations", $Value->Name." hinzugefuegt", 0);
+			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PossibleShots_".$this->InstanceID, $Value->Name, "Party", -1);
+		}
+		
 	}
 	
 	private function Get_GPIO()
