@@ -307,6 +307,7 @@ class ShotGlassFillingMachine extends IPSModule
 					$this->SetValue("FillingActive", false);
 					$this->SetValue("FillingStep", 0);
 					$this->SetValue("DrinkChoise", 0);
+					$this->SetDrink(0);
 					
 				}
 				else {
