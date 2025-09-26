@@ -354,6 +354,16 @@ class ShotGlassFillingMachine extends IPSModule
 			case "DrinkChoise":
 	            If ($this->ReadPropertyBoolean("Open") == true) {
 			    	$this->SetValue("DrinkChoise", $Value);
+					If ($Value == 2) {
+						for ($i = 1; $i <= 5; $i++) {
+							$this->EnableAction("ShotGlassFill_".$i);
+						}
+					}
+					else {
+						for ($i = 1; $i <= 5; $i++) {
+							$this->DisableAction("ShotGlassFill_".$i);
+						}
+					}
 			    }
 	            break;
 	        default:
