@@ -69,9 +69,7 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->RegisterVariableInteger("ServoPosition", "Servo-Position", "ShotGlassFillingMachine.Position", 20);
 			$this->EnableAction("ServoPosition");
 			$this->RegisterVariableBoolean("State_Pump_1", "Status Pumpe 1", "~Switch", 30);
-			$this->EnableAction("State_Pump_1");
 			$this->RegisterVariableBoolean("State_Pump_2", "Status Pumpe 2", "~Switch", 40);
-			$this->EnableAction("State_Pump_2");
 			for ($i = 1; $i <= 5; $i++) {
 				$this->RegisterVariableBoolean("State_IRSensor_".$i, "Status IRSensor ".$i, "ShotGlassFillingMachine.ShotGlass", 40 + ($i * 10));
                 $this->DisableAction("State_IRSensor_".$i);
@@ -327,7 +325,7 @@ class ShotGlassFillingMachine extends IPSModule
 	            If ($this->ReadPropertyBoolean("Open") == true) {
 					$this->SetValue("Start", $Value);
 			    	If ($Value == true) {
-						$this->Start();
+						$this->StartFilling();
 					}
 			    }
 	            break;
@@ -555,6 +553,8 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->SendDebug("StopPump_1", "Ausfuehrung", 0);
 			$this->SetPumpState(1, false);
 			$this->SetTimerInterval("Pump_1", 0);
+			$this->SetValue("FillingStep", $FillingStep + 1);
+			$this->FillingProcess();
 		}
 	}
 
@@ -564,6 +564,8 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->SendDebug("StopPump_2", "Ausfuehrung", 0);
 			$this->SetPumpState(2, false);
 			$this->SetTimerInterval("Pump_2", 0);
+			$this->SetValue("FillingStep", $FillingStep + 1);
+			$this->FillingProcess();
 		}
 	}
 
@@ -693,8 +695,11 @@ class ShotGlassFillingMachine extends IPSModule
 				$this->SendDebug("Start", "Auf Postion ".$FillingStep." ist ein Glas!", 0);
 				$NewPosition = $this->SetServoPosition($FillingStep);
 
-				// Timer Setzen
-				$this->SetTimerInterval("WateringTimer", 1000 * 60 * $Duration);
+				// Ausgewählte Pumpe
+				$SelectedDrink = 1;
+				
+				// Pumpe Starten
+				$this->SetPumpState($SelectedDrink, true);
 			}
 			else {
 				// Schrittzähler um einen hochsetzen
@@ -703,12 +708,10 @@ class ShotGlassFillingMachine extends IPSModule
 			}
 		}
 		else {
-			$this->SetBuffer("WateringProgramm", 0);
-			SetValueBoolean($this->GetIDForIdent("ProgramActive"), false);
+			$this->SetValue("FillingActive", false);
 			// Schrittzähler zurücksetzen
-			SetValueInteger($this->GetIDForIdent("StepCounter"), 0);
-			SetValueInteger($this->GetIDForIdent("RadioButton"), 0);
-			SetValueString($this->GetIDForIdent("ProgramStep"), "---");
+			$this->SetValue("FillingStep", 0);
+			$this->SetServoPosition(0);
 		}	
 	}
 	
