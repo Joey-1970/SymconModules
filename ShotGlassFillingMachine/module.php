@@ -240,23 +240,7 @@ class ShotGlassFillingMachine extends IPSModule
 		$arrayColumns[] = array("label" => "Name", "name" => "Name", "width" => "300px", "add" => "Wodka", "edit" => $arrayEditName);
 		$arrayElements[] = array("type" => "List", "name" => "PossibleDrinks", "rowCount" => 10, "add" => true, "delete" => true, "sort" => $arraySort, "columns" => $arrayColumns);
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");
-		/*
-		// Rundumleuchten
-		foreach($GPIO AS $Value => $Label) {
-			$arrayOptions[] = array("label" => $Label, "value" => $Value);
-		}
-		$arrayElements[] = array("type" => "Label", "caption" => "Angabe der GPIO-Nummer (Broadcom-Number) der Rundumleuchten"); 
-		$arrayElements[] = array("type" => "Select", "name" => "Pin_RotatingBeacon", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "caption" => "Angabe der Microsekunden bei 50 Hz"); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "RB_Fast_RotatingBeacon", "caption" => "Schnelles Rundumlicht (µs)", "minimum" => 0); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "RB_Slow_RotatingBeacon", "caption" => "Langsames Rundumlicht (µs)", "minimum" => 0); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "RB_Slow_Flash", "caption" => "Langsames Blinken (µs)", "minimum" => 0);
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "RB_Fast_Flash", "caption" => "Schnelles Blinken (µs)", "minimum" => 0); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "RB_Off", "caption" => "Ausschalten (µs)", "minimum" => 0);
-		$arrayElements[] = array("type" => "Label", "caption" => "Zeit bis zur Abschaltung in Microsekunden (0 = keine automatische Abschaltung)"); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "RB_Shutdown", "caption" => "Abschaltung (ms)", "minimum" => 0); 
-		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
-		*/
+		
 		
 		// Rundumleuchten
 		foreach($GPIO AS $Value => $Label) {
@@ -273,7 +257,6 @@ class ShotGlassFillingMachine extends IPSModule
 		$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "RB_Off", "caption" => "Ausschalten (µs)", "minimum" => 0);
 		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "Zeit bis zur Abschaltung in Microsekunden (0 = keine automatische Abschaltung)"); 
 		$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "RB_Shutdown", "caption" => "Abschaltung (ms)", "minimum" => 0); 
-		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "ExpansionPanel", "caption" => "Rundumleuchte(n)", "items" => $arrayExpansionPanel);
 		
 		// Sonstiges
