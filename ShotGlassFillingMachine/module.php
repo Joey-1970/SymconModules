@@ -702,8 +702,6 @@ class ShotGlassFillingMachine extends IPSModule
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("SetRotatingBeacon", "Ausfuehrung", 0);
 			$Value = min(4, max(0, $Value));
-
-			If ($this->ReadPropertyInteger("Pin_RotatingBeacon")
 			
 			$RB_Fast_RotatingBeacon = $this->ReadPropertyInteger("RB_Fast_RotatingBeacon");
 			$RB_Slow_RotatingBeacon = $this->ReadPropertyInteger("RB_Slow_RotatingBeacon");
