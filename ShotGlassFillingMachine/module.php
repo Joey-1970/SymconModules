@@ -171,7 +171,6 @@ class ShotGlassFillingMachine extends IPSModule
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_Servo", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "caption" => "Angabe der Microsekunden bei 50 Hz"); 
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "most_anti_clockwise", "caption" => "Max. Links (µs) - gegen den Uhrzeigersinn", "minimum" => 0); 
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "midpoint", "caption" => "Mittelstellung (µs)", "minimum" => 0); 
@@ -245,8 +244,8 @@ class ShotGlassFillingMachine extends IPSModule
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
+		$arrayElements[] = array("type" => "Label", "caption" => "Angabe der GPIO-Nummer (Broadcom-Number) der Rundumleuchten"); 
 		$arrayElements[] = array("type" => "Select", "name" => "Pin_RotatingBeacon", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "Label", "caption" => "Angabe der Microsekunden bei 50 Hz"); 
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "RB_Fast_RotatingBeacon", "caption" => "Schnelles Rundumlicht (µs)", "minimum" => 0); 
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "RB_Slow_RotatingBeacon", "caption" => "Langsames Rundumlicht (µs)", "minimum" => 0); 
