@@ -429,12 +429,7 @@ class ShotGlassFillingMachine extends IPSModule
 				}
 			}
 		}
-		else {
-			If ($this->GetStatus() <> 104) {
-				$this->SetStatus(104);
-			}
-		}
-	}
+	
 	public function RequestAction($Ident, $Value) 
 	{
   		switch($Ident) {
