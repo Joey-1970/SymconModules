@@ -220,27 +220,24 @@ class ShotGlassFillingMachine extends IPSModule
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		
 		// für die TCRT5000
-		$arrayElements[] = array("type" => "Label", "caption" => "Angabe der GPIO-Nummer (Broadcom-Number) für IR-Sensoren"); 
+		$arrayExpansionPanel = array();
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
+		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "Angabe der GPIO-Nummer (Broadcom-Number) für IR-Sensoren"); 
 		for ($i = 1; $i <= 5; $i++) {
-			$arrayElements[] = array("type" => "Select", "name" => "Pin_IRSensor_".$i, "caption" => "GPIO-Nr. für Sensor Nr. ".$i, "options" => $arrayOptions );
+			$arrayExpansionPanel[] = array("type" => "Select", "name" => "Pin_IRSensor_".$i, "caption" => "GPIO-Nr. für Sensor Nr. ".$i, "options" => $arrayOptions );
 		}
-		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
-	
-		$arrayElements[] = array("type" => "Label", "caption" => "Shot-Auswahl");
+		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "Shot-Auswahl");
 		$arraySort = array();
 		$arraySort = array("column" => "Name", "direction" => "ascending");
-		
 		$arrayEditName = array();
 		$arrayEditName = array("type" => "ValidationTextBox");
-			
 		$arrayColumns = array();
 		$arrayColumns[] = array("label" => "Name", "name" => "Name", "width" => "300px", "add" => "Wodka", "edit" => $arrayEditName);
-		$arrayElements[] = array("type" => "List", "name" => "PossibleDrinks", "rowCount" => 10, "add" => true, "delete" => true, "sort" => $arraySort, "columns" => $arrayColumns);
-		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");
-		
+		$arrayExpansionPanel[] = array("type" => "List", "name" => "PossibleDrinks", "rowCount" => 10, "add" => true, "delete" => true, "sort" => $arraySort, "columns" => $arrayColumns);
+		$arrayElements[] = array("type" => "ExpansionPanel", "caption" => "Rundumleuchte(n)", "items" => $arrayExpansionPanel);
 		
 		// Rundumleuchten
 		foreach($GPIO AS $Value => $Label) {
