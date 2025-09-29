@@ -64,6 +64,7 @@ class ShotGlassFillingMachine extends IPSModule
 			
 			$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 			$this->RegisterTimer("Shutdown", 0, 'ShotGlassFillingMachine_Shutdown($_IPS["TARGET"]);');
+			$this->RegisterTimer("RB_Shutdown", 0, 'ShotGlassFillingMachine_RB_Shutdown($_IPS["TARGET"]);');
 			$this->RegisterTimer("Pump_1", 0, 'ShotGlassFillingMachine_StopPump_1($_IPS["TARGET"]);');
 			$this->RegisterTimer("Pump_2", 0, 'ShotGlassFillingMachine_StopPump_2($_IPS["TARGET"]);');
 			$this->RegisterTimer("IR_Sensor", 0, 'ShotGlassFillingMachine_GetIRSensor($_IPS["TARGET"]);');
@@ -627,6 +628,53 @@ class ShotGlassFillingMachine extends IPSModule
 				}
 			}
 		$this->SetTimerInterval("Shutdown", 0);
+	}
+
+	public function SetRotatingBeacon(Int $Value)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("SetRotatingBeacon", "Ausfuehrung", 0);
+			$RB_Fast_RotatingBeacon = $this->ReadPropertyInteger("RB_Fast_RotatingBeacon");
+			$RB_Slow_RotatingBeacon = $this->ReadPropertyInteger("RB_Slow_RotatingBeacon");
+			$RB_Slow_Flash = $this->ReadPropertyInteger("RB_Slow_Flash");
+			$RB_Fast_Flash = $this->ReadPropertyInteger("RB_Fast_Flash");
+			$RB_Off = $this->ReadPropertyInteger("RB_Off");
+			$RB_Shutdown = $this->ReadPropertyInteger("RB_Shutdown");
+			/*
+			$this->SendDebug("SetServo", "Errechneter Zielwert: ".$Value, 0);
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_Servo"), "Value" => $Value)));
+			If (!$Result) {
+				$this->SendDebug("SetOutput", "Fehler beim Positionieren!", 0);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
+			}
+			else {
+				If ($this->GetStatus() <> 102) {
+					$this->SetStatus(102);
+				}
+				//$Output = ($Value / ($Right - $Left)) * 100;
+				$Output = (($Value - $Left)/ ($Right - $Left)) * 100;
+				$this->SetValue("Servo", $Output);
+				$this->GetServo();
+			}
+			*/
+			If ($RB_Shutdown > 0) {
+				$this->SetTimerInterval("RB_Shutdown", $RB_Shutdown);
+			}
+		}
+	}
+	
+	public function RB_Shutdown()
+	{
+		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon"), "Value" => 0)));
+			If (!$Result) {
+				$this->SendDebug("RB_Shutdown", "Fehler beim Ausschalten!", 0);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
+			}
+		$this->SetTimerInterval("RB_Shutdown", 0);
 	}
 	   
 	public function GetServo()
