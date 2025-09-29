@@ -48,6 +48,16 @@ class ShotGlassFillingMachine extends IPSModule
 				$this->SetBuffer("PreviousPin_IRSensor_".$i, -1);
 			}
 
+			// Rundumleuchten
+			$this->RegisterPropertyInteger("Pin_RotatingBeacon", -1);
+			$this->SetBuffer("PreviousPin_RotatingBeacon", -1);
+			$this->RegisterPropertyInteger("RB_Fast_RotatingBeacon", 1500);
+			$this->RegisterPropertyInteger("RB_Slow_RotatingBeacon", 1500);
+			$this->RegisterPropertyInteger("RB_Slow_Flash", 1500);
+			$this->RegisterPropertyInteger("RB_Fast_Flash", 1500);
+			$this->RegisterPropertyInteger("RB_Off", 1500);
+			$this->RegisterPropertyInteger("RB_Shutdown", 1000);
+
 			// Sonstiges
 			$this->RegisterPropertyInteger("Modus", 0);
 			$this->RegisterPropertyString("PossibleDrinks", "");
@@ -216,7 +226,22 @@ class ShotGlassFillingMachine extends IPSModule
 		$arrayElements[] = array("type" => "List", "name" => "PossibleDrinks", "rowCount" => 10, "add" => true, "delete" => true, "sort" => $arraySort, "columns" => $arrayColumns);
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");
 
-
+		// Rundumleuchten
+		foreach($GPIO AS $Value => $Label) {
+			$arrayOptions[] = array("label" => $Label, "value" => $Value);
+		}
+		$arrayElements[] = array("type" => "Select", "name" => "Pin_RotatingBeacon", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("type" => "Label", "caption" => "Angabe der Microsekunden bei 50 Hz"); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "RB_Fast_RotatingBeacon", "caption" => "Schnelles Rundumlicht (µs)", "minimum" => 0); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "RB_Slow_RotatingBeacon", "caption" => "Langsames Rundumlicht (µs)", "minimum" => 0); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "RB_Slow_Flash", "caption" => "Langsames Blinken (µs)", "minimum" => 0);
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "RB_Fast_Flash", "caption" => "Schnelles Blinken (µs)", "minimum" => 0); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "RB_Off", "caption" => "Ausschalten (µs)", "minimum" => 0);
+		$arrayElements[] = array("type" => "Label", "caption" => "Zeit bis zur Abschaltung in Microsekunden (0 = keine automatische Abschaltung)"); 
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "RB_Shutdown", "caption" => "Abschaltung (ms)", "minimum" => 0); 
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+		
 		// Sonstiges
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "Produktivmodus", "value" => 0);
