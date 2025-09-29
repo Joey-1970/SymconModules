@@ -577,7 +577,7 @@ class ShotGlassFillingMachine extends IPSModule
 	
 	public function SetServo(Int $Value)
 	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
+		If (($this->ReadPropertyInteger("Pin_Servo") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 			$this->SendDebug("SetServo", "Ausfuehrung", 0);
 			$Left = $this->ReadPropertyInteger("most_anti_clockwise");
 			$Right = $this->ReadPropertyInteger("most_clockwise");
@@ -612,7 +612,7 @@ class ShotGlassFillingMachine extends IPSModule
 
 	public function SetServoPosition(Int $Value)
 	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
+		If (($this->ReadPropertyInteger("Pin_Servo") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 			$NewPosition = false;
 			$this->SendDebug("SetServoPosition", "Ausfuehrung", 0);
 			$Left = $this->ReadPropertyInteger("most_anti_clockwise");
@@ -663,7 +663,7 @@ class ShotGlassFillingMachine extends IPSModule
 
 	public function GetServo()
 	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
+		If (($this->ReadPropertyInteger("Pin_Servo") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 			$this->SendDebug("GetServo", "Ausfuehrung", 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_servo", "Pin" => $this->ReadPropertyInteger("Pin_Servo") )));
 			If ($Result < 0) {
@@ -699,7 +699,7 @@ class ShotGlassFillingMachine extends IPSModule
 
 	public function SetRotatingBeacon(Int $Value)
 	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
+		If (($this->ReadPropertyInteger("Pin_RotatingBeacon") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 			$this->SendDebug("SetRotatingBeacon", "Ausfuehrung", 0);
 			$Value = min(4, max(0, $Value));
 			
@@ -762,7 +762,7 @@ class ShotGlassFillingMachine extends IPSModule
 	   
 	public function GetRotatingBeacon()
 	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
+		If (($this->ReadPropertyInteger("Pin_RotatingBeacon") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 			$this->SendDebug("GetRotatingBeacon", "Ausfuehrung", 0);
 			$RB_Fast_RotatingBeacon = $this->ReadPropertyInteger("RB_Fast_RotatingBeacon");
 			$RB_Slow_RotatingBeacon = $this->ReadPropertyInteger("RB_Slow_RotatingBeacon");
@@ -806,7 +806,7 @@ class ShotGlassFillingMachine extends IPSModule
 
 	public function SetPumpState(int $Pump, Bool $Value)
 	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
+		If (($this->ReadPropertyInteger("Pin_Pump_".$Pump) >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 			$Shutdown = $this->ReadPropertyFloat("Time_Pump_".$Pump);
 			$Value = min(1, max(0, $Value));
 			
@@ -836,7 +836,7 @@ class ShotGlassFillingMachine extends IPSModule
 
 	public function GetPumpState(int $Pump)
 	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
+		If (($this->ReadPropertyInteger("Pin_Pump_".$Pump) >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 			$this->SendDebug("GetPumpState", "Ausfuehrung", 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_value", "Pin" => $this->ReadPropertyInteger("Pin_Pump_".$Pump) )));
 			If ($Result < 0) {
