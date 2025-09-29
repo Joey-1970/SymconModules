@@ -741,7 +741,7 @@ class ShotGlassFillingMachine extends IPSModule
 				$this->GetRotatingBeacon();
 				$this->SetValue("RotatingBeacon", $Value);
 			}
-			*/
+
 			If ($RB_Shutdown > 0) {
 				$this->SetTimerInterval("RB_Shutdown", $RB_Shutdown);
 			}
