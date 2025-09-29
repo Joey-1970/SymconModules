@@ -187,7 +187,6 @@ class ShotGlassFillingMachine extends IPSModule
 		for ($i = 1; $i <= 5; $i++) {
 			$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "Position_".$i, "caption" => "Position ".$i, "minimum" => 0, "maximum" => 100); 
 		}
-		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		$arrayElements[] = array("type" => "ExpansionPanel", "caption" => "Servo", "items" => $arrayExpansionPanel);
 		
 		// Relais 1/ Pumpe 1
