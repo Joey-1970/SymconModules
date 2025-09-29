@@ -142,9 +142,7 @@ class ShotGlassFillingMachine extends IPSModule
 		
 		$arrayElements = array(); 
 		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv"); 
-		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
- 		$arrayElements[] = array("type" => "Label", "caption" => "Angabe der GPIO-Nummer (Broadcom-Number) des Servos"); 
-  		
+
 		$arrayOptions = array();
 		$GPIO = array();
 		$GPIO = unserialize($this->Get_GPIO());
@@ -168,56 +166,62 @@ class ShotGlassFillingMachine extends IPSModule
 		
 		ksort($GPIO);
 		
-		foreach($GPIO AS $Value => $Label) {
-			$arrayOptions[] = array("label" => $Label, "value" => $Value);
-		}
-		$arrayElements[] = array("type" => "Select", "name" => "Pin_Servo", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "caption" => "Angabe der Microsekunden bei 50 Hz"); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "most_anti_clockwise", "caption" => "Max. Links (µs) - gegen den Uhrzeigersinn", "minimum" => 0); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "midpoint", "caption" => "Mittelstellung (µs)", "minimum" => 0); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "most_clockwise", "caption" => "Max. Rechts (µs) - im Uhrzeigersinn", "minimum" => 0);
-		$arrayElements[] = array("type" => "Label", "caption" => "Zeit bis zur Abschaltung in Microsekunden (0 = keine automatische Abschaltung)"); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Shutdown", "caption" => "Abschaltung (ms)", "minimum" => 0); 
-		$arrayElements[] = array("type" => "Label", "caption" => "ACHTUNG: Falsche Werte können zur Beschädigung des Servo führen!");
-		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
-		$arrayElements[] = array("type" => "Label", "caption" => "Angabe der Postitionen in Prozent"); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "RestingPosition", "caption" => "Ruhe-Position", "minimum" => 0, "maximum" => 100); 
-		for ($i = 1; $i <= 5; $i++) {
-			$arrayElements[] = array("type" => "NumberSpinner", "name" => "Position_".$i, "caption" => "Position ".$i, "minimum" => 0, "maximum" => 100); 
-		}
-		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
-		// Relais 1/ Pumpe 1
-		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für die Pumpe 1"); 
-		$arrayOptions = array();
-		foreach($GPIO AS $Value => $Label) {
-			$arrayOptions[] = array("label" => $Label, "value" => $Value);
-		}
-		$arrayElements[] = array("type" => "Select", "name" => "Pin_Pump_1", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "caption" => "Zeit bis zur Abschaltung in Sekunden (0 = keine automatische Abschaltung)"); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Time_Pump_1", "caption" => "Abschaltung (s)", "minimum" => 0, "maximum" => 10, "digits" => 1); 
+		// Servo
+		$arrayExpansionPanel = array();
+		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "Angabe der GPIO-Nummer (Broadcom-Number) des Servos"); 
 		
-		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
-		// Relais 2/ Pumpe 2
-		$arrayElements[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für die Pumpe 2"); 
+		foreach($GPIO AS $Value => $Label) {
+			$arrayOptions[] = array("label" => $Label, "value" => $Value);
+		}
+		$arrayExpansionPanel[] = array("type" => "Select", "name" => "Pin_Servo", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
+		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "Angabe der Microsekunden bei 50 Hz"); 
+		$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "most_anti_clockwise", "caption" => "Max. Links (µs) - gegen den Uhrzeigersinn", "minimum" => 0); 
+		$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "midpoint", "caption" => "Mittelstellung (µs)", "minimum" => 0); 
+		$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "most_clockwise", "caption" => "Max. Rechts (µs) - im Uhrzeigersinn", "minimum" => 0);
+		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "Zeit bis zur Abschaltung in Microsekunden (0 = keine automatische Abschaltung)"); 
+		$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "Shutdown", "caption" => "Abschaltung (ms)", "minimum" => 0); 
+		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "ACHTUNG: Falsche Werte können zur Beschädigung des Servo führen!");
+		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "Angabe der Postitionen in Prozent"); 
+		$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "RestingPosition", "caption" => "Ruhe-Position", "minimum" => 0, "maximum" => 100); 
+		for ($i = 1; $i <= 5; $i++) {
+			$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "Position_".$i, "caption" => "Position ".$i, "minimum" => 0, "maximum" => 100); 
+		}
+		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("type" => "ExpansionPanel", "caption" => "Servo", "items" => $arrayExpansionPanel);
+		
+		// Relais 1/ Pumpe 1
+		$arrayExpansionPanel = array();
+		$arrayExpansionPanel[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für die Pumpe 1"); 
 		$arrayOptions = array();
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
-		$arrayElements[] = array("type" => "Select", "name" => "Pin_Pump_2", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "caption" => "Zeit bis zur Abschaltung in Sekunden (0 = keine automatische Abschaltung)"); 
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Time_Pump_2", "caption" => "Abschaltung (s)", "minimum" => 0, "maximum" => 10, "digits" => 1); 
-		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
-
+		$arrayExpansionPanel[] = array("type" => "Select", "name" => "Pin_Pump_1", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
+		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "Zeit bis zur Abschaltung in Sekunden (0 = keine automatische Abschaltung)"); 
+		$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "Time_Pump_1", "caption" => "Abschaltung (s)", "minimum" => 0, "maximum" => 10, "digits" => 1); 
+		
+		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+		// Relais 2/ Pumpe 2
+		$arrayExpansionPanel[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für die Pumpe 2"); 
+		$arrayOptions = array();
+		foreach($GPIO AS $Value => $Label) {
+			$arrayOptions[] = array("label" => $Label, "value" => $Value);
+		}
+		$arrayExpansionPanel[] = array("type" => "Select", "name" => "Pin_Pump_2", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
+		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "Zeit bis zur Abschaltung in Sekunden (0 = keine automatische Abschaltung)"); 
+		$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "Time_Pump_2", "caption" => "Abschaltung (s)", "minimum" => 0, "maximum" => 10, "digits" => 1); 
+		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		// für beide Relais/Pumpen
-		$arrayElements[] = array("type" => "Label", "caption" => "Für beiden Pumpen"); 
-		$arrayElements[] = array("name" => "Invert_Pump", "type" => "CheckBox",  "caption" => "Invertiere Anzeige");
-		$arrayElements[] = array("type" => "Label", "label" => "Status des Ausgangs nach Neustart");
+		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "Für beiden Pumpen"); 
+		$arrayExpansionPanel[] = array("name" => "Invert_Pump", "type" => "CheckBox",  "caption" => "Invertiere Anzeige");
+		$arrayExpansionPanel[] = array("type" => "Label", "label" => "Status des Ausgangs nach Neustart");
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "Aus", "value" => 0);
 		$arrayOptions[] = array("label" => "An", "value" => 1);
 		$arrayOptions[] = array("label" => "undefiniert", "value" => 2);
-		$arrayElements[] = array("type" => "Select", "name" => "Startoption_Pump", "caption" => "Startoption", "options" => $arrayOptions );
-		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+		$arrayExpansionPanel[] = array("type" => "Select", "name" => "Startoption_Pump", "caption" => "Startoption", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "ExpansionPanel", "caption" => "Pumpe(n)", "items" => $arrayExpansionPanel);
 		
 		// für die TCRT5000
 		$arrayExpansionPanel = array();
@@ -229,18 +233,6 @@ class ShotGlassFillingMachine extends IPSModule
 			$arrayExpansionPanel[] = array("type" => "Select", "name" => "Pin_IRSensor_".$i, "caption" => "GPIO-Nr. für Sensor Nr. ".$i, "options" => $arrayOptions );
 		}
 		$arrayElements[] = array("type" => "ExpansionPanel", "caption" => "IR-Sensor(en)", "items" => $arrayExpansionPanel);
-
-		// Shot Auswahl
-		$arrayExpansionPanel = array();
-		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "Shot-Auswahl");
-		$arraySort = array();
-		$arraySort = array("column" => "Name", "direction" => "ascending");
-		$arrayEditName = array();
-		$arrayEditName = array("type" => "ValidationTextBox");
-		$arrayColumns = array();
-		$arrayColumns[] = array("label" => "Name", "name" => "Name", "width" => "300px", "add" => "Wodka", "edit" => $arrayEditName);
-		$arrayExpansionPanel[] = array("type" => "List", "name" => "PossibleDrinks", "rowCount" => 10, "add" => true, "delete" => true, "sort" => $arraySort, "columns" => $arrayColumns);
-		$arrayElements[] = array("type" => "ExpansionPanel", "caption" => "Shot-Auswahl", "items" => $arrayExpansionPanel);
 		
 		// Rundumleuchten
 		foreach($GPIO AS $Value => $Label) {
@@ -258,12 +250,26 @@ class ShotGlassFillingMachine extends IPSModule
 		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "Zeit bis zur Abschaltung in Microsekunden (0 = keine automatische Abschaltung)"); 
 		$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "RB_Shutdown", "caption" => "Abschaltung (ms)", "minimum" => 0); 
 		$arrayElements[] = array("type" => "ExpansionPanel", "caption" => "Rundumleuchte(n)", "items" => $arrayExpansionPanel);
+
+		// Shot Auswahl
+		$arrayExpansionPanel = array();
+		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "Shot-Auswahl");
+		$arraySort = array();
+		$arraySort = array("column" => "Name", "direction" => "ascending");
+		$arrayEditName = array();
+		$arrayEditName = array("type" => "ValidationTextBox");
+		$arrayColumns = array();
+		$arrayColumns[] = array("label" => "Name", "name" => "Name", "width" => "300px", "add" => "Wodka", "edit" => $arrayEditName);
+		$arrayExpansionPanel[] = array("type" => "List", "name" => "PossibleDrinks", "rowCount" => 10, "add" => true, "delete" => true, "sort" => $arraySort, "columns" => $arrayColumns);
+		$arrayElements[] = array("type" => "ExpansionPanel", "caption" => "Shot-Auswahl", "items" => $arrayExpansionPanel);
 		
 		// Sonstiges
+		$arrayExpansionPanel = array();
 		$arrayOptions = array();
 		$arrayOptions[] = array("label" => "Produktivmodus", "value" => 0);
 		$arrayOptions[] = array("label" => "Kalibrierungsmodus", "value" => 1);
-		$arrayElements[] = array("type" => "Select", "name" => "Modus", "caption" => "Modus", "options" => $arrayOptions );
+		$arrayExpansionPanel[] = array("type" => "Select", "name" => "Modus", "caption" => "Modus", "options" => $arrayOptions );
+		$arrayElements[] = array("type" => "ExpansionPanel", "caption" => "Sonstiges", "items" => $arrayExpansionPanel);
 		
 		$arrayActions = array();
 		If (($this->ReadPropertyInteger("Pin_Servo") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
