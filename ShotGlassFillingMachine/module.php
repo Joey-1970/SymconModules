@@ -228,7 +228,10 @@ class ShotGlassFillingMachine extends IPSModule
 		for ($i = 1; $i <= 5; $i++) {
 			$arrayExpansionPanel[] = array("type" => "Select", "name" => "Pin_IRSensor_".$i, "caption" => "GPIO-Nr. für Sensor Nr. ".$i, "options" => $arrayOptions );
 		}
-		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
+		$arrayElements[] = array("type" => "ExpansionPanel", "caption" => "IR-Sensor(en)", "items" => $arrayExpansionPanel);
+
+		// Shot Auswahl
+		$arrayExpansionPanel = array();
 		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "Shot-Auswahl");
 		$arraySort = array();
 		$arraySort = array("column" => "Name", "direction" => "ascending");
@@ -237,7 +240,7 @@ class ShotGlassFillingMachine extends IPSModule
 		$arrayColumns = array();
 		$arrayColumns[] = array("label" => "Name", "name" => "Name", "width" => "300px", "add" => "Wodka", "edit" => $arrayEditName);
 		$arrayExpansionPanel[] = array("type" => "List", "name" => "PossibleDrinks", "rowCount" => 10, "add" => true, "delete" => true, "sort" => $arraySort, "columns" => $arrayColumns);
-		$arrayElements[] = array("type" => "ExpansionPanel", "caption" => "Rundumleuchte(n)", "items" => $arrayExpansionPanel);
+		$arrayElements[] = array("type" => "ExpansionPanel", "caption" => "Shot-Auswahl", "items" => $arrayExpansionPanel);
 		
 		// Rundumleuchten
 		foreach($GPIO AS $Value => $Label) {
