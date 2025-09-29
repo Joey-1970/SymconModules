@@ -81,6 +81,14 @@ class ShotGlassFillingMachine extends IPSModule
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PreShotGlassFill", 1, "Alle Gläser mit Getränk 2 füllen", "Party", 0x000000);
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PreShotGlassFill", 2, "Individuell füllen", "Party", 0x000000);
 
+			$this->RegisterProfileInteger("ShotGlassFillingMachine.RotatingBeacon", "Bulb", "", "", 0, 4, 0);
+			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 0, "Aus", "Bulb", 0x000000);
+			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 1, "Schnelles Rundumlicht", "Bulb", 0x000000);
+			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 2, "Langsames Rundumlicht", "Bulb", 0x000000);
+			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 3, "Schnelles Blinken", "Bulb", 0x000000);
+			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 4, "Langsames Blinken", "Bulb", 0x000000);
+			
+
 			$this->RegisterProfileBoolean("ShotGlassFillingMachine.ShotGlassFill", "Party");
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.ShotGlassFill", 0, "Getränk 1", "Party", 0x000000);
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.ShotGlassFill", 1, "Getränk 2", "Party", 0x000000);
@@ -117,6 +125,9 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->EnableAction("PossibleShots_2");
 			$this->RegisterVariableBoolean("AfterFilling", "Befüllung erfolgt", "~Switch", 220);
 			$this->DisableAction("AfterFilling");
+
+			$this->RegisterVariableInteger("RotatingBeacon", "Rundumleuchte", "ShotGlassFillingMachine.RotatingBeacon", 230);
+			$this->EnableAction("RotatingBeacon");
         }
 	
 	public function GetConfigurationForm() 
@@ -138,6 +149,9 @@ class ShotGlassFillingMachine extends IPSModule
 		$GPIO = unserialize($this->Get_GPIO());
 		If ($this->ReadPropertyInteger("Pin_Servo") >= 0 ) {
 			$GPIO[$this->ReadPropertyInteger("Pin_Servo")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_Servo")));
+		}
+		If ($this->ReadPropertyInteger("Pin_RotatingBeacon") >= 0 ) {
+			$GPIO[$this->ReadPropertyInteger("Pin_RotatingBeacon")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_RotatingBeacon")));
 		}
 		If ($this->ReadPropertyInteger("Pin_Pump_1") >= 0 ) {
 			$GPIO[$this->ReadPropertyInteger("Pin_Pump_1")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_Pump_1")));
@@ -270,6 +284,9 @@ class ShotGlassFillingMachine extends IPSModule
 			If (intval($this->GetBuffer("PreviousPin_Servo")) <> $this->ReadPropertyInteger("Pin_Servo")) {
 				$this->SendDebug("ApplyChanges", "Pin-Wechsel Servo - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_Servo")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_Servo"), 0);
 			}
+			If (intval($this->GetBuffer("PreviousPin_RotatingBeacon")) <> $this->ReadPropertyInteger("Pin_RotatingBeacon")) {
+				$this->SendDebug("ApplyChanges", "Pin-Wechsel Servo - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_RotatingBeacon")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_RotatingBeacon"), 0);
+			}
 			If (intval($this->GetBuffer("PreviousPin_Pump_1")) <> $this->ReadPropertyInteger("Pin_Pump_1")) {
 				$this->SendDebug("ApplyChanges", "Pin-Wechsel Pumpe 1 - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_Pump_1")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_Pump_1"), 0);
 			}
@@ -289,6 +306,7 @@ class ShotGlassFillingMachine extends IPSModule
 			//$this->SetReceiveDataFilter($Filter);
 			
 			$this->SetTimerInterval("Shutdown", 0);
+			$this->SetTimerInterval("RB_Shutdown", 0);
 			$this->SetTimerInterval("Pump_1", 0);
 			$this->SetTimerInterval("Pump_2", 0);
 			$this->SetTimerInterval("IR_Sensor", 0);
@@ -303,6 +321,16 @@ class ShotGlassFillingMachine extends IPSModule
 					$this->SetBuffer("PreviousPin_Servo", $this->ReadPropertyInteger("Pin_Servo"));
 					If ($Result == true) {
 						$this->Setup();
+						If ($this->GetStatus() <> 102) {
+							$this->SetStatus(102);
+						}
+					}
+					// Rundumleuchte
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+										  "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon"), "PreviousPin" => $this->GetBuffer("PreviousPin_RotatingBeacon"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+					$this->SetBuffer("PreviousPin_RotatingBeacon", $this->ReadPropertyInteger("Pin_RotatingBeacon"));
+					If ($Result == true) {
+						// 
 						If ($this->GetStatus() <> 102) {
 							$this->SetStatus(102);
 						}
@@ -401,6 +429,11 @@ class ShotGlassFillingMachine extends IPSModule
 		    		$this->SetServo($Value);
 		    	}
 	            break;
+			case "RotatingBeacon":
+	            If ($this->ReadPropertyBoolean("Open") == true) {
+		    		$this->SetRotatingBeacon($Value);
+		    	}
+	            break;
 			case "ServoPosition":
 	            If ($this->ReadPropertyBoolean("Open") == true) {
 		    		$this->SetServoPosition($Value);
@@ -483,6 +516,7 @@ class ShotGlassFillingMachine extends IPSModule
 					break;
 			   case "status":
 				   	If (($data->Pin == $this->ReadPropertyInteger("Pin_Servo")) 
+						OR ($data->Pin == $this->ReadPropertyInteger("Pin_RotatingBeacon"))
 						OR ($data->Pin == $this->ReadPropertyInteger("Pin_Pump_1")) 
 						OR ($data->Pin == $this->ReadPropertyInteger("Pin_Pump_2")) 
 						OR ($data->Pin == $this->ReadPropertyInteger("Pin_IRSensor_1"))
