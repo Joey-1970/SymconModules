@@ -507,6 +507,7 @@ class ShotGlassFillingMachine extends IPSModule
 			case "PossibleShots_1":
 	            If ($this->ReadPropertyBoolean("Open") == true) {
 			    	$this->SetValue($Ident, $Value);
+					$this->SetShotName($Ident, $Value);
 			    }
 	            break;
 			case "PossibleShots_2":
@@ -579,6 +580,13 @@ class ShotGlassFillingMachine extends IPSModule
 					$this->EnableAction("ShotGlassFill_".$i);
 				}
 			}
+		}
+	}
+
+	private function SetShotName(int $Ident, int $Value)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->IPS_SetName($this->GetIDForIdent("State_Pump_1"), "Status Pumpe 1 (".$this->GetValueFormatted($this->GetIDForIdent($Ident)).")");
 		}
 	}
 	
