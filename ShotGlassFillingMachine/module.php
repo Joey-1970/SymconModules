@@ -1054,7 +1054,7 @@ class ShotGlassFillingMachine extends IPSModule
 		$ProfilArray = Array();
 		$ProfilArray = IPS_GetVariableProfile("ShotGlassFillingMachine.PossibleShots_".$this->InstanceID);
 
-		IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PossibleShots_".$this->InstanceID, "unbenutzt", "", "", -1);
+		// löschen der aktuellen Assoziationen
 		foreach ($ProfilArray["Associations"] as $Association)
 		{
 			@IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PossibleShots_".$this->InstanceID, $Association["Value"], "", "", -1);
@@ -1063,7 +1063,8 @@ class ShotGlassFillingMachine extends IPSModule
 		$PossibleDrinksString = $this->ReadPropertyString("PossibleDrinks");
 		$PossibleDrinks = json_decode($PossibleDrinksString);
 		$this->SendDebug("SetPossibleShotsAssociations", serialize($PossibleDrinks), 0);
-		
+
+		IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PossibleShots_".$this->InstanceID, "unbenutzt", "", "", -1);
 		$i = 0;
 		foreach ($PossibleDrinks as $Key => $Value) {
 			$this->SendDebug("SetPossibleShotsAssociations", $Value->Name." hinzugefuegt", 0);
