@@ -599,7 +599,7 @@ class ShotGlassFillingMachine extends IPSModule
 			*/
 
 			// Pumpen
-			IPS_SetName($this->GetIDForIdent("State_Pump_".Number), "Status Pumpe ".$Number." (".$ShotName.")");
+			IPS_SetName($this->GetIDForIdent("State_Pump_".$Number), "Status Pumpe ".$Number." (".$ShotName.")");
 			// Text Befüllung wählen
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.ShotGlassFill", $Number - 1, "Getränk ".$Number." (".$ShotName.")", "Party", 0x000000);
 			// Befüllart
