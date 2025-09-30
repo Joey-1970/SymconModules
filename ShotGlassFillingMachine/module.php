@@ -1053,6 +1053,8 @@ class ShotGlassFillingMachine extends IPSModule
 		$this->SendDebug("SetPossibleShotsAssociations", "Ausfuehrung", 0);
 		$ProfilArray = Array();
 		$ProfilArray = IPS_GetVariableProfile("ShotGlassFillingMachine.PossibleShots_".$this->InstanceID);
+
+		IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PossibleShots_".$this->InstanceID, "unbenutzt", "", "", -1);
 		foreach ($ProfilArray["Associations"] as $Association)
 		{
 			@IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PossibleShots_".$this->InstanceID, $Association["Value"], "", "", -1);
