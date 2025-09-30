@@ -592,7 +592,7 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->SendDebug("SetShotName", "ShotName: ".$ShotName, 0);
 			$NewName = "Status Pumpe 1 (".$ShotName.")";
 			$this->SendDebug("SetShotName", "NewName: ".$NewName, 0);
-			$this->IPS_SetName($State_Pump_ID, $NewName);
+			IPS_SetName($State_Pump_ID, $NewName);
 		}
 	}
 	
