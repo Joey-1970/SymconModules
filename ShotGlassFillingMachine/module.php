@@ -588,7 +588,7 @@ class ShotGlassFillingMachine extends IPSModule
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$State_Pump_ID = $this->GetIDForIdent("State_Pump_1");
 			$this->SendDebug("SetShotName", "State_Pump_ID:".$State_Pump_ID, 0);
-			$ShotName = $this->GetValueFormatted($this->GetIDForIdent($Ident));
+			$ShotName = GetValueFormatted($this->GetIDForIdent($Ident));
 			$this->SendDebug("SetShotName", "ShotName: ".$ShotName, 0);
 			$NewName = "Status Pumpe 1 (".$ShotName.")";
 			$this->SendDebug("SetShotName", "NewName: ".$NewName, 0);
