@@ -513,6 +513,7 @@ class ShotGlassFillingMachine extends IPSModule
 			case "PossibleShots_2":
 	            If ($this->ReadPropertyBoolean("Open") == true) {
 			    	$this->SetValue($Ident, $Value);
+					$this->SetShotName($Ident, $Value);
 			    }
 	            break;
 			
@@ -586,13 +587,23 @@ class ShotGlassFillingMachine extends IPSModule
 	private function SetShotName(string $Ident, int $Value)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$State_Pump_ID = $this->GetIDForIdent("State_Pump_1");
+			$Number = substr($Ident, -1);
+			$ShotName = GetValueFormatted($this->GetIDForIdent($Ident));
+			/*
+			$State_Pump_ID = $this->GetIDForIdent("State_Pump_".Number);
 			$this->SendDebug("SetShotName", "State_Pump_ID:".$State_Pump_ID, 0);
 			$ShotName = GetValueFormatted($this->GetIDForIdent($Ident));
 			$this->SendDebug("SetShotName", "ShotName: ".$ShotName, 0);
-			$NewName = "Status Pumpe 1 (".$ShotName.")";
+			$NewName = "Status Pumpe ".$Number." (".GetValueFormatted($this->GetIDForIdent($Ident));.")";
 			$this->SendDebug("SetShotName", "NewName: ".$NewName, 0);
-			IPS_SetName($State_Pump_ID, $NewName);
+			*/
+
+			// Pumpen
+			IPS_SetName($this->GetIDForIdent("State_Pump_".Number), "Status Pumpe ".$Number." (".$ShotName.")");
+			// Text Befüllung wählen
+			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.ShotGlassFill", $Number - 1, "Getränk ".$Number." (".$ShotName.")", "Party", 0x000000);
+			// Befüllart
+			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PreShotGlassFill", $Number - 1, "Alle Gläser mit Getränk ".$Number." (".$ShotName.") füllen", "Party", 0x000000);
 		}
 	}
 	
