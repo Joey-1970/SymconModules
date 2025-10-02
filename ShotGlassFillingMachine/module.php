@@ -61,7 +61,6 @@ class ShotGlassFillingMachine extends IPSModule
 			
 			$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 			$this->RegisterTimer("Shutdown", 0, 'ShotGlassFillingMachine_Shutdown($_IPS["TARGET"]);');
-			$this->RegisterTimer("RB_Shutdown", 0, 'ShotGlassFillingMachine_RB_Shutdown($_IPS["TARGET"]);');
 			$this->RegisterTimer("Pump_1", 0, 'ShotGlassFillingMachine_StopPump_1($_IPS["TARGET"]);');
 			$this->RegisterTimer("Pump_2", 0, 'ShotGlassFillingMachine_StopPump_2($_IPS["TARGET"]);');
 			$this->RegisterTimer("IR_Sensor", 0, 'ShotGlassFillingMachine_GetIRSensor($_IPS["TARGET"]);');
@@ -78,14 +77,21 @@ class ShotGlassFillingMachine extends IPSModule
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PreShotGlassFill", 1, "Alle Gläser mit Getränk 2 füllen", "Party", 0x000000);
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PreShotGlassFill", 2, "Individuell füllen", "Party", 0x000000);
 
+			-Schnelles Rundumlicht
+
+-Langsames Rundumlicht
+
+-Langsames aufblinken
+
+-Schnelles aufblinken
+
+- Led´s ausgeschaltet
 			$this->RegisterProfileInteger("ShotGlassFillingMachine.RotatingBeacon", "Bulb", "", "", 0, 4, 0);
-			
-			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 0, "Aus", "Bulb", 0x000000);
-			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 1, "Schnelles Rundumlicht", "Bulb", 0x000000);
-			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 2, "Langsames Rundumlicht", "Bulb", 0x000000);
+			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 0, "Schnelles Rundumlicht", "Bulb", 0x000000);
+			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 1, "Langsames Rundumlicht", "Bulb", 0x000000);
+			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 2, "Langsames Blinken", "Bulb", 0x000000);
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 3, "Schnelles Blinken", "Bulb", 0x000000);
-			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 4, "Langsames Blinken", "Bulb", 0x000000);
-			
+			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 4, "Aus", "Bulb", 0x000000);
 
 			$this->RegisterProfileBoolean("ShotGlassFillingMachine.ShotGlassFill", "Party");
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.ShotGlassFill", 0, "Getränk 1", "Party", 0x000000);
@@ -756,8 +762,6 @@ class ShotGlassFillingMachine extends IPSModule
 						$this->SendDebug("RB_Switch", "Dritter Befehl war erfolgreich!", 0);
 						// Ausschalten
 						$this->SetStatus(102);
-						//$this->SetValue("Servo", $Value);
-						//$this->GetServo();
 						IPS_Sleep(100);
 						$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon"), "Value" => 0)));
 						If (!$Result) {
@@ -775,101 +779,25 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->SendDebug("SetRotatingBeacon", "Ausfuehrung", 0);
 			$Value = min(4, max(0, $Value));
 			
-			
+			$OldValue = $this->GetValue("RotatingBeacon");
+			$this->SendDebug("SetRotatingBeacon", "Aktueller Wert: ".$OldValue." - Neuer Wert: ".$Value, 0);
 
-			If ($Value == 0) {
-				$ServoValue = $RB_Off;
-			}
-			elseif ($Value == 1) {
-				$ServoValue = $RB_Fast_RotatingBeacon;
-			}
-			elseif ($Value == 2) {
-				$ServoValue = $RB_Slow_RotatingBeacon;
-			}
-			elseif ($Value == 3) {
-				$ServoValue = $RB_Fast_Flash;
-			}
-			elseif ($Value == 4) {
-				$ServoValue = $RB_Slow_Flash;
-			}
-			
-			$this->SendDebug("SetRotatingBeacon", "Zielwert: ".$Value, 0);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon"), "Value" => $ServoValue)));
-			If (!$Result) {
-				$this->SendDebug("SetRotatingBeacon", "Fehler beim Positionieren!", 0);
-				If ($this->GetStatus() <> 202) {
-					$this->SetStatus(202);
+			If ($Value > $OldValue) {
+				for ($i = $OldValue; $i <= $Value; $i++) {
+					$this->RB_Switch();
 				}
 			}
-			else {
-				If ($this->GetStatus() <> 102) {
-					$this->SetStatus(102);
+			elseif ($Value < $OldValue) {
+				for ($i = $Value; $i <= $OldValue; $i--) {
+					$this->RB_Switch();
 				}
-				$this->GetRotatingBeacon();
-				$this->SetValue("RotatingBeacon", $Value);
 			}
-
-			If ($RB_Shutdown > 0) {
-				$this->SetTimerInterval("RB_Shutdown", $RB_Shutdown);
+			elseif ($Value == $OldValue) {
+				// Nichts machen
 			}
+			$this->SetValue("RotatingBeacon", $Value);
 		}
 	}
-	
-	public function RB_Shutdown()
-	{
-		$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon"), "Value" => 0)));
-			If (!$Result) {
-				$this->SendDebug("RB_Shutdown", "Fehler beim Ausschalten!", 0);
-				If ($this->GetStatus() <> 202) {
-					$this->SetStatus(202);
-				}
-			}
-		$this->SetTimerInterval("RB_Shutdown", 0);
-	}
-	   
-	public function GetRotatingBeacon()
-	{
-		If (($this->ReadPropertyInteger("Pin_RotatingBeacon") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-			$this->SendDebug("GetRotatingBeacon", "Ausfuehrung", 0);
-			$RB_Fast_RotatingBeacon = $this->ReadPropertyInteger("RB_Fast_RotatingBeacon");
-			$RB_Slow_RotatingBeacon = $this->ReadPropertyInteger("RB_Slow_RotatingBeacon");
-			$RB_Slow_Flash = $this->ReadPropertyInteger("RB_Slow_Flash");
-			$RB_Fast_Flash = $this->ReadPropertyInteger("RB_Fast_Flash");
-			$RB_Off = $this->ReadPropertyInteger("RB_Off");
-			
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_servo", "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon") )));
-			If ($Result < 0) {
-				$this->SendDebug("GetRotatingBeacon", "Fehler beim Lesen!", 0);
-				If ($this->GetStatus() <> 202) {
-					$this->SetStatus(202);
-				}
-			}
-			else {
-				If ($this->GetStatus() <> 102) {
-					$this->SetStatus(102);
-				}
-				$this->SendDebug("GetRotatingBeacon", "Wert: ".$Result, 0);
-
-				If ($Result == $RB_Off) {
-					$ServoValue = 0;
-				}
-				elseif ($Result == $RB_Fast_RotatingBeacon) {
-					$ServoValue = 1;
-				}
-				elseif ($Result == $RB_Slow_RotatingBeacon) {
-					$ServoValue = 2;
-				}
-				elseif ($Result == $RB_Fast_Flash) {
-					$ServoValue = 3;
-				}
-				elseif ($Result == $RB_Slow_Flash) {
-					$ServoValue = 4;
-				}
-				
-				$this->SetValue("RotatingBeacon", $ServoValue);
-			}
-		}
-	}   
 
 	public function SetPumpState(int $Pump, Bool $Value)
 	{
