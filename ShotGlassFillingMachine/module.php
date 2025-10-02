@@ -141,14 +141,18 @@ class ShotGlassFillingMachine extends IPSModule
 		$arrayElements = array(); 
 		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv"); 
 
-		$arrayOptions = array();
 		$GPIO = array();
 		$GPIO = unserialize($this->Get_GPIO());
+		
+		$arrayOptions = array();
 		If ($this->ReadPropertyInteger("Pin_Servo") >= 0 ) {
 			$GPIO[$this->ReadPropertyInteger("Pin_Servo")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_Servo")));
 		}
 		If ($this->ReadPropertyInteger("Pin_RotatingBeacon") >= 0 ) {
 			$GPIO[$this->ReadPropertyInteger("Pin_RotatingBeacon")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_RotatingBeacon")));
+		}
+		If ($this->ReadPropertyInteger("Pin_PowerRotatingBeacon") >= 0 ) {
+			$GPIO[$this->ReadPropertyInteger("Pin_PowerRotatingBeacon")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_PowerRotatingBeacon")));
 		}
 		If ($this->ReadPropertyInteger("Pin_Pump_1") >= 0 ) {
 			$GPIO[$this->ReadPropertyInteger("Pin_Pump_1")] = "GPIO".(sprintf("%'.02d", $this->ReadPropertyInteger("Pin_Pump_1")));
@@ -190,10 +194,12 @@ class ShotGlassFillingMachine extends IPSModule
 		// Relais 1/ Pumpe 1
 		$arrayExpansionPanel = array();
 		$arrayExpansionPanel[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für die Pumpe 1"); 
+		
 		$arrayOptions = array();
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
+		
 		$arrayExpansionPanel[] = array("type" => "Select", "name" => "Pin_Pump_1", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "Zeit bis zur Abschaltung in Sekunden (0 = keine automatische Abschaltung)"); 
 		$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "Time_Pump_1", "caption" => "Abschaltung (s)", "minimum" => 0, "maximum" => 10, "digits" => 1); 
@@ -201,6 +207,7 @@ class ShotGlassFillingMachine extends IPSModule
 		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________"); 
 		// Relais 2/ Pumpe 2
 		$arrayExpansionPanel[] = array("type" => "Label", "label" => "Angabe der GPIO-Nummer (Broadcom-Number) für die Pumpe 2"); 
+		
 		$arrayOptions = array();
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
@@ -222,6 +229,8 @@ class ShotGlassFillingMachine extends IPSModule
 		
 		// für die TCRT5000
 		$arrayExpansionPanel = array();
+		
+		$arrayOptions = array();
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
@@ -232,6 +241,7 @@ class ShotGlassFillingMachine extends IPSModule
 		$arrayElements[] = array("type" => "ExpansionPanel", "caption" => "IR-Sensor(en)", "items" => $arrayExpansionPanel);
 		
 		// Rundumleuchten
+		$arrayOptions = array();
 		foreach($GPIO AS $Value => $Label) {
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
