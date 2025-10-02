@@ -54,13 +54,6 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->RegisterPropertyInteger("RB_most_anti_clockwise", 1000);
 			$this->RegisterPropertyInteger("RB_midpoint", 1500);
 			$this->RegisterPropertyInteger("RB_most_clockwise", 2000);
-			
-			$this->RegisterPropertyInteger("RB_Fast_RotatingBeacon", 1500);
-			$this->RegisterPropertyInteger("RB_Slow_RotatingBeacon", 1500);
-			$this->RegisterPropertyInteger("RB_Slow_Flash", 1500);
-			$this->RegisterPropertyInteger("RB_Fast_Flash", 1500);
-			$this->RegisterPropertyInteger("RB_Off", 1500);
-			$this->RegisterPropertyInteger("RB_Shutdown", 1000);
 
 			// Sonstiges
 			$this->RegisterPropertyInteger("Modus", 0);
@@ -86,6 +79,7 @@ class ShotGlassFillingMachine extends IPSModule
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PreShotGlassFill", 2, "Individuell füllen", "Party", 0x000000);
 
 			$this->RegisterProfileInteger("ShotGlassFillingMachine.RotatingBeacon", "Bulb", "", "", 0, 4, 0);
+			
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 0, "Aus", "Bulb", 0x000000);
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 1, "Schnelles Rundumlicht", "Bulb", 0x000000);
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 2, "Langsames Rundumlicht", "Bulb", 0x000000);
@@ -245,13 +239,9 @@ class ShotGlassFillingMachine extends IPSModule
 		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "Angabe der GPIO-Nummer (Broadcom-Number) der Rundumleuchten"); 
 		$arrayExpansionPanel[] = array("type" => "Select", "name" => "Pin_RotatingBeacon", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "Angabe der Microsekunden bei 50 Hz"); 
-		$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "RB_Fast_RotatingBeacon", "caption" => "Schnelles Rundumlicht (µs)", "minimum" => 0); 
-		$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "RB_Slow_RotatingBeacon", "caption" => "Langsames Rundumlicht (µs)", "minimum" => 0); 
-		$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "RB_Slow_Flash", "caption" => "Langsames Blinken (µs)", "minimum" => 0);
-		$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "RB_Fast_Flash", "caption" => "Schnelles Blinken (µs)", "minimum" => 0); 
-		$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "RB_Off", "caption" => "Ausschalten (µs)", "minimum" => 0);
-		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "Zeit bis zur Abschaltung in Microsekunden (0 = keine automatische Abschaltung)"); 
-		$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "RB_Shutdown", "caption" => "Abschaltung (ms)", "minimum" => 0); 
+		$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "RB_most_anti_clockwise", "caption" => "Max. Links (µs) - gegen den Uhrzeigersinn", "minimum" => 0); 
+		$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "RB_midpoint", "caption" => "Mittelstellung (µs)", "minimum" => 0); 
+		$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "RB_most_clockwise", "caption" => "Max. Rechts (µs) - im Uhrzeigersinn", "minimum" => 0);
 		$arrayElements[] = array("type" => "ExpansionPanel", "caption" => "Rundumleuchte(n)", "items" => $arrayExpansionPanel);
 
 		// Shot Auswahl
@@ -593,14 +583,6 @@ class ShotGlassFillingMachine extends IPSModule
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$Number = substr($Ident, -1);
 			$ShotName = GetValueFormatted($this->GetIDForIdent($Ident));
-			/*
-			$State_Pump_ID = $this->GetIDForIdent("State_Pump_".Number);
-			$this->SendDebug("SetShotName", "State_Pump_ID:".$State_Pump_ID, 0);
-			$ShotName = GetValueFormatted($this->GetIDForIdent($Ident));
-			$this->SendDebug("SetShotName", "ShotName: ".$ShotName, 0);
-			$NewName = "Status Pumpe ".$Number." (".GetValueFormatted($this->GetIDForIdent($Ident));.")";
-			$this->SendDebug("SetShotName", "NewName: ".$NewName, 0);
-			*/
 
 			// Pumpen
 			IPS_SetName($this->GetIDForIdent("State_Pump_".$Number), "Status Pumpe ".$Number." (".$ShotName.")");
@@ -634,7 +616,6 @@ class ShotGlassFillingMachine extends IPSModule
 				If ($this->GetStatus() <> 102) {
 					$this->SetStatus(102);
 				}
-				//$Output = ($Value / ($Right - $Left)) * 100;
 				$Output = (($Value - $Left)/ ($Right - $Left)) * 100;
 				$this->SetValue("Servo", $Output);
 				$this->GetServo();
@@ -794,12 +775,7 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->SendDebug("SetRotatingBeacon", "Ausfuehrung", 0);
 			$Value = min(4, max(0, $Value));
 			
-			$RB_Fast_RotatingBeacon = $this->ReadPropertyInteger("RB_Fast_RotatingBeacon");
-			$RB_Slow_RotatingBeacon = $this->ReadPropertyInteger("RB_Slow_RotatingBeacon");
-			$RB_Slow_Flash = $this->ReadPropertyInteger("RB_Slow_Flash");
-			$RB_Fast_Flash = $this->ReadPropertyInteger("RB_Fast_Flash");
-			$RB_Off = $this->ReadPropertyInteger("RB_Off");
-			$RB_Shutdown = $this->ReadPropertyInteger("RB_Shutdown");
+			
 
 			If ($Value == 0) {
 				$ServoValue = $RB_Off;
