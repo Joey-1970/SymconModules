@@ -715,15 +715,15 @@ class ShotGlassFillingMachine extends IPSModule
 	}
 
 	public function RB_Switch()
-	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
+	{ 
+		If (($this->ReadPropertyInteger("Pin_RotatingBeacon") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 			$this->SendDebug("RB_Switch", "Ausfuehrung", 0);
 			$Left = $this->ReadPropertyInteger("RB_most_anti_clockwise");
 			$Right = $this->ReadPropertyInteger("RB_most_clockwise");
 			$Midpoint = $this->ReadPropertyInteger("RB_midpoint");
 			
 			// Erster Schritt: 1000µs senden
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon"), "Value" => 1000)));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon"), "Value" => $Left)));
 			If (!$Result) {
 				$this->SendDebug("RB_Switch", "Fehler beim Senden des ersten Befehls!", 0);
 				If ($this->GetStatus() <> 202) {
@@ -734,7 +734,7 @@ class ShotGlassFillingMachine extends IPSModule
 				$this->SendDebug("RB_Switch", "Erster Befehl war erfolgreich!", 0);
 				// Zweiter Schritt: 2000µs senden
 				IPS_Sleep(50);
-				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon"), "Value" => 2000)));
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon"), "Value" => $Right)));
 				If (!$Result) {
 					$this->SendDebug("Setup", "Fehler beim Senden des zweiten Befehls!", 0);
 					If ($this->GetStatus() <> 202) {
@@ -745,7 +745,7 @@ class ShotGlassFillingMachine extends IPSModule
 					$this->SendDebug("RB_Switch", "Zweiter Befehl war erfolgreich!", 0);
 					// Dritter Schritt: 1500µs senden
 					IPS_Sleep(50);
-					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon"), "Value" => 1500)));
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon"), "Value" => $Midpoint)));
 					If (!$Result) {
 						$this->SendDebug("Setup", "Fehler beim Senden des dritten Befehls!", 0);
 						If ($this->GetStatus() <> 202) {
