@@ -51,6 +51,10 @@ class ShotGlassFillingMachine extends IPSModule
 			// Rundumleuchten
 			$this->RegisterPropertyInteger("Pin_RotatingBeacon", -1);
 			$this->SetBuffer("PreviousPin_RotatingBeacon", -1);
+			$this->RegisterPropertyInteger("RB_most_anti_clockwise", 1000);
+			$this->RegisterPropertyInteger("RB_midpoint", 1500);
+			$this->RegisterPropertyInteger("RB_most_clockwise", 2000);
+			
 			$this->RegisterPropertyInteger("RB_Fast_RotatingBeacon", 1500);
 			$this->RegisterPropertyInteger("RB_Slow_RotatingBeacon", 1500);
 			$this->RegisterPropertyInteger("RB_Slow_Flash", 1500);
@@ -729,6 +733,57 @@ class ShotGlassFillingMachine extends IPSModule
 		$this->SetTimerInterval("Shutdown", 0);
 	}
 
+	public function RB_Switch()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("RB_Switch", "Ausfuehrung", 0);
+			$Left = $this->ReadPropertyInteger("RB_most_anti_clockwise");
+			$Right = $this->ReadPropertyInteger("RB_most_clockwise");
+			$Midpoint = $this->ReadPropertyInteger("RB_midpoint");
+			
+			// Erster Schritt: 1000µs senden
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon"), "Value" => 1000)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "Fehler beim Senden des ersten Befehls!", 0);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
+			}
+			else {
+				// Zweiter Schritt: 2000µs senden
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon"), "Value" => 2000)));
+				If (!$Result) {
+					$this->SendDebug("Setup", "Fehler beim Senden des zweiten Befehls!", 0);
+					If ($this->GetStatus() <> 202) {
+						$this->SetStatus(202);
+					}
+				}
+				else {
+					// Dritter Schritt: 1500µs senden
+					// Zweiter Schritt: 2000µs senden
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon"), "Value" => 2000)));
+					If (!$Result) {
+						$this->SendDebug("Setup", "Fehler beim Senden des dritten Befehls!", 0);
+						If ($this->GetStatus() <> 202) {
+							$this->SetStatus(202);
+						}
+					}
+					else {
+						// Ausschalten
+						$this->SetStatus(102);
+						//$this->SetValue("Servo", $Value);
+						//$this->GetServo();
+						IPS_Sleep(100);
+						$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon"), "Value" => 0)));
+						If (!$Result) {
+							$this->SendDebug("Setup", "Fehler beim Ausschalten!", 0);
+						}
+					}
+				}
+			}
+		}
+	}
+	
 	public function SetRotatingBeacon(Int $Value)
 	{
 		If (($this->ReadPropertyInteger("Pin_RotatingBeacon") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
