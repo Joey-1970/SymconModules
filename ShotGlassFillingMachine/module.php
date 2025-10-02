@@ -322,7 +322,6 @@ class ShotGlassFillingMachine extends IPSModule
 			//$this->SetReceiveDataFilter($Filter);
 			
 			$this->SetTimerInterval("Shutdown", 0);
-			$this->SetTimerInterval("RB_Shutdown", 0);
 			$this->SetTimerInterval("Pump_1", 0);
 			$this->SetTimerInterval("Pump_2", 0);
 			$this->SetTimerInterval("IR_Sensor", 0);
