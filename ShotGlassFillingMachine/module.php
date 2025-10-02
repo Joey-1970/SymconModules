@@ -51,6 +51,8 @@ class ShotGlassFillingMachine extends IPSModule
 			// Rundumleuchten
 			$this->RegisterPropertyInteger("Pin_RotatingBeacon", -1);
 			$this->SetBuffer("PreviousPin_RotatingBeacon", -1);
+			$this->RegisterPropertyInteger("Pin_PowerRotatingBeacon", -1);
+			$this->SetBuffer("PreviousPin_PowerRotatingBeacon", -1);
 			$this->RegisterPropertyInteger("RB_most_anti_clockwise", 1000);
 			$this->RegisterPropertyInteger("RB_midpoint", 1500);
 			$this->RegisterPropertyInteger("RB_most_clockwise", 2000);
@@ -123,6 +125,7 @@ class ShotGlassFillingMachine extends IPSModule
 
 			$this->RegisterVariableInteger("RotatingBeacon", "Rundumleuchte", "ShotGlassFillingMachine.RotatingBeacon", 230);
 			$this->EnableAction("RotatingBeacon");
+			$this->RegisterVariableBoolean("PowerRotatingBeacon", "Spannung Rundumleuchte(n)", "~Switch", 240);
         }
 	
 	public function GetConfigurationForm() 
@@ -233,12 +236,14 @@ class ShotGlassFillingMachine extends IPSModule
 			$arrayOptions[] = array("label" => $Label, "value" => $Value);
 		}
 		$arrayExpansionPanel = array();
-		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "Angabe der GPIO-Nummer (Broadcom-Number) der Rundumleuchten"); 
+		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "Angabe der GPIO-Nummer (Broadcom-Number) der Rundumleuchten für die Steuerung"); 
 		$arrayExpansionPanel[] = array("type" => "Select", "name" => "Pin_RotatingBeacon", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "Angabe der Microsekunden bei 50 Hz"); 
 		$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "RB_most_anti_clockwise", "caption" => "Max. Links (µs) - gegen den Uhrzeigersinn", "minimum" => 0); 
 		$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "RB_midpoint", "caption" => "Mittelstellung (µs)", "minimum" => 0); 
 		$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "RB_most_clockwise", "caption" => "Max. Rechts (µs) - im Uhrzeigersinn", "minimum" => 0);
+		$arrayExpansionPanel[] = array("type" => "Label", "caption" => "Angabe der GPIO-Nummer (Broadcom-Number) der Rundumleuchten Spannungsversorgung"); 
+		$arrayExpansionPanel[] = array("type" => "Select", "name" => "Pin_PowerRotatingBeacon", "caption" => "GPIO-Nr.", "options" => $arrayOptions );
 		$arrayElements[] = array("type" => "ExpansionPanel", "caption" => "Rundumleuchte(n)", "items" => $arrayExpansionPanel);
 
 		// Shot Auswahl
@@ -283,7 +288,10 @@ class ShotGlassFillingMachine extends IPSModule
 				$this->SendDebug("ApplyChanges", "Pin-Wechsel Servo - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_Servo")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_Servo"), 0);
 			}
 			If (intval($this->GetBuffer("PreviousPin_RotatingBeacon")) <> $this->ReadPropertyInteger("Pin_RotatingBeacon")) {
-				$this->SendDebug("ApplyChanges", "Pin-Wechsel Servo - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_RotatingBeacon")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_RotatingBeacon"), 0);
+				$this->SendDebug("ApplyChanges", "Pin-Wechsel Rundumlicht Steuerung - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_RotatingBeacon")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_RotatingBeacon"), 0);
+			}
+			If (intval($this->GetBuffer("PreviousPin_PowerRotatingBeacon")) <> $this->ReadPropertyInteger("Pin_PowerRotatingBeacon")) {
+				$this->SendDebug("ApplyChanges", "Pin-Wechsel Rundumlicht Spannung - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_PowerRotatingBeacon")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_PowerRotatingBeacon"), 0);
 			}
 			If (intval($this->GetBuffer("PreviousPin_Pump_1")) <> $this->ReadPropertyInteger("Pin_Pump_1")) {
 				$this->SendDebug("ApplyChanges", "Pin-Wechsel Pumpe 1 - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_Pump_1")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_Pump_1"), 0);
@@ -326,7 +334,7 @@ class ShotGlassFillingMachine extends IPSModule
 					}
 				}
 				
-				// Rundumleuchte
+				// Rundumleuchte Steuerung
 				If (($this->ReadPropertyInteger("Pin_RotatingBeacon") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
 										  "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon"), "PreviousPin" => $this->GetBuffer("PreviousPin_RotatingBeacon"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
@@ -334,6 +342,21 @@ class ShotGlassFillingMachine extends IPSModule
 					If ($Result == true) {
 						If ($this->GetStatus() <> 102) {
 							$this->SetStatus(102);
+						}
+					}
+				}	
+
+				// Rundumleuchte Spannung
+				If (($this->ReadPropertyInteger("Pin_PowerRotatingBeacon") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+									  "Pin" => $this->ReadPropertyInteger("Pin_PowerRotatingBeacon"), "PreviousPin" => $this->GetBuffer("PreviousPin_PowerRotatingBeacon"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+					$this->SetBuffer("PreviousPin_PowerRotatingBeacon", $this->ReadPropertyInteger("Pin_PowerRotatingBeacon"));
+					If ($Result == true) {
+						If ($this->GetStatus() <> 102) {
+							$this->SetStatus(102);
+							$this->SetPowerRotatingBeacon(false);
+							IPS_Sleep(200);
+							$this->SetPowerRotatingBeacon(true);
 						}
 					}
 				}	
@@ -393,8 +416,9 @@ class ShotGlassFillingMachine extends IPSModule
 					}
 				}
 				// Initiale Abfrage des aktuellen Status
-				$this->GetIRSensor();
-
+				$this->GetIRSensor(); 
+				$this->GetPowerRotatingBeacon();
+				
 				// Start-Button zurücksetzen
 				$this->SetValue("Start", false);
 				$this->SetValue("FillingActive", false);
@@ -774,6 +798,7 @@ class ShotGlassFillingMachine extends IPSModule
 			$OldValue = $this->GetValue("RotatingBeacon");
 			$this->SendDebug("SetRotatingBeacon", "Aktueller Wert: ".$OldValue." - Neuer Wert: ".$Value, 0);
 
+			/*
 			If ($Value > $OldValue) {
 				for ($i = $OldValue; $i <= $Value; $i++) {
 					$this->RB_Switch();
@@ -787,10 +812,59 @@ class ShotGlassFillingMachine extends IPSModule
 			elseif ($Value == $OldValue) {
 				// Nichts machen
 			}
+			*/
 			$this->SetValue("RotatingBeacon", $Value);
 		}
 	}
 
+	public function SetPowerRotatingBeacon(Bool $Value)
+	{
+		If (($this->ReadPropertyInteger("Pin_PowerRotatingBeacon") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+			$Value = min(1, max(0, $Value));
+			
+			$this->SendDebug("SetPowerRotatingBeacon", "Ausfuehrung", 0);
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_PowerRotatingBeacon"), "Value" => $Value) )));
+			$this->SendDebug("SetPowerRotatingBeacon", "Ergebnis: ".(int)$Result, 0);
+			IF (!$Result) {
+				$this->SendDebug("SetPowerRotatingBeacon", "Fehler beim Setzen des Status!", 0);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
+				return;
+			}
+			else {
+				If ($this->GetStatus() <> 102) {
+					$this->SetStatus(102);
+				}
+				$this->SetValue("PowerRotatingBeacon", $Value);
+
+				$this->GetPowerRotatingBeacon();
+			}
+		}
+	}
+
+	public function GetPowerRotatingBeacon()
+	{
+		If (($this->ReadPropertyInteger("Pin_PowerRotatingBeacon") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+			$this->SendDebug("GetPowerRotatingBeacon", "Ausfuehrung", 0);
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_value", "Pin" => $this->ReadPropertyInteger("Pin_PowerRotatingBeacon") )));
+			If ($Result < 0) {
+				$this->SendDebug("GetPowerRotatingBeacon", "Fehler beim Lesen des Status!", 0);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
+				return;
+			}
+			else {
+				If ($this->GetStatus() <> 102) {
+					$this->SetStatus(102);
+				}
+				$this->SendDebug("GetPowerRotatingBeacon", "Ergebnis: ".(int)$Result, 0);
+				$this->SetValue("PowerRotatingBeacon", $Result);
+			}
+		}
+	}
+	
 	public function SetPumpState(int $Pump, Bool $Value)
 	{
 		If (($this->ReadPropertyInteger("Pin_Pump_".$Pump) >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
