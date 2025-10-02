@@ -363,10 +363,10 @@ class ShotGlassFillingMachine extends IPSModule
 					If ($Result == true) {
 						If ($this->GetStatus() <> 102) {
 							$this->SetStatus(102);
-							$this->SetPowerRotatingBeacon(false);
-							IPS_Sleep(200);
-							$this->SetPowerRotatingBeacon(true);
 						}
+						$this->SetPowerRotatingBeacon(false);
+						IPS_Sleep(200);
+						$this->SetPowerRotatingBeacon(true);
 					}
 				}	
 				
