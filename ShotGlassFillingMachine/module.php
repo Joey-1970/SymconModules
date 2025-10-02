@@ -823,7 +823,7 @@ class ShotGlassFillingMachine extends IPSModule
 			$Value = min(1, max(0, $Value));
 			
 			$this->SendDebug("SetPowerRotatingBeacon", "Ausfuehrung", 0);
-			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_PowerRotatingBeacon"), "Value" => $Value) )));
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_PowerRotatingBeacon"), "Value" => $Value )));
 			$this->SendDebug("SetPowerRotatingBeacon", "Ergebnis: ".(int)$Result, 0);
 			IF (!$Result) {
 				$this->SendDebug("SetPowerRotatingBeacon", "Fehler beim Setzen des Status!", 0);
