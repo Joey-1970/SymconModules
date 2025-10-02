@@ -77,15 +77,6 @@ class ShotGlassFillingMachine extends IPSModule
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PreShotGlassFill", 1, "Alle Gläser mit Getränk 2 füllen", "Party", 0x000000);
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PreShotGlassFill", 2, "Individuell füllen", "Party", 0x000000);
 
-			-Schnelles Rundumlicht
-
--Langsames Rundumlicht
-
--Langsames aufblinken
-
--Schnelles aufblinken
-
-- Led´s ausgeschaltet
 			$this->RegisterProfileInteger("ShotGlassFillingMachine.RotatingBeacon", "Bulb", "", "", 0, 4, 0);
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 0, "Schnelles Rundumlicht", "Bulb", 0x000000);
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 1, "Langsames Rundumlicht", "Bulb", 0x000000);
@@ -412,6 +403,7 @@ class ShotGlassFillingMachine extends IPSModule
 				$this->SetDrink(0);
 				$this->SetRotatingBeacon(0);
 				$this->SetValue("AfterFilling", false);
+				$this->SetValue("RotatingBeacon", 0);
 
 				// Modus
 				If ($this->ReadPropertyInteger("Modus") == 0) {  //Produktivmodus
