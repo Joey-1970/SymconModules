@@ -744,13 +744,15 @@ class ShotGlassFillingMachine extends IPSModule
 			// Erster Schritt: 1000µs senden
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon"), "Value" => 1000)));
 			If (!$Result) {
-				$this->SendDebug("Setup", "Fehler beim Senden des ersten Befehls!", 0);
+				$this->SendDebug("RB_Switch", "Fehler beim Senden des ersten Befehls!", 0);
 				If ($this->GetStatus() <> 202) {
 					$this->SetStatus(202);
 				}
 			}
 			else {
+				$this->SendDebug("RB_Switch", "Erster Befehl war erfolgreich!", 0);
 				// Zweiter Schritt: 2000µs senden
+				IPS_Sleep(50);
 				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon"), "Value" => 2000)));
 				If (!$Result) {
 					$this->SendDebug("Setup", "Fehler beim Senden des zweiten Befehls!", 0);
@@ -759,9 +761,10 @@ class ShotGlassFillingMachine extends IPSModule
 					}
 				}
 				else {
+					$this->SendDebug("RB_Switch", "Zweiter Befehl war erfolgreich!", 0);
 					// Dritter Schritt: 1500µs senden
-					// Zweiter Schritt: 2000µs senden
-					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon"), "Value" => 2000)));
+					IPS_Sleep(50);
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon"), "Value" => 1500)));
 					If (!$Result) {
 						$this->SendDebug("Setup", "Fehler beim Senden des dritten Befehls!", 0);
 						If ($this->GetStatus() <> 202) {
@@ -769,6 +772,7 @@ class ShotGlassFillingMachine extends IPSModule
 						}
 					}
 					else {
+						$this->SendDebug("RB_Switch", "Dritter Befehl war erfolgreich!", 0);
 						// Ausschalten
 						$this->SetStatus(102);
 						//$this->SetValue("Servo", $Value);
