@@ -811,11 +811,13 @@ class ShotGlassFillingMachine extends IPSModule
 			IPS_Sleep(200);
 			$this->SetPowerRotatingBeacon(true);
 			IPS_Sleep(50);
-			
-			for ($i = 0; $i <= $Value; $i++) {
-				$this->RB_Switch();
-			}
 
+			If ($Value > 0) {
+				for ($i = 0; $i <= $Value; $i++) {
+					$this->RB_Switch();
+				}
+			}
+			
 			$this->SetValue("RotatingBeacon", $Value);
 
 			// Steuerung ausschalten
