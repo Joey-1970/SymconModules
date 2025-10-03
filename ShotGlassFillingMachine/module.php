@@ -803,25 +803,16 @@ class ShotGlassFillingMachine extends IPSModule
 		If (($this->ReadPropertyInteger("Pin_RotatingBeacon") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 			$this->SendDebug("SetRotatingBeacon", "Ausfuehrung", 0);
 			$Value = min(4, max(0, $Value));
-			
-			$OldValue = $this->GetValue("RotatingBeacon");
-			$this->SendDebug("SetRotatingBeacon", "Aktueller Wert: ".$OldValue." - Neuer Wert: ".$Value, 0);
 
-			/*
-			If ($Value > $OldValue) {
-				for ($i = $OldValue; $i <= $Value; $i++) {
-					$this->RB_Switch();
-				}
+			// Rundumlicht auf einen definierten Startpunkt setzen
+			$this->SetPowerRotatingBeacon(false);
+			IPS_Sleep(200);
+			$this->SetPowerRotatingBeacon(true);
+			
+			for ($i = 0; $i <= $Value; $i++) {
+				$this->RB_Switch();
 			}
-			elseif ($Value < $OldValue) {
-				for ($i = $Value; $i <= $OldValue; $i--) {
-					$this->RB_Switch();
-				}
-			}
-			elseif ($Value == $OldValue) {
-				// Nichts machen
-			}
-			*/
+
 			$this->SetValue("RotatingBeacon", $Value);
 		}
 	}
