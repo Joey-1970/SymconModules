@@ -808,7 +808,7 @@ class ShotGlassFillingMachine extends IPSModule
 
 			// Rundumlicht auf einen definierten Startpunkt setzen
 			$this->SetPowerRotatingBeacon(false);
-			IPS_Sleep(150);
+			IPS_Sleep(200);
 			$this->SetPowerRotatingBeacon(true);
 			IPS_Sleep(50);
 			
