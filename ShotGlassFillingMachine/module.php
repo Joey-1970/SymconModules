@@ -787,11 +787,13 @@ class ShotGlassFillingMachine extends IPSModule
 						$this->SendDebug("RB_Switch", "Dritter Befehl war erfolgreich!", 0);
 						// Ausschalten
 						$this->SetStatus(102);
+						/*
 						IPS_Sleep(100);
 						$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon"), "Value" => 0)));
 						If (!$Result) {
 							$this->SendDebug("Setup", "Fehler beim Ausschalten!", 0);
 						}
+						*/
 					}
 				}
 			}
@@ -806,14 +808,22 @@ class ShotGlassFillingMachine extends IPSModule
 
 			// Rundumlicht auf einen definierten Startpunkt setzen
 			$this->SetPowerRotatingBeacon(false);
-			IPS_Sleep(200);
+			IPS_Sleep(150);
 			$this->SetPowerRotatingBeacon(true);
+			IPS_Sleep(50);
 			
 			for ($i = 0; $i <= $Value; $i++) {
 				$this->RB_Switch();
 			}
 
 			$this->SetValue("RotatingBeacon", $Value);
+
+			// Steuerung ausschalten
+			IPS_Sleep(100);
+			$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon"), "Value" => 0)));
+			If (!$Result) {
+				$this->SendDebug("Setup", "Fehler beim Ausschalten!", 0);
+			}
 		}
 	}
 
