@@ -813,7 +813,7 @@ class ShotGlassFillingMachine extends IPSModule
 			IPS_Sleep(50);
 
 			If ($Value > 0) {
-				for ($i = 0; $i <= $Value; $i++) {
+				for ($i = 0; $i < $Value; $i++) {
 					$this->SendDebug("SetRotatingBeacon", "Schleife: ".$i, 0);
 					$this->RB_Switch();
 				}
