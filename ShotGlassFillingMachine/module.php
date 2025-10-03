@@ -807,16 +807,28 @@ class ShotGlassFillingMachine extends IPSModule
 			$Value = min(4, max(0, $Value));
 
 			// Rundumlicht auf einen definierten Startpunkt setzen
-			$this->SetPowerRotatingBeacon(false);
-			IPS_Sleep(200);
-			$this->SetPowerRotatingBeacon(true);
-			IPS_Sleep(50);
-
-			If ($Value > 0) {
+			If ($Value == 0) {
+				// Rundumlicht auf einen definierten Startpunkt setzen (schnelles Rundumlicht)
+				$this->SetPowerRotatingBeacon(false);
+				IPS_Sleep(200);
+				$this->SetPowerRotatingBeacon(true);
+				IPS_Sleep(50);
+			}
+			elseif (($Value > 0) AND ($Value < 4)) {
+				// Rundumlicht auf einen definierten Startpunkt setzen (schnelles Rundumlicht)
+				$this->SetPowerRotatingBeacon(false);
+				IPS_Sleep(200);
+				$this->SetPowerRotatingBeacon(true);
+				IPS_Sleep(50);
+				// Jetzt eine entspechende Anzahl von Schaltbefehlen senden
 				for ($i = 0; $i < $Value; $i++) {
 					$this->SendDebug("SetRotatingBeacon", "Schleife: ".$i, 0);
 					$this->RB_Switch();
 				}
+			}
+			elseif ($Value == 4) {
+				// Spannung ausschalten
+				$this->SetPowerRotatingBeacon(false);
 			}
 			
 			$this->SetValue("RotatingBeacon", $Value);
