@@ -60,12 +60,14 @@ class ShotGlassFillingMachine extends IPSModule
 			// Sonstiges
 			$this->RegisterPropertyInteger("Modus", 0);
 			$this->RegisterPropertyString("PossibleDrinks", "");
+			$this->RegisterPropertyInteger("ActivityWatch", 10);
 			
 			$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 			$this->RegisterTimer("Shutdown", 0, 'ShotGlassFillingMachine_Shutdown($_IPS["TARGET"]);');
 			$this->RegisterTimer("Pump_1", 0, 'ShotGlassFillingMachine_StopPump_1($_IPS["TARGET"]);');
 			$this->RegisterTimer("Pump_2", 0, 'ShotGlassFillingMachine_StopPump_2($_IPS["TARGET"]);');
 			$this->RegisterTimer("IR_Sensor", 0, 'ShotGlassFillingMachine_GetIRSensor($_IPS["TARGET"]);');
+			$this->RegisterTimer("ActivityWatch", 0, 'ShotGlassFillingMachine_ActivityWatch($_IPS["TARGET"]);');
 
 			// Profile erstellen
 			$this->RegisterProfileInteger("ShotGlassFillingMachine.Position", "Information", "", "", 0, 5, 0);
@@ -274,6 +276,7 @@ class ShotGlassFillingMachine extends IPSModule
 		$arrayOptions[] = array("label" => "Produktivmodus", "value" => 0);
 		$arrayOptions[] = array("label" => "Kalibrierungsmodus", "value" => 1);
 		$arrayExpansionPanel[] = array("type" => "Select", "name" => "Modus", "caption" => "Modus", "options" => $arrayOptions );
+		$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "ActivityWatch", "caption" => "Abschaltung (min)", "minimum" => 0, "maximum" => 30, "digits" => 0); 
 		$arrayElements[] = array("type" => "ExpansionPanel", "caption" => "Sonstiges", "items" => $arrayExpansionPanel);
 		
 		$arrayActions = array();
@@ -437,6 +440,8 @@ class ShotGlassFillingMachine extends IPSModule
 				$this->SetRotatingBeacon(0);
 				$this->SetValue("AfterFilling", false);
 				$this->SetValue("RotatingBeacon", 0);
+				$this->SetTimerInterval("ActivityWatch", $this->ReadPropertyInteger("ActivityWatch") * 1000 * 60);
+				
 
 				// Modus
 				If ($this->ReadPropertyInteger("Modus") == 0) {  //Produktivmodus
@@ -464,7 +469,10 @@ class ShotGlassFillingMachine extends IPSModule
 	
 	public function RequestAction($Ident, $Value) 
 	{
-  		switch($Ident) {
+  		// ActivityWatch zurücksetzen
+		$this->SetTimerInterval("ActivityWatch", $this->ReadPropertyInteger("ActivityWatch") * 1000 * 60);
+		
+		switch($Ident) {
 	        case "Servo":
 	            If ($this->ReadPropertyBoolean("Open") == true) {
 		    		$this->SetServo($Value);
@@ -577,6 +585,8 @@ class ShotGlassFillingMachine extends IPSModule
 						OR ($data->Pin == $this->ReadPropertyInteger("Pin_IRSensor_4"))
 						OR ($data->Pin == $this->ReadPropertyInteger("Pin_IRSensor_5"))) {
 			   		$this->SendDebug("ReceiveData", "Notify IR-Sensor ".$data->Pin, 0);
+					// ActivityWatch zurücksetzen
+					$this->SetTimerInterval("ActivityWatch", $this->ReadPropertyInteger("ActivityWatch") * 1000 * 60);
 					$this->GetIRSensor();
 			   	}
 			   	break;
@@ -585,6 +595,13 @@ class ShotGlassFillingMachine extends IPSModule
 	 	}
  	}
 	// Beginn der Funktionen
+
+	public function ActivityWatch()
+	{
+		$this->SendDebug("ActivityWatch", "Ausfuehrung", 0);
+		$this->SetServoPosition(0);
+		$this->SetRotatingBeacon(4);
+	}
 	
 	private function SetDrink($Value)
 	{
@@ -787,13 +804,6 @@ class ShotGlassFillingMachine extends IPSModule
 						$this->SendDebug("RB_Switch", "Dritter Befehl war erfolgreich!", 0);
 						// Ausschalten
 						$this->SetStatus(102);
-						/*
-						IPS_Sleep(100);
-						$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_servo", "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon"), "Value" => 0)));
-						If (!$Result) {
-							$this->SendDebug("Setup", "Fehler beim Ausschalten!", 0);
-						}
-						*/
 					}
 				}
 			}
@@ -1044,6 +1054,7 @@ class ShotGlassFillingMachine extends IPSModule
 		If ($this->GetValue("FillingActive") == false) {
 			$this->SendDebug("StartFilling", "Ausfuehrung", 0);
 			$this->SetValue("FillingActive", true);
+			$this->SetRotatingBeacon(0);
 			// Schrittzähler zurücksetzen
 			$this->SetValue("FillingStep", 1);
 			// Alles in Ausgangsstellung bringen
@@ -1060,6 +1071,7 @@ class ShotGlassFillingMachine extends IPSModule
 		$this->SendDebug("FillingProcess", "Ausfuehrung", 0);
 
 		$FillingStep = $this->GetValue("FillingStep");
+		$this->SetRotatingBeacon(0);
 		
 		If ($FillingStep <= 5) {
 			$IsGlass = $this->GetOneIRSensor($FillingStep);
@@ -1070,6 +1082,7 @@ class ShotGlassFillingMachine extends IPSModule
 				$this->SetValue("StateText", "Position anfahren...");
 				$NewPosition = $this->SetServoPosition($FillingStep);
 				If ($NewPosition == true) {
+					$this->SetRotatingBeacon(3);
 					IPS_Sleep(1000); 
 					// Ausgewählte Pumpe
 					$SelectedDrink = $this->GetValue("ShotGlassFill_".$FillingStep) + 1;
@@ -1093,7 +1106,7 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->SetServoPosition(0);
 			$this->SetValue("AfterFilling", true);
 			$this->GetIRSensor();
-			
+			$this->SetRotatingBeacon(0);
 		}	
 	}
 	
