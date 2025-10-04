@@ -471,6 +471,9 @@ class ShotGlassFillingMachine extends IPSModule
 	{
   		// ActivityWatch zurücksetzen
 		$this->SetTimerInterval("ActivityWatch", $this->ReadPropertyInteger("ActivityWatch") * 1000 * 60);
+		If ($this->GetValue("RotatingBeacon") == 4) {
+			$this->SetRotatingBeacon(0);
+		}
 		
 		switch($Ident) {
 	        case "Servo":
@@ -588,6 +591,9 @@ class ShotGlassFillingMachine extends IPSModule
 					// ActivityWatch zurücksetzen
 					$this->SetTimerInterval("ActivityWatch", $this->ReadPropertyInteger("ActivityWatch") * 1000 * 60);
 					$this->GetIRSensor();
+					If ($this->GetValue("RotatingBeacon") == 4) {
+						$this->SetRotatingBeacon(0);
+					}
 			   	}
 			   	break;
 			
