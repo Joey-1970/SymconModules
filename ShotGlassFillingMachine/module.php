@@ -906,11 +906,11 @@ class ShotGlassFillingMachine extends IPSModule
 			$Shutdown = $this->ReadPropertyFloat("Time_Pump_".$Pump);
 			$Value = min(1, max(0, $Value));
 			
-			$this->SendDebug("SetPumpState", "Ausfuehrung", 0);
+			$this->SendDebug("SetPumpState Pump ".$Pump, "Ausfuehrung", 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_value", "Pin" => $this->ReadPropertyInteger("Pin_Pump_".$Pump), "Value" => ($Value ^ $this->ReadPropertyBoolean("Invert_Pump")) )));
-			$this->SendDebug("SetPumpState", "Ergebnis: ".(int)$Result, 0);
+			$this->SendDebug("SetPumpState Pump ".$Pump, "Ergebnis: ".(int)$Result, 0);
 			IF (!$Result) {
-				$this->SendDebug("SetPumpState", "Fehler beim Setzen des Status!", 0);
+				$this->SendDebug("SetPumpState Pump ".$Pump, "Fehler beim Setzen des Status!", 0);
 				If ($this->GetStatus() <> 202) {
 					$this->SetStatus(202);
 				}
@@ -933,10 +933,10 @@ class ShotGlassFillingMachine extends IPSModule
 	public function GetPumpState(int $Pump)
 	{
 		If (($this->ReadPropertyInteger("Pin_Pump_".$Pump) >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-			$this->SendDebug("GetPumpState", "Ausfuehrung", 0);
+			$this->SendDebug("GetPumpState Pump ".$Pump, "Ausfuehrung", 0);
 			$Result = $this->SendDataToParent(json_encode(Array("DataID"=>"{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "get_value", "Pin" => $this->ReadPropertyInteger("Pin_Pump_".$Pump) )));
 			If ($Result < 0) {
-				$this->SendDebug("GetPumpState", "Fehler beim Lesen des Status!", 0);
+				$this->SendDebug("GetPumpState Pump ".$Pump, "Fehler beim Lesen des Status!", 0);
 				If ($this->GetStatus() <> 202) {
 					$this->SetStatus(202);
 				}
@@ -946,7 +946,7 @@ class ShotGlassFillingMachine extends IPSModule
 				If ($this->GetStatus() <> 102) {
 					$this->SetStatus(102);
 				}
-				$this->SendDebug("GetPumpState", "Ergebnis: ".(int)$Result, 0);
+				$this->SendDebug("GetPumpState Pump ".$Pump, "Ergebnis: ".(int)$Result, 0);
 				$this->SetValue("State_Pump_".$Pump, ($Result ^ $this->ReadPropertyBoolean("Invert_Pump")));
 			}
 		}
