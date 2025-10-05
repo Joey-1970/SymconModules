@@ -508,6 +508,7 @@ class ShotGlassFillingMachine extends IPSModule
 					}
 					else {
 						// Abbruch!
+						$this->SetValue("StateText", "Abbruch...");
 						$this->SetPumpState(1, false);
 						$this->SetPumpState(2, false);
 						$this->SetValue("FillingActive", false);
