@@ -507,6 +507,15 @@ class ShotGlassFillingMachine extends IPSModule
 			    	If ($Value == true) {
 						$this->StartFilling();
 					}
+					else {
+						// Abbruch!
+						$this->SetPumpState(1, false);
+						$this->SetPumpState(2, false);
+						$this->SetValue("FillingActive", false);
+						$this->SetValue("FillingStep", 0);
+						$this->SetValue("RotatingBeacon", 0);
+						$this->SetServoPosition(0);
+					}
 			    }
 	            break;
 			case "DrinkChoise":
