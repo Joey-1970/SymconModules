@@ -7,128 +7,127 @@ class ShotGlassFillingMachine extends IPSModule
 		//Never delete this line!
 		parent::Destroy();
 	}  
-	    
-	    
+	        
 	// Überschreibt die interne IPS_Create($id) Funktion
-        public function Create() 
-        {
-			// Diese Zeile nicht löschen.
-			parent::Create();
-			$this->RegisterPropertyBoolean("Open", false);
-			
-			// Servo
-			$this->RegisterPropertyInteger("Pin_Servo", -1);
-			$this->SetBuffer("PreviousPin_Servo", -1);
-			$this->RegisterPropertyInteger("most_anti_clockwise", 1000);
-			$this->RegisterPropertyInteger("midpoint", 1500);
-			$this->RegisterPropertyInteger("most_clockwise", 2000);
-			$this->RegisterPropertyInteger("Shutdown", 2000);
-			$this->RegisterPropertyInteger("RestingPosition", 100);
-			for ($i = 1; $i <= 5; $i++) {
-				$this->RegisterPropertyInteger("Position_".$i, $i * 20);
-			}
+	public function Create() 
+	{
+		// Diese Zeile nicht löschen.
+		parent::Create();
+		$this->RegisterPropertyBoolean("Open", false);
+		
+		// Servo
+		$this->RegisterPropertyInteger("Pin_Servo", -1);
+		$this->SetBuffer("PreviousPin_Servo", -1);
+		$this->RegisterPropertyInteger("most_anti_clockwise", 1000);
+		$this->RegisterPropertyInteger("midpoint", 1500);
+		$this->RegisterPropertyInteger("most_clockwise", 2000);
+		$this->RegisterPropertyInteger("Shutdown", 2000);
+		$this->RegisterPropertyInteger("RestingPosition", 100);
+		for ($i = 1; $i <= 5; $i++) {
+			$this->RegisterPropertyInteger("Position_".$i, $i * 20);
+		}
 
-			// Relais 1/ Pumpe 1
-			$this->RegisterPropertyInteger("Pin_Pump_1", -1);
-			$this->SetBuffer("PreviousPin_Pump_1", -1);
-			$this->RegisterPropertyFloat("Time_Pump_1", 5.0);
+		// Relais 1/ Pumpe 1
+		$this->RegisterPropertyInteger("Pin_Pump_1", -1);
+		$this->SetBuffer("PreviousPin_Pump_1", -1);
+		$this->RegisterPropertyFloat("Time_Pump_1", 5.0);
 
-			// Relais 2/ Pumpe 2
-			$this->RegisterPropertyInteger("Pin_Pump_2", -1);
-			$this->SetBuffer("PreviousPin_Pump_2", -1);
-			$this->RegisterPropertyFloat("Time_Pump_2", 5.0);
+		// Relais 2/ Pumpe 2
+		$this->RegisterPropertyInteger("Pin_Pump_2", -1);
+		$this->SetBuffer("PreviousPin_Pump_2", -1);
+		$this->RegisterPropertyFloat("Time_Pump_2", 5.0);
 
-			// für beide Relais / Pumpen
-			$this->RegisterPropertyBoolean("Invert_Pump", false);
-			$this->RegisterPropertyInteger("Startoption_Pump", 2);
+		// für beide Relais / Pumpen
+		$this->RegisterPropertyBoolean("Invert_Pump", false);
+		$this->RegisterPropertyInteger("Startoption_Pump", 2);
 
-			// für die TCRT5000
-			for ($i = 1; $i <= 5; $i++) {
-				$this->RegisterPropertyInteger("Pin_IRSensor_".$i, -1);
-				$this->SetBuffer("PreviousPin_IRSensor_".$i, -1);
-			}
+		// für die TCRT5000
+		for ($i = 1; $i <= 5; $i++) {
+			$this->RegisterPropertyInteger("Pin_IRSensor_".$i, -1);
+			$this->SetBuffer("PreviousPin_IRSensor_".$i, -1);
+		}
 
-			// Rundumleuchten
-			$this->RegisterPropertyInteger("Pin_RotatingBeacon", -1);
-			$this->SetBuffer("PreviousPin_RotatingBeacon", -1);
-			$this->RegisterPropertyInteger("Pin_PowerRotatingBeacon", -1);
-			$this->SetBuffer("PreviousPin_PowerRotatingBeacon", -1);
-			$this->RegisterPropertyInteger("RB_most_anti_clockwise", 1000);
-			$this->RegisterPropertyInteger("RB_midpoint", 1500);
-			$this->RegisterPropertyInteger("RB_most_clockwise", 2000);
+		// Rundumleuchten
+		$this->RegisterPropertyInteger("Pin_RotatingBeacon", -1);
+		$this->SetBuffer("PreviousPin_RotatingBeacon", -1);
+		$this->RegisterPropertyInteger("Pin_PowerRotatingBeacon", -1);
+		$this->SetBuffer("PreviousPin_PowerRotatingBeacon", -1);
+		$this->RegisterPropertyInteger("RB_most_anti_clockwise", 1000);
+		$this->RegisterPropertyInteger("RB_midpoint", 1500);
+		$this->RegisterPropertyInteger("RB_most_clockwise", 2000);
 
-			// Sonstiges
-			$this->RegisterPropertyInteger("Modus", 0);
-			$this->RegisterPropertyString("PossibleDrinks", "");
-			$this->RegisterPropertyInteger("ActivityWatch", 10);
-			
-			$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
-			$this->RegisterTimer("Shutdown", 0, 'ShotGlassFillingMachine_Shutdown($_IPS["TARGET"]);');
-			$this->RegisterTimer("Pump_1", 0, 'ShotGlassFillingMachine_StopPump_1($_IPS["TARGET"]);');
-			$this->RegisterTimer("Pump_2", 0, 'ShotGlassFillingMachine_StopPump_2($_IPS["TARGET"]);');
-			$this->RegisterTimer("IR_Sensor", 0, 'ShotGlassFillingMachine_GetIRSensor($_IPS["TARGET"]);');
-			$this->RegisterTimer("ActivityWatch", 0, 'ShotGlassFillingMachine_ActivityWatch($_IPS["TARGET"]);');
+		// Sonstiges
+		$this->RegisterPropertyInteger("Modus", 0);
+		$this->RegisterPropertyString("PossibleDrinks", "");
+		$this->RegisterPropertyInteger("ActivityWatch", 10);
+		
+		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+		$this->RegisterTimer("Shutdown", 0, 'ShotGlassFillingMachine_Shutdown($_IPS["TARGET"]);');
+		$this->RegisterTimer("Pump_1", 0, 'ShotGlassFillingMachine_StopPump_1($_IPS["TARGET"]);');
+		$this->RegisterTimer("Pump_2", 0, 'ShotGlassFillingMachine_StopPump_2($_IPS["TARGET"]);');
+		$this->RegisterTimer("IR_Sensor", 0, 'ShotGlassFillingMachine_GetIRSensor($_IPS["TARGET"]);');
+		$this->RegisterTimer("ActivityWatch", 0, 'ShotGlassFillingMachine_ActivityWatch($_IPS["TARGET"]);');
 
-			// Profile erstellen
-			$this->RegisterProfileInteger("ShotGlassFillingMachine.Position", "Information", "", "", 0, 5, 0);
-			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.Position", 0, "Ruheposition", "TurnLeft", 0x000000);
-			for ($i = 1; $i <= 5; $i++) {
-				IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.Position", $i, "Postion ".$i, "TurnRight", 0x000000);
-			}
+		// Profile erstellen
+		$this->RegisterProfileInteger("ShotGlassFillingMachine.Position", "Information", "", "", 0, 5, 0);
+		IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.Position", 0, "Ruheposition", "TurnLeft", 0x000000);
+		for ($i = 1; $i <= 5; $i++) {
+			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.Position", $i, "Postion ".$i, "TurnRight", 0x000000);
+		}
 
-			$this->RegisterProfileInteger("ShotGlassFillingMachine.PreShotGlassFill", "Party", "", "", 0, 2, 0);
-			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PreShotGlassFill", 0, "Alle Gläser mit Getränk 1 füllen", "Party", 0x000000);
-			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PreShotGlassFill", 1, "Alle Gläser mit Getränk 2 füllen", "Party", 0x000000);
-			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PreShotGlassFill", 2, "Individuell füllen", "Party", 0x000000);
+		$this->RegisterProfileInteger("ShotGlassFillingMachine.PreShotGlassFill", "Party", "", "", 0, 2, 0);
+		IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PreShotGlassFill", 0, "Alle Gläser mit Getränk 1 füllen", "Party", 0x000000);
+		IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PreShotGlassFill", 1, "Alle Gläser mit Getränk 2 füllen", "Party", 0x000000);
+		IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PreShotGlassFill", 2, "Individuell füllen", "Party", 0x000000);
 
-			$this->RegisterProfileInteger("ShotGlassFillingMachine.RotatingBeacon", "Bulb", "", "", 0, 4, 0);
-			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 0, "Schnelles Rundumlicht", "Bulb", 0x000000);
-			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 1, "Langsames Rundumlicht", "Bulb", 0x000000);
-			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 2, "Langsames Blinken", "Bulb", 0x000000);
-			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 3, "Schnelles Blinken", "Bulb", 0x000000);
-			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 4, "Aus", "Bulb", 0x000000);
+		$this->RegisterProfileInteger("ShotGlassFillingMachine.RotatingBeacon", "Bulb", "", "", 0, 4, 0);
+		IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 0, "Schnelles Rundumlicht", "Bulb", 0x000000);
+		IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 1, "Langsames Rundumlicht", "Bulb", 0x000000);
+		IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 2, "Langsames Blinken", "Bulb", 0x000000);
+		IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 3, "Schnelles Blinken", "Bulb", 0x000000);
+		IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.RotatingBeacon", 4, "Aus", "Bulb", 0x000000);
 
-			$this->RegisterProfileBoolean("ShotGlassFillingMachine.ShotGlassFill", "Party");
-			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.ShotGlassFill", 0, "Getränk 1", "Party", 0x000000);
-			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.ShotGlassFill", 1, "Getränk 2", "Party", 0x000000);
+		$this->RegisterProfileBoolean("ShotGlassFillingMachine.ShotGlassFill", "Party");
+		IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.ShotGlassFill", 0, "Getränk 1", "Party", 0x000000);
+		IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.ShotGlassFill", 1, "Getränk 2", "Party", 0x000000);
 
-			$this->RegisterProfileBoolean("ShotGlassFillingMachine.ShotGlass", "Information");
-			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.ShotGlass", 0, "Glas", "Ok", 0x00FF00);
-			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.ShotGlass", 1, "kein Glas", "Close", 0xFF0000);
+		$this->RegisterProfileBoolean("ShotGlassFillingMachine.ShotGlass", "Information");
+		IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.ShotGlass", 0, "Glas", "Ok", 0x00FF00);
+		IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.ShotGlass", 1, "kein Glas", "Close", 0xFF0000);
 
-			$this->RegisterProfileInteger("ShotGlassFillingMachine.PossibleShots_".$this->InstanceID, "Party", "", "", 0, 10, 0);
-			
-			// Status-Variablen anlegen
-			$this->RegisterVariableInteger("Servo", "Servo", "~Intensity.100", 10);
-			$this->RegisterVariableInteger("ServoPosition", "Servo-Position", "ShotGlassFillingMachine.Position", 20);
-			$this->RegisterVariableBoolean("State_Pump_1", "Status Pumpe 1", "~Switch", 30);
-			$this->RegisterVariableBoolean("State_Pump_2", "Status Pumpe 2", "~Switch", 40);
-			for ($i = 1; $i <= 5; $i++) {
-				$this->RegisterVariableBoolean("State_IRSensor_".$i, "Status IRSensor ".$i, "ShotGlassFillingMachine.ShotGlass", 40 + ($i * 10));
-                $this->DisableAction("State_IRSensor_".$i);
-			}
-			$this->RegisterVariableBoolean("Start", "Start", "~Switch", 100);
-			$this->DisableAction("Start");
-			$this->RegisterVariableString("StateText", "Status", "~TextBox", 110);
-			$this->RegisterVariableBoolean("FillingActive", "Befüllung aktiv", "~Switch", 120);
-			$this->RegisterVariableInteger("FillingStep", "Befüllung Schritt", "", 130);
-			$this->RegisterVariableInteger("DrinkChoise", "Befüllung wählen", "ShotGlassFillingMachine.PreShotGlassFill", 140);
-			$this->EnableAction("DrinkChoise");
-			for ($i = 1; $i <= 5; $i++) {
-				$this->RegisterVariableBoolean("ShotGlassFill_".$i, "Getränk Glas ".$i, "ShotGlassFillingMachine.ShotGlassFill", 140 + ($i * 10));
-                $this->DisableAction("ShotGlassFill_".$i);
-			}
-			$this->RegisterVariableInteger("PossibleShots_1", "Shots 1", "ShotGlassFillingMachine.PossibleShots_".$this->InstanceID, 200);
-			$this->EnableAction("PossibleShots_1");
-			$this->RegisterVariableInteger("PossibleShots_2", "Shots 2", "ShotGlassFillingMachine.PossibleShots_".$this->InstanceID, 210);
-			$this->EnableAction("PossibleShots_2");
-			$this->RegisterVariableBoolean("AfterFilling", "Befüllung erfolgt", "~Switch", 220);
-			$this->DisableAction("AfterFilling");
+		$this->RegisterProfileInteger("ShotGlassFillingMachine.PossibleShots_".$this->InstanceID, "Party", "", "", 0, 10, 0);
+		
+		// Status-Variablen anlegen
+		$this->RegisterVariableInteger("Servo", "Servo", "~Intensity.100", 10);
+		$this->RegisterVariableInteger("ServoPosition", "Servo-Position", "ShotGlassFillingMachine.Position", 20);
+		$this->RegisterVariableBoolean("State_Pump_1", "Status Pumpe 1", "~Switch", 30);
+		$this->RegisterVariableBoolean("State_Pump_2", "Status Pumpe 2", "~Switch", 40);
+		for ($i = 1; $i <= 5; $i++) {
+			$this->RegisterVariableBoolean("State_IRSensor_".$i, "Status IRSensor ".$i, "ShotGlassFillingMachine.ShotGlass", 40 + ($i * 10));
+			$this->DisableAction("State_IRSensor_".$i);
+		}
+		$this->RegisterVariableBoolean("Start", "Start", "~Switch", 100);
+		$this->DisableAction("Start");
+		$this->RegisterVariableString("StateText", "Status", "~TextBox", 110);
+		$this->RegisterVariableBoolean("FillingActive", "Befüllung aktiv", "~Switch", 120);
+		$this->RegisterVariableInteger("FillingStep", "Befüllung Schritt", "", 130);
+		$this->RegisterVariableInteger("DrinkChoise", "Befüllung wählen", "ShotGlassFillingMachine.PreShotGlassFill", 140);
+		$this->EnableAction("DrinkChoise");
+		for ($i = 1; $i <= 5; $i++) {
+			$this->RegisterVariableBoolean("ShotGlassFill_".$i, "Getränk Glas ".$i, "ShotGlassFillingMachine.ShotGlassFill", 140 + ($i * 10));
+			$this->DisableAction("ShotGlassFill_".$i);
+		}
+		$this->RegisterVariableInteger("PossibleShots_1", "Shots 1", "ShotGlassFillingMachine.PossibleShots_".$this->InstanceID, 200);
+		$this->EnableAction("PossibleShots_1");
+		$this->RegisterVariableInteger("PossibleShots_2", "Shots 2", "ShotGlassFillingMachine.PossibleShots_".$this->InstanceID, 210);
+		$this->EnableAction("PossibleShots_2");
+		$this->RegisterVariableBoolean("AfterFilling", "Befüllung erfolgt", "~Switch", 220);
+		$this->DisableAction("AfterFilling");
 
-			$this->RegisterVariableInteger("RotatingBeacon", "Rundumleuchte", "ShotGlassFillingMachine.RotatingBeacon", 230);
-			$this->EnableAction("RotatingBeacon");
-			$this->RegisterVariableBoolean("PowerRotatingBeacon", "Spannung Rundumleuchte(n)", "~Switch", 240);
-        }
+		$this->RegisterVariableInteger("RotatingBeacon", "Rundumleuchte", "ShotGlassFillingMachine.RotatingBeacon", 230);
+		$this->EnableAction("RotatingBeacon");
+		$this->RegisterVariableBoolean("PowerRotatingBeacon", "Spannung Rundumleuchte(n)", "~Switch", 240);
+	}
 	
 	public function GetConfigurationForm() 
 	{ 
