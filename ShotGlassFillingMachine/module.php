@@ -291,180 +291,180 @@ class ShotGlassFillingMachine extends IPSModule
  		return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements, "actions" => $arrayActions)); 		 
  	}        
 	  
-        // Überschreibt die intere IPS_ApplyChanges($id) Funktion
-        public function ApplyChanges() 
-        {
-			// Diese Zeile nicht löschen
-			parent::ApplyChanges();
-			If (intval($this->GetBuffer("PreviousPin_Servo")) <> $this->ReadPropertyInteger("Pin_Servo")) {
-				$this->SendDebug("ApplyChanges", "Pin-Wechsel Servo - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_Servo")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_Servo"), 0);
-			}
-			If (intval($this->GetBuffer("PreviousPin_RotatingBeacon")) <> $this->ReadPropertyInteger("Pin_RotatingBeacon")) {
-				$this->SendDebug("ApplyChanges", "Pin-Wechsel Rundumlicht Steuerung - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_RotatingBeacon")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_RotatingBeacon"), 0);
-			}
-			If (intval($this->GetBuffer("PreviousPin_PowerRotatingBeacon")) <> $this->ReadPropertyInteger("Pin_PowerRotatingBeacon")) {
-				$this->SendDebug("ApplyChanges", "Pin-Wechsel Rundumlicht Spannung - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_PowerRotatingBeacon")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_PowerRotatingBeacon"), 0);
-			}
-			If (intval($this->GetBuffer("PreviousPin_Pump_1")) <> $this->ReadPropertyInteger("Pin_Pump_1")) {
-				$this->SendDebug("ApplyChanges", "Pin-Wechsel Pumpe 1 - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_Pump_1")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_Pump_1"), 0);
-			}
-			If (intval($this->GetBuffer("PreviousPin_Pump_2")) <> $this->ReadPropertyInteger("Pin_Pump_2")) {
-				$this->SendDebug("ApplyChanges", "Pin-Wechsel Pumpe 2 - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_Pump_2")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_Pump_2"), 0);
-			}
-			for ($i = 1; $i <= 5; $i++) {
-				If (intval($this->GetBuffer("PreviousPin_IRSensor_".$i)) <> $this->ReadPropertyInteger("Pin_IRSensor_".$i)) {
-					$this->SendDebug("ApplyChanges", "Pin-Wechsel IR-Sensor ".$i." - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_IRSensor_".$i)." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_IRSensor_".$i), 0);
-				}
-			}
-			// Summary setzen
-			$this->SetSummary("GPIO: ".$this->ReadPropertyInteger("Pin_Servo"));
-	            	
-			//ReceiveData-Filter setzen
-	        // $Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_Servo").'.*)';
-			//$this->SetReceiveDataFilter($Filter);
-			
-			$this->SetTimerInterval("Shutdown", 0);
-			$this->SetTimerInterval("Pump_1", 0);
-			$this->SetTimerInterval("Pump_2", 0);
-			$this->SetTimerInterval("IR_Sensor", 0);
-			$this->SetPossibleShotsAssociations();
-			$this->SetValue("StateText", "Initialisierung...");
-		
-			If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
-				// Servo
-				If (($this->ReadPropertyInteger("Pin_Servo") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-					// Servo
-					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
-										  "Pin" => $this->ReadPropertyInteger("Pin_Servo"), "PreviousPin" => $this->GetBuffer("PreviousPin_Servo"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
-					$this->SetBuffer("PreviousPin_Servo", $this->ReadPropertyInteger("Pin_Servo"));
-					If ($Result == true) {
-						$this->Setup();
-						If ($this->GetStatus() <> 102) {
-							$this->SetStatus(102);
-						}
-					}
-				}
-				
-				// Rundumleuchte Steuerung
-				If (($this->ReadPropertyInteger("Pin_RotatingBeacon") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
-										  "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon"), "PreviousPin" => $this->GetBuffer("PreviousPin_RotatingBeacon"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
-					$this->SetBuffer("PreviousPin_RotatingBeacon", $this->ReadPropertyInteger("Pin_RotatingBeacon"));
-					If ($Result == true) {
-						If ($this->GetStatus() <> 102) {
-							$this->SetStatus(102);
-						}
-					}
-				}	
-
-				// Rundumleuchte Spannung
-				If (($this->ReadPropertyInteger("Pin_PowerRotatingBeacon") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
-									  "Pin" => $this->ReadPropertyInteger("Pin_PowerRotatingBeacon"), "PreviousPin" => $this->GetBuffer("PreviousPin_PowerRotatingBeacon"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
-					$this->SetBuffer("PreviousPin_PowerRotatingBeacon", $this->ReadPropertyInteger("Pin_PowerRotatingBeacon"));
-					If ($Result == true) {
-						If ($this->GetStatus() <> 102) {
-							$this->SetStatus(102);
-						}
-						$this->SetPowerRotatingBeacon(false);
-						IPS_Sleep(200);
-						$this->SetPowerRotatingBeacon(true);
-					}
-				}	
-				
-				// Pumpe 1
-				If (($this->ReadPropertyInteger("Pin_Pump_1") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
-									  "Pin" => $this->ReadPropertyInteger("Pin_Pump_1"), "PreviousPin" => $this->GetBuffer("PreviousPin_Pump_1"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
-					$this->SetBuffer("PreviousPin_Pump_1", $this->ReadPropertyInteger("Pin_Pump_1"));
-					If ($Result == true) {
-						If ($this->ReadPropertyInteger("Startoption_Pump") == 0) {
-							$this->SetPumpState(1, false);
-						}
-						elseif ($this->ReadPropertyInteger("Startoption_Pump") == 1) {
-							$this->SetPumpState(1, true);
-						}
-						If ($this->GetStatus() <> 102) {
-							$this->SetStatus(102);
-						}
-						// Initiale Abfrage des aktuellen Status
-						$this->GetPumpState(1);
-					}
-				}
-				
-				// Pumpe 2
-				If (($this->ReadPropertyInteger("Pin_Pump_2") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
-									  "Pin" => $this->ReadPropertyInteger("Pin_Pump_2"), "PreviousPin" => $this->GetBuffer("PreviousPin_Pump_2"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
-					$this->SetBuffer("PreviousPin_Pump_2", $this->ReadPropertyInteger("Pin_Pump_2"));
-					If ($Result == true) {
-						If ($this->ReadPropertyInteger("Startoption_Pump") == 0) {
-							$this->SetPumpState(2, false);
-						}
-						elseif ($this->ReadPropertyInteger("Startoption_Pump") == 1) {
-							$this->SetPumpState(2, true);
-						}
-						If ($this->GetStatus() <> 102) {
-							$this->SetStatus(102);
-						}
-						// Initiale Abfrage des aktuellen Status
-						$this->GetPumpState(2);
-					}
-				}
-
-				
-				// IR-Sensoren
-				for ($i = 1; $i <= 5; $i++) {
-					If (($this->ReadPropertyInteger("Pin_IRSensor_".$i) >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-						$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
-											  "Pin" => $this->ReadPropertyInteger("Pin_IRSensor_".$i), "PreviousPin" => $this->GetBuffer("PreviousPin_IRSensor_".$i), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 50, "Resistance" => 2)));
-						$this->SetBuffer("PreviousPin_IRSensor_".$i, $this->ReadPropertyInteger("Pin_IRSensor_".$i));
-						If ($Result == true) {
-							If ($this->GetStatus() <> 102) {
-								$this->SetStatus(102);
-							}
-						}	
-					}
-				}
-				// Initiale Abfrage des aktuellen Status
-				$this->GetIRSensor(); 
-				$this->GetPowerRotatingBeacon();
-				
-				// Start-Button zurücksetzen
-				$this->SetValue("Start", false);
-				$this->SetValue("FillingActive", false);
-				$this->SetValue("FillingStep", 0);
-				$this->SetValue("DrinkChoise", 0);
-				$this->SetDrink(0);
-				$this->SetRotatingBeacon(0);
-				$this->SetValue("AfterFilling", false);
-				$this->SetValue("RotatingBeacon", 0);
-				$this->SetTimerInterval("ActivityWatch", $this->ReadPropertyInteger("ActivityWatch") * 1000 * 60);
-				
-
-				// Modus
-				If ($this->ReadPropertyInteger("Modus") == 0) {  //Produktivmodus
-					$this->DisableAction("Servo");
-					$this->DisableAction("ServoPosition");
-					$this->DisableAction("State_Pump_1");
-					$this->DisableAction("State_Pump_2");
-					$this->DisableAction("RotatingBeacon");										   
-				}
-				elseif ($this->ReadPropertyInteger("Modus") == 1) { // Kalibriermodus
-					$this->EnableAction("Servo");
-					$this->EnableAction("ServoPosition");
-					$this->EnableAction("State_Pump_1");
-					$this->EnableAction("State_Pump_2");
-					$this->EnableAction("RotatingBeacon");												   
-				}
-					
-			}
-			else {
-				If ($this->GetStatus() <> 104) {
-					$this->SetStatus(104);
-				}
+	// Überschreibt die intere IPS_ApplyChanges($id) Funktion
+	public function ApplyChanges() 
+	{
+		// Diese Zeile nicht löschen
+		parent::ApplyChanges();
+		If (intval($this->GetBuffer("PreviousPin_Servo")) <> $this->ReadPropertyInteger("Pin_Servo")) {
+			$this->SendDebug("ApplyChanges", "Pin-Wechsel Servo - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_Servo")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_Servo"), 0);
+		}
+		If (intval($this->GetBuffer("PreviousPin_RotatingBeacon")) <> $this->ReadPropertyInteger("Pin_RotatingBeacon")) {
+			$this->SendDebug("ApplyChanges", "Pin-Wechsel Rundumlicht Steuerung - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_RotatingBeacon")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_RotatingBeacon"), 0);
+		}
+		If (intval($this->GetBuffer("PreviousPin_PowerRotatingBeacon")) <> $this->ReadPropertyInteger("Pin_PowerRotatingBeacon")) {
+			$this->SendDebug("ApplyChanges", "Pin-Wechsel Rundumlicht Spannung - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_PowerRotatingBeacon")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_PowerRotatingBeacon"), 0);
+		}
+		If (intval($this->GetBuffer("PreviousPin_Pump_1")) <> $this->ReadPropertyInteger("Pin_Pump_1")) {
+			$this->SendDebug("ApplyChanges", "Pin-Wechsel Pumpe 1 - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_Pump_1")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_Pump_1"), 0);
+		}
+		If (intval($this->GetBuffer("PreviousPin_Pump_2")) <> $this->ReadPropertyInteger("Pin_Pump_2")) {
+			$this->SendDebug("ApplyChanges", "Pin-Wechsel Pumpe 2 - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_Pump_2")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_Pump_2"), 0);
+		}
+		for ($i = 1; $i <= 5; $i++) {
+			If (intval($this->GetBuffer("PreviousPin_IRSensor_".$i)) <> $this->ReadPropertyInteger("Pin_IRSensor_".$i)) {
+				$this->SendDebug("ApplyChanges", "Pin-Wechsel IR-Sensor ".$i." - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_IRSensor_".$i)." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_IRSensor_".$i), 0);
 			}
 		}
+		// Summary setzen
+		$this->SetSummary("GPIO: ".$this->ReadPropertyInteger("Pin_Servo"));
+				
+		//ReceiveData-Filter setzen
+		// $Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_Servo").'.*)';
+		//$this->SetReceiveDataFilter($Filter);
+		
+		$this->SetTimerInterval("Shutdown", 0);
+		$this->SetTimerInterval("Pump_1", 0);
+		$this->SetTimerInterval("Pump_2", 0);
+		$this->SetTimerInterval("IR_Sensor", 0);
+		$this->SetPossibleShotsAssociations();
+		$this->SetValue("StateText", "Initialisierung...");
+	
+		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
+			// Servo
+			If (($this->ReadPropertyInteger("Pin_Servo") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+				// Servo
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+									  "Pin" => $this->ReadPropertyInteger("Pin_Servo"), "PreviousPin" => $this->GetBuffer("PreviousPin_Servo"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+				$this->SetBuffer("PreviousPin_Servo", $this->ReadPropertyInteger("Pin_Servo"));
+				If ($Result == true) {
+					$this->Setup();
+					If ($this->GetStatus() <> 102) {
+						$this->SetStatus(102);
+					}
+				}
+			}
+			
+			// Rundumleuchte Steuerung
+			If (($this->ReadPropertyInteger("Pin_RotatingBeacon") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+									  "Pin" => $this->ReadPropertyInteger("Pin_RotatingBeacon"), "PreviousPin" => $this->GetBuffer("PreviousPin_RotatingBeacon"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+				$this->SetBuffer("PreviousPin_RotatingBeacon", $this->ReadPropertyInteger("Pin_RotatingBeacon"));
+				If ($Result == true) {
+					If ($this->GetStatus() <> 102) {
+						$this->SetStatus(102);
+					}
+				}
+			}	
+
+			// Rundumleuchte Spannung
+			If (($this->ReadPropertyInteger("Pin_PowerRotatingBeacon") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+								  "Pin" => $this->ReadPropertyInteger("Pin_PowerRotatingBeacon"), "PreviousPin" => $this->GetBuffer("PreviousPin_PowerRotatingBeacon"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+				$this->SetBuffer("PreviousPin_PowerRotatingBeacon", $this->ReadPropertyInteger("Pin_PowerRotatingBeacon"));
+				If ($Result == true) {
+					If ($this->GetStatus() <> 102) {
+						$this->SetStatus(102);
+					}
+					$this->SetPowerRotatingBeacon(false);
+					IPS_Sleep(200);
+					$this->SetPowerRotatingBeacon(true);
+				}
+			}	
+			
+			// Pumpe 1
+			If (($this->ReadPropertyInteger("Pin_Pump_1") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+								  "Pin" => $this->ReadPropertyInteger("Pin_Pump_1"), "PreviousPin" => $this->GetBuffer("PreviousPin_Pump_1"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+				$this->SetBuffer("PreviousPin_Pump_1", $this->ReadPropertyInteger("Pin_Pump_1"));
+				If ($Result == true) {
+					If ($this->ReadPropertyInteger("Startoption_Pump") == 0) {
+						$this->SetPumpState(1, false);
+					}
+					elseif ($this->ReadPropertyInteger("Startoption_Pump") == 1) {
+						$this->SetPumpState(1, true);
+					}
+					If ($this->GetStatus() <> 102) {
+						$this->SetStatus(102);
+					}
+					// Initiale Abfrage des aktuellen Status
+					$this->GetPumpState(1);
+				}
+			}
+			
+			// Pumpe 2
+			If (($this->ReadPropertyInteger("Pin_Pump_2") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+				$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+								  "Pin" => $this->ReadPropertyInteger("Pin_Pump_2"), "PreviousPin" => $this->GetBuffer("PreviousPin_Pump_2"), "InstanceID" => $this->InstanceID, "Modus" => 1, "Notify" => false)));
+				$this->SetBuffer("PreviousPin_Pump_2", $this->ReadPropertyInteger("Pin_Pump_2"));
+				If ($Result == true) {
+					If ($this->ReadPropertyInteger("Startoption_Pump") == 0) {
+						$this->SetPumpState(2, false);
+					}
+					elseif ($this->ReadPropertyInteger("Startoption_Pump") == 1) {
+						$this->SetPumpState(2, true);
+					}
+					If ($this->GetStatus() <> 102) {
+						$this->SetStatus(102);
+					}
+					// Initiale Abfrage des aktuellen Status
+					$this->GetPumpState(2);
+				}
+			}
+
+			
+			// IR-Sensoren
+			for ($i = 1; $i <= 5; $i++) {
+				If (($this->ReadPropertyInteger("Pin_IRSensor_".$i) >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
+					$Result = $this->SendDataToParent(json_encode(Array("DataID"=> "{A0DAAF26-4A2D-4350-963E-CC02E74BD414}", "Function" => "set_usedpin", 
+										  "Pin" => $this->ReadPropertyInteger("Pin_IRSensor_".$i), "PreviousPin" => $this->GetBuffer("PreviousPin_IRSensor_".$i), "InstanceID" => $this->InstanceID, "Modus" => 0, "Notify" => true, "GlitchFilter" => 50, "Resistance" => 2)));
+					$this->SetBuffer("PreviousPin_IRSensor_".$i, $this->ReadPropertyInteger("Pin_IRSensor_".$i));
+					If ($Result == true) {
+						If ($this->GetStatus() <> 102) {
+							$this->SetStatus(102);
+						}
+					}	
+				}
+			}
+			// Initiale Abfrage des aktuellen Status
+			$this->GetIRSensor(); 
+			$this->GetPowerRotatingBeacon();
+			
+			// Start-Button zurücksetzen
+			$this->SetValue("Start", false);
+			$this->SetValue("FillingActive", false);
+			$this->SetValue("FillingStep", 0);
+			$this->SetValue("DrinkChoise", 0);
+			$this->SetDrink(0);
+			$this->SetRotatingBeacon(0);
+			$this->SetValue("AfterFilling", false);
+			$this->SetValue("RotatingBeacon", 0);
+			$this->SetTimerInterval("ActivityWatch", $this->ReadPropertyInteger("ActivityWatch") * 1000 * 60);
+			
+
+			// Modus
+			If ($this->ReadPropertyInteger("Modus") == 0) {  //Produktivmodus
+				$this->DisableAction("Servo");
+				$this->DisableAction("ServoPosition");
+				$this->DisableAction("State_Pump_1");
+				$this->DisableAction("State_Pump_2");
+				$this->DisableAction("RotatingBeacon");										   
+			}
+			elseif ($this->ReadPropertyInteger("Modus") == 1) { // Kalibriermodus
+				$this->EnableAction("Servo");
+				$this->EnableAction("ServoPosition");
+				$this->EnableAction("State_Pump_1");
+				$this->EnableAction("State_Pump_2");
+				$this->EnableAction("RotatingBeacon");												   
+			}
+				
+		}
+		else {
+			If ($this->GetStatus() <> 104) {
+				$this->SetStatus(104);
+			}
+		}
+	}
 	
 	public function RequestAction($Ident, $Value) 
 	{
