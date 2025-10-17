@@ -1186,8 +1186,10 @@ class ShotGlassFillingMachine extends IPSModule
 	{
 		$this->SendDebug("SetHTMLDisplay", "Ausfuehrung", 0);
 		$StatusText = $this->GetValue("StateText");
-		$StopImage = __DIR__ ."/ ../imgs/StopButton.jpg"; 
-		$StartImage = __DIR__ . "/ ../imgs/StartButton.jpg";
+		$StopImage = "/var/lib/symcon/modules/SymconModules/ShotGlassFillingMachine/../imgs/StopButton.jpg";
+		$StartImage = "/var/lib/symcon/modules/SymconModules/ShotGlassFillingMachine/../imgs/StartButton.jpg";
+		//$StopImage = __DIR__ ."/ ../imgs/StopButton.jpg"; 
+		//$StartImage = __DIR__ . "/ ../imgs/StartButton.jpg";
 		$this->SendDebug("SetHTMLDisplay", "Dateipfad:".$StopImage, 0);
 		
 		$HTMLText = '<table style="height: 91px; width: 100%; border-collapse: collapse; border-style: hidden; float: left;" border="1">';
