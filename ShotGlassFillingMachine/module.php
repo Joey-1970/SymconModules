@@ -1181,6 +1181,29 @@ class ShotGlassFillingMachine extends IPSModule
 		}
 		
 	}
+
+	public function SetHTMLDisplay()
+	{
+		$StatusText = $this->GetValue("StateText");
+		$StopImage = file_get_contents(__DIR__ . '/../imgs/StopButton.jpg'); 
+		$StartImage = file_get_contents(__DIR__ . '/../imgs/StartButton.jpg'); 
+		
+		$HTMLText = '<table style="height: 91px; width: 100%; border-collapse: collapse; border-style: hidden; float: left;" border="1">';
+		$HTMLText .= '<tbody>';
+		$HTMLText .= '<tr style="height: 18px;">';
+		$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: right; vertical-align: middle;"><img src='.$StartImage.' alt="" /></td>';
+		$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: right; vertical-align: middle;"><img src='.$StopImage.' alt="" /></td>';
+		$HTMLText .= '</tr>';
+		$HTMLText .= '<tr style="height: 73px;">';
+		$HTMLText .= '<td style="width: 100%; height: 73px;" colspan="2">';
+		$HTMLText .= '<h1>'.$StatusText.'</h1>';
+		$HTMLText .= '</td>';
+		$HTMLText .= '</tr>';
+		$HTMLText .= '</tbody>';
+		$HTMLText .= '</table>';
+		
+		$this->SetValue("StateTextHTML", $HTMLText);
+	}
 	
 	private function Get_GPIO()
 	{
