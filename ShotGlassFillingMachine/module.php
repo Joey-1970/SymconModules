@@ -109,6 +109,7 @@ class ShotGlassFillingMachine extends IPSModule
 		$this->RegisterVariableBoolean("Start", "Start", "~Switch", 100);
 		$this->DisableAction("Start");
 		$this->RegisterVariableString("StateText", "Status", "~TextBox", 110);
+		$this->RegisterVariableString("StateTextHTML", "Display", "~HTMLBox", 115);
 		$this->RegisterVariableBoolean("FillingActive", "Befüllung aktiv", "~Switch", 120);
 		$this->RegisterVariableInteger("FillingStep", "Befüllung Schritt", "", 130);
 		$this->RegisterVariableInteger("DrinkChoise", "Befüllung wählen", "ShotGlassFillingMachine.PreShotGlassFill", 140);
