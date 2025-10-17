@@ -1185,8 +1185,8 @@ class ShotGlassFillingMachine extends IPSModule
 	public function SetHTMLDisplay()
 	{
 		$StatusText = $this->GetValue("StateText");
-		$StopImage = "__DIR__/ ../imgs/StopButton.jpg"; 
-		$StartImage = "__DIR__/ ../imgs/StartButton.jpg";
+		$StopImage = __DIR__ ."/ ../imgs/StopButton.jpg"; 
+		$StartImage = __DIR__ . "/ ../imgs/StartButton.jpg";
 		
 		$HTMLText = '<table style="height: 91px; width: 100%; border-collapse: collapse; border-style: hidden; float: left;" border="1">';
 		$HTMLText .= '<tbody>';
