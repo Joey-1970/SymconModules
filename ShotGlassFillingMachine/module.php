@@ -1193,8 +1193,10 @@ class ShotGlassFillingMachine extends IPSModule
 		$HTMLText = '<table style="height: 91px; width: 100%; border-collapse: collapse; border-style: hidden; float: left;" border="1">';
 		$HTMLText .= '<tbody>';
 		$HTMLText .= '<tr style="height: 18px;">';
-		$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: right; vertical-align: middle;"><img src='.$StartImage.' alt="" /></td>';
-		$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: right; vertical-align: middle;"><img src='.$StopImage.' alt="" /></td>';
+		$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: left; vertical-align: middle;"><img src="'.$StartImage.'" alt="Start" /></td>';
+		$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: right; vertical-align: middle;"><img src="'.$StopImage.'" alt="Stop" /></td>';
+		//$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: right; vertical-align: middle;"><img src='.$StartImage.' alt="" /></td>';
+		//$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: right; vertical-align: middle;"><img src='.$StopImage.' alt="" /></td>';
 		$HTMLText .= '</tr>';
 		$HTMLText .= '<tr style="height: 73px;">';
 		$HTMLText .= '<td style="width: 100%; height: 73px;" colspan="2">';
