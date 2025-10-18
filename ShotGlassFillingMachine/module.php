@@ -338,6 +338,7 @@ class ShotGlassFillingMachine extends IPSModule
 		$this->SetTimerInterval("IR_Sensor", 0);
 		$this->SetPossibleShotsAssociations();
 		$this->SetValue("StateText", "Initialisierung...");
+		$this->SetHTMLDisplay();
 	
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
 			// Servo
@@ -450,8 +451,6 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->SetValue("RotatingBeacon", 0);
 			$this->SetTimerInterval("ActivityWatch", $this->ReadPropertyInteger("ActivityWatch") * 1000 * 60);
 
-			$this->SetHTMLDisplay();
-
 			// Modus
 			If ($this->ReadPropertyInteger("Modus") == 0) {  //Produktivmodus
 				$this->DisableAction("Servo");
@@ -547,12 +546,17 @@ class ShotGlassFillingMachine extends IPSModule
 					else {
 						// Abbruch!
 						$this->SetValue("StateText", "Abbruch...");
+						$this->SetHTMLDisplay();
 						$this->SetPumpState(1, false);
 						$this->SetPumpState(2, false);
 						$this->SetValue("FillingActive", false);
 						$this->SetValue("FillingStep", 0);
 						$this->SetValue("RotatingBeacon", 0);
 						$this->SetServoPosition(0);
+						$this->SetTimerInterval("Shutdown", 0);
+						$this->SetTimerInterval("Pump_1", 0);
+						$this->SetTimerInterval("Pump_2", 0);
+						$this->SetTimerInterval("IR_Sensor", 0);
 					}
 			    }
 	            break;
@@ -1061,15 +1065,18 @@ class ShotGlassFillingMachine extends IPSModule
 			If (($StartButtonState == true) And ($AfterFilling == false)) {
 				$this->EnableAction("Start");
 				$this->SetValue("StateText", "Der Spass kann beginnen! Drücke Start zur Befüllung...");
+				$this->SetHTMLDisplay();
 			}
 			elseif (($StartButtonState == true) And ($AfterFilling == true)) {
 				$this->DisableAction("Start");
 				$this->SetValue("StateText", "PROST!");
+				$this->SetHTMLDisplay();
 			}
 			else {
 				$this->DisableAction("Start");
 				$this->SetValue("AfterFilling", false);
 				$this->SetValue("StateText", "Es muss schon mindestens ein Glas bereitstehen!");
+				$this->SetHTMLDisplay();
 			}
 		}
 	}
@@ -1133,6 +1140,7 @@ class ShotGlassFillingMachine extends IPSModule
 				// Fahre die Postion an
 				$this->SendDebug("FillingProcess", "Auf Postion ".$FillingStep." ist ein Glas!", 0);
 				$this->SetValue("StateText", "Position anfahren...");
+				$this->SetHTMLDisplay();
 				$NewPosition = $this->SetServoPosition($FillingStep);
 				If ($NewPosition == true) {
 					$this->SetRotatingBeacon(3);
@@ -1141,6 +1149,7 @@ class ShotGlassFillingMachine extends IPSModule
 					$SelectedDrink = $this->GetValue("ShotGlassFill_".$FillingStep) + 1;
 					// Pumpe Starten
 					$this->SetValue("StateText", "Jetzt geht es los...");
+					$this->SetHTMLDisplay();
 					$this->SetPumpState($SelectedDrink, true);
 				}
 			}
