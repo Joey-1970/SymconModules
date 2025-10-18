@@ -1186,19 +1186,20 @@ class ShotGlassFillingMachine extends IPSModule
 	{
 		$this->SendDebug("SetHTMLDisplay", "Ausfuehrung", 0);
 		$StatusText = $this->GetValue("StateText");
-		$StopImage = "/var/lib/symcon/modules/SymconModules/ShotGlassFillingMachine/../imgs/StopButton.jpg";
-		$StartImage = "/var/lib/symcon/modules/SymconModules/ShotGlassFillingMachine/../imgs/StartButton.jpg";
-		//$StopImage = __DIR__ ."/ ../imgs/StopButton.jpg"; 
-		//$StartImage = __DIR__ . "/ ../imgs/StartButton.jpg";
-		$this->SendDebug("SetHTMLDisplay", "Dateipfad:".$StopImage, 0);
+		
+		$StartImage = file_get_contents(__DIR__ . '/../imgs/StartButton.jpg');
+		$StartImage = base64_encode($StartImage);
+
+		$StopImage = file_get_contents(__DIR__ . '/../imgs/StopButton.jpg');
+		$StopImage = base64_encode($StopImage);
 		
 		$HTMLText = '<table style="height: 91px; width: 100%; border-collapse: collapse; border-style: hidden; float: left;" border="1">';
 		$HTMLText .= '<tbody>';
 		$HTMLText .= '<tr style="height: 18px;">';
-		$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: left; vertical-align: middle;"><img src="'.$StartImage.'" alt="Start" /></td>';
-		$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: right; vertical-align: middle;"><img src="'.$StopImage.'" alt="Stop" /></td>';
-		//$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: right; vertical-align: middle;"><img src='.$StartImage.' alt="" /></td>';
-		//$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: right; vertical-align: middle;"><img src='.$StopImage.' alt="" /></td>';
+		
+		$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: left; vertical-align: middle;"><img src="data:image/png;base64,'.$StartImage.'" alt="Start" width="200"/></td>';
+		$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: right; vertical-align: middle;"><img src="data:image/png;base64,'.$StopImage.'" alt="Stop" width="200"/></td>';
+
 		$HTMLText .= '</tr>';
 		$HTMLText .= '<tr style="height: 73px;">';
 		$HTMLText .= '<td style="width: 100%; height: 73px;" colspan="2">';
