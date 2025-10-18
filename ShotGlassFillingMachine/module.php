@@ -1248,8 +1248,14 @@ class ShotGlassFillingMachine extends IPSModule
 		$HTMLText .= '<tr style="height: 18px;">';
 		// $content .= '<td class=\'lst\'><div class=\''.$TypeWF.'\' onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2MessageDisplay_'.$this->InstanceID.'?ts=\' + (new Date()).getTime() + \'&action=switch&MessageID='.$Message['MessageID'].'\' });">WF</div></td>';
 
-		$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: left; vertical-align: middle;"><img src="data:image/png;base64,'.$StartImage.'" alt="Start" width="200"/></td>';
-		$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: right; vertical-align: middle;"><img src="data:image/png;base64,'.$StopImage.'" alt="Stop" width="200"/></td>';
+		$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: left; vertical-align: middle;"><img src="data:image/png;base64,'.$StartImage.'" alt="Start" width="200"
+				onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/ShotGlassFillingMachine_'.$this->InstanceID.'?&action=start\' })"></td>';
+                                                                                                   
+		$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: right; vertical-align: middle;"><img src="data:image/png;base64,'.$StopImage.'" alt="Stop" width="200"
+				onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/ShotGlassFillingMachine_'.$this->InstanceID.'?&action=stop\' })"></td>';
+
+		//$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: left; vertical-align: middle;"><img src="data:image/png;base64,'.$StartImage.'" alt="Start" width="200"/></td>';
+		//$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: right; vertical-align: middle;"><img src="data:image/png;base64,'.$StopImage.'" alt="Stop" width="200"/></td>';
 
 		$HTMLText .= '</tr>';
 		$HTMLText .= '<tr style="height: 73px;">';
