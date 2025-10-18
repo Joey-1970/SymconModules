@@ -1239,7 +1239,10 @@ class ShotGlassFillingMachine extends IPSModule
 		$StopImage = file_get_contents(__DIR__ . '/../imgs/StopButton.jpg');
 		$StopImage = base64_encode($StopImage);
 		
-		$HTMLText = '<table style="height: 91px; width: 100%; border-collapse: collapse; border-style: hidden; float: left;" border="1">';
+		$HTMLText = '<style type="text/css">';
+		$HTMLText .= '<link rel="stylesheet" href="./.../webfront.css">';
+		$HTMLText .= "</style>";
+		$HTMLText .= '<table style="height: 91px; width: 100%; border-collapse: collapse; border-style: hidden; float: left;" border="1">';
 		$HTMLText .= '<tbody>';
 		$HTMLText .= '<tr style="height: 18px;">';
 		// $content .= '<td class=\'lst\'><div class=\''.$TypeWF.'\' onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2MessageDisplay_'.$this->InstanceID.'?ts=\' + (new Date()).getTime() + \'&action=switch&MessageID='.$Message['MessageID'].'\' });">WF</div></td>';
