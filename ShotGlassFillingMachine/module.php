@@ -13,6 +13,8 @@ class ShotGlassFillingMachine extends IPSModule
 	{
 		// Diese Zeile nicht löschen.
 		parent::Create();
+		$this->RegisterMessage(0, IPS_KERNELSTARTED);
+		
 		$this->RegisterPropertyBoolean("Open", false);
 		
 		// Servo
@@ -297,6 +299,12 @@ class ShotGlassFillingMachine extends IPSModule
 	{
 		// Diese Zeile nicht löschen
 		parent::ApplyChanges();
+
+		if (IPS_GetKernelRunlevel() == KR_READY) {
+			// Webhook einrichten
+			$this->RegisterHook("/hook/ShotGlassFillingMachine_".$this->InstanceID);
+		}
+		
 		If (intval($this->GetBuffer("PreviousPin_Servo")) <> $this->ReadPropertyInteger("Pin_Servo")) {
 			$this->SendDebug("ApplyChanges", "Pin-Wechsel Servo - Vorheriger Pin: ".$this->GetBuffer("PreviousPin_Servo")." Jetziger Pin: ".$this->ReadPropertyInteger("Pin_Servo"), 0);
 		}
@@ -466,6 +474,48 @@ class ShotGlassFillingMachine extends IPSModule
 			}
 		}
 	}
+
+	public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
+    {
+		switch ($Message) {
+			case IPS_KERNELSTARTED:
+				// IPS_KERNELSTARTED
+				$this->RegisterHook("/hook/ShotGlassFillingMachine_".$this->InstanceID);
+				break;
+			
+		}
+    }     
+
+	protected function ProcessHookData() 
+	{		
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SendDebug("ProcessHookData", "Ausfuehrung: ".$_SERVER['HOOK'], 0);
+			switch ($_GET['action']) {
+				// Muss angepasst werden
+				case 'remove':
+			      		$MessageID = isset($_GET['MessageID']) ? $_GET['MessageID'] : -1;
+			      		if ($MessageID > 0) {
+						$this->WorkProcess("Remove", $MessageID, "", 0, false, 0, "", 0, "");
+				  		//$this->Remove($MessageID);
+			      		}
+					else {
+						$this->SendDebug("ProcessHookData", "Keine MessageID!", 0);
+					}
+			      		break;
+			    case 'switch':
+			      		$MessageID = isset($_GET['MessageID']) ? $_GET['MessageID'] : -1;
+			      		if ($MessageID > 0) {
+						$this->WorkProcess("Switch", $MessageID, "", 0, false, 0, "", 0, "");
+				  		//$this->Switch($MessageID);
+			      		}
+					else {
+						$this->SendDebug("ProcessHookData", "Keine MessageID!", 0);
+					}
+			      		break;
+			      break;
+			}
+		}
+	}       
 	
 	public function RequestAction($Ident, $Value) 
 	{
@@ -1196,7 +1246,8 @@ class ShotGlassFillingMachine extends IPSModule
 		$HTMLText = '<table style="height: 91px; width: 100%; border-collapse: collapse; border-style: hidden; float: left;" border="1">';
 		$HTMLText .= '<tbody>';
 		$HTMLText .= '<tr style="height: 18px;">';
-		
+		// $content .= '<td class=\'lst\'><div class=\''.$TypeWF.'\' onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2MessageDisplay_'.$this->InstanceID.'?ts=\' + (new Date()).getTime() + \'&action=switch&MessageID='.$Message['MessageID'].'\' });">WF</div></td>';
+
 		$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: left; vertical-align: middle;"><img src="data:image/png;base64,'.$StartImage.'" alt="Start" width="200"/></td>';
 		$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: right; vertical-align: middle;"><img src="data:image/png;base64,'.$StopImage.'" alt="Stop" width="200"/></td>';
 
@@ -1259,6 +1310,29 @@ class ShotGlassFillingMachine extends IPSModule
 	        }
 	        IPS_SetVariableProfileIcon($Name, $Icon);      
 	}
+
+	private function RegisterHook($WebHook)
+    {
+        	$ids = IPS_GetInstanceListByModuleID('{015A6EB8-D6E5-4B93-B496-0D3F77AE9FE1}');
+        	if (count($ids) > 0) {
+            		$hooks = json_decode(IPS_GetProperty($ids[0], 'Hooks'), true);
+            		$found = false;
+            		foreach ($hooks as $index => $hook) {
+                		if ($hook['Hook'] == $WebHook) {
+                    			if ($hook['TargetID'] == $this->InstanceID) {
+                        			return;
+                    			}
+                    			$hooks[$index]['TargetID'] = $this->InstanceID;
+                    			$found = true;
+                		}
+            		}
+            		if (!$found) {
+                		$hooks[] = ['Hook' => $WebHook, 'TargetID' => $this->InstanceID];
+            		}
+            		IPS_SetProperty($ids[0], 'Hooks', json_encode($hooks));
+            		IPS_ApplyChanges($ids[0]);
+		}
+    }
 	
 	protected function HasActiveParent()
     	{
