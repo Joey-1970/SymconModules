@@ -490,12 +490,12 @@ class ShotGlassFillingMachine extends IPSModule
 	{		
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$this->SendDebug("ProcessHookData", "Ausfuehrung: ".$_SERVER['HOOK'], 0);
-			switch ($_GET['action']) {
+			switch ($_GET['Action']) {
 				// Muss angepasst werden
-				case 'start':
+				case 'Start':
 			      		$this->SendDebug("ProcessHookData", "Start", 0);
 			      		break;
-			    case 'stop':
+			    case 'Stop':
 			      		$this->SendDebug("ProcessHookData", "Start", 0);
 			      		break;
 			    break;
@@ -1235,10 +1235,10 @@ class ShotGlassFillingMachine extends IPSModule
 		// $content .= '<td class=\'lst\'><div class=\''.$TypeWF.'\' onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2MessageDisplay_'.$this->InstanceID.'?ts=\' + (new Date()).getTime() + \'&action=switch&MessageID='.$Message['MessageID'].'\' });">WF</div></td>';
 
 		$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: left; vertical-align: middle;"><img src="data:image/png;base64,'.$StartImage.'" alt="Start" width="200"
-				onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/ShotGlassFillingMachine_'.$this->InstanceID.'?&action=start\' })"></td>';
+				onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/ShotGlassFillingMachine_'.$this->InstanceID.'?Action=Start\' })"></td>';
                                                                                                    
 		$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: right; vertical-align: middle;"><img src="data:image/png;base64,'.$StopImage.'" alt="Stop" width="200"
-				onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/ShotGlassFillingMachine_'.$this->InstanceID.'?&action=stop\' })"></td>';
+				onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/ShotGlassFillingMachine_'.$this->InstanceID.'?Action=Stop\' })"></td>';
 
 		//$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: left; vertical-align: middle;"><img src="data:image/png;base64,'.$StartImage.'" alt="Start" width="200"/></td>';
 		//$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: right; vertical-align: middle;"><img src="data:image/png;base64,'.$StopImage.'" alt="Stop" width="200"/></td>';
