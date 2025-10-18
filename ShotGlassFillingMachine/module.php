@@ -492,27 +492,13 @@ class ShotGlassFillingMachine extends IPSModule
 			$this->SendDebug("ProcessHookData", "Ausfuehrung: ".$_SERVER['HOOK'], 0);
 			switch ($_GET['action']) {
 				// Muss angepasst werden
-				case 'remove':
-			      		$MessageID = isset($_GET['MessageID']) ? $_GET['MessageID'] : -1;
-			      		if ($MessageID > 0) {
-						$this->WorkProcess("Remove", $MessageID, "", 0, false, 0, "", 0, "");
-				  		//$this->Remove($MessageID);
-			      		}
-					else {
-						$this->SendDebug("ProcessHookData", "Keine MessageID!", 0);
-					}
+				case 'start':
+			      		$this->SendDebug("ProcessHookData", "Start", 0);
 			      		break;
-			    case 'switch':
-			      		$MessageID = isset($_GET['MessageID']) ? $_GET['MessageID'] : -1;
-			      		if ($MessageID > 0) {
-						$this->WorkProcess("Switch", $MessageID, "", 0, false, 0, "", 0, "");
-				  		//$this->Switch($MessageID);
-			      		}
-					else {
-						$this->SendDebug("ProcessHookData", "Keine MessageID!", 0);
-					}
+			    case 'stop':
+			      		$this->SendDebug("ProcessHookData", "Start", 0);
 			      		break;
-			      break;
+			    break;
 			}
 		}
 	}       
