@@ -494,9 +494,25 @@ class ShotGlassFillingMachine extends IPSModule
 				// Muss angepasst werden
 				case 'Start':
 			      		$this->SendDebug("ProcessHookData", "Start", 0);
+						$this->SetValue("Start", true);
+				    	$this->StartFilling();
 			      		break;
 			    case 'Stop':
 			      		$this->SendDebug("ProcessHookData", "Stop", 0);
+						$this->SetValue("Start", false);
+						// Abbruch!
+						$this->SetValue("StateText", "Abbruch...");
+						$this->SetHTMLDisplay();
+						$this->SetPumpState(1, false);
+						$this->SetPumpState(2, false);
+						$this->SetValue("FillingActive", false);
+						$this->SetValue("FillingStep", 0);
+						$this->SetValue("RotatingBeacon", 0);
+						$this->SetServoPosition(0);
+						$this->SetTimerInterval("Shutdown", 0);
+						$this->SetTimerInterval("Pump_1", 0);
+						$this->SetTimerInterval("Pump_2", 0);
+						$this->SetTimerInterval("IR_Sensor", 0);
 			      		break;
 			    break;
 			}
@@ -538,9 +554,10 @@ class ShotGlassFillingMachine extends IPSModule
 			    }
 	            break;
 			case "Start":
-	            If ($this->ReadPropertyBoolean("Open") == true) {
+				If ($this->ReadPropertyBoolean("Open") == true) {
 					$this->SetValue("Start", $Value);
-			    	If ($Value == true) {
+			    	
+					If ($Value == true) {
 						$this->StartFilling();
 					}
 					else {
