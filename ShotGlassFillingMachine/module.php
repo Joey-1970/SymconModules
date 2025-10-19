@@ -496,7 +496,7 @@ class ShotGlassFillingMachine extends IPSModule
 			      		$this->SendDebug("ProcessHookData", "Start", 0);
 			      		break;
 			    case 'Stop':
-			      		$this->SendDebug("ProcessHookData", "Start", 0);
+			      		$this->SendDebug("ProcessHookData", "Stop", 0);
 			      		break;
 			    break;
 			}
