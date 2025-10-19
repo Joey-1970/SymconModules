@@ -1233,10 +1233,10 @@ class ShotGlassFillingMachine extends IPSModule
 		$this->SendDebug("SetHTMLDisplay", "Ausfuehrung", 0);
 		$StatusText = $this->GetValue("StateText");
 		
-		$StartImage = file_get_contents(__DIR__ . '/../imgs/StartButton.jpg');
+		$StartImage = file_get_contents(__DIR__ . '/../imgs/StartButton.png');
 		$StartImage = base64_encode($StartImage);
 
-		$StopImage = file_get_contents(__DIR__ . '/../imgs/StopButton.jpg');
+		$StopImage = file_get_contents(__DIR__ . '/../imgs/StopButton.png');
 		$StopImage = base64_encode($StopImage);
 		
 		$HTMLText = '<style type="text/css">';
@@ -1247,10 +1247,14 @@ class ShotGlassFillingMachine extends IPSModule
 		$HTMLText .= '<tr style="height: 18px;">';
 		// $content .= '<td class=\'lst\'><div class=\''.$TypeWF.'\' onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/IPS2MessageDisplay_'.$this->InstanceID.'?ts=\' + (new Date()).getTime() + \'&action=switch&MessageID='.$Message['MessageID'].'\' });">WF</div></td>';
 
-		$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: left; vertical-align: middle;"><img src="data:image/jpeg;base64,'.$StartImage.'" alt="Start" width="200" onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/ShotGlassFillingMachine_'.$this->InstanceID.'?Action=Start\' })"></td>';
+		$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: left; vertical-align: middle;"><img src="data:image/png;base64,'.$StartImage.'" alt="Start" width="200" onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/ShotGlassFillingMachine_'.$this->InstanceID.'?Action=Start\' })"></td>';
                                                                                                    
-		$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: right; vertical-align: middle;"><img src="data:image/jpeg;base64,'.$StopImage.'" alt="Stop" width="200" onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/ShotGlassFillingMachine_'.$this->InstanceID.'?Action=Stop\' })"></td>';
+		$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: right; vertical-align: middle;"><img src="data:image/png;base64,'.$StopImage.'" alt="Stop" width="200" onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/ShotGlassFillingMachine_'.$this->InstanceID.'?Action=Stop\' })"></td>';
 
+		$Servicereference = "Hallo";
+		$HTMLText .= '<td class="tg-611x"> <button type="button" alt="Details" onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'hook/ShotGlassFillingMachine_'.$this->InstanceID.'?StationID='.$Servicereference.'\' })"id="ID">...</button> </td>';
+
+		
 		//$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: left; vertical-align: middle;"><img src="data:image/png;base64,'.$StartImage.'" alt="Start" width="200"/></td>';
 		//$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: right; vertical-align: middle;"><img src="data:image/png;base64,'.$StopImage.'" alt="Stop" width="200"/></td>';
 
