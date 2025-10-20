@@ -1550,8 +1550,12 @@ class IPS2GPIO_IO extends IPSModule
 			$KeepAlive = (int)boolval($Flags & 64);
 			$WatchDog = (int)boolval($Flags & 32);
 			$WatchDogNumber = $Flags & 31;
-			$Tick = $MessageArray[$i + 1];
-			$Level = $MessageArray[$i + 2];
+			If (isset($MessageArray[$i + 1])) {
+				$Tick = $MessageArray[$i + 1];
+			}
+			If (isset($MessageArray[$i + 2])) {
+				$Level = $MessageArray[$i + 2];
+			}
 			
 			// Prüfen ob es sich um ein Kommando handelt
 			If ($Command == 99) {
