@@ -336,6 +336,8 @@ class ShotGlassFillingMachine extends IPSModule
 		  	(.*"Pin":'.$this->ReadPropertyInteger("Pin_IRSensor_3").'.*|.*"Pin":'.$this->ReadPropertyInteger("Pin_IRSensor_4").'.*)|
 		  	(.*"Pin":'.$this->ReadPropertyInteger("Pin_IRSensor_4").'.*) )';
 		$this->SetReceiveDataFilter($Filter);
+
+		// ((.*"Function":"get_usedpin".*|.*"Pin":1.*)|(.*"Pin":2.*|.*"Pin":3.*)|(.*"Pin":4.*|.*"Pin":5.*)|(.*"Pin":6.*|.*"Pin":7.*)|(.*"Pin":8.*|.*"Pin":9.*)|(.*"Pin":10.*) )
 		
 		$this->SetTimerInterval("Shutdown", 0);
 		$this->SetTimerInterval("Pump_1", 0);
@@ -1275,7 +1277,49 @@ class ShotGlassFillingMachine extends IPSModule
 		for ($i = 1; $i <= 5; $i++) {
 			$this->GetValue("State_IRSensor_".$i);
 		}
+
+		$HTMLText = '<style type="text/css">';
+		$HTMLText .= '<link rel="stylesheet" href="./.../webfront.css">';
+		$HTMLText .= "</style>";
 		
+		$HTMLText .= '<table style="height: 72px; width: 100%; border-collapse: collapse; border-style: hidden;" border="1">';
+		$HTMLText .= '<tbody>';
+		$HTMLText .= '<tr style="height: 18px; border-style: hidden;">';
+		$HTMLText .= '<td style="width: 40%; height: 18px; text-align: left; vertical-align: middle; border-style: hidden;" colspan="2"><img src="data:image/png;base64,'.$StartImage.'" alt="Start" width="200" onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'/hook/ShotGlassFillingMachine_'.$this->InstanceID.'?Action=Start\' })"></td>';
+		$HTMLText .= '<td style="width: 20%; height: 18px; border-style: hidden;"></td>';
+		$HTMLText .= '<td style="width: 40%; height: 18px; text-align: right; vertical-align: middle; border-style: hidden;" colspan="2"><img src="data:image/png;base64,'.$StopImage.'" alt="Stop" width="200" onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'/hook/ShotGlassFillingMachine_'.$this->InstanceID.'?Action=Stop\' })"></td>';
+		$HTMLText .= '</tr>';
+		$HTMLText .= '<tr style="height: 18px;">';
+		$HTMLText .= '<td style="width: 100%; height: 18px; border-style: hidden;" colspan="5"><h1>'.$StatusText.'</h1></td>';
+		$HTMLText .= '</tr>';
+		
+		$HTMLText .= '<tr style="height: 18px;">';
+		for ($i = 1; $i <= 5; $i++) {
+			If ($this->GetValue("State_IRSensor_".$i) == false) {
+				$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><img src="data:image/png;base64,'.$ShotGlassImage.'" alt="ShotGlass" width="200"></td>';
+			}
+			else {
+				$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h4>Vergebene Chance</h4></td>';
+			}
+		/*
+		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h4>ImageGlass 2</h4></td>';
+		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h4>ImageGlass 3</h4></td>';
+		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h4>ImageGlass 4</h4></td>';
+		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h4>ImageGlass 5</h4></td>';
+		*/
+		$HTMLText .= '</tr>';
+		
+		$HTMLText .= '<tr style="height: 18px;">';
+		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;">Fill 1</td>';
+		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;">Fill 2</td>';
+		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;">Fill 3</td>';
+		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;">Fill 4</td>';
+		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;">Fill 5</td>';
+		$HTMLText .= '</tr>';
+		
+		$HTMLText .= '</tbody>';
+		$HTMLText .= '</table>';
+		/*
 		$HTMLText = '<style type="text/css">';
 		$HTMLText .= '<link rel="stylesheet" href="./.../webfront.css">';
 		$HTMLText .= "</style>";
@@ -1298,7 +1342,7 @@ class ShotGlassFillingMachine extends IPSModule
 		$HTMLText .= '</tr>';
 		$HTMLText .= '</tbody>';
 		$HTMLText .= '</table>';
-		
+		*/
 		$this->SetValue("StateTextHTML", $HTMLText);
 	}
 	
