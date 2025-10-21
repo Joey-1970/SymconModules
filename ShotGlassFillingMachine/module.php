@@ -1276,9 +1276,8 @@ class ShotGlassFillingMachine extends IPSModule
 		$ShotGlassImage = file_get_contents(__DIR__ . '/../imgs/ShotGlass.png');
 		$ShotGlassImage = base64_encode($ShotGlassImage);
 
-		for ($i = 1; $i <= 5; $i++) {
-			$this->GetValue("State_IRSensor_".$i);
-		}
+		$ShotName_1 = GetValueFormatted("PossibleShots_1");
+		$ShotName_2 = GetValueFormatted("PossibleShots_2");
 
 		$HTMLText = '<style type="text/css">';
 		$HTMLText .= '<link rel="stylesheet" href="./.../webfront.css">';
@@ -1310,11 +1309,11 @@ class ShotGlassFillingMachine extends IPSModule
 		for ($i = 1; $i <= 5; $i++) {
 			// Getränk 1 und ein Glas vorhanden
 			If (($this->GetValue("ShotGlassFill_".$i) == 0) AND ($this->GetValue("State_IRSensor_".$i) == false)) {
-				$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h4>'.$this->GetValue("PossibleShots_1").'</h4></td>';
+				$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h4>'.$ShotName_1.'</h4></td>';
 			}
 			// Getränk 2 und ein Glas vorhanden
 			elseif (($this->GetValue("ShotGlassFill_".$i) == 1) AND ($this->GetValue("State_IRSensor_".$i) == false)) {
-				$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h4>'.$this->GetValue("PossibleShots_2").'</h4></td>';
+				$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h4>'.$ShotName_2.'</h4></td>';
 			}
 			// kein Glas vorhanden
 			elseif ($this->GetValue("State_IRSensor_".$i) == true) { 
