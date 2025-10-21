@@ -1276,8 +1276,8 @@ class ShotGlassFillingMachine extends IPSModule
 		$ShotGlassImage = file_get_contents(__DIR__ . '/../imgs/ShotGlass.png');
 		$ShotGlassImage = base64_encode($ShotGlassImage);
 
-		$ShotName_1 = GetValueFormatted("PossibleShots_1");
-		$ShotName_2 = GetValueFormatted("PossibleShots_2");
+		$ShotName_1 = $this->GetValueFormatted("PossibleShots_1");
+		$ShotName_2 = $this->GetValueFormatted("PossibleShots_2");
 
 		$HTMLText = '<style type="text/css">';
 		$HTMLText .= '<link rel="stylesheet" href="./.../webfront.css">';
