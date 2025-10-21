@@ -705,6 +705,7 @@ class ShotGlassFillingMachine extends IPSModule
 				}
 			}
 		}
+		$this->SetHTMLDisplay();
 	}
 
 	private function SetShotName(string $Ident, int $Value)
@@ -719,6 +720,7 @@ class ShotGlassFillingMachine extends IPSModule
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.ShotGlassFill", $Number - 1, "Getränk ".$Number." (".$ShotName.")", "Party", 0x000000);
 			// Befüllart
 			IPS_SetVariableProfileAssociation("ShotGlassFillingMachine.PreShotGlassFill", $Number - 1, "Alle Gläser mit Getränk ".$Number." (".$ShotName.") füllen", "Party", 0x000000);
+			$this->SetHTMLDisplay();
 		}
 	}
 	
@@ -1302,20 +1304,30 @@ class ShotGlassFillingMachine extends IPSModule
 				$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h4>Vergebene Chance</h4></td>';
 			}
 		}
-		/*
-		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h4>ImageGlass 2</h4></td>';
-		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h4>ImageGlass 3</h4></td>';
-		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h4>ImageGlass 4</h4></td>';
-		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h4>ImageGlass 5</h4></td>';
-		*/
 		$HTMLText .= '</tr>';
 		
 		$HTMLText .= '<tr style="height: 18px;">';
-		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;">Fill 1</td>';
+		for ($i = 1; $i <= 5; $i++) {
+			// Getränk 1 und ein Glas vorhanden
+			If (($this->GetValue("ShotGlassFill_".$i) == 0) AND ($this->GetValue("State_IRSensor_".$i) == false)) {
+				$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h4>'.$this->GetValueFormatted("PossibleShots_1").'</h4></td>';
+			}
+			// Getränk 2 und ein Glas vorhanden
+			elseif (($this->GetValue("ShotGlassFill_".$i) == 1) AND ($this->GetValue("State_IRSensor_".$i) == false)) {
+				$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h4>'.$this->GetValueFormatted("PossibleShots_2").'</h4></td>';
+			}
+			// kein Glas vorhanden
+			elseif ($this->GetValue("State_IRSensor_".$i) == true) { 
+				$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h4>Nichts</h4></td>';
+			}												
+		}
+		/*
 		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;">Fill 2</td>';
 		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;">Fill 3</td>';
 		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;">Fill 4</td>';
 		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;">Fill 5</td>';
+		*/
+		}
 		$HTMLText .= '</tr>';
 		
 		$HTMLText .= '</tbody>';
