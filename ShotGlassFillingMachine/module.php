@@ -1073,7 +1073,9 @@ class ShotGlassFillingMachine extends IPSModule
 						}
 						$this->SendDebug("GetIRSensor", "Ergebnis: ".(int)$Result, 0);
 						If ($this->GetValue("State_IRSensor_".$i) <> boolval($Result)) {
-							$this->SetValue("State_IRSensor_".$i, boolval($Result));
+							If ($this->GetValue("State_IRSensor_".$i) <> boolval($Result)) {
+								$this->SetValue("State_IRSensor_".$IRSensor, boolval($Result));
+							}
 						}
 						If (boolval($Result) == false) {
 							$StartButtonState = true;
@@ -1120,7 +1122,9 @@ class ShotGlassFillingMachine extends IPSModule
 						$this->SetStatus(102);
 					}
 					$this->SendDebug("GetOneIRSensor", "Ergebnis: ".(int)$Result, 0);
-					$this->SetValue("State_IRSensor_".$IRSensor, boolval($Result));
+					If ($this->GetValue("State_IRSensor_".$i) <> boolval($Result)) {
+						$this->SetValue("State_IRSensor_".$IRSensor, boolval($Result));
+					}
 					$IsGlass = !boolval($Result); 
 				}
 			}
@@ -1257,6 +1261,13 @@ class ShotGlassFillingMachine extends IPSModule
 
 		$StopImage = file_get_contents(__DIR__ . '/../imgs/StopButton.png');
 		$StopImage = base64_encode($StopImage);
+
+		$ShotGlassImage = file_get_contents(__DIR__ . '/../imgs/ShotGlass.png');
+		$ShotGlassImage = base64_encode($ShotGlassImage);
+
+		for ($i = 1; $i <= 5; $i++) {
+			$this->GetValue("State_IRSensor_".$i);
+		}
 		
 		$HTMLText = '<style type="text/css">';
 		$HTMLText .= '<link rel="stylesheet" href="./.../webfront.css">';
