@@ -1327,7 +1327,6 @@ class ShotGlassFillingMachine extends IPSModule
 		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;">Fill 4</td>';
 		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;">Fill 5</td>';
 		*/
-		}
 		$HTMLText .= '</tr>';
 		
 		$HTMLText .= '</tbody>';
