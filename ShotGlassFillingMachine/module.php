@@ -327,10 +327,15 @@ class ShotGlassFillingMachine extends IPSModule
 		}
 		// Summary setzen
 		$this->SetSummary("GPIO: ".$this->ReadPropertyInteger("Pin_Servo"));
-				
+
 		//ReceiveData-Filter setzen
-		// $Filter = '(.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_Servo").'.*)';
-		//$this->SetReceiveDataFilter($Filter);
+        $Filter = '((.*"Function":"get_usedpin".*|.*"Pin":'.$this->ReadPropertyInteger("Pin_Servo").'.*)|
+		  	(.*"Pin":'.$this->ReadPropertyInteger("Pin_RotatingBeacon").'.*|.*"Pin":'.$this->ReadPropertyInteger("Pin_PowerRotatingBeacon").'.*)|
+		  	(.*"Pin":'.$this->ReadPropertyInteger("Pin_Pump_1").'.*|.*"Pin":'.$this->ReadPropertyInteger("Pin_Pump_2").'.*)|
+		  	(.*"Pin":'.$this->ReadPropertyInteger("Pin_IRSensor_1").'.*|.*"Pin":'.$this->ReadPropertyInteger("Pin_IRSensor_2").'.*)|
+		  	(.*"Pin":'.$this->ReadPropertyInteger("Pin_IRSensor_3").'.*|.*"Pin":'.$this->ReadPropertyInteger("Pin_IRSensor_4").'.*)|
+		  	(.*"Pin":'.$this->ReadPropertyInteger("Pin_IRSensor_4").'.*) )';
+		$this->SetReceiveDataFilter($Filter);
 		
 		$this->SetTimerInterval("Shutdown", 0);
 		$this->SetTimerInterval("Pump_1", 0);
