@@ -593,26 +593,31 @@ class ShotGlassFillingMachine extends IPSModule
 			case "ShotGlassFill_1":
 	            If ($this->ReadPropertyBoolean("Open") == true) {
 			    	$this->SetValue($Ident, $Value);
+					$this->SetHTMLDisplay();
 			    }
 	            break;
 			case "ShotGlassFill_2":
 	            If ($this->ReadPropertyBoolean("Open") == true) {
 			    	$this->SetValue($Ident, $Value);
+					$this->SetHTMLDisplay();
 			    }
 	            break;
 			case "ShotGlassFill_3":
 	            If ($this->ReadPropertyBoolean("Open") == true) {
 			    	$this->SetValue($Ident, $Value);
+					$this->SetHTMLDisplay();
 			    }
 	            break;
 			case "ShotGlassFill_4":
 	            If ($this->ReadPropertyBoolean("Open") == true) {
 			    	$this->SetValue($Ident, $Value);
+					$this->SetHTMLDisplay();
 			    }
 	            break;
 			case "ShotGlassFill_5":
 	            If ($this->ReadPropertyBoolean("Open") == true) {
 			    	$this->SetValue($Ident, $Value);
+					$this->SetHTMLDisplay();
 			    }
 	            break;
 			case "PossibleShots_1":
@@ -1276,8 +1281,8 @@ class ShotGlassFillingMachine extends IPSModule
 		$ShotGlassImage = file_get_contents(__DIR__ . '/../imgs/ShotGlass.png');
 		$ShotGlassImage = base64_encode($ShotGlassImage);
 
-		$ShotName_1 = $this->GetValue("PossibleShots_1");
-		$ShotName_2 = $this->GetValue("PossibleShots_2");
+		//$ShotName_1 = $this->GetValue("PossibleShots_1");
+		//$ShotName_2 = $this->GetValue("PossibleShots_2");
 		$ShotName_1 = GetValueFormatted($this->GetIDForIdent("PossibleShots_1"));
 		$ShotName_2 = GetValueFormatted($this->GetIDForIdent("PossibleShots_2"));
 
@@ -1311,15 +1316,15 @@ class ShotGlassFillingMachine extends IPSModule
 		for ($i = 1; $i <= 5; $i++) {
 			// Getränk 1 und ein Glas vorhanden
 			If (($this->GetValue("ShotGlassFill_".$i) == 0) AND ($this->GetValue("State_IRSensor_".$i) == false)) {
-				$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h4>'.$ShotName_1.'</h4></td>';
+				$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h3>'.$ShotName_1.'</h3></td>';
 			}
 			// Getränk 2 und ein Glas vorhanden
 			elseif (($this->GetValue("ShotGlassFill_".$i) == 1) AND ($this->GetValue("State_IRSensor_".$i) == false)) {
-				$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h4>'.$ShotName_2.'</h4></td>';
+				$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h3>'.$ShotName_2.'</h3></td>';
 			}
 			// kein Glas vorhanden
 			elseif ($this->GetValue("State_IRSensor_".$i) == true) { 
-				$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h4>Nichts</h4></td>';
+				$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h3>Nichts</h3></td>';
 			}												
 		}
 		/*
