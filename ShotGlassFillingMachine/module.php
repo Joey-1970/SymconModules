@@ -1072,7 +1072,9 @@ class ShotGlassFillingMachine extends IPSModule
 							$this->SetStatus(102);
 						}
 						$this->SendDebug("GetIRSensor", "Ergebnis: ".(int)$Result, 0);
-						$this->SetValue("State_IRSensor_".$i, boolval($Result));
+						If ($this->GetValue("State_IRSensor_".$i) <> boolval($Result)) {
+							$this->SetValue("State_IRSensor_".$i, boolval($Result));
+						}
 						If (boolval($Result) == false) {
 							$StartButtonState = true;
 						}
