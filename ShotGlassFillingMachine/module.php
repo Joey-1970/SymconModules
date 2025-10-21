@@ -1075,6 +1075,7 @@ class ShotGlassFillingMachine extends IPSModule
 						If ($this->GetValue("State_IRSensor_".$i) <> boolval($Result)) {
 							If ($this->GetValue("State_IRSensor_".$i) <> boolval($Result)) {
 								$this->SetValue("State_IRSensor_".$IRSensor, boolval($Result));
+								$this->SetHTMLDisplay();
 							}
 						}
 						If (boolval($Result) == false) {
@@ -1124,6 +1125,7 @@ class ShotGlassFillingMachine extends IPSModule
 					$this->SendDebug("GetOneIRSensor", "Ergebnis: ".(int)$Result, 0);
 					If ($this->GetValue("State_IRSensor_".$i) <> boolval($Result)) {
 						$this->SetValue("State_IRSensor_".$IRSensor, boolval($Result));
+						$this->SetHTMLDisplay();
 					}
 					$IsGlass = !boolval($Result); 
 				}
