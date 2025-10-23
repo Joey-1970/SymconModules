@@ -335,7 +335,7 @@ class ShotGlassFillingMachine extends IPSModule
 		  	(.*"Pin":'.$this->ReadPropertyInteger("Pin_IRSensor_1").'.*|.*"Pin":'.$this->ReadPropertyInteger("Pin_IRSensor_2").'.*)|
 		  	(.*"Pin":'.$this->ReadPropertyInteger("Pin_IRSensor_3").'.*|.*"Pin":'.$this->ReadPropertyInteger("Pin_IRSensor_4").'.*)|
 		  	(.*"Pin":'.$this->ReadPropertyInteger("Pin_IRSensor_4").'.*) )';
-		//$this->SetReceiveDataFilter($Filter);
+		$this->SetReceiveDataFilter($Filter);
 
 		// ((.*"Function":"get_usedpin".*|.*"Pin":1.*)|(.*"Pin":2.*|.*"Pin":3.*)|(.*"Pin":4.*|.*"Pin":5.*)|(.*"Pin":6.*|.*"Pin":7.*)|(.*"Pin":8.*|.*"Pin":9.*)|(.*"Pin":10.*) )
 		
