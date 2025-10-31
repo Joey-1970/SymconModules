@@ -671,7 +671,22 @@ class ShotGlassFillingMachine extends IPSModule
 			   		$this->SendDebug("ReceiveData", "Notify IR-Sensor ".$data->Pin, 0);
 					// ActivityWatch zurücksetzen
 					$this->SetTimerInterval("ActivityWatch", $this->ReadPropertyInteger("ActivityWatch") * 1000 * 60);
-					$this->GetIRSensor();
+					If ($data->Pin == $this->ReadPropertyInteger("Pin_IRSensor_1")) {
+						$this->GetOneIRSensor(1);
+					}
+					elseif ($data->Pin == $this->ReadPropertyInteger("Pin_IRSensor_2")) {
+						$this->GetOneIRSensor(2);
+					}
+					elseif ($data->Pin == $this->ReadPropertyInteger("Pin_IRSensor_3")) {
+						$this->GetOneIRSensor(3);
+					}
+					elseif ($data->Pin == $this->ReadPropertyInteger("Pin_IRSensor_4")) {
+						$this->GetOneIRSensor(4);
+					}
+					elseif ($data->Pin == $this->ReadPropertyInteger("Pin_IRSensor_5")) {
+						$this->GetOneIRSensor(5);
+					}
+					//$this->GetIRSensor();
 					If ($this->GetValue("RotatingBeacon") == 4) {
 						$this->SetRotatingBeacon(0);
 					}
