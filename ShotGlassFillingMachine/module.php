@@ -522,6 +522,18 @@ class ShotGlassFillingMachine extends IPSModule
 						$this->SetTimerInterval("Pump_2", 0);
 						$this->SetTimerInterval("IR_Sensor", 0);
 			      		break;
+				case 'AllShotOne':
+			      		$this->SendDebug("ProcessHookData", "AllShotOne", 0);
+						$this->SetValue("DrinkChoise", 0);
+			      		break;
+				case 'AllShotTwo':
+			      		$this->SendDebug("ProcessHookData", "AllShotTwo", 0);
+						$this->SetValue("DrinkChoise", 1);
+			      		break;
+				case 'AllShotMix':
+			      		$this->SendDebug("ProcessHookData", "AllShotMix", 0);
+						$this->SetValue("DrinkChoise", 2);
+			      		break;
 			    break;
 			}
 		}
@@ -1307,7 +1319,7 @@ class ShotGlassFillingMachine extends IPSModule
 		$HTMLText = '<style type="text/css">';
 		$HTMLText .= '<link rel="stylesheet" href="./.../webfront.css">';
 		$HTMLText .= "</style>";
-		
+		// Zeile 1
 		$HTMLText .= '<table style="height: 72px; width: 100%; border-collapse: collapse; border-style: hidden;" border="1">';
 		$HTMLText .= '<tbody>';
 		$HTMLText .= '<tr style="height: 18px; border-style: hidden;">';
@@ -1315,10 +1327,11 @@ class ShotGlassFillingMachine extends IPSModule
 		$HTMLText .= '<td style="width: 20%; height: 18px; border-style: hidden;"></td>';
 		$HTMLText .= '<td style="width: 40%; height: 18px; text-align: right; vertical-align: middle; border-style: hidden;" colspan="2"><img src="data:image/png;base64,'.$StopImage.'" alt="Stop" width="200" onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'/hook/ShotGlassFillingMachine_'.$this->InstanceID.'?Action=Stop\' })"></td>';
 		$HTMLText .= '</tr>';
+		// Zeile 2
 		$HTMLText .= '<tr style="height: 18px;">';
 		$HTMLText .= '<td style="width: 100%; height: 18px; border-style: hidden;" colspan="5"><h1>'.$StatusText.'</h1></td>';
 		$HTMLText .= '</tr>';
-		
+		// Zeile 3
 		$HTMLText .= '<tr style="height: 18px;">';
 		for ($i = 1; $i <= 5; $i++) {
 			If ($this->GetValue("State_IRSensor_".$i) == false) {
@@ -1329,7 +1342,7 @@ class ShotGlassFillingMachine extends IPSModule
 			}
 		}
 		$HTMLText .= '</tr>';
-		
+		// Zeile 4
 		$HTMLText .= '<tr style="height: 18px;">';
 		for ($i = 1; $i <= 5; $i++) {
 			// Getränk 1 und ein Glas vorhanden
@@ -1345,40 +1358,20 @@ class ShotGlassFillingMachine extends IPSModule
 				$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h3>Nichts</h3></td>';
 			}												
 		}
-		/*
-		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;">Fill 2</td>';
-		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;">Fill 3</td>';
-		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;">Fill 4</td>';
-		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;">Fill 5</td>';
-		*/
+		// Zeile 5
 		$HTMLText .= '</tr>';
-		
-		$HTMLText .= '</tbody>';
-		$HTMLText .= '</table>';
-		/*
-		$HTMLText = '<style type="text/css">';
-		$HTMLText .= '<link rel="stylesheet" href="./.../webfront.css">';
-		$HTMLText .= "</style>";
-		$HTMLText .= '<table style="height: 91px; width: 100%; border-collapse: collapse; border-style: hidden; float: left;" border="1">';
+		$HTMLText .= '<table style="height: 72px; width: 100%; border-collapse: collapse; border-style: hidden;" border="1">';
 		$HTMLText .= '<tbody>';
-		$HTMLText .= '<tr style="height: 18px;">';
-	
-		$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: left; vertical-align: middle;"><img src="data:image/png;base64,'.$StartImage.'" alt="Start" width="200" onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'/hook/ShotGlassFillingMachine_'.$this->InstanceID.'?Action=Start\' })"></td>';
-                                                                                                   
-		$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: right; vertical-align: middle;"><img src="data:image/png;base64,'.$StopImage.'" alt="Stop" width="200" onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'/hook/ShotGlassFillingMachine_'.$this->InstanceID.'?Action=Stop\' })"></td>';
-		
-		//$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: left; vertical-align: middle;"><img src="data:image/png;base64,'.$StartImage.'" alt="Start" width="200"/></td>';
-		//$HTMLText .= '<td style="width: 50%; height: 18px; border-style: hidden; text-align: right; vertical-align: middle;"><img src="data:image/png;base64,'.$StopImage.'" alt="Stop" width="200"/></td>';
+		$HTMLText .= '<tr style="height: 18px; border-style: hidden;">';
+		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h3 onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'/hook/ShotGlassFillingMachine_'.$this->InstanceID.'?Action=AllShotOne\' })" >Alle Gläser mit Getränk 1 füllen</h3>"</td>';
+		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h3 onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'/hook/ShotGlassFillingMachine_'.$this->InstanceID.'?Action=AllShotTwo\' })" >Alle Gläser mit Getränk 2 füllen</h3>"</td>';
+		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h3 onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'/hook/ShotGlassFillingMachine_'.$this->InstanceID.'?Action=AllShotMix\' })" >Alle Gläser mit Getränk individuell füllen</h3>"</td>';
+		$HTMLText .= '</tr>';
 
-		$HTMLText .= '</tr>';
-		$HTMLText .= '<tr style="height: 73px;">';
-		$HTMLText .= '<td style="width: 100%; height: 73px;" colspan="2">';
-		$HTMLText .= '<h1>'.$StatusText.'</h1>';
-		$HTMLText .= '</td>';
-		$HTMLText .= '</tr>';
+		
 		$HTMLText .= '</tbody>';
 		$HTMLText .= '</table>';
-		*/
+		
 		$this->SetValue("StateTextHTML", $HTMLText);
 	}
 	
