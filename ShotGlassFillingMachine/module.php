@@ -539,7 +539,8 @@ class ShotGlassFillingMachine extends IPSModule
 			      		break;
 				case 'ShotGlassFill':
 			      		$this->SendDebug("ProcessHookData", "ShotGlassFill ".$_GET['Index'], 0);
-						
+						$this->SetValue("ShotGlassFill_".$_GET['Index'], !$this->GetValue("ShotGlassFill_".$_GET['Index']) );
+						$this->SetHTMLDisplay();
 			      		break;
 			    break;
 			}
