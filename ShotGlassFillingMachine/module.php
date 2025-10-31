@@ -525,14 +525,17 @@ class ShotGlassFillingMachine extends IPSModule
 				case 'AllShotOne':
 			      		$this->SendDebug("ProcessHookData", "AllShotOne", 0);
 						$this->SetValue("DrinkChoise", 0);
+						$this->SetDrink(0);
 			      		break;
 				case 'AllShotTwo':
 			      		$this->SendDebug("ProcessHookData", "AllShotTwo", 0);
 						$this->SetValue("DrinkChoise", 1);
+						$this->SetDrink(1);
 			      		break;
 				case 'AllShotMix':
 			      		$this->SendDebug("ProcessHookData", "AllShotMix", 0);
 						$this->SetValue("DrinkChoise", 2);
+						$this->SetDrink(2);
 			      		break;
 			    break;
 			}
@@ -1365,7 +1368,7 @@ class ShotGlassFillingMachine extends IPSModule
 		$HTMLText .= '<tr style="height: 18px; border-style: hidden;">';
 		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h3 onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'/hook/ShotGlassFillingMachine_'.$this->InstanceID.'?Action=AllShotOne\' })" >Alle Gläser mit Getränk 1 füllen</h3>"</td>';
 		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h3 onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'/hook/ShotGlassFillingMachine_'.$this->InstanceID.'?Action=AllShotTwo\' })" >Alle Gläser mit Getränk 2 füllen</h3>"</td>';
-		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h3 onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'/hook/ShotGlassFillingMachine_'.$this->InstanceID.'?Action=AllShotMix\' })" >Alle Gläser mit Getränk individuell füllen</h3>"</td>';
+		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h3 onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'/hook/ShotGlassFillingMachine_'.$this->InstanceID.'?Action=AllShotMix\' })" >Alle Gläser individuell füllen</h3>"</td>';
 		$HTMLText .= '</tr>';
 
 		
