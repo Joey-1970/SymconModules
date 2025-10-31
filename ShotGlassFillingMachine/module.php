@@ -347,7 +347,7 @@ class ShotGlassFillingMachine extends IPSModule
 		$this->SetValue("StateText", "Initialisierung...");
 		$this->SetHTMLDisplay();
 	
-		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {	
+		If ((IPS_GetKernelRunlevel() == KR_READY) AND ($this->HasActiveParent() == true)) {	
 			// Servo
 			If (($this->ReadPropertyInteger("Pin_Servo") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
 				// Servo
@@ -488,6 +488,7 @@ class ShotGlassFillingMachine extends IPSModule
 			case IPS_KERNELSTARTED:
 				// IPS_KERNELSTARTED
 				$this->RegisterHook("/hook/ShotGlassFillingMachine_".$this->InstanceID);
+				$this->ApplyChanges();
 				break;
 			
 		}
