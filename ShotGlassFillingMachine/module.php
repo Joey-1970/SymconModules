@@ -1329,9 +1329,9 @@ class ShotGlassFillingMachine extends IPSModule
 		$HTMLText .= '<table style="height: 72px; width: 100%; border-collapse: collapse; border-style: hidden;" border="1">';
 		$HTMLText .= '<tbody>';
 		$HTMLText .= '<tr style="height: 18px; border-style: hidden;">';
-		$HTMLText .= '<td style="width: 40%; height: 18px; text-align: middle; vertical-align: middle; border-style: hidden;" colspan="2"><img src="data:image/png;base64,'.$StartImage.'" alt="Start" width="200" onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'/hook/ShotGlassFillingMachine_'.$this->InstanceID.'?Action=Start\' })"></td>';
+		$HTMLText .= '<td style="width: 40%; height: 18px; text-align: right; vertical-align: middle; border-style: hidden;" colspan="2"><img src="data:image/png;base64,'.$StartImage.'" alt="Start" width="200" onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'/hook/ShotGlassFillingMachine_'.$this->InstanceID.'?Action=Start\' })"></td>';
 		$HTMLText .= '<td style="width: 20%; height: 18px; border-style: hidden;"></td>';
-		$HTMLText .= '<td style="width: 40%; height: 18px; text-align: middle; vertical-align: middle; border-style: hidden;" colspan="2"><img src="data:image/png;base64,'.$StopImage.'" alt="Stop" width="200" onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'/hook/ShotGlassFillingMachine_'.$this->InstanceID.'?Action=Stop\' })"></td>';
+		$HTMLText .= '<td style="width: 40%; height: 18px; text-align: left; vertical-align: middle; border-style: hidden;" colspan="2"><img src="data:image/png;base64,'.$StopImage.'" alt="Stop" width="200" onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'/hook/ShotGlassFillingMachine_'.$this->InstanceID.'?Action=Stop\' })"></td>';
 		$HTMLText .= '</tr>';
 		// Zeile 2
 		$HTMLText .= '<tr style="height: 18px;">';
