@@ -1335,7 +1335,7 @@ class ShotGlassFillingMachine extends IPSModule
 		$HTMLText .= '</tr>';
 		// Zeile 2
 		$HTMLText .= '<tr style="height: 18px;">';
-		$HTMLText .= '<td style="width: 100%; height: 18px; border-style: hidden;" colspan="5"><h1>'.$StatusText.'</h1></td>';
+		$HTMLText .= '<td style="width: 100%; height: 18px; text-align: middle;border-style: hidden;" colspan="5"><h1>'.$StatusText.'</h1></td>';
 		$HTMLText .= '</tr>';
 		$DrinkChoise = $this->GetValue("DrinkChoise");
 		// Zeile 3
