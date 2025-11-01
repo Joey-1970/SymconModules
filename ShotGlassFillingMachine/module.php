@@ -1337,11 +1337,17 @@ class ShotGlassFillingMachine extends IPSModule
 		$HTMLText .= '<tr style="height: 18px;">';
 		$HTMLText .= '<td style="width: 100%; height: 18px; border-style: hidden;" colspan="5"><h1>'.$StatusText.'</h1></td>';
 		$HTMLText .= '</tr>';
+		$DrinkChoise = $this->GetValue("DrinkChoise");
 		// Zeile 3
 		$HTMLText .= '<tr style="height: 18px;">';
 		for ($i = 1; $i <= 5; $i++) {
 			If ($this->GetValue("State_IRSensor_".$i) == false) {
-				$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><img src="data:image/png;base64,'.$ShotGlassImage.'" alt="ShotGlass" width="200"></td>';
+				If ($DrinkChoise <> 2) {
+					$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><img src="data:image/png;base64,'.$ShotGlassImage.'" alt="ShotGlass" width="200"></td>';
+				}
+				elseif ($DrinkChoise == 2) {
+					$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><img src="data:image/png;base64,'.$ShotGlassImage.'" alt="ShotGlass" width="200" onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'/hook/ShotGlassFillingMachine_'.$this->InstanceID.'?Action=ShotGlassFill&Index='.$i.'\' })"></td>';
+				}
 			}
 			else {
 				$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h4>Vergebene Chance</h4></td>';
@@ -1350,7 +1356,6 @@ class ShotGlassFillingMachine extends IPSModule
 		$HTMLText .= '</tr>';
 		// Zeile 4
 		$HTMLText .= '<tr style="height: 18px;">';
-		$DrinkChoise = $this->GetValue("DrinkChoise");
 		for ($i = 1; $i <= 5; $i++) {
 			// Getränk 1 und ein Glas vorhanden
 			If (($this->GetValue("ShotGlassFill_".$i) == 0) AND ($this->GetValue("State_IRSensor_".$i) == false)) {
