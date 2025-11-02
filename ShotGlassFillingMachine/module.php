@@ -1311,7 +1311,7 @@ class ShotGlassFillingMachine extends IPSModule
 	{
 		$this->SendDebug("SetHTMLDisplay", "Ausfuehrung", 0);
 		$StatusText = $this->GetValue("StateText");
-		$EventText = $this->GetValue("EventText");
+		$EventText = $this->ReadPropertyString("EventText");
 		
 		$StartImage = file_get_contents(__DIR__ . '/../imgs/StartButton.png');
 		$StartImage = base64_encode($StartImage);
