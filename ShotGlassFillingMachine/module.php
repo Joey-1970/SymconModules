@@ -63,6 +63,7 @@ class ShotGlassFillingMachine extends IPSModule
 		$this->RegisterPropertyString("PossibleDrinks", "");
 		$this->RegisterPropertyInteger("ActivityWatch", 10);
 		$this->RegisterPropertyString("EventText", "");
+		$this->RegisterPropertyString("EventTextColor", "#000000");
 		
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 		$this->RegisterTimer("Shutdown", 0, 'ShotGlassFillingMachine_Shutdown($_IPS["TARGET"]);');
@@ -281,6 +282,7 @@ class ShotGlassFillingMachine extends IPSModule
 		$arrayExpansionPanel[] = array("type" => "Select", "name" => "Modus", "caption" => "Modus", "options" => $arrayOptions );
 		$arrayExpansionPanel[] = array("type" => "NumberSpinner", "name" => "ActivityWatch", "caption" => "Abschaltung (min)", "minimum" => 0, "maximum" => 30, "digits" => 0); 
 		$arrayExpansionPanel[] = array("type" => "ValidationTextBox", "name" => "EventText", "caption" => "Veranstaltungsname");
+		$arrayExpansionPanel[] = array("type" => "SelectColor", "name" => "EventTextColor", "caption" => "Veranstaltungsnamenfarbe");
 		$arrayElements[] = array("type" => "ExpansionPanel", "caption" => "Sonstiges", "items" => $arrayExpansionPanel);
 		
 		$arrayActions = array();
@@ -1312,6 +1314,7 @@ class ShotGlassFillingMachine extends IPSModule
 		$this->SendDebug("SetHTMLDisplay", "Ausfuehrung", 0);
 		$StatusText = $this->GetValue("StateText");
 		$EventText = $this->ReadPropertyString("EventText");
+		$EventText = $this->ReadPropertyString("EventTextColor");
 		
 		$StartImage = file_get_contents(__DIR__ . '/../imgs/StartButton.png');
 		$StartImage = base64_encode($StartImage);
@@ -1334,7 +1337,8 @@ class ShotGlassFillingMachine extends IPSModule
 		$HTMLText .= '<tr style="height: 18px; border-style: hidden;">';
 		$HTMLText .= '<td style="width: 40%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;" colspan="2"><img src="data:image/png;base64,'.$StartImage.'" alt="Start" width="200" onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'/hook/ShotGlassFillingMachine_'.$this->InstanceID.'?Action=Start\' })"></td>';
 		//$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"></td>';
-		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h2>'.$EventText.'</h2></td>';
+		//$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><h2>'.$EventText.'</h2></td>';
+		$HTMLText .= '<td style="width: 20%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;"><span style="color: '.$EventTextColor.';"><h1>'.$EventText.'</h1></span></td>';
 		$HTMLText .= '<td style="width: 40%; height: 18px; text-align: center; vertical-align: middle; border-style: hidden;" colspan="2"><img src="data:image/png;base64,'.$StopImage.'" alt="Stop" width="200" onclick="window.xhrGet=function xhrGet(o) {var HTTP = new XMLHttpRequest();HTTP.open(\'GET\',o.url,true);HTTP.send();};window.xhrGet({ url: \'/hook/ShotGlassFillingMachine_'.$this->InstanceID.'?Action=Stop\' })"></td>';
 		$HTMLText .= '</tr>';
 		// Zeile 2
