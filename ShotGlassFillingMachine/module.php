@@ -63,7 +63,7 @@ class ShotGlassFillingMachine extends IPSModule
 		$this->RegisterPropertyString("PossibleDrinks", "");
 		$this->RegisterPropertyInteger("ActivityWatch", 10);
 		$this->RegisterPropertyString("EventText", "");
-		$this->RegisterPropertyString("EventTextColor", "#000000");
+		$this->RegisterPropertyInteger("EventTextColor", 0);
 		
 		$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
 		$this->RegisterTimer("Shutdown", 0, 'ShotGlassFillingMachine_Shutdown($_IPS["TARGET"]);');
@@ -1314,7 +1314,7 @@ class ShotGlassFillingMachine extends IPSModule
 		$this->SendDebug("SetHTMLDisplay", "Ausfuehrung", 0);
 		$StatusText = $this->GetValue("StateText");
 		$EventText = $this->ReadPropertyString("EventText");
-		$EventTextColor = $this->ReadPropertyString("EventTextColor");
+		$EventTextColor = $this->ReadPropertyInteger("EventTextColor");
 		
 		$StartImage = file_get_contents(__DIR__ . '/../imgs/StartButton.png');
 		$StartImage = base64_encode($StartImage);
