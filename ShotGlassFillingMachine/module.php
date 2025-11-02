@@ -801,8 +801,8 @@ class ShotGlassFillingMachine extends IPSModule
 
 	public function SetServoPosition(Int $Value)
 	{
+		$NewPosition = false;
 		If (($this->ReadPropertyInteger("Pin_Servo") >= 0) AND ($this->ReadPropertyBoolean("Open") == true)) {
-			$NewPosition = false;
 			$this->SendDebug("SetServoPosition", "Ausfuehrung", 0);
 			$Left = $this->ReadPropertyInteger("most_anti_clockwise");
 			$Right = $this->ReadPropertyInteger("most_clockwise");
