@@ -1,0 +1,69 @@
+<?php
+
+/**
+ * "PKCS1" Formatted EC Key Handler
+ *
+ * PHP version 5
+ *
+ * Processes keys with the following headers:
+ *
+ * -----BEGIN DH PARAMETERS-----
+ *
+ * Technically, PKCS1 is for RSA keys, only, but we're using PKCS1 to describe
+ * DSA, whose format isn't really formally described anywhere, so might as well
+ * use it to describe this, too.
+ *
+ * @author    Jim Wigginton <terrafrost@php.net>
+ * @copyright 2015 Jim Wigginton
+ * @license   http://www.opensource.org/licenses/mit-license.html  MIT License
+ * @link      http://phpseclib.sourceforge.net
+ */
+
+declare(strict_types=1);
+
+namespace phpseclib4\Crypt\DH\Formats\Keys;
+
+use phpseclib4\Crypt\Common\Formats\Keys\PKCS1 as Progenitor;
+use phpseclib4\Exception\RuntimeException;
+use phpseclib4\File\ASN1;
+use phpseclib4\File\ASN1\Maps;
+use phpseclib4\Math\BigInteger;
+
+/**
+ * "PKCS1" Formatted DH Key Handler
+ *
+ * @author  Jim Wigginton <terrafrost@php.net>
+ */
+abstract class PKCS1 extends Progenitor
+{
+    /**
+     * Break a public or private key down into its constituent components
+     */
+    public static function load(string|array $key, #[SensitiveParameter] ?string $password = null): array
+    {
+        $key = parent::loadHelper($key, $password);
+
+        $decoded = ASN1::decodeBER($key);
+        if (!$decoded) {
+            throw new RuntimeException('Unable to decode BER');
+        }
+
+        return ASN1::map($decoded, Maps\DHParameter::MAP)->toArray();
+    }
+
+    /**
+     * Convert EC parameters to the appropriate format
+     */
+    public static function saveParameters(BigInteger $prime, BigInteger $base, array $options = []): string
+    {
+        $params = [
+            'prime' => $prime,
+            'base' => $base,
+        ];
+        $params = ASN1::encodeDER($params, Maps\DHParameter::MAP);
+
+        return "-----BEGIN DH PARAMETERS-----\r\n" .
+               chunk_split(base64_encode($params), 64) .
+               "-----END DH PARAMETERS-----\r\n";
+    }
+}
