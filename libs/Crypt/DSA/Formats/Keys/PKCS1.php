@@ -25,16 +25,13 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Crypt\DSA\Formats\Keys;
 
-namespace phpseclib4\Crypt\DSA\Formats\Keys;
-
-use phpseclib4\Common\Functions\Strings;
-use phpseclib4\Crypt\Common\Formats\Keys\PKCS1 as Progenitor;
-use phpseclib4\Exception\RuntimeException;
-use phpseclib4\File\ASN1;
-use phpseclib4\File\ASN1\Maps;
-use phpseclib4\Math\BigInteger;
+use phpseclib3\Common\Functions\Strings;
+use phpseclib3\Crypt\Common\Formats\Keys\PKCS1 as Progenitor;
+use phpseclib3\File\ASN1;
+use phpseclib3\File\ASN1\Maps;
+use phpseclib3\Math\BigInteger;
 
 /**
  * PKCS#1 Formatted DSA Key Handler
@@ -45,25 +42,28 @@ abstract class PKCS1 extends Progenitor
 {
     /**
      * Break a public or private key down into its constituent components
+     *
+     * @param string $key
+     * @param string $password optional
+     * @return array
      */
-    public static function load(string|array $key, #[SensitiveParameter] ?string $password = null): array
+    public static function load($key, $password = '')
     {
-        $key = parent::loadHelper($key, $password);
+        $key = parent::load($key, $password);
 
-        try {
-            $decoded = ASN1::decodeBER($key);
-        } catch (\Exception $e) {
-            throw new RuntimeException('Unable to decode BER', 0, $e);
+        $decoded = ASN1::decodeBER($key);
+        if (!$decoded) {
+            throw new \RuntimeException('Unable to decode BER');
         }
 
-        try {
-            return ASN1::map($decoded, Maps\DSAParams::MAP)->toArray();
-        } catch (\Exception $e) {
+        $key = ASN1::asn1map($decoded[0], Maps\DSAParams::MAP);
+        if (is_array($key)) {
+            return $key;
         }
 
-        try {
-            return ASN1::map($decoded, Maps\DSAPrivateKey::MAP)->toArray();
-        } catch (\Exception $e) {
+        $key = ASN1::asn1map($decoded[0], Maps\DSAPrivateKey::MAP);
+        if (is_array($key)) {
+            return $key;
         }
 
         // PKCS1 DSA public keys are not supported by phpseclib since they can't be used to do
@@ -80,30 +80,26 @@ abstract class PKCS1 extends Progenitor
         // included. eg. \phpseclib3\File\ASN1\Maps\SubjectPublicKeyInfo has "algorithm" and
         // "subjectPublicKey" and "algorithm", in turn, has "algorithm" and "parameters". y
         // is saved as "subjectPublicKey" and p, q and g are saved as "parameters".
-        //
-        // furthermore, the following ASN1::map() doesn't return a Constructed object
-        // with Maps\DSAPublicKey::MAP - it returns a BigInteger object that doesn't
-        // even have the toArray() method, anyway
 
-        try {
-            if (ASN1::map($decoded, Maps\DSAPublicKey::MAP) instanceof BigInteger) {
-                throw new RuntimeException('Key appears to be a DSAPublicKey, which is unsupported');
-            }
-        } catch (\Exception $e) {
-        }
+        //$key = ASN1::asn1map($decoded[0], Maps\DSAPublicKey::MAP);
 
-        throw new RuntimeException('Unable to perform ASN1 mapping');
+        throw new \RuntimeException('Unable to perform ASN1 mapping');
     }
 
     /**
      * Convert DSA parameters to the appropriate format
+     *
+     * @param BigInteger $p
+     * @param BigInteger $q
+     * @param BigInteger $g
+     * @return string
      */
-    public static function saveParameters(BigInteger $p, BigInteger $q, BigInteger $g): string
+    public static function saveParameters(BigInteger $p, BigInteger $q, BigInteger $g)
     {
         $key = [
             'p' => $p,
             'q' => $q,
-            'g' => $g,
+            'g' => $g
         ];
 
         $key = ASN1::encodeDER($key, Maps\DSAParams::MAP);
@@ -115,8 +111,17 @@ abstract class PKCS1 extends Progenitor
 
     /**
      * Convert a private key to the appropriate format.
+     *
+     * @param BigInteger $p
+     * @param BigInteger $q
+     * @param BigInteger $g
+     * @param BigInteger $y
+     * @param BigInteger $x
+     * @param string $password optional
+     * @param array $options optional
+     * @return string
      */
-    public static function savePrivateKey(BigInteger $p, BigInteger $q, BigInteger $g, BigInteger $y, BigInteger $x, #[SensitiveParameter] ?string $password = null, array $options = []): string
+    public static function savePrivateKey(BigInteger $p, BigInteger $q, BigInteger $g, BigInteger $y, BigInteger $x, $password = '', array $options = [])
     {
         $key = [
             'version' => 0,
@@ -124,7 +129,7 @@ abstract class PKCS1 extends Progenitor
             'q' => $q,
             'g' => $g,
             'y' => $y,
-            'x' => $x,
+            'x' => $x
         ];
 
         $key = ASN1::encodeDER($key, Maps\DSAPrivateKey::MAP);
@@ -134,8 +139,14 @@ abstract class PKCS1 extends Progenitor
 
     /**
      * Convert a public key to the appropriate format
+     *
+     * @param BigInteger $p
+     * @param BigInteger $q
+     * @param BigInteger $g
+     * @param BigInteger $y
+     * @return string
      */
-    public static function savePublicKey(BigInteger $p, BigInteger $q, BigInteger $g, BigInteger $y): string
+    public static function savePublicKey(BigInteger $p, BigInteger $q, BigInteger $g, BigInteger $y)
     {
         $key = ASN1::encodeDER($y, Maps\DSAPublicKey::MAP);
 

@@ -13,12 +13,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Crypt\DSA\Formats\Keys;
 
-namespace phpseclib4\Crypt\DSA\Formats\Keys;
-
-use phpseclib4\Exception\UnexpectedValueException;
-use phpseclib4\Math\BigInteger;
+use phpseclib3\Math\BigInteger;
 
 /**
  * Raw DSA Key Handler
@@ -30,12 +27,14 @@ abstract class Raw
     /**
      * Break a public or private key down into its constituent components
      *
-     * @param string|array $key
+     * @param array $key
+     * @param string $password optional
+     * @return array
      */
-    public static function load($key, #[SensitiveParameter] ?string $password = null): array
+    public static function load($key, $password = '')
     {
         if (!is_array($key)) {
-            throw new UnexpectedValueException('Key should be a array - not a ' . gettype($key));
+            throw new \UnexpectedValueException('Key should be a array - not a ' . gettype($key));
         }
 
         switch (true) {
@@ -46,7 +45,7 @@ abstract class Raw
             case !isset($key['x']) && !isset($key['y']):
             case isset($key['x']) && !$key['x'] instanceof BigInteger:
             case isset($key['y']) && !$key['y'] instanceof BigInteger:
-                throw new UnexpectedValueException('Key appears to be malformed');
+                throw new \UnexpectedValueException('Key appears to be malformed');
         }
 
         $options = ['p' => 1, 'q' => 1, 'g' => 1, 'x' => 1, 'y' => 1];
@@ -57,17 +56,29 @@ abstract class Raw
     /**
      * Convert a private key to the appropriate format.
      *
+     * @param BigInteger $p
+     * @param BigInteger $q
+     * @param BigInteger $g
+     * @param BigInteger $y
+     * @param BigInteger $x
      * @param string $password optional
+     * @return string
      */
-    public static function savePrivateKey(BigInteger $p, BigInteger $q, BigInteger $g, BigInteger $y, BigInteger $x, string $password = ''): string
+    public static function savePrivateKey(BigInteger $p, BigInteger $q, BigInteger $g, BigInteger $y, BigInteger $x, $password = '')
     {
         return compact('p', 'q', 'g', 'y', 'x');
     }
 
     /**
      * Convert a public key to the appropriate format
+     *
+     * @param BigInteger $p
+     * @param BigInteger $q
+     * @param BigInteger $g
+     * @param BigInteger $y
+     * @return string
      */
-    public static function savePublicKey(BigInteger $p, BigInteger $q, BigInteger $g, BigInteger $y): string
+    public static function savePublicKey(BigInteger $p, BigInteger $q, BigInteger $g, BigInteger $y)
     {
         return compact('p', 'q', 'g', 'y');
     }

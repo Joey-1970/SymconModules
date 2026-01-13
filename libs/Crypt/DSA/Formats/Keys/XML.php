@@ -17,14 +17,11 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Crypt\DSA\Formats\Keys;
 
-namespace phpseclib4\Crypt\DSA\Formats\Keys;
-
-use phpseclib4\Common\Functions\Strings;
-use phpseclib4\Exception\BadConfigurationException;
-use phpseclib4\Exception\UnexpectedValueException;
-use phpseclib4\Math\BigInteger;
+use phpseclib3\Common\Functions\Strings;
+use phpseclib3\Exception\BadConfigurationException;
+use phpseclib3\Math\BigInteger;
 
 /**
  * XML Formatted DSA Key Handler
@@ -35,11 +32,15 @@ abstract class XML
 {
     /**
      * Break a public or private key down into its constituent components
+     *
+     * @param string $key
+     * @param string $password optional
+     * @return array
      */
-    public static function load(string $key, #[SensitiveParameter] ?string $password = null): array
+    public static function load($key, $password = '')
     {
         if (!Strings::is_stringable($key)) {
-            throw new UnexpectedValueException('Key should be a string - not a ' . gettype($key));
+            throw new \UnexpectedValueException('Key should be a string - not a ' . gettype($key));
         }
 
         if (!class_exists('DOMDocument')) {
@@ -54,7 +55,7 @@ abstract class XML
         }
         if (!$dom->loadXML($key)) {
             libxml_use_internal_errors($use_errors);
-            throw new UnexpectedValueException('Key does not appear to contain XML');
+            throw new \UnexpectedValueException('Key does not appear to contain XML');
         }
         $xpath = new \DOMXPath($dom);
         $keys = ['p', 'q', 'g', 'y', 'j', 'seed', 'pgencounter'];
@@ -95,7 +96,7 @@ abstract class XML
         libxml_use_internal_errors($use_errors);
 
         if (!isset($components['y'])) {
-            throw new UnexpectedValueException('Key is missing y component');
+            throw new \UnexpectedValueException('Key is missing y component');
         }
 
         switch (true) {
@@ -112,8 +113,14 @@ abstract class XML
      * Convert a public key to the appropriate format
      *
      * See https://www.w3.org/TR/xmldsig-core/#sec-DSAKeyValue
+     *
+     * @param BigInteger $p
+     * @param BigInteger $q
+     * @param BigInteger $g
+     * @param BigInteger $y
+     * @return string
      */
-    public static function savePublicKey(BigInteger $p, BigInteger $q, BigInteger $g, BigInteger $y): string
+    public static function savePublicKey(BigInteger $p, BigInteger $q, BigInteger $g, BigInteger $y)
     {
         return "<DSAKeyValue>\r\n" .
                '  <P>' . Strings::base64_encode($p->toBytes()) . "</P>\r\n" .
