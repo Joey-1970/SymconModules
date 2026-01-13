@@ -11,12 +11,10 @@
  * @link      http://pear.php.net/package/Math_BigInteger
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Crypt\EC\Curves;
 
-namespace phpseclib4\Crypt\EC\Curves;
-
-use phpseclib4\Crypt\EC\BaseCurves\KoblitzPrime;
-use phpseclib4\Math\BigInteger;
+use phpseclib3\Crypt\EC\BaseCurves\KoblitzPrime;
+use phpseclib3\Math\BigInteger;
 
 class secp192k1 extends KoblitzPrime
 {
@@ -36,11 +34,11 @@ class secp192k1 extends KoblitzPrime
         $this->basis = [];
         $this->basis[] = [
             'a' => new BigInteger('00B3FB3400DEC5C4ADCEB8655C', -16),
-            'b' => new BigInteger('8EE96418CCF4CFC7124FDA0F', -16),
+            'b' => new BigInteger('8EE96418CCF4CFC7124FDA0F', -16)
         ];
         $this->basis[] = [
             'a' => new BigInteger('01D90D03E8F096B9948B20F0A9', -16),
-            'b' => new BigInteger('42E49819ABBA9474E1083F6B', -16),
+            'b' => new BigInteger('42E49819ABBA9474E1083F6B', -16)
         ];
         $this->beta = $this->factory->newInteger(new BigInteger('447A96E6C647963E2F7809FEAAB46947F34B0AA3CA0BBA74', -16));
     }

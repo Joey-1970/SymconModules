@@ -11,9 +11,7 @@
  * @link      http://pear.php.net/package/Math_BigInteger
  */
 
-declare(strict_types=1);
-
-namespace phpseclib4\Crypt\EC\Curves;
+namespace phpseclib3\Crypt\EC\Curves;
 
 final class nistt571 extends sect571k1
 {

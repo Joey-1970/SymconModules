@@ -13,13 +13,11 @@
  * @link      http://pear.php.net/package/Math_BigInteger
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Crypt\EC\Curves;
 
-namespace phpseclib4\Crypt\EC\Curves;
-
-//use phpseclib4\Crypt\EC\BaseCurves\Prime;
-use phpseclib4\Crypt\EC\BaseCurves\KoblitzPrime;
-use phpseclib4\Math\BigInteger;
+//use phpseclib3\Crypt\EC\BaseCurves\Prime;
+use phpseclib3\Crypt\EC\BaseCurves\KoblitzPrime;
+use phpseclib3\Math\BigInteger;
 
 //class secp256k1 extends Prime
 class secp256k1 extends KoblitzPrime
@@ -40,11 +38,11 @@ class secp256k1 extends KoblitzPrime
         $this->basis = [];
         $this->basis[] = [
             'a' => new BigInteger('3086D221A7D46BCDE86C90E49284EB15', -16),
-            'b' => new BigInteger('FF1BBC8129FEF177D790AB8056F5401B3D', -16),
+            'b' => new BigInteger('FF1BBC8129FEF177D790AB8056F5401B3D', -16)
         ];
         $this->basis[] = [
             'a' => new BigInteger('114CA50F7A8E2F3F657C1108D9D44CFD8', -16),
-            'b' => new BigInteger('3086D221A7D46BCDE86C90E49284EB15', -16),
+            'b' => new BigInteger('3086D221A7D46BCDE86C90E49284EB15', -16)
         ];
         $this->beta = $this->factory->newInteger(new BigInteger('7AE96A2B657C07106E64479EAC3434E99CF0497512F58995C1396C28719501EE', -16));
     }
