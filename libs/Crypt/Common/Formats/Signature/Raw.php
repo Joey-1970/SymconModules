@@ -13,11 +13,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Crypt\Common\Formats\Signature;
 
-namespace phpseclib4\Crypt\Common\Formats\Signature;
-
-use phpseclib4\Math\BigInteger;
+use phpseclib3\Math\BigInteger;
 
 /**
  * Raw Signature Handler
@@ -29,9 +27,10 @@ abstract class Raw
     /**
      * Loads a signature
      *
+     * @param array $sig
      * @return array|bool
      */
-    public static function load(array $sig)
+    public static function load($sig)
     {
         switch (true) {
             case !is_array($sig):
@@ -43,14 +42,18 @@ abstract class Raw
 
         return [
             'r' => $sig['r'],
-            's' => $sig['s'],
+            's' => $sig['s']
         ];
     }
 
     /**
      * Returns a signature in the appropriate format
+     *
+     * @param BigInteger $r
+     * @param BigInteger $s
+     * @return string
      */
-    public static function save(BigInteger $r, BigInteger $s): string
+    public static function save(BigInteger $r, BigInteger $s)
     {
         return compact('r', 's');
     }
