@@ -13,12 +13,10 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Crypt\DSA\Formats\Signature;
 
-namespace phpseclib4\Crypt\DSA\Formats\Signature;
-
-use phpseclib4\Common\Functions\Strings;
-use phpseclib4\Math\BigInteger;
+use phpseclib3\Common\Functions\Strings;
+use phpseclib3\Math\BigInteger;
 
 /**
  * SSH2 Signature Handler
@@ -29,8 +27,11 @@ abstract class SSH2
 {
     /**
      * Loads a signature
+     *
+     * @param string $sig
+     * @return mixed
      */
-    public static function load(string $sig)
+    public static function load($sig)
     {
         if (!is_string($sig)) {
             return false;
@@ -40,20 +41,22 @@ abstract class SSH2
         if ($result === false) {
             return false;
         }
-        [$type, $blob] = $result;
+        list($type, $blob) = $result;
         if ($type != 'ssh-dss' || strlen($blob) != 40) {
             return false;
         }
 
         return [
             'r' => new BigInteger(substr($blob, 0, 20), 256),
-            's' => new BigInteger(substr($blob, 20), 256),
+            's' => new BigInteger(substr($blob, 20), 256)
         ];
     }
 
     /**
      * Returns a signature in the appropriate format
      *
+     * @param BigInteger $r
+     * @param BigInteger $s
      * @return string
      */
     public static function save(BigInteger $r, BigInteger $s)
