@@ -11,11 +11,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\File\ASN1\Maps;
 
-namespace phpseclib4\File\ASN1\Maps;
-
-use phpseclib4\File\ASN1;
+use phpseclib3\File\ASN1;
 
 /**
  * PersonalName
@@ -24,33 +22,33 @@ use phpseclib4\File\ASN1;
  */
 abstract class PersonalName
 {
-    public const MAP = [
+    const MAP = [
         'type' => ASN1::TYPE_SET,
         'children' => [
             'surname' => [
                 'type' => ASN1::TYPE_PRINTABLE_STRING,
                 'constant' => 0,
                 'optional' => true,
-                'implicit' => true,
+                'implicit' => true
             ],
             'given-name' => [
                 'type' => ASN1::TYPE_PRINTABLE_STRING,
                 'constant' => 1,
                 'optional' => true,
-                'implicit' => true,
+                'implicit' => true
             ],
             'initials' => [
                 'type' => ASN1::TYPE_PRINTABLE_STRING,
                 'constant' => 2,
                 'optional' => true,
-                'implicit' => true,
+                'implicit' => true
             ],
             'generation-qualifier' => [
                 'type' => ASN1::TYPE_PRINTABLE_STRING,
                 'constant' => 3,
                 'optional' => true,
-                'implicit' => true,
-            ],
-        ],
+                'implicit' => true
+            ]
+        ]
     ];
 }

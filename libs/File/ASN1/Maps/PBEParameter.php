@@ -11,11 +11,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\File\ASN1\Maps;
 
-namespace phpseclib4\File\ASN1\Maps;
-
-use phpseclib4\File\ASN1;
+use phpseclib3\File\ASN1;
 
 /**
  * PBEParameter
@@ -26,11 +24,11 @@ use phpseclib4\File\ASN1;
  */
 abstract class PBEParameter
 {
-    public const MAP = [
+    const MAP = [
         'type' => ASN1::TYPE_SEQUENCE,
         'children' => [
             'salt' => ['type' => ASN1::TYPE_OCTET_STRING],
-            'iterationCount' => ['type' => ASN1::TYPE_INTEGER],
-        ],
+            'iterationCount' => ['type' => ASN1::TYPE_INTEGER]
+        ]
     ];
 }

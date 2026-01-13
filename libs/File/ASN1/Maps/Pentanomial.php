@@ -11,11 +11,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\File\ASN1\Maps;
 
-namespace phpseclib4\File\ASN1\Maps;
-
-use phpseclib4\File\ASN1;
+use phpseclib3\File\ASN1;
 
 /**
  * Pentanomial
@@ -24,12 +22,12 @@ use phpseclib4\File\ASN1;
  */
 abstract class Pentanomial
 {
-    public const MAP = [
+    const MAP = [
         'type' => ASN1::TYPE_SEQUENCE,
         'children' => [
             'k1' => ['type' => ASN1::TYPE_INTEGER], // k1 > 0
             'k2' => ['type' => ASN1::TYPE_INTEGER], // k2 > k1
             'k3' => ['type' => ASN1::TYPE_INTEGER], // k3 > h2
-        ],
+        ]
     ];
 }

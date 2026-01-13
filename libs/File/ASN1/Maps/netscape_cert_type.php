@@ -11,11 +11,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\File\ASN1\Maps;
 
-namespace phpseclib4\File\ASN1\Maps;
-
-use phpseclib4\File\ASN1;
+use phpseclib3\File\ASN1;
 
 /**
  * netscape_cert_type
@@ -26,7 +24,7 @@ use phpseclib4\File\ASN1;
  */
 abstract class netscape_cert_type
 {
-    public const MAP = [
+    const MAP = [
         'type' => ASN1::TYPE_BIT_STRING,
         'mapping' => [
             'SSLClient',
@@ -36,7 +34,7 @@ abstract class netscape_cert_type
             'Reserved',
             'SSLCA',
             'EmailCA',
-            'ObjectSigningCA',
-        ],
+            'ObjectSigningCA'
+        ]
     ];
 }

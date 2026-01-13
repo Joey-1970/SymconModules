@@ -11,11 +11,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\File\ASN1\Maps;
 
-namespace phpseclib4\File\ASN1\Maps;
-
-use phpseclib4\File\ASN1;
+use phpseclib3\File\ASN1;
 
 /**
  * netscape_comment
@@ -24,5 +22,5 @@ use phpseclib4\File\ASN1;
  */
 abstract class netscape_comment
 {
-    public const MAP = ['type' => ASN1::TYPE_IA5_STRING];
+    const MAP = ['type' => ASN1::TYPE_IA5_STRING];
 }

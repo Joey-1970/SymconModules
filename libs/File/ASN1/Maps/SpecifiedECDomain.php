@@ -13,11 +13,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\File\ASN1\Maps;
 
-namespace phpseclib4\File\ASN1\Maps;
-
-use phpseclib4\File\ASN1;
+use phpseclib3\File\ASN1;
 
 /**
  * SpecifiedECDomain
@@ -26,12 +24,12 @@ use phpseclib4\File\ASN1;
  */
 abstract class SpecifiedECDomain
 {
-    public const MAP = [
+    const MAP = [
         'type' => ASN1::TYPE_SEQUENCE,
         'children' => [
             'version' => [
                 'type' => ASN1::TYPE_INTEGER,
-                'mapping' => [1 => 'ecdpVer1', 'ecdpVer2', 'ecdpVer3'],
+                'mapping' => [1 => 'ecdpVer1', 'ecdpVer2', 'ecdpVer3']
             ],
             'fieldID' => FieldID::MAP,
             'curve' => Curve::MAP,
@@ -39,9 +37,9 @@ abstract class SpecifiedECDomain
             'order' => ['type' => ASN1::TYPE_INTEGER],
             'cofactor' => [
                 'type' => ASN1::TYPE_INTEGER,
-                'optional' => true,
+                'optional' => true
             ],
-            'hash' => ['optional' => true] + HashAlgorithm::MAP,
-        ],
+            'hash' => ['optional' => true] + HashAlgorithm::MAP
+        ]
     ];
 }

@@ -11,11 +11,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\File\ASN1\Maps;
 
-namespace phpseclib4\File\ASN1\Maps;
-
-use phpseclib4\File\ASN1;
+use phpseclib3\File\ASN1;
 
 /**
  * RC2CBCParameter
@@ -26,14 +24,14 @@ use phpseclib4\File\ASN1;
  */
 abstract class RC2CBCParameter
 {
-    public const MAP = [
+    const MAP = [
         'type' => ASN1::TYPE_SEQUENCE,
         'children' => [
             'rc2ParametersVersion' => [
                 'type' => ASN1::TYPE_INTEGER,
-                'optional' => true,
+                'optional' => true
             ],
-            'iv' => ['type' => ASN1::TYPE_OCTET_STRING],
-        ],
+            'iv' => ['type' => ASN1::TYPE_OCTET_STRING]
+        ]
     ];
 }
