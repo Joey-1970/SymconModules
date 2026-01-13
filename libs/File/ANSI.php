@@ -5,10 +5,10 @@
  *
  * PHP version 5
  *
- * If you call read() in \phpseclib4\Net\SSH2 you may get {@link http://en.wikipedia.org/wiki/ANSI_escape_code ANSI escape codes} back.
+ * If you call read() in \phpseclib3\Net\SSH2 you may get {@link http://en.wikipedia.org/wiki/ANSI_escape_code ANSI escape codes} back.
  * They'd look like chr(0x1B) . '[00m' or whatever (0x1B = ESC).  They tell a
  * {@link http://en.wikipedia.org/wiki/Terminal_emulator terminal emulator} how to format the characters, what
- * color to display them in, etc. \phpseclib4\File\ANSI is a {@link http://en.wikipedia.org/wiki/VT100 VT100} terminal emulator.
+ * color to display them in, etc. \phpseclib3\File\ANSI is a {@link http://en.wikipedia.org/wiki/VT100 VT100} terminal emulator.
  *
  * @author    Jim Wigginton <terrafrost@php.net>
  * @copyright 2012 Jim Wigginton
@@ -16,9 +16,7 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
-
-namespace phpseclib4\File;
+namespace phpseclib3\File;
 
 /**
  * Pure-PHP ANSI Decoder
@@ -164,8 +162,11 @@ class ANSI
      * Set terminal width and height
      *
      * Resets the screen as well
+     *
+     * @param int $x
+     * @param int $y
      */
-    public function setDimensions(int $x, int $y): void
+    public function setDimensions($x, $y)
     {
         $this->max_x = $x - 1;
         $this->max_y = $y - 1;
@@ -179,16 +180,20 @@ class ANSI
 
     /**
      * Set the number of lines that should be logged past the terminal height
+     *
+     * @param int $history
      */
-    public function setHistory(int $history): void
+    public function setHistory($history)
     {
         $this->max_history = $history;
     }
 
     /**
      * Load a string
+     *
+     * @param string $source
      */
-    public function loadString(string $source): void
+    public function loadString($source)
     {
         $this->setDimensions($this->max_x + 1, $this->max_y + 1);
         $this->appendString($source);
@@ -196,8 +201,10 @@ class ANSI
 
     /**
      * Appdend a string
+     *
+     * @param string $source
      */
-    public function appendString(string $source): void
+    public function appendString($source)
     {
         $this->tokenization = [''];
         for ($i = 0; $i < strlen($source); $i++) {
@@ -400,8 +407,9 @@ class ANSI
      * Add a new line
      *
      * Also update the $this->screen and $this->history buffers
+     *
      */
-    private function newLine(): void
+    private function newLine()
     {
         //if ($this->y < $this->max_y) {
         //    $this->y++;
@@ -426,8 +434,13 @@ class ANSI
 
     /**
      * Returns the current coordinate without preformating
+     *
+     * @param \stdClass $last_attr
+     * @param \stdClass $cur_attr
+     * @param string $char
+     * @return string
      */
-    private function processCoordinate(\stdClass $last_attr, \stdClass $cur_attr, string $char): string
+    private function processCoordinate(\stdClass $last_attr, \stdClass $cur_attr, $char)
     {
         $output = '';
 
@@ -480,15 +493,17 @@ class ANSI
 
     /**
      * Returns the current screen without preformating
+     *
+     * @return string
      */
-    private function getScreenHelper(): string
+    private function getScreenHelper()
     {
         $output = '';
         $last_attr = $this->base_attr_cell;
         for ($i = 0; $i <= $this->max_y; $i++) {
             for ($j = 0; $j <= $this->max_x; $j++) {
                 $cur_attr = $this->attrs[$i][$j];
-                $output .= $this->processCoordinate($last_attr, $cur_attr, $this->screen[$i][$j] ?? '');
+                $output .= $this->processCoordinate($last_attr, $cur_attr, isset($this->screen[$i][$j]) ? $this->screen[$i][$j] : '');
                 $last_attr = $this->attrs[$i][$j];
             }
             $output .= "\r\n";
@@ -501,23 +516,27 @@ class ANSI
 
     /**
      * Returns the current screen
+     *
+     * @return string
      */
-    public function getScreen(): string
+    public function getScreen()
     {
         return '<pre width="' . ($this->max_x + 1) . '" style="color: white; background: black">' . $this->getScreenHelper() . '</pre>';
     }
 
     /**
      * Returns the current screen and the x previous lines
+     *
+     * @return string
      */
-    public function getHistory(): string
+    public function getHistory()
     {
         $scrollback = '';
         $last_attr = $this->base_attr_cell;
         for ($i = 0; $i < count($this->history); $i++) {
             for ($j = 0; $j <= $this->max_x + 1; $j++) {
                 $cur_attr = $this->history_attrs[$i][$j];
-                $scrollback .= $this->processCoordinate($last_attr, $cur_attr, $this->history[$i][$j] ?? '');
+                $scrollback .= $this->processCoordinate($last_attr, $cur_attr, isset($this->history[$i][$j]) ? $this->history[$i][$j] : '');
                 $last_attr = $this->history_attrs[$i][$j];
             }
             $scrollback .= "\r\n";
