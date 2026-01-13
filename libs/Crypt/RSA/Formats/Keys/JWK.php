@@ -11,13 +11,11 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Crypt\RSA\Formats\Keys;
 
-namespace phpseclib4\Crypt\RSA\Formats\Keys;
-
-use phpseclib4\Common\Functions\Strings;
-use phpseclib4\Crypt\Common\Formats\Keys\JWK as Progenitor;
-use phpseclib4\Math\BigInteger;
+use phpseclib3\Common\Functions\Strings;
+use phpseclib3\Crypt\Common\Formats\Keys\JWK as Progenitor;
+use phpseclib3\Math\BigInteger;
 
 /**
  * JWK Formatted RSA Handler
@@ -29,11 +27,13 @@ abstract class JWK extends Progenitor
     /**
      * Break a public or private key down into its constituent components
      *
-     * @param string|array $key
+     * @param string $key
+     * @param string $password optional
+     * @return array
      */
-    public static function load($key, #[SensitiveParameter] ?string $password = null): array
+    public static function load($key, $password = '')
     {
-        $key = parent::loadHelper($key);
+        $key = parent::load($key, $password);
 
         if ($key->kty != 'RSA') {
             throw new \RuntimeException('Only RSA JWK keys are supported');
@@ -90,10 +90,17 @@ abstract class JWK extends Progenitor
     /**
      * Convert a private key to the appropriate format.
      *
+     * @param BigInteger $n
+     * @param BigInteger $e
+     * @param BigInteger $d
+     * @param array $primes
+     * @param array $exponents
+     * @param array $coefficients
      * @param string $password optional
      * @param array $options optional
+     * @return string
      */
-    public static function savePrivateKey(BigInteger $n, BigInteger $e, BigInteger $d, array $primes, array $exponents, array $coefficients, #[SensitiveParameter] ?string $password = null, array $options = []): string
+    public static function savePrivateKey(BigInteger $n, BigInteger $e, BigInteger $d, array $primes, array $exponents, array $coefficients, $password = '', array $options = [])
     {
         if (count($primes) != 2) {
             throw new \InvalidArgumentException('JWK does not support multi-prime RSA keys');
@@ -108,7 +115,7 @@ abstract class JWK extends Progenitor
             'q' => Strings::base64url_encode($primes[2]->toBytes()),
             'dp' => Strings::base64url_encode($exponents[1]->toBytes()),
             'dq' => Strings::base64url_encode($exponents[2]->toBytes()),
-            'qi' => Strings::base64url_encode($coefficients[2]->toBytes()),
+            'qi' => Strings::base64url_encode($coefficients[2]->toBytes())
         ];
 
         return self::wrapKey($key, $options);
@@ -116,13 +123,18 @@ abstract class JWK extends Progenitor
 
     /**
      * Convert a public key to the appropriate format
+     *
+     * @param BigInteger $n
+     * @param BigInteger $e
+     * @param array $options optional
+     * @return string
      */
-    public static function savePublicKey(BigInteger $n, BigInteger $e, array $options = []): string
+    public static function savePublicKey(BigInteger $n, BigInteger $e, array $options = [])
     {
         $key = [
             'kty' => 'RSA',
             'n' => Strings::base64url_encode($n->toBytes()),
-            'e' => Strings::base64url_encode($e->toBytes()),
+            'e' => Strings::base64url_encode($e->toBytes())
         ];
 
         return self::wrapKey($key, $options);

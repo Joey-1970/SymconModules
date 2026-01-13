@@ -18,16 +18,12 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Crypt\RSA\Formats\Keys;
 
-namespace phpseclib4\Crypt\RSA\Formats\Keys;
-
-use phpseclib4\Common\Functions\Strings;
-use phpseclib4\Exception\BadConfigurationException;
-use phpseclib4\Exception\InvalidArgumentException;
-use phpseclib4\Exception\UnexpectedValueException;
-use phpseclib4\Exception\UnsupportedFormatException;
-use phpseclib4\Math\BigInteger;
+use phpseclib3\Common\Functions\Strings;
+use phpseclib3\Exception\BadConfigurationException;
+use phpseclib3\Exception\UnsupportedFormatException;
+use phpseclib3\Math\BigInteger;
 
 /**
  * XML Formatted RSA Key Handler
@@ -39,12 +35,14 @@ abstract class XML
     /**
      * Break a public or private key down into its constituent components
      *
-     * @param string|array $key
+     * @param string $key
+     * @param string $password optional
+     * @return array
      */
-    public static function load($key): array
+    public static function load($key, $password = '')
     {
         if (!Strings::is_stringable($key)) {
-            throw new UnexpectedValueException('Key should be a string - not a ' . gettype($key));
+            throw new \UnexpectedValueException('Key should be a string - not a ' . gettype($key));
         }
 
         if (!class_exists('DOMDocument')) {
@@ -55,7 +53,7 @@ abstract class XML
             'isPublicKey' => false,
             'primes' => [],
             'exponents' => [],
-            'coefficients' => [],
+            'coefficients' => []
         ];
 
         $use_errors = libxml_use_internal_errors(true);
@@ -66,7 +64,7 @@ abstract class XML
         }
         if (!$dom->loadXML($key)) {
             libxml_use_internal_errors($use_errors);
-            throw new UnexpectedValueException('Key does not appear to contain XML');
+            throw new \UnexpectedValueException('Key does not appear to contain XML');
         }
         $xpath = new \DOMXPath($dom);
         $keys = ['modulus', 'exponent', 'p', 'q', 'dp', 'dq', 'inverseq', 'd'];
@@ -119,18 +117,25 @@ abstract class XML
             return $components;
         }
 
-        throw new UnexpectedValueException('Modulus / exponent not present');
+        throw new \UnexpectedValueException('Modulus / exponent not present');
     }
 
     /**
      * Convert a private key to the appropriate format.
      *
+     * @param BigInteger $n
+     * @param BigInteger $e
+     * @param BigInteger $d
+     * @param array $primes
+     * @param array $exponents
+     * @param array $coefficients
      * @param string $password optional
+     * @return string
      */
-    public static function savePrivateKey(BigInteger $n, BigInteger $e, BigInteger $d, array $primes, array $exponents, array $coefficients, string $password = ''): string
+    public static function savePrivateKey(BigInteger $n, BigInteger $e, BigInteger $d, array $primes, array $exponents, array $coefficients, $password = '')
     {
         if (count($primes) != 2) {
-            throw new InvalidArgumentException('XML does not support multi-prime RSA keys');
+            throw new \InvalidArgumentException('XML does not support multi-prime RSA keys');
         }
 
         if (!empty($password) && is_string($password)) {
@@ -151,8 +156,12 @@ abstract class XML
 
     /**
      * Convert a public key to the appropriate format
+     *
+     * @param BigInteger $n
+     * @param BigInteger $e
+     * @return string
      */
-    public static function savePublicKey(BigInteger $n, BigInteger $e): string
+    public static function savePublicKey(BigInteger $n, BigInteger $e)
     {
         return "<RSAKeyValue>\r\n" .
                '  <Modulus>' . Strings::base64_encode($n->toBytes()) . "</Modulus>\r\n" .
