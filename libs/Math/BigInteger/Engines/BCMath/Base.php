@@ -11,11 +11,9 @@
  * @link      http://pear.php.net/package/Math_BigInteger
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Math\BigInteger\Engines\BCMath;
 
-namespace phpseclib4\Math\BigInteger\Engines\BCMath;
-
-use phpseclib4\Math\BigInteger\Engines\BCMath;
+use phpseclib3\Math\BigInteger\Engines\BCMath;
 
 /**
  * Sliding Window Exponentiation Engine
@@ -28,25 +26,35 @@ abstract class Base extends BCMath
      * Cache constants
      *
      * $cache[self::VARIABLE] tells us whether or not the cached data is still valid.
+     *
      */
-    public const VARIABLE = 0;
+    const VARIABLE = 0;
     /**
      * $cache[self::DATA] contains the cached data.
+     *
      */
-    public const DATA = 1;
+    const DATA = 1;
 
     /**
      * Test for engine validity
+     *
+     * @return bool
      */
-    public static function isValidEngine(): bool
+    public static function isValidEngine()
     {
         return static::class != __CLASS__;
     }
 
     /**
      * Performs modular exponentiation.
+     *
+     * @param BCMath $x
+     * @param BCMath $e
+     * @param BCMath $n
+     * @param string $class
+     * @return BCMath
      */
-    protected static function powModHelper(BCMath $x, BCMath $e, BCMath $n, string $class): BCMath
+    protected static function powModHelper(BCMath $x, BCMath $e, BCMath $n, $class)
     {
         if (empty($e->value)) {
             $temp = new $class();
@@ -60,9 +68,13 @@ abstract class Base extends BCMath
     /**
      * Modular reduction preparation
      *
+     * @param string $x
+     * @param string $n
+     * @param string $class
      * @see self::slidingWindow()
+     * @return string
      */
-    protected static function prepareReduce(string $x, string $n, string $class): string
+    protected static function prepareReduce($x, $n, $class)
     {
         return static::reduce($x, $n);
     }
@@ -70,9 +82,14 @@ abstract class Base extends BCMath
     /**
      * Modular multiply
      *
+     * @param string $x
+     * @param string $y
+     * @param string $n
+     * @param string $class
      * @see self::slidingWindow()
+     * @return string
      */
-    protected static function multiplyReduce(string $x, string $y, string $n, string $class): string
+    protected static function multiplyReduce($x, $y, $n, $class)
     {
         return static::reduce(bcmul($x, $y, 0), $n);
     }
@@ -80,9 +97,13 @@ abstract class Base extends BCMath
     /**
      * Modular square
      *
+     * @param string $x
+     * @param string $n
+     * @param string $class
      * @see self::slidingWindow()
+     * @return string
      */
-    protected static function squareReduce(string $x, string $n, string $class): string
+    protected static function squareReduce($x, $n, $class)
     {
         return static::reduce(bcmul($x, $x, 0), $n);
     }

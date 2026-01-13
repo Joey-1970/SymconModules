@@ -11,11 +11,9 @@
  * @link      http://pear.php.net/package/Math_BigInteger
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Math\BigInteger\Engines\BCMath;
 
-namespace phpseclib4\Math\BigInteger\Engines\BCMath;
-
-use phpseclib4\Math\BigInteger\Engines\BCMath\Reductions\Barrett;
+use phpseclib3\Math\BigInteger\Engines\BCMath\Reductions\Barrett;
 
 /**
  * PHP Default Modular Exponentiation Engine
