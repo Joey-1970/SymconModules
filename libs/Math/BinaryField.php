@@ -12,14 +12,11 @@
  * @license   http://www.opensource.org/licenses/mit-license.html  MIT License
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Math;
 
-namespace phpseclib4\Math;
-
-use phpseclib4\Common\Functions\Strings;
-use phpseclib4\Exception\OutOfBoundsException;
-use phpseclib4\Math\BinaryField\Integer;
-use phpseclib4\Math\Common\FiniteField;
+use phpseclib3\Common\Functions\Strings;
+use phpseclib3\Math\BinaryField\Integer;
+use phpseclib3\Math\Common\FiniteField;
 
 /**
  * Binary Finite Fields
@@ -58,7 +55,7 @@ class BinaryField extends FiniteField
                http://tools.ietf.org/html/rfc4253#section-6.1 (The Secure Shell (SSH) Transport Layer Protocol) says
                "implementations SHOULD check that the packet length is reasonable in order for the implementation to
                 avoid denial of service and/or buffer overflow attacks" */
-            throw new OutOfBoundsException('Degrees larger than 571 are not supported');
+            throw new \OutOfBoundsException('Degrees larger than 571 are not supported');
         }
         $val = str_repeat('0', $m) . '1';
         foreach ($indices as $index) {
@@ -67,13 +64,13 @@ class BinaryField extends FiniteField
         $modulo = static::base2ToBase256(strrev($val));
 
         $mStart = 2 * $m - 2;
-        $t = (int) ceil($m / 8);
+        $t = ceil($m / 8);
         $finalMask = chr((1 << ($m % 8)) - 1);
         if ($finalMask == "\0") {
             $finalMask = "\xFF";
         }
         $bitLen = $mStart + 1;
-        $pad = (int) ceil($bitLen / 8);
+        $pad = ceil($bitLen / 8);
         $h = $bitLen & 7;
         $h = $h ? 8 - $h : 0;
 
@@ -123,17 +120,20 @@ class BinaryField extends FiniteField
     /**
      * Returns an instance of a dynamically generated PrimeFieldInteger class
      *
-     * @param BigInteger|string $num
+     * @param string $num
+     * @return Integer
      */
-    public function newInteger($num): Integer
+    public function newInteger($num)
     {
         return new Integer($this->instanceID, $num instanceof BigInteger ? $num->toBytes() : $num);
     }
 
     /**
      * Returns an integer on the finite field between one and the prime modulo
+     *
+     * @return Integer
      */
-    public function randomInteger(): Integer
+    public function randomInteger()
     {
         static $one;
         if (!isset($one)) {
@@ -145,24 +145,32 @@ class BinaryField extends FiniteField
 
     /**
      * Returns the length of the modulo in bytes
+     *
+     * @return int
      */
-    public function getLengthInBytes(): int
+    public function getLengthInBytes()
     {
         return strlen(Integer::getModulo($this->instanceID));
     }
 
     /**
      * Returns the length of the modulo in bits
+     *
+     * @return int
      */
-    public function getLength(): int
+    public function getLength()
     {
         return strlen(Integer::getModulo($this->instanceID)) << 3;
     }
 
     /**
      * Converts a base-2 string to a base-256 string
+     *
+     * @param string $x
+     * @param int|null $size
+     * @return string
      */
-    public static function base2ToBase256(string $x, ?int $size = null): string
+    public static function base2ToBase256($x, $size = null)
     {
         $str = Strings::bits2bin($x);
 
@@ -180,8 +188,11 @@ class BinaryField extends FiniteField
 
     /**
      * Converts a base-256 string to a base-2 string
+     *
+     * @param string $x
+     * @return string
      */
-    public static function base256ToBase2(string $x): string
+    public static function base256ToBase2($x)
     {
         if (function_exists('gmp_import')) {
             return gmp_strval(gmp_import($x), 2);
