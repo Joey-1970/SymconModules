@@ -1,4 +1,32 @@
 <?
+
+/**
+ * AutoLoaderSSHClientPHPSecLib
+ */
+class AutoLoaderPHPSecLib
+{
+    private $namespace;
+
+    public function __construct($namespace = null)
+    {
+        $this->namespace = $namespace;
+    }
+
+    public function register(): void
+    {
+        spl_autoload_register([$this, 'loadClass']);
+    }
+
+    public function loadClass($className): void
+    {
+        $LibPath = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'libs' . DIRECTORY_SEPARATOR .'phpseclib'. DIRECTORY_SEPARATOR;
+        $file = $LibPath . str_replace(['\\', 'phpseclib3'], [DIRECTORY_SEPARATOR, 'phpseclib'], $className) . '.php';
+        if (file_exists($file)) {
+            require_once $file;
+        }
+    }
+}
+
 class IPS2GPIO_IO extends IPSModule
 {
 	private $Socket = false;
@@ -2381,10 +2409,9 @@ class IPS2GPIO_IO extends IPSModule
 	public function SSH_Connect(String $Command)
 	{
 	        If (($this->ReadPropertyBoolean("Open") == true) ) {
-			set_include_path(__DIR__.'/../libs');
-			require_once (__DIR__ . '/../libs/Net/SSH2.php');
-
-			$ssh = new Net_SSH2($this->ReadPropertyString("IPAddress"));
+			$AutoLoader = new AutoLoaderPHPSecLib('Net\SSH2');
+			$AutoLoader->register();
+			$ssh = new \phpseclib3\Net\SSH2($this->ReadPropertyString("IPAddress"));
 			$login = @$ssh->login($this->ReadPropertyString("User"), $this->ReadPropertyString("Password"));
 			if ($login == false)
 			{
@@ -2406,10 +2433,9 @@ class IPS2GPIO_IO extends IPSModule
 	private function SSH_Connect_Array(String $Command)
 	{
 	        If (($this->ReadPropertyBoolean("Open") == true) AND ($this->GetParentStatus() == 102)) {
-			set_include_path(__DIR__.'/../libs');
-			require_once (__DIR__ . '/../libs/Net/SSH2.php');
-
-			$ssh = new Net_SSH2($this->ReadPropertyString("IPAddress"));
+			$AutoLoader = new AutoLoaderPHPSecLib('Net\SSH2');
+			$AutoLoader->register();
+			$ssh = new \phpseclib3\Net\SSH2($this->ReadPropertyString("IPAddress"));
 			$login = @$ssh->login($this->ReadPropertyString("User"), $this->ReadPropertyString("Password"));
 			if ($login == false)
 			{
