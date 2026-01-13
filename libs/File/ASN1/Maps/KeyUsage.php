@@ -11,11 +11,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\File\ASN1\Maps;
 
-namespace phpseclib4\File\ASN1\Maps;
-
-use phpseclib4\File\ASN1;
+use phpseclib3\File\ASN1;
 
 /**
  * KeyUsage
@@ -24,7 +22,7 @@ use phpseclib4\File\ASN1;
  */
 abstract class KeyUsage
 {
-    public const MAP = [
+    const MAP = [
         'type' => ASN1::TYPE_BIT_STRING,
         'mapping' => [
             'digitalSignature',
@@ -35,7 +33,7 @@ abstract class KeyUsage
             'keyCertSign',
             'cRLSign',
             'encipherOnly',
-            'decipherOnly',
-        ],
+            'decipherOnly'
+        ]
     ];
 }

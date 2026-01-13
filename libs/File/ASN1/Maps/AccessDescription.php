@@ -11,11 +11,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\File\ASN1\Maps;
 
-namespace phpseclib4\File\ASN1\Maps;
-
-use phpseclib4\File\ASN1;
+use phpseclib3\File\ASN1;
 
 /**
  * AccessDescription
@@ -24,11 +22,11 @@ use phpseclib4\File\ASN1;
  */
 abstract class AccessDescription
 {
-    public const MAP = [
+    const MAP = [
         'type' => ASN1::TYPE_SEQUENCE,
         'children' => [
             'accessMethod' => ['type' => ASN1::TYPE_OBJECT_IDENTIFIER],
-            'accessLocation' => GeneralName::MAP,
-        ],
+            'accessLocation' => GeneralName::MAP
+        ]
     ];
 }

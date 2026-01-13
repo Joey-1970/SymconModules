@@ -11,9 +11,7 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
-
-namespace phpseclib4\File\ASN1\Maps;
+namespace phpseclib3\File\ASN1\Maps;
 
 /**
  * MaskGenAglorithm
@@ -22,5 +20,5 @@ namespace phpseclib4\File\ASN1\Maps;
  */
 abstract class MaskGenAlgorithm
 {
-    public const MAP = AlgorithmIdentifier::MAP;
+    const MAP = AlgorithmIdentifier::MAP;
 }

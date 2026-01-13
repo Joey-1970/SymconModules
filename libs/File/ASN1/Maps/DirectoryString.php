@@ -11,11 +11,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\File\ASN1\Maps;
 
-namespace phpseclib4\File\ASN1\Maps;
-
-use phpseclib4\File\ASN1;
+use phpseclib3\File\ASN1;
 
 /**
  * DirectoryString
@@ -24,14 +22,14 @@ use phpseclib4\File\ASN1;
  */
 abstract class DirectoryString
 {
-    public const MAP = [
+    const MAP = [
         'type' => ASN1::TYPE_CHOICE,
         'children' => [
             'teletexString' => ['type' => ASN1::TYPE_TELETEX_STRING],
             'printableString' => ['type' => ASN1::TYPE_PRINTABLE_STRING],
             'universalString' => ['type' => ASN1::TYPE_UNIVERSAL_STRING],
             'utf8String' => ['type' => ASN1::TYPE_UTF8_STRING],
-            'bmpString' => ['type' => ASN1::TYPE_BMP_STRING],
-        ],
+            'bmpString' => ['type' => ASN1::TYPE_BMP_STRING]
+        ]
     ];
 }

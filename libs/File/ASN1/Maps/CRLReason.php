@@ -11,11 +11,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\File\ASN1\Maps;
 
-namespace phpseclib4\File\ASN1\Maps;
-
-use phpseclib4\File\ASN1;
+use phpseclib3\File\ASN1;
 
 /**
  * CRLReason
@@ -24,7 +22,7 @@ use phpseclib4\File\ASN1;
  */
 abstract class CRLReason
 {
-    public const MAP = [
+    const MAP = [
         'type' => ASN1::TYPE_ENUMERATED,
         'mapping' => [
             'unspecified',
@@ -37,7 +35,7 @@ abstract class CRLReason
             // Value 7 is not used.
             8 => 'removeFromCRL',
             'privilegeWithdrawn',
-            'aACompromise',
-        ],
+            'aACompromise'
+        ]
     ];
 }

@@ -11,11 +11,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\File\ASN1\Maps;
 
-namespace phpseclib4\File\ASN1\Maps;
-
-use phpseclib4\File\ASN1;
+use phpseclib3\File\ASN1;
 
 /**
  * CertificateList
@@ -24,12 +22,12 @@ use phpseclib4\File\ASN1;
  */
 abstract class CertificateList
 {
-    public const MAP = [
+    const MAP = [
         'type' => ASN1::TYPE_SEQUENCE,
         'children' => [
             'tbsCertList' => TBSCertList::MAP,
             'signatureAlgorithm' => AlgorithmIdentifier::MAP,
-            'signature' => ['type' => ASN1::TYPE_BIT_STRING],
-        ],
+            'signature' => ['type' => ASN1::TYPE_BIT_STRING]
+        ]
     ];
 }

@@ -11,11 +11,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\File\ASN1\Maps;
 
-namespace phpseclib4\File\ASN1\Maps;
-
-use phpseclib4\File\ASN1;
+use phpseclib3\File\ASN1;
 
 /**
  * BasicConstraints
@@ -24,18 +22,18 @@ use phpseclib4\File\ASN1;
  */
 abstract class BasicConstraints
 {
-    public const MAP = [
+    const MAP = [
         'type' => ASN1::TYPE_SEQUENCE,
         'children' => [
             'cA' => [
                 'type' => ASN1::TYPE_BOOLEAN,
                 'optional' => true,
-                'default' => false,
+                'default' => false
             ],
             'pathLenConstraint' => [
                 'type' => ASN1::TYPE_INTEGER,
-                'optional' => true,
-            ],
-        ],
+                'optional' => true
+            ]
+        ]
     ];
 }

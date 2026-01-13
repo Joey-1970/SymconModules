@@ -11,11 +11,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\File\ASN1\Maps;
 
-namespace phpseclib4\File\ASN1\Maps;
-
-use phpseclib4\File\ASN1;
+use phpseclib3\File\ASN1;
 
 /**
  * DSAPrivateKey
@@ -24,7 +22,7 @@ use phpseclib4\File\ASN1;
  */
 abstract class DSAPrivateKey
 {
-    public const MAP = [
+    const MAP = [
         'type' => ASN1::TYPE_SEQUENCE,
         'children' => [
             'version' => ['type' => ASN1::TYPE_INTEGER],
@@ -32,7 +30,7 @@ abstract class DSAPrivateKey
             'q' => ['type' => ASN1::TYPE_INTEGER],
             'g' => ['type' => ASN1::TYPE_INTEGER],
             'y' => ['type' => ASN1::TYPE_INTEGER],
-            'x' => ['type' => ASN1::TYPE_INTEGER],
-        ],
+            'x' => ['type' => ASN1::TYPE_INTEGER]
+        ]
     ];
 }

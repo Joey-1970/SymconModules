@@ -11,11 +11,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\File\ASN1\Maps;
 
-namespace phpseclib4\File\ASN1\Maps;
-
-use phpseclib4\File\ASN1;
+use phpseclib3\File\ASN1;
 
 /**
  * DssSigValue
@@ -24,11 +22,11 @@ use phpseclib4\File\ASN1;
  */
 abstract class DssSigValue
 {
-    public const MAP = [
+    const MAP = [
         'type' => ASN1::TYPE_SEQUENCE,
         'children' => [
             'r' => ['type' => ASN1::TYPE_INTEGER],
-            's' => ['type' => ASN1::TYPE_INTEGER],
-        ],
+            's' => ['type' => ASN1::TYPE_INTEGER]
+        ]
     ];
 }

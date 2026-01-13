@@ -11,11 +11,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\File\ASN1\Maps;
 
-namespace phpseclib4\File\ASN1\Maps;
-
-use phpseclib4\File\ASN1;
+use phpseclib3\File\ASN1;
 
 /**
  * EDIPartyName
@@ -24,21 +22,21 @@ use phpseclib4\File\ASN1;
  */
 abstract class EDIPartyName
 {
-    public const MAP = [
+    const MAP = [
         'type' => ASN1::TYPE_SEQUENCE,
         'children' => [
             'nameAssigner' => [
                 'constant' => 0,
                 'optional' => true,
-                'implicit' => true,
+                'implicit' => true
             ] + DirectoryString::MAP,
-            // partyName is technically required but \phpseclib4\File\ASN1 doesn't currently support non-optional constants and
+            // partyName is technically required but \phpseclib3\File\ASN1 doesn't currently support non-optional constants and
             // setting it to optional gets the job done in any event.
             'partyName' => [
                 'constant' => 1,
                 'optional' => true,
-                'implicit' => true,
-            ] + DirectoryString::MAP,
-        ],
+                'implicit' => true
+            ] + DirectoryString::MAP
+        ]
     ];
 }
