@@ -9,11 +9,7 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
-
-namespace phpseclib4\Crypt\Common;
-
-use phpseclib4\File\Common\Signable;
+namespace phpseclib3\Crypt\Common;
 
 /**
  * PrivateKey interface
@@ -22,13 +18,14 @@ use phpseclib4\File\Common\Signable;
  */
 interface PrivateKey
 {
-    public function sign(string|Signable $message): string;
+    public function sign($message);
     //public function decrypt($ciphertext);
-    public function getPublicKey(): PublicKey;
-    public function toString(string $type, array $options = []): string;
+    public function getPublicKey();
+    public function toString($type, array $options = []);
 
     /**
-     * @return static
+     * @param string|false $password
+     * @return mixed
      */
-    public function withPassword(#[SensitiveParameter] ?string $password = null): PrivateKey;
+    public function withPassword($password = false);
 }

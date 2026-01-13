@@ -12,9 +12,7 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
-
-namespace phpseclib4\Crypt\Common;
+namespace phpseclib3\Crypt\Common;
 
 /**
  * Base Class for all block cipher classes
