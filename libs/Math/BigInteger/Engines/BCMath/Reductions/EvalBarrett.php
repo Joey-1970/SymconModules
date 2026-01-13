@@ -11,12 +11,10 @@
  * @link      http://pear.php.net/package/Math_BigInteger
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Math\BigInteger\Engines\BCMath\Reductions;
 
-namespace phpseclib4\Math\BigInteger\Engines\BCMath\Reductions;
-
-use phpseclib4\Math\BigInteger\Engines\BCMath;
-use phpseclib4\Math\BigInteger\Engines\BCMath\Base;
+use phpseclib3\Math\BigInteger\Engines\BCMath;
+use phpseclib3\Math\BigInteger\Engines\BCMath\Base;
 
 /**
  * PHP Barrett Modular Exponentiation Engine
@@ -37,8 +35,12 @@ abstract class EvalBarrett extends Base
      *
      * This calls a dynamically generated loop unrolled function that's specific to a given modulo.
      * Array lookups are avoided as are if statements testing for how many bits the host OS supports, etc.
+     *
+     * @param string $n
+     * @param string $m
+     * @return string
      */
-    protected static function reduce(string $n, string $m): string
+    protected static function reduce($n, $m)
     {
         $inline = self::$custom_reduction;
         return $inline($n);
@@ -47,9 +49,11 @@ abstract class EvalBarrett extends Base
     /**
      * Generate Custom Reduction
      *
+     * @param BCMath $m
+     * @param string $class
      * @return callable|void
      */
-    protected static function generateCustomReduction(BCMath $m, string $class)
+    protected static function generateCustomReduction(BCMath $m, $class)
     {
         $m_length = strlen($m);
 
