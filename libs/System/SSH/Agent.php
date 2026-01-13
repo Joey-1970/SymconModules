@@ -12,9 +12,9 @@
  * <?php
  *    include 'vendor/autoload.php';
  *
- *    $agent = new \phpseclib4\System\SSH\Agent();
+ *    $agent = new \phpseclib3\System\SSH\Agent();
  *
- *    $ssh = new \phpseclib4\Net\SSH2('www.domain.tld');
+ *    $ssh = new \phpseclib3\Net\SSH2('www.domain.tld');
  *    if (!$ssh->login('username', $agent)) {
  *        exit('Login Failed');
  *    }
@@ -30,22 +30,20 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\System\SSH;
 
-namespace phpseclib4\System\SSH;
-
-use phpseclib4\Common\Functions\Strings;
-use phpseclib4\Crypt\Common\PublicKey;
-use phpseclib4\Crypt\PublicKeyLoader;
-use phpseclib4\Exception\BadConfigurationException;
-use phpseclib4\Exception\RuntimeException;
-use phpseclib4\Net\SSH2;
-use phpseclib4\System\SSH\Agent\Identity;
+use phpseclib3\Common\Functions\Strings;
+use phpseclib3\Crypt\Common\PublicKey;
+use phpseclib3\Crypt\PublicKeyLoader;
+use phpseclib3\Crypt\RSA;
+use phpseclib3\Exception\BadConfigurationException;
+use phpseclib3\Net\SSH2;
+use phpseclib3\System\SSH\Agent\Identity;
 
 /**
  * Pure-PHP ssh-agent client identity factory
  *
- * requestIdentities() method pumps out \phpseclib4\System\SSH\Agent\Identity objects
+ * requestIdentities() method pumps out \phpseclib3\System\SSH\Agent\Identity objects
  *
  * @author  Jim Wigginton <terrafrost@php.net>
  */
@@ -56,27 +54,27 @@ class Agent
     // Message numbers
 
     // to request SSH1 keys you have to use SSH_AGENTC_REQUEST_RSA_IDENTITIES (1)
-    public const SSH_AGENTC_REQUEST_IDENTITIES = 11;
+    const SSH_AGENTC_REQUEST_IDENTITIES = 11;
     // this is the SSH2 response; the SSH1 response is SSH_AGENT_RSA_IDENTITIES_ANSWER (2).
-    public const SSH_AGENT_IDENTITIES_ANSWER = 12;
+    const SSH_AGENT_IDENTITIES_ANSWER = 12;
     // the SSH1 request is SSH_AGENTC_RSA_CHALLENGE (3)
-    public const SSH_AGENTC_SIGN_REQUEST = 13;
+    const SSH_AGENTC_SIGN_REQUEST = 13;
     // the SSH1 response is SSH_AGENT_RSA_RESPONSE (4)
-    public const SSH_AGENT_SIGN_RESPONSE = 14;
+    const SSH_AGENT_SIGN_RESPONSE = 14;
 
     // Agent forwarding status
 
     // no forwarding requested and not active
-    public const FORWARD_NONE = 0;
+    const FORWARD_NONE = 0;
     // request agent forwarding when opportune
-    public const FORWARD_REQUEST = 1;
+    const FORWARD_REQUEST = 1;
     // forwarding has been request and is active
-    public const FORWARD_ACTIVE = 2;
+    const FORWARD_ACTIVE = 2;
 
     /**
      * Unused
      */
-    public const SSH_AGENT_FAILURE = 5;
+    const SSH_AGENT_FAILURE = 5;
 
     /**
      * Socket Resource
@@ -115,9 +113,9 @@ class Agent
      *
      * @return Agent
      * @throws BadConfigurationException if SSH_AUTH_SOCK cannot be found
-     * @throws RuntimeException on connection errors
+     * @throws \RuntimeException on connection errors
      */
-    public function __construct(?string $address = null)
+    public function __construct($address = null)
     {
         if (!$address) {
             switch (true) {
@@ -135,16 +133,16 @@ class Agent
         if (in_array('unix', stream_get_transports())) {
             $this->fsock = fsockopen('unix://' . $address, 0, $errno, $errstr);
             if (!$this->fsock) {
-                throw new RuntimeException("Unable to connect to ssh-agent (Error $errno: $errstr)");
+                throw new \RuntimeException("Unable to connect to ssh-agent (Error $errno: $errstr)");
             }
         } else {
-            if (substr($address, 0, 9) != '\\\\.\\pipe\\' || str_contains(substr($address, 9), '\\')) {
-                throw new RuntimeException('Address is not formatted as a named pipe should be');
+            if (substr($address, 0, 9) != '\\\\.\\pipe\\' || strpos(substr($address, 9), '\\') !== false) {
+                throw new \RuntimeException('Address is not formatted as a named pipe should be');
             }
 
             $this->fsock = fopen($address, 'r+b');
             if (!$this->fsock) {
-                throw new RuntimeException('Unable to open address');
+                throw new \RuntimeException('Unable to open address');
             }
         }
     }
@@ -153,34 +151,35 @@ class Agent
      * Request Identities
      *
      * See "2.5.2 Requesting a list of protocol 2 keys"
-     * Returns an array containing zero or more \phpseclib4\System\SSH\Agent\Identity objects
+     * Returns an array containing zero or more \phpseclib3\System\SSH\Agent\Identity objects
      *
-     * @throws RuntimeException on receipt of unexpected packets
+     * @return array
+     * @throws \RuntimeException on receipt of unexpected packets
      */
-    public function requestIdentities(): array
+    public function requestIdentities()
     {
         if (!$this->fsock) {
             return [];
         }
 
         $packet = pack('NC', 1, self::SSH_AGENTC_REQUEST_IDENTITIES);
-        if (strlen($packet) != fwrite($this->fsock, $packet)) {
-            throw new RuntimeException('Connection closed while requesting identities');
+        if (strlen($packet) != fputs($this->fsock, $packet)) {
+            throw new \RuntimeException('Connection closed while requesting identities');
         }
 
         $length = current(unpack('N', $this->readBytes(4)));
         $packet = $this->readBytes($length);
 
-        [$type, $keyCount] = Strings::unpackSSH2('CN', $packet);
+        list($type, $keyCount) = Strings::unpackSSH2('CN', $packet);
         if ($type != self::SSH_AGENT_IDENTITIES_ANSWER) {
-            throw new RuntimeException('Unable to request identities');
+            throw new \RuntimeException('Unable to request identities');
         }
 
         $identities = [];
         for ($i = 0; $i < $keyCount; $i++) {
-            [$key_blob, $comment] = Strings::unpackSSH2('ss', $packet);
+            list($key_blob, $comment) = Strings::unpackSSH2('ss', $packet);
             $temp = $key_blob;
-            [$key_type] = Strings::unpackSSH2('s', $temp);
+            list($key_type) = Strings::unpackSSH2('s', $temp);
             switch ($key_type) {
                 case 'ssh-rsa':
                 case 'ssh-dss':
@@ -225,8 +224,10 @@ class Agent
     /**
      * Signal that agent forwarding should
      * be requested when a channel is opened
+     *
+     * @return void
      */
-    public function startSSHForwarding(): void
+    public function startSSHForwarding()
     {
         if ($this->forward_status == self::FORWARD_NONE) {
             $this->forward_status = self::FORWARD_REQUEST;
@@ -235,8 +236,11 @@ class Agent
 
     /**
      * Request agent forwarding of remote server
+     *
+     * @param SSH2 $ssh
+     * @return bool
      */
-    private function request_forwarding(SSH2 $ssh): bool
+    private function request_forwarding(SSH2 $ssh)
     {
         if (!$ssh->requestAgentForwarding()) {
             return false;
@@ -253,8 +257,10 @@ class Agent
      * This method is called upon successful channel
      * open to give the SSH Agent an opportunity
      * to take further action. i.e. request agent forwarding
+     *
+     * @param SSH2 $ssh
      */
-    public function registerChannelOpen(SSH2 $ssh): void
+    public function registerChannelOpen(SSH2 $ssh)
     {
         if ($this->forward_status == self::FORWARD_REQUEST) {
             $this->request_forwarding($ssh);
@@ -264,10 +270,11 @@ class Agent
     /**
      * Forward data to SSH Agent and return data reply
      *
+     * @param string $data
      * @return string Data from SSH Agent
-     * @throws RuntimeException on connection errors
+     * @throws \RuntimeException on connection errors
      */
-    public function forwardData(string $data)
+    public function forwardData($data)
     {
         if ($this->expected_bytes > 0) {
             $this->socket_buffer .= $data;
@@ -283,7 +290,7 @@ class Agent
         }
 
         if (strlen($this->socket_buffer) != fwrite($this->fsock, $this->socket_buffer)) {
-            throw new RuntimeException('Connection closed attempting to forward data to SSH agent');
+            throw new \RuntimeException('Connection closed attempting to forward data to SSH agent');
         }
 
         $this->socket_buffer = '';
