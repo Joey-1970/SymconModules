@@ -11,12 +11,10 @@
  * @link      http://pear.php.net/package/Math_BigInteger
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Math\BigInteger\Engines;
 
-namespace phpseclib4\Math\BigInteger\Engines;
-
-use phpseclib4\Common\Functions\Strings;
-use phpseclib4\Exception\BadConfigurationException;
+use phpseclib3\Common\Functions\Strings;
+use phpseclib3\Exception\BadConfigurationException;
 
 /**
  * BCMath Engine.
@@ -31,21 +29,27 @@ class BCMath extends Engine
      * @see parent::bitwise_leftRotate()
      * @see parent::bitwise_rightRotate()
      */
-    public const FAST_BITWISE = false;
+    const FAST_BITWISE = false;
 
     /**
      * Engine Directory
      *
      * @see parent::setModExpEngine
      */
-    public const ENGINE_DIR = 'BCMath';
+    const ENGINE_DIR = 'BCMath';
+
+    /**
+     * Test to see if bcmod() accepts 2 or 3 parameters
+     */
+    const BCMOD_THREE_PARAMS = PHP_VERSION_ID >= 72000;
 
     /**
      * Test for engine validity
      *
+     * @return bool
      * @see parent::__construct()
      */
-    public static function isValidEngine(): bool
+    public static function isValidEngine()
     {
         return extension_loaded('bcmath');
     }
@@ -54,9 +58,10 @@ class BCMath extends Engine
      * Default constructor
      *
      * @param mixed $x integer Base-10 number or base-$base number if $base set.
+     * @param int $base
      * @see parent::__construct()
      */
-    public function __construct($x = 0, int $base = 10)
+    public function __construct($x = 0, $base = 10)
     {
         if (!isset(static::$isValidEngine[static::class])) {
             static::$isValidEngine[static::class] = self::isValidEngine();
@@ -73,9 +78,10 @@ class BCMath extends Engine
     /**
      * Initialize a BCMath BigInteger Engine instance
      *
+     * @param int $base
      * @see parent::__construct()
      */
-    protected function initialize(int $base): void
+    protected function initialize($base)
     {
         switch (abs($base)) {
             case 256:
@@ -89,7 +95,9 @@ class BCMath extends Engine
                     $this->value = bcmul($this->value, '4294967296', 0); // 4294967296 == 2**32
                     $this->value = bcadd(
                         $this->value,
-                        (string) (0x1000000 * ord($x[$i]) + ((ord($x[$i + 1]) << 16) | (ord($x[$i + 2]) << 8) | ord($x[$i + 3]))),
+                        0x1000000 * ord($x[$i]) + ((ord($x[$i + 1]) << 16) | (ord(
+                            $x[$i + 2]
+                        ) << 8) | ord($x[$i + 3])),
                         0
                     );
                 }
@@ -113,8 +121,10 @@ class BCMath extends Engine
 
     /**
      * Converts a BigInteger to a base-10 number.
+     *
+     * @return string
      */
-    public function toString(): string
+    public function toString()
     {
         if ($this->value === '0') {
             return '0';
@@ -125,8 +135,11 @@ class BCMath extends Engine
 
     /**
      * Converts a BigInteger to a byte string (eg. base-256).
+     *
+     * @param bool $twos_compliment
+     * @return string
      */
-    public function toBytes(bool $twos_compliment = false): string
+    public function toBytes($twos_compliment = false)
     {
         if ($twos_compliment) {
             return $this->toBytesHelper();
@@ -140,7 +153,7 @@ class BCMath extends Engine
         }
 
         while (bccomp($current, '0', 0) > 0) {
-            $temp = bcmod($current, '16777216', 0);
+            $temp = self::BCMOD_THREE_PARAMS ? bcmod($current, '16777216', 0) : bcmod($current, '16777216');
             $value = chr($temp >> 16) . chr(($temp >> 8) & 0xFF) . chr($temp & 0xFF) . $value;
             $current = bcdiv($current, '16777216', 0);
         }
@@ -152,8 +165,11 @@ class BCMath extends Engine
 
     /**
      * Adds two BigIntegers.
+     *
+     * @param BCMath $y
+     * @return BCMath
      */
-    public function add(BCMath $y): BCMath
+    public function add(BCMath $y)
     {
         $temp = new self();
         $temp->value = bcadd($this->value, $y->value, 0);
@@ -163,8 +179,11 @@ class BCMath extends Engine
 
     /**
      * Subtracts two BigIntegers.
+     *
+     * @param BCMath $y
+     * @return BCMath
      */
-    public function subtract(BCMath $y): BCMath
+    public function subtract(BCMath $y)
     {
         $temp = new self();
         $temp->value = bcsub($this->value, $y->value, 0);
@@ -174,8 +193,11 @@ class BCMath extends Engine
 
     /**
      * Multiplies two BigIntegers.
+     *
+     * @param BCMath $x
+     * @return BCMath
      */
-    public function multiply(BCMath $x): BCMath
+    public function multiply(BCMath $x)
     {
         $temp = new self();
         $temp->value = bcmul($this->value, $x->value, 0);
@@ -191,15 +213,16 @@ class BCMath extends Engine
      * same.  If the remainder would be negative, the "common residue" is equal to the sum of the remainder
      * and the divisor (basically, the "common residue" is the first positive modulo).
      *
+     * @param BCMath $y
      * @return array{static, static}
      */
-    public function divide(BCMath $y): array
+    public function divide(BCMath $y)
     {
         $quotient = new self();
         $remainder = new self();
 
         $quotient->value = bcdiv($this->value, $y->value, 0);
-        $remainder->value = bcmod($this->value, $y->value, 0);
+        $remainder->value = self::BCMOD_THREE_PARAMS ? bcmod($this->value, $y->value, 0) : bcmod($this->value, $y->value);
 
         if ($remainder->value[0] == '-') {
             $remainder->value = bcadd($remainder->value, $y->value[0] == '-' ? substr($y->value, 1) : $y->value, 0);
@@ -213,6 +236,7 @@ class BCMath extends Engine
      *
      * Say you have (30 mod 17 * x mod 17) mod 17 == 1.  x can be found using modular inverses.
      *
+     * @param BCMath $n
      * @return false|BCMath
      */
     public function modInverse(BCMath $n)
@@ -228,9 +252,10 @@ class BCMath extends Engine
      * combination is returned is dependent upon which mode is in use.  See
      * {@link http://en.wikipedia.org/wiki/B%C3%A9zout%27s_identity Bezout's identity - Wikipedia} for more information.
      *
+     * @param BCMath $n
      * @return array{gcd: static, x: static, y: static}
      */
-    public function extendedGCD(BCMath $n): array
+    public function extendedGCD(BCMath $n)
     {
         // it might be faster to use the binary xGCD algorithim here, as well, but (1) that algorithim works
         // best when the base is a power of 2 and (2) i don't think it'd make much difference, anyway.  as is,
@@ -263,7 +288,7 @@ class BCMath extends Engine
         return [
             'gcd' => $this->normalize(new static($u)),
             'x' => $this->normalize(new static($a)),
-            'y' => $this->normalize(new static($b)),
+            'y' => $this->normalize(new static($b))
         ];
     }
 
@@ -271,17 +296,22 @@ class BCMath extends Engine
      * Calculates the greatest common divisor
      *
      * Say you have 693 and 609.  The GCD is 21.
+     *
+     * @param BCMath $n
+     * @return BCMath
      */
-    public function gcd(BCMath $n): BCMath
+    public function gcd(BCMath $n)
     {
-        ['gcd' => $gcd] = $this->extendedGCD($n);
+        $gcd = $this->extendedGCD($n)['gcd'];
         return $gcd;
     }
 
     /**
      * Absolute value.
+     *
+     * @return BCMath
      */
-    public function abs(): BCMath
+    public function abs()
     {
         $temp = new static();
         $temp->value = strlen($this->value) && $this->value[0] == '-' ?
@@ -293,24 +323,33 @@ class BCMath extends Engine
 
     /**
      * Logical And
+     *
+     * @param BCMath $x
+     * @return BCMath
      */
-    public function bitwise_and(BCMath $x): BCMath
+    public function bitwise_and(BCMath $x)
     {
         return $this->bitwiseAndHelper($x);
     }
 
     /**
      * Logical Or
+     *
+     * @param BCMath $x
+     * @return BCMath
      */
-    public function bitwise_or(BCMath $x): BCMath
+    public function bitwise_or(BCMath $x)
     {
         return $this->bitwiseOrHelper($x);
     }
 
     /**
      * Logical Exclusive Or
+     *
+     * @param BCMath $x
+     * @return BCMath
      */
-    public function bitwise_xor(BCMath $x): BCMath
+    public function bitwise_xor(BCMath $x)
     {
         return $this->bitwiseXorHelper($x);
     }
@@ -319,11 +358,14 @@ class BCMath extends Engine
      * Logical Right Shift
      *
      * Shifts BigInteger's by $shift bits, effectively dividing by 2**$shift.
+     *
+     * @param int $shift
+     * @return BCMath
      */
-    public function bitwise_rightShift(int $shift): BCMath
+    public function bitwise_rightShift($shift)
     {
         $temp = new static();
-        $temp->value = bcdiv($this->value, bcpow('2', (string)$shift, 0), 0);
+        $temp->value = bcdiv($this->value, bcpow('2', $shift, 0), 0);
 
         return $this->normalize($temp);
     }
@@ -332,11 +374,14 @@ class BCMath extends Engine
      * Logical Left Shift
      *
      * Shifts BigInteger's by $shift bits, effectively multiplying by 2**$shift.
+     *
+     * @param int $shift
+     * @return BCMath
      */
-    public function bitwise_leftShift(int $shift): BCMath
+    public function bitwise_leftShift($shift)
     {
         $temp = new static();
-        $temp->value = bcmul($this->value, bcpow('2', (string) $shift, 0), 0);
+        $temp->value = bcmul($this->value, bcpow('2', $shift, 0), 0);
 
         return $this->normalize($temp);
     }
@@ -355,10 +400,11 @@ class BCMath extends Engine
      *
      * {@internal Could return $this->subtract($x), but that's not as fast as what we do do.}
      *
+     * @param BCMath $y
      * @return int in case < 0 if $this is less than $y; > 0 if $this is greater than $y, and 0 if they are equal.
      * @see self::equals()
      */
-    public function compare(BCMath $y): int
+    public function compare(BCMath $y)
     {
         return bccomp($this->value, $y->value, 0);
     }
@@ -367,16 +413,23 @@ class BCMath extends Engine
      * Tests the equality of two numbers.
      *
      * If you need to see if one number is greater than or less than another number, use BigInteger::compare()
+     *
+     * @param BCMath $x
+     * @return bool
      */
-    public function equals(BCMath $x): bool
+    public function equals(BCMath $x)
     {
         return $this->value == $x->value;
     }
 
     /**
      * Performs modular exponentiation.
+     *
+     * @param BCMath $e
+     * @param BCMath $n
+     * @return BCMath
      */
-    public function modPow(BCMath $e, BCMath $n): BCMath
+    public function modPow(BCMath $e, BCMath $n)
     {
         return $this->powModOuter($e, $n);
     }
@@ -385,16 +438,24 @@ class BCMath extends Engine
      * Performs modular exponentiation.
      *
      * Alias for modPow().
+     *
+     * @param BCMath $e
+     * @param BCMath $n
+     * @return BCMath
      */
-    public function powMod(BCMath $e, BCMath $n): BCMath
+    public function powMod(BCMath $e, BCMath $n)
     {
         return $this->powModOuter($e, $n);
     }
 
     /**
      * Performs modular exponentiation.
+     *
+     * @param BCMath $e
+     * @param BCMath $n
+     * @return BCMath
      */
-    protected function powModInner(BCMath $e, BCMath $n): BCMath
+    protected function powModInner(BCMath $e, BCMath $n)
     {
         try {
             $class = static::$modexpEngine[static::class];
@@ -408,14 +469,17 @@ class BCMath extends Engine
      * Normalize
      *
      * Removes leading zeros and truncates (if necessary) to maintain the appropriate precision
+     *
+     * @param BCMath $result
+     * @return BCMath
      */
-    protected function normalize(BCMath $result): BCMath
+    protected function normalize(BCMath $result)
     {
         $result->precision = $this->precision;
         $result->bitmask = $this->bitmask;
 
         if ($result->bitmask !== false) {
-            $result->value = bcmod($result->value, $result->bitmask->value, 0);
+            $result->value = self::BCMOD_THREE_PARAMS ? bcmod($result->value, $result->bitmask->value, 0) : bcmod($result->value, $result->bitmask->value);
         }
 
         return $result;
@@ -426,6 +490,8 @@ class BCMath extends Engine
      *
      * If there's not a prime within the given range, false will be returned.
      *
+     * @param BCMath $min
+     * @param BCMath $max
      * @return false|BCMath
      */
     public static function randomRangePrime(BCMath $min, BCMath $max)
@@ -441,8 +507,12 @@ class BCMath extends Engine
      *
      * BigInteger::randomRange($min, $max)
      * BigInteger::randomRange($max, $min)
+     *
+     * @param BCMath $min
+     * @param BCMath $max
+     * @return BCMath
      */
-    public static function randomRange(BCMath $min, BCMath $max): BCMath
+    public static function randomRange(BCMath $min, BCMath $max)
     {
         return self::randomRangeHelper($min, $max);
     }
@@ -454,7 +524,7 @@ class BCMath extends Engine
      *
      * @see self::randomPrime()
      */
-    protected function make_odd(): void
+    protected function make_odd()
     {
         if (!$this->isOdd()) {
             $this->value = bcadd($this->value, '1', 0);
@@ -466,7 +536,7 @@ class BCMath extends Engine
      *
      * @see self::isPrime()
      */
-    protected function testSmallPrimes(): bool
+    protected function testSmallPrimes()
     {
         if ($this->value === '1') {
             return false;
@@ -474,14 +544,14 @@ class BCMath extends Engine
         if ($this->value === '2') {
             return true;
         }
-        if ($this->value[-1] % 2 == 0) {
+        if ($this->value[strlen($this->value) - 1] % 2 == 0) {
             return false;
         }
 
         $value = $this->value;
 
         foreach (self::PRIMES as $prime) {
-            $r = bcmod($this->value, (string)$prime, 0);
+            $r = self::BCMOD_THREE_PARAMS ? bcmod($this->value, $prime, 0) : bcmod($this->value, $prime);
             if ($r == '0') {
                 return $this->value == $prime;
             }
@@ -495,14 +565,16 @@ class BCMath extends Engine
      *
      * ie. $s = gmp_scan1($n, 0) and $r = gmp_div_q($n, gmp_pow(gmp_init('2'), $s));
      *
+     * @param BCMath $r
+     * @return int
      * @see self::isPrime()
      */
-    public static function scan1divide(BCMath $r): int
+    public static function scan1divide(BCMath $r)
     {
         $r_value = &$r->value;
         $s = 0;
         // if $n was 1, $r would be 0 and this would be an infinite loop, hence our $this->equals(static::$one[static::class]) check earlier
-        while ($r_value[-1] % 2 == 0) {
+        while ($r_value[strlen($r_value) - 1] % 2 == 0) {
             $r_value = bcdiv($r_value, '2', 0);
             ++$s;
         }
@@ -512,8 +584,11 @@ class BCMath extends Engine
 
     /**
      * Performs exponentiation.
+     *
+     * @param BCMath $n
+     * @return BCMath
      */
-    public function pow(BCMath $n): BCMath
+    public function pow(BCMath $n)
     {
         $temp = new self();
         $temp->value = bcpow($this->value, $n->value, 0);
@@ -523,24 +598,34 @@ class BCMath extends Engine
 
     /**
      * Return the minimum BigInteger between an arbitrary number of BigIntegers.
+     *
+     * @param BCMath ...$nums
+     * @return BCMath
      */
-    public static function min(BCMath ...$nums): BCMath
+    public static function min(BCMath ...$nums)
     {
         return self::minHelper($nums);
     }
 
     /**
      * Return the maximum BigInteger between an arbitrary number of BigIntegers.
+     *
+     * @param BCMath ...$nums
+     * @return BCMath
      */
-    public static function max(BCMath ...$nums): BCMath
+    public static function max(BCMath ...$nums)
     {
         return self::maxHelper($nums);
     }
 
     /**
      * Tests BigInteger to see if it is between two integers, inclusive
+     *
+     * @param BCMath $min
+     * @param BCMath $max
+     * @return bool
      */
-    public function between(BCMath $min, BCMath $max): bool
+    public function between(BCMath $min, BCMath $max)
     {
         return $this->compare($min) >= 0 && $this->compare($max) <= 0;
     }
@@ -548,9 +633,11 @@ class BCMath extends Engine
     /**
      * Set Bitmask
      *
+     * @param int $bits
+     * @return Engine
      * @see self::setPrecision()
      */
-    protected static function setBitmask(int $bits): Engine
+    protected static function setBitmask($bits)
     {
         $temp = parent::setBitmask($bits);
         return $temp->add(static::$one[static::class]);
@@ -558,29 +645,35 @@ class BCMath extends Engine
 
     /**
      * Is Odd?
+     *
+     * @return bool
      */
-    public function isOdd(): bool
+    public function isOdd()
     {
-        return $this->value[-1] % 2 == 1;
+        return $this->value[strlen($this->value) - 1] % 2 == 1;
     }
 
     /**
      * Tests if a bit is set
+     *
+     * @return bool
      */
-    public function testBit($x): bool
+    public function testBit($x)
     {
-        $divisor = bcpow('2', (string) ($x + 1), 0);
+        $divisor = bcpow('2', $x + 1, 0);
         return bccomp(
-            bcmod($this->value, $divisor, 0),
-            bcpow('2', "$x", 0),
+            self::BCMOD_THREE_PARAMS ? bcmod($this->value, $divisor, 0) : bcmod($this->value, $divisor),
+            bcpow('2', $x, 0),
             0
         ) >= 0;
     }
 
     /**
      * Is Negative?
+     *
+     * @return bool
      */
-    public function isNegative(): bool
+    public function isNegative()
     {
         return strlen($this->value) && $this->value[0] == '-';
     }
@@ -589,8 +682,10 @@ class BCMath extends Engine
      * Negate
      *
      * Given $k, returns -$k
+     *
+     * @return BCMath
      */
-    public function negate(): BCMath
+    public function negate()
     {
         $temp = clone $this;
 
