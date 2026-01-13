@@ -9,16 +9,12 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Crypt\DSA;
 
-namespace phpseclib4\Crypt\DSA;
-
-use phpseclib4\Crypt\Common;
-use phpseclib4\Crypt\DSA;
-use phpseclib4\Crypt\DSA\Formats\Signature\ASN1 as ASN1Signature;
-use phpseclib4\File\Common\Signable;
-use phpseclib4\File\CSR;
-use phpseclib4\Math\BigInteger;
+use phpseclib3\Crypt\Common;
+use phpseclib3\Crypt\DSA;
+use phpseclib3\Crypt\DSA\Formats\Signature\ASN1 as ASN1Signature;
+use phpseclib3\Math\BigInteger;
 
 /**
  * DSA Private Key
@@ -31,8 +27,10 @@ final class PrivateKey extends DSA implements Common\PrivateKey
 
     /**
      * DSA secret exponent x
+     *
+     * @var BigInteger
      */
-    protected BigInteger $x;
+    protected $x;
 
     /**
      * Returns the public key
@@ -53,8 +51,9 @@ final class PrivateKey extends DSA implements Common\PrivateKey
      * without the parameters and the PKCS1 DSA public key format does not include the parameters.
      *
      * @see self::getPrivateKey()
+     * @return mixed
      */
-    public function getPublicKey(): PublicKey
+    public function getPublicKey()
     {
         $type = self::validatePlugin('Keys', 'PKCS8', 'savePublicKey');
 
@@ -73,20 +72,12 @@ final class PrivateKey extends DSA implements Common\PrivateKey
      * Create a signature
      *
      * @see self::verify()
+     * @param string $message
+     * @return mixed
      */
-    public function sign(string|Signable $source): string
+    public function sign($message)
     {
         $format = $this->sigFormat;
-
-        if ($source instanceof Signable) {
-            if ($source instanceof CSR && !$source->hasPublicKey()) {
-                $source->setPublicKey($this->getPublicKey());
-            }
-            $source->setSignatureAlgorithm($source::identifySignatureAlgorithm($this));
-            $message = $source->getSignableSection();
-        } else {
-            $message = $source;
-        }
 
         if (self::$engines['OpenSSL'] && in_array($this->hash->getHash(), openssl_get_md_methods())) {
             $signature = '';
@@ -94,21 +85,14 @@ final class PrivateKey extends DSA implements Common\PrivateKey
 
             if ($result) {
                 if ($this->shortFormat == 'ASN1') {
-                    if ($source instanceof Signable) {
-                        $source->setSignature($signature);
-                    }
                     return $signature;
                 }
 
-                ['r' => $r, 's' => $s] = ASN1Signature::load($signature);
+                $loaded = ASN1Signature::load($signature);
+                $r = $loaded['r'];
+                $s = $loaded['s'];
 
-                $signature = $format::save($r, $s);
-
-                if ($source instanceof Signable) {
-                    $source->setSignature($signature);
-                }
-
-                return $signature;
+                return $format::save($r, $s);
             }
         }
 
@@ -118,14 +102,14 @@ final class PrivateKey extends DSA implements Common\PrivateKey
         while (true) {
             $k = BigInteger::randomRange(self::$one, $this->q->subtract(self::$one));
             $r = $this->g->powMod($k, $this->p);
-            [, $r] = $r->divide($this->q);
+            list(, $r) = $r->divide($this->q);
             if ($r->equals(self::$zero)) {
                 continue;
             }
             $kinv = $k->modInverse($this->q);
             $temp = $h->add($this->x->multiply($r));
             $temp = $kinv->multiply($temp);
-            [, $s] = $temp->divide($this->q);
+            list(, $s) = $temp->divide($this->q);
             if (!$s->equals(self::$zero)) {
                 break;
             }
@@ -147,19 +131,17 @@ final class PrivateKey extends DSA implements Common\PrivateKey
         list(, $s) = $temp->divide($this->q);
         */
 
-        $signature = $format::save($r, $s);
-        if ($source instanceof Signable) {
-            $source->setSignature($signature);
-        }
-        return $signature;
+        return $format::save($r, $s);
     }
 
     /**
      * Returns the private key
      *
+     * @param string $type
      * @param array $options optional
+     * @return string
      */
-    public function toString(string $type, array $options = []): string
+    public function toString($type, array $options = [])
     {
         $type = self::validatePlugin('Keys', $type, 'savePrivateKey');
 

@@ -9,13 +9,11 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Crypt\DSA;
 
-namespace phpseclib4\Crypt\DSA;
-
-use phpseclib4\Crypt\Common;
-use phpseclib4\Crypt\DSA;
-use phpseclib4\Crypt\DSA\Formats\Signature\ASN1 as ASN1Signature;
+use phpseclib3\Crypt\Common;
+use phpseclib3\Crypt\DSA;
+use phpseclib3\Crypt\DSA\Formats\Signature\ASN1 as ASN1Signature;
 
 /**
  * DSA Public Key
@@ -32,8 +30,9 @@ final class PublicKey extends DSA implements Common\PublicKey
      * @see self::verify()
      * @param string $message
      * @param string $signature
+     * @return mixed
      */
-    public function verify($message, $signature): bool
+    public function verify($message, $signature)
     {
         $format = $this->sigFormat;
 
@@ -41,7 +40,8 @@ final class PublicKey extends DSA implements Common\PublicKey
         if ($params === false || count($params) != 2) {
             return false;
         }
-        ['r' => $r, 's' => $s] = $params;
+        $r = $params['r'];
+        $s = $params['s'];
 
         if (self::$engines['OpenSSL'] && in_array($this->hash->getHash(), openssl_get_md_methods())) {
             $sig = $format != 'ASN1' ? ASN1Signature::save($r, $s) : $signature;
@@ -61,12 +61,12 @@ final class PublicKey extends DSA implements Common\PublicKey
         $w = $s->modInverse($this->q);
         $h = $this->hash->hash($message);
         $h = $this->bits2int($h);
-        [, $u1] = $h->multiply($w)->divide($this->q);
-        [, $u2] = $r->multiply($w)->divide($this->q);
+        list(, $u1) = $h->multiply($w)->divide($this->q);
+        list(, $u2) = $r->multiply($w)->divide($this->q);
         $v1 = $this->g->powMod($u1, $this->p);
         $v2 = $this->y->powMod($u2, $this->p);
-        [, $v] = $v1->multiply($v2)->divide($this->p);
-        [, $v] = $v->divide($this->q);
+        list(, $v) = $v1->multiply($v2)->divide($this->p);
+        list(, $v) = $v->divide($this->q);
 
         return $v->equals($r);
     }
@@ -74,9 +74,11 @@ final class PublicKey extends DSA implements Common\PublicKey
     /**
      * Returns the public key
      *
+     * @param string $type
      * @param array $options optional
+     * @return string
      */
-    public function toString(string $type, array $options = []): string
+    public function toString($type, array $options = [])
     {
         $type = self::validatePlugin('Keys', $type, 'savePublicKey');
 
