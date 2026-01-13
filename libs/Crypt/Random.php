@@ -10,7 +10,7 @@
  * <?php
  *    include 'vendor/autoload.php';
  *
- *    echo bin2hex(\phpseclib4\Crypt\Random::string(8));
+ *    echo bin2hex(\phpseclib3\Crypt\Random::string(8));
  * ?>
  * </code>
  *
@@ -20,11 +20,7 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
-
-namespace phpseclib4\Crypt;
-
-use phpseclib4\Exception\RuntimeException;
+namespace phpseclib3\Crypt;
 
 /**
  * Pure-PHP Random Number Generator
@@ -40,9 +36,11 @@ abstract class Random
      * microoptimizations because this function has the potential of being called a huge number of times.
      * eg. for RSA key generation.
      *
-     * @throws RuntimeException if a symmetric cipher is needed but not loaded
+     * @param int $length
+     * @throws \RuntimeException if a symmetric cipher is needed but not loaded
+     * @return string
      */
-    public static function string(int $length): string
+    public static function string($length)
     {
         if (!$length) {
             return '';
@@ -85,7 +83,7 @@ abstract class Random
             $old_session_id = session_id();
             $old_use_cookies = ini_get('session.use_cookies');
             $old_session_cache_limiter = session_cache_limiter();
-            $_OLD_SESSION = $_SESSION ?? false;
+            $_OLD_SESSION = isset($_SESSION) ? $_SESSION : false;
             if ($old_session_id != '') {
                 session_write_close();
             }
@@ -102,7 +100,7 @@ abstract class Random
                  // as of PHP 8.1 $GLOBALS can't be accessed by reference, which eliminates
                  // the need for phpseclib_safe_serialize. see https://wiki.php.net/rfc/restrict_globals_usage
                  // for more info
-                 serialize($GLOBALS) .
+                 (version_compare(PHP_VERSION, '8.1.0', '>=') ? serialize($GLOBALS) : self::safe_serialize($GLOBALS)) .
                  self::safe_serialize($_SESSION) .
                  self::safe_serialize($_OLD_SESSION);
             $v = $seed = $_SESSION['seed'] = sha1($v, true);
@@ -143,26 +141,26 @@ abstract class Random
             //
             // http://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator#Designs_based_on_cryptographic_primitives
             switch (true) {
-                case class_exists('\phpseclib4\Crypt\AES'):
+                case class_exists('\phpseclib3\Crypt\AES'):
                     $crypto = new AES('ctr');
                     break;
-                case class_exists('\phpseclib4\Crypt\Twofish'):
+                case class_exists('\phpseclib3\Crypt\Twofish'):
                     $crypto = new Twofish('ctr');
                     break;
-                case class_exists('\phpseclib4\Crypt\Blowfish'):
+                case class_exists('\phpseclib3\Crypt\Blowfish'):
                     $crypto = new Blowfish('ctr');
                     break;
-                case class_exists('\phpseclib4\Crypt\TripleDES'):
+                case class_exists('\phpseclib3\Crypt\TripleDES'):
                     $crypto = new TripleDES('ctr');
                     break;
-                case class_exists('\phpseclib4\Crypt\DES'):
+                case class_exists('\phpseclib3\Crypt\DES'):
                     $crypto = new DES('ctr');
                     break;
-                case class_exists('\phpseclib4\Crypt\RC4'):
+                case class_exists('\phpseclib3\Crypt\RC4'):
                     $crypto = new RC4();
                     break;
                 default:
-                    throw new RuntimeException(__CLASS__ . ' requires at least one symmetric cipher be loaded');
+                    throw new \RuntimeException(__CLASS__ . ' requires at least one symmetric cipher be loaded');
             }
 
             $crypto->setKey(substr($key, 0, $crypto->getKeyLength() >> 3));
@@ -195,8 +193,10 @@ abstract class Random
      * Safely serialize variables
      *
      * If a class has a private __sleep() it'll emit a warning
+     * @return mixed
+     * @param mixed $arr
      */
-    private static function safe_serialize(&$arr): string
+    private static function safe_serialize(&$arr)
     {
         if (is_object($arr)) {
             return '';

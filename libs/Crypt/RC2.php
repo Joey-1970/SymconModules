@@ -3,7 +3,7 @@
 /**
  * Pure-PHP implementation of RC2.
  *
- * Uses OpenSSL, if available/possible, and an internal implementation, otherwise
+ * Uses mcrypt, if available, and an internal implementation, otherwise.
  *
  * PHP version 5
  *
@@ -16,7 +16,7 @@
  * <?php
  *    include 'vendor/autoload.php';
  *
- *    $rc2 = new \phpseclib4\Crypt\RC2('ctr');
+ *    $rc2 = new \phpseclib3\Crypt\RC2('ctr');
  *
  *    $rc2->setKey('abcdefgh');
  *
@@ -31,17 +31,14 @@
  * @link     http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Crypt;
 
-namespace phpseclib4\Crypt;
-
-use phpseclib4\Crypt\Common\BlockCipher;
-use phpseclib4\Exception\BadModeException;
-use phpseclib4\Exception\InvalidArgumentException;
-use phpseclib4\Exception\LengthException;
+use phpseclib3\Crypt\Common\BlockCipher;
+use phpseclib3\Exception\BadModeException;
 
 /**
  * Pure-PHP implementation of RC2.
+ *
  */
 class RC2 extends BlockCipher
 {
@@ -76,14 +73,12 @@ class RC2 extends BlockCipher
     /**
      * Key Length (in bytes)
      *
-     * @see \phpseclib4\Crypt\RC2::setKeyLength()
+     * @see \phpseclib3\Crypt\RC2::setKeyLength()
      * @var int
      */
     protected $key_length = 16; // = 128 bits
 
     /**
-<<<<<<< HEAD
-=======
      * The mcrypt specific name of the cipher
      *
      * @see Common\SymmetricKey::cipher_name_mcrypt
@@ -100,7 +95,6 @@ class RC2 extends BlockCipher
     protected $cfb_init_len = 500;
 
     /**
->>>>>>> 3.0
      * The key length in bits.
      *
      * {@internal Should be in range [1..1024].}
@@ -203,7 +197,7 @@ class RC2 extends BlockCipher
         0x0D, 0x38, 0x34, 0x1B, 0xAB, 0x33, 0xFF, 0xB0,
         0xBB, 0x48, 0x0C, 0x5F, 0xB9, 0xB1, 0xCD, 0x2E,
         0xC5, 0xF3, 0xDB, 0x47, 0xE5, 0xA5, 0x9C, 0x77,
-        0x0A, 0xA6, 0x20, 0x68, 0xFE, 0x7F, 0xC1, 0xAD,
+        0x0A, 0xA6, 0x20, 0x68, 0xFE, 0x7F, 0xC1, 0xAD
     ];
 
     /**
@@ -244,15 +238,16 @@ class RC2 extends BlockCipher
         0xA1, 0xD4, 0xDD, 0xC4, 0x56, 0xF4, 0xD2, 0x77,
         0x81, 0x09, 0x82, 0x33, 0x9F, 0x07, 0x86, 0x75,
         0x38, 0x4E, 0x69, 0xF1, 0xAD, 0x23, 0x73, 0x87,
-        0x70, 0x02, 0xC2, 0x1E, 0xB8, 0x0A, 0xFC, 0xE6,
+        0x70, 0x02, 0xC2, 0x1E, 0xB8, 0x0A, 0xFC, 0xE6
     ];
 
     /**
      * Default Constructor.
      *
-     * @throws InvalidArgumentException if an invalid / unsupported mode is provided
+     * @param string $mode
+     * @throws \InvalidArgumentException if an invalid / unsupported mode is provided
      */
-    public function __construct(string $mode)
+    public function __construct($mode)
     {
         parent::__construct($mode);
 
@@ -264,17 +259,13 @@ class RC2 extends BlockCipher
     /**
      * Test for engine validity
      *
-     * This is mainly just a wrapper to set things up for \phpseclib4\Crypt\Common\SymmetricKey::isValidEngine()
+     * This is mainly just a wrapper to set things up for \phpseclib3\Crypt\Common\SymmetricKey::isValidEngine()
      *
-<<<<<<< HEAD
-     * @see \phpseclib4\Crypt\Common\SymmetricKey::__construct()
-=======
      * @see Common\SymmetricKey::__construct()
      * @param int $engine
      * @return bool
->>>>>>> 3.0
      */
-    protected function isValidEngineHelper(int $engine): bool
+    protected function isValidEngineHelper($engine)
     {
         switch ($engine) {
             case self::ENGINE_OPENSSL:
@@ -299,15 +290,15 @@ class RC2 extends BlockCipher
      *
      * Valid key lengths are 8 to 1024.
      * Calling this function after setting the key has no effect until the next
-     *  \phpseclib4\Crypt\RC2::setKey() call.
+     *  \phpseclib3\Crypt\RC2::setKey() call.
      *
      * @param int $length in bits
-     * @throws LengthException if the key length isn't supported
+     * @throws \LengthException if the key length isn't supported
      */
-    public function setKeyLength(int $length): void
+    public function setKeyLength($length)
     {
         if ($length < 8 || $length > 1024) {
-            throw new LengthException('Key size of ' . $length . ' bits is not supported by this algorithm. Only keys between 1 and 1024 bits, inclusive, are supported');
+            throw new \LengthException('Key size of ' . $length . ' bits is not supported by this algorithm. Only keys between 1 and 1024 bits, inclusive, are supported');
         }
 
         $this->default_key_length = $this->current_key_length = $length;
@@ -316,8 +307,10 @@ class RC2 extends BlockCipher
 
     /**
      * Returns the current key length
+     *
+     * @return int
      */
-    public function getKeyLength(): int
+    public function getKeyLength()
     {
         return $this->current_key_length;
     }
@@ -330,31 +323,26 @@ class RC2 extends BlockCipher
      * has more then 128 bytes in it, and set $key to a single null byte if
      * it is empty.
      *
-<<<<<<< HEAD
-     * @throws LengthException if the key length isn't supported
-     * @see \phpseclib4\Crypt\Common\SymmetricKey::setKey()
-=======
      * @see Common\SymmetricKey::setKey()
      * @param string $key
      * @param int|boolean $t1 optional Effective key length in bits.
      * @throws \LengthException if the key length isn't supported
->>>>>>> 3.0
      */
-    public function setKey(string $key, ?int $t1 = null): void
+    public function setKey($key, $t1 = false)
     {
         $this->orig_key = $key;
 
-        if ($t1 === null) {
+        if ($t1 === false) {
             $t1 = $this->default_key_length;
         }
 
         if ($t1 < 1 || $t1 > 1024) {
-            throw new LengthException('Key size of ' . $t1 . ' bits is not supported by this algorithm. Only keys between 1 and 1024 bits, inclusive, are supported');
+            throw new \LengthException('Key size of ' . $length . ' bits is not supported by this algorithm. Only keys between 1 and 1024 bits, inclusive, are supported');
         }
 
         $this->current_key_length = $t1;
         if (strlen($key) < 1 || strlen($key) > 128) {
-            throw new LengthException('Key of size ' . strlen($key) . ' not supported by this algorithm. Only keys of sizes between 8 and 1024 bits, inclusive, are supported');
+            throw new \LengthException('Key of size ' . strlen($key) . ' not supported by this algorithm. Only keys of sizes between 8 and 1024 bits, inclusive, are supported');
         }
 
         $t = strlen($key);
@@ -394,12 +382,13 @@ class RC2 extends BlockCipher
     /**
      * Encrypts a message.
      *
-     * Mostly a wrapper for \phpseclib4\Crypt\Common\SymmetricKey::encrypt, with some additional OpenSSL handling code
+     * Mostly a wrapper for \phpseclib3\Crypt\Common\SymmetricKey::encrypt, with some additional OpenSSL handling code
      *
-     * @return string $ciphertext
      * @see self::decrypt()
+     * @param string $plaintext
+     * @return string $ciphertext
      */
-    public function encrypt(string $plaintext): string
+    public function encrypt($plaintext)
     {
         if ($this->engine == self::ENGINE_OPENSSL) {
             $temp = $this->key;
@@ -415,12 +404,13 @@ class RC2 extends BlockCipher
     /**
      * Decrypts a message.
      *
-     * Mostly a wrapper for \phpseclib4\Crypt\Common\SymmetricKey::decrypt, with some additional OpenSSL handling code
+     * Mostly a wrapper for \phpseclib3\Crypt\Common\SymmetricKey::decrypt, with some additional OpenSSL handling code
      *
-     * @return string $plaintext
      * @see self::encrypt()
+     * @param string $ciphertext
+     * @return string $plaintext
      */
-    public function decrypt(string $ciphertext): string
+    public function decrypt($ciphertext)
     {
         if ($this->engine == self::ENGINE_OPENSSL) {
             $temp = $this->key;
@@ -436,19 +426,14 @@ class RC2 extends BlockCipher
     /**
      * Encrypts a block
      *
-<<<<<<< HEAD
-     * @see \phpseclib4\Crypt\Common\SymmetricKey::encryptBlock()
-     * @see \phpseclib4\Crypt\Common\SymmetricKey::encrypt()
-=======
      * @see Common\SymmetricKey::encryptBlock()
      * @see Common\SymmetricKey::encrypt()
      * @param string $in
      * @return string
->>>>>>> 3.0
      */
-    protected function encryptBlock(string $in): string
+    protected function encryptBlock($in)
     {
-        [$r0, $r1, $r2, $r3] = array_values(unpack('v*', $in));
+        list($r0, $r1, $r2, $r3) = array_values(unpack('v*', $in));
         $keys = $this->keys;
         $limit = 20;
         $actions = [$limit => 44, 44 => 64];
@@ -485,19 +470,14 @@ class RC2 extends BlockCipher
     /**
      * Decrypts a block
      *
-<<<<<<< HEAD
-     * @see \phpseclib4\Crypt\Common\SymmetricKey::decryptBlock()
-     * @see \phpseclib4\Crypt\Common\SymmetricKey::decrypt()
-=======
      * @see Common\SymmetricKey::decryptBlock()
      * @see Common\SymmetricKey::decrypt()
      * @param string $in
      * @return string
->>>>>>> 3.0
      */
-    protected function decryptBlock(string $in): string
+    protected function decryptBlock($in)
     {
-        [$r0, $r1, $r2, $r3] = array_values(unpack('v*', $in));
+        list($r0, $r1, $r2, $r3) = array_values(unpack('v*', $in));
         $keys = $this->keys;
         $limit = 44;
         $actions = [$limit => 20, 20 => 0];
@@ -536,13 +516,13 @@ class RC2 extends BlockCipher
      *
      * @see Common\SymmetricKey::setupKey()
      */
-    protected function setupKey(): void
+    protected function setupKey()
     {
         if (!isset($this->key)) {
             $this->setKey('');
         }
 
-        // Key has already been expanded in \phpseclib4\Crypt\RC2::setKey():
+        // Key has already been expanded in \phpseclib3\Crypt\RC2::setKey():
         // Only the first value must be altered.
         $l = unpack('Ca/Cb/v*', $this->key);
         array_unshift($l, self::$pitable[$l['a']] | ($l['b'] << 8));
@@ -556,7 +536,7 @@ class RC2 extends BlockCipher
      *
      * @see Common\SymmetricKey::setupInlineCrypt()
      */
-    protected function setupInlineCrypt(): void
+    protected function setupInlineCrypt()
     {
         // Init code for both, encrypt and decrypt.
         $init_crypt = '$keys = $this->keys;';
@@ -653,7 +633,7 @@ class RC2 extends BlockCipher
             [
                'init_crypt'    => $init_crypt,
                'encrypt_block' => $encrypt_block,
-               'decrypt_block' => $decrypt_block,
+               'decrypt_block' => $decrypt_block
             ]
         );
     }

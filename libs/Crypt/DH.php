@@ -10,7 +10,7 @@
  * <?php
  * include 'vendor/autoload.php';
  *
- * $ourPrivate = \phpseclib4\Crypt\DH::createKey();
+ * $ourPrivate = \phpseclib3\Crypt\DH::createKey();
  * $secret = DH::computeSecret($ourPrivate, $theirPublic);
  *
  * ?>
@@ -22,18 +22,15 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Crypt;
 
-namespace phpseclib4\Crypt;
-
-use phpseclib4\Crypt\Common\AsymmetricKey;
-use phpseclib4\Crypt\DH\Parameters;
-use phpseclib4\Crypt\DH\PrivateKey;
-use phpseclib4\Crypt\DH\PublicKey;
-use phpseclib4\Exception\InvalidArgumentException;
-use phpseclib4\Exception\NoKeyLoadedException;
-use phpseclib4\Exception\UnsupportedOperationException;
-use phpseclib4\Math\BigInteger;
+use phpseclib3\Crypt\Common\AsymmetricKey;
+use phpseclib3\Crypt\DH\Parameters;
+use phpseclib3\Crypt\DH\PrivateKey;
+use phpseclib3\Crypt\DH\PublicKey;
+use phpseclib3\Exception\NoKeyLoadedException;
+use phpseclib3\Exception\UnsupportedOperationException;
+use phpseclib3\Math\BigInteger;
 
 /**
  * Pure-PHP (EC)DH implementation
@@ -47,24 +44,30 @@ abstract class DH extends AsymmetricKey
      *
      * @var string
      */
-    public const ALGORITHM = 'DH';
+    const ALGORITHM = 'DH';
 
     /**
      * DH prime
+     *
+     * @var BigInteger
      */
-    protected BigInteger $prime;
+    protected $prime;
 
     /**
      * DH Base
      *
      * Prime divisor of p-1
+     *
+     * @var BigInteger
      */
-    protected BigInteger $base;
+    protected $base;
 
     /**
      * Public Key
+     *
+     * @var BigInteger
      */
-    protected BigInteger $publicKey;
+    protected $publicKey;
 
     /**
      * Create DH parameters
@@ -73,8 +76,10 @@ abstract class DH extends AsymmetricKey
      *  - two BigInteger's (prime and base)
      *  - an integer representing the size of the prime in bits (the base is assumed to be 2)
      *  - a string (eg. diffie-hellman-group14-sha1)
+     *
+     * @return Parameters
      */
-    public static function createParameters(BigInteger|int|string ...$args): Parameters
+    public static function createParameters(...$args)
     {
         $class = new \ReflectionClass(static::class);
         if ($class->isFinal()) {
@@ -84,17 +89,17 @@ abstract class DH extends AsymmetricKey
         $params = new Parameters();
         if (count($args) == 2 && $args[0] instanceof BigInteger && $args[1] instanceof BigInteger) {
             //if (!$args[0]->isPrime()) {
-            //    throw new \phpseclib4\Exception\InvalidArgumentException('The first parameter should be a prime number');
+            //    throw new \InvalidArgumentException('The first parameter should be a prime number');
             //}
             $params->prime = $args[0];
             $params->base = $args[1];
             return $params;
         } elseif (count($args) == 1 && is_numeric($args[0])) {
-            $params->prime = BigInteger::randomPrime((int) $args[0]);
+            $params->prime = BigInteger::randomPrime($args[0]);
             $params->base = new BigInteger(2);
             return $params;
         } elseif (count($args) != 1 || !is_string($args[0])) {
-            throw new InvalidArgumentException('Valid parameters are either: two BigInteger\'s (prime and base), a single integer (the length of the prime; base is assumed to be 2) or a string');
+            throw new \InvalidArgumentException('Valid parameters are either: two BigInteger\'s (prime and base), a single integer (the length of the prime; base is assumed to be 2) or a string');
         }
         switch ($args[0]) {
             // see http://tools.ietf.org/html/rfc2409#section-6.2 and
@@ -214,7 +219,7 @@ abstract class DH extends AsymmetricKey
                          '9E3050E2765694DFC81F56E880B96E7160C980DD98EDD3DFFFFFFFFFFFFFFFFF';
                 break;
             default:
-                throw new InvalidArgumentException('Invalid named prime provided');
+                throw new \InvalidArgumentException('Invalid named prime provided');
         }
 
         $params->prime = new BigInteger($prime, 16);
@@ -236,9 +241,11 @@ abstract class DH extends AsymmetricKey
      *
      * $length is in bits
      *
+     * @param Parameters $params
      * @param int $length optional
+     * @return PrivateKey
      */
-    public static function createKey(Parameters $params, int $length = 0): PrivateKey
+    public static function createKey(Parameters $params, $length = 0)
     {
         $class = new \ReflectionClass(static::class);
         if ($class->isFinal()) {
@@ -263,14 +270,18 @@ abstract class DH extends AsymmetricKey
 
     /**
      * Compute Shared Secret
+     *
+     * @param PrivateKey|EC $private
+     * @param PublicKey|BigInteger|string $public
+     * @return mixed
      */
-    public static function computeSecret(PrivateKey|EC\PrivateKey|string $private, PublicKey|EC\PublicKey|BigInteger|string $public): BigInteger|string
+    public static function computeSecret($private, $public)
     {
         if ($private instanceof PrivateKey) { // DH\PrivateKey
             switch (true) {
                 case $public instanceof PublicKey:
                     if (!$private->prime->equals($public->prime) || !$private->base->equals($public->base)) {
-                        throw new InvalidArgumentException('The public and private key do not share the same prime and / or base numbers');
+                        throw new \InvalidArgumentException('The public and private key do not share the same prime and / or base numbers');
                     }
                     return $public->publicKey->powMod($private->privateKey, $private->prime)->toBytes(true);
                 case is_string($public):
@@ -279,7 +290,7 @@ abstract class DH extends AsymmetricKey
                 case $public instanceof BigInteger:
                     return $public->powMod($private->privateKey, $private->prime)->toBytes(true);
                 default:
-                    throw new InvalidArgumentException('$public needs to be an instance of DH\PublicKey, a BigInteger or a string');
+                    throw new \InvalidArgumentException('$public needs to be an instance of DH\PublicKey, a BigInteger or a string');
             }
         }
 
@@ -306,15 +317,19 @@ abstract class DH extends AsymmetricKey
                     */
                     return $secret;
                 default:
-                    throw new InvalidArgumentException('$public needs to be an instance of EC\PublicKey or a string (an encoded coordinate)');
+                    throw new \InvalidArgumentException('$public needs to be an instance of EC\PublicKey or a string (an encoded coordinate)');
             }
         }
     }
 
     /**
      * Load the key
+     *
+     * @param string $key
+     * @param string $password optional
+     * @return AsymmetricKey
      */
-    public static function load(string|array $key, #[SensitiveParameter] ?string $password = null): AsymmetricKey
+    public static function load($key, $password = false)
     {
         try {
             return EC::load($key, $password);
@@ -326,8 +341,10 @@ abstract class DH extends AsymmetricKey
 
     /**
      * OnLoad Handler
+     *
+     * @return bool
      */
-    protected static function onLoad(array $components): Parameters|PrivateKey|PublicKey
+    protected static function onLoad(array $components)
     {
         if (!isset($components['privateKey']) && !isset($components['publicKey'])) {
             $new = new Parameters();
@@ -352,16 +369,19 @@ abstract class DH extends AsymmetricKey
 
     /**
      * Determines which hashing function should be used
+     *
+     * @param string $hash
      */
-    public function withHash(string $hash): AsymmetricKey
+    public function withHash($hash)
     {
         throw new UnsupportedOperationException('DH does not use a hash algorithm');
     }
 
     /**
      * Returns the hash algorithm currently being used
+     *
      */
-    public function getHash(): Hash
+    public function getHash()
     {
         throw new UnsupportedOperationException('DH does not use a hash algorithm');
     }
@@ -373,8 +393,9 @@ abstract class DH extends AsymmetricKey
      * value.
      *
      * @see self::getPublicKey()
+     * @return mixed
      */
-    public function getParameters(): AsymmetricKey
+    public function getParameters()
     {
         $type = DH::validatePlugin('Keys', 'PKCS1', 'saveParameters');
 

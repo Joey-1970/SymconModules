@@ -10,7 +10,7 @@
  * <?php
  * include 'vendor/autoload.php';
  *
- * $private = \phpseclib4\Crypt\RSA::createKey();
+ * $private = Crypt\RSA::createKey();
  * $public = $private->getPublicKey();
  *
  * $plaintext = 'terrafrost';
@@ -26,7 +26,7 @@
  * <?php
  * include 'vendor/autoload.php';
  *
- * $private = \phpseclib4\Crypt\RSA::createKey();
+ * $private = Crypt\RSA::createKey();
  * $public = $private->getPublicKey();
  *
  * $plaintext = 'terrafrost';
@@ -51,19 +51,15 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Crypt;
 
-namespace phpseclib4\Crypt;
-
-use phpseclib4\Crypt\Common\AsymmetricKey;
-use phpseclib4\Crypt\RSA\Formats\Keys\PSS;
-use phpseclib4\Crypt\RSA\PrivateKey;
-use phpseclib4\Crypt\RSA\PublicKey;
-use phpseclib4\Exception\InconsistentSetupException;
-use phpseclib4\Exception\LengthException;
-use phpseclib4\Exception\OutOfRangeException;
-use phpseclib4\Exception\UnsupportedAlgorithmException;
-use phpseclib4\Math\BigInteger;
+use phpseclib3\Crypt\Common\AsymmetricKey;
+use phpseclib3\Crypt\RSA\Formats\Keys\PSS;
+use phpseclib3\Crypt\RSA\PrivateKey;
+use phpseclib3\Crypt\RSA\PublicKey;
+use phpseclib3\Exception\InconsistentSetupException;
+use phpseclib3\Exception\UnsupportedAlgorithmException;
+use phpseclib3\Math\BigInteger;
 
 /**
  * Pure-PHP PKCS#1 compliant implementation of RSA.
@@ -77,7 +73,7 @@ abstract class RSA extends AsymmetricKey
      *
      * @var string
      */
-    public const ALGORITHM = 'RSA';
+    const ALGORITHM = 'RSA';
 
     /**
      * Use {@link http://en.wikipedia.org/wiki/Optimal_Asymmetric_Encryption_Padding Optimal Asymmetric Encryption Padding}
@@ -90,7 +86,7 @@ abstract class RSA extends AsymmetricKey
      * @see self::encrypt()
      * @see self::decrypt()
      */
-    public const ENCRYPTION_OAEP = 1;
+    const ENCRYPTION_OAEP = 1;
 
     /**
      * Use PKCS#1 padding.
@@ -101,7 +97,7 @@ abstract class RSA extends AsymmetricKey
      * @see self::encrypt()
      * @see self::decrypt()
      */
-    public const ENCRYPTION_PKCS1 = 2;
+    const ENCRYPTION_PKCS1 = 2;
 
     /**
      * Do not use any padding
@@ -112,7 +108,7 @@ abstract class RSA extends AsymmetricKey
      * @see self::encrypt()
      * @see self::decrypt()
      */
-    public const ENCRYPTION_NONE = 4;
+    const ENCRYPTION_NONE = 4;
 
     /**
      * Use the Probabilistic Signature Scheme for signing
@@ -126,7 +122,7 @@ abstract class RSA extends AsymmetricKey
      * @see self::verify()
      * @see self::setHash()
      */
-    public const SIGNATURE_PSS = 16;
+    const SIGNATURE_PSS = 16;
 
     /**
      * Use a relaxed version of PKCS#1 padding for signature verification
@@ -135,7 +131,7 @@ abstract class RSA extends AsymmetricKey
      * @see self::verify()
      * @see self::setHash()
      */
-    public const SIGNATURE_RELAXED_PKCS1 = 32;
+    const SIGNATURE_RELAXED_PKCS1 = 32;
 
     /**
      * Use PKCS#1 padding for signature verification
@@ -144,7 +140,7 @@ abstract class RSA extends AsymmetricKey
      * @see self::verify()
      * @see self::setHash()
      */
-    public const SIGNATURE_PKCS1 = 64;
+    const SIGNATURE_PKCS1 = 64;
 
     /**
      * Encryption padding mode
@@ -170,9 +166,9 @@ abstract class RSA extends AsymmetricKey
     /**
      * Length of salt
      *
-     * @var int|null
+     * @var int
      */
-    protected $sLen = null;
+    protected $sLen;
 
     /**
      * Label
@@ -198,21 +194,21 @@ abstract class RSA extends AsymmetricKey
     /**
      * Modulus (ie. n)
      *
-     * @var BigInteger
+     * @var Math\BigInteger
      */
     protected $modulus;
 
     /**
      * Modulus length
      *
-     * @var int
+     * @var Math\BigInteger
      */
     protected $k;
 
     /**
      * Exponent (ie. e or d)
      *
-     * @var BigInteger
+     * @var Math\BigInteger
      */
     protected $exponent;
 
@@ -256,7 +252,7 @@ abstract class RSA extends AsymmetricKey
     /**
      * Public Exponent
      *
-     * @var BigInteger
+     * @var Math\BigInteger
      */
     protected $publicExponent;
 
@@ -264,8 +260,10 @@ abstract class RSA extends AsymmetricKey
      * Sets the public exponent for key generation
      *
      * This will be 65537 unless changed.
+     *
+     * @param int $val
      */
-    public static function setExponent(int $val): void
+    public static function setExponent($val)
     {
         self::$defaultExponent = $val;
     }
@@ -274,8 +272,10 @@ abstract class RSA extends AsymmetricKey
      * Sets the smallest prime number in bits. Used for key generation
      *
      * This will be 4096 unless changed.
+     *
+     * @param int $val
      */
-    public static function setSmallestPrime(int $val): void
+    public static function setSmallestPrime($val)
     {
         self::$smallestPrime = $val;
     }
@@ -284,8 +284,10 @@ abstract class RSA extends AsymmetricKey
      * Sets the OpenSSL config file path
      *
      * Set to the empty string to use the default config file
+     *
+     * @param string $val
      */
-    public static function setOpenSSLConfigPath(string $val): void
+    public static function setOpenSSLConfigPath($val)
     {
         self::$configFile = $val;
     }
@@ -294,8 +296,11 @@ abstract class RSA extends AsymmetricKey
      * Create a private key
      *
      * The public key can be extracted from the private key
+     *
+     * @return PrivateKey
+     * @param int $bits
      */
-    public static function createKey(int $bits = 2048): PrivateKey
+    public static function createKey($bits = 2048)
     {
         self::initialize_static_variables();
 
@@ -344,7 +349,7 @@ abstract class RSA extends AsymmetricKey
         $exponents = $coefficients = $primes = [];
         $lcm = [
             'top' => clone self::$one,
-            'bottom' => false,
+            'bottom' => false
         ];
 
         do {
@@ -352,10 +357,12 @@ abstract class RSA extends AsymmetricKey
                 if ($i != $num_primes) {
                     $primes[$i] = BigInteger::randomPrime($regSize);
                 } else {
-                    ['min' => $min, 'max' => $max] = BigInteger::minMaxBits($bits);
-                    [$min] = $min->divide($n);
+                    $minMax = BigInteger::minMaxBits($bits);
+                    $min = $minMax['min'];
+                    $max = $minMax['max'];
+                    list($min) = $min->divide($n);
                     $min = $min->add(self::$one);
-                    [$max] = $max->divide($n);
+                    list($max) = $max->divide($n);
                     $primes[$i] = BigInteger::randomRangePrime($min, $max);
                 }
 
@@ -375,7 +382,7 @@ abstract class RSA extends AsymmetricKey
                 $lcm['bottom'] = $lcm['bottom'] === false ? $temp : $lcm['bottom']->gcd($temp);
             }
 
-            [$temp] = $lcm['top']->divide($lcm['bottom']);
+            list($temp) = $lcm['top']->divide($lcm['bottom']);
             $gcd = $temp->gcd($e);
             $i0 = 1;
         } while (!$gcd->equals(self::$one));
@@ -426,7 +433,7 @@ abstract class RSA extends AsymmetricKey
     /**
      * OnLoad Handler
      *
-     * @return PrivateKey|PublicKey|RSA
+     * @return bool
      */
     protected static function onLoad(array $components)
     {
@@ -474,7 +481,7 @@ abstract class RSA extends AsymmetricKey
     /**
      * Initialize static variables
      */
-    protected static function initialize_static_variables(): void
+    protected static function initialize_static_variables()
     {
         if (!isset(self::$configFile)) {
             self::$configFile = dirname(__FILE__) . '/../openssl.cnf';
@@ -501,12 +508,19 @@ abstract class RSA extends AsymmetricKey
      * Integer-to-Octet-String primitive
      *
      * See {@link http://tools.ietf.org/html/rfc3447#section-4.1 RFC3447#section-4.1}.
+     *
+     * @param bool|Math\BigInteger $x
+     * @param int $xLen
+     * @return bool|string
      */
-    protected function i2osp(BigInteger $x, int $xLen): string
+    protected function i2osp($x, $xLen)
     {
+        if ($x === false) {
+            return false;
+        }
         $x = $x->toBytes();
         if (strlen($x) > $xLen) {
-            throw new OutOfRangeException('Resultant string length out of range');
+            throw new \OutOfRangeException('Resultant string length out of range');
         }
         return str_pad($x, $xLen, chr(0), STR_PAD_LEFT);
     }
@@ -515,8 +529,11 @@ abstract class RSA extends AsymmetricKey
      * Octet-String-to-Integer primitive
      *
      * See {@link http://tools.ietf.org/html/rfc3447#section-4.2 RFC3447#section-4.2}.
+     *
+     * @param string $x
+     * @return Math\BigInteger
      */
-    protected function os2ip(string $x): BigInteger
+    protected function os2ip($x)
     {
         return new BigInteger($x, 256);
     }
@@ -526,9 +543,12 @@ abstract class RSA extends AsymmetricKey
      *
      * See {@link http://tools.ietf.org/html/rfc3447#section-9.2 RFC3447#section-9.2}.
      *
-     * @throws LengthException if the intended encoded message length is too short
+     * @param string $m
+     * @param int $emLen
+     * @throws \LengthException if the intended encoded message length is too short
+     * @return string
      */
-    protected function emsa_pkcs1_v1_5_encode(string $m, int $emLen): string
+    protected function emsa_pkcs1_v1_5_encode($m, $emLen)
     {
         $h = $this->hash->hash($m);
 
@@ -566,7 +586,7 @@ abstract class RSA extends AsymmetricKey
         $tLen = strlen($t);
 
         if ($emLen < $tLen + 11) {
-            throw new LengthException('Intended encoded message length too short');
+            throw new \LengthException('Intended encoded message length too short');
         }
 
         $ps = str_repeat(chr(0xFF), $emLen - $tLen - 3);
@@ -585,8 +605,12 @@ abstract class RSA extends AsymmetricKey
      *  id-sha384, id-sha512, id-sha512/224, and id-sha512/256 should
      *  generally be omitted, but if present, it shall have a value of type
      *  NULL"
+     *
+     * @param string $m
+     * @param int $emLen
+     * @return string
      */
-    protected function emsa_pkcs1_v1_5_encode_without_null(string $m, int $emLen): string
+    protected function emsa_pkcs1_v1_5_encode_without_null($m, $emLen)
     {
         $h = $this->hash->hash($m);
 
@@ -621,7 +645,7 @@ abstract class RSA extends AsymmetricKey
         $tLen = strlen($t);
 
         if ($emLen < $tLen + 11) {
-            throw new LengthException('Intended encoded message length too short');
+            throw new \LengthException('Intended encoded message length too short');
         }
 
         $ps = str_repeat(chr(0xFF), $emLen - $tLen - 3);
@@ -635,8 +659,12 @@ abstract class RSA extends AsymmetricKey
      * MGF1
      *
      * See {@link http://tools.ietf.org/html/rfc3447#appendix-B.2.1 RFC3447#appendix-B.2.1}.
+     *
+     * @param string $mgfSeed
+     * @param int $maskLen
+     * @return string
      */
-    protected function mgf1(string $mgfSeed, int $maskLen): string
+    protected function mgf1($mgfSeed, $maskLen)
     {
         // if $maskLen would yield strings larger than 4GB, PKCS#1 suggests a "Mask too long" error be output.
 
@@ -654,8 +682,10 @@ abstract class RSA extends AsymmetricKey
      * Returns the key size
      *
      * More specifically, this returns the size of the modulo in bits.
+     *
+     * @return int
      */
-    public function getLength(): int
+    public function getLength()
     {
         return !isset($this->modulus) ? 0 : $this->modulus->getLength();
     }
@@ -665,12 +695,14 @@ abstract class RSA extends AsymmetricKey
      *
      * Used with signature production / verification and (if the encryption mode is self::PADDING_OAEP) encryption and
      * decryption.
+     *
+     * @param string $hash
      */
-    public function withHash(string $hash): RSA
+    public function withHash($hash)
     {
         $new = clone $this;
 
-        // \phpseclib4\Crypt\Hash supports algorithms that PKCS#1 doesn't support.  md5-96 and sha1-96, for example.
+        // Crypt\Hash supports algorithms that PKCS#1 doesn't support.  md5-96 and sha1-96, for example.
         switch (strtolower($hash)) {
             case 'md2':
             case 'md5':
@@ -698,12 +730,14 @@ abstract class RSA extends AsymmetricKey
      *
      * The mask generation function is used by self::PADDING_OAEP and self::PADDING_PSS and although it's
      * best if Hash and MGFHash are set to the same thing this is not a requirement.
+     *
+     * @param string $hash
      */
-    public function withMGFHash(string $hash): RSA
+    public function withMGFHash($hash)
     {
         $new = clone $this;
 
-        // \phpseclib4\Crypt\Hash supports algorithms that PKCS#1 doesn't support.  md5-96 and sha1-96, for example.
+        // Crypt\Hash supports algorithms that PKCS#1 doesn't support.  md5-96 and sha1-96, for example.
         switch (strtolower($hash)) {
             case 'md2':
             case 'md5':
@@ -728,8 +762,9 @@ abstract class RSA extends AsymmetricKey
 
     /**
      * Returns the MGF hash algorithm currently being used
+     *
      */
-    public function getMGFHash(): Hash
+    public function getMGFHash()
     {
         return clone $this->mgfHash;
     }
@@ -743,8 +778,10 @@ abstract class RSA extends AsymmetricKey
      *
      *    Typical salt lengths in octets are hLen (the length of the output
      *    of the hash function Hash) and 0.
+     *
+     * @param int $sLen
      */
-    public function withSaltLength(?int $sLen): RSA
+    public function withSaltLength($sLen)
     {
         $new = clone $this;
         $new->sLen = $sLen;
@@ -753,8 +790,9 @@ abstract class RSA extends AsymmetricKey
 
     /**
      * Returns the salt length currently being used
+     *
      */
-    public function getSaltLength(): int
+    public function getSaltLength()
     {
         return $this->sLen !== null ? $this->sLen : $this->hLen;
     }
@@ -770,8 +808,10 @@ abstract class RSA extends AsymmetricKey
      *    the value of a label L as input.  In this version of PKCS #1, L is
      *    the empty string; other uses of the label are outside the scope of
      *    this document.
+     *
+     * @param string $label
      */
-    public function withLabel(string $label): RSA
+    public function withLabel($label)
     {
         $new = clone $this;
         $new->label = $label;
@@ -780,8 +820,9 @@ abstract class RSA extends AsymmetricKey
 
     /**
      * Returns the label currently being used
+     *
      */
-    public function getLabel(): string
+    public function getLabel()
     {
         return $this->label;
     }
@@ -790,13 +831,15 @@ abstract class RSA extends AsymmetricKey
      * Determines the padding modes
      *
      * Example: $key->withPadding(RSA::ENCRYPTION_PKCS1 | RSA::SIGNATURE_PKCS1);
+     *
+     * @param int $padding
      */
-    public function withPadding(int $padding): RSA
+    public function withPadding($padding)
     {
         $masks = [
             self::ENCRYPTION_OAEP,
             self::ENCRYPTION_PKCS1,
-            self::ENCRYPTION_NONE,
+            self::ENCRYPTION_NONE
         ];
         $encryptedCount = 0;
         $selected = 0;
@@ -814,7 +857,7 @@ abstract class RSA extends AsymmetricKey
         $masks = [
             self::SIGNATURE_PSS,
             self::SIGNATURE_RELAXED_PKCS1,
-            self::SIGNATURE_PKCS1,
+            self::SIGNATURE_PKCS1
         ];
         $signatureCount = 0;
         $selected = 0;
@@ -841,8 +884,9 @@ abstract class RSA extends AsymmetricKey
 
     /**
      * Returns the padding currently being used
+     *
      */
-    public function getPadding(): int
+    public function getPadding()
     {
         return $this->signaturePadding | $this->encryptionPadding;
     }
@@ -857,8 +901,9 @@ abstract class RSA extends AsymmetricKey
      *
      * @see self::useInternalEngine()
      * @see self::useBestEngine()
+     * @return string
      */
-    public function getEngine(): string
+    public function getEngine()
     {
         if (!isset(self::$engines['PHP'])) {
             self::useBestEngine();
@@ -870,16 +915,18 @@ abstract class RSA extends AsymmetricKey
 
     /**
      * Enable RSA Blinding
+     *
      */
-    public static function enableBlinding(): void
+    public static function enableBlinding()
     {
         static::$enableBlinding = true;
     }
 
     /**
      * Disable RSA Blinding
+     *
      */
-    public static function disableBlinding(): void
+    public static function disableBlinding()
     {
         static::$enableBlinding = false;
     }
