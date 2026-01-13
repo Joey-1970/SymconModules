@@ -11,19 +11,15 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Crypt\Common\Formats\Keys;
 
-namespace phpseclib4\Crypt\Common\Formats\Keys;
-
-use phpseclib4\Common\Functions\Strings;
-use phpseclib4\Crypt\AES;
-use phpseclib4\Crypt\DES;
-use phpseclib4\Crypt\Random;
-use phpseclib4\Crypt\TripleDES;
-use phpseclib4\Exception\BadDecryptionException;
-use phpseclib4\Exception\UnexpectedValueException;
-use phpseclib4\Exception\UnsupportedAlgorithmException;
-use phpseclib4\File\ASN1;
+use phpseclib3\Common\Functions\Strings;
+use phpseclib3\Crypt\AES;
+use phpseclib3\Crypt\DES;
+use phpseclib3\Crypt\Random;
+use phpseclib3\Crypt\TripleDES;
+use phpseclib3\Exception\UnsupportedAlgorithmException;
+use phpseclib3\File\ASN1;
 
 /**
  * PKCS1 Formatted Key Handler
@@ -41,8 +37,10 @@ abstract class PKCS1 extends PKCS
 
     /**
      * Sets the default encryption algorithm
+     *
+     * @param string $algo
      */
-    public static function setEncryptionAlgorithm(string $algo): void
+    public static function setEncryptionAlgorithm($algo)
     {
         self::$defaultEncryptionAlgorithm = $algo;
     }
@@ -50,10 +48,11 @@ abstract class PKCS1 extends PKCS
     /**
      * Returns the mode constant corresponding to the mode string
      *
+     * @param string $mode
      * @return int
-     * @throws UnexpectedValueException if the block cipher mode is unsupported
+     * @throws \UnexpectedValueException if the block cipher mode is unsupported
      */
-    private static function getEncryptionMode(string $mode): string
+    private static function getEncryptionMode($mode)
     {
         switch ($mode) {
             case 'CBC':
@@ -63,22 +62,23 @@ abstract class PKCS1 extends PKCS
             case 'CTR':
                 return $mode;
         }
-        throw new UnexpectedValueException('Unsupported block cipher mode of operation');
+        throw new \UnexpectedValueException('Unsupported block cipher mode of operation');
     }
 
     /**
      * Returns a cipher object corresponding to a string
      *
-     * @return AES|DES|TripleDES
-     * @throws UnexpectedValueException if the encryption algorithm is unsupported
+     * @param string $algo
+     * @return string
+     * @throws \UnexpectedValueException if the encryption algorithm is unsupported
      */
-    private static function getEncryptionObject(string $algo)
+    private static function getEncryptionObject($algo)
     {
         $modes = '(CBC|ECB|CFB|OFB|CTR)';
         switch (true) {
             case preg_match("#^AES-(128|192|256)-$modes$#", $algo, $matches):
                 $cipher = new AES(self::getEncryptionMode($matches[2]));
-                $cipher->setKeyLength((int) $matches[1]);
+                $cipher->setKeyLength($matches[1]);
                 return $cipher;
             case preg_match("#^DES-EDE3-$modes$#", $algo, $matches):
                 return new TripleDES(self::getEncryptionMode($matches[1]));
@@ -91,8 +91,13 @@ abstract class PKCS1 extends PKCS
 
     /**
      * Generate a symmetric key for PKCS#1 keys
+     *
+     * @param string $password
+     * @param string $iv
+     * @param int $length
+     * @return string
      */
-    private static function generateSymmetricKey(#[SensitiveParameter] string $password, string $iv, int $length): string
+    private static function generateSymmetricKey($password, $iv, $length)
     {
         $symkey = '';
         $iv = substr($iv, 0, 8);
@@ -104,11 +109,15 @@ abstract class PKCS1 extends PKCS
 
     /**
      * Break a public or private key down into its constituent components
+     *
+     * @param string $key
+     * @param string $password optional
+     * @return array
      */
-    protected static function loadHelper(string|array $key, #[SensitiveParameter] ?string $password = null): string
+    protected static function load($key, $password)
     {
-        if (!is_string($key)) {
-            throw new UnexpectedValueException('Key should be a string - not an array');
+        if (!Strings::is_stringable($key)) {
+            throw new \UnexpectedValueException('Key should be a string - not a ' . gettype($key));
         }
 
         /* Although PKCS#1 proposes a format that public and private keys can use, encrypting them is
@@ -127,15 +136,11 @@ abstract class PKCS1 extends PKCS
 
            * OpenSSL is the de facto standard.  It's utilized by OpenSSH and other projects */
         if (preg_match('#DEK-Info: (.+),(.+)#', $key, $matches)) {
-            if (!isset($password)) {
-                throw new BadDecryptionException('Unable to perform decryption without some sort of password');
-            }
             $iv = Strings::hex2bin(trim($matches[2]));
             // remove the Proc-Type / DEK-Info sections as they're no longer needed
             $key = preg_replace('#^(?:Proc-Type|DEK-Info): .*#m', '', $key);
-            try {
-                $ciphertext = ASN1::extractBER($key);
-            } catch (\Exception $e) {
+            $ciphertext = ASN1::extractBER($key);
+            if ($ciphertext === false) {
                 $ciphertext = $key;
             }
             $crypto = self::getEncryptionObject($matches[1]);
@@ -148,7 +153,7 @@ abstract class PKCS1 extends PKCS
                 if ($decoded !== false) {
                     $key = $decoded;
                 } elseif (self::$format == self::MODE_PEM) {
-                    throw new UnexpectedValueException('Expected base64-encoded PEM format but was unable to decode base64 text');
+                    throw new \UnexpectedValueException('Expected base64-encoded PEM format but was unable to decode base64 text');
                 }
             }
         }
@@ -158,16 +163,22 @@ abstract class PKCS1 extends PKCS
 
     /**
      * Wrap a private key appropriately
+     *
+     * @param string $key
+     * @param string $type
+     * @param string $password
+     * @param array $options optional
+     * @return string
      */
-    protected static function wrapPrivateKey(string $key, string $type, #[SensitiveParameter] ?string $password, array $options = []): string
+    protected static function wrapPrivateKey($key, $type, $password, array $options = [])
     {
-        if (!isset($password)) {
+        if (empty($password) || !is_string($password)) {
             return "-----BEGIN $type PRIVATE KEY-----\r\n" .
                    chunk_split(Strings::base64_encode($key), 64) .
                    "-----END $type PRIVATE KEY-----";
         }
 
-        $encryptionAlgorithm = $options['encryptionAlgorithm'] ?? self::$defaultEncryptionAlgorithm;
+        $encryptionAlgorithm = isset($options['encryptionAlgorithm']) ? $options['encryptionAlgorithm'] : self::$defaultEncryptionAlgorithm;
 
         $cipher = self::getEncryptionObject($encryptionAlgorithm);
         $iv = Random::string($cipher->getBlockLength() >> 3);
@@ -184,8 +195,12 @@ abstract class PKCS1 extends PKCS
 
     /**
      * Wrap a public key appropriately
+     *
+     * @param string $key
+     * @param string $type
+     * @return string
      */
-    protected static function wrapPublicKey(string $key, string $type): string
+    protected static function wrapPublicKey($key, $type)
     {
         return "-----BEGIN $type PUBLIC KEY-----\r\n" .
                chunk_split(Strings::base64_encode($key), 64) .
