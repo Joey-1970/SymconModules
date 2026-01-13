@@ -13,12 +13,10 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Crypt\EC\Formats\Signature;
 
-namespace phpseclib4\Crypt\EC\Formats\Signature;
-
-use phpseclib4\Common\Functions\Strings;
-use phpseclib4\Math\BigInteger;
+use phpseclib3\Common\Functions\Strings;
+use phpseclib3\Math\BigInteger;
 
 /**
  * SSH2 Signature Handler
@@ -29,8 +27,11 @@ abstract class SSH2
 {
     /**
      * Loads a signature
+     *
+     * @param string $sig
+     * @return mixed
      */
-    public static function load(string $sig)
+    public static function load($sig)
     {
         if (!is_string($sig)) {
             return false;
@@ -40,7 +41,7 @@ abstract class SSH2
         if ($result === false) {
             return false;
         }
-        [$type, $blob] = $result;
+        list($type, $blob) = $result;
         switch ($type) {
             // see https://tools.ietf.org/html/rfc5656#section-3.1.2
             case 'ecdsa-sha2-nistp256':
@@ -58,16 +59,19 @@ abstract class SSH2
 
         return [
             'r' => $result[0],
-            's' => $result[1],
+            's' => $result[1]
         ];
     }
 
     /**
      * Returns a signature in the appropriate format
      *
+     * @param BigInteger $r
+     * @param BigInteger $s
+     * @param string $curve
      * @return string
      */
-    public static function save(BigInteger $r, BigInteger $s, string $curve)
+    public static function save(BigInteger $r, BigInteger $s, $curve)
     {
         switch ($curve) {
             case 'secp256r1':

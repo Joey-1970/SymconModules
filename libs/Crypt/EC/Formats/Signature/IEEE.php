@@ -15,11 +15,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Crypt\EC\Formats\Signature;
 
-namespace phpseclib4\Crypt\EC\Formats\Signature;
-
-use phpseclib4\Math\BigInteger;
+use phpseclib3\Math\BigInteger;
 
 /**
  * ASN1 Signature Handler
@@ -53,8 +51,14 @@ abstract class IEEE
 
     /**
      * Returns a signature in the appropriate format
+     *
+     * @param BigInteger $r
+     * @param BigInteger $s
+     * @param string $curve
+     * @param int $length
+     * @return string
      */
-    public static function save(BigInteger $r, BigInteger $s, string $curve, int $length): string
+    public static function save(BigInteger $r, BigInteger $s, $curve, $length)
     {
         $r = $r->toBytes();
         $s = $s->toBytes();

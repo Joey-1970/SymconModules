@@ -11,11 +11,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Crypt\EC\Formats\Signature;
 
-namespace phpseclib4\Crypt\EC\Formats\Signature;
-
-use phpseclib4\Crypt\Common\Formats\Signature\Raw as Progenitor;
+use phpseclib3\Crypt\Common\Formats\Signature\Raw as Progenitor;
 
 /**
  * Raw DSA Signature Handler
