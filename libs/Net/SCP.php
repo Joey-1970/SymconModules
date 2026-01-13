@@ -29,10 +29,10 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib4\Net;
+namespace phpseclib3\Net;
 
-use phpseclib4\Common\Functions\Strings;
-use phpseclib4\Exception\FileNotFoundException;
+use phpseclib3\Common\Functions\Strings;
+use phpseclib3\Exception\FileNotFoundException;
 
 /**
  * Pure-PHP implementations of SCP.
@@ -64,8 +64,9 @@ class SCP extends SSH2
      *
      * @see self::getSCPErrors()
      * @see self::getLastSCPError()
+     * @var array
      */
-    private array $scp_errors = [];
+    private $scp_errors = [];
 
     /**
      * Uploads a file to the SCP server.
@@ -80,10 +81,15 @@ class SCP extends SSH2
      *
      * Currently, only binary mode is supported.  As such, if the line endings need to be adjusted, you will need to take
      * care of that, yourself.
-     * 
-     * @param string|resource $data
+     *
+     * @param string $remote_file
+     * @param string $data
+     * @param int $mode
+     * @param callable $callback
+     * @return bool
+     * @access public
      */
-    public function put(string $remote_file, mixed $data, int $mode = self::SOURCE_STRING, ?callable $callback = null): bool
+    public function put($remote_file, $data, $mode = self::SOURCE_STRING, $callback = null)
     {
         if (!($this->bitmap & self::MASK_LOGIN)) {
             return false;
@@ -177,9 +183,12 @@ class SCP extends SSH2
      * the operation was unsuccessful.  If $local_file is defined, returns true or false depending on the success of the
      * operation
      *
-     * @param string|resource|null $local_file
+     * @param string $remote_file
+     * @param string $local_file
+     * @return mixed
+     * @access public
      */
-    public function get(string $remote_file, mixed $local_file = null, ?callable $progressCallback = null): bool|string
+    public function get($remote_file, $local_file = null, $progressCallback = null)
     {
         if (!($this->bitmap & self::MASK_LOGIN)) {
             return false;
@@ -274,16 +283,20 @@ class SCP extends SSH2
 
     /**
      * Returns all errors on the SCP layer
+     *
+     * @return array
      */
-    public function getSCPErrors(): array
+    public function getSCPErrors()
     {
         return $this->scp_errors;
     }
 
     /**
      * Returns the last error on the SCP layer
+     *
+     * @return string
      */
-    public function getLastSCPError(): string
+    public function getLastSCPError()
     {
         return count($this->scp_errors) ? $this->scp_errors[count($this->scp_errors) - 1] : '';
     }
