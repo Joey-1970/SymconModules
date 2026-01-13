@@ -11,16 +11,12 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Crypt\EC\Formats\Keys;
 
-namespace phpseclib4\Crypt\EC\Formats\Keys;
-
-use phpseclib4\Crypt\EC\BaseCurves\Montgomery as MontgomeryCurve;
-use phpseclib4\Crypt\EC\Curves\Curve25519;
-use phpseclib4\Crypt\EC\Curves\Curve448;
-use phpseclib4\Exception\LengthException;
-use phpseclib4\Math\BigInteger;
-use phpseclib4\Math\Common\FiniteField\Integer;
+use phpseclib3\Crypt\EC\BaseCurves\Montgomery as MontgomeryCurve;
+use phpseclib3\Crypt\EC\Curves\Curve25519;
+use phpseclib3\Crypt\EC\Curves\Curve448;
+use phpseclib3\Math\BigInteger;
 
 /**
  * Montgomery Public Key Handler
@@ -31,13 +27,18 @@ abstract class MontgomeryPublic
 {
     /**
      * Is invisible flag
+     *
      */
-    public const IS_INVISIBLE = true;
+    const IS_INVISIBLE = true;
 
     /**
      * Break a public or private key down into its constituent components
+     *
+     * @param string $key
+     * @param string $password optional
+     * @return array
      */
-    public static function load(string $key, #[SensitiveParameter] ?string $password = null): array
+    public static function load($key, $password = '')
     {
         switch (strlen($key)) {
             case 32:
@@ -47,7 +48,7 @@ abstract class MontgomeryPublic
                 $curve = new Curve448();
                 break;
             default:
-                throw new LengthException('The only supported lengths are 32 and 56');
+                throw new \LengthException('The only supported lengths are 32 and 56');
         }
 
         $components = ['curve' => $curve];
@@ -59,9 +60,11 @@ abstract class MontgomeryPublic
     /**
      * Convert an EC public key to the appropriate format
      *
-     * @param Integer[] $publicKey
+     * @param MontgomeryCurve $curve
+     * @param \phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
+     * @return string
      */
-    public static function savePublicKey(MontgomeryCurve $curve, array $publicKey): string
+    public static function savePublicKey(MontgomeryCurve $curve, array $publicKey)
     {
         return strrev($publicKey[0]->toBytes());
     }

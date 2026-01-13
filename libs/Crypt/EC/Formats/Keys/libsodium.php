@@ -15,15 +15,11 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Crypt\EC\Formats\Keys;
 
-namespace phpseclib4\Crypt\EC\Formats\Keys;
-
-use phpseclib4\Crypt\EC\Curves\Ed25519;
-use phpseclib4\Exception\RuntimeException;
-use phpseclib4\Exception\UnsupportedFormatException;
-use phpseclib4\Math\BigInteger;
-use phpseclib4\Math\Common\FiniteField\Integer;
+use phpseclib3\Crypt\EC\Curves\Ed25519;
+use phpseclib3\Exception\UnsupportedFormatException;
+use phpseclib3\Math\BigInteger;
 
 /**
  * libsodium Key Handler
@@ -36,13 +32,18 @@ abstract class libsodium
 
     /**
      * Is invisible flag
+     *
      */
-    public const IS_INVISIBLE = true;
+    const IS_INVISIBLE = true;
 
     /**
      * Break a public or private key down into its constituent components
+     *
+     * @param string $key
+     * @param string $password optional
+     * @return array
      */
-    public static function load(string $key, #[SensitiveParameter] ?string $password = null): array
+    public static function load($key, $password = '')
     {
         switch (strlen($key)) {
             case 32:
@@ -55,12 +56,12 @@ abstract class libsodium
             case 96:
                 $public = substr($key, -32);
                 if (substr($key, 32, 32) != $public) {
-                    throw new RuntimeException('Keys with 96 bytes should have the 2nd and 3rd set of 32 bytes match');
+                    throw new \RuntimeException('Keys with 96 bytes should have the 2nd and 3rd set of 32 bytes match');
                 }
                 $private = substr($key, 0, 32);
                 break;
             default:
-                throw new RuntimeException('libsodium keys need to either be 32 bytes long, 64 bytes long or 96 bytes long');
+                throw new \RuntimeException('libsodium keys need to either be 32 bytes long, 64 bytes long or 96 bytes long');
         }
 
         $curve = new Ed25519();
@@ -80,9 +81,11 @@ abstract class libsodium
     /**
      * Convert an EC public key to the appropriate format
      *
-     * @param Integer[] $publicKey
+     * @param Ed25519 $curve
+     * @param \phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
+     * @return string
      */
-    public static function savePublicKey(Ed25519 $curve, array $publicKey): string
+    public static function savePublicKey(Ed25519 $curve, array $publicKey)
     {
         return $curve->encodePoint($publicKey);
     }
@@ -90,15 +93,20 @@ abstract class libsodium
     /**
      * Convert a private key to the appropriate format.
      *
-     * @param Integer[] $publicKey
+     * @param BigInteger $privateKey
+     * @param Ed25519 $curve
+     * @param \phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
+     * @param string $secret optional
+     * @param string $password optional
+     * @return string
      */
-    public static function savePrivateKey(BigInteger $privateKey, Ed25519 $curve, array $publicKey, ?string $secret = null, #[SensitiveParameter] ?string $password = null): string
+    public static function savePrivateKey(BigInteger $privateKey, Ed25519 $curve, array $publicKey, $secret = null, $password = '')
     {
         if (!isset($secret)) {
-            throw new RuntimeException('Private Key does not have a secret set');
+            throw new \RuntimeException('Private Key does not have a secret set');
         }
         if (strlen($secret) != 32) {
-            throw new RuntimeException('Private Key secret is not of the correct length');
+            throw new \RuntimeException('Private Key secret is not of the correct length');
         }
         if (!empty($password) && is_string($password)) {
             throw new UnsupportedFormatException('libsodium private keys do not support encryption');

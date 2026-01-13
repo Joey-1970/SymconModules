@@ -16,22 +16,16 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Crypt\EC\Formats\Keys;
 
-namespace phpseclib4\Crypt\EC\Formats\Keys;
-
-use phpseclib4\Common\Functions\Strings;
-use phpseclib4\Crypt\EC\BaseCurves\Base as BaseCurve;
-use phpseclib4\Crypt\EC\BaseCurves\Montgomery as MontgomeryCurve;
-use phpseclib4\Crypt\EC\BaseCurves\Prime as PrimeCurve;
-use phpseclib4\Crypt\EC\BaseCurves\TwistedEdwards as TwistedEdwardsCurve;
-use phpseclib4\Exception\BadConfigurationException;
-use phpseclib4\Exception\RuntimeException;
-use phpseclib4\Exception\UnexpectedValueException;
-use phpseclib4\Exception\UnsupportedCurveException;
-use phpseclib4\File\ASN1\OIDs\Curves;
-use phpseclib4\Math\BigInteger;
-use phpseclib4\Math\Common\FiniteField\Integer;
+use phpseclib3\Common\Functions\Strings;
+use phpseclib3\Crypt\EC\BaseCurves\Base as BaseCurve;
+use phpseclib3\Crypt\EC\BaseCurves\Montgomery as MontgomeryCurve;
+use phpseclib3\Crypt\EC\BaseCurves\Prime as PrimeCurve;
+use phpseclib3\Crypt\EC\BaseCurves\TwistedEdwards as TwistedEdwardsCurve;
+use phpseclib3\Exception\BadConfigurationException;
+use phpseclib3\Exception\UnsupportedCurveException;
+use phpseclib3\Math\BigInteger;
 
 /**
  * XML Formatted EC Key Handler
@@ -59,14 +53,16 @@ abstract class XML
     /**
      * Break a public or private key down into its constituent components
      *
-     * @param string|array $key
+     * @param string $key
+     * @param string $password optional
+     * @return array
      */
-    public static function load($key, #[SensitiveParameter] ?string $password = null): array
+    public static function load($key, $password = '')
     {
         self::initialize_static_variables();
 
         if (!Strings::is_stringable($key)) {
-            throw new UnexpectedValueException('Key should be a string - not a ' . gettype($key));
+            throw new \UnexpectedValueException('Key should be a string - not a ' . gettype($key));
         }
 
         if (!class_exists('DOMDocument')) {
@@ -93,7 +89,7 @@ abstract class XML
 
         if (!$dom->loadXML($key)) {
             libxml_use_internal_errors($use_errors);
-            throw new UnexpectedValueException('Key does not appear to contain XML');
+            throw new \UnexpectedValueException('Key does not appear to contain XML');
         }
         $xpath = new \DOMXPath($dom);
         libxml_use_internal_errors($use_errors);
@@ -113,11 +109,13 @@ abstract class XML
     /**
      * Case-insensitive xpath query
      *
-     * @param string|null $error optional
+     * @param \DOMXPath $xpath
+     * @param string $name
+     * @param string $error optional
      * @param bool $decode optional
-     * @return \DOMNodeList|string
+     * @return \DOMNodeList
      */
-    private static function query(\DOMXPath $xpath, string $name, ?string $error = null, bool $decode = true)
+    private static function query(\DOMXPath $xpath, $name, $error = null, $decode = true)
     {
         $query = '/';
         $names = explode('/', $name);
@@ -130,15 +128,18 @@ abstract class XML
         }
 
         if (!$result->length) {
-            throw new RuntimeException($error);
+            throw new \RuntimeException($error);
         }
         return $decode ? self::decodeValue($result->item(0)->textContent) : $result->item(0)->textContent;
     }
 
     /**
      * Finds the first element in the relevant namespace, strips the namespacing and returns the XML for that element.
+     *
+     * @param string $xml
+     * @param string $ns
      */
-    private static function isolateNamespace(string $xml, string $ns)
+    private static function isolateNamespace($xml, $ns)
     {
         $dom = new \DOMDocument();
         if (!$dom->loadXML($xml)) {
@@ -159,8 +160,10 @@ abstract class XML
 
     /**
      * Decodes the value
+     *
+     * @param string $value
      */
-    private static function decodeValue(string $value): string
+    private static function decodeValue($value)
     {
         return Strings::base64_decode(str_replace(["\r", "\n", ' ', "\t"], '', $value));
     }
@@ -168,32 +171,35 @@ abstract class XML
     /**
      * Extract points from an XML document
      *
+     * @param \DOMXPath $xpath
+     * @param BaseCurve $curve
      * @return object[]
      */
-    private static function extractPointRFC4050(\DOMXPath $xpath, BaseCurve $curve): array
+    private static function extractPointRFC4050(\DOMXPath $xpath, BaseCurve $curve)
     {
         $x = self::query($xpath, 'publickey/x');
         $y = self::query($xpath, 'publickey/y');
         if (!$x->length || !$x->item(0)->hasAttribute('Value')) {
-            throw new RuntimeException('Public Key / X coordinate not found');
+            throw new \RuntimeException('Public Key / X coordinate not found');
         }
         if (!$y->length || !$y->item(0)->hasAttribute('Value')) {
-            throw new RuntimeException('Public Key / Y coordinate not found');
+            throw new \RuntimeException('Public Key / Y coordinate not found');
         }
         $point = [
             $curve->convertInteger(new BigInteger($x->item(0)->getAttribute('Value'))),
-            $curve->convertInteger(new BigInteger($y->item(0)->getAttribute('Value'))),
+            $curve->convertInteger(new BigInteger($y->item(0)->getAttribute('Value')))
         ];
         if (!$curve->verifyPoint($point)) {
-            throw new RuntimeException('Unable to verify that point exists on curve');
+            throw new \RuntimeException('Unable to verify that point exists on curve');
         }
         return $point;
     }
 
     /**
-     * Returns an instance of \phpseclib4\Crypt\EC\BaseCurves\Base based
+     * Returns an instance of \phpseclib3\Crypt\EC\BaseCurves\Base based
      * on the curve parameters
      *
+     * @param \DomXPath $xpath
      * @return BaseCurve|false
      */
     private static function loadCurveByParam(\DOMXPath $xpath)
@@ -202,12 +208,12 @@ abstract class XML
         if ($namedCurve->length == 1) {
             $oid = $namedCurve->item(0)->getAttribute('URN');
             $oid = preg_replace('#[^\d.]#', '', $oid);
-            $name = array_search($oid, Curves::OIDs);
+            $name = array_search($oid, self::$curveOIDs);
             if ($name === false) {
                 throw new UnsupportedCurveException('Curve with OID of ' . $oid . ' is not supported');
             }
 
-            $curve = '\phpseclib4\Crypt\EC\Curves\\' . $name;
+            $curve = '\phpseclib3\Crypt\EC\Curves\\' . $name;
             if (!class_exists($curve)) {
                 throw new UnsupportedCurveException('Named Curve of ' . $name . ' is not supported');
             }
@@ -221,7 +227,7 @@ abstract class XML
 
         $params = self::query($xpath, 'ecparameters');
         if (!$params->length) {
-            throw new RuntimeException('No parameters are present');
+            throw new \RuntimeException('No parameters are present');
         }
 
         $fieldTypes = [
@@ -229,7 +235,7 @@ abstract class XML
             'gnb' => ['fieldid/gnb/m'],
             'tnb' => ['fieldid/tnb/k'],
             'pnb' => ['fieldid/pnb/k1', 'fieldid/pnb/k2', 'fieldid/pnb/k3'],
-            'unknown' => [],
+            'unknown' => []
         ];
 
         foreach ($fieldTypes as $type => $queries) {
@@ -270,16 +276,17 @@ abstract class XML
     }
 
     /**
-     * Returns an instance of \phpseclib4\Crypt\EC\BaseCurves\Base based
+     * Returns an instance of \phpseclib3\Crypt\EC\BaseCurves\Base based
      * on the curve parameters
      *
+     * @param \DomXPath $xpath
      * @return BaseCurve|false
      */
     private static function loadCurveByParamRFC4050(\DOMXPath $xpath)
     {
         $fieldTypes = [
             'prime-field' => ['primefieldparamstype/p'],
-            'unknown' => [],
+            'unknown' => []
         ];
 
         foreach ($fieldTypes as $type => $queries) {
@@ -333,8 +340,10 @@ abstract class XML
      * Sets the namespace. dsig11 is the most common one.
      *
      * Set to null to unset. Used only for creating public keys.
+     *
+     * @param string $namespace
      */
-    public static function setNamespace(string $namespace): void
+    public static function setNamespace($namespace)
     {
         self::$namespace = $namespace;
     }
@@ -342,7 +351,7 @@ abstract class XML
     /**
      * Uses the XML syntax specified in https://tools.ietf.org/html/rfc4050
      */
-    public static function enableRFC4050Syntax(): void
+    public static function enableRFC4050Syntax()
     {
         self::$rfc4050 = true;
     }
@@ -350,7 +359,7 @@ abstract class XML
     /**
      * Uses the XML syntax specified in https://www.w3.org/TR/xmldsig-core/#sec-ECParameters
      */
-    public static function disableRFC4050Syntax(): void
+    public static function disableRFC4050Syntax()
     {
         self::$rfc4050 = false;
     }
@@ -358,10 +367,12 @@ abstract class XML
     /**
      * Convert a public key to the appropriate format
      *
-     * @param Integer[] $publicKey
+     * @param BaseCurve $curve
+     * @param \phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
      * @param array $options optional
+     * @return string
      */
-    public static function savePublicKey(BaseCurve $curve, array $publicKey, array $options = []): string
+    public static function savePublicKey(BaseCurve $curve, array $publicKey, array $options = [])
     {
         self::initialize_static_variables();
 
@@ -397,15 +408,17 @@ abstract class XML
     /**
      * Encode Parameters
      *
+     * @param BaseCurve $curve
+     * @param string $pre
      * @param array $options optional
      * @return string|false
      */
-    private static function encodeXMLParameters(BaseCurve $curve, string $pre, array $options = [])
+    private static function encodeXMLParameters(BaseCurve $curve, $pre, array $options = [])
     {
         $result = self::encodeParameters($curve, true, $options);
 
         if (isset($result['namedCurve'])) {
-            $namedCurve = '<' . $pre . 'NamedCurve URI="urn:oid:' . Curves::OIDs[$result['namedCurve']] . '" />';
+            $namedCurve = '<' . $pre . 'NamedCurve URI="urn:oid:' . self::$curveOIDs[$result['namedCurve']] . '" />';
             return self::$rfc4050 ?
                 '<DomainParameters>' . str_replace('URI', 'URN', $namedCurve) . '</DomainParameters>' :
                 $namedCurve;
@@ -422,7 +435,7 @@ abstract class XML
                            '</' . $pre . 'PrimeFieldParamsType>' . "\r\n";
                     $a = $curve->getA();
                     $b = $curve->getB();
-                    [$x, $y] = $curve->getBasePoint();
+                    list($x, $y) = $curve->getBasePoint();
                     break;
                 default:
                     throw new UnsupportedCurveException('Field Type of ' . $temp['fieldID']['fieldType'] . ' is not supported');

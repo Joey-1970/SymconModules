@@ -11,18 +11,13 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Crypt\EC\Formats\Keys;
 
-namespace phpseclib4\Crypt\EC\Formats\Keys;
-
-use phpseclib4\Common\Functions\Strings;
-use phpseclib4\Crypt\Common\Formats\Keys\PuTTY as Progenitor;
-use phpseclib4\Crypt\EC\BaseCurves\Base as BaseCurve;
-use phpseclib4\Crypt\EC\BaseCurves\TwistedEdwards as TwistedEdwardsCurve;
-use phpseclib4\Exception\RuntimeException;
-use phpseclib4\Math\BigInteger;
-use phpseclib4\Math\Common\FiniteField;
-use phpseclib4\Math\Common\FiniteField\Integer;
+use phpseclib3\Common\Functions\Strings;
+use phpseclib3\Crypt\Common\Formats\Keys\PuTTY as Progenitor;
+use phpseclib3\Crypt\EC\BaseCurves\Base as BaseCurve;
+use phpseclib3\Crypt\EC\BaseCurves\TwistedEdwards as TwistedEdwardsCurve;
+use phpseclib3\Math\BigInteger;
 
 /**
  * PuTTY Formatted EC Key Handler
@@ -38,7 +33,7 @@ abstract class PuTTY extends Progenitor
      *
      * @var string
      */
-    public const PUBLIC_HANDLER = 'phpseclib4\Crypt\EC\Formats\Keys\OpenSSH';
+    const PUBLIC_HANDLER = 'phpseclib3\Crypt\EC\Formats\Keys\OpenSSH';
 
     /**
      * Supported Key Types
@@ -49,17 +44,17 @@ abstract class PuTTY extends Progenitor
         'ecdsa-sha2-nistp256',
         'ecdsa-sha2-nistp384',
         'ecdsa-sha2-nistp521',
-        'ssh-ed25519',
+        'ssh-ed25519'
     ];
 
     /**
      * Break a public or private key down into its constituent components
      *
-     * @param string|array $key
-     * @param string|false $password
-     * @return array|false
+     * @param string $key
+     * @param string $password optional
+     * @return array
      */
-    public static function load($key, $password)
+    public static function load($key, $password = '')
     {
         $components = parent::load($key, $password);
         if (!isset($components['private'])) {
@@ -73,13 +68,13 @@ abstract class PuTTY extends Progenitor
 
         if ($components['curve'] instanceof TwistedEdwardsCurve) {
             if (Strings::shift($private, 4) != "\0\0\0\x20") {
-                throw new RuntimeException('Length of ssh-ed25519 key should be 32');
+                throw new \RuntimeException('Length of ssh-ed25519 key should be 32');
             }
             $arr = $components['curve']->extractSecret($private);
             $components['dA'] = $arr['dA'];
             $components['secret'] = $arr['secret'];
         } else {
-            [$components['dA']] = Strings::unpackSSH2('i', $private);
+            list($components['dA']) = Strings::unpackSSH2('i', $private);
             $components['curve']->rangeCheck($components['dA']);
         }
 
@@ -89,16 +84,22 @@ abstract class PuTTY extends Progenitor
     /**
      * Convert a private key to the appropriate format.
      *
-     * @param Integer[] $publicKey
+     * @param BigInteger $privateKey
+     * @param BaseCurve $curve
+     * @param \phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
+     * @param string $secret optional
+     * @param string $password optional
+     * @param array $options optional
+     * @return string
      */
-    public static function savePrivateKey(BigInteger $privateKey, BaseCurve $curve, array $publicKey, ?string $secret = null, #[SensitiveParameter] ?string $password = null, array $options = []): string
+    public static function savePrivateKey(BigInteger $privateKey, BaseCurve $curve, array $publicKey, $secret = null, $password = false, array $options = [])
     {
         self::initialize_static_variables();
 
         $public = explode(' ', OpenSSH::savePublicKey($curve, $publicKey));
         $name = $public[0];
         $public = Strings::base64_decode($public[1]);
-        [, $length] = unpack('N', Strings::shift($public, 4));
+        list(, $length) = unpack('N', Strings::shift($public, 4));
         Strings::shift($public, $length);
 
         // PuTTY pads private keys with a null byte per the following:
@@ -120,14 +121,16 @@ abstract class PuTTY extends Progenitor
     /**
      * Convert an EC public key to the appropriate format
      *
-     * @param FiniteField[] $publicKey
+     * @param BaseCurve $curve
+     * @param \phpseclib3\Math\Common\FiniteField[] $publicKey
+     * @return string
      */
-    public static function savePublicKey(BaseCurve $curve, array $publicKey): string
+    public static function savePublicKey(BaseCurve $curve, array $publicKey)
     {
         $public = explode(' ', OpenSSH::savePublicKey($curve, $publicKey));
         $type = $public[0];
         $public = Strings::base64_decode($public[1]);
-        [, $length] = unpack('N', Strings::shift($public, 4));
+        list(, $length) = unpack('N', Strings::shift($public, 4));
         Strings::shift($public, $length);
 
         return self::wrapPublicKey($public, $type);
