@@ -11,15 +11,13 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
-
-namespace phpseclib4\Exception;
+namespace phpseclib3\Exception;
 
 /**
  * InconsistentSetupException
  *
  * @author  Jim Wigginton <terrafrost@php.net>
  */
-class InconsistentSetupException extends \RuntimeException implements ExceptionInterface
+class InconsistentSetupException extends \RuntimeException
 {
 }

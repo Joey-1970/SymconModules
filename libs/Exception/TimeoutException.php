@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-namespace phpseclib4\Exception;
+namespace phpseclib3\Exception;
 
 /**
  * Indicates a timeout awaiting server response

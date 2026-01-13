@@ -11,15 +11,13 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
-
-namespace phpseclib4\Exception;
+namespace phpseclib3\Exception;
 
 /**
  * FileNotFoundException
  *
  * @author  Jim Wigginton <terrafrost@php.net>
  */
-class FileNotFoundException extends \RuntimeException implements ExceptionInterface
+class FileNotFoundException extends \RuntimeException
 {
 }

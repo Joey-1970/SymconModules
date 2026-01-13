@@ -11,15 +11,13 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-declare(strict_types=1);
-
-namespace phpseclib4\Exception;
+namespace phpseclib3\Exception;
 
 /**
  * UnableToConnectException
  *
  * @author  Jim Wigginton <terrafrost@php.net>
  */
-class UnableToConnectException extends \RuntimeException implements ExceptionInterface
+class UnableToConnectException extends \RuntimeException
 {
 }
