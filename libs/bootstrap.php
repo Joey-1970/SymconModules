@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Bootstrapping File for phpseclib
  *
@@ -20,15 +18,5 @@ if (extension_loaded('mbstring')) {
             'Overloading of string functions using mbstring.func_overload ' .
             'is not supported by phpseclib.'
         );
-    }
-}
-
-if (\PHP_VERSION_ID < 80200) {
-    #[Attribute(Attribute::TARGET_PARAMETER)]
-    final class SensitiveParameter
-    {
-        public function __construct()
-        {
-        }
     }
 }
