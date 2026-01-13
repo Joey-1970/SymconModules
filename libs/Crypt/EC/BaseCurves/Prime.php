@@ -19,18 +19,13 @@
  * @link      http://pear.php.net/package/Math_BigInteger
  */
 
-declare(strict_types=1);
+namespace phpseclib3\Crypt\EC\BaseCurves;
 
-namespace phpseclib4\Crypt\EC\BaseCurves;
-
-use phpseclib4\Common\Functions\Strings;
-use phpseclib4\Exception\RuntimeException;
-use phpseclib4\Exception\UnexpectedValueException;
-use phpseclib4\Math\BigInteger;
-use phpseclib4\Math\Common\FiniteField\Integer;
-use phpseclib4\Math\PrimeField;
-use phpseclib4\Math\PrimeField\Integer as PrimeInteger;
-use phpseclib4\Math\PrimeFields;
+use phpseclib3\Common\Functions\Strings;
+use phpseclib3\Math\BigInteger;
+use phpseclib3\Math\Common\FiniteField\Integer;
+use phpseclib3\Math\PrimeField;
+use phpseclib3\Math\PrimeField\Integer as PrimeInteger;
 
 /**
  * Curves over y^2 = x^3 + a*x + b
@@ -42,7 +37,7 @@ class Prime extends Base
     /**
      * Prime Field Integer factory
      *
-     * @var PrimeFields
+     * @var \phpseclib3\Math\PrimeFields
      */
     protected $factory;
 
@@ -119,7 +114,7 @@ class Prime extends Base
     /**
      * Sets the modulo
      */
-    public function setModulo(BigInteger $modulo): void
+    public function setModulo(BigInteger $modulo)
     {
         $this->modulo = $modulo;
         $this->factory = new PrimeField($modulo);
@@ -134,10 +129,10 @@ class Prime extends Base
     /**
      * Set coefficients a and b
      */
-    public function setCoefficients(BigInteger $a, BigInteger $b): void
+    public function setCoefficients(BigInteger $a, BigInteger $b)
     {
         if (!isset($this->factory)) {
-            throw new RuntimeException('setModulo needs to be called before this method');
+            throw new \RuntimeException('setModulo needs to be called before this method');
         }
         $this->a = $this->factory->newInteger($a);
         $this->b = $this->factory->newInteger($b);
@@ -148,21 +143,22 @@ class Prime extends Base
      *
      * @param BigInteger|PrimeInteger $x
      * @param BigInteger|PrimeInteger $y
+     * @return PrimeInteger[]
      */
-    public function setBasePoint($x, $y): void
+    public function setBasePoint($x, $y)
     {
         switch (true) {
             case !$x instanceof BigInteger && !$x instanceof PrimeInteger:
-                throw new UnexpectedValueException('Argument 1 passed to Prime::setBasePoint() must be an instance of either BigInteger or PrimeField\Integer');
+                throw new \UnexpectedValueException('Argument 1 passed to Prime::setBasePoint() must be an instance of either BigInteger or PrimeField\Integer');
             case !$y instanceof BigInteger && !$y instanceof PrimeInteger:
-                throw new UnexpectedValueException('Argument 2 passed to Prime::setBasePoint() must be an instance of either BigInteger or PrimeField\Integer');
+                throw new \UnexpectedValueException('Argument 2 passed to Prime::setBasePoint() must be an instance of either BigInteger or PrimeField\Integer');
         }
         if (!isset($this->factory)) {
-            throw new RuntimeException('setModulo needs to be called before this method');
+            throw new \RuntimeException('setModulo needs to be called before this method');
         }
         $this->p = [
             $x instanceof BigInteger ? $this->factory->newInteger($x) : $x,
-            $y instanceof BigInteger ? $this->factory->newInteger($y) : $y,
+            $y instanceof BigInteger ? $this->factory->newInteger($y) : $y
         ];
     }
 
@@ -174,11 +170,11 @@ class Prime extends Base
     public function getBasePoint()
     {
         if (!isset($this->factory)) {
-            throw new RuntimeException('setModulo needs to be called before this method');
+            throw new \RuntimeException('setModulo needs to be called before this method');
         }
         /*
         if (!isset($this->p)) {
-            throw new \phpseclib4\Exception\RuntimeException('setBasePoint needs to be called before this method');
+            throw new \RuntimeException('setBasePoint needs to be called before this method');
         }
         */
         return $this->p;
@@ -189,10 +185,10 @@ class Prime extends Base
      *
      * @return FiniteField[]
      */
-    protected function jacobianAddPointMixedXY(array $p, array $q): array
+    protected function jacobianAddPointMixedXY(array $p, array $q)
     {
-        [$u1, $s1] = $p;
-        [$u2, $s2] = $q;
+        list($u1, $s1) = $p;
+        list($u2, $s2) = $q;
         if ($u1->equals($u2)) {
             if (!$s1->equals($s2)) {
                 return [];
@@ -221,10 +217,10 @@ class Prime extends Base
      *
      * @return FiniteField[]
      */
-    protected function jacobianAddPointMixedX(array $p, array $q): array
+    protected function jacobianAddPointMixedX(array $p, array $q)
     {
-        [$u1, $s1, $z1] = $p;
-        [$x2, $y2] = $q;
+        list($u1, $s1, $z1) = $p;
+        list($x2, $y2) = $q;
 
         $z12 = $z1->multiply($z1);
 
@@ -257,10 +253,10 @@ class Prime extends Base
      *
      * @return FiniteField[]
      */
-    protected function jacobianAddPoint(array $p, array $q): array
+    protected function jacobianAddPoint(array $p, array $q)
     {
-        [$x1, $y1, $z1] = $p;
-        [$x2, $y2, $z2] = $q;
+        list($x1, $y1, $z1) = $p;
+        list($x2, $y2, $z2) = $q;
 
         $z12 = $z1->multiply($z1);
         $z22 = $z2->multiply($z2);
@@ -296,10 +292,10 @@ class Prime extends Base
      *
      * @return FiniteField[]
      */
-    public function addPoint(array $p, array $q): array
+    public function addPoint(array $p, array $q)
     {
         if (!isset($this->factory)) {
-            throw new RuntimeException('setModulo needs to be called before this method');
+            throw new \RuntimeException('setModulo needs to be called before this method');
         }
 
         if (!count($p) || !count($q)) {
@@ -327,14 +323,14 @@ class Prime extends Base
         }
 
         if (isset($p[2]) || isset($q[2])) {
-            throw new RuntimeException('Affine coordinates need to be manually converted to Jacobi coordinates or vice versa');
+            throw new \RuntimeException('Affine coordinates need to be manually converted to Jacobi coordinates or vice versa');
         }
 
         if ($p[0]->equals($q[0])) {
             if (!$p[1]->equals($q[1])) {
                 return [];
             } else { // eg. doublePoint
-                [$numerator, $denominator] = $this->doublePointHelper($p);
+                list($numerator, $denominator) = $this->doublePointHelper($p);
             }
         } else {
             $numerator = $q[1]->subtract($p[1]);
@@ -352,7 +348,7 @@ class Prime extends Base
      *
      * @return FiniteField[]
      */
-    protected function doublePointHelper(array $p): array
+    protected function doublePointHelper(array $p)
     {
         $numerator = $this->three->multiply($p[0])->multiply($p[0])->add($this->a);
         $denominator = $this->two->multiply($p[1]);
@@ -364,9 +360,9 @@ class Prime extends Base
      *
      * @return FiniteField[]
      */
-    protected function jacobianDoublePoint(array $p): array
+    protected function jacobianDoublePoint(array $p)
     {
-        [$x, $y, $z] = $p;
+        list($x, $y, $z) = $p;
         $x2 = $x->multiply($x);
         $y2 = $y->multiply($y);
         $z2 = $z->multiply($z);
@@ -387,9 +383,9 @@ class Prime extends Base
      *
      * @return FiniteField[]
      */
-    protected function jacobianDoublePointMixed(array $p): array
+    protected function jacobianDoublePointMixed(array $p)
     {
-        [$x, $y] = $p;
+        list($x, $y) = $p;
         $x2 = $x->multiply($x);
         $y2 = $y->multiply($y);
         $s = $this->four->multiply($x)->multiply($y2);
@@ -408,10 +404,10 @@ class Prime extends Base
      *
      * @return FiniteField[]
      */
-    public function doublePoint(array $p): array
+    public function doublePoint(array $p)
     {
         if (!isset($this->factory)) {
-            throw new RuntimeException('setModulo needs to be called before this method');
+            throw new \RuntimeException('setModulo needs to be called before this method');
         }
 
         if (!count($p)) {
@@ -426,7 +422,7 @@ class Prime extends Base
             return $this->jacobianDoublePoint($p);
         }
 
-        [$numerator, $denominator] = $this->doublePointHelper($p);
+        list($numerator, $denominator) = $this->doublePointHelper($p);
 
         $slope = $numerator->divide($denominator);
 
@@ -438,8 +434,10 @@ class Prime extends Base
 
     /**
      * Returns the X coordinate and the derived Y coordinate
+     *
+     * @return array
      */
-    public function derivePoint($m): array
+    public function derivePoint($m)
     {
         $y = ord(Strings::shift($m));
         $x = new BigInteger($m, 256);
@@ -452,14 +450,14 @@ class Prime extends Base
                 $ypn = true;
                 break;
             default:
-                throw new RuntimeException('Coordinate not in recognized format');
+                throw new \RuntimeException('Coordinate not in recognized format');
         }
         $temp = $xp->multiply($this->a);
         $temp = $xp->multiply($xp)->multiply($xp)->add($temp);
         $temp = $temp->add($this->b);
         $b = $temp->squareRoot();
         if (!$b) {
-            throw new RuntimeException('Unable to derive Y coordinate');
+            throw new \RuntimeException('Unable to derive Y coordinate');
         }
         $bn = $b->isOdd();
         $yp = $ypn == $bn ? $b : $b->negate();
@@ -471,9 +469,9 @@ class Prime extends Base
      *
      * @return boolean
      */
-    public function verifyPoint(array $p): bool
+    public function verifyPoint(array $p)
     {
-        [$x, $y] = $p;
+        list($x, $y) = $p;
         $lhs = $y->multiply($y);
         $temp = $x->multiply($this->a);
         $temp = $x->multiply($x)->multiply($x)->add($temp);
@@ -484,8 +482,10 @@ class Prime extends Base
 
     /**
      * Returns the modulo
+     *
+     * @return BigInteger
      */
-    public function getModulo(): BigInteger
+    public function getModulo()
     {
         return $this->modulo;
     }
@@ -518,7 +518,7 @@ class Prime extends Base
      *
      * @return int[]
      */
-    public function multiplyAddPoints(array $points, array $scalars): array
+    public function multiplyAddPoints(array $points, array $scalars)
     {
         $length = count($points);
 
@@ -527,10 +527,10 @@ class Prime extends Base
         }
 
         $wnd = [$this->getNAFPoints($points[0], 7)];
-        $wndWidth = [$points[0]['nafwidth'] ?? 7];
+        $wndWidth = [isset($points[0]['nafwidth']) ? $points[0]['nafwidth'] : 7];
         for ($i = 1; $i < $length; $i++) {
             $wnd[] = $this->getNAFPoints($points[$i], 1);
-            $wndWidth[] = $points[$i]['nafwidth'] ?? 1;
+            $wndWidth[] = isset($points[$i]['nafwidth']) ? $points[$i]['nafwidth'] : 1;
         }
 
         $naf = [];
@@ -552,7 +552,7 @@ class Prime extends Base
                 $points[$a], // 1
                 null,        // 3
                 null,        // 5
-                $points[$b],  // 7
+                $points[$b]  // 7
             ];
 
             $comb[1] = $this->addPoint($points[$a], $points[$b]);
@@ -567,7 +567,7 @@ class Prime extends Base
                  7, /*  0  1 */
                  5, /*  1 -1 */
                  1, /*  1  0 */
-                 3,  /*  1  1 */
+                 3  /*  1  1 */
             ];
 
             $jsf = self::getJSFPoints($scalars[$a], $scalars[$b]);
@@ -582,8 +582,8 @@ class Prime extends Base
             }
 
             for ($j = 0; $j < $max; $j++) {
-                $ja = $jsf[0][$j] ?? 0;
-                $jb = $jsf[1][$j] ?? 0;
+                $ja = isset($jsf[0][$j]) ? $jsf[0][$j] : 0;
+                $jb = isset($jsf[1][$j]) ? $jsf[1][$j] : 0;
 
                 $naf[$a][$j] = $index[3 * ($ja + 1) + $jb + 1];
                 $naf[$b][$j] = 0;
@@ -598,7 +598,7 @@ class Prime extends Base
             while ($i >= 0) {
                 $zero = true;
                 for ($j = 0; $j < $length; $j++) {
-                    $temp[$j] = $naf[$j][$i] ?? 0;
+                    $temp[$j] = isset($naf[$j][$i]) ? $naf[$j][$i] : 0;
                     if ($temp[$j] != 0) {
                         $zero = false;
                     }
@@ -643,9 +643,9 @@ class Prime extends Base
      * Adapted from:
      * https://github.com/indutny/elliptic/blob/725bd91/lib/elliptic/curve/base.js#L351
      *
-     * @return list<array>
+     * @return int[]
      */
-    private function getNAFPoints(array $point, int $wnd): array
+    private function getNAFPoints(array $point, $wnd)
     {
         if (isset($point['naf'])) {
             return $point['naf'];
@@ -682,7 +682,7 @@ class Prime extends Base
      *
      * @return int[]
      */
-    private static function getJSFPoints(Integer $k1, Integer $k2): array
+    private static function getJSFPoints(Integer $k1, Integer $k2)
     {
         static $three;
         if (!isset($three)) {
@@ -753,17 +753,17 @@ class Prime extends Base
      *
      * @return PrimeInteger[]
      */
-    public function convertToAffine(array $p): array
+    public function convertToAffine(array $p)
     {
         if (!isset($p[2])) {
             return $p;
         }
-        [$x, $y, $z] = $p;
+        list($x, $y, $z) = $p;
         $z = $this->one->divide($z);
         $z2 = $z->multiply($z);
         return [
             $x->multiply($z2),
-            $y->multiply($z2)->multiply($z),
+            $y->multiply($z2)->multiply($z)
         ];
     }
 
@@ -772,7 +772,7 @@ class Prime extends Base
      *
      * @return PrimeInteger[]
      */
-    public function convertToInternal(array $p): array
+    public function convertToInternal(array $p)
     {
         if (isset($p[2])) {
             return $p;
