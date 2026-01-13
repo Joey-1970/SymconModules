@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Finite Fields Base Class
  *
@@ -12,7 +10,7 @@ declare(strict_types=1);
  * @license   http://www.opensource.org/licenses/mit-license.html  MIT License
  */
 
-namespace phpseclib4\Math\Common;
+namespace phpseclib3\Math\Common;
 
 /**
  * Finite Fields
