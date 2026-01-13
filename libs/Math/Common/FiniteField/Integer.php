@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Finite Field Integer Base Class
  *
@@ -12,7 +10,7 @@ declare(strict_types=1);
  * @license   http://www.opensource.org/licenses/mit-license.html  MIT License
  */
 
-namespace phpseclib4\Math\Common\FiniteField;
+namespace phpseclib3\Math\Common\FiniteField;
 
 /**
  * Finite Field Integer
@@ -32,13 +30,15 @@ abstract class Integer implements \JsonSerializable
      * @return array{hex: string}
      */
     #[\ReturnTypeWillChange]
-    public function jsonSerialize(): array
+    public function jsonSerialize()
     {
         return ['hex' => $this->toHex(true)];
     }
 
     /**
      * Converts an Integer to a hex string (eg. base-16).
+     *
+     * @return string
      */
-    abstract public function toHex(): string;
+    abstract public function toHex();
 }
